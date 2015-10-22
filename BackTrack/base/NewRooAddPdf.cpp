@@ -327,7 +327,7 @@ RooFitResult* NewRooAddPdf::improvedFitTo(RooDataHist& data, const RooLinkedList
   RooCmdConfig pc(Form("RooAbsPdf::improvedFitTo(%s)",GetName())) ;
 
   RooLinkedList fitCmdList(cmdList) ;
-  //Add options here
+  // Add options here
   RooLinkedList nllCmdList = pc.filterCmdList(fitCmdList,"ProjectedObservables,Extended,Range,RangeWithName,SumCoefRange,NumCPU,SplitRange,Constrained,Constrain,ExternalConstraints,CloneData,GlobalObservables,GlobalObservablesTag,OffsetLikelihood") ;
 
   pc.defineString("fitOpt","FitOptions",0,"") ;
@@ -435,6 +435,10 @@ RooFitResult* NewRooAddPdf::improvedFitTo(RooDataHist& data, const RooLinkedList
   if (string(minType)!="OldMinuit") {
   
 #ifndef __ROOFIT_NOROOMINIMIZER
+    
+    //debug
+    //printf("USING NEWROOMINIMIZER\n");
+
     NewRooMinimizer m(*nll) ;
 
     m.setMinimizerType(minType) ;

@@ -54,6 +54,7 @@
 #include "Math/CholeskyDecomp.h"
 #include <RooAbsBinning.h>
 #include <RooUniform.h>
+#include "KVNumberList.h"
 
 ClassImp(BackTrack::GenericModel_Binned)
 
@@ -69,13 +70,13 @@ namespace BackTrack {
     fBool_provided          =kFALSE;    //To control if the workspace was provided or not, if it was provided then no need to import the model data    
     
     fInitWeights = new vector<Double_t>();
-    
+    fRefusedDataSets = new KVNumberList();
     fwk_name=0;	  
   
     fDataHist           = 0;
     fWorkspace          = 0; 
     fexpdatahist_counts = -1;
-    fNDataSets          =0;
+    fNpdf               =0;
     fModelPseudoPDF     =0;
     fLastFit            =0;
     fParameterPDF       =0;
@@ -94,14 +95,7 @@ namespace BackTrack {
 	fHistPdfs.Delete();
 	fModelPseudoPDF=0;
 	fFractions.removeAll();
-      }
-      
-//     if(fNDataSets)
-//       {
-// 	fDataSets.Delete();
-// 	fDataSetParams.Delete();
-// 	fNDataSets=0;
-//       }
+      }      
             
     SafeDelete(fLastFit);
     SafeDelete(fWorkspace);
@@ -111,7 +105,8 @@ namespace BackTrack {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   void GenericModel_Binned::SetExperimentalDataHist(RooDataHist& data)
   {
-    //Set the experimental RooDataHist we will fit    
+    //Set the experimental RooDataHist we want to fit (to know the expected number of events for an extended fit)
+       
     fDataHist = new RooDataHist(data, "data_hist");
     fexpdatahist_counts   = data.sumEntries();
     fBool_expdatahist_set = kTRUE;
@@ -122,6 +117,7 @@ namespace BackTrack {
   {
     //Extended/ Not extended fit
     //By default not extended
+    
     fBool_extended = ext;
   }
   
@@ -280,6 +276,9 @@ namespace BackTrack {
   /////////////////////////////////////////////////////////////////////////////////////////////////
   void GenericModel_Binned::ImportAllModelData()
   {
+    // Import the model data: create the RooDataSets and import the corresponding RooDataHists,
+    // according to the defined parameters ranges and binnings.
+  
     ImportModelData();
    
     //Saving  
@@ -289,7 +288,7 @@ namespace BackTrack {
   /////////////////////////////////////////////////////////////////////////////////////////////////
   void GenericModel_Binned::ImportModelData(Int_t parameter_num, RooArgList* plist)
   {
-    //Initial RooWorksapce already given by the user for the fit, no save or importation   
+    // Initial RooWorksapce already given by the user for the fit, no save or importation       
     if(IsWorkspaceImported()==kTRUE)
       {
         Info("ImportModelData", "RooWorspace for fit already provided, no importation needed !!!");		
@@ -328,8 +327,7 @@ namespace BackTrack {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   void GenericModel_Binned::AddParamInitWeight(RooArgList& params, Double_t weight)
   {
-    // Add the initial value of the weight of the parameter.
-    if(!weight) return;   
+    // Create the initial values of the guess/weight of the each set of fit parameters.  
     fInitWeights->push_back(weight);     
   }
 
@@ -338,8 +336,8 @@ namespace BackTrack {
   {
     // Generate/fill the initial weight corresponding to the parameter values in the list.
 
-    AbstractMethod("GetParamWeight");
-    return nullptr;
+    AbstractMethod("GetParamInitWeight");
+    return -1;
   }
   
   
@@ -347,13 +345,8 @@ namespace BackTrack {
   /////////////////////////////////////////////////////////////////////////////////////////////////
   void GenericModel_Binned::ImportParamInitWeight(Int_t parameter_num, RooArgList* plist)
   {  
-    // If uniform guess/weights for parameters for the fit
-    if(IsUniformInitWeight()==kTRUE) CreateUniformInitWeight(GetExpectedCounts());
-  
-    // If not uniform guess/weights for parameters for the fit
-    // Import all initial weights for the parameters corresponding to their ranges & binnings  
-    else
-       {
+    // Import all initial weights for the parameters corresponding to their ranges & binnings.  
+    
     RooArgList PLIST;
     if(plist) PLIST.addClone(*plist);
     RooRealVar* par = GetParameter(parameter_num);
@@ -363,41 +356,58 @@ namespace BackTrack {
    
     if(!par_in_list)
       {
-	PLIST.addClone(RooRealVar(par->GetName(),par->GetTitle(),0.));
-	par_in_list = (RooRealVar*)PLIST.find(par->GetName());
+    	PLIST.addClone(RooRealVar(par->GetName(),par->GetTitle(),0.));
+    	par_in_list = (RooRealVar*)PLIST.find(par->GetName());
       }
    
     for(int i=0; i<N; i++)
       {
-	par_in_list->setMax(bins.binHigh(i));
-	par_in_list->setMin(bins.binLow(i));
-	par_in_list->setVal(bins.binCenter(i));
-	    	
-	if((parameter_num+1)<GetNumberOfParameters()) ImportParamInitWeight(parameter_num+1,&PLIST);
-	    
-	else AddParamInitWeight(PLIST, GetParamInitWeight(PLIST));
-      }      
-    }  	         
-
+    	par_in_list->setMax(bins.binHigh(i));
+    	par_in_list->setMin(bins.binLow(i));
+    	par_in_list->setVal(bins.binCenter(i));
+    	    
+    	if((parameter_num+1)<GetNumberOfParameters()) ImportParamInitWeight(parameter_num+1,&PLIST);
+    	
+    	else AddParamInitWeight(PLIST, GetParamInitWeight(PLIST));
+      } 			     
   } 
   
-  
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
-  void GenericModel_Binned::SetUniformInitWeight(Bool_t uni)
-  {  
-    //Initialize or not the same weights for each parameter set    
-    fBool_uniform=uni;
-  }     
-
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+  void GenericModel_Binned::ImportAllParamInitWeight(Bool_t uniform)
+  {
+    // Initialize the parameters weights,
+    // if uniform=kTRUE  -> will call the default uniform weight initialization (CreateUniformInitWeight())
+    // if uniform=kFALSE -> wil call the ImportParamInitWeight() method
+    
+    fBool_uniform=uniform;
+    
+    if(IsUniformInitWeight()==kTRUE)
+      {
+        Info("ImportAllParamInitWeight", ".. setting uniform weights...");
+        CreateUniformInitWeight(GetExpectedCounts());
+      } 
+      
+    else
+      {
+      	Info("ImportAllParamInitWeight", ".. setting user weights...");
+	ImportParamInitWeight();
+      } 
+      
+    //debug
+    printf("fIniWeight size = %d\n", (int) fInitWeights->size());
+    for(std::vector<Double_t>::const_iterator i=fInitWeights->begin(); i != fInitWeights->end(); i++) cout << *i << endl;
+     
+  }
+      
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
   void GenericModel_Binned::CreateUniformInitWeight(Double_t ncounts)
   {
     if(ncounts<=0)
-	{
-	  Error("CreateUniformInitWeights", "...Warning empty experimental RooDataHist...");
-	  return;
-        }
+      {
+	Error("CreateUniformInitWeights", "...Warning empty experimental RooDataHist...");
+	return;
+      }
 
     Double_t integral=0;	
 	     
@@ -411,37 +421,34 @@ namespace BackTrack {
       {
         fInitWeights->push_back(ww);
       } 
-   }
+  }
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
   void GenericModel_Binned::ConstructPseudoPDF(Bool_t debug)
   {
-    //Build a parameterised pseudo-PDF from all the imported model datasets.
+    //Build a parameterised pseudo-PDF from all the imported model datasets (RooDataHist).
     //Each dataset will be transformed into a RooHistPdf.  
-    //
-    //The user can decide to initialize the parameters values using a vector<const Double_t>*
-    //For an extended fit the user need to declare the experimental DataSet entries
-    //If debug=kTRUE, each dataset and kernel PDF will be displayed in a canvas. 
-    //If numint=kTRUE the integrals are force numerical
+    //The user can decide to initialize the parameters values using the ImportAllParamInitWeight() method.
+    //For an extended fit the weights will be created using GetExpectedCounts() method.
     
    
     //-------------Control if the user gave the experimental RooDataHist to fit------------
     if(IsExpDataHistSet()==kFALSE)
       {
-        Error("ConstructPseudoPDF", "... !!! No Experimental RooDataHist for the fit !!! Import experimental RooDataHist to fit with SetExperimentalDataHist() first...");
+        Error("ConstructPseudoPDF", "... !!! No Experimental RooDataHist for the fit !!! Import experimental RooDataHist to fit with SetExperimentalDataHist() method first...");
 	return;
       }  	
     
     //-------------Control if DataSets list is given------------
     if(!GetNumberOfDataSets() || GetNumberOfDataSets()==0)
       {
-	if(IsWorkspaceImported()==kFALSE) Error("ConstructPseudoPDF", "... !!! No DataSets !!! Import model datasets with ImportModelData() first...");
+	if(IsWorkspaceImported()==kFALSE) Error("ConstructPseudoPDF", "... !!! No DataSets !!! Import model datasets with ImportModelData() method first...");
 	else                              Error("ConstructPseudoPDF", "... !!! No DataSets !!! Verify provided worspace...");
 	
 	return;
       }    
        
     //-------------For the weights initialization--------------       
-    if(fInitWeights==0)  Error("ConstructPseudoPDF", "Initial guess of parameters not given... use SetInitWeights() or SetUniformWeights() first...");        
+    if(fInitWeights==0)  Error("ConstructPseudoPDF", "Initial guess of parameters not given... use ImportAllParamInitWeight() method first...");        
 
 
     if(fModelPseudoPDF)
@@ -463,12 +470,12 @@ namespace BackTrack {
       {                    
         const RooDataHist *set = GetDataHist(i);
 	
-	//If stat in the DataSet
-	//Else error : RooFit can't create the RooHistPdf without statistic
+	// Check if there are events in the DataSet
+	// Else error : RooFit can't create an empty RooHistPdf
 	if(set->sumEntries()>0)
-	  {
-	    ++fNDataSets;  //For modifying counting if no stat
-	    last=i;        //For extended fit  
+	  {	    
+// 	    ++fNpdf;       // Counting the number of kept RooHistPdf for the fit
+	    last=i;        // Remember the last kept histogram for extended fit  
       
 	    RooHistPdf *pdf = new RooHistPdf(Form("HistPdf%d",i), Form("RooHistPdf from datahist#%d",i), GetObservables(), *set, fSmoothing);
 	    pdf->forceNumInt(IsNumInt()); 
@@ -480,31 +487,31 @@ namespace BackTrack {
             
 	    //Extended pdf
 	    if(IsExtended()==kTRUE)
-	      {
-		RooRealVar pp(Form("W%d",i),Form("fractional weight of kernel-PDF #%d for extended fit",i),(*fInitWeights)[i],0., 2.*fexpdatahist_counts);				   
-		fFractions.addClone(pp);	  	      	
-	      }
-      
-	    //Not-Extended pdf
+	       {
+	         RooRealVar pp(Form("W%d",i),Form("fractional weight of kernel-PDF #%d for extended fit",i),(*fInitWeights)[i],0., 2.*fexpdatahist_counts);
+	         fFractions.addClone(pp);		
+	       }
+	       	
+	    //Not extended pdf
 	    else
-	      {
-		RooRealVar pp(Form("W%d",i),Form("fractional weight of kernel-PDF #%d for not-extended fit",i),(*fInitWeights)[i],0.,1.);
-		fFractions.addClone(pp);	       
-	      }
+	       { 		   
+	         RooRealVar pp(Form("W%d",i),Form("fractional weight of kernel-PDF #%d for not-extended fit",i),(*fInitWeights)[i],0.,1.);
+	         fFractions.addClone(pp);
+	       }	      		       
+	      
 	  } 
 	 
 	 
 	else
 	  {
-	    //Remove this parameters set from _datasetparams used to save the results
-	    GetDataSetParametersList()->RemoveAt(i);
-	    Info("ConstructPseudoPDF", "...datahist#%d... refused (nentries=%d)...", i, (int) set->sumEntries());
-	    Info("ConstructPseudoPDF", "...RooArgList%d... removed from _datasetparams for the results...", i);	    
+	    // Keep the number of the refused RooDataHist/RooDataSet in a list
+	    fRefusedDataSets->Add(i);	    
+	    Info("ConstructPseudoPDF", "...datahist#%d... refused (nentries=%d)...", i, (int) set->sumEntries());	    
 	  } 
       }
    
           
-    //-------------Remove last coefficient for not-extended fit-----------
+    //-------------Remove last coefficient from fFractions for not-extended fit-----------
     if(IsExtended()==kFALSE)
       {
 	RooRealVar *p = (RooRealVar*) fFractions.find(Form("W%d",last));
@@ -518,30 +525,20 @@ namespace BackTrack {
 	else Error("ConstructPseudoPdf", "...error in finding the last dataset to remove for not-extended fit...");  
       }
    
+   //----------------Construction of the pseufo-pdf----------------
     //Extended
-    if(IsExtended()==kTRUE)
-      {
-	fModelPseudoPDF = new NewRooAddPdf("Model", "Pseudo-PDF constructed from kernels for model datahists", kernels, fFractions, kFALSE);
-        fModelPseudoPDF->forceNumInt(IsNumInt());	
-      }
-      
-    else
-      {
-        //fFractions->remove();
-	fModelPseudoPDF = new NewRooAddPdf("Model", "Pseudo-PDF constructed from kernels for model datahists", kernels, fFractions, kTRUE);
-	fModelPseudoPDF->forceNumInt(IsNumInt());
-      }  
-      
-//     if(save==kTRUE)
-//       { 
-// 	SavePseudoPDF(GetWorkspaceFileName());
-//       } 
+    if(IsExtended()==kTRUE) fModelPseudoPDF = new NewRooAddPdf("Model", "Pseudo-PDF constructed from kernels for model datahists", kernels, fFractions, kFALSE);
+    //Not extended
+    else                    fModelPseudoPDF = new NewRooAddPdf("Model", "Pseudo-PDF constructed from kernels for model datahists", kernels, fFractions, kTRUE); 
+    
+    // Numerical integral   
+    fModelPseudoPDF->forceNumInt(IsNumInt());	      
   }
     
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   RooFitResult* GenericModel_Binned::fitTo(RooDataHist& data, const RooCmdArg& arg1, const RooCmdArg& arg2, const RooCmdArg& arg3, const RooCmdArg& arg4, 
-					      const RooCmdArg& arg5, const RooCmdArg& arg6, const RooCmdArg& arg7, const RooCmdArg& arg8,
-					      const RooCmdArg& arg9, const RooCmdArg& arg10, const RooCmdArg& arg11, const RooCmdArg& arg12)
+					   const RooCmdArg& arg5, const RooCmdArg& arg6, const RooCmdArg& arg7, const RooCmdArg& arg8,
+					   const RooCmdArg& arg9, const RooCmdArg& arg10, const RooCmdArg& arg11, const RooCmdArg& arg12)
   {
     //Print informations
     Info("fiTo...","performing fit with %d parameters and %d observables", GetNumberOfParameters(), GetNumberOfObservables());
@@ -569,32 +566,108 @@ namespace BackTrack {
    
     fWeights.removeAll();
     const RooArgList& coefs = fModelPseudoPDF->coefList();
-    for(int i=0;i<fNDataSets;i++)
+    
+    for(int i=0;i<GetNumberOfDataSets();i++)
       { 
-	RooAbsReal* coef = (RooAbsReal*)coefs.at(i);
-	RooRealVar w(Form("w%d",i),Form("Fitted weight of kernel#%d",i),coef->getVal());
-	printf("coef%d=%e\n",i, coef->getVal());
+        // If accepted set of parameters (events in the RooDataSet)
+        if(fRefusedDataSets->Contains(i)==kFALSE)
+	   {        
+	     RooAbsReal* coef = (RooAbsReal*)coefs.at(i);
+	     RooRealVar w(Form("w%d",i),Form("Fitted weight of kernel#%d",i),coef->getVal());
+	     printf("coef%d=%e\n",i, coef->getVal());
 	
-	if(coef->InheritsFrom(RooRealVar::Class()))
-	  {
-	    w.setError(((RooRealVar*)coef)->getError());
-	  }
-	else
-	  {
-	    w.setError(coef->getPropagatedError(*fLastFit));
-	  }
+	     if(coef->InheritsFrom(RooRealVar::Class()))
+	       {
+	         w.setError(((RooRealVar*)coef)->getError());
+	       }
+	       
+	     else
+	        {
+	         w.setError(coef->getPropagatedError(*fLastFit));
+	        }
       
-	fWeights.addClone(w);
-	fParamDataHist->set(*GetParametersForDataset(i),w.getVal(),w.getError());	
+	     fWeights.addClone(w);
+	     fParamDataHist->set(*GetParametersForDataset(i),w.getVal(),w.getError());	
+	   } 
+	   
+	else
+           {
+             printf("coef%d not calculated because of no events in the RooDataSet", i);
+           }      	    
       }
-     
+           
     SafeDelete(fParameterPDF);
     fParameterPDF = new RooHistPdf("paramPDF","paramPDF",GetParameters(),*fParamDataHist); 
      
     return fLastFit;
   }
     
-
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  RooFitResult* GenericModel_Binned::chi2FitTo(RooDataHist& data, const RooCmdArg& arg1, const RooCmdArg& arg2, const RooCmdArg& arg3, const RooCmdArg& arg4, 
+					   const RooCmdArg& arg5, const RooCmdArg& arg6, const RooCmdArg& arg7, const RooCmdArg& arg8)
+					   
+  {
+    //Print informations
+    Info("fiTo...","performing fit with %d parameters and %d observables", GetNumberOfParameters(), GetNumberOfObservables());
+    for(Int_t ii=0; ii<GetNumberOfParameters(); ii++)
+      {
+        RooRealVar *p = dynamic_cast<RooRealVar*>(GetParameters().at(ii));
+	RooAbsBinning& bins = p->getBinning();
+        Int_t N = bins.numBins();
+        Info("fiTo...","parameter%d: name=%s, min=%e, max=%e, nbin=%d",ii, p->GetName(),p->getMin(),p->getMax(),N); 
+      }
+    for(Int_t ii=0; ii<GetNumberOfObservables(); ii++)
+      {
+        RooRealVar *p = dynamic_cast<RooRealVar*>(GetObservables().at(ii));
+	RooAbsBinning& bins = p->getBinning();
+        Int_t N = bins.numBins();
+        Info("fiTo...","observable%d: name=%s, min=%e, max=%e, nbin=%d",ii, p->GetName(),p->getMin(),p->getMax(),N); 
+      }  
+        
+    //Fit
+    fLastFit = fModelPseudoPDF->chi2FitTo(data, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+        
+    //Save Coefs
+    SafeDelete(fParamDataHist);
+    fParamDataHist = new RooDataHist("params","params",GetParameters());
+   
+    fWeights.removeAll();
+    const RooArgList& coefs = fModelPseudoPDF->coefList();
+    
+    for(int i=0;i<GetNumberOfDataSets();i++)
+      { 
+        // If accepted set of parameters (events in the RooDataSet)
+        if(fRefusedDataSets->Contains(i)==kFALSE)
+	   {        
+	     RooAbsReal* coef = (RooAbsReal*)coefs.at(i);
+	     RooRealVar w(Form("w%d",i),Form("Fitted weight of kernel#%d",i),coef->getVal());
+	     printf("coef%d=%e\n",i, coef->getVal());
+	
+	     if(coef->InheritsFrom(RooRealVar::Class()))
+	       {
+	         w.setError(((RooRealVar*)coef)->getError());
+	       }
+	       
+// 	     else
+// 	        {
+// 	         w.setError(coef->getPropagatedError(*fLastFit));
+// 	        }
+      
+	     fWeights.addClone(w);
+	     fParamDataHist->set(*GetParametersForDataset(i),w.getVal(),w.getError());	
+	   } 
+	   
+	else
+           {
+             printf("coef%d not calculated because of no events in the RooDataSet", i);
+           }      	    
+      }
+           
+    SafeDelete(fParameterPDF);
+    fParameterPDF = new RooHistPdf("paramPDF","paramPDF",GetParameters(),*fParamDataHist); 
+     
+    return fLastFit;
+  }
   //////////////////////////////////////////////////////////////////////////////////////////////////////
   void GenericModel_Binned::plotOn(RooPlot* frame)
   {
@@ -747,23 +820,23 @@ namespace BackTrack {
   void GenericModel_Binned::SaveInitWorkspace(char *file)
   {  
     /*
-     To save an initial worksapce for further fits
-     Will save the needed objects for the performing another fit
-     without generating the new RooDataSets (can be long)
-     will contain:
-     _parameters    = RooArgList of the parameters
-     _obsevables    = RooArgList of the observables
-     _parobs        = RooArgList of the param+observables (mandatory for cuts in the RooDataHist)
-     _datahistset   = TObjArray of the  model RooDataHist
-     _datasetparams = TObjArray of the model RooDataHist parameters
-     This workspace can then be used with SetWorkspace() method	   
-     By default not saved and saved in a file which name will contain
-     observables informations
-     If workspace already provided, will not save it again   
-     */ 
+      To save an initial worksapce for further fits
+      Will save the needed objects for the performing another fit
+      without generating the new RooDataSets (can be long)
+      will contain:
+      _parameters    = RooArgList of the parameters
+      _obsevables    = RooArgList of the observables
+      _parobs        = RooArgList of the param+observables (mandatory for cuts in the RooDataHist)
+      _datahistset   = TObjArray of the  model RooDataHist
+      _datasetparams = TObjArray of the model RooDataHist parameters
+      This workspace can then be used with SetWorkspace() method	   
+      By default not saved and saved in a file which name will contain
+      observables informations
+      If workspace already provided, will not save it again   
+    */ 
      
-     fBool_saved = kTRUE; 
-     fwk_name    = file;           
+    fBool_saved = kTRUE; 
+    fwk_name    = file;           
   }
   
   
@@ -817,25 +890,5 @@ namespace BackTrack {
     	InitWorkspace->writeToFile(Form("%s.root",file),"recreate");	    
     	Info("SaveWorkspace", "Saving Created RooDatSet workspace in file '%s.root'", file);	    
       }          
-  }
-//   
-//   //////////////////////////////////////////////////////////////////////////////////////////////////////////  
-//   void GenericModel_Binned::SavePseudoPDF(char *file)
-//   {  
-//     //To save the PDF generated with ConstructPseudoPDF() method
-//   
-//     if(file==0)
-//       {       
-//         fWorkspace->writeToFile("_PseudoPDF.root","recreate");
-//         Info("ConstructPseudoPdf","...workspace of results saved in file '_fitresults.root'..."); 
-//       }	 
-//      
-//     else
-//       {
-//         fWorkspace->writeToFile(Form("%s.root", file), "recreate");
-// 	Info("ConstructPseudoPdf","...workspace of results saved in file '%s.root'...", file); 
-//       }     
-//   }
-//     
-    
+  }       
 } 

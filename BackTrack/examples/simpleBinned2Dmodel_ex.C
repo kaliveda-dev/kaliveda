@@ -91,10 +91,9 @@ void simple2Dmodel_ex(Int_t statexp, Int_t statmod)
    model->SaveInitWorkspace();
    model->SetNumInt(kTRUE);
    model->SetExtended(kFALSE);
-   model->SetUniformInitWeight(kTRUE);
    model->SetNumGen(statmod);
    model->ImportAllModelData(); 
-   model->ImportParamInitWeight();
+   model->ImportAllParamInitWeight(kTRUE);
    model->ConstructPseudoPDF(kFALSE);
    //model->fitTo(datahist, Save(), NumCPU(6), SumW2Error(kTRUE), PrintLevel(1), Minimizer("TMinuit","migrad"), Extended(kFALSE), Offset(kTRUE));
    model->fitTo(datahist, Save(), NumCPU(6), SumW2Error(kTRUE), PrintLevel(1), Minimizer("TMinuit","migrad"), Extended(kFALSE), Offset(kTRUE), SetMaxIter(500000), SetMaxCalls(500000));

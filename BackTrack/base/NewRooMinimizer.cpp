@@ -190,10 +190,8 @@ void NewRooMinimizer::setErrorLevel(Double_t level)
 //_____________________________________________________________________________
 void NewRooMinimizer::setEps(Double_t eps)
 {
-  // Change MINUIT epsilon
-
+  // Change fit epsilon (tolerance)
   _theFitter->Config().MinimizerOptions().SetTolerance(eps);
-
 }
 
 

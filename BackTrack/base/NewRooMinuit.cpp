@@ -295,7 +295,7 @@ Int_t NewRooMinuit::migrad()
 
   Double_t arglist[2];
   arglist[0]= _maxEvalMult*_nPar; // maximum iterations
-  arglist[1]= 1.0;       // tolerance
+  arglist[1]= 1.0;                // tolerance
 
   synchronize(_verbose) ;
   profileStart() ;

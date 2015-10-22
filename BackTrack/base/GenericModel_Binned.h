@@ -48,7 +48,7 @@ namespace BackTrack {
       char* fwk_name;                     // name of the initial saved workspace  
        
       Int_t   fexpdatahist_counts;        // number of counts in the experimental RooDataHist for an extended fit       
-      Int_t   fNDataSets;	          // internal counter of model datasets  
+      Int_t   fNpdf;	                  // internal counter of model RooHistPdf used for the fit  
       Int_t   fSmoothing;	          // histpdf smoothing factor 
       Bool_t  fBool_expdatahist_set;      // verify if the experimental RooDataHist was given
       Bool_t  fBool_extended;	          // extended/not extended fit
@@ -59,12 +59,13 @@ namespace BackTrack {
         
       RooArgList        fWeights;              // fitted weight of each pseudo-pdf in result
       NewRooAddPdf*     fModelPseudoPDF;       // pseudo-pdf for model to fit data
-      RooArgList        fFractions;            // weights of each kernel in pseudo pdf
+      RooArgList        fFractions;            // weights of each kernel in pseudo-pdf (only used for pseudo-pdf construction)
       vector<Double_t>* fInitWeights;          // initital weights 
       RooFitResult*     fLastFit;              // result of last fit
       RooHistPdf*       fParameterPDF;         // pdf for parameters after fit to data
       RooDataHist*      fParamDataHist;        // binned parameter dataset used to construct fParameterPDF   
-      TObjArray         fHistPdfs;             // pseudo-pdfs for each dataset     
+      TObjArray         fHistPdfs;             // pseudo-pdfs for each dataset
+      KVNumberList*     fRefusedDataSets;      // to list the refused RooHistPdf numbers (if the corresponding RooDataHist has no events
          
 	 
        
@@ -86,7 +87,7 @@ namespace BackTrack {
 
       // For data importation
       void ImportModelData(Int_t parameter_num = 0, RooArgList* plist = 0);     
-            
+      void ImportParamInitWeight(Int_t parameter_num = 0, RooArgList* plist = 0);      
 	    
 	                
     public:
@@ -96,8 +97,8 @@ namespace BackTrack {
       
       // Fit caracteristics
       void SetExperimentalDataHist(RooDataHist& data);
+      const RooDataHist* GetExperimentalDataHist() const { return fDataHist; }
       Int_t GetExpectedCounts() { return fexpdatahist_counts; }
-      void SetUniformInitWeight(Bool_t uni=kTRUE);
       void SaveInitWorkspace(char* file=0);
       char* GetInitWorkspaceFileName() { return fwk_name; }   
       void SetExtended(Bool_t extended=kFALSE);
@@ -129,7 +130,7 @@ namespace BackTrack {
       // Initial guess/weights for the fit
       void AddParamInitWeight(RooArgList& params, Double_t weight);
       virtual Double_t GetParamInitWeight(RooArgList& par);
-      void ImportParamInitWeight(Int_t parameter_num = 0, RooArgList* plist = 0);
+      void ImportAllParamInitWeight(Bool_t uniform=kFALSE);
       
             
       Int_t GetNumberOfDataSets();
@@ -150,10 +151,15 @@ namespace BackTrack {
       const RooHistPdf* GetParameterPDF() const { return fParameterPDF; }
       const RooDataHist* GetParamDataHist() const { return fParamDataHist; }
       const RooArgList& GetWeights() const { return fWeights; }
+      const KVNumberList* GetRefusedSetsList() const { return fRefusedDataSets; }
       
       RooFitResult* fitTo(RooDataHist& data, const RooCmdArg& arg1 = RooCmdArg::none(), const RooCmdArg& arg2 = RooCmdArg::none(), const RooCmdArg& arg3 = RooCmdArg::none(), const RooCmdArg& arg4 = RooCmdArg::none(),
                                                 const RooCmdArg& arg5 = RooCmdArg::none(), const RooCmdArg& arg6 = RooCmdArg::none(), const RooCmdArg& arg7 = RooCmdArg::none(), const RooCmdArg& arg8 = RooCmdArg::none(),
-						const RooCmdArg& arg9 = RooCmdArg::none(), const RooCmdArg& sarg10 = RooCmdArg::none(), const RooCmdArg& arg11 = RooCmdArg::none(), const RooCmdArg& arg12 = RooCmdArg::none());      						 
+						const RooCmdArg& arg9 = RooCmdArg::none(), const RooCmdArg& sarg10 = RooCmdArg::none(), const RooCmdArg& arg11 = RooCmdArg::none(), const RooCmdArg& arg12 = RooCmdArg::none()); 
+      
+      RooFitResult* chi2FitTo(RooDataHist& data, const RooCmdArg& arg1 = RooCmdArg::none(), const RooCmdArg& arg2 = RooCmdArg::none(), const RooCmdArg& arg3 = RooCmdArg::none(), const RooCmdArg& arg4 = RooCmdArg::none(),
+                                                const RooCmdArg& arg5 = RooCmdArg::none(), const RooCmdArg& arg6 = RooCmdArg::none(), const RooCmdArg& arg7 = RooCmdArg::none(), const RooCmdArg& arg8 = RooCmdArg::none());						
+						     						 
       RooFitResult* GetLastFit() const { return fLastFit; }
       
       void plotOn(RooPlot*);
