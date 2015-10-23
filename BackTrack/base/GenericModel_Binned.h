@@ -45,7 +45,7 @@ namespace BackTrack {
       
       RooDataHist*  fDataHist;            // experimental RooDataHist to fit
       RooWorkspace* fWorkspace;           // workspace for the fit
-      char* fwk_name;                     // name of the initial saved workspace  
+      const char* fwk_name;                     // name of the initial saved workspace  
        
       Int_t   fexpdatahist_counts;        // number of counts in the experimental RooDataHist for an extended fit       
       Int_t   fNpdf;	                  // internal counter of model RooHistPdf used for the fit  
@@ -82,8 +82,8 @@ namespace BackTrack {
       void CreateUniformInitWeight(Double_t exp_counts); 
       
       // Save
-      void CreateWorkspaceSaving(char *file);
-//      void SavePseudoPDF(char* file); 
+      void CreateWorkspaceSaving(const char *file);
+//      void SavePseudoPDF(const char* file); 
 
       // For data importation
       void ImportModelData(Int_t parameter_num = 0, RooArgList* plist = 0);     
@@ -99,8 +99,8 @@ namespace BackTrack {
       void SetExperimentalDataHist(RooDataHist& data);
       const RooDataHist* GetExperimentalDataHist() const { return fDataHist; }
       Int_t GetExpectedCounts() { return fexpdatahist_counts; }
-      void SaveInitWorkspace(char* file=0);
-      char* GetInitWorkspaceFileName() { return fwk_name; }   
+      void SaveInitWorkspace(const char* file=0);
+      const char* GetInitWorkspaceFileName() { return fwk_name; }   
       void SetExtended(Bool_t extended=kFALSE);
       void SetNumInt(Bool_t numint=kFALSE);      
       void InitWorkspace(Bool_t debug=kFALSE); 
@@ -130,7 +130,7 @@ namespace BackTrack {
       // Initial guess/weights for the fit
       void AddParamInitWeight(RooArgList& params, Double_t weight);
       virtual Double_t GetParamInitWeight(RooArgList& par);
-      void ImportAllParamInitWeight(Bool_t uniform=kFALSE);
+      void ImportAllParamInitWeight(Bool_t uniform=kTRUE);
       
             
       Int_t GetNumberOfDataSets();

@@ -447,8 +447,9 @@ namespace BackTrack {
 	return;
       }    
        
-    //-------------For the weights initialization--------------       
-    if(fInitWeights==0)  Error("ConstructPseudoPDF", "Initial guess of parameters not given... use ImportAllParamInitWeight() method first...");        
+    //-------------For the weights initialization--------------
+    Int_t size =  (int) fInitWeights->size();      
+    if(size==0)  Error("ConstructPseudoPDF", "Initial guess of parameters not given... use ImportAllParamInitWeight() method first...");        
 
 
     if(fModelPseudoPDF)
@@ -699,7 +700,7 @@ namespace BackTrack {
     //TObjArray  histpdf;	   
         
     //init new workspace
-    Info("InitWorkspace ...", "Workspace not given...creating one...");  
+    Info("InitWorkspace ...", "Creating a new workspace...");  
     
     fWorkspace = new RooWorkspace("_workspace","RooWorkspace for the fit");
     fWorkspace->import(par, "_parameters");
@@ -717,6 +718,7 @@ namespace BackTrack {
   {  
     fBool_provided = kTRUE;  
     fWorkspace = workspace;
+    Info("ImportWorkspace ...", "Importing the given workspace...");
     VerifyWorkspace(debug);
   }
 
@@ -804,8 +806,7 @@ namespace BackTrack {
 	else
 	  {
 	    if(debug==kTRUE) Info("VerifyWorkspace ...", "_datasetparams found...");
-	  }
-	
+	  }	
       }	  
 	 
     return good_workspace;	    		         
@@ -817,7 +818,7 @@ namespace BackTrack {
 
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////     
-  void GenericModel_Binned::SaveInitWorkspace(char *file)
+  void GenericModel_Binned::SaveInitWorkspace(const char *file)
   {  
     /*
       To save an initial worksapce for further fits
@@ -841,7 +842,7 @@ namespace BackTrack {
   
   
   //////////////////////////////////////////////////////////////////////////////////////////////////////////   
-  void GenericModel_Binned::CreateWorkspaceSaving(char *file)
+  void GenericModel_Binned::CreateWorkspaceSaving(const char *file)
   {      
     RooWorkspace *InitWorkspace = new RooWorkspace(Form("init_workspace"),"RooWorkspace prepared for fit");
 
@@ -879,16 +880,17 @@ namespace BackTrack {
     	  }  
 
     	ss0+=ss2;
-    				      
+    	
+	Info("SaveWorkspace", "Saving created RooDataSet workspace in file 'workspace%s.root'", ss0.Data());			      
     	InitWorkspace->writeToFile(Form("workspace%s.root",ss0.Data()),"recreate");
-
-    	Info("SaveWorkspace", "Saving created RooDataSet workspace in file 'workspace%s.root'", ss0.Data());
+	Info("SaveWorkspace", "Save done...");
       }
 
     else
-      {
-    	InitWorkspace->writeToFile(Form("%s.root",file),"recreate");	    
-    	Info("SaveWorkspace", "Saving Created RooDatSet workspace in file '%s.root'", file);	    
+      {    		    
+    	Info("SaveWorkspace", "Saving Created RooDatSet workspace in file '%s.root'", file);
+	InitWorkspace->writeToFile(Form("%s.root",file),"recreate");
+        Info("SaveWorkspace", "Save done...");	    
       }          
   }       
 } 
