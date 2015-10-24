@@ -45,10 +45,9 @@ namespace BackTrack {
       
       RooDataHist*  fDataHist;            // experimental RooDataHist to fit
       RooWorkspace* fWorkspace;           // workspace for the fit
-      const char* fwk_name;                     // name of the initial saved workspace  
+      const char* fwk_name;               // name of the initial saved workspace  
        
       Int_t   fexpdatahist_counts;        // number of counts in the experimental RooDataHist for an extended fit       
-      Int_t   fNpdf;	                  // internal counter of model RooHistPdf used for the fit  
       Int_t   fSmoothing;	          // histpdf smoothing factor 
       Bool_t  fBool_expdatahist_set;      // verify if the experimental RooDataHist was given
       Bool_t  fBool_extended;	          // extended/not extended fit
@@ -96,6 +95,7 @@ namespace BackTrack {
       virtual ~GenericModel_Binned();
       
       // Fit caracteristics
+      void SetSmoothing(Int_t smooth);
       void SetExperimentalDataHist(RooDataHist& data);
       const RooDataHist* GetExperimentalDataHist() const { return fDataHist; }
       Int_t GetExpectedCounts() { return fexpdatahist_counts; }
@@ -162,6 +162,8 @@ namespace BackTrack {
 						     						 
       RooFitResult* GetLastFit() const { return fLastFit; }
       
+      void plotProfileNLL(Int_t parnum); 
+      //void plotLastNLL(Int_t parnum);     
       void plotOn(RooPlot*);
    };
 

@@ -78,6 +78,8 @@ ClassImp(NewRooAddPdf)
 NewRooAddPdf::NewRooAddPdf() : RooAddPdf()
 {
   // Default constructor used for persistence    
+  fnll=0;
+  finit_nll=0;
 }
 
 
@@ -86,6 +88,8 @@ NewRooAddPdf::NewRooAddPdf() : RooAddPdf()
 NewRooAddPdf::NewRooAddPdf(const char *name, const char *title) : RooAddPdf(name, title)
 {
   // Dummy constructor 
+    delete fnll ;
+    delete finit_nll ;
 }
 
 
@@ -426,7 +430,9 @@ RooFitResult* NewRooAddPdf::improvedFitTo(RooDataHist& data, const RooLinkedList
     coutW(InputArguments) << "RooAbsPdf::improvedFitTo(" << GetName() << ") WARNING: sum-of-weights correction does not apply to MINOS errors" << endl ;
   }
     
-  RooAbsReal* nll = createNLL(data,nllCmdList) ;
+  finit_nll = createNLL(data, nllCmdList);
+  fnll      = createNLL(data, nllCmdList);
+  //fnll      = new RooAbsReal(*finit_nll);
         
   NewRooFitResult *ret = 0 ;    
 
@@ -439,7 +445,7 @@ RooFitResult* NewRooAddPdf::improvedFitTo(RooDataHist& data, const RooLinkedList
     //debug
     //printf("USING NEWROOMINIMIZER\n");
 
-    NewRooMinimizer m(*nll) ;
+    NewRooMinimizer m(*fnll) ;
 
     m.setMinimizerType(minType) ;
     
@@ -500,7 +506,7 @@ RooFitResult* NewRooAddPdf::improvedFitTo(RooDataHist& data, const RooLinkedList
       
       if (doSumW2==1 && m.getNPar()>0) {
 	// Make list of RooNLLVar components of FCN
-	RooArgSet* comps = nll->getComponents();
+	RooArgSet* comps = fnll->getComponents();
 	vector<RooNLLVar*> nllComponents;
 	nllComponents.reserve(comps->getSize());
 	TIterator* citer = comps->createIterator();
@@ -575,7 +581,7 @@ RooFitResult* NewRooAddPdf::improvedFitTo(RooDataHist& data, const RooLinkedList
 
   } else {
 
-    NewRooMinuit m(*nll) ;
+    NewRooMinuit m(*fnll) ;
     
     //New Commands
     m.setEps(eps);           //Default eps=1
@@ -634,7 +640,7 @@ RooFitResult* NewRooAddPdf::improvedFitTo(RooDataHist& data, const RooLinkedList
 	
 	// Make list of RooNLLVar components of FCN
 	list<RooNLLVar*> nllComponents ;
-	RooArgSet* comps = nll->getComponents() ;
+	RooArgSet* comps = fnll->getComponents() ;
 	RooAbsArg* arg ;
 	TIterator* citer = comps->createIterator() ;
 	while((arg=(RooAbsArg*)citer->Next())) {
@@ -707,8 +713,6 @@ RooFitResult* NewRooAddPdf::improvedFitTo(RooDataHist& data, const RooLinkedList
     
   }
   
-  // Cleanup
-  delete nll ;
   return ret ;
 }
 

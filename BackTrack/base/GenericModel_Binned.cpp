@@ -76,7 +76,6 @@ namespace BackTrack {
     fDataHist           = 0;
     fWorkspace          = 0; 
     fexpdatahist_counts = -1;
-    fNpdf               =0;
     fModelPseudoPDF     =0;
     fLastFit            =0;
     fParameterPDF       =0;
@@ -129,6 +128,12 @@ namespace BackTrack {
     fBool_numint = numint;
   }  
   
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+  void GenericModel_Binned::SetSmoothing(Int_t smooth)
+  {
+    fSmoothing=smooth;
+  }
     
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   void GenericModel_Binned::AddParameter(const char* name, const char* title, Double_t min, Double_t max, Int_t nbins)
@@ -475,7 +480,6 @@ namespace BackTrack {
 	// Else error : RooFit can't create an empty RooHistPdf
 	if(set->sumEntries()>0)
 	  {	    
-// 	    ++fNpdf;       // Counting the number of kept RooHistPdf for the fit
 	    last=i;        // Remember the last kept histogram for extended fit  
       
 	    RooHistPdf *pdf = new RooHistPdf(Form("HistPdf%d",i), Form("RooHistPdf from datahist#%d",i), GetObservables(), *set, fSmoothing);
@@ -498,8 +502,7 @@ namespace BackTrack {
 	       { 		   
 	         RooRealVar pp(Form("W%d",i),Form("fractional weight of kernel-PDF #%d for not-extended fit",i),(*fInitWeights)[i],0.,1.);
 	         fFractions.addClone(pp);
-	       }	      		       
-	      
+	       }	      		       	      
 	  } 
 	 
 	 
@@ -892,5 +895,91 @@ namespace BackTrack {
 	InitWorkspace->writeToFile(Form("%s.root",file),"recreate");
         Info("SaveWorkspace", "Save done...");	    
       }          
-  }       
+  }
+  
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  void GenericModel_Binned::plotNLL(Int_t parnum)
+  {
+   // Method to plot the NLL as function of the chosen p.d.f parameter
+   // (a p.d.f parameter corresponds to a defined set of model parameters)
+         
+   //Get the NLL from the constructed RooAddPdf we fit
+   RooAbsReal* nll = fModelPseudoPDF->GetLastNLL();
+   if(nll==0)
+      {
+        Error("plotProfileLastNLL", "Fit the pseudo-pdf with FitTo() method before drawing the result NLL");
+	return;
+      }	
+      
+   // Get the parameter + infos
+   RooRealVar* par = (RooRealVar*) fFractions.at(parnum);
+   // Find the corresponding number of parameter set according to the name of the weight
+   // in fFractions
+   TString ss(par->GetName());
+   TString ss0 = (ss(1,3));
+   Int_t ind = ss0.Atoi(); 
+
+   Info("plotProfileNLL", "Plotting profile NLL corresponding to the following p.d.f parameter (parameters set (%d))...", ind);
+   RooArgList* list = GetParametersForDataset(parnum); 
+   for(Int_t ii=1; ii<= GetNumberOfParameters(); ii++)
+      {    
+        RooRealVar* val = (RooRealVar*) list->at(ii-1);
+        TString ss1(val->GetName());
+        Double_t vv = val->getVal();   
+        printf("%s = %e \n", ss1.Data(), vv); 
+      }
+      
+   //Create the RooPlot
+   RooPlot* frame = par->frame();
+   //Draw
+   nll->plotOn(frame, ShiftToZero());
+  }   
+  
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  void GenericModel_Binned::plotProfileNLL(Int_t parnum)
+  {
+   // Method to evaluate and plot the profile NegativLogLikelihood estimator
+   // as a function of the chosen p.d.f parameter.
+   // (a p.d.f parameter corresponds to a defined set of model parameters)
+   // The profile likelihood estimator on nll for the p.d.f parameter will minimize NLL
+   // w.r.t all other floating p.d.f parameters (so except the one we chose) for each evaluation
+      
+   //Get the NLL from the constructed RooAddPdf
+   RooAbsReal* nll = fModelPseudoPDF->GetLastNLL(); 
+      
+   if(nll==0)
+      {
+        Error("plotProfileLastNLL", "Fit the pseudo-pdf with FitTo() method before drawing the profile NLL(s)");
+	return;
+      }	  
+      
+   // Get the parameter + infos
+   RooRealVar* par = (RooRealVar*) fFractions.at(parnum);
+   // Find the corresponding number of parameter set according to the name of the weight
+   // in fFractions
+   TString ss(par->GetName());
+   TString ss0 = (ss(1,3));
+   Int_t ind = ss0.Atoi(); 
+
+   Info("plotProfileNLL", "Plotting profile NLL corresponding to the following p.d.f parameter (parameters set (%d))...", ind);
+   RooArgList* list = GetParametersForDataset(parnum); 
+   for(Int_t ii=1; ii<= GetNumberOfParameters(); ii++)
+      {    
+        RooRealVar* val = (RooRealVar*) list->at(ii-1);
+        TString ss1(val->GetName());
+        Double_t vv = val->getVal();   
+        printf("%s = %e \n", ss1.Data(), vv); 
+      }
+      
+   //Create the profile NLL   
+   RooAbsReal* pll = nll->createProfile(*par);
+   //Create the RooPlot
+   RooPlot* frame = par->frame();
+   //Draw
+   pll->plotOn(frame);
+   //pll->plotOn(frame,ShiftToZero()) ;   
+  }    
+       
 } 

@@ -17,6 +17,10 @@ using namespace RooFit;
 
 class NewRooAddPdf : public RooAddPdf
 {
+private :
+   RooAbsReal* fnll;
+   RooAbsReal* finit_nll;
+
 
 public:
    NewRooAddPdf();
@@ -26,6 +30,9 @@ public:
    NewRooAddPdf(const char *name, const char *title, const RooArgList& pdfList, const RooArgList& coefList, Bool_t recursiveFraction=kFALSE) ;
   
    NewRooAddPdf(const NewRooAddPdf& other, const char* name=0) ;
+   
+   RooAbsReal* GetLastNLL() { return fnll; }
+   RooAbsReal* GetInitNLL() { return finit_nll; }
    
    virtual NewRooAddPdf* clone(const char* newname) const { return new NewRooAddPdf(*this,newname) ; }
    
