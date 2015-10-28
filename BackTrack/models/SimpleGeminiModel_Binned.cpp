@@ -145,7 +145,7 @@ namespace BackTrack {
     for(Int_t hh=1;hh<=cold->GetMult();hh++)
        {
          part = (KVSimNucleus*) cold->GetParticle(hh);
-         fcal->Fill(part);
+         if(part->GetZ() !=0) fcal->Fill(part);
        }
     fcal->Calculate();
     

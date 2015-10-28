@@ -163,7 +163,7 @@ namespace BackTrack {
       RooFitResult* GetLastFit() const { return fLastFit; }
       
       void plotProfileNLL(Int_t parnum); 
-      //void plotLastNLL(Int_t parnum);     
+      void plotNLL(Int_t parnum);     
       void plotOn(RooPlot*);
    };
 
