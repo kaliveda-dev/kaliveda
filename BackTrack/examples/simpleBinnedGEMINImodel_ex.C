@@ -276,7 +276,7 @@ void simpleGEMINImodel(Int_t statexp, Int_t statmod)
    
    else
        {
-   	printf("WTF, impossible to createHistogram from GetPseudoPDF ???\n");
+   	printf("Impossible to createHistogram from GetPseudoPDF() method \n");
        }               
 }
 
