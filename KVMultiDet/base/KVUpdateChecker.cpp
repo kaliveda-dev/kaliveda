@@ -36,13 +36,13 @@ void KVUpdateChecker::GotoSourceDir()
    // Memorise current working directory and then change directory
    // to top-level source directory
    fWorkDir = gSystem->WorkingDirectory();
-   gSystem->ChangeDirectory( fSourceDir.Data() );
+   gSystem->ChangeDirectory(fSourceDir.Data());
 }
 
 void KVUpdateChecker::GotoWorkingDir()
 {
    // Resent current directory to working directory memorised before
    // changing to top-level source directory
-   gSystem->ChangeDirectory( fWorkDir.Data() );
+   gSystem->ChangeDirectory(fWorkDir.Data());
 }
 

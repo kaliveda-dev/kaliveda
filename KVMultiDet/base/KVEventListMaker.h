@@ -13,56 +13,83 @@ $Date: 2008/12/17 15:27:25 $
 #include "KVList.h"
 #include "KVString.h"
 
-class KVEventListMaker
-{
+class KVEventListMaker {
 
-	protected:
-	KVString ktname;	//name of the tree
-	KVString kfname;	//name of the file
-	KVString kbname;	//name of branches, si plusieurs branches sont concernees
-							//il faut separer les noms par un espace exemple "module couronne"
-	Bool_t ktag_tree;
-	
-	void init() {
-		//initialisation des variables
-		ktname = kfname = kbname = "";
-		ktag_tree = kFALSE;
-	}
-	
-   public:
-   KVEventListMaker() {
-		//default constructor
-		init();
-	}
-   virtual ~KVEventListMaker() { 
-		//destructor
-	};
+protected:
+   KVString ktname;  //name of the tree
+   KVString kfname;  //name of the file
+   KVString kbname;  //name of branches, si plusieurs branches sont concernees
+   //il faut separer les noms par un espace exemple "module couronne"
+   Bool_t ktag_tree;
 
-	void Clear(){ /*do nothing*/ }
-	
-	void SetTreeName(KVString name) {ktname = name;}
-	KVString GetTreeName()  {return ktname;}
-	
-	void SetBranchName(KVString name){kbname = name; }
-	KVString GetBranchName()  {return kbname;}
-	
-	void SetFileName(KVString name) {kfname = name;}
-	KVString GetFileName()  {return kfname;}
-	
-	void TagWithTreeName(Bool_t tag=kTRUE){ ktag_tree=tag; }
-	
-	Bool_t IsReady()  {
-		//just check if all fields have been set
-		Bool_t temp=kTRUE;
-		temp &= (GetFileName()!="");
-		temp &= (GetTreeName()!="");
-		temp &= (GetBranchName()!="");
-		return temp;
-	}
-	
-	void Process();
-	
-   ClassDef(KVEventListMaker,1)//compute TEventList on trees
+   void init()
+   {
+      //initialisation des variables
+      ktname = kfname = kbname = "";
+      ktag_tree = kFALSE;
+   }
+
+public:
+   KVEventListMaker()
+   {
+      //default constructor
+      init();
+   }
+   virtual ~KVEventListMaker()
+   {
+      //destructor
+   };
+
+   void Clear()
+   {
+      /*do nothing*/
+   }
+
+   void SetTreeName(KVString name)
+   {
+      ktname = name;
+   }
+   KVString GetTreeName()
+   {
+      return ktname;
+   }
+
+   void SetBranchName(KVString name)
+   {
+      kbname = name;
+   }
+   KVString GetBranchName()
+   {
+      return kbname;
+   }
+
+   void SetFileName(KVString name)
+   {
+      kfname = name;
+   }
+   KVString GetFileName()
+   {
+      return kfname;
+   }
+
+   void TagWithTreeName(Bool_t tag = kTRUE)
+   {
+      ktag_tree = tag;
+   }
+
+   Bool_t IsReady()
+   {
+      //just check if all fields have been set
+      Bool_t temp = kTRUE;
+      temp &= (GetFileName() != "");
+      temp &= (GetTreeName() != "");
+      temp &= (GetBranchName() != "");
+      return temp;
+   }
+
+   void Process();
+
+   ClassDef(KVEventListMaker, 1) //compute TEventList on trees
 
 };
 

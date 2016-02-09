@@ -13,30 +13,29 @@
 #include "KVNameValueList.h"
 
 
-class KVLauncherGUI : public TGMainFrame
-{
+class KVLauncherGUI : public TGMainFrame {
 
-   public:
+public:
    TList fButtonList;
 
    virtual void SetDefault();
    virtual void MapAll();
    virtual void Build();
-   
-   public:
+
+public:
    KVLauncherGUI();
    virtual ~KVLauncherGUI();
-   
+
    virtual void AddButtons();
-   virtual TGTextButton* AddButton(const char* name, const char* method, TObject* obj=0);
+   virtual TGTextButton* AddButton(const char* name, const char* method, TObject* obj = 0);
    TGTextButton* GetButton(const char* method);
-   void SetEnabled(const char* method, Bool_t e=kTRUE);
-   
-   Bool_t IsEnabled(const char* method);   
+   void SetEnabled(const char* method, Bool_t e = kTRUE);
+
+   Bool_t IsEnabled(const char* method);
    void DummyMethod();
    virtual void Close();
 
-   ClassDef(KVLauncherGUI,1)//Generic GUI launcher
+   ClassDef(KVLauncherGUI, 1) //Generic GUI launcher
 };
 
 #endif

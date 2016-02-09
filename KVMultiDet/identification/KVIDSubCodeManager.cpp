@@ -17,7 +17,7 @@ ClassImp(KVIDSubCodeManager)
 //number of the most significant bit used to store the subcode - bit 0 is the
 //Least Significant Bit).
 //
-    KVIDSubCodeManager::KVIDSubCodeManager(UChar_t nbits, UChar_t msb)
+KVIDSubCodeManager::KVIDSubCodeManager(UChar_t nbits, UChar_t msb)
 {
    //Ctor with number of bits and position of Most Significant Bit.
    //By default, we use all the bits of a KVIDSubCode.
@@ -25,7 +25,7 @@ ClassImp(KVIDSubCodeManager)
    SetMSB(msb);
 }
 
-const Char_t *KVIDSubCodeManager::GetIDSubCodeString(KVIDSubCode & concat) const
+const Char_t* KVIDSubCodeManager::GetIDSubCodeString(KVIDSubCode& concat) const
 {
    //Should be redefined in child-classes (KVIDTelescopes) so that an appropriate
    //message corresponding to the subcode is returned.

@@ -57,22 +57,22 @@ void KVDetectorEvent::init()
 
 KVDetectorEvent::~KVDetectorEvent()
 {
-    Clear();
-    delete fHitGroups;
-    fHitGroups = 0;
+   Clear();
+   delete fHitGroups;
+   fHitGroups = 0;
 }
 
-void KVDetectorEvent::Clear(Option_t * )
+void KVDetectorEvent::Clear(Option_t*)
 {
-    // Reset the list of hit groups, ready for analysis of a new event.
-    // Each 'hit' group is cleared (energy losses in detectors set to zero, etc.).
+   // Reset the list of hit groups, ready for analysis of a new event.
+   // Each 'hit' group is cleared (energy losses in detectors set to zero, etc.).
 
-    fHitGroups->R__FOR_EACH(KVGroup,Reset) ();
-    fHitGroups->Clear();
+   fHitGroups->R__FOR_EACH(KVGroup, Reset)();
+   fHitGroups->Clear();
 }
 
 //____________________________________________________________________________
-void KVDetectorEvent::Print(Option_t *) const
+void KVDetectorEvent::Print(Option_t*) const
 {
    //Print a listing of hit groups with fired detectors
 
@@ -81,9 +81,9 @@ void KVDetectorEvent::Print(Option_t *) const
    cout << "\nGroups hit: " << GetMult() << endl;
    cout << "\n";
    if (GetMult()) {
-      KVGroup *g;
+      KVGroup* g;
       for (UInt_t i = 0; i < GetMult(); i++) {
-         g = (KVGroup *) fHitGroups->At(i);
+         g = (KVGroup*) fHitGroups->At(i);
          g->Print("fired");
       }
    }

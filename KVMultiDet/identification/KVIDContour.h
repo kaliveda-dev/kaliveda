@@ -13,18 +13,24 @@ $Date: 2009/03/03 13:36:00 $
 #include "KVIDentifier.h"
 #include "TCutG.h"
 
-class KVIDContour : public KVIDentifier
-{
+class KVIDContour : public KVIDentifier {
 
-   public:
+public:
    KVIDContour();
-   KVIDContour(const KVIDContour &);
-   KVIDContour(const TCutG &);
+   KVIDContour(const KVIDContour&);
+   KVIDContour(const TCutG&);
    virtual ~KVIDContour();
-	
-	virtual Int_t InsertPoint() { if(GetEditable()){ return TCutG::InsertPoint(); } else {return -2;} }; // *MENU*
 
-   ClassDef(KVIDContour,1)//Basic graphical contour class for use in particle identification
+   virtual Int_t InsertPoint()
+   {
+      if (GetEditable()) {
+         return TCutG::InsertPoint();
+      } else {
+         return -2;
+      }
+   }; // *MENU*
+
+   ClassDef(KVIDContour, 1) //Basic graphical contour class for use in particle identification
 };
 
 #endif

@@ -20,32 +20,37 @@ $Id: KVDBElasticPeak.h,v 1.3 2006/10/19 14:32:43 franklan Exp $
 
 #include "KVDBPeak.h"
 
-class KVDBElasticPeak:public KVDBPeak {
+class KVDBElasticPeak: public KVDBPeak {
 
- private:
+private:
 
    UChar_t fZbeam;              //Z of projectile
    UChar_t fAbeam;              //A of projectile
 
- public:
+public:
 
-    KVDBElasticPeak();
-    KVDBElasticPeak(const Char_t * detname);
-    virtual ~ KVDBElasticPeak() {
+   KVDBElasticPeak();
+   KVDBElasticPeak(const Char_t* detname);
+   virtual ~ KVDBElasticPeak()
+   {
    };
 
    void init();
 
-   void SetZproj(UChar_t z) {
+   void SetZproj(UChar_t z)
+   {
       fZbeam = z;
    };
-   UChar_t GetZproj() const {
+   UChar_t GetZproj() const
+   {
       return fZbeam;
    };
-   void SetAproj(UChar_t a) {
+   void SetAproj(UChar_t a)
+   {
       fAbeam = a;
    };
-   UChar_t GetAproj() const {
+   UChar_t GetAproj() const
+   {
       return fAbeam;
    };
 

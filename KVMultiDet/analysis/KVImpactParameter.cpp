@@ -60,7 +60,7 @@ KVImpactParameter::KVImpactParameter(TH1* data, Option_t* evol)
    fEvol = evol;
    fIPScale = 0;
    fObsTransform = 0;
-   Bmax= 1.0;
+   Bmax = 1.0;
 }
 
 KVImpactParameter::~KVImpactParameter()
@@ -76,53 +76,53 @@ void KVImpactParameter::MakeScale(Int_t npoints, Double_t bmax)
    // whose distribution is contained in the histogram fData.
    // For a given value X of the observable x, the reduced impact parameter
    // b_hat is calculated from the distribution of x, Y(x), using the following formula:
-	/*
-BEGIN_LATEX
-\hat{b}^{2} = \int^{\infty}_{x=X} Y(x) dx #divide  \int_{0}^{\infty} Y(x) dx
-END_LATEX
-	*/
+   /*
+   BEGIN_LATEX
+   \hat{b}^{2} = \int^{\infty}_{x=X} Y(x) dx #divide  \int_{0}^{\infty} Y(x) dx
+   END_LATEX
+   */
    // npoints = number of points for which to calculate the impact parameter.
    // The greater the number of points, the more accurate the results.
    // Default value is 100. Maximum value is number of bins in histogram of observable, fData.
    // bmax is the maximum reduced impact parameter for the data.
    // To obtain absolute values of impact parameter/cross-section,
    // use MakeAbsoluteScale.
-   
-   if(bmax>1.0){
-      Warning("MakeScale","called with bmax>1.0 - calling MakeAbsoluteScale for absolute impact parameters");
-      MakeAbsoluteScale(npoints,bmax);
+
+   if (bmax > 1.0) {
+      Warning("MakeScale", "called with bmax>1.0 - calling MakeAbsoluteScale for absolute impact parameters");
+      MakeAbsoluteScale(npoints, bmax);
       return;
    }
-   Bmax=bmax;
-   Smax=pow(bmax,2.);//total reduced X-section
+   Bmax = bmax;
+   Smax = pow(bmax, 2.); //total reduced X-section
    make_scale(npoints);
 }
 
 void KVImpactParameter::make_scale(Int_t npoints)
 {
-   TH1*cumul = HM.CumulatedHisto(fData, fEvol.Data() ,-1,-1,"max");
+   TH1* cumul = HM.CumulatedHisto(fData, fEvol.Data() , -1, -1, "max");
    Int_t nbins = cumul->GetNbinsX();
    Int_t first_bin = 1;
    Int_t last_bin = nbins;
-   npoints = TMath::Min(nbins,npoints);
+   npoints = TMath::Min(nbins, npoints);
    fIPScale = new TGraph(npoints);
    fXSecScale = new TGraph(npoints);
-   Double_t delta_bin = 1.*(last_bin-first_bin)/(npoints-1.);
+   Double_t delta_bin = 1.*(last_bin - first_bin) / (npoints - 1.);
    Int_t bin;
-   for(int i=0;i<npoints;i++){
-      bin = first_bin + i*delta_bin;
+   for (int i = 0; i < npoints; i++) {
+      bin = first_bin + i * delta_bin;
       Double_t et12 = cumul->GetBinCenter(bin);
       Double_t b = Bmax * sqrt(cumul->GetBinContent(bin));
-      Double_t sigma = Smax*cumul->GetBinContent(bin);
-      fIPScale->SetPoint(i,et12,b);
-      fXSecScale->SetPoint(i,et12,sigma);
+      Double_t sigma = Smax * cumul->GetBinContent(bin);
+      fIPScale->SetPoint(i, et12, b);
+      fXSecScale->SetPoint(i, et12, sigma);
    }
    delete cumul;
 
    fObsTransform = new TF1("fObsTransform", this, &KVImpactParameter::BTransform,
                            fData->GetXaxis()->GetXmin(), fData->GetXaxis()->GetXmax(), 0, "KVImpactParameter", "BTransform");
    fObsTransformXSec = new TF1("fObsTransformXSec", this, &KVImpactParameter::XTransform,
-                           fData->GetXaxis()->GetXmin(), fData->GetXaxis()->GetXmax(), 0, "KVImpactParameter", "XTransform");
+                               fData->GetXaxis()->GetXmin(), fData->GetXaxis()->GetXmax(), 0, "KVImpactParameter", "XTransform");
 }
 
 void KVImpactParameter::MakeAbsoluteScale(Int_t npoints, Double_t bmax)
@@ -132,23 +132,23 @@ void KVImpactParameter::MakeAbsoluteScale(Int_t npoints, Double_t bmax)
    // whose distribution is contained in the histogram fData.
    // For a given value X of the observable x, the reduced impact parameter
    // b_hat is calculated from the distribution of x, Y(x), using the following formula:
-        /*
-BEGIN_LATEX
-\hat{b}^{2} = \int^{\infty}_{x=X} Y(x) dx #divide  \int_{0}^{\infty} Y(x) dx
-END_LATEX
-        */
+   /*
+   BEGIN_LATEX
+   \hat{b}^{2} = \int^{\infty}_{x=X} Y(x) dx #divide  \int_{0}^{\infty} Y(x) dx
+   END_LATEX
+   */
    // npoints = number of points for which to calculate the impact parameter.
    // The greater the number of points, the more accurate the results.
    // Default value is 100. Maximum value is number of bins in histogram of observable, fData.
    // bmax is the maximum absolute impact parameter for the data in [fm].
    // To obtain values of reduced impact parameter/cross-section, use MakeScale.
 
-   Bmax=bmax;
-   Smax=GetXSecFromIP(bmax);//total X-section in [mb]
+   Bmax = bmax;
+   Smax = GetXSecFromIP(bmax); //total X-section in [mb]
    make_scale(npoints);
 }
 
-Double_t KVImpactParameter::BTransform(Double_t *x, Double_t *)
+Double_t KVImpactParameter::BTransform(Double_t* x, Double_t*)
 {
    // Function using the TGraph calculated with MakeScale/MakeAbsoluteScale in order to
    // transform distributions of the observable histogrammed in fData
@@ -158,7 +158,7 @@ Double_t KVImpactParameter::BTransform(Double_t *x, Double_t *)
    return fIPScale->Eval(*x);
 }
 
-Double_t KVImpactParameter::XTransform(Double_t *x, Double_t *)
+Double_t KVImpactParameter::XTransform(Double_t* x, Double_t*)
 {
    // Function using the TGraph calculated with MakeScale/MakeAbsoluteScale in order to
    // transform distributions of the observable histogrammed in fData
@@ -175,11 +175,11 @@ TH1* KVImpactParameter::GetIPDistribution(TH1* obs, Int_t nbinx, Option_t* norm)
    // User's responsibility to delete histo.
    //
    // nbinx = number of bins in I.P. histo (default = 100)
-        //  norm = "" (default) : no adjustment is made for the change in bin width due to the transformation
-        //  norm = "width" : bin contents are adjusted for width change, so that the integral of the histogram
-        //                   contents taking into account the bin width (i.e. TH1::Integral("width")) is the same.
+   //  norm = "" (default) : no adjustment is made for the change in bin width due to the transformation
+   //  norm = "width" : bin contents are adjusted for width change, so that the integral of the histogram
+   //                   contents taking into account the bin width (i.e. TH1::Integral("width")) is the same.
 
-   if(!fObsTransform){
+   if (!fObsTransform) {
       Error("GetIPDistribution", "Call MakeScale first to calculate correspondance observable<->i.p.");
       return 0;
    }
@@ -196,11 +196,11 @@ TGraph* KVImpactParameter::GetIPEvolution(TH2* obscor, TString moment, TString a
    // If the impact parameter observable is on the Y-axis of obscor, use axis="X"
    // (by default axis="Y", i.e. we assume that the I.P. observable is on the x axis).
 
-   if(!fObsTransform){
+   if (!fObsTransform) {
       Error("GetIPEvolution", "Call MakeScale first to calculate correspondance observable<->i.p.");
       return 0;
    }
-   TGraphErrors *gre = HM.GetMomentEvolution(obscor,moment,"",axis);
+   TGraphErrors* gre = HM.GetMomentEvolution(obscor, moment, "", axis);
    TGraph* gr = HM.ScaleGraph(gre, fObsTransform, 0);
    delete gre;
    return gr;
@@ -214,11 +214,11 @@ TH1* KVImpactParameter::GetXSecDistribution(TH1* obs, Int_t nbinx, Option_t* nor
    // User's responsibility to delete histo.
    //
    // nbinx = number of bins in I.P. histo (default = 100)
-        //  norm = "" (default) : no adjustment is made for the change in bin width due to the transformation
-        //  norm = "width" : bin contents are adjusted for width change, so that the integral of the histogram
-        //                   contents taking into account the bin width (i.e. TH1::Integral("width")) is the same.
+   //  norm = "" (default) : no adjustment is made for the change in bin width due to the transformation
+   //  norm = "width" : bin contents are adjusted for width change, so that the integral of the histogram
+   //                   contents taking into account the bin width (i.e. TH1::Integral("width")) is the same.
 
-   if(!fObsTransformXSec){
+   if (!fObsTransformXSec) {
       Error("GetXSecDistribution", "Call MakeScale first to calculate correspondance observable<->i.p.");
       return 0;
    }
@@ -235,11 +235,11 @@ TGraph* KVImpactParameter::GetXSecEvolution(TH2* obscor, TString moment, TString
    // If the impact parameter observable is on the Y-axis of obscor, use axis="X"
    // (by default axis="Y", i.e. we assume that the I.P. observable is on the x axis).
 
-   if(!fObsTransformXSec){
+   if (!fObsTransformXSec) {
       Error("GetXSecEvolution", "Call MakeScale first to calculate correspondance observable<->i.p.");
       return 0;
    }
-   TGraphErrors *gre = HM.GetMomentEvolution(obscor,moment,"",axis);
+   TGraphErrors* gre = HM.GetMomentEvolution(obscor, moment, "", axis);
    TGraph* gr = HM.ScaleGraph(gre, fObsTransformXSec, 0);
    delete gre;
    return gr;

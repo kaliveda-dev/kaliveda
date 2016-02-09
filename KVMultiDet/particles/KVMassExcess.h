@@ -6,21 +6,14 @@
 
 #include "KVNuclData.h"
 
-class KVMassExcess : public KVNuclData
-{
+class KVMassExcess : public KVNuclData {
 
-   protected:
-	
-	void init(){}	//do nothing
-  	
-	public:
+public:
    KVMassExcess();
-	KVMassExcess(const Char_t* name);
-	virtual ~KVMassExcess();
-	
-	const Char_t* GetUnit() const;
-   
-	ClassDef(KVMassExcess,1)//Simple class to store mass information of nucleus
+   KVMassExcess(const Char_t* name);
+   virtual ~KVMassExcess();
+
+   ClassDef(KVMassExcess, 1) //Simple class to store mass information of nucleus
 };
 
 #endif

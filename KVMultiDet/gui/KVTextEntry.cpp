@@ -21,7 +21,7 @@ ClassImp(KVTextEntry)
 ////////////////////////////////////////////////////////////////////////////////
 
 //______________________________________________________________________________
-void KVTextEntry::SetText(const char *text, Bool_t emit)
+void KVTextEntry::SetText(const char* text, Bool_t emit)
 {
    // Sets text entry to text, clears the selection and moves
    // the cursor to the end of the line.
@@ -35,7 +35,7 @@ void KVTextEntry::SetText(const char *text, Bool_t emit)
 
    End(kFALSE);
    if (oldText != GetText()) {
-      if(emit) TextChanged();            // emit signal
+      if (emit) TextChanged();           // emit signal
       fClient->NeedRedraw(this);
    }
 }
@@ -46,16 +46,16 @@ void KVTextEntry::SetMaxLength(Int_t maxlen)
    // Set the maximum length of the text in the editor.
    // Any marked text will be unmarked.
    // The cursor position is set to 0 and the first part of the
-   // string is shown, but no truncation ever takes place. 
+   // string is shown, but no truncation ever takes place.
 
-   fMaxLen = maxlen; 
+   fMaxLen = maxlen;
 
    SetCursorPosition(0);
    Deselect();
 }
 
 //______________________________________________________________________________
-void KVTextEntry::Insert(const char *newText)
+void KVTextEntry::Insert(const char* newText)
 {
    // Removes any currently selected text, inserts newText,
    // sets it as the new contents of the text entry.
@@ -65,7 +65,7 @@ void KVTextEntry::Insert(const char *newText)
 
    if (t.IsNull()) return;
 
-   for (int i=0; i<t.Length(); i++) {
+   for (int i = 0; i < t.Length(); i++) {
       if (t[i] < ' ') t[i] = ' '; // unprintable/linefeed becomes space
    }
 
@@ -74,12 +74,12 @@ void KVTextEntry::Insert(const char *newText)
    Int_t cp = fCursorIX;
 
    if (HasMarkedText()) {
-      fText->RemoveText(minP, maxP-minP);
+      fText->RemoveText(minP, maxP - minP);
       cp = minP;
    }
 
-   if (fInsertMode == kReplace) fText->RemoveText(cp,t.Length());
-   Int_t ncp = TMath::Min(cp+t.Length(), GetMaxLength());
+   if (fInsertMode == kReplace) fText->RemoveText(cp, t.Length());
+   Int_t ncp = TMath::Min(cp + t.Length(), GetMaxLength());
    fText->AddText(cp, t.Data());
 
    SetCursorPosition(ncp);

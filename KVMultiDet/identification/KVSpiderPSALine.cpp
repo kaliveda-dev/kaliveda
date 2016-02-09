@@ -21,7 +21,7 @@ KVSpiderPSALine::KVSpiderPSALine()
 
 //________________________________________________________________
 
-KVSpiderPSALine::KVSpiderPSALine (const KVSpiderPSALine& obj)  : KVSpiderLine()
+KVSpiderPSALine::KVSpiderPSALine(const KVSpiderPSALine& obj)  : KVSpiderLine()
 {
    // Copy constructor
    // This ctor is used to make a copy of an existing object (for example
@@ -39,7 +39,7 @@ KVSpiderPSALine::~KVSpiderPSALine()
 
 //________________________________________________________________
 
-void KVSpiderPSALine::Copy (TObject& obj) const
+void KVSpiderPSALine::Copy(TObject& obj) const
 {
    // This method copies the current state of 'this' object into 'obj'
    // You should add here any member variables, for example:

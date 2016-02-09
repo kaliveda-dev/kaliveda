@@ -27,7 +27,7 @@ in the directory name.
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-KVDatedFileManager::KVDatedFileManager(const Char_t* base, const Char_t* dir):fBaseName(base),fDirectory(dir)
+KVDatedFileManager::KVDatedFileManager(const Char_t* base, const Char_t* dir): fBaseName(base), fDirectory(dir)
 {
    //Read all versions of file with basename 'base' in directory 'dir' and put them
    //in a list sorted according to their timestamps
@@ -44,18 +44,19 @@ void KVDatedFileManager::ReadFiles()
    //in a list sorted according to their timestamps
    gSystem->ExpandPathName(fDirectory);
    TSystemDirectory DIR("dir", fDirectory.Data());
-   TList *files = DIR.GetListOfFiles();
-   if(!files){
+   TList* files = DIR.GetListOfFiles();
+   if (!files) {
       Error(KV__ERROR(ReadFiles), "Cannot read directory %s", fDirectory.Data());
       return;
    }
-   TIter next(files); TObject* file;
-   while( (file = next()) ){
+   TIter next(files);
+   TObject* file;
+   while ((file = next())) {
       KVString nom(file->GetName());
-      if(nom.BeginsWith(fBaseName)) fFileList.Add( new KVSortableDatedFile(nom,fBaseName) );
+      if (nom.BeginsWith(fBaseName)) fFileList.Add(new KVSortableDatedFile(nom, fBaseName));
    }
    delete files;
-   if(fFileList.GetEntries()) fFileList.Sort();
+   if (fFileList.GetEntries()) fFileList.Sort();
 }
 
 //__________________________________________________________________________________//
@@ -67,19 +68,19 @@ const Char_t* KVDatedFileManager::GetPreviousVersion(const Char_t* name)
    //   to know the name of the most recent backup version, give the base name of the file
    //
    //If no older version exists, returns empty string
-   
+
    TObject* obj = fFileList.FindObject(name);
-   if( !obj ){
+   if (!obj) {
       Error(KV__ERROR(GetPreviousVersion), "File %s does not exist", name);
       return "";
    }
-   Int_t index = fFileList.IndexOf( obj );
-   if( index == (fFileList.GetEntries()-1) ){
+   Int_t index = fFileList.IndexOf(obj);
+   if (index == (fFileList.GetEntries() - 1)) {
       //file is already oldest version
       Warning(KV__ERROR(GetPreviousVersion), "File %s is oldest known version", name);
-      return "";      
+      return "";
    }
-   return fFileList.At( index+1 )->GetName();
+   return fFileList.At(index + 1)->GetName();
 }
 
 //__________________________________________________________________________________//
@@ -123,32 +124,32 @@ KVSortableDatedFile::KVSortableDatedFile(const Char_t* filename, const Char_t* b
    //If the filename given is the same as the basename (i.e. no timestamp in name),
    //the timestamps is set to the current date & time
    KVString f(filename), b(basename);
-   if(f!=b){
-      f.Remove(0, b.Length()+1);
-      f.ReplaceAll("_"," ");
+   if (f != b) {
+      f.Remove(0, b.Length() + 1);
+      f.ReplaceAll("_", " ");
       fTimestamp.SetSQLDate(f.Data());
    }
 }
 
 //___________________________________________________________________________
 
-Int_t KVSortableDatedFile::Compare(const TObject * obj) const
+Int_t KVSortableDatedFile::Compare(const TObject* obj) const
 {
    // Compare two files according to their timestamp.
    // Used to sort lists, most recent files appear first
 
-   KVSortableDatedFile *f =
-       dynamic_cast < KVSortableDatedFile * >(const_cast < TObject * >(obj));
-   return (f->fTimestamp == fTimestamp ? 0 : (f->fTimestamp > fTimestamp ? 1 : -1 ) );
+   KVSortableDatedFile* f =
+      dynamic_cast < KVSortableDatedFile* >(const_cast < TObject* >(obj));
+   return (f->fTimestamp == fTimestamp ? 0 : (f->fTimestamp > fTimestamp ? 1 : -1));
 }
 
 //___________________________________________________________________________
 
-Bool_t KVSortableDatedFile::IsEqual(const TObject * obj) const
+Bool_t KVSortableDatedFile::IsEqual(const TObject* obj) const
 {
    //Two files are the same if they have the same basename and timestamp
 
-   KVSortableDatedFile *f =
-       dynamic_cast < KVSortableDatedFile * >(const_cast < TObject * >(obj));
+   KVSortableDatedFile* f =
+      dynamic_cast < KVSortableDatedFile* >(const_cast < TObject* >(obj));
    return (f->fTimestamp == fTimestamp && !strcmp(GetName(), obj->GetName()));
 }

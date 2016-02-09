@@ -24,9 +24,9 @@ ClassImp(KVInputDialog)
 //      We use a KVTextEntry, so the string can take any length.
 //
 /////////////////////////////////////////////////////////////
-    KVInputDialog::KVInputDialog(const TGWindow * main,
-                                 const Char_t * question, TString * answer,
-                                 Bool_t * ok, const Char_t * tooltip)
+KVInputDialog::KVInputDialog(const TGWindow* main,
+                             const Char_t* question, TString* answer,
+                             Bool_t* ok, const Char_t* tooltip)
 {
    //Create the dialog box asking a "question" and receiving the "answer"
    //If you want a default value to appear, put it in 'answer' before opening dialogue
@@ -44,7 +44,7 @@ ClassImp(KVInputDialog)
    *fOK = kFALSE;               //initialise flag
    // Add a label and text input field.
 
-   TGLabel *l = new TGLabel(fMain, question);
+   TGLabel* l = new TGLabel(fMain, question);
    fTextEntry = new KVTextEntry(fMain, answer->Data());
    if (strcmp(tooltip, ""))
       fTextEntry->SetToolTipText(tooltip);
@@ -64,10 +64,10 @@ ClassImp(KVInputDialog)
 
    UInt_t nb = 0, width = 0, height = 0;
 
-   TGHorizontalFrame *hf =
-       new TGHorizontalFrame(fMain, 60, 20, kFixedWidth);
-   TGLayoutHints *l1 =
-       new TGLayoutHints(kLHintsCenterY | kLHintsExpandX, 5, 5, 0, 0);
+   TGHorizontalFrame* hf =
+      new TGHorizontalFrame(fMain, 60, 20, kFixedWidth);
+   TGLayoutHints* l1 =
+      new TGLayoutHints(kLHintsCenterY | kLHintsExpandX, 5, 5, 0, 0);
 
    fOKBut = new TGTextButton(hf, "&OK", 1);
    hf->AddFrame(fOKBut, l1);

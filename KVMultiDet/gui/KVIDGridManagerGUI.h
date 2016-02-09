@@ -23,8 +23,8 @@
 class KVIDGridManagerGUI: public TGMainFrame {
 
    //TGMainFrame* fMain;
-   TGPopupMenu *fMenuFile;
-   TGPopupMenu *fMenuHelp;
+   TGPopupMenu* fMenuFile;
+   TGPopupMenu* fMenuHelp;
    enum {
       M_GRIDS_NEW,
       M_GRIDS_READ,
@@ -38,16 +38,16 @@ class KVIDGridManagerGUI: public TGMainFrame {
       ID_LIST_BOX,
       M_QUIT
    };
-   TGLayoutHints *fMenuBarItemLayout;
-   TGLayoutHints *fMenuBarHelpLayout;
-   TGMenuBar *fMenuBar;
-   TGHorizontalFrame *fHframe;
-   TGTab *fGridListTabs;//tabs with lists of grids
-   KVListView *fIDGridList;//list of grids in current tab
-   KVListView *fIDLineList;//list of lines in currently selected grid
-   KVListView *fCUTLineList;//list of lines in currently selected grid
-   KVListView *fCUTContourList;//list of lines in currently selected grid
-   
+   TGLayoutHints* fMenuBarItemLayout;
+   TGLayoutHints* fMenuBarHelpLayout;
+   TGMenuBar* fMenuBar;
+   TGHorizontalFrame* fHframe;
+   TGTab* fGridListTabs;//tabs with lists of grids
+   KVListView* fIDGridList;//list of grids in current tab
+   KVListView* fIDLineList;//list of lines in currently selected grid
+   KVListView* fCUTLineList;//list of lines in currently selected grid
+   KVListView* fCUTContourList;//list of lines in currently selected grid
+
    KVIDGridEditor* fIDGridEditor; // ID grid editor
 
    TGToolBar* fToolBar;
@@ -67,23 +67,25 @@ class KVIDGridManagerGUI: public TGMainFrame {
    TGButton* fTBRefresh;
    TGButton* fTBStartEditor;
    TGButton* fTBOpenRoot;
-	     
+
    TGStatusBar* fStatusBar;
 
    Int_t fFirstGrid;
    Int_t fLastGrid;
-   KVIDGraph *fSelectedGrid;
-   KVIDGraph *fLastSelectedGrid;
+   KVIDGraph* fSelectedGrid;
+   KVIDGraph* fLastSelectedGrid;
    TString fFileName;
-   TList *fSelectedEntries;
+   TList* fSelectedEntries;
 
-   TCollection* GetAllGridsInTab() {
+   TCollection* GetAllGridsInTab()
+   {
       // list of all grids (selected or not) in current tab
       if (fIDGridList) return fIDGridList->GetUserItems();
       return 0;
    };
 
-   void SetStatus(const Char_t* text = "") {
+   void SetStatus(const Char_t* text = "")
+   {
       //set status bar message
       fStatusBar->SetText(text);
    };
@@ -121,7 +123,8 @@ public:
    void SaveGridsAs(const TCollection* /*selected*/ = 0);
 
    void OpenFile();
-   void SaveCurrent() {
+   void SaveCurrent()
+   {
       SaveGridsAs();
    };
    void NewIDLine();
@@ -131,12 +134,13 @@ public:
    void TestGrid();
    void TestTreeGrid();
    void DeleteSelectedGrids();
-   void Quit() {
+   void Quit()
+   {
       CloseWindow();
    };
    void StartEditor();
    void OpenRootFile();
-   
+
    ClassDef(KVIDGridManagerGUI, 0)      //A GUI for managing identification grids
-   TFile*TestIdentificationWithTree(KVIDGraph* gr, const Char_t* name_of_data_histo);
+   TFile* TestIdentificationWithTree(KVIDGraph* gr, const Char_t* name_of_data_histo);
 };

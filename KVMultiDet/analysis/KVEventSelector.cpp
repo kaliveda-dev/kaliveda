@@ -28,7 +28,7 @@ ClassImp(KVEventSelector)
 // The following is an optional option:
 //
 //    EventsReadInterval:     print info on analysis every N events instead of default value
-// 
+//
 // Any other options can be defined by the user and parsed in her analysis class
 // with methods IsOptGiven(const Char_t*) and GetOpt(const Char_t*)
 //
@@ -84,65 +84,65 @@ ClassImp(KVEventSelector)
 // allowing it to be found at the end of the analysis)
 ////////////////////////////////////////////////////////////////////////////////
 
-void KVEventSelector::Begin(TTree * /*tree*/)
+void KVEventSelector::Begin(TTree* /*tree*/)
 {
-    // Need to parse options here for use in Terminate
+   // Need to parse options here for use in Terminate
 
-    ParseOptions();
+   ParseOptions();
 
-    if(IsOptGiven("CombinedOutputFile")) {
-        fCombinedOutputFile=GetOpt("CombinedOutputFile");
-        Info("Begin", "Output file name = %s", fCombinedOutputFile.Data());
-    }
+   if (IsOptGiven("CombinedOutputFile")) {
+      fCombinedOutputFile = GetOpt("CombinedOutputFile");
+      Info("Begin", "Output file name = %s", fCombinedOutputFile.Data());
+   }
 }
 
-void KVEventSelector::SlaveBegin(TTree * /*tree*/)
+void KVEventSelector::SlaveBegin(TTree* /*tree*/)
 {
-	// The SlaveBegin() function is called after the Begin() function.
+   // The SlaveBegin() function is called after the Begin() function.
    // When running with PROOF SlaveBegin() is called on each slave server.
    // The tree argument is deprecated (on PROOF 0 is passed).
    //
-	// ParseOptions : Manage options passed as arguments
-	//
-	// Called user method InitAnalysis where users can create trees or histos
-	// using the appropiate methods :
-	// CreateTrees and CreateMethods
-	// 
-	// Test the presence or not of such histo or tree
-	// to manage it properly
-	
-	ParseOptions();
+   // ParseOptions : Manage options passed as arguments
+   //
+   // Called user method InitAnalysis where users can create trees or histos
+   // using the appropiate methods :
+   // CreateTrees and CreateMethods
+   //
+   // Test the presence or not of such histo or tree
+   // to manage it properly
 
-    if(IsOptGiven("CombinedOutputFile")) {
-        fCombinedOutputFile=GetOpt("CombinedOutputFile");
-        Info("SlaveBegin", "Output file name = %s", fCombinedOutputFile.Data());
-    }
+   ParseOptions();
 
-	InitAnalysis();
-	
-	if (ltree->GetEntries()>0)
-		for (Int_t ii=0;ii<ltree->GetEntries();ii+=1){
-			TTree* tt = (TTree* )ltree->At(ii);
-			tt->SetDirectory(writeFile);
-			tt->AutoSave();
-		}
-	
+   if (IsOptGiven("CombinedOutputFile")) {
+      fCombinedOutputFile = GetOpt("CombinedOutputFile");
+      Info("SlaveBegin", "Output file name = %s", fCombinedOutputFile.Data());
+   }
+
+   InitAnalysis();
+
+   if (ltree->GetEntries() > 0)
+      for (Int_t ii = 0; ii < ltree->GetEntries(); ii += 1) {
+         TTree* tt = (TTree*)ltree->At(ii);
+         tt->SetDirectory(writeFile);
+         tt->AutoSave();
+      }
+
 }
 Bool_t KVEventSelector::CreateTreeFile(const Char_t* filename)
 {
-    // For PROOF:
-    // This method must be called before creating any user TTree in InitAnalysis().
-    // If no filename is given, default name="TreeFileFrom[name of selector class].root"
-	
-    if (!strcmp(filename,""))
-        tree_file_name.Form("TreeFileFrom%s.root",ClassName());
-	else 
-		tree_file_name = filename;
-	
-   mergeFile = new TProofOutputFile(tree_file_name.Data(),"M");
+   // For PROOF:
+   // This method must be called before creating any user TTree in InitAnalysis().
+   // If no filename is given, default name="TreeFileFrom[name of selector class].root"
+
+   if (!strcmp(filename, ""))
+      tree_file_name.Form("TreeFileFrom%s.root", ClassName());
+   else
+      tree_file_name = filename;
+
+   mergeFile = new TProofOutputFile(tree_file_name.Data(), "M");
    mergeFile->SetOutputFileName(tree_file_name.Data());
 
-   TDirectory *savedir = gDirectory;
+   TDirectory* savedir = gDirectory;
    writeFile = mergeFile->OpenFile("RECREATE");
    if (writeFile && writeFile->IsZombie()) SafeDelete(writeFile);
    savedir->cd();
@@ -152,7 +152,7 @@ Bool_t KVEventSelector::CreateTreeFile(const Char_t* filename)
       Info("CreateTreeFile", "could not create '%s': instance is invalid!", filename);
       return kFALSE;
    }
-	return kTRUE;  
+   return kTRUE;
 
 }
 
@@ -181,34 +181,33 @@ Bool_t KVEventSelector::Process(Long64_t entry)
    if (!(fEventsRead % fEventsReadInterval) && fEventsRead) {
       Info("Process", " +++ %lld events processed +++ ", fEventsRead);
       ProcInfo_t pid;
-      if(gSystem->GetProcInfo(&pid)==0){
+      if (gSystem->GetProcInfo(&pid) == 0) {
          cout << "     ------------- Process infos -------------" << endl;
          printf(" CpuSys = %f  s.    CpuUser = %f s.    ResMem = %f MB   VirtMem = %f MB\n",
-            pid.fCpuSys, pid.fCpuUser, pid.fMemResident/1024., pid.fMemVirtual/1024.);
+                pid.fCpuSys, pid.fCpuUser, pid.fMemResident / 1024., pid.fMemVirtual / 1024.);
       }
    }
    GetEntry(entry);
    fEventsRead++;
-	if (GetEvent())
-	{
-		SetAnalysisFrame();//let user define any necessary reference frames
-   	KVNucleus* part = 0;
-   	//apply particle selection criteria
-   	if (fPartCond) {
-      	part = 0;
-      	while ((part = GetEvent()->GetNextParticle("ok"))) {
-      	   part->SetIsOK(fPartCond->Test(part));
-      	}
-   	}
+   if (GetEvent()) {
+      SetAnalysisFrame();//let user define any necessary reference frames
+      KVNucleus* part = 0;
+      //apply particle selection criteria
+      if (fPartCond) {
+         part = 0;
+         while ((part = GetEvent()->GetNextParticle("ok"))) {
+            part->SetIsOK(fPartCond->Test(part));
+         }
+      }
 
-   	// initialise global variables at first event
-   	if (fFirstEvent && gvlist) {
-   	   gvlist->Init();
-   	   fFirstEvent = kFALSE;
-   	}
-   	RecalculateGlobalVariables();
-	}
-	
+      // initialise global variables at first event
+      if (fFirstEvent && gvlist) {
+         gvlist->Init();
+         fFirstEvent = kFALSE;
+      }
+      RecalculateGlobalVariables();
+   }
+
    Bool_t ok_anal = kTRUE;
    ok_anal = Analysis();     //user analysis
 
@@ -228,33 +227,33 @@ void KVEventSelector::SlaveTerminate()
    // The SlaveTerminate() function is called after all entries or objects
    // have been processed. When running with PROOF SlaveTerminate() is called
    // on each slave server.
-	// if tree have been defined in the CreateTrees method
-	// manage the merge of them in ProofLite session
-	//
-	
-   if (ltree->GetEntries()>0){
-	
-		if (writeFile) {
-      	TDirectory *savedir = gDirectory;
-      	TTree* tt = 0;
-			for (Int_t ii=0;ii<ltree->GetEntries();ii+=1){
-				tt = (TTree* )ltree->At(ii);
-				writeFile->cd();
-				tt->Write();
-			}
-      	mergeFile->Print();
-      	fOutput->Add(mergeFile);
-      
-			for (Int_t ii=0;ii<ltree->GetEntries();ii+=1){
-				tt = (TTree* )ltree->At(ii);
-				tt->SetDirectory(0);
-      	}
-		
-			gDirectory = savedir;
-      	writeFile->Close();
-   	}
+   // if tree have been defined in the CreateTrees method
+   // manage the merge of them in ProofLite session
+   //
 
-	}
+   if (ltree->GetEntries() > 0) {
+
+      if (writeFile) {
+         TDirectory* savedir = gDirectory;
+         TTree* tt = 0;
+         for (Int_t ii = 0; ii < ltree->GetEntries(); ii += 1) {
+            tt = (TTree*)ltree->At(ii);
+            writeFile->cd();
+            tt->Write();
+         }
+         mergeFile->Print();
+         fOutput->Add(mergeFile);
+
+         for (Int_t ii = 0; ii < ltree->GetEntries(); ii += 1) {
+            tt = (TTree*)ltree->At(ii);
+            tt->SetDirectory(0);
+         }
+
+         gDirectory = savedir;
+         writeFile->Close();
+      }
+
+   }
 
 }
 
@@ -263,48 +262,44 @@ void KVEventSelector::Terminate()
    // The Terminate() function is the last function to be called during
    // a query. It always runs on the client, it can be used to present
    // the results graphically or save the results to file.
-	//
-	// This method call the user defined EndAnalysis
-	// where user can do what she wants
-	//
+   //
+   // This method call the user defined EndAnalysis
+   // where user can do what she wants
+   //
 
-	TDatime now;
-    Info("Terminate", "Analysis ends at %s", now.AsString());
+   TDatime now;
+   Info("Terminate", "Analysis ends at %s", now.AsString());
 
-   if( fCombinedOutputFile!="" ){
-       Info("Terminate", "combine = %s", fCombinedOutputFile.Data());
-       // combine histograms and trees from analysis into one file
-       TString file1,file2;
-       file1.Form("HistoFileFrom%s.root", ClassName());
-       file2.Form("TreeFileFrom%s.root", ClassName());
-       if(GetOutputList()->FindObject("ThereAreHistos")){
-           if(GetOutputList()->FindObject(file2)){
-               Info("Terminate", "both");
-               SaveHistos();
-               KVBase::CombineFiles(file1,file2,fCombinedOutputFile,kFALSE);
-           }
-           else
-           {
-               // no trees - just rename histo file
-               Info("Terminate", "histo");
-               SaveHistos(fCombinedOutputFile);
-           }
-       }
-       else if(GetOutputList()->FindObject(file2)){
-           // no histos - just rename tree file
-           Info("Terminate", "tree");
-           gSystem->Rename(file2, fCombinedOutputFile);
-       }
-       else  Info("Terminate", "none");
+   if (fCombinedOutputFile != "") {
+      Info("Terminate", "combine = %s", fCombinedOutputFile.Data());
+      // combine histograms and trees from analysis into one file
+      TString file1, file2;
+      file1.Form("HistoFileFrom%s.root", ClassName());
+      file2.Form("TreeFileFrom%s.root", ClassName());
+      if (GetOutputList()->FindObject("ThereAreHistos")) {
+         if (GetOutputList()->FindObject(file2)) {
+            Info("Terminate", "both");
+            SaveHistos();
+            KVBase::CombineFiles(file1, file2, fCombinedOutputFile, kFALSE);
+         } else {
+            // no trees - just rename histo file
+            Info("Terminate", "histo");
+            SaveHistos(fCombinedOutputFile);
+         }
+      } else if (GetOutputList()->FindObject(file2)) {
+         // no histos - just rename tree file
+         Info("Terminate", "tree");
+         gSystem->Rename(file2, fCombinedOutputFile);
+      } else  Info("Terminate", "none");
    }
 
 
-	EndAnalysis();               //user end of analysis routine
-	
+   EndAnalysis();               //user end of analysis routine
+
 }
 
-KVVarGlob *KVEventSelector::AddGV(const Char_t * class_name,
-                                  const Char_t * name)
+KVVarGlob* KVEventSelector::AddGV(const Char_t* class_name,
+                                  const Char_t* name)
 {
    //Add a global variable to the list of variables for the analysis.
    //
@@ -333,11 +328,11 @@ KVVarGlob *KVEventSelector::AddGV(const Char_t * class_name,
    //
    //Returns pointer to new global variable object in case more than the usual default initialisation is necessary.
 
-   KVVarGlob *vg = 0;
-   TClass *clas = gROOT->GetClass(class_name);
+   KVVarGlob* vg = 0;
+   TClass* clas = gROOT->GetClass(class_name);
    if (!clas) {
       //class not in dictionary - user-defined class ? Look for plugin.
-      TPluginHandler *ph = KVBase::LoadPlugin("KVVarGlob", class_name);
+      TPluginHandler* ph = KVBase::LoadPlugin("KVVarGlob", class_name);
       if (!ph) {
          //not found
          Error("AddGV(const Char_t*,const Char_t*)",
@@ -345,7 +340,7 @@ KVVarGlob *KVEventSelector::AddGV(const Char_t * class_name,
                class_name);
          return 0;
       } else {
-         vg = (KVVarGlob *) ph->ExecPlugin(0);
+         vg = (KVVarGlob*) ph->ExecPlugin(0);
       }
    } else if (!clas->InheritsFrom("KVVarGlob")) {
       Error("AddGV(const Char_t*,const Char_t*)",
@@ -353,7 +348,7 @@ KVVarGlob *KVEventSelector::AddGV(const Char_t * class_name,
             class_name);
       return 0;
    } else {
-      vg = (KVVarGlob *) clas->New();
+      vg = (KVVarGlob*) clas->New();
    }
    vg->SetName(name);
    AddGV(vg);
@@ -379,14 +374,14 @@ void KVEventSelector::RecalculateGlobalVariables()
 
       //2nd step: loop over particles with correct codes
       //          and fill global variables
-      KVNucleus *n1 = 0;
+      KVNucleus* n1 = 0;
       // calculate 1-body variables
       if (gvlist->Has1BodyVariables()) {
          while ((n1 = GetEvent()->GetNextParticle("ok"))) {
             gvlist->Fill(n1);
          }
       }
-      KVNucleus *n2 = 0;
+      KVNucleus* n2 = 0;
       // calculate 2-body variables
       // we use every pair of particles (including identical pairs) in the event
       if (gvlist->Has2BodyVariables()) {
@@ -427,8 +422,8 @@ void KVEventSelector::SetParticleConditions(const KVParticleCondition& cond)
 KVHashList* KVEventSelector::GetHistoList() const
 {
 
-	//return the list of created trees
-  return lhisto;
+   //return the list of created trees
+   return lhisto;
 
 }
 
@@ -436,7 +431,7 @@ KVHashList* KVEventSelector::GetHistoList() const
 
 TH1* KVEventSelector::GetHisto(const Char_t* histo_name) const
 {
-	
+
    return (TH1*)lhisto->FindObject(histo_name);
 
 }
@@ -445,18 +440,18 @@ TH1* KVEventSelector::GetHisto(const Char_t* histo_name) const
 
 void KVEventSelector::AddHisto(TH1* histo)
 {
-    // Declare a histogram to be used in analysis.
-    // This method must be called when using PROOF.
-    lhisto->Add(histo);
-    fOutput->Add(histo);
-    if(!fOutput->FindObject("ThereAreHistos")) fOutput->Add(new TNamed("ThereAreHistos", "...so save them!"));
+   // Declare a histogram to be used in analysis.
+   // This method must be called when using PROOF.
+   lhisto->Add(histo);
+   fOutput->Add(histo);
+   if (!fOutput->FindObject("ThereAreHistos")) fOutput->Add(new TNamed("ThereAreHistos", "...so save them!"));
 }
 
-void KVEventSelector::AddTree(TTree *tree)
+void KVEventSelector::AddTree(TTree* tree)
 {
-    // Declare a TTree to be used in analysis.
-    // This method must be called when using PROOF.
-    ltree->Add(tree);
+   // Declare a TTree to be used in analysis.
+   // This method must be called when using PROOF.
+   ltree->Add(tree);
 }
 
 //____________________________________________________________________________
@@ -535,55 +530,54 @@ void KVEventSelector::FillTH3(TH3* h3, Double_t one, Double_t two, Double_t thre
 
 void KVEventSelector::SaveHistos(const Char_t* filename, Option_t* option, Bool_t onlyfilled)
 {
-    // Write in file all histograms declared with AddHisto(TH1*)
-    // This method works with PROOF.
-    //
-    // If no filename is specified, set default name : HistoFileFrom[KVEvenSelector::GetName()].root
-	//
-    // If a filename is specified, search in gROOT->GetListOfFiles() if
-    // this file has been already opened
-    //  - if yes write in it
-    //  - if not, create it with the corresponding option, write in it
-    // and close it just after
-	 //
-	 // onlyfilled flag allow to write all (onlyfilled=kFALSE, default) 
-	 // or only histograms (onlyfilled=kTRUE) those have been filled
+   // Write in file all histograms declared with AddHisto(TH1*)
+   // This method works with PROOF.
+   //
+   // If no filename is specified, set default name : HistoFileFrom[KVEvenSelector::GetName()].root
+   //
+   // If a filename is specified, search in gROOT->GetListOfFiles() if
+   // this file has been already opened
+   //  - if yes write in it
+   //  - if not, create it with the corresponding option, write in it
+   // and close it just after
+   //
+   // onlyfilled flag allow to write all (onlyfilled=kFALSE, default)
+   // or only histograms (onlyfilled=kTRUE) those have been filled
 
-	TString histo_file_name="";
-    if (!strcmp(filename,""))
-		histo_file_name.Form("HistoFileFrom%s.root",GetName());
-	else 
-		histo_file_name = filename;
-	
+   TString histo_file_name = "";
+   if (!strcmp(filename, ""))
+      histo_file_name.Form("HistoFileFrom%s.root", GetName());
+   else
+      histo_file_name = filename;
+
    Bool_t justopened = kFALSE;
-		
-	TFile* file = 0;
-	TDirectory* pwd = gDirectory;
-	//if filename correspond to an already opened file, write in it
-	//if not open/create it, depending on the option ("recreate" by default)
-	//and write in it
-	if (!(file = (TFile*)gROOT->GetListOfFiles()->FindObject(histo_file_name.Data()))){
-		file = new TFile(histo_file_name.Data(), option);
-		justopened=kTRUE;
-	}	
-	file->cd();
-	TIter next(GetOutputList());
-	TObject* obj=0;
-	while ( (obj = next()) ){
-		if (obj->InheritsFrom("TH1")){
-			if (onlyfilled){
-				if ( ((TH1* )obj)->GetEntries()>0 ){
-					obj->Write();
-				}
-			}
-			else{
-				obj->Write();
-			}		
-		}
-	}	
-	if (justopened)
-		file->Close();
-	pwd->cd();
+
+   TFile* file = 0;
+   TDirectory* pwd = gDirectory;
+   //if filename correspond to an already opened file, write in it
+   //if not open/create it, depending on the option ("recreate" by default)
+   //and write in it
+   if (!(file = (TFile*)gROOT->GetListOfFiles()->FindObject(histo_file_name.Data()))) {
+      file = new TFile(histo_file_name.Data(), option);
+      justopened = kTRUE;
+   }
+   file->cd();
+   TIter next(GetOutputList());
+   TObject* obj = 0;
+   while ((obj = next())) {
+      if (obj->InheritsFrom("TH1")) {
+         if (onlyfilled) {
+            if (((TH1*)obj)->GetEntries() > 0) {
+               obj->Write();
+            }
+         } else {
+            obj->Write();
+         }
+      }
+   }
+   if (justopened)
+      file->Close();
+   pwd->cd();
 
 }
 
@@ -591,7 +585,7 @@ void KVEventSelector::SaveHistos(const Char_t* filename, Option_t* option, Bool_
 
 KVHashList* KVEventSelector::GetTreeList() const
 {
-	//return the list of created trees
+   //return the list of created trees
    return ltree;
 
 }
@@ -600,7 +594,7 @@ KVHashList* KVEventSelector::GetTreeList() const
 
 TTree* KVEventSelector::GetTree(const Char_t* tree_name) const
 {
-	//return the tree named tree_name
+   //return the tree named tree_name
    return (TTree*)ltree->FindObject(tree_name);
 
 }
@@ -609,12 +603,12 @@ TTree* KVEventSelector::GetTree(const Char_t* tree_name) const
 
 void KVEventSelector::FillTree(const Char_t* tree_name)
 {
-	//Filltree method, the tree named tree_name
-    //has to be declared with AddTTree(TTree*) method
-	//
-	//if no sname="", all trees in the list is filled
-	//
-    if (!strcmp(tree_name,"")) {
+   //Filltree method, the tree named tree_name
+   //has to be declared with AddTTree(TTree*) method
+   //
+   //if no sname="", all trees in the list is filled
+   //
+   if (!strcmp(tree_name, "")) {
       ltree->Execute("Fill", "");
    } else {
       TTree* tt = 0;
@@ -639,7 +633,7 @@ void KVEventSelector::SetOpt(const Char_t* option, const Char_t* value)
 Bool_t KVEventSelector::IsOptGiven(const Char_t* opt)
 {
    // Returns kTRUE if the option 'opt' has been set
-   
+
    return fOptionList.HasParameter(opt);
 }
 
@@ -649,7 +643,7 @@ const TString& KVEventSelector::GetOpt(const Char_t* opt) const
 {
    // Returns the value of the option
    // Only use after checking existence of option with IsOptGiven(const Char_t* opt)
-   
+
    return fOptionList.GetTStringValue(opt);
 }
 
@@ -658,7 +652,7 @@ const TString& KVEventSelector::GetOpt(const Char_t* opt) const
 void KVEventSelector::UnsetOpt(const Char_t* opt)
 {
    // Removes the option 'opt' from the internal lists, as if it had never been set
-   
+
    fOptionList.RemoveParameter(opt);
 }
 
@@ -674,7 +668,7 @@ void KVEventSelector::ParseOptions()
    // This method is called by SlaveBegin
    //
 
-	fOptionList.Clear(); // clear list
+   fOptionList.Clear(); // clear list
    KVString option = GetOption();
    option.Begin(",");
    while (!option.End()) {
@@ -682,18 +676,18 @@ void KVEventSelector::ParseOptions()
       KVString opt = option.Next();
       opt.Begin("=");
       KVString param = opt.Next();
-      KVString val=opt.Next();
-      while(!opt.End()){
-          val+="=";
-          val+=opt.Next();
+      KVString val = opt.Next();
+      while (!opt.End()) {
+         val += "=";
+         val += opt.Next();
       }
 
       SetOpt(param.Data(), val.Data());
    }
-	
-	fOptionList.Print();
-	// check for branch name
-	if(IsOptGiven("BranchName")) SetBranchName(GetOpt("BranchName"));
-	// check for events read interval
-	if(IsOptGiven("EventsReadInterval")) SetEventsReadInterval(GetOpt("EventsReadInterval").Atoi());
+
+   fOptionList.Print();
+   // check for branch name
+   if (IsOptGiven("BranchName")) SetBranchName(GetOpt("BranchName"));
+   // check for events read interval
+   if (IsOptGiven("EventsReadInterval")) SetEventsReadInterval(GetOpt("EventsReadInterval").Atoi());
 }

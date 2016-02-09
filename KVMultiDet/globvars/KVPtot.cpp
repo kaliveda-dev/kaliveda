@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 20/03/2006:
 // Creation d'une classe Variable Globale.
@@ -81,12 +81,12 @@ void KVPtot::init_KVPtot(void)
 }
 
 //_________________________________________________________________
-KVPtot::KVPtot(void):KVVarGlob()
+KVPtot::KVPtot(void): KVVarGlob()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    init_KVPtot();
    sprintf(nom, "KVPtot_%d", nb_crea);
@@ -99,11 +99,11 @@ KVPtot::KVPtot(void):KVVarGlob()
 }
 
 //_________________________________________________________________
-KVPtot::KVPtot(Char_t * nom, const Char_t * frm):KVVarGlob(nom)
+KVPtot::KVPtot(Char_t* nom, const Char_t* frm): KVVarGlob(nom)
 {
    // Create KVPtot with name "nom" and using Lorentz frame whose name is "frame" to calculate
    // the sum of momenta. If "frame" is not given, the laboratory reference frame is assumed.
-   
+
    init_KVPtot();
 #ifdef DEBUG_KVPtot
    cout << nb << " crees...(nom) " << endl;
@@ -113,16 +113,16 @@ KVPtot::KVPtot(Char_t * nom, const Char_t * frm):KVVarGlob(nom)
 }
 
 //_________________________________________________________________
-KVPtot::KVPtot(const KVPtot & a) : KVVarGlob()
+KVPtot::KVPtot(const KVPtot& a) : KVVarGlob()
 {
-// 
+//
 // Contructeur par Copy
 //
    init_KVPtot();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVPtot &) a).Copy(*this);
+   ((KVPtot&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVPtot
    cout << nb << " crees...(Copy) " << endl;
@@ -132,7 +132,7 @@ KVPtot::KVPtot(const KVPtot & a) : KVVarGlob()
 //_________________________________________________________________
 KVPtot::~KVPtot(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVPtot
@@ -145,9 +145,9 @@ KVPtot::~KVPtot(void)
 
 //_________________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVPtot::Copy(TObject & a) const
+void KVPtot::Copy(TObject& a) const
 #else
-void KVPtot::Copy(TObject & a)
+void KVPtot::Copy(TObject& a)
 #endif
 {
 // Methode de Copy
@@ -157,14 +157,14 @@ void KVPtot::Copy(TObject & a)
    cout << "Copy de " << GetName() << "..." << endl;
 #endif
    KVVarGlob::Copy(a);
-   ((KVPtot &) a).ptot = ptot;
+   ((KVPtot&) a).ptot = ptot;
 #ifdef DEBUG_KVPtot
    cout << "Nom de la Copy (resultat) : " << a.GetName() << endl;
 #endif
 }
 
 //_________________________________________________________________
-KVPtot & KVPtot::operator =(const KVPtot & a)
+KVPtot& KVPtot::operator =(const KVPtot& a)
 {
 //
 // Operateur =
@@ -175,7 +175,7 @@ KVPtot & KVPtot::operator =(const KVPtot & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVPtot &) a).Copy(*this);
+   ((KVPtot&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVPtot
    cout << "Nom de la Copy par egalite: " << GetName() << endl;
@@ -206,8 +206,8 @@ void KVPtot::Reset(void)
 
 Double_t KVPtot::getvalue_void() const
 {
-	// Retourne la valeur du Z component of Ptot
-	return ptot.Z();
+   // Retourne la valeur du Z component of Ptot
+   return ptot.Z();
 }
 
 //_________________________________________________________________
@@ -223,26 +223,26 @@ Double_t KVPtot::getvalue_int(Int_t i)
 //   2                       Y component of Ptot
 //
    switch (i) {
-   case 0:
-      return ptot.Z();
-      break;
-   case 1:
-      return ptot.X();
-      break;
-   case 2:
-      return ptot.Y();
-      break;
-   default:
-      Warning("GetValue(Int_t i)", "Index not valid. Pz returned.");
-      return ptot.Z();
-      break;
+      case 0:
+         return ptot.Z();
+         break;
+      case 1:
+         return ptot.X();
+         break;
+      case 2:
+         return ptot.Y();
+         break;
+      default:
+         Warning("GetValue(Int_t i)", "Index not valid. Pz returned.");
+         return ptot.Z();
+         break;
    }
 }
 
 //_________________________________________________________________
-Double_t *KVPtot::GetValuePtr(void)
+Double_t* KVPtot::GetValuePtr(void)
 {
-// On retourne un tableau de valeurs. il est organise comme suit 
+// On retourne un tableau de valeurs. il est organise comme suit
 //
 //   Index    Meaning
 //------------------------------------------
@@ -251,7 +251,7 @@ Double_t *KVPtot::GetValuePtr(void)
 //   2        Y component of Ptot
 //
 
-	
+
    for (Int_t i = 0; i < 3; i++) {
       fVal[i] = GetValue(i);
    }
@@ -259,12 +259,12 @@ Double_t *KVPtot::GetValuePtr(void)
 }
 
 //_________________________________________________________________
-void KVPtot::Fill(KVNucleus * c)
+void KVPtot::Fill(KVNucleus* c)
 {
 //
 // Routine de remplissage
 //
-      ptot += c->GetFrame(fFrame.Data())->GetMomentum();
+   ptot += c->GetFrame(fFrame.Data())->GetMomentum();
 }
 
 //_________________________________________________________________

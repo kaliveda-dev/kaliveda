@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 17/02/2004
 // Creation d'une classe Variable Globale.
@@ -13,24 +13,24 @@
 
 ClassImp(KVMultIMFAv)
 //////////////////////////////////////////////////////////////////////////////////
-//  Similar to KVMultIMF but the multiplicity is computed for fragments with 
-// Vz > 0 in the reference frame chosen by the user with KVVarGlob::SetFrame().     
+//  Similar to KVMultIMF but the multiplicity is computed for fragments with
+// Vz > 0 in the reference frame chosen by the user with KVVarGlob::SetFrame().
 //  The default frame is the "CM" frame.
 //
 // Look at KVVarGlob class to have an example of use.
 //
 //_________________________________________________________________
-KVMultIMFAv::KVMultIMFAv(void):KVMultIMF()
+KVMultIMFAv::KVMultIMFAv(void): KVMultIMF()
 {
 //
 // Createur par default
 //
-  
+
    SetFrame("CM");
 }
 
 //_________________________________________________________________
-KVMultIMFAv::KVMultIMFAv(char *nom):KVMultIMF(nom)
+KVMultIMFAv::KVMultIMFAv(char* nom): KVMultIMF(nom)
 {
 //
 // Constructeur avec un nom
@@ -40,7 +40,7 @@ KVMultIMFAv::KVMultIMFAv(char *nom):KVMultIMF(nom)
 //_________________________________________________________________
 KVMultIMFAv::~KVMultIMFAv(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVMultIMFAv
@@ -50,7 +50,7 @@ KVMultIMFAv::~KVMultIMFAv(void)
 
 
 //_________________________________________________________________
-void KVMultIMFAv::Fill(KVNucleus * c)
+void KVMultIMFAv::Fill(KVNucleus* c)
 {
    //The multiplicity is incremented if the projection of the particle's velocity
    //along the 'z'-direction in the currently defined frame is >0 and if the Z of

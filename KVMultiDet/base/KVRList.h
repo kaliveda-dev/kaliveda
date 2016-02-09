@@ -28,57 +28,71 @@ $Id: KVRList.h,v 1.15 2009/01/19 12:03:10 franklan Exp $
 #include "TRefArray.h"
 #include "KVConfig.h"
 
-class KVRList:public TRefArray {
+class KVRList: public TRefArray {
 
- public:
+public:
 #ifdef __WITH_OLD_TREFARRAY
    KVRList() : TRefArray() {};
    KVRList(Int_t size, Int_t lowerBound = 0) : TRefArray(size, lowerBound) {};
 #else
    KVRList(TProcessID* pid = 0) : TRefArray(pid) {};
-   KVRList(Int_t s, TProcessID* pid) : TRefArray(s,pid) {};
+   KVRList(Int_t s, TProcessID* pid) : TRefArray(s, pid) {};
    KVRList(Int_t size, Int_t lowerBound = 0, TProcessID* pid = 0) : TRefArray(size, lowerBound, pid) {};
 #endif
-   
+
    virtual ~ KVRList() {};
-   virtual KVBase *FindObjectByName(const Char_t *) const;
-   virtual KVBase *FindObjectByType(const Char_t *) const;
-   virtual KVBase *FindObjectByLabel(const Char_t *) const;
-   virtual KVBase *FindObject(const Char_t * name,
-                              const Char_t * type) const;
-   virtual KVBase *FindObject(KVBase * obj) const;
-   virtual TObject *FindObject(const TObject * obj) const {
+   virtual KVBase* FindObjectByName(const Char_t*) const;
+   virtual KVBase* FindObjectByType(const Char_t*) const;
+   virtual KVBase* FindObjectByLabel(const Char_t*) const;
+   virtual KVBase* FindObject(const Char_t* name,
+                              const Char_t* type) const;
+   virtual KVBase* FindObject(KVBase* obj) const;
+   virtual TObject* FindObject(const TObject* obj) const
+   {
       return TCollection::FindObject(obj);
    };
-   virtual TObject *FindObject(const char *obj) const {
+   virtual TObject* FindObject(const char* obj) const
+   {
       return TCollection::FindObject(obj);
    };
 
-   virtual void Execute(const char *method, const char *params,
-                        Int_t * error = 0);
-   virtual void Execute(TMethod * m, TObjArray * o, Int_t * i) {
+   virtual void Execute(const char* method, const char* params,
+                        Int_t* error = 0);
+   virtual void Execute(TMethod* m, TObjArray* o, Int_t* i)
+   {
       TObject::Execute(m, o, i);
    };
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   virtual void Copy(TObject & obj) const;
+   virtual void Copy(TObject& obj) const;
 #else
-   virtual void Copy(TObject & obj);
+   virtual void Copy(TObject& obj);
 #endif
-   virtual Int_t GetSize() const {
+   virtual Int_t GetSize() const
+   {
       return GetLast() + 1;
    };
-   virtual void Print(Option_t * opt = "") const;
+   virtual void Print(Option_t* opt = "") const;
 #ifdef __WITH_NEW_TCOLLECTION_PRINT
-   virtual void       Print(Option_t *option, Int_t recurse) const {TCollection::Print(option,recurse);};
-   virtual void       Print(Option_t *option, const char* wildcard, Int_t recurse=1) const{TCollection::Print(option,wildcard,recurse);};
-   virtual void       Print(Option_t *option, TPRegexp& regexp, Int_t recurse=1) const{TCollection::Print(option,regexp,recurse);};
+   virtual void       Print(Option_t* option, Int_t recurse) const
+   {
+      TCollection::Print(option, recurse);
+   };
+   virtual void       Print(Option_t* option, const char* wildcard, Int_t recurse = 1) const
+   {
+      TCollection::Print(option, wildcard, recurse);
+   };
+   virtual void       Print(Option_t* option, TPRegexp& regexp, Int_t recurse = 1) const
+   {
+      TCollection::Print(option, regexp, recurse);
+   };
 #else
 #ifdef __WITH_TCOLLECTION_PRINT_WILDCARD
-   virtual void Print(Option_t * wildcard, Option_t * opt) const {
+   virtual void Print(Option_t* wildcard, Option_t* opt) const
+   {
       TCollection::Print(wildcard, opt);
    };
-#endif	
+#endif
 #endif
 
    ClassDef(KVRList, 1)         //KV wrapper for ROOT TRefArray class

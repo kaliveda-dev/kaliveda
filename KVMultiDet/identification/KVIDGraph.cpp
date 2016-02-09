@@ -36,23 +36,24 @@ ClassImp(KVIDGraph)
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-void KVIDGraph::ResetPad(){
+void KVIDGraph::ResetPad()
+{
    cout << "The pad showing graph " << GetName() << " has been closed !" << endl;
 
-   if(fPad)
-   {
+   if (fPad) {
       fPad->Disconnect("Closed()", this, "ResetPad()");
-      if(fPad->GetCanvas()) fPad->GetCanvas()->Disconnect("Cleared(TVirtualPad*)", this, "ClearPad(TVirtualPad*)");
+      if (fPad->GetCanvas()) fPad->GetCanvas()->Disconnect("Cleared(TVirtualPad*)", this, "ClearPad(TVirtualPad*)");
    }
    fPad = 0;
 
 }
 
-void KVIDGraph::ClearPad(TVirtualPad* pad){
-   if(fPad==pad){
+void KVIDGraph::ClearPad(TVirtualPad* pad)
+{
+   if (fPad == pad) {
       cout << "The pad showing graph " << GetName() << " has been cleared" << endl;
       fPad->Disconnect("Closed()", this, "ResetPad()");
-      if(fPad->GetCanvas()) fPad->GetCanvas()->Disconnect("Cleared(TVirtualPad*)", this, "ClearPad(TVirtualPad*)");
+      if (fPad->GetCanvas()) fPad->GetCanvas()->Disconnect("Cleared(TVirtualPad*)", this, "ClearPad(TVirtualPad*)");
       fPad = 0;
    }
 }
@@ -76,7 +77,7 @@ void KVIDGraph::init()
    fPad = 0;
    SetName("");
    SetEditable(kFALSE);
-   if(fAutoAddGridManager && gIDGridManager) gIDGridManager->AddGrid(this);
+   if (fAutoAddGridManager && gIDGridManager) gIDGridManager->AddGrid(this);
    fMassFormula = 0;
    fLastSavedVersion = NULL;
 }
@@ -92,7 +93,7 @@ void KVIDGraph::init()
 //    // the grid in the KVIDGridEditor canvas (if one exists).
 //    // If no KVIDGridEditor exists, we perform the default action (Draw()).
 //    //
-//    
+//
 //    if( gIDGridEditor ){
 //       // avant d'editer la grille, on en fait une copie pour
 //       // pouvoir revenir en arriere
@@ -107,9 +108,9 @@ void KVIDGraph::init()
 //________________________________________________________________________________
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVIDGraph::Copy(TObject & obj) const
+void KVIDGraph::Copy(TObject& obj) const
 #else
-void KVIDGraph::Copy(TObject & obj)
+void KVIDGraph::Copy(TObject& obj)
 #endif
 {
    //Copy this to 'obj'
@@ -119,24 +120,24 @@ void KVIDGraph::Copy(TObject & obj)
    TAttMarker::Copy((TAttMarker&)obj);
    ((TCutG&)obj).SetVarX(GetVarX());
    ((TCutG&)obj).SetVarY(GetVarY());
-   KVIDGraph & grid = (KVIDGraph &) obj;
-   grid.fOnlyZId = const_cast <KVIDGraph *>(this)->fOnlyZId;
+   KVIDGraph& grid = (KVIDGraph&) obj;
+   grid.fOnlyZId = const_cast <KVIDGraph*>(this)->fOnlyZId;
    grid.SetPattern(fPattern);
    //as in WriteAsciiFile, we need to remove any scaling factors from the coordinates
    //before copying the coordinates, then we set the scaling factors at the end
 
    //remove scaling if there is one
    if (fLastScaleX != 1 || fLastScaleY != 1)
-      const_cast < KVIDGraph * >(this)->Scale(1. / fLastScaleX,
-                                              1. / fLastScaleY);
+      const_cast < KVIDGraph* >(this)->Scale(1. / fLastScaleX,
+                                             1. / fLastScaleY);
 
-   fIdentifiers->Copy((TObject &) (*grid.GetIdentifiers()));
-   fCuts->Copy((TObject &) (*grid.GetCuts()));
+   fIdentifiers->Copy((TObject&)(*grid.GetIdentifiers()));
+   fCuts->Copy((TObject&)(*grid.GetCuts()));
    // set mass formula of grid (and identifiers)
    grid.SetMassFormula(GetMassFormula());
    //copy all parameters EXCEPT scaling parameters
-   KVNamedParameter *par = 0;
-   for( int i=0; i<fPar->GetNpar(); i++) { //loop over all parameters
+   KVNamedParameter* par = 0;
+   for (int i = 0; i < fPar->GetNpar(); i++) { //loop over all parameters
       par = fPar->GetParameter(i);
       TString parname(par->GetName());
       if (!parname.Contains("ScaleFactor"))
@@ -144,7 +145,7 @@ void KVIDGraph::Copy(TObject & obj)
    }
    //restore scaling to this grid if there was one, and apply it to the copied grid
    if (fLastScaleX != 1 || fLastScaleY != 1) {
-      const_cast < KVIDGraph * >(this)->Scale(fLastScaleX, fLastScaleY);
+      const_cast < KVIDGraph* >(this)->Scale(fLastScaleX, fLastScaleY);
       grid.SetXScaleFactor(fLastScaleX);
       grid.SetYScaleFactor(fLastScaleY);
    }
@@ -161,14 +162,14 @@ KVIDGraph::KVIDGraph() : fRunList(""), fDyName(""), fPattern("")
 
 //________________________________________________________________________________
 
-KVIDGraph::KVIDGraph(const KVIDGraph & grid) : TCutG(), fRunList(""), fDyName(""), fPattern("")
+KVIDGraph::KVIDGraph(const KVIDGraph& grid) : TCutG(), fRunList(""), fDyName(""), fPattern("")
 {
    //Copy constructor
    init();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    grid.Copy(*this);
 #else
-   ((KVIDGraph &) grid).Copy(*this);
+   ((KVIDGraph&) grid).Copy(*this);
 #endif
 }
 
@@ -185,7 +186,7 @@ KVIDGraph::~KVIDGraph()
 
 //________________________________________________________________________________
 
-void KVIDGraph::Clear(Option_t * )
+void KVIDGraph::Clear(Option_t*)
 {
    // reset the grid (destroying any previously defined identifiers) ready to start anew.
    // resets axis limits
@@ -264,17 +265,15 @@ KVIDentifier* KVIDGraph::GetIdentifier(Int_t Z, Int_t A) const
    // Return pointer to identifier with atomic number Z and mass number A.
    // If this is a 'OnlyZId()' graph we ignore A.
 
-   KVIDentifier* id=0;
-   if(!OnlyZId()){
-      KVSeqCollection *isotopes= fIdentifiers->GetSubListWithMethod( Form("%d",Z), "GetZ" );
+   KVIDentifier* id = 0;
+   if (!OnlyZId()) {
+      KVSeqCollection* isotopes = fIdentifiers->GetSubListWithMethod(Form("%d", Z), "GetZ");
       TIter next(isotopes);
-      while( (id=(KVIDentifier*)next()) ) if(id->GetA()==A) break;
+      while ((id = (KVIDentifier*)next())) if (id->GetA() == A) break;
       delete isotopes;
-   }
-   else
-   {
+   } else {
       TIter next(fIdentifiers);
-      while( (id=(KVIDentifier*)next()) ) if(id->GetZ()==Z) break;
+      while ((id = (KVIDentifier*)next())) if (id->GetZ() == Z) break;
    }
    return id;
 }
@@ -291,7 +290,7 @@ void KVIDGraph::RemoveIdentifier(KVIDentifier* id)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void KVIDGraph::RemoveCut(KVIDentifier *cut)
+void KVIDGraph::RemoveCut(KVIDentifier* cut)
 {
    // Remove and destroy cut
    fCuts->Remove(cut);
@@ -309,17 +308,17 @@ void KVIDGraph::WriteParameterListOfIDTelescopes()
    // if list of telescope pointers is empty, do nothing
    // this is in case there are telescope names already in the IDTelescopes parameter
    // but they are not telescopes in the current multi det array
-   if(!fTelescopes.GetEntries()) return;
+   if (!fTelescopes.GetEntries()) return;
    fPar->SetValue("IDTelescopes", "");
    KVString tel_list = GetNamesOfIDTelescopes();
-   fPar->SetValue("IDTelescopes",tel_list);
+   fPar->SetValue("IDTelescopes", tel_list);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 //_______________________________________________________________________________________________//
 
-void KVIDGraph::WriteAsciiFile(const Char_t * filename)
+void KVIDGraph::WriteAsciiFile(const Char_t* filename)
 {
    //Open, write and close ascii file containing this grid.
 
@@ -330,7 +329,7 @@ void KVIDGraph::WriteAsciiFile(const Char_t * filename)
 
 //_______________________________________________________________________________________________//
 
-void KVIDGraph::WriteToAsciiFile(ofstream & gridfile)
+void KVIDGraph::WriteToAsciiFile(ofstream& gridfile)
 {
    //Write info on this grid in already-open ascii file stream 'gridfile'.
    //This begins with the line
@@ -358,28 +357,28 @@ void KVIDGraph::WriteToAsciiFile(ofstream & gridfile)
    //then the scaling is applied.
 
    gridfile << "# ASCII file generated by " << ClassName() <<
-               "::WriteToAsciiFile" << endl;
+            "::WriteToAsciiFile" << endl;
    gridfile << "# ID Graph Name : " << GetName() << endl;
    gridfile << "# This file can be read using " << ClassName() <<
-               "::ReadFromAsciiFile" << endl;
+            "::ReadFromAsciiFile" << endl;
    gridfile << "# " << endl;
    gridfile << "++" << ClassName() << endl;
 
    // write name if given
-   if(fName!="") gridfile << "<NAME> " << fName.Data() << endl;
+   if (fName != "") gridfile << "<NAME> " << fName.Data() << endl;
    //write X & Y axis names
    gridfile << "<VARX> " << GetVarX() << endl;
    gridfile << "<VARY> " << GetVarY() << endl;
    //write parameters
    WriteParameterListOfIDTelescopes();
-   KVNamedParameter *par = 0;
-   for( int i=0; i<fPar->GetNpar(); i++) { //loop over all parameters
+   KVNamedParameter* par = 0;
+   for (int i = 0; i < fPar->GetNpar(); i++) { //loop over all parameters
       par = fPar->GetParameter(i);
       gridfile << "<PARAMETER> " << par->GetName() << "=" << par->GetString() << endl;
    }
 
    //write fOnlyZId & mass formula
-   if(OnlyZId()) gridfile << "OnlyZId " << GetMassFormula() << endl;
+   if (OnlyZId()) gridfile << "OnlyZId " << GetMassFormula() << endl;
 
    //remove scaling if there is one
    if (fLastScaleX != 1 || fLastScaleY != 1)
@@ -387,13 +386,13 @@ void KVIDGraph::WriteToAsciiFile(ofstream & gridfile)
 
    //Write identifiers
    TIter next_IDline(fIdentifiers);
-   KVIDentifier *line;
-   while ((line = (KVIDentifier *) next_IDline())) {
+   KVIDentifier* line;
+   while ((line = (KVIDentifier*) next_IDline())) {
       line->WriteAsciiFile(gridfile, "ID");
    }
    //Write cuts
    TIter next_OKline(fCuts);
-   while ((line = (KVIDentifier *) next_OKline())) {
+   while ((line = (KVIDentifier*) next_OKline())) {
       line->WriteAsciiFile(gridfile, "OK");
    }
    gridfile << "!" << endl;
@@ -404,13 +403,13 @@ void KVIDGraph::WriteToAsciiFile(ofstream & gridfile)
 
    // if a back-up copy had previously been created (by starting the editor)
    // we replace it by the version read from file
-   if(fLastSavedVersion) UpdateLastSavedVersion();
+   if (fLastSavedVersion) UpdateLastSavedVersion();
 }
 
 void KVIDGraph::UpdateLastSavedVersion()
-{   
+{
    //update last saved version. mkae copy of current state of graph.
-   if(!fLastSavedVersion) {
+   if (!fLastSavedVersion) {
       SetAutoAdd(kFALSE); // disable auto add to grid manager - or we'll have every grid appearing twice!
       fLastSavedVersion = (KVIDGraph*)IsA()->New();
       SetAutoAdd(); // re-enable auto add
@@ -419,26 +418,26 @@ void KVIDGraph::UpdateLastSavedVersion()
 }
 
 void KVIDGraph::RevertToLastSavedVersion()
-{   
+{
    // Revert to last saved version of grid
    // this will destroy any existing lines in the grid and replace them with
    // copies of the lines as they were at the last moment the grid was saved
    // If the grid is (was) visible in a pad, we redraw the new lines.
-   
-   if(!fLastSavedVersion) {
+
+   if (!fLastSavedVersion) {
       Info("RevertToLastSavedVersion", "No saved version to revert to! (Sorry)");
       return;
    }
-   Bool_t wasDrawn=kFALSE;
-   if(fPad){
+   Bool_t wasDrawn = kFALSE;
+   if (fPad) {
       // if grid was visible, remove it from pad before modifying (deleting) lines
-      wasDrawn=kTRUE;
+      wasDrawn = kTRUE;
       fPad->cd();// make sure pad with grid is active (gPad) pad
       UnDraw();
    }
    Clear();
    fLastSavedVersion->Copy(*this);
-   if(wasDrawn){
+   if (wasDrawn) {
       // if grid was visible, redraw it with new lines
       Draw();
    }
@@ -446,7 +445,7 @@ void KVIDGraph::RevertToLastSavedVersion()
 
 //_______________________________________________________________________________________________//
 
-void KVIDGraph::ReadFromAsciiFile(ifstream & gridfile)
+void KVIDGraph::ReadFromAsciiFile(ifstream& gridfile)
 {
    //Read info from already open ascii file stream containing each line of this grid.
    //Any previous lines in the grid are destroyed.
@@ -469,7 +468,7 @@ void KVIDGraph::ReadFromAsciiFile(ifstream & gridfile)
    fPar->Clear();
 
    KVString s;
-   int line_no=0;// counter for lines read
+   int line_no = 0; // counter for lines read
    SetOnlyZId(kFALSE);
    Int_t mass_formula = -1;
 
@@ -482,7 +481,7 @@ void KVIDGraph::ReadFromAsciiFile(ifstream & gridfile)
       } else if (s.BeginsWith("++")) {  //will only happen if we are reading a file using ReadAsciiFile(const char*)
          //check classname
          s.Remove(0, 2);
-         s.Remove( TString::kBoth, ' ');//remove whitespace
+         s.Remove(TString::kBoth, ' '); //remove whitespace
          if (s != ClassName())
             Warning("ReadFromAsciiFile(ofstream&)",
                     "Class name in file %s does not correspond to this class (%s)",
@@ -490,48 +489,48 @@ void KVIDGraph::ReadFromAsciiFile(ifstream & gridfile)
       } else if (s.BeginsWith("<NAME>")) {
          //name of grid
          s.Remove(0, 7);
-         s.Remove( TString::kBoth, ' ');//remove whitespace
+         s.Remove(TString::kBoth, ' '); //remove whitespace
          SetName(s.Data());
       } else if (s.BeginsWith("<VARX>")) {
          //x-axis definition
          s.Remove(0, 7);
-         s.Remove( TString::kBoth, ' ');//remove whitespace
+         s.Remove(TString::kBoth, ' '); //remove whitespace
          SetVarX(s.Data());
       } else if (s.BeginsWith("<VARY>")) {
          //y-axis definition
          s.Remove(0, 7);
-         s.Remove( TString::kBoth, ' ');//remove whitespace
+         s.Remove(TString::kBoth, ' '); //remove whitespace
          SetVarY(s.Data());
       } else if (s.BeginsWith("<PARAMETER>")) {
          //parameter definition
          s.Remove(0, 11);
          //split into tokens separated by '='
-         TObjArray *toks = s.Tokenize('=');
-         if(toks->GetEntries()>1){
+         TObjArray* toks = s.Tokenize('=');
+         if (toks->GetEntries() > 1) {
             TString name =
-                  ((TObjString *) toks->At(0))->GetString().
-                  Strip(TString::kBoth);
-            KVString value(((TObjString *) toks->At(1))->GetString());
-            value.Remove( TString::kBoth, ' ');//remove whitespace
-            if(name!="" && value!="") {
-               if(value.IsFloat())
+               ((TObjString*) toks->At(0))->GetString().
+               Strip(TString::kBoth);
+            KVString value(((TObjString*) toks->At(1))->GetString());
+            value.Remove(TString::kBoth, ' '); //remove whitespace
+            if (name != "" && value != "") {
+               if (value.IsFloat())
                   fPar->SetValue(name.Data(), value.Atof());
-               else if(value.IsDigit())
+               else if (value.IsDigit())
                   fPar->SetValue(name.Data(), value.Atoi());
                else
-                  fPar->SetValue(name.Data(),value.Data());
+                  fPar->SetValue(name.Data(), value.Data());
             }
          }
          delete toks;           //must clean up
       } else if (s.BeginsWith("<LIST>")) {      // number list definition
          s.Remove(0, 6);        // get rid of "<LIST>"
          //split into tokens separated by '='
-         TObjArray *toks = s.Tokenize('=');
-         if(toks->GetEntries()>1){
+         TObjArray* toks = s.Tokenize('=');
+         if (toks->GetEntries() > 1) {
             TString name =
-                  ((TObjString *) toks->At(0))->GetString().
-                  Strip(TString::kBoth);
-            TString list(((TObjString *) toks->At(1))->GetString());
+               ((TObjString*) toks->At(0))->GetString().
+               Strip(TString::kBoth);
+            TString list(((TObjString*) toks->At(1))->GetString());
             //set appropriate list
             if (name == "Runs")
                SetRuns(list.Data());
@@ -539,17 +538,15 @@ void KVIDGraph::ReadFromAsciiFile(ifstream & gridfile)
                fPar->SetValue(name.Data(), list.Data());
          }
          delete toks;           //must clean up
-      }
-      else if (s.BeginsWith("OnlyZId")){
+      } else if (s.BeginsWith("OnlyZId")) {
          SetOnlyZId(kTRUE);
-         s.ReplaceAll("OnlyZId","");
+         s.ReplaceAll("OnlyZId", "");
          s.Remove(TString::kBoth, ' ');
-         if(s!=""){//older versions did not write mass formula after OnlyZId
-            mass_formula=s.Atoi();
-            if(mass_formula>-1) SetMassFormula(mass_formula);
+         if (s != "") { //older versions did not write mass formula after OnlyZId
+            mass_formula = s.Atoi();
+            if (mass_formula > -1) SetMassFormula(mass_formula);
          }
-      }
-      else if (s.BeginsWith('+')) {
+      } else if (s.BeginsWith('+')) {
          //New line
          line_no++;
          //Get name of class by stripping off the '+' at the start of the line
@@ -558,20 +555,19 @@ void KVIDGraph::ReadFromAsciiFile(ifstream & gridfile)
          //next line is type ("ID" or "OK") followed by ':', followed by name of line
          s.ReadLine(gridfile);
          //split into tokens separated by ':'
-         TObjArray *toks = s.Tokenize(':');
-         TString type = ((TObjString *) toks->At(0))->GetString();
+         TObjArray* toks = s.Tokenize(':');
+         TString type = ((TObjString*) toks->At(0))->GetString();
          TString name = "";
          // make sure the line actually has a name !
-         if( toks->GetEntries()>1 ) name = ((TObjString *) toks->At(1))->GetString();
-         else
-         {
+         if (toks->GetEntries() > 1) name = ((TObjString*) toks->At(1))->GetString();
+         else {
             // print warning allowing to find nameless line in file
             Warning("ReadFromAsciiFile",
                     "In graph : %s\nIdentifier with no name. Identifier type = %s. Line number in graph = %d",
                     GetName(), type.Data(), line_no);
          }
          delete toks;           //must clean up
-         ReadIdentifierFromAsciiFile(name,type,lineclass,gridfile);
+         ReadIdentifierFromAsciiFile(name, type, lineclass, gridfile);
       }
    }
    fLastScaleX = GetXScaleFactor();
@@ -581,22 +577,22 @@ void KVIDGraph::ReadFromAsciiFile(ifstream & gridfile)
    }
    BackwardsCompatibilityFix();
    //set runlist
-   if(fPar->HasParameter("Runlist")) SetRuns( fPar->GetStringValue("Runlist") );
+   if (fPar->HasParameter("Runlist")) SetRuns(fPar->GetStringValue("Runlist"));
    else SetRuns("");
-   
+
    // if a back-up copy had previously been created (by starting the editor)
    // we replace it by the version read from file
-   if(fLastSavedVersion) UpdateLastSavedVersion();
+   if (fLastSavedVersion) UpdateLastSavedVersion();
 }
 
 //_______________________________________________________________________________________________//
 
-void KVIDGraph::ReadIdentifierFromAsciiFile(TString &name, TString &type, TString &cl, ifstream& gridfile)
+void KVIDGraph::ReadIdentifierFromAsciiFile(TString& name, TString& type, TString& cl, ifstream& gridfile)
 {
    // Read in new identifier object from file
 
-   KVIDentifier* line = New( cl.Data() );
-   line->SetName( name.Data() );
+   KVIDentifier* line = New(cl.Data());
+   line->SetName(name.Data());
    Add(type, line);
    //now use ReadAscii method of class to read coordinates and other informations
    line->ReadAsciiFile(gridfile);
@@ -604,7 +600,7 @@ void KVIDGraph::ReadIdentifierFromAsciiFile(TString &name, TString &type, TStrin
 
 //_______________________________________________________________________________________________//
 
-void KVIDGraph::ReadAsciiFile(const Char_t * filename)
+void KVIDGraph::ReadAsciiFile(const Char_t* filename)
 {
    //Open, read and close ascii file containing this grid.
    //Any previous lines in the grid are destroyed.
@@ -625,12 +621,12 @@ void KVIDGraph::ReadAsciiFile(const Char_t * filename)
 
 //_______________________________________________________________________________________________//
 
-KVIDentifier *KVIDGraph::New(const Char_t * id_class)
+KVIDentifier* KVIDGraph::New(const Char_t* id_class)
 {
    //Create new object of class "id_class" which derives from KVIDentifier
 
-   KVIDentifier *line = 0;
-   TClass *clas = TClass::GetClass(id_class);
+   KVIDentifier* line = 0;
+   TClass* clas = TClass::GetClass(id_class);
    if (!clas) {
       Error("New",
             "%s is not a valid classname. No known class.", id_class);
@@ -640,7 +636,7 @@ KVIDentifier *KVIDGraph::New(const Char_t * id_class)
                "%s is not a valid class deriving from KVIDentifier",
                id_class);
       } else {
-         line = (KVIDentifier *) clas->New();
+         line = (KVIDentifier*) clas->New();
       }
    }
    return line;
@@ -648,15 +644,15 @@ KVIDentifier *KVIDGraph::New(const Char_t * id_class)
 
 //_______________________________________________________________________________________________//
 
-void KVIDGraph::Add(TString type, KVIDentifier *id)
+void KVIDGraph::Add(TString type, KVIDentifier* id)
 {
    // Add the object to the list of cuts or identifiers:
    //  type = "ID"            -->  calls AddIdentifier(id)
    //  type = "OK" or "cut"   -->  calls AddCut(id)
 
    type.ToUpper();
-   if(type=="ID") AddIdentifier(id);
-   else if(type=="OK"||type=="CUT") AddCut(id);
+   if (type == "ID") AddIdentifier(id);
+   else if (type == "OK" || type == "CUT") AddCut(id);
 }
 
 //_______________________________________________________________________________________________//
@@ -669,15 +665,15 @@ KVIDentifier* KVIDGraph::Add(TString type, TString classname)
 
    type.ToUpper();
    KVIDentifier* id = New(classname);
-   if(!id) return 0;
-   if(type=="ID") AddIdentifier(id);
-   else if(type=="OK"||type=="CUT") AddCut(id);
+   if (!id) return 0;
+   if (type == "ID") AddIdentifier(id);
+   else if (type == "OK" || type == "CUT") AddCut(id);
    return id;
 }
 
 //_______________________________________________________________________________________________//
 
-void KVIDGraph::Draw(Option_t * )
+void KVIDGraph::Draw(Option_t*)
 {
    //Draw all objects in graph on the current display, if one exists: i.e. in order to superimpose the grid
    //on a 2D display of data, use KVIDGraph::Draw() (no option "same" needed).
@@ -704,14 +700,14 @@ void KVIDGraph::Draw(Option_t * )
    if (!gPad->GetListOfPrimitives()->GetSize()) {
       //calculate size of pad necessary to show graph
       if (GetXmin() == GetXmax())
-         const_cast < KVIDGraph * >(this)->FindAxisLimits();
+         const_cast < KVIDGraph* >(this)->FindAxisLimits();
       gPad->DrawFrame(GetXmin(), GetYmin(), GetXmax(), GetYmax());
    }
    {
-      fIdentifiers->R__FOR_EACH(KVIDentifier, Draw) ("PL");
+      fIdentifiers->R__FOR_EACH(KVIDentifier, Draw)("PL");
    }
    {
-      fCuts->R__FOR_EACH(KVIDentifier, Draw) ("PL");
+      fCuts->R__FOR_EACH(KVIDentifier, Draw)("PL");
    }
    gPad->Modified();
    gPad->Update();
@@ -719,7 +715,7 @@ void KVIDGraph::Draw(Option_t * )
    // canvas GUI is closed (thereby deleting the fPad object), we reset fPad
    // and do not try to Undraw in a non-existent canvas
    fPad->Connect("Closed()",  "KVIDGraph", this, "ResetPad()");
-   if(fPad->GetCanvas()) fPad->GetCanvas()->Connect("Cleared(TVirtualPad*)", "KVIDGraph", this, "ClearPad(TVirtualPad*)");
+   if (fPad->GetCanvas()) fPad->GetCanvas()->Connect("Cleared(TVirtualPad*)", "KVIDGraph", this, "ClearPad(TVirtualPad*)");
 }
 
 //_______________________________________________________________________________________________//
@@ -731,26 +727,26 @@ void KVIDGraph::UnDraw()
    //gPad->GetListOfPrimitives()->Remove() as long as gPad->GetListOfPrimitives()->FindObject()
    //returns kTRUE for each identifier.
 
-   if(!fPad) {
+   if (!fPad) {
       Error("UnDraw", "Cannot undraw, no pad stored ??");
       return;
    }
    TIter next_id(fIdentifiers);
-   KVIDentifier *line;
+   KVIDentifier* line;
    //remove the rest of the lines
-   while ((line = (KVIDentifier *) next_id())) {
+   while ((line = (KVIDentifier*) next_id())) {
       while (fPad->GetListOfPrimitives()->FindObject(line))
          fPad->GetListOfPrimitives()->Remove(line);
    }
    TIter next_ok(fCuts);
-   while ((line = (KVIDentifier *) next_ok())) {
+   while ((line = (KVIDentifier*) next_ok())) {
       while (fPad->GetListOfPrimitives()->FindObject(line))
          fPad->GetListOfPrimitives()->Remove(line);
    }
    fPad->Modified();
    fPad->Update();
    fPad->Disconnect("Closed()", this, "ResetPad()");
-   if(fPad->GetCanvas()) fPad->GetCanvas()->Disconnect("Cleared(TVirtualPad*)", this, "ClearPad(TVirtualPad*)");
+   if (fPad->GetCanvas()) fPad->GetCanvas()->Disconnect("Cleared(TVirtualPad*)", this, "ClearPad(TVirtualPad*)");
    fPad = 0;
 }
 
@@ -765,7 +761,7 @@ void KVIDGraph::ResetDraw()
 
 //_______________________________________________________________________________________________//
 
-void KVIDGraph::Print(Option_t * ) const
+void KVIDGraph::Print(Option_t*) const
 {
    //Print out all objects in graph
 
@@ -773,12 +769,12 @@ void KVIDGraph::Print(Option_t * ) const
    cout << "Title : " << GetTitle() << endl;
    //print list of parameters
    fPar->Print();
-   KVIDentifier *line = 0;
+   KVIDentifier* line = 0;
    TIter nextOK(fCuts);
-   while ((line = (KVIDentifier *) nextOK()))
+   while ((line = (KVIDentifier*) nextOK()))
       line->ls();
    TIter nextID(fIdentifiers);
-   while ((line = (KVIDentifier *) nextID()))
+   while ((line = (KVIDentifier*) nextID()))
       line->ls();
 }
 
@@ -788,12 +784,12 @@ void KVIDGraph::FindAxisLimits()
 {
    //Calculate X/Y min/max of all objects in graph
 
-   KVIDentifier *line;
+   KVIDentifier* line;
    Double_t x, y, xmin, ymin, xmax, ymax;
    xmax = ymax = -999999;
    xmin = ymin = 999999;
    TIter nextOK(fCuts);
-   while ((line = (KVIDentifier *) nextOK())) {
+   while ((line = (KVIDentifier*) nextOK())) {
       for (int i = 0; i < line->GetN(); i++) {
          line->GetPoint(i, x, y);
          xmin = (x < xmin ? x : xmin);
@@ -803,7 +799,7 @@ void KVIDGraph::FindAxisLimits()
       }
    }
    TIter nextID(fIdentifiers);
-   while ((line = (KVIDentifier *) nextID())) {
+   while ((line = (KVIDentifier*) nextID())) {
       for (int i = 0; i < line->GetN(); i++) {
          line->GetPoint(i, x, y);
          xmin = (x < xmin ? x : xmin);
@@ -821,7 +817,7 @@ void KVIDGraph::FindAxisLimits()
 
 //___________________________________________________________________________________
 
-void KVIDGraph::Scale(TF1 *sx, TF1 *sy)
+void KVIDGraph::Scale(TF1* sx, TF1* sy)
 {
    // Rescale coordinates of every object in graph according to arbitrary functions
    // of the coordinates (sx & sy can be 1-dimensional or 2-dimensional functions).
@@ -829,13 +825,13 @@ void KVIDGraph::Scale(TF1 *sx, TF1 *sy)
    // If sy is a TF1 function f(x), then the 'x' in this function refers to the y-coordinate.
    // If sy is a TF2 function f(x,y), 'x' and 'y' refer to the x & y-coordinates.
 
-   if ( !sx && !sy )
+   if (!sx && !sy)
       return;
    if (GetNumberOfIdentifiers() > 0) {
-      fIdentifiers->R__FOR_EACH(KVIDentifier, Scale) (sx, sy);
+      fIdentifiers->R__FOR_EACH(KVIDentifier, Scale)(sx, sy);
    }
    if (GetNumberOfCuts() > 0) {
-      fCuts->R__FOR_EACH(KVIDentifier, Scale) (sx, sy);
+      fCuts->R__FOR_EACH(KVIDentifier, Scale)(sx, sy);
    }
    Modified();
 }
@@ -849,10 +845,10 @@ void KVIDGraph::Scale(Double_t sx, Double_t sy)
    if (TMath::Abs(sx) == 1 && TMath::Abs(sy) == 1)
       return;
    if (GetNumberOfIdentifiers() > 0) {
-      fIdentifiers->R__FOR_EACH(KVIDentifier, Scale) (sx, sy);
+      fIdentifiers->R__FOR_EACH(KVIDentifier, Scale)(sx, sy);
    }
    if (GetNumberOfCuts() > 0) {
-      fCuts->R__FOR_EACH(KVIDentifier, Scale) (sx, sy);
+      fCuts->R__FOR_EACH(KVIDentifier, Scale)(sx, sy);
    }
 }
 
@@ -875,16 +871,16 @@ void KVIDGraph::DrawAndAdd(const Char_t* Type, const Char_t* Classname)
 
    if (!fPad && !gPad) return;
    // if grid already drawn somewhere, make grid's pad active
-   if(fPad && fPad!=gPad){
+   if (fPad && fPad != gPad) {
       fPad->cd();
-      Warning("DrawAndAdd","Changed active pad to pad containing this graph");
+      Warning("DrawAndAdd", "Changed active pad to pad containing this graph");
    }
-   if(!fPad) fPad=gPad;
+   if (!fPad) fPad = gPad;
 
    TString type(Type);
    TString classname(Classname);
    //create new ID line
-   KVIDentifier *line = New(classname);
+   KVIDentifier* line = New(classname);
    //wait for user to draw object
    line->WaitForPrimitive();
    //add line to list
@@ -896,8 +892,8 @@ void KVIDGraph::DrawAndAdd(const Char_t* Type, const Char_t* Classname)
 
 //___________________________________________________________________________________
 
-KVIDGraph *KVIDGraph::AddGraphs(KVIDGraph * g1, Int_t id1_min, Int_t id1_max,
-                                KVIDGraph * g2, Int_t id2_min, Int_t id2_max)
+KVIDGraph* KVIDGraph::AddGraphs(KVIDGraph* g1, Int_t id1_min, Int_t id1_max,
+                                KVIDGraph* g2, Int_t id2_min, Int_t id2_max)
 {
    //Static method taking lines id1_min to id2_min from grid g1 and lines id2_min to id2_max from
    //grid g2 and making a new grid containing them. Returns the pointer to the new grid.
@@ -910,21 +906,21 @@ KVIDGraph *KVIDGraph::AddGraphs(KVIDGraph * g1, Int_t id1_min, Int_t id1_max,
    //of all its lines result from application of the different scaling factors of the two grids.
 
    //make new grid
-   KVIDGraph *merger = (KVIDGraph *) g1->IsA()->New();
+   KVIDGraph* merger = (KVIDGraph*) g1->IsA()->New();
 
    //loop over lines in first grid
    TIter next_id1(g1->GetIdentifiers());
-   KVIDentifier *line;
-   while ((line = (KVIDentifier *) next_id1())) {
+   KVIDentifier* line;
+   while ((line = (KVIDentifier*) next_id1())) {
       if (line->GetID() >= id1_min && line->GetID() <= id1_max)
-         merger->Add("ID", (KVIDentifier *) line->Clone());     //add clone of lines with right ID
+         merger->Add("ID", (KVIDentifier*) line->Clone());      //add clone of lines with right ID
    }
 
    //loop over lines in second grid
    TIter next_id2(g2->GetIdentifiers());
-   while ((line = (KVIDentifier *) next_id2())) {
+   while ((line = (KVIDentifier*) next_id2())) {
       if (line->GetID() >= id2_min && line->GetID() <= id2_max)
-         merger->Add("ID", (KVIDentifier *) line->Clone());
+         merger->Add("ID", (KVIDentifier*) line->Clone());
    }
 
    //just in case any of the lines were highlighted...
@@ -942,8 +938,9 @@ Bool_t KVIDGraph::IsIdentifiable(Double_t x, Double_t y) const
    // point with the method TestPoint(x,y). If the point is accepted
    // by all cuts, then (x,y) is identifiable (return kTRUE).
 
-   TIter next(fCuts); KVIDentifier* id=0;
-   while( (id = (KVIDentifier*)next()) ) if( !id->TestPoint(x,y) ) return kFALSE;
+   TIter next(fCuts);
+   KVIDentifier* id = 0;
+   while ((id = (KVIDentifier*)next())) if (!id->TestPoint(x, y)) return kFALSE;
    return kTRUE;
 }
 
@@ -965,11 +962,11 @@ const Char_t* KVIDGraph::GetName() const
    // we return the name of the first ID telescope in the list of telescopes
    // with which this grid is associated.
 
-   if(fName!="") return fName;
+   if (fName != "") return fName;
    const_cast<KVIDGraph*>(this)->fDyName = "";
-   if(fTelescopes.At(0)) const_cast<KVIDGraph*>(this)->fDyName = fTelescopes.At(0)->GetName();
+   if (fTelescopes.At(0)) const_cast<KVIDGraph*>(this)->fDyName = fTelescopes.At(0)->GetName();
    else {
-      if( fPar->HasParameter("IDTelescopes") ){
+      if (fPar->HasParameter("IDTelescopes")) {
          KVString tel_list = fPar->GetStringValue("IDTelescopes");
          tel_list.Begin(",");
          const_cast<KVIDGraph*>(this)->fDyName = tel_list.Next();
@@ -988,8 +985,8 @@ void KVIDGraph::BackwardsCompatibilityFix()
    //<PARAMETER> First run=... ----> <PARAMETER> Runlist=...
    //<PARAMETER> Last run=...
 
-   if( fPar->HasParameter("Runlist") ) return;
-   if( fPar->HasParameter("First run") && fPar->HasParameter("Last run") ){
+   if (fPar->HasParameter("Runlist")) return;
+   if (fPar->HasParameter("First run") && fPar->HasParameter("Last run")) {
       fRunList.SetMinMax(fPar->GetIntValue("First run"), fPar->GetIntValue("Last run"));
       fPar->SetValue("Runlist", fRunList.AsString());
       fPar->RemoveParameter("First run");
@@ -1005,19 +1002,19 @@ void KVIDGraph::WriteAsciiFile_WP(Int_t version)
    // la valeur par default version=-1 permet l ecriture de la derniere version
    // apres un check des versions existantes (methode CheckVersion)
    // la premiere version est indexee v0
-   Int_t vv=0; if (version==-1) vv = CheckVersion(version)+1;
-   WriteAsciiFile(fPattern+"_v"+Form("%d",vv)+".grid");
+   Int_t vv = 0;
+   if (version == -1) vv = CheckVersion(version) + 1;
+   WriteAsciiFile(fPattern + "_v" + Form("%d", vv) + ".grid");
 }
 //_______________________________________________________________________________________________//
 void KVIDGraph::ReadAsciiFile_WP(Int_t version)
 {
    // lecture des grilles avec version suivant un modele de fichier
    Int_t vv = CheckVersion(version);
-   if (vv==-1) {
-      if (version==-1) 	cout << "no file "+fPattern+"_v%d.grid" << endl;
-      else 					cout << "no file "+fPattern+Form("_v%d.grid",version) << endl;
-   }
-   else ReadAsciiFile(fPattern+"_v"+Form("%d",vv)+".grid");
+   if (vv == -1) {
+      if (version == -1)  cout << "no file " + fPattern + "_v%d.grid" << endl;
+      else              cout << "no file " + fPattern + Form("_v%d.grid", version) << endl;
+   } else ReadAsciiFile(fPattern + "_v" + Form("%d", vv) + ".grid");
 }
 //___________________________________________________________________________________//
 Int_t KVIDGraph::CheckVersion(Int_t version)
@@ -1027,35 +1024,39 @@ Int_t KVIDGraph::CheckVersion(Int_t version)
    // si la version demandee n existe pas return -1
    // creation d un fichier tampon dans le repertoire ou se situe les fichiers grilles
    // efface a la fin de la methode
-   Int_t temoin=-1;
-   TString pbis = fPattern,chemin = "";
-   TObjArray *tok=NULL;
-   if (fPattern.Contains("/")){		// prise en compte de fPattern contenant un chemin pour les fichiers
+   Int_t temoin = -1;
+   TString pbis = fPattern, chemin = "";
+   TObjArray* tok = NULL;
+   if (fPattern.Contains("/")) {    // prise en compte de fPattern contenant un chemin pour les fichiers
       tok = fPattern.Tokenize("/");
       Int_t nb = tok->GetEntries();
-      pbis = ((TObjString*)(*tok)[nb-1])->GetString();
-      chemin = ""; for (Int_t ii=0;ii<nb-1;ii+=1) chemin+=((TObjString*)(*tok)[ii])->GetString(); chemin+="/";
+      pbis = ((TObjString*)(*tok)[nb - 1])->GetString();
+      chemin = "";
+      for (Int_t ii = 0; ii < nb - 1; ii += 1) chemin += ((TObjString*)(*tok)[ii])->GetString();
+      chemin += "/";
    }
-   gROOT->ProcessLine(".! ls "+fPattern+"_v*.grid >> "+chemin+"listKVIDGraph_"+pbis);
-   ifstream f_in(chemin+"listKVIDGraph_"+pbis);
-   TString line="";
-   Int_t num=-2;
-   while (f_in.good() && num!=version) {
-      line.ReadLine(f_in); if ( line.Contains(fPattern+"_v") && line.Contains(".grid") ){
+   gROOT->ProcessLine(".! ls " + fPattern + "_v*.grid >> " + chemin + "listKVIDGraph_" + pbis);
+   ifstream f_in(chemin + "listKVIDGraph_" + pbis);
+   TString line = "";
+   Int_t num = -2;
+   while (f_in.good() && num != version) {
+      line.ReadLine(f_in);
+      if (line.Contains(fPattern + "_v") && line.Contains(".grid")) {
          tok = line.Tokenize(".");
          line = ((TObjString*)(*tok)[0])->GetString();
-         line.ReplaceAll(fPattern+"_v","template");
+         line.ReplaceAll(fPattern + "_v", "template");
          tok = line.Tokenize("template");
          num = ((TObjString*)(*tok)[0])->GetString().Atoi();
-         if (num>temoin) temoin=num;
+         if (num > temoin) temoin = num;
       }
    }
    f_in.close();
-   gROOT->ProcessLine(".! rm -f "+chemin+"listKVIDGraph_"+pbis);
+   gROOT->ProcessLine(".! rm -f " + chemin + "listKVIDGraph_" + pbis);
    delete tok;
-   if (version==-1) return temoin;
-   else if (temoin!=version) { return -1; }
-   else return temoin;
+   if (version == -1) return temoin;
+   else if (temoin != version) {
+      return -1;
+   } else return temoin;
 }
 
 //___________________________________________________________________________________
@@ -1066,9 +1067,9 @@ void KVIDGraph::SetMassFormula(Int_t mass)
    // This will change the mass (A) of each identifier.
 
    fMassFormula = mass;
-   if(OnlyZId()){
+   if (OnlyZId()) {
       if (GetNumberOfIdentifiers() > 0) {
-         fIdentifiers->R__FOR_EACH(KVIDentifier, SetMassFormula) (mass);
+         fIdentifiers->R__FOR_EACH(KVIDentifier, SetMassFormula)(mass);
       }
    }
    Modified();
@@ -1084,7 +1085,7 @@ void KVIDGraph::SetOnlyZId(Bool_t yes)
    // widths are calculated (see KVIDGrid::CalculateLineWidths)
    fOnlyZId = yes;
    if (GetNumberOfIdentifiers() > 0) {
-      fIdentifiers->R__FOR_EACH(KVIDentifier, SetOnlyZId) (yes);
+      fIdentifiers->R__FOR_EACH(KVIDentifier, SetOnlyZId)(yes);
    }
    Modified();
 }
@@ -1098,9 +1099,9 @@ void KVIDGraph::AddIDTelescopes(const TList* tels)
 
    TIter next(tels);
    KVBase* tel;
-   while ( (tel = (KVBase*)next()) ) AddIDTelescope(tel);
+   while ((tel = (KVBase*)next())) AddIDTelescope(tel);
    Modified();
-   if(gIDGridManager) gIDGridManager->Modified();
+   if (gIDGridManager) gIDGridManager->Modified();
 }
 
 //___________________________________________________________________________________
@@ -1126,19 +1127,19 @@ void KVIDGraph::AddIDTelescopes(const TList* tels)
 
 //_________________________________________________________________________________
 
-KVIDGraph *KVIDGraph::MakeIDGraph(const Char_t * class_name)
+KVIDGraph* KVIDGraph::MakeIDGraph(const Char_t* class_name)
 {
    // Static function which will create and 'Build' the identification graph of
    // class 'class_name', one of the plugins defined in either $KVROOT/KVFiles/.kvrootrc,
    // or in the user's .kvrootrc file.
 
    //check and load plugin library
-   TPluginHandler *ph;
+   TPluginHandler* ph;
    if (!(ph = KVBase::LoadPlugin("KVIDGraph", class_name)))
       return 0;
 
    //execute constructor/macro for graph - assumed without arguments
-   KVIDGraph *gr = (KVIDGraph *) ph->ExecPlugin(0);
+   KVIDGraph* gr = (KVIDGraph*) ph->ExecPlugin(0);
    return gr;
 }
 
@@ -1151,15 +1152,15 @@ void KVIDGraph::SetEditable(Bool_t editable)
    //    we then take a snapshot of the graph before editing begins
    //    and store it in fLastSavedVersion. we can always revert to
    //    this version if we want
-   
-   if(editable && !GetEditable()) UpdateLastSavedVersion();
-   
+
+   if (editable && !GetEditable()) UpdateLastSavedVersion();
+
    TCutG::SetEditable(editable);
    if (GetNumberOfIdentifiers() > 0) {
-      fIdentifiers->R__FOR_EACH(KVIDentifier, SetEditable) (editable);
+      fIdentifiers->R__FOR_EACH(KVIDentifier, SetEditable)(editable);
    }
    if (GetNumberOfCuts() > 0) {
-      fCuts->R__FOR_EACH(KVIDentifier, SetEditable) (editable);
+      fCuts->R__FOR_EACH(KVIDentifier, SetEditable)(editable);
    }
 }
 
@@ -1171,43 +1172,44 @@ const Char_t* KVIDGraph::GetNamesOfIDTelescopes()
    // this grid is valid.
 
    static TString tel_list;
-   if(!fTelescopes.GetEntries()){
+   if (!fTelescopes.GetEntries()) {
       // case of grid with "unknown" ID telescopes
       // we return the value of the IDTelescopes parameter (if defined)
-      if(fPar->HasParameter("IDTelescopes")){
+      if (fPar->HasParameter("IDTelescopes")) {
          tel_list = fPar->GetStringValue("IDTelescopes");
          return tel_list.Data();
       }
    }
    TIter next(&fTelescopes);
    TObject* id = next();
-   if(id) tel_list = id->GetName();
-   while ( (id = next()) ) tel_list += Form(",%s", id->GetName());
+   if (id) tel_list = id->GetName();
+   while ((id = next())) tel_list += Form(",%s", id->GetName());
    return tel_list.Data();
 }
 
 //______________________________________________________________________________
 
-void KVIDGraph::Streamer(TBuffer &R__b)
+void KVIDGraph::Streamer(TBuffer& R__b)
 {
    // Stream an object of class KVIDGraph.
    // Resets the 'fParent' pointer of each KVIDentifier after reading them in.
 
    if (R__b.IsReading()) {
-      R__b.ReadClassBuffer(KVIDGraph::Class(),this);
-      TIter nxt_id( fIdentifiers ); KVIDentifier* id;
-      while( (id= (KVIDentifier*)nxt_id()) ) id->fParent=this;
-      TIter nxt_cut( fCuts );
-      while( (id= (KVIDentifier*)nxt_cut()) ) id->fParent=this;
+      R__b.ReadClassBuffer(KVIDGraph::Class(), this);
+      TIter nxt_id(fIdentifiers);
+      KVIDentifier* id;
+      while ((id = (KVIDentifier*)nxt_id())) id->fParent = this;
+      TIter nxt_cut(fCuts);
+      while ((id = (KVIDentifier*)nxt_cut())) id->fParent = this;
    } else {
-      R__b.WriteClassBuffer(KVIDGraph::Class(),this);
+      R__b.WriteClassBuffer(KVIDGraph::Class(), this);
    }
 }
 
 //___________________________________________________________________________________
 
-void KVIDGraph::TestIdentification(TH2F * data, TH1F * id_real,
-                                   TH2F * id_real_vs_e_res, TH2F* z_a_real)
+void KVIDGraph::TestIdentification(TH2F* data, TH1F* id_real,
+                                   TH2F* id_real_vs_e_res, TH2F* z_a_real)
 {
    //This method allows to test the identification capabilities of the grid using data in a TH2F.
    //We assume that 'data' contains an identification map, whose 'x' and 'y' coordinates correspond
@@ -1222,14 +1224,14 @@ void KVIDGraph::TestIdentification(TH2F * data, TH1F * id_real,
    //Initialize the grid: calculate line widths etc.
    Initialize();
 
-   KVIdentificationResult *idr = new KVIdentificationResult;
-   
+   KVIdentificationResult* idr = new KVIdentificationResult;
+
    id_real->Reset();
    id_real_vs_e_res->Reset();
    Int_t tot_events = (Int_t) data->GetSum();
    Int_t events_read = 0;
    Float_t percent = 0., cumul = 10.;
-   Bool_t zaMap = (!IsOnlyZId())&&(z_a_real);
+   Bool_t zaMap = (!IsOnlyZId()) && (z_a_real);
 
    //loop over data in histo
    for (int i = 1; i <= data->GetNbinsX(); i++) {
@@ -1256,15 +1258,15 @@ void KVIDGraph::TestIdentification(TH2F * data, TH1F * id_real,
             y = gRandom->Uniform(y0 - .5 * wy, y0 + .5 * wy);
             if (IsIdentifiable(x, y)) {
                Identify(x, y, idr);
-               if(AcceptIDForTest()){
-						Float_t PID = idr->PID;
+               if (AcceptIDForTest()) {
+                  Float_t PID = idr->PID;
                   if (idr->Aident) PID = (idr->Z + 0.1 * (idr->PID - 2. * idr->Z));
                   id_real->Fill(PID, weight);
                   id_real_vs_e_res->Fill(x, PID, weight);
-						Float_t RealA,RealZ;
-						RealA = (idr->Aident? idr->PID : (Float_t)idr->A);
-						RealZ = (idr->Aident? (Float_t)idr->Z : idr->PID);
-                  if(zaMap) z_a_real->Fill(RealA-RealZ, gRandom->Gaus(RealZ,0.15), weight);
+                  Float_t RealA, RealZ;
+                  RealA = (idr->Aident ? idr->PID : (Float_t)idr->A);
+                  RealZ = (idr->Aident ? (Float_t)idr->Z : idr->PID);
+                  if (zaMap) z_a_real->Fill(RealA - RealZ, gRandom->Gaus(RealZ, 0.15), weight);
                }
             }
          }

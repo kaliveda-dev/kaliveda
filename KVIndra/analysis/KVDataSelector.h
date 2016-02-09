@@ -14,32 +14,35 @@ $Date: 2006/11/03 08:01:32 $
 class KVSelector;
 #include "TEventList.h"
 
-class KVDataSelector:public KVBase {
+class KVDataSelector: public KVBase {
 
- private:
-   KVSelector * kvsel;
-   TEventList *evtl;
+private:
+   KVSelector* kvsel;
+   TEventList* evtl;
 
- public:
+public:
 
-    KVDataSelector();
-    virtual ~ KVDataSelector();
+   KVDataSelector();
+   virtual ~ KVDataSelector();
 
-   virtual void SetKVSelector(KVSelector * kvs = 0) {
+   virtual void SetKVSelector(KVSelector* kvs = 0)
+   {
       kvsel = kvs;
-   } virtual KVSelector *GetKVSelector(void) {
+   } virtual KVSelector* GetKVSelector(void)
+   {
       return kvsel;
    }
    virtual void Reset(Int_t nrun);
    virtual Bool_t ProcessCurrentEntry(void);
-   virtual const TEventList *GetTEventList(void) {
+   virtual const TEventList* GetTEventList(void)
+   {
       return evtl;
    }
    virtual void Init(void);
    virtual Bool_t SelectCurrentEntry(void);
 
-   static void MakeClass(const Char_t * classname,
-                         const Char_t * classdesc);
+   static void MakeClass(const Char_t* classname,
+                         const Char_t* classdesc);
 
    ClassDef(KVDataSelector, 1)  //Class handling event lists for KVSelector analysis of data chains
 };

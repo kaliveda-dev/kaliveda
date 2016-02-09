@@ -55,7 +55,7 @@ Char_t KVINDRACodes::fCodeGenIdent[14][120] = {
 };
 
 UChar_t KVINDRACodes::fIDCodes[14] =
-    { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 15 };
+{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 15 };
 
 UShort_t KVINDRACodes::fIDBits[16] = {
    kIDCode0,
@@ -94,8 +94,8 @@ UChar_t KVINDRACodes::fEBits[16] = {
    kECode1,
    kECode2,
    kECode3,
-         kECode4,
-         kECode5,
+   kECode4,
+   kECode5,
    0,
    0,
    0,
@@ -116,14 +116,14 @@ KVINDRACodes::KVINDRACodes()
 }
 
 
-const Char_t *KVINDRACodes::GetIDStatus()
+const Char_t* KVINDRACodes::GetIDStatus()
 {
    //Give an explanation for the ID code
 
    return fCodeGenIdent[GetCodeIndex(GetIDMask())];
 }
 
-const Char_t *KVINDRACodes::GetEStatus()
+const Char_t* KVINDRACodes::GetEStatus()
 {
    //Give an explanation for the calibration code
 
@@ -231,7 +231,7 @@ UChar_t KVINDRACodes::VedaECodeToBitmask(UChar_t veda_e_code)
    return fEBits[veda_e_code];
 }
 
-void KVINDRACodes::Clear(Option_t *)
+void KVINDRACodes::Clear(Option_t*)
 {
    //resets all id subcodes.
    KVINDRACodeMask::Clear();

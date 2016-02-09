@@ -6,17 +6,23 @@
 
 #include "KVFAZIA.h"
 
-class KVFAZIASYM : public KVFAZIA
-{
+class KVFAZIASYM : public KVFAZIA {
 
    virtual void BuildFAZIA();
    virtual void GetGeometryParameters();
-   
-   public:
+
+   void RutherfordTelescope();
+   void DefineStructureFormats(KVGeoImport& g)
+   {
+      g.SetStructureNameFormat("RUTH", "$type");
+   }
+   virtual void SetNameOfDetectors(KVEnv& env);
+
+public:
    KVFAZIASYM();
    virtual ~KVFAZIASYM();
 
-   ClassDef(KVFAZIASYM,1)//Description of the FAZIA set up
+   ClassDef(KVFAZIASYM, 1) //Description of the FAZIA set up
 };
 
 #endif

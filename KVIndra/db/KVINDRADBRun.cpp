@@ -29,8 +29,8 @@ KVINDRADBRun::KVINDRADBRun()
 }
 
 //____________________________________________________________________________
-KVINDRADBRun::KVINDRADBRun(Int_t number, const Char_t * title):KVDBRun(number,
-        title)
+KVINDRADBRun::KVINDRADBRun(Int_t number, const Char_t* title): KVDBRun(number,
+         title)
 {
    //ctor for a given run number
 }
@@ -44,14 +44,14 @@ KVINDRADBRun::~KVINDRADBRun()
 //___________________________________________________________________________
 
 Double_t KVINDRADBRun::GetEventCrossSection(Double_t Q_apres_cible,
-                                            Double_t Coul_par_top) const
+      Double_t Coul_par_top) const
 {
    //Calculation of cross-section (in millibarn) per event of this run from the measured integrated beam current and correcting for dead time.
    //Based on sect_effic.f by M.F. Rivet
    //
    //For meaning of arguments, see GetNIncidentIons()
 
-   KVTarget *target = GetTarget();
+   KVTarget* target = GetTarget();
    if (!target)
       return 0;                 //can't calculate X-section without knowing target characteristics
 
@@ -71,7 +71,7 @@ Double_t KVINDRADBRun::GetEventCrossSection(Double_t Q_apres_cible,
 }
 
 Double_t KVINDRADBRun::GetTotalCrossSection(Double_t Q_apres_cible,
-                                            Double_t Coul_par_top) const
+      Double_t Coul_par_top) const
 {
    //Calculate total cross-section (in millibarn) measured for this run from the calculated cross-section per event
    //(see GetEventCrossSection()) and the total number of measured events
@@ -114,15 +114,15 @@ void KVINDRADBRun::UnsetSystem()
    //If this run has previously been associated with a system in the database,
    //this will remove the association. The run will also be removed from the system's
    //list of associated runs.
-   
+
    KVDBRun::UnsetSystem();
    SetTitle("INDRA run");
 }
 
-KVDBTape *KVINDRADBRun::GetTape() const
+KVDBTape* KVINDRADBRun::GetTape() const
 {
    if (GetKey("Tapes")) {
-      return (KVDBTape *) GetKey("Tapes")->GetLinks()->First();
+      return (KVDBTape*) GetKey("Tapes")->GetLinks()->First();
    }
    return 0;
 }
@@ -139,17 +139,17 @@ Int_t KVINDRADBRun::GetTapeNumber() const
 
 Float_t KVINDRADBRun::GetMeanPulser(const Char_t* param)
 {
-	// Return mean value of pulser/laser for this run.
-	//
-	// For detectors, param should be name of an acquisition parameter
-	// e.g. CI_0201_PG, CSI_1301_L, etc.
-	// For pin laser diodes, param should be name of associated acquisition parameter
-	// with either '_laser' or '_gene' appended
-	// e.g. PILA_05_PG_laser, SI_PIN1_PG_gene
-	//
-	// Returns -1.0 if no data available for this parameter/run.
-	
-	if( gIndraDB && gIndraDB->GetPulserData() )
-		return gIndraDB->GetPulserData()->GetMean(param, GetNumber());
-	return -1.0;
+   // Return mean value of pulser/laser for this run.
+   //
+   // For detectors, param should be name of an acquisition parameter
+   // e.g. CI_0201_PG, CSI_1301_L, etc.
+   // For pin laser diodes, param should be name of associated acquisition parameter
+   // with either '_laser' or '_gene' appended
+   // e.g. PILA_05_PG_laser, SI_PIN1_PG_gene
+   //
+   // Returns -1.0 if no data available for this parameter/run.
+
+   if (gIndraDB && gIndraDB->GetPulserData())
+      return gIndraDB->GetPulserData()->GetMean(param, GetNumber());
+   return -1.0;
 }

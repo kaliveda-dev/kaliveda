@@ -19,7 +19,7 @@ ClassImp(KVRunListLine)
 //based on the DST runlists kept at CC-IN2P3 (KVLineDST).
 //
 //For backwards compatibility, this uses KVString whenever possible.
-    KVRunListLine::KVRunListLine()
+KVRunListLine::KVRunListLine()
 {
    //Default ctor
    //Initial size of TObjArray (fMaxNFields) is 5. This will be increased if necessary in BreakLineIntoFields().
@@ -52,7 +52,7 @@ Int_t KVRunListLine::BreakLineIntoFields(const char _delim)
    Int_t start = 0;
    TString delim(_delim);
    Int_t end = fLine.Index(delim);
-   TObjArray & tca = *fFields;
+   TObjArray& tca = *fFields;
    while (end > -1) {
 
       tca[allfields] = new TObjString();
@@ -68,10 +68,10 @@ Int_t KVRunListLine::BreakLineIntoFields(const char _delim)
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,5,0)
          //since ROOT v3.05 SetString(const char *)
-         ((TObjString *) tca[allfields])->SetString(dummy.Data());
+         ((TObjString*) tca[allfields])->SetString(dummy.Data());
 #else
          //before ROOT v3.05 SetString(char *)
-         ((TObjString *) tca[allfields])->SetString((char *) dummy.Data());
+         ((TObjString*) tca[allfields])->SetString((char*) dummy.Data());
 #endif
 
       }
@@ -108,9 +108,9 @@ void KVRunListLine::SetFields()
    fFieldsSet = kFALSE;
 
    TIter next_field(fFields);
-   TObjString *field = 0;
+   TObjString* field = 0;
    Int_t idx = 0;
-   while ((field = (TObjString *) next_field())) {
+   while ((field = (TObjString*) next_field())) {
 
       if (field->GetString().IsAscii() && field->GetString().Length()) {
          //non-null ASCII string ? use it as column header
@@ -120,8 +120,8 @@ void KVRunListLine::SetFields()
 
    }
 
-   if (!fIndexList.GetNpar() ) {
-      //no indices set - something's wrong 
+   if (!fIndexList.GetNpar()) {
+      //no indices set - something's wrong
       Error(Form("%s::SetFields", IsA()->GetName()), "No indices set");
       return;
    }
@@ -131,7 +131,7 @@ void KVRunListLine::SetFields()
 
 //_____________________________________________________________________________________
 
-TObjString *KVRunListLine::GetFieldString(const Char_t * fname) const
+TObjString* KVRunListLine::GetFieldString(const Char_t* fname) const
 {
    //returns a TObjString containing the field in the line corresponding to column title "fname".
    //Check that field indices are set and field is known otherwise return 0
@@ -139,18 +139,18 @@ TObjString *KVRunListLine::GetFieldString(const Char_t * fname) const
    Int_t idx = GetFieldIndex(fname);
    if (idx < 0)
       return 0;
-   TObjArray & tca = *fFields;
-   return (TObjString *) tca[idx];
+   TObjArray& tca = *fFields;
+   return (TObjString*) tca[idx];
 }
 
 //_____________________________________________________________________________________
 
-const Char_t *KVRunListLine::GetField(const Char_t * fname) const
+const Char_t* KVRunListLine::GetField(const Char_t* fname) const
 {
    //returns a string containing the field in the line corresponding to column title "fname".
    //returns 0 if field not found
 
-   TObjString *tmp = GetFieldString(fname);
+   TObjString* tmp = GetFieldString(fname);
    if (tmp)
       return tmp->String().Data();
    return 0;
@@ -158,13 +158,13 @@ const Char_t *KVRunListLine::GetField(const Char_t * fname) const
 
 //_____________________________________________________________________________________
 
-Int_t KVRunListLine::GetIntField(const Char_t * fname)
+Int_t KVRunListLine::GetIntField(const Char_t* fname)
 {
    //Returns the integer translation of the field in the line corresponding to column title "fname".
    //We check the field is present in current line and that all characters in the field are numbers (KVString::IsDigit).
    //If not, 0 is returned.
 
-   TObjString *tmp = GetFieldString(fname);
+   TObjString* tmp = GetFieldString(fname);
    if (!tmp)
       return 0;
    KVString kvs(tmp->String());
@@ -175,13 +175,13 @@ Int_t KVRunListLine::GetIntField(const Char_t * fname)
 
 //_____________________________________________________________________________________
 
-Float_t KVRunListLine::GetFloatField(const Char_t * fname)
+Float_t KVRunListLine::GetFloatField(const Char_t* fname)
 {
    //returns the floating-point translation of the field in the line corresponding to column title "fname".
    //We check that the field is a floating point number (IsFloat=kTRUE)
    //If not, 0 is returned.
 
-   TObjString *tmp = GetFieldString(fname);
+   TObjString* tmp = GetFieldString(fname);
    if (!tmp)
       return 0;
    KVString kvs(tmp->String());
@@ -215,7 +215,7 @@ void KVRunListLine::Print() const
 
 //_____________________________________________________________________________________
 
-Bool_t KVRunListLine::IsFloat(const Char_t * name)
+Bool_t KVRunListLine::IsFloat(const Char_t* name)
 {
    //Returns kTRUE if field "name" contains a floating point number
    //Examples are:
@@ -226,7 +226,7 @@ Bool_t KVRunListLine::IsFloat(const Char_t * name)
 
    if (HasFieldValue(name)) {   //check field is present
 
-      TObjString *tmp = GetFieldString(name);
+      TObjString* tmp = GetFieldString(name);
       if (!tmp)
          return 0;
       KVString kvs(tmp->String());
@@ -237,13 +237,13 @@ Bool_t KVRunListLine::IsFloat(const Char_t * name)
 
 //______________________________________________________________________//
 
-Bool_t KVRunListLine::FieldContains(const Char_t * field,
-                                    const Char_t * string) const
+Bool_t KVRunListLine::FieldContains(const Char_t* field,
+                                    const Char_t* string) const
 {
    //Returns true if "field" exists, has been filled, and contains "string" as part or all of its value
    if (!HasFieldValue(field))
       return kFALSE;
-   TObjString *tmp = GetFieldString(field);
+   TObjString* tmp = GetFieldString(field);
    if (!tmp)
       return kFALSE;
    KVString kvs(tmp->String());
@@ -252,8 +252,8 @@ Bool_t KVRunListLine::FieldContains(const Char_t * field,
 
 //_____________________________________________________________________________________
 
-Int_t KVRunListLine::GetTrigger(const Char_t * field_name,
-                                const Char_t * fmt)
+Int_t KVRunListLine::GetTrigger(const Char_t* field_name,
+                                const Char_t* fmt)
 {
    //Returns value of "Trigger" field, assuming it is written with format "fmt" i.e. if fmt = "M>=%d" (default) we expect "M>=1", "M>=4" etc.
    //The actual field name for the trigger is given as first argument (default value = "Trigger")
@@ -272,7 +272,7 @@ Int_t KVRunListLine::GetTrigger(const Char_t * field_name,
 
 //_____________________________________________________________________________________
 
-void KVRunListLine::SetFieldKeys(Int_t nkeys, const Char_t * key1, ...)
+void KVRunListLine::SetFieldKeys(Int_t nkeys, const Char_t* key1, ...)
 {
    //Set keywords used to identify lines in the file which define the column headings, i.e. the field names.
    //Give the number of keywords (nkeys>=1) and then the list of keywords (at least one).
@@ -290,7 +290,7 @@ void KVRunListLine::SetFieldKeys(Int_t nkeys, const Char_t * key1, ...)
    va_start(ap, key1);
    while (narg < nkeys) {
 
-      fFieldKeys.Add(new TObjString(va_arg(ap, const Char_t *)));
+      fFieldKeys.Add(new TObjString(va_arg(ap, const Char_t*)));
       narg++;
    }
    va_end(ap);
@@ -298,7 +298,7 @@ void KVRunListLine::SetFieldKeys(Int_t nkeys, const Char_t * key1, ...)
 
 //_____________________________________________________________________________________
 
-void KVRunListLine::SetRunKeys(Int_t nkeys, const Char_t * key1, ...)
+void KVRunListLine::SetRunKeys(Int_t nkeys, const Char_t* key1, ...)
 {
    //Set list of fields which must have values for a line to be considered a "good" run line
    //Give the number of fields (nkeys>=1) and then the list of field names (at least one).
@@ -313,7 +313,7 @@ void KVRunListLine::SetRunKeys(Int_t nkeys, const Char_t * key1, ...)
    va_start(ap, key1);
    while (narg < nkeys) {
 
-      fRunKeys.Add(new TObjString(va_arg(ap, const Char_t *)));
+      fRunKeys.Add(new TObjString(va_arg(ap, const Char_t*)));
       narg++;
    }
    va_end(ap);
@@ -331,9 +331,9 @@ Bool_t KVRunListLine::IsFieldHeader()
    }
    //test all keywords in list - first one not contained in "line" causes us to return kFALSE
    TIter next_kw(&fFieldKeys);
-   TObjString *os;
-   while ((os = (TObjString *) next_kw())) {
-      if (!fLine.Contains(os->GetString())){
+   TObjString* os;
+   while ((os = (TObjString*) next_kw())) {
+      if (!fLine.Contains(os->GetString())) {
          return kFALSE;
       }
    }
@@ -352,13 +352,15 @@ Bool_t KVRunListLine::GoodRunLine()
    }
    //test all fields in list - first one without a value in line causes us to return kFALSE
    TIter next_kw(&fRunKeys);
-   TObjString *os;
-   while ((os = (TObjString *) next_kw())) {
-      if (!HasFieldValue(os->GetString()))
-      {return kFALSE;}
+   TObjString* os;
+   while ((os = (TObjString*) next_kw())) {
+      if (!HasFieldValue(os->GetString())) {
+         return kFALSE;
+      }
       KVString tmp(GetField(os->GetString()));
-      if (!tmp.IsDigit())
-      {return kFALSE;}
+      if (!tmp.IsDigit()) {
+         return kFALSE;
+      }
    }
    return kTRUE;
 }

@@ -1,0 +1,16 @@
+#Order of the transfer functions (polynomial)
+ORDER: 7
+
+#Liste of files with the coefficients of the transfer matrix
+
+#file for reconstruction in delta (Brho)
+DELTA: r_brho_In.dat
+
+#file for reconstrucion  in theta
+THETA: r_theta_In.dat
+
+#file for reconstrucion  in phi
+PHI:   r_phi_In.dat
+
+#file for reconstrucion  in path
+PATH:  r_path_In.dat

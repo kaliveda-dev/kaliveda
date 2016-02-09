@@ -10,53 +10,57 @@
 class KVVAMOSReconNuc;
 class KVDetectorEvent;
 
-class KVVAMOSReconEvent : public KVReconstructedEvent
-{
+class KVVAMOSReconEvent : public KVReconstructedEvent {
 
-	private:
+private:
 
-		KVVAMOSCodes *fCodeMask; //!codes accepted for "good" VAMOS nucleus (IsOK)
-		inline KVVAMOSCodes *GetCodeMask(){
-      		if (!fCodeMask)
-         		fCodeMask = new KVVAMOSCodes;
-      		return fCodeMask;
-   		};
-
-
-   	public:
-
-	   	KVVAMOSReconEvent(Int_t mult = 5, const char* classname = "KVVAMOSReconNuc");
-		void init();
-   		virtual ~KVVAMOSReconEvent();
+   KVVAMOSCodes* fCodeMask; //!codes accepted for "good" VAMOS nucleus (IsOK)
+   inline KVVAMOSCodes* GetCodeMask()
+   {
+      if (!fCodeMask)
+         fCodeMask = new KVVAMOSCodes;
+      return fCodeMask;
+   };
 
 
+public:
 
-   		        void     AcceptECodes (UChar_t  code);
-		        void     AcceptFPCodes(UInt_t   code);
-		        void     AcceptIDCodes(UShort_t code);
-		        void     AcceptTCodes (UShort_t code);
-	    virtual void     CalibrateEvent();
-     KVVAMOSReconNuc    *GetNextNucleus(Option_t * opt = "");
-     KVVAMOSReconNuc    *GetNucleus(Int_t n_nuc) const;
-		virtual void     IdentifyEvent_A();
-		virtual void     IdentifyEvent_Z();
-		virtual Bool_t   IsOK();
-		virtual void     Print(Option_t * option = "") const;
-                virtual void     ReconstructEvent(KVMultiDetArray*, KVDetectorEvent * kvde);
+   KVVAMOSReconEvent(Int_t mult = 5, const char* classname = "KVVAMOSReconNuc");
+   void init();
+   virtual ~KVVAMOSReconEvent();
 
 
-		inline Bool_t CheckCodes(KVVAMOSCodes & code){
-      		//returns kTRUE if "code" is compatible with VAMOS event's code mask.
-      		//If no code mask set for event, returns kTRUE in all cases
-      		if (!fCodeMask)
-         		return kTRUE;
-      		return ((*fCodeMask) & code);
-   		}
 
-		inline void ResetGetNextNucleus(){ ResetGetNextParticle(); }
+   void     AcceptECodes(UChar_t  code);
+   void     AcceptFPCodes(UInt_t   code);
+   void     AcceptIDCodes(UShort_t code);
+   void     AcceptTCodes(UShort_t code);
+   KVVAMOSReconNuc*    GetNextNucleus(Option_t* opt = "");
+   KVVAMOSReconNuc*    GetNucleus(Int_t n_nuc) const;
+   virtual void     IdentifyEvent_A();
+   virtual void     IdentifyEvent_Z();
+   virtual void     IdentAndCalibEvent();
+   virtual Bool_t   IsOK();
+   virtual void     Print(Option_t* option = "") const;
+   virtual void     ReconstructEvent(KVMultiDetArray*, KVDetectorEvent* kvde);
 
 
-   		ClassDef(KVVAMOSReconEvent,1)//Event reconstructed from energy losses in VAMOS spectrometer
+   inline Bool_t CheckCodes(KVVAMOSCodes& code)
+   {
+      //returns kTRUE if "code" is compatible with VAMOS event's code mask.
+      //If no code mask set for event, returns kTRUE in all cases
+      if (!fCodeMask)
+         return kTRUE;
+      return ((*fCodeMask) & code);
+   }
+
+   inline void ResetGetNextNucleus()
+   {
+      ResetGetNextParticle();
+   }
+
+
+   ClassDef(KVVAMOSReconEvent, 1) //Event reconstructed from energy losses in VAMOS spectrometer
 };
 
 #endif

@@ -12,10 +12,9 @@
 #include "KVCanvas.h"
 #include "KVNumberList.h"
 
-class KVNuclearChart : public KVBase
-{
+class KVNuclearChart : public KVBase {
 
-   protected:
+protected:
    Int_t fNmin;
    Int_t fNmax;
    Int_t fZmin;
@@ -38,40 +37,76 @@ class KVNuclearChart : public KVBase
    TPaveText* fInfo;
    KVCanvas* fCanvas;
 
-   public:
+public:
 //    KVNuclearChart();
-   KVNuclearChart(Int_t nMin=-1, Int_t nMax=-1, Int_t zMin=-1, Int_t zMax=-1, Double_t life=1.e-06);
-   KVNuclearChart (const KVNuclearChart&) ;
+   KVNuclearChart(Int_t nMin = -1, Int_t nMax = -1, Int_t zMin = -1, Int_t zMax = -1, Double_t life = 1.e-06);
+   KVNuclearChart(const KVNuclearChart&) ;
    virtual ~KVNuclearChart();
-   void Copy (TObject&) const;
-   
+   void Copy(TObject&) const;
+
    void Draw(Option_t* option = "");
    void ShowNucleusInfo(KVNucleus* nuc);
 
-   Int_t GetShowSymbol(){return fShowSymbol;}
-   void SetShowSymbol(Int_t value=1);// *TOGGLE*
+   Int_t GetShowSymbol()
+   {
+      return fShowSymbol;
+   }
+   void SetShowSymbol(Int_t value = 1); // *TOGGLE*
    void ShowSymbol();
 
-   Int_t GetShowMagicNumbers(){return fShowMagicNumbers;}
-   void SetShowMagicNumbers(Int_t value=1);// *TOGGLE*
+   Int_t GetShowMagicNumbers()
+   {
+      return fShowMagicNumbers;
+   }
+   void SetShowMagicNumbers(Int_t value = 1); // *TOGGLE*
    void ShowMagicNumbers();
 
-   KVCanvas* GetCanvas(){return fCanvas;}
+   KVCanvas* GetCanvas()
+   {
+      return fCanvas;
+   }
 
-   virtual void        Delete(Option_t *option=""){KVBase::Delete(option);}
-   virtual void        DrawClass() const {KVBase::DrawClass();}
-   virtual TObject    *DrawClone(Option_t *option="") const {return KVBase::DrawClone(option);}
-   virtual void        Dump() const {KVBase::Dump();}
+   virtual void        Delete(Option_t* option = "")
+   {
+      KVBase::Delete(option);
+   }
+   virtual void        DrawClass() const
+   {
+      KVBase::DrawClass();
+   }
+   virtual TObject*    DrawClone(Option_t* option = "") const
+   {
+      return KVBase::DrawClone(option);
+   }
+   virtual void        Dump() const
+   {
+      KVBase::Dump();
+   }
 
-   virtual void        Inspect() const {KVBase::Inspect();}
-   virtual void        SaveAs(const char *filename="",Option_t *option="") const {KVBase::SaveAs(filename,option);}
-   virtual void        SetDrawOption(Option_t *option="") {KVBase::SetDrawOption(option);}
+   virtual void        Inspect() const
+   {
+      KVBase::Inspect();
+   }
+   virtual void        SaveAs(const char* filename = "", Option_t* option = "") const
+   {
+      KVBase::SaveAs(filename, option);
+   }
+   virtual void        SetDrawOption(Option_t* option = "")
+   {
+      KVBase::SetDrawOption(option);
+   }
 
-   virtual void        SetTitle(const char *title){KVBase::SetTitle(title);}
-   virtual void        SetName(const char *name){KVBase::SetName(name);}
+   virtual void        SetTitle(const char* title)
+   {
+      KVBase::SetTitle(title);
+   }
+   virtual void        SetName(const char* name)
+   {
+      KVBase::SetName(name);
+   }
 
 
-   ClassDef(KVNuclearChart,1)//Used to draw nuclear chart
+   ClassDef(KVNuclearChart, 1) //Used to draw nuclear chart
 };
 
 #endif

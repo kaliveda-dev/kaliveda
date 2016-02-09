@@ -53,45 +53,53 @@ enum EIDCodes {
    kIDCode_MultihitChIo = kIDCode8
 };
 
-class KVINDRACodeMask:public TObject {
+class KVINDRACodeMask: public TObject {
 
- private:
+private:
    UShort_t fIDMask;            //16-bit mask with id codes
    UChar_t fEMask;              //8-bit mask with e-calibration codes
 
- public:
+public:
 
-    KVINDRACodeMask() {
+   KVINDRACodeMask()
+   {
       //Default ctor - no mask defined
       fIDMask = 0;
       fEMask = 0;
    };
-   virtual ~ KVINDRACodeMask() {
+   virtual ~ KVINDRACodeMask()
+   {
       //Default dtor
       fIDMask = 0;
       fEMask = 0;
    };
 
-   UShort_t GetIDMask() {
+   UShort_t GetIDMask()
+   {
       return fIDMask;
    }
-   UChar_t GetEMask() {
+   UChar_t GetEMask()
+   {
       return fEMask;
    }
-   void SetIDMask(UShort_t codes) {
+   void SetIDMask(UShort_t codes)
+   {
       fIDMask = codes;
    }
    Bool_t TestIDCode(UShort_t code);
    Bool_t TestECode(UChar_t code);
-   void SetEMask(UChar_t codes) {
+   void SetEMask(UChar_t codes)
+   {
       fEMask = codes;
    }
 
-   Bool_t operator&(KVINDRACodeMask & msk) {
+   Bool_t operator&(KVINDRACodeMask& msk)
+   {
       return (TestIDCode(msk.GetIDMask()) && TestECode(msk.GetEMask()));
    };
 
-   void Clear(Option_t* = "") {
+   void Clear(Option_t* = "")
+   {
       fIDMask = 0;
       fEMask = 0;
       TObject::Clear();

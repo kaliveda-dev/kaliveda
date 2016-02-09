@@ -26,21 +26,22 @@ $Id: KVDataBaseBrowser.h,v 1.2 2006/10/19 14:32:43 franklan Exp $
 
 class KVDataBase;
 
-class KVDataBaseBrowser:public KVBrowser, public TGMainFrame {
+class KVDataBaseBrowser: public KVBrowser, public TGMainFrame {
 
    friend class KVDataBase;
 
- private:
+private:
 
-    KVDataBase * fDbase;        //! the DataBase under study
-   TGComboBox *fCB_Tables;      //combo box for database tables
-   TGComboBox *fCB_Records;     //combo box for records in a table
+   KVDataBase* fDbase;         //! the DataBase under study
+   TGComboBox* fCB_Tables;      //combo box for database tables
+   TGComboBox* fCB_Records;     //combo box for records in a table
 
- public:
+public:
 
-    KVDataBaseBrowser(const TGWindow * p, KVDataBase * d, UInt_t w,
-                      UInt_t h);
-    virtual ~ KVDataBaseBrowser() {
+   KVDataBaseBrowser(const TGWindow* p, KVDataBase* d, UInt_t w,
+                     UInt_t h);
+   virtual ~ KVDataBaseBrowser()
+   {
    };
    virtual void CloseWindow();
    virtual Bool_t ProcessMessage(Long_t msg, Long_t parm1, Long_t);

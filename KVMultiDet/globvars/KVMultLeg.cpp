@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 17/02/2004:
 // Creation d'une classe Variable Globale.
@@ -17,7 +17,7 @@ ClassImp(KVMultLeg)
 //
 // Look at KVVarGlob class to have an example of use.
 //
-    /* *///
+/* *///
 Int_t KVMultLeg::nb = 0;
 Int_t KVMultLeg::nb_crea = 0;
 Int_t KVMultLeg::nb_dest = 0;
@@ -33,16 +33,16 @@ void KVMultLeg::init_KVMultLeg(void)
    nb_crea++;
 
    zmax = 2;
-   fValueType='I';// integer values
+   fValueType = 'I'; // integer values
 }
 
 //_________________________________________________________________
-KVMultLeg::KVMultLeg(void):KVVarGlob1()
+KVMultLeg::KVMultLeg(void): KVVarGlob1()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    init_KVMultLeg();
    sprintf(nom, "KVMultLeg_%d", nb_crea);
@@ -55,7 +55,7 @@ KVMultLeg::KVMultLeg(void):KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVMultLeg::KVMultLeg(Char_t * nom):KVVarGlob1(nom)
+KVMultLeg::KVMultLeg(Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom
@@ -67,16 +67,16 @@ KVMultLeg::KVMultLeg(Char_t * nom):KVVarGlob1(nom)
 }
 
 //_________________________________________________________________
-KVMultLeg::KVMultLeg(const KVMultLeg & a) : KVVarGlob1()
+KVMultLeg::KVMultLeg(const KVMultLeg& a) : KVVarGlob1()
 {
-// 
+//
 // Contructeur par Copy
 //
    init_KVMultLeg();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVMultLeg &) a).Copy(*this);
+   ((KVMultLeg&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVMultLeg
    cout << nb << " crees...(Copy) " << endl;
@@ -86,7 +86,7 @@ KVMultLeg::KVMultLeg(const KVMultLeg & a) : KVVarGlob1()
 //_________________________________________________________________
 KVMultLeg::~KVMultLeg(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVMultLeg
@@ -99,9 +99,9 @@ KVMultLeg::~KVMultLeg(void)
 
 //_________________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVMultLeg::Copy(TObject & a) const
+void KVMultLeg::Copy(TObject& a) const
 #else
-void KVMultLeg::Copy(TObject & a)
+void KVMultLeg::Copy(TObject& a)
 #endif
 {
 // Methode de Copy
@@ -112,14 +112,14 @@ void KVMultLeg::Copy(TObject & a)
    cout << "Copy de " << GetName() << "..." << endl;
 #endif
    KVVarGlob1::Copy(a);
-   ((KVMultLeg &) a).SetZmax(GetZmax());
+   ((KVMultLeg&) a).SetZmax(GetZmax());
 #ifdef DEBUG_KVMultLeg
    cout << "Nom de la Copy (resultat) : " << a.GetName() << endl;
 #endif
 }
 
 //_________________________________________________________________
-KVMultLeg & KVMultLeg::operator =(const KVMultLeg & a)
+KVMultLeg& KVMultLeg::operator =(const KVMultLeg& a)
 {
 //
 // Operateur =
@@ -130,7 +130,7 @@ KVMultLeg & KVMultLeg::operator =(const KVMultLeg & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVMultLeg &) a).Copy(*this);
+   ((KVMultLeg&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVMultLeg
    cout << "Nom de la Copy par egalite: " << GetName() << endl;
@@ -140,9 +140,9 @@ KVMultLeg & KVMultLeg::operator =(const KVMultLeg & a)
 
 
 //_________________________________________________________________
-void KVMultLeg::Fill(KVNucleus * c)
+void KVMultLeg::Fill(KVNucleus* c)
 {
-   //The multiplicity is incremented if the Z of nucleus *c is <=zmax   
+   //The multiplicity is incremented if the Z of nucleus *c is <=zmax
    if (c->GetZ() <= zmax)
       FillVar(1.);
 }

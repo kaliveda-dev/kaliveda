@@ -24,7 +24,7 @@ See documentation <a href="KVedaLossDoc/KVedaLoss.html">here</a>.
 // (usually 400MeV/u for Z<3, 250MeV/u for Z>3)
 // If higher energies are required, call static method KVedaLoss::SetIgnoreEnergyLimits()
 // BEFORE ANY MATERIALS ARE CREATED
-// in order to recalculate the Emax limits in such a way that: 
+// in order to recalculate the Emax limits in such a way that:
 //     range function is always monotonically increasing function of Einc
 //     stopping power is concave (i.e. no minimum of stopping power followed by an increase)
 // at the most, the new limit will be 1 GeV/nucleon.
@@ -42,17 +42,17 @@ void KVedaLoss::SetIgnoreEnergyLimits(Bool_t yes)
    // where Emax is nominal max energy for which range tables are valid
    // (usually 400MeV/u for Z<3, 250MeV/u for Z>3)
    // If higher energies are required, call this static method in order to recalculate the Emax limits
-   // in such a way that: 
+   // in such a way that:
    //     range function is always monotonically increasing function of Einc
    //     stopping power is concave (i.e. no minimum of stopping power followed by an increase)
    // at the most, the new limit will be 1 GeV/nucleon.
    // at the least, it will remain at the nominal (400 or 250 MeV/nucleon) level.
    KVedaLossMaterial::SetNoLimits(yes);
 };
-   
+
 KVedaLoss::KVedaLoss()
-      : KVIonRangeTable("VEDALOSS",
-      "Calculation of range and energy loss of charged particles in matter using VEDALOSS range tables")
+   : KVIonRangeTable("VEDALOSS",
+                     "Calculation of range and energy loss of charged particles in matter using VEDALOSS range tables")
 {
    // Default constructor
    if (!CheckMaterialsList()) {
@@ -81,11 +81,11 @@ Bool_t KVedaLoss::init_materials() const
    fMaterials->SetOwner();
 
    TString DataFilePath;
-   if(!KVBase::SearchKVFile(gEnv->GetValue("KVedaLoss.RangeTables", "kvloss.data"), DataFilePath, "data")) {
+   if (!KVBase::SearchKVFile(gEnv->GetValue("KVedaLoss.RangeTables", "kvloss.data"), DataFilePath, "data")) {
       Error("init_materials()", "Range tables file %s not found", gEnv->GetValue("KVedaLoss.RangeTables", "kvloss.data"));
       return kFALSE;
    }
-      
+
    Char_t name[25], gtype[25], state[10];
    Float_t Amat = 0.;
    Float_t Dens = 0.;
@@ -93,7 +93,7 @@ Bool_t KVedaLoss::init_materials() const
    Float_t Temp = 19.;
    Float_t Zmat = 0.;
 
-   FILE *fp;
+   FILE* fp;
    if (!(fp = fopen(DataFilePath.Data(), "r"))) {
       Error("init_materials()", "Range tables file %s cannot be opened", DataFilePath.Data());
       return kFALSE;
@@ -111,25 +111,25 @@ Bool_t KVedaLoss::init_materials() const
                if (sscanf(line, "+ %s %s %s %f %f %f %f %f",
                           gtype, name, state, &Dens, &Zmat, &Amat,
                           &MoleWt, &Temp)
-                   != 8) {
+                     != 8) {
                   Error("init_materials()", "Problem reading file %s", DataFilePath.Data());
                   fclose(fp);
                   return kFALSE;
                }
 //found a new material
-               KVedaLossMaterial *tmp_mat = new KVedaLossMaterial(this, name, gtype, state, Dens,
-                                                                  Zmat, Amat, MoleWt);
+               KVedaLossMaterial* tmp_mat = new KVedaLossMaterial(this, name, gtype, state, Dens,
+                     Zmat, Amat, MoleWt);
                fMaterials->Add(tmp_mat);
                if (!tmp_mat->ReadRangeTable(fp)) return kFALSE;
                tmp_mat->Initialize();
                ++mat_count;
                Double_t rho = 0.;
-               if(tmp_mat->IsGas()) tmp_mat->SetTemperatureAndPressure(19., 1.*KVUnits::atm);
+               if (tmp_mat->IsGas()) tmp_mat->SetTemperatureAndPressure(19., 1.*KVUnits::atm);
                rho = tmp_mat->GetDensity();
                printf("\t*  %2d.  %-7s %-18s  Z=%2d A=%5.1f  rho=%6.3f g/cm**3    *\n",
-                           mat_count, tmp_mat->GetType(), tmp_mat->GetName(),
-                           (int)tmp_mat->GetZ(), tmp_mat->GetMass(),
-                           rho);
+                      mat_count, tmp_mat->GetType(), tmp_mat->GetName(),
+                      (int)tmp_mat->GetZ(), tmp_mat->GetMass(),
+                      rho);
                break;
          }
       }
@@ -137,9 +137,9 @@ Bool_t KVedaLoss::init_materials() const
    }
    printf("\t*                                                                       *\n");
    printf("\t*     TF1::Range::Npx = %4d            TF1::EnergyLoss::Npx = %4d     *\n",
-   	gEnv->GetValue("KVedaLoss.Range.Npx",100), gEnv->GetValue("KVedaLoss.EnergyLoss.Npx",100));
+          gEnv->GetValue("KVedaLoss.Range.Npx", 100), gEnv->GetValue("KVedaLoss.EnergyLoss.Npx", 100));
    printf("\t*                      TF1::ResidualEnergy::Npx = %4d                  *\n",
-   		gEnv->GetValue("KVedaLoss.ResidualEnergy.Npx",100));
+          gEnv->GetValue("KVedaLoss.ResidualEnergy.Npx", 100));
    printf("\t*                                                                       *\n");
    printf("\t*                       INITIALISATION COMPLETE                         *\n");
    printf("\t*************************************************************************\n");
@@ -170,13 +170,13 @@ TObjArray* KVedaLoss::GetListOfMaterials()
    // Create and fill a list of all materials for which range tables exist.
    // Each entry is a TNamed with the name and type (title) of the material.
    // User's responsibility to delete list after use (it owns its objects).
-   
-   if(CheckMaterialsList()){
+
+   if (CheckMaterialsList()) {
       TObjArray* list = new TObjArray(fMaterials->GetEntries());
       list->SetOwner(kTRUE);
       TIter next(fMaterials);
       KVedaLossMaterial* mat;
-      while( (mat = (KVedaLossMaterial*)next()) ){
+      while ((mat = (KVedaLossMaterial*)next())) {
          list->Add(new TNamed(mat->GetName(), mat->GetType()));
       }
       return list;

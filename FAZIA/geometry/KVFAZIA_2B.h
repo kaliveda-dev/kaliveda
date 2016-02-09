@@ -6,17 +6,16 @@
 
 #include "KVFAZIA.h"
 
-class KVFAZIA_2B : public KVFAZIA
-{
+class KVFAZIA_2B : public KVFAZIA {
 
    virtual void BuildFAZIA();
    virtual void GetGeometryParameters();
-   
-   public:
+
+public:
    KVFAZIA_2B();
    virtual ~KVFAZIA_2B();
-  
-   ClassDef(KVFAZIA_2B,1)//FAZIA set-up with two blocks used in LNS 2014 commissioning
+
+   ClassDef(KVFAZIA_2B, 1) //FAZIA set-up with two blocks used in LNS 2014 commissioning
 };
 
 #endif

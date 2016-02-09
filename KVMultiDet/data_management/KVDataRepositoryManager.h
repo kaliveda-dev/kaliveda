@@ -15,28 +15,31 @@ class KVDataRepository;
 class KVDataSet;
 
 class KVDataRepositoryManager {
- private:
+private:
    TList fRepositories;         //list of available repositories
 
- protected:
+protected:
 
- public:
+public:
 
    KVDataRepositoryManager();
    virtual ~ KVDataRepositoryManager();
 
    void Init();
-   const TList* GetListOfRepositories() const {return &fRepositories;};
-   KVDataRepository *GetRepository(const Char_t * name) const;
-   
-   KVDataSet *GetDataSet(const Char_t* repository, const Char_t * dataset) const;
+   const TList* GetListOfRepositories() const
+   {
+      return &fRepositories;
+   };
+   KVDataRepository* GetRepository(const Char_t* name) const;
 
-   void Print(Option_t * opt = "") const;
+   KVDataSet* GetDataSet(const Char_t* repository, const Char_t* dataset) const;
 
-    ClassDef(KVDataRepositoryManager, 1)        //Handles available data repositories
+   void Print(Option_t* opt = "") const;
+
+   ClassDef(KVDataRepositoryManager, 1)        //Handles available data repositories
 };
 
 //................  global variable
-R__EXTERN KVDataRepositoryManager *gDataRepositoryManager;
+R__EXTERN KVDataRepositoryManager* gDataRepositoryManager;
 
 #endif

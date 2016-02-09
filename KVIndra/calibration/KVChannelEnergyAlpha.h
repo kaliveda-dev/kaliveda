@@ -20,20 +20,21 @@ $Id: KVChannelEnergyAlpha.h,v 1.4 2007/02/27 11:56:33 franklan Exp $
 
 #include "KVCalibrator.h"
 
-class KVChannelEnergyAlpha:public KVCalibrator {
- protected:
+class KVChannelEnergyAlpha: public KVCalibrator {
+protected:
    Char_t fSignal[3];
- public:
+public:
    KVChannelEnergyAlpha();
-   KVChannelEnergyAlpha(Char_t * signal, KVDetector * kvd);
-   virtual ~ KVChannelEnergyAlpha() {
+   KVChannelEnergyAlpha(Char_t* signal, KVDetector* kvd);
+   virtual ~ KVChannelEnergyAlpha()
+   {
    };
 
    virtual Double_t Compute(Double_t chan) const;
-   virtual Double_t operator() (Double_t chan);
+   virtual Double_t operator()(Double_t chan);
    virtual Double_t Invert(Double_t volts);
 
-   virtual void SetSignal(Char_t * signal);
+   virtual void SetSignal(Char_t* signal);
 
    ClassDef(KVChannelEnergyAlpha, 1)    //Alpha channel-energy calibration for Si and ChIo detectors.
 };

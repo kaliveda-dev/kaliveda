@@ -7,20 +7,19 @@
 #include "KVBase.h"
 #include "TEnv.h"
 
-class KVClassMonitor : public KVBase
-{
-	TEnv fClassStats;//store class instance statistics
-	TEnv fClassStatsInit;//intitial class instance statistics
-	
-   public:
+class KVClassMonitor : public KVBase {
+   TEnv fClassStats;//store class instance statistics
+   TEnv fClassStatsInit;//intitial class instance statistics
+
+public:
    KVClassMonitor();
    virtual ~KVClassMonitor();
 
-	virtual void Check();
-	virtual void CompareToInit();
-	virtual void SetInitStatistics();
+   virtual void Check();
+   virtual void CompareToInit();
+   virtual void SetInitStatistics();
 
-   ClassDef(KVClassMonitor,1)//Track potential memory leaks
+   ClassDef(KVClassMonitor, 1) //Track potential memory leaks
 };
 
 #endif

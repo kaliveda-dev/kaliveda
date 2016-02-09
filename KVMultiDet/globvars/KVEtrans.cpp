@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 17/02/2004:
 // Creation d'une classe Variable Globale.
@@ -30,12 +30,12 @@ void KVEtrans::init_KVEtrans(void)
 }
 
 //_________________________________________________________________
-KVEtrans::KVEtrans(void):KVVarGlob1()
+KVEtrans::KVEtrans(void): KVVarGlob1()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    init_KVEtrans();
    sprintf(nom, "KVEtrans_%d", nb_crea);
@@ -48,7 +48,7 @@ KVEtrans::KVEtrans(void):KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVEtrans::KVEtrans(Char_t * nom):KVVarGlob1(nom)
+KVEtrans::KVEtrans(Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom
@@ -60,16 +60,16 @@ KVEtrans::KVEtrans(Char_t * nom):KVVarGlob1(nom)
 }
 
 //_________________________________________________________________
-KVEtrans::KVEtrans(const KVEtrans & a) : KVVarGlob1()
+KVEtrans::KVEtrans(const KVEtrans& a) : KVVarGlob1()
 {
-// 
+//
 // Contructeur par Copy
 //
    init_KVEtrans();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVEtrans &) a).Copy(*this);
+   ((KVEtrans&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVEtrans
    cout << nb << " crees...(Copy) " << endl;
@@ -79,7 +79,7 @@ KVEtrans::KVEtrans(const KVEtrans & a) : KVVarGlob1()
 //_________________________________________________________________
 KVEtrans::~KVEtrans(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVEtrans
@@ -92,7 +92,7 @@ KVEtrans::~KVEtrans(void)
 
 
 //_________________________________________________________________
-KVEtrans & KVEtrans::operator =(const KVEtrans & a)
+KVEtrans& KVEtrans::operator =(const KVEtrans& a)
 {
 //
 // Operateur =
@@ -103,7 +103,7 @@ KVEtrans & KVEtrans::operator =(const KVEtrans & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVEtrans &) a).Copy(*this);
+   ((KVEtrans&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVEtrans
    cout << "Nom de la Copy par egalite: " << GetName() << endl;
@@ -113,7 +113,7 @@ KVEtrans & KVEtrans::operator =(const KVEtrans & a)
 
 
 //_________________________________________________________________
-void KVEtrans::Fill(KVNucleus * c)
+void KVEtrans::Fill(KVNucleus* c)
 {
    //Add particle's transverse kinetic energy in frame chosen with SetFrame()
    //to the sum of transverse energies

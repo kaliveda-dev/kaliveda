@@ -8,21 +8,23 @@
 #include "TTree.h"
 #include "TBranch.h"
 
-class KVDataBranchHandler : public KVBase
-{
+class KVDataBranchHandler : public KVBase {
    TTree* fTree;              // the TTree
    void* fAddr;                 // address of variable
    TBranch* fBranch;       // the branch
-   
-   public:
+
+public:
    KVDataBranchHandler(TTree*, TObject*, const Char_t*, const Char_t*, const Char_t* = "");
    virtual ~KVDataBranchHandler();
-   
+
    Bool_t ConnectBranch();
    TBranch* CreateBranch();
-   TBranch* GetBranch() const { return fBranch; };
-   
-   ClassDef(KVDataBranchHandler,0)//Handles TTree branches for storing member variables of classes
+   TBranch* GetBranch() const
+   {
+      return fBranch;
+   };
+
+   ClassDef(KVDataBranchHandler, 0) //Handles TTree branches for storing member variables of classes
 };
 
 #endif

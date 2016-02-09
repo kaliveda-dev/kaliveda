@@ -16,41 +16,40 @@ $Date: 2009/05/22 14:54:47 $
 
 class KVDBParameterSet;
 
-class KVSilicon_e475s : public KVSilicon
-{
-   
-	protected:
-	
-	KVFunctionCal *fcalibPG;//!channel-energy function conversion (PG)
-	KVFunctionCal *fcalibGG;//!channel-energy function conversion (GG)
-   
-	void init();
-	
-	public:
-	
-	KVSilicon_e475s();
-	KVSilicon_e475s(Float_t thick);
-   virtual ~KVSilicon_e475s(){};
-	
-	void SetCalibrators(){};
-	void SetCalibrator(KVDBParameterSet *kvdbps);
-	void ChangeCalibParameters(KVDBParameterSet *kvdbps);
+class KVSilicon_e475s : public KVSilicon {
 
-	Double_t GetOriginalValue(Float_t to,TString signal);
-	Double_t GetCalibratedValue(Float_t from,TString signal);
+protected:
 
-	KVFunctionCal *GetCalibratorBySignal(TString signal) const;
-	Bool_t 	IsCalibrated() const;
-	Bool_t	IsCalibratedBySignal(TString signal) const;
+   KVFunctionCal* fcalibPG;//!channel-energy function conversion (PG)
+   KVFunctionCal* fcalibGG;//!channel-energy function conversion (GG)
 
-	Double_t	GetCalibratedEnergy();
-	Double_t	GetEnergy();
-   
-    Double_t GetCorrectedEnergy(KVNucleus*, Double_t e = -1., Bool_t transmission=kTRUE);
+   void init();
 
-	Short_t GetCalcACQParam(KVACQParam*,Double_t) const;
+public:
 
-	ClassDef(KVSilicon_e475s,1)//derivation of KVSilicon class for E475s experiment
+   KVSilicon_e475s();
+   KVSilicon_e475s(Float_t thick);
+   virtual ~KVSilicon_e475s() {};
+
+   void SetCalibrators() {};
+   void SetCalibrator(KVDBParameterSet* kvdbps);
+   void ChangeCalibParameters(KVDBParameterSet* kvdbps);
+
+   Double_t GetOriginalValue(Float_t to, TString signal);
+   Double_t GetCalibratedValue(Float_t from, TString signal);
+
+   KVFunctionCal* GetCalibratorBySignal(TString signal) const;
+   Bool_t   IsCalibrated() const;
+   Bool_t   IsCalibratedBySignal(TString signal) const;
+
+   Double_t GetCalibratedEnergy();
+   Double_t GetEnergy();
+
+   Double_t GetCorrectedEnergy(KVNucleus*, Double_t e = -1., Bool_t transmission = kTRUE);
+
+   Short_t GetCalcACQParam(KVACQParam*, Double_t) const;
+
+   ClassDef(KVSilicon_e475s, 1) //derivation of KVSilicon class for E475s experiment
 
 };
 

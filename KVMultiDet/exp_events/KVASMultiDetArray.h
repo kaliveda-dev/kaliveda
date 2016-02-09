@@ -28,67 +28,73 @@ class KVASGroup;
 class KVASMultiDetArray : public KVMultiDetArray {
 
 protected:
-    UInt_t fCurrentLayerNumber; //! used to number layers
-    UInt_t fGr;                 //!used to number groups
+   UInt_t fCurrentLayerNumber; //! used to number layers
+   UInt_t fGr;                 //!used to number groups
 
-    virtual void AddToGroups(KVTelescope * kt1, KVTelescope * kt2);
-    void SetGroups(KVLayer *, KVLayer *);
-    void UpdateGroupsInRings(KVRing * r1, KVRing * r2);
-    void MakeListOfDetectors();
-    virtual void MergeGroups(KVASGroup * kg1, KVASGroup * kg2);
-    KVNameValueList* DetectParticle_KV(KVNucleus * part);
-    void GetIDTelescopesForGroup(KVGroup* grp, TCollection* tel_list);
-    public:
-    KVASMultiDetArray();
-    virtual ~ KVASMultiDetArray();
-    void init();
-    virtual KVGroup *GetGroupWithAngles(Float_t theta, Float_t phi);
-    TList *GetTelescopes(Float_t theta, Float_t phi);
-    virtual KVNameValueList* DetectParticle(KVNucleus * part)
-    {
-        // Simulate detection of a charged particle by the array.
-        // The actual method called depends on the value of fROOTGeometry:
-        //   fROOTGeometry=kTRUE:  calls DetectParticle_TGEO, particle propagation performed using
-        //               TGeo description of array and algorithms from ROOT TGeo package
-        //   fROOTGeometry=kFALSE:  calls DetectParticle_KV, uses simple KaliVeda geometry
-        //                to simulate propagation of particle
-        //
-        // The default value is given in .kvrootrc by variable KVASMultiDetArray.FilterUsesROOTGeometry
-        return (IsROOTGeometry()?DetectParticle_TGEO(part):DetectParticle_KV(part));
-    };
+   virtual void AddToGroups(KVTelescope* kt1, KVTelescope* kt2);
+   void SetGroups(KVLayer*, KVLayer*);
+   void UpdateGroupsInRings(KVRing* r1, KVRing* r2);
+   void MakeListOfDetectors();
+   virtual void MergeGroups(KVASGroup* kg1, KVASGroup* kg2);
+   KVNameValueList* DetectParticle_KV(KVNucleus* part);
+   void GetIDTelescopesForGroup(KVGroup* grp, TCollection* tel_list);
+public:
+   KVASMultiDetArray();
+   virtual ~ KVASMultiDetArray();
+   void init();
+   virtual KVGroup* GetGroupWithAngles(Float_t theta, Float_t phi);
+   TList* GetTelescopes(Float_t theta, Float_t phi);
+   virtual KVNameValueList* DetectParticle(KVNucleus* part)
+   {
+      // Simulate detection of a charged particle by the array.
+      // The actual method called depends on the value of fROOTGeometry:
+      //   fROOTGeometry=kTRUE:  calls DetectParticle_TGEO, particle propagation performed using
+      //               TGeo description of array and algorithms from ROOT TGeo package
+      //   fROOTGeometry=kFALSE:  calls DetectParticle_KV, uses simple KaliVeda geometry
+      //                to simulate propagation of particle
+      //
+      // The default value is given in .kvrootrc by variable KVASMultiDetArray.FilterUsesROOTGeometry
+      return (IsROOTGeometry() ? DetectParticle_TGEO(part) : DetectParticle_KV(part));
+   };
 
-    void CalculateGroupsFromGeometry();
-    KVLayer *GetLayer(const Char_t * name) const {
-        //find layer with name
-        return (KVLayer *)GetStructure("LAYER",name);
-    }
-    KVLayer *GetLayer(Int_t num) const {
-        //find layer with number
-        return (KVLayer *)GetStructure("LAYER",num);
-    }
-    KVTelescope *GetTelescope(const Char_t *name) const;
-    KVRing *GetRing(const Char_t * layer, const Char_t * ring_name) const;
-    KVRing *GetRing(const Char_t * layer, UInt_t ring_number) const;
-    KVRing *GetRing(UInt_t layer, const Char_t * ring_name) const;
-    KVRing *GetRing(UInt_t layer, UInt_t ring_number) const;
+   void CalculateGroupsFromGeometry();
+   KVLayer* GetLayer(const Char_t* name) const
+   {
+      //find layer with name
+      return (KVLayer*)GetStructure("LAYER", name);
+   }
+   KVLayer* GetLayer(Int_t num) const
+   {
+      //find layer with number
+      return (KVLayer*)GetStructure("LAYER", num);
+   }
+   KVTelescope* GetTelescope(const Char_t* name) const;
+   KVRing* GetRing(const Char_t* layer, const Char_t* ring_name) const;
+   KVRing* GetRing(const Char_t* layer, UInt_t ring_number) const;
+   KVRing* GetRing(UInt_t layer, const Char_t* ring_name) const;
+   KVRing* GetRing(UInt_t layer, UInt_t ring_number) const;
 
-    virtual Double_t GetSolidAngleByLayerAndRing(const Char_t* layer,UInt_t ring_number) {
-        // return the solid angle (msr) for a given KVRing conditioned by the chosen KVLayer
-        return GetRing(layer,ring_number)->GetSolidAngle();
-    }
-    virtual Double_t GetSolidAngleByLayer(const Char_t* layer) {
-        // return the solid angle (msr) of all the KVRing conditioned by the chosen KVLayer
-        Double_t sol_ang=0;
-        KVRing *cou; TIter nxtcou(GetLayer(layer)->GetStructures()); while ((cou = (KVRing *) nxtcou())) sol_ang+=cou->GetSolidAngle();
-        return sol_ang;
-    }
+   virtual Double_t GetSolidAngleByLayerAndRing(const Char_t* layer, UInt_t ring_number)
+   {
+      // return the solid angle (msr) for a given KVRing conditioned by the chosen KVLayer
+      return GetRing(layer, ring_number)->GetSolidAngle();
+   }
+   virtual Double_t GetSolidAngleByLayer(const Char_t* layer)
+   {
+      // return the solid angle (msr) of all the KVRing conditioned by the chosen KVLayer
+      Double_t sol_ang = 0;
+      KVRing* cou;
+      TIter nxtcou(GetLayer(layer)->GetStructures());
+      while ((cou = (KVRing*) nxtcou())) sol_ang += cou->GetSolidAngle();
+      return sol_ang;
+   }
 
-    virtual TGeoManager* CreateGeoManager(Double_t /*dx*/ = 500, Double_t /*dy*/ = 500, Double_t /*dz*/ = 500, Bool_t /*closegeo*/ = kTRUE);
-    virtual Double_t GetTotalSolidAngle(void);
+   virtual TGeoManager* CreateGeoManager(Double_t /*dx*/ = 500, Double_t /*dy*/ = 500, Double_t /*dz*/ = 500, Bool_t /*closegeo*/ = kTRUE);
+   virtual Double_t GetTotalSolidAngle(void);
 
-    ClassDef(KVASMultiDetArray, 1) //Azimuthally-symmetric multidetector arrays
-    void AnalyseGroupAndReconstructEvent(KVReconstructedEvent* event, KVGroup* grp);
-    void AnalyseTelescopes(KVReconstructedEvent* event, TList* kvtl);
+   ClassDef(KVASMultiDetArray, 1) //Azimuthally-symmetric multidetector arrays
+   void AnalyseGroupAndReconstructEvent(KVReconstructedEvent* event, KVGroup* grp);
+   void AnalyseTelescopes(KVReconstructedEvent* event, TList* kvtl);
 };
 
 #endif

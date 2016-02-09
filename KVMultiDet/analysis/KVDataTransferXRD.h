@@ -6,17 +6,16 @@
 
 #include "KVDataTransfer.h"
 
-class KVDataTransferXRD : public KVDataTransfer
-{
+class KVDataTransferXRD : public KVDataTransfer {
 
-   public:
+public:
    KVDataTransferXRD();
    virtual ~KVDataTransferXRD();
 
    virtual void ExecuteCommand();
-   virtual void WriteTransferScript(){};
+   virtual void WriteTransferScript() {};
 
-   ClassDef(KVDataTransferXRD,1)//Transfer data from remote repository using xrootd
+   ClassDef(KVDataTransferXRD, 1) //Transfer data from remote repository using xrootd
 };
 
 #endif

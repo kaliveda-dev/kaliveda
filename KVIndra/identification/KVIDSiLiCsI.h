@@ -21,16 +21,16 @@
 #include "KVIDSiCsI.h"
 
 
-class KVIDSiLiCsI:public KVIDSiCsI {
+class KVIDSiLiCsI: public KVIDSiCsI {
 
- public:
+public:
 
    KVIDSiLiCsI();
    virtual ~ KVIDSiLiCsI();
 
-   void Calibrate(KVReconstructedNucleus * part);
+   void Calibrate(KVReconstructedNucleus* part);
 
-    ClassDef(KVIDSiLiCsI, 1)    //INDRA identification using SiLi-CsI matrices
+   ClassDef(KVIDSiLiCsI, 1)    //INDRA identification using SiLi-CsI matrices
 };
 
 #endif

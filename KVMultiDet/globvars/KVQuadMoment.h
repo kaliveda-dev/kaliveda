@@ -6,15 +6,14 @@
 
 #include "KVVarGlob.h"
 
-class KVQuadMoment : public KVVarGlob
-{
+class KVQuadMoment : public KVVarGlob {
    Double_t matrix[3][3];//!
-   
+
    void init_KVQuadMoment(void);
    virtual Double_t getvalue_void(void) const;
    virtual Double_t getvalue_int(Int_t i);
-   
-   public:
+
+public:
    KVQuadMoment();
    KVQuadMoment(const KVQuadMoment& obj);
    KVQuadMoment(Char_t* nom);
@@ -22,12 +21,12 @@ class KVQuadMoment : public KVVarGlob
    void Copy(TObject& obj) const;
 
    virtual void Init(void);
-   
-   virtual void Reset(void); 
-   
-   virtual void Fill(KVNucleus * c);
-   
-   ClassDef(KVQuadMoment,1)//Quadrupole moment tensor of particle momenta
+
+   virtual void Reset(void);
+
+   virtual void Fill(KVNucleus* c);
+
+   ClassDef(KVQuadMoment, 1) //Quadrupole moment tensor of particle momenta
 };
 
 #endif

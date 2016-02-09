@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 17/02/2004:
 // Creation d'une classe Variable Globale.
@@ -31,12 +31,12 @@ void KVEkin::init_KVEkin(void)
 }
 
 //_________________________________________________________________
-KVEkin::KVEkin(void):KVVarGlob1()
+KVEkin::KVEkin(void): KVVarGlob1()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    init_KVEkin();
    sprintf(nom, "KVEkin_%d", nb_crea);
@@ -49,7 +49,7 @@ KVEkin::KVEkin(void):KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVEkin::KVEkin(Char_t * nom):KVVarGlob1(nom)
+KVEkin::KVEkin(Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom
@@ -61,16 +61,16 @@ KVEkin::KVEkin(Char_t * nom):KVVarGlob1(nom)
 }
 
 //_________________________________________________________________
-KVEkin::KVEkin(const KVEkin & a) : KVVarGlob1()
+KVEkin::KVEkin(const KVEkin& a) : KVVarGlob1()
 {
-// 
+//
 // Contructeur par Copy
 //
    init_KVEkin();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVEkin &) a).Copy(*this);
+   ((KVEkin&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVEkin
    cout << nb << " crees...(Copy) " << endl;
@@ -80,7 +80,7 @@ KVEkin::KVEkin(const KVEkin & a) : KVVarGlob1()
 //_________________________________________________________________
 KVEkin::~KVEkin(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVEkin
@@ -93,7 +93,7 @@ KVEkin::~KVEkin(void)
 
 
 //_________________________________________________________________
-KVEkin & KVEkin::operator =(const KVEkin & a)
+KVEkin& KVEkin::operator =(const KVEkin& a)
 {
 //
 // Operateur =
@@ -104,7 +104,7 @@ KVEkin & KVEkin::operator =(const KVEkin & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVEkin &) a).Copy(*this);
+   ((KVEkin&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVEkin
    cout << "Nom de la Copy par egalite: " << GetName() << endl;
@@ -114,7 +114,7 @@ KVEkin & KVEkin::operator =(const KVEkin & a)
 
 
 //_________________________________________________________________
-void KVEkin::Fill(KVNucleus * c)
+void KVEkin::Fill(KVNucleus* c)
 {
    //Add particle's kinetic energy in frame chosen with SetFrame()
    //to the sum of kinetic energies

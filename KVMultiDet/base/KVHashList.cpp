@@ -23,7 +23,7 @@ the same argument as THashList::Sort().
 ////////////////////////////////////////////////////////////////////////////////
 
 KVHashList::KVHashList(Int_t capacity, Int_t rehash)
-	: KVSeqCollection()
+   : KVSeqCollection()
 {
    // Create a THashList object. Capacity is the initial hashtable capacity
    // (i.e. number of slots), by default kInitHashTableCapacity = 17, and
@@ -40,7 +40,7 @@ KVHashList::KVHashList(Int_t capacity, Int_t rehash)
    // must be Rehashed
 
    fCollection = new THashList(capacity, rehash);
-	fCollection->SetName(GetName());
+   fCollection->SetName(GetName());
 }
 
 KVHashList::~KVHashList()
@@ -74,28 +74,28 @@ void KVHashList::Rehash(Int_t newCapacity)
    //   In this case it is not necessary to increase the capacity of the list,
    //   just call Rehash() with no arguments.
 
-   if(!newCapacity) newCapacity = fCollection->GetSize();
+   if (!newCapacity) newCapacity = fCollection->GetSize();
    ((THashList*)fCollection)->Rehash(newCapacity);
 }
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(6,5,0)
-const TList* KVHashList::GetListForObject(const char *name) const
+const TList* KVHashList::GetListForObject(const char* name) const
 #else
-TList* KVHashList::GetListForObject(const char *name) const
+TList* KVHashList::GetListForObject(const char* name) const
 #endif
 {
    // Return the THashTable's list (bucket) in which obj can be found based on
    // its hash; see THashTable::GetListForObject().
 
-   return  ((THashList*)fCollection)->GetListForObject(name);
+   return ((THashList*)fCollection)->GetListForObject(name);
 }
 
 //______________________________________________________________________________
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(6,5,0)
-const TList *KVHashList::GetListForObject(const TObject *obj) const
+const TList* KVHashList::GetListForObject(const TObject* obj) const
 #else
-TList *KVHashList::GetListForObject(const TObject *obj) const
+TList* KVHashList::GetListForObject(const TObject* obj) const
 #endif
 {
    // Return the THashTable's list (bucket) in which obj can be found based on

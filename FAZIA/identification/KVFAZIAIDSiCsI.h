@@ -6,16 +6,15 @@
 
 #include "KVFAZIAIDTelescope.h"
 
-class KVFAZIAIDSiCsI : public KVFAZIAIDTelescope
-{
+class KVFAZIAIDSiCsI : public KVFAZIAIDTelescope {
 
-   public:
+public:
    KVFAZIAIDSiCsI();
    virtual ~KVFAZIAIDSiCsI();
-   public:
+public:
    void Copy(TObject& obj) const;
 
-   ClassDef(KVFAZIAIDSiCsI,1)//id telescope to manage FAZIA Si-CsI identification
+   ClassDef(KVFAZIAIDSiCsI, 1) //id telescope to manage FAZIA Si-CsI identification
 };
 
 #endif

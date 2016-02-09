@@ -1,3 +1,9 @@
+/usr/share/kaliveda/examples/KVMultiDet/base_kvbase.C
+/usr/share/kaliveda/examples/KVMultiDet/base_kvnumberlist.C
+/usr/share/kaliveda/examples/KVMultiDet/ClassTraj.cpp
+/usr/share/kaliveda/examples/KVMultiDet/ClassTraj.h
+/usr/share/kaliveda/examples/KVMultiDet/KVGenPhaseSpace_example2.C
+/usr/share/kaliveda/examples/KVMultiDet/KVGenPhaseSpace_example.C
 /usr/lib/libKVMultiDetanalysis.so
 /usr/lib/libKVMultiDetdata_management.so
 /usr/lib/libKVMultiDetparticles.so
@@ -109,6 +115,7 @@
 /usr/include/kaliveda/KVUpDater.h
 /usr/include/kaliveda/KVGeoImport.h
 /usr/include/kaliveda/KVReconstructedNucleus.h
+/usr/include/kaliveda/KVElasticCountRates.h
 /usr/include/kaliveda/KVEventFiltering.h
 /usr/include/kaliveda/KVRawDataAnalyser.h
 /usr/include/kaliveda/KVElasticScatter.h
@@ -185,6 +192,7 @@
 /usr/include/kaliveda/KVMemoryChunk.h
 /usr/include/kaliveda/KVLockfile.h
 /usr/include/kaliveda/KVPartitionFunction.h
+/usr/include/kaliveda/TF1Derivative.h
 /usr/include/kaliveda/Hexa_t.h
 /usr/include/kaliveda/KVValues.h
 /usr/include/kaliveda/KVNameValueList.h

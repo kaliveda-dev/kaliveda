@@ -23,4 +23,3 @@ KVFAZIAIDTelescope::~KVFAZIAIDTelescope()
 {
    // Destructor
 }
-

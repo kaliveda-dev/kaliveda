@@ -21,7 +21,7 @@
 
 ClassImp(KVTelBlocking)
 
-KVTelBlocking::KVTelBlocking(UInt_t n):KVTelescope()
+KVTelBlocking::KVTelBlocking(UInt_t n): KVTelescope()
 {
    //Create blocking telescope number 'n'.
    //By default the BIC pressure is 30 (Torr)

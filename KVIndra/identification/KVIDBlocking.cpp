@@ -24,7 +24,7 @@ ClassImp(KVIDBlocking)
 //KVIDBlocking
 //
 //Identification in BIC-SiB blocking telescopes of E416(a)
-Bool_t KVIDBlocking::SetIDGrid(KVIDGrid *)
+Bool_t KVIDBlocking::SetIDGrid(KVIDGrid*)
 {
    //No grids for the moment
    return kFALSE;
@@ -32,7 +32,7 @@ Bool_t KVIDBlocking::SetIDGrid(KVIDGrid *)
 
 //________________________________________________________________________________________//
 
-Double_t KVIDBlocking::GetIDMapX(Option_t * gain)
+Double_t KVIDBlocking::GetIDMapX(Option_t* gain)
 {
    //X coordinate for BIC-SiB identification is energy parameter of SiB
    //"gain" can be "GG" (we use value of SIB_x_E_GG) or "" (SIB_x_E)
@@ -43,7 +43,7 @@ Double_t KVIDBlocking::GetIDMapX(Option_t * gain)
    return GetDetector(2)->GetACQData(type.Data());
 }
 
-Double_t KVIDBlocking::GetIDMapY(Option_t * gain)
+Double_t KVIDBlocking::GetIDMapY(Option_t* gain)
 {
    //Y coordinate for BIC-SIB identification is BIC PG or GG
    TString _gain(gain);

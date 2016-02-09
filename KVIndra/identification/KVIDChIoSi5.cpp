@@ -32,13 +32,13 @@ KVIDChIoSi5::~KVIDChIoSi5()
 
 //________________________________________________________________________________________//
 
-Double_t KVIDChIoSi5::GetIDMapX(Option_t *)
+Double_t KVIDChIoSi5::GetIDMapX(Option_t*)
 {
    //X coordinate for 5th campaign ChIo-Si identification is KVSilicon::GetEnergy
    return (fsi->Fired() ? fsi->GetEnergy() : -999);
 }
 
-Double_t KVIDChIoSi5::GetIDMapY(Option_t *)
+Double_t KVIDChIoSi5::GetIDMapY(Option_t*)
 {
    //Y coordinate for 5th campaign ChIo-Si identification is KVChIo::GetEnergy
    return (fchio->Fired() ? fchio->GetEnergy() : -999);

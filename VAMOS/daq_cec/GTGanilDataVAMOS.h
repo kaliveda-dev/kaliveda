@@ -13,22 +13,21 @@ $Date: 2007/06/08 15:49:10 $
 #include "GTGanilData.h"
 #include "Parameters.h"
 
-class GTGanilDataVAMOS : public GTGanilData
-{
-   protected:
-  
-   Parameters *Par;//->list of acquisition parameters
-   virtual bool EventUnravelling         (CTRL_EVENT*);
+class GTGanilDataVAMOS : public GTGanilData {
+protected:
+
+   Parameters* Par;//->list of acquisition parameters
+   virtual bool EventUnravelling(CTRL_EVENT*);
    virtual void ReadParameters(void);
-   
-   public:
+
+public:
 
    GTGanilDataVAMOS();
    GTGanilDataVAMOS(const TString filename);
    virtual ~GTGanilDataVAMOS();
-   virtual void SetUserTree(TTree*);  
+   virtual void SetUserTree(TTree*);
 
-   ClassDef(GTGanilDataVAMOS,1)//Reads and formats raw data from INDRA-VAMOS experiments
+   ClassDef(GTGanilDataVAMOS, 1) //Reads and formats raw data from INDRA-VAMOS experiments
 };
 
 #endif

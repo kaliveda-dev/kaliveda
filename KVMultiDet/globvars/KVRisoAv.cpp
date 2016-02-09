@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 17/02/2004
 // Creation d'une classe Variable Globale.
@@ -15,9 +15,9 @@ ClassImp(KVRisoAv)
 // the parallel component of their velocity Vz > 0 in the reference frame chosen
 // by the user with KVVarGlob::SetFrame().
 //  The default frame is the "CM" frame.
-// 
+//
 
-KVRisoAv::KVRisoAv(void):KVRiso()
+KVRisoAv::KVRisoAv(void): KVRiso()
 {
 //
 // Createur par default
@@ -27,7 +27,7 @@ KVRisoAv::KVRisoAv(void):KVRiso()
 }
 
 //_________________________________________________________________
-KVRisoAv::KVRisoAv(char *nom):KVRiso(nom)
+KVRisoAv::KVRisoAv(char* nom): KVRiso(nom)
 {
 //
 // Constructeur avec un nom
@@ -37,7 +37,7 @@ KVRisoAv::KVRisoAv(char *nom):KVRiso(nom)
 //_________________________________________________________________
 KVRisoAv::~KVRisoAv(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVRisoAv
@@ -47,7 +47,7 @@ KVRisoAv::~KVRisoAv(void)
 
 
 //_________________________________________________________________
-void KVRisoAv::Fill(KVNucleus * c)
+void KVRisoAv::Fill(KVNucleus* c)
 {
 //
 // Routine de remplissage

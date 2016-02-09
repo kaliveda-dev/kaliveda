@@ -48,9 +48,9 @@ ClassImp(KVBIC)
 //The bombage can be set/modified using SetBombage(). The default value is 5mm.
 //The effective thickness of CF4 between the two mylar windows, "averaged" over the whole surface of the
 //entry window, is then "estimated" according to the formula (see GetEffectiveEntryThickness() ):
-//      e = bombage/2 + 1.5  [mm] 
+//      e = bombage/2 + 1.5  [mm]
 //With the default bombage of 5mm, this gives e=4mm.
-    KVBIC::KVBIC()
+KVBIC::KVBIC()
 {
    //default ctor
    //Segmentation index = 1
@@ -63,7 +63,7 @@ ClassImp(KVBIC)
 
 //___________________________________________________________________________
 
-KVBIC::KVBIC(Float_t pressure, Float_t bomb):KVChIo()
+KVBIC::KVBIC(Float_t pressure, Float_t bomb): KVChIo()
 {
    //BIC detector.
    //Give pressure in Torr
@@ -80,18 +80,18 @@ KVBIC::KVBIC(Float_t pressure, Float_t bomb):KVChIo()
 
    fBomb = bomb;
    //build detector
-   AddAbsorber(new KVMaterial("Myl", 1.5*KVUnits::um));     //mylar entry window
+   AddAbsorber(new KVMaterial("Myl", 1.5 * KVUnits::um));   //mylar entry window
    Float_t e = GetEffectiveEntryThickness();
-   KVMaterial *gas = new KVMaterial("CF4", e*KVUnits::mm, pressure);
+   KVMaterial* gas = new KVMaterial("CF4", e * KVUnits::mm, pressure);
    AddAbsorber(gas);            //gas between two windows
-   AddAbsorber(new KVMaterial("Myl", 1.0*KVUnits::um));     //interior window
-   gas = new KVMaterial("CF4", 60*KVUnits::mm,pressure);
+   AddAbsorber(new KVMaterial("Myl", 1.0 * KVUnits::um));   //interior window
+   gas = new KVMaterial("CF4", 60 * KVUnits::mm, pressure);
    AddAbsorber(gas);            //main body of gas
    SetActiveLayer(gas);         //active layer - energy loss is measured
-   AddAbsorber(new KVMaterial("Myl", 1.0*KVUnits::um));     //2nd interor window
-   gas = new KVMaterial("CF4", e*KVUnits::mm, pressure);
+   AddAbsorber(new KVMaterial("Myl", 1.0 * KVUnits::um));   //2nd interor window
+   gas = new KVMaterial("CF4", e * KVUnits::mm, pressure);
    AddAbsorber(gas);            //gas between two exit windows
-   AddAbsorber(new KVMaterial("Myl", 1.5*KVUnits::um));     //exit window
+   AddAbsorber(new KVMaterial("Myl", 1.5 * KVUnits::um));   //exit window
 
 }
 
@@ -103,7 +103,7 @@ KVBIC::~KVBIC()
 
 //___________________________________________________________________________
 
-const Char_t *KVBIC::GetArrayName()
+const Char_t* KVBIC::GetArrayName()
 {
    //Give name of detector as BIC_x with x=number of blocking telescope
 
@@ -113,7 +113,7 @@ const Char_t *KVBIC::GetArrayName()
 
 //_______________________________________________________________________________
 
-void KVBIC::AddACQParam(const Char_t * type)
+void KVBIC::AddACQParam(const Char_t* type)
 {
    //Add an acquisition parameter of given type to this detector
    //The parameters for the BIC in blocking telescopes 1, 2, and 3
@@ -122,7 +122,7 @@ void KVBIC::AddACQParam(const Char_t * type)
 
    if (!fACQParams)
       fACQParams = new KVList();
-   KVACQParam *par = new KVACQParam();
+   KVACQParam* par = new KVACQParam();
    TString name;
    name.Form("CI_16%02d_%s", GetTelescope()->GetNumber(), type);
    par->SetName(name);
@@ -133,7 +133,7 @@ void KVBIC::AddACQParam(const Char_t * type)
 
 //________________________________________________________________________________
 
-KVACQParam *KVBIC::GetACQParam(const Char_t * type)
+KVACQParam* KVBIC::GetACQParam(const Char_t* type)
 {
    //
    //Access acquisition parameter of given type
@@ -145,7 +145,7 @@ KVACQParam *KVBIC::GetACQParam(const Char_t * type)
    }
    TString name;
    name.Form("CI_16%02d_%s", GetTelescope()->GetNumber(), type);
-   return ((KVACQParam *) fACQParams->FindObjectWithNameAndType(name, type));
+   return ((KVACQParam*) fACQParams->FindObjectWithNameAndType(name, type));
 }
 
 //__________________________________________________________________________________
@@ -161,7 +161,7 @@ Float_t KVBIC::GetEffectiveEntryThickness() const
 
 //__________________________________________________________________________________________________________________________
 
-Double_t KVBIC::GetELossMylar(UInt_t , UInt_t , Double_t )
+Double_t KVBIC::GetELossMylar(UInt_t , UInt_t , Double_t)
 {
    //This returns zero.
    //It is so that the KVChIo method doesn't get used by accident
@@ -170,7 +170,7 @@ Double_t KVBIC::GetELossMylar(UInt_t , UInt_t , Double_t )
 
 //__________________________________________________________________________________________________________________________
 
-Double_t KVBIC::GetCorrectedEnergy(KVNucleus *nuc, Double_t e, Bool_t transmit)
+Double_t KVBIC::GetCorrectedEnergy(KVNucleus* nuc, Double_t e, Bool_t transmit)
 {
    //For a particle which passes through the BIC (i.e. is stopped in SIB behind it)
    //this will give the total energy loss of the particle in the BIC, i.e. including all
@@ -180,7 +180,7 @@ Double_t KVBIC::GetCorrectedEnergy(KVNucleus *nuc, Double_t e, Bool_t transmit)
    //this function should not be called.
    //If argument 'egas' not given, KVBIC::GetEnergy() is used
 
-    if(!transmit) return 0.;
+   if (!transmit) return 0.;
 
    e = ((e < 0.) ? GetEnergy() : e);
 
@@ -190,15 +190,15 @@ Double_t KVBIC::GetCorrectedEnergy(KVNucleus *nuc, Double_t e, Bool_t transmit)
    Bool_t maxDE = kFALSE;
 
    //egas > max possible ?
-   if (e > GetMaxDeltaE(nuc->GetZ(),nuc->GetA())) {
-       e = GetMaxDeltaE(nuc->GetZ(),nuc->GetA());
+   if (e > GetMaxDeltaE(nuc->GetZ(), nuc->GetA())) {
+      e = GetMaxDeltaE(nuc->GetZ(), nuc->GetA());
       maxDE = kTRUE;
    }
    //calculate incident energy
-   Double_t e_inc = GetIncidentEnergy(nuc->GetZ(),nuc->GetA(), e);
+   Double_t e_inc = GetIncidentEnergy(nuc->GetZ(), nuc->GetA(), e);
 
    //calculate residual energy
-   Double_t e_res = GetERes(nuc->GetZ(),nuc->GetA(), e_inc);
+   Double_t e_res = GetERes(nuc->GetZ(), nuc->GetA(), e_inc);
 
    Double_t eloss = e_inc - e_res;
    if (maxDE)
@@ -246,12 +246,12 @@ void KVBIC::SetCalibrators()
    KVLinCal* cal = new KVLinCal(this);
    cal->SetChannelParameter("PG");
    cal->WithPedestalCorrection(kFALSE);
-   if(!AddCalibrator( cal )) delete cal;
+   if (!AddCalibrator(cal)) delete cal;
 }
 
 //______________________________________________________________________________
 
-void KVBIC::Streamer(TBuffer &R__b)
+void KVBIC::Streamer(TBuffer& R__b)
 {
    // Stream an object of class KVBIC.
    // We set the pointers to the calibrator objects

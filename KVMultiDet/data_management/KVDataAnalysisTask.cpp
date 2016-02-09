@@ -109,42 +109,42 @@ KVDataAnalysisTask::KVDataAnalysisTask()
    fStatusUpdateInterval = 1000;
 }
 
-KVDataAnalysisTask::KVDataAnalysisTask(const KVDataAnalysisTask & obj) : KVBase()
+KVDataAnalysisTask::KVDataAnalysisTask(const KVDataAnalysisTask& obj) : KVBase()
 {
    //Copy ctor
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    obj.Copy(*this);
 #else
-   ((KVDataAnalysisTask &) obj).Copy(*this);
+   ((KVDataAnalysisTask&) obj).Copy(*this);
 #endif
 }
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVDataAnalysisTask::Copy(TObject & obj) const
+void KVDataAnalysisTask::Copy(TObject& obj) const
 #else
-void KVDataAnalysisTask::Copy(TObject & obj)
+void KVDataAnalysisTask::Copy(TObject& obj)
 #endif
 {
    //Copy this to obj
    //Redefinition of KVBase::Copy
 
    KVBase::Copy(obj);
-   ((KVDataAnalysisTask &) obj).fPrereq = fPrereq;
-   ((KVDataAnalysisTask &) obj).fAnalyser = fAnalyser;
-   ((KVDataAnalysisTask &) obj).fBaseClass = fBaseClass;
-   ((KVDataAnalysisTask &) obj).fUserClass = fUserClass;
-   ((KVDataAnalysisTask &) obj).fBaseIsPlugin = fBaseIsPlugin;
-   ((KVDataAnalysisTask &) obj).fPluginBase = fPluginBase;
-   ((KVDataAnalysisTask &) obj).fPluginURI = fPluginURI;
-   ((KVDataAnalysisTask &) obj).fExtraAClicIncludes = fExtraAClicIncludes;
-   ((KVDataAnalysisTask &) obj).fStatusUpdateInterval = fStatusUpdateInterval;
+   ((KVDataAnalysisTask&) obj).fPrereq = fPrereq;
+   ((KVDataAnalysisTask&) obj).fAnalyser = fAnalyser;
+   ((KVDataAnalysisTask&) obj).fBaseClass = fBaseClass;
+   ((KVDataAnalysisTask&) obj).fUserClass = fUserClass;
+   ((KVDataAnalysisTask&) obj).fBaseIsPlugin = fBaseIsPlugin;
+   ((KVDataAnalysisTask&) obj).fPluginBase = fPluginBase;
+   ((KVDataAnalysisTask&) obj).fPluginURI = fPluginURI;
+   ((KVDataAnalysisTask&) obj).fExtraAClicIncludes = fExtraAClicIncludes;
+   ((KVDataAnalysisTask&) obj).fStatusUpdateInterval = fStatusUpdateInterval;
 }
 
 KVDataAnalysisTask::~KVDataAnalysisTask()
 {
 }
 
-void KVDataAnalysisTask::ls(Option_t *) const
+void KVDataAnalysisTask::ls(Option_t*) const
 {
    //Print analysis task information
    cout << "KVDataAnalysisTask : ";
@@ -152,69 +152,70 @@ void KVDataAnalysisTask::ls(Option_t *) const
    cout << GetTitle();
    cout << "  (pre-req = " << GetPrereq();
    cout << ",  analyser = " << GetDataAnalyser();
-   if(fUserClass) cout << ", base class for user analysis = " << GetUserBaseClass();
-   else if(fBaseClass!="") cout << ", default class for analysis = " << GetUserBaseClass();
+   if (fUserClass) cout << ", base class for user analysis = " << GetUserBaseClass();
+   else if (fBaseClass != "") cout << ", default class for analysis = " << GetUserBaseClass();
    cout << ")" << endl;
 }
 
 void KVDataAnalysisTask::SetUserBaseClass(const Char_t* base_name)
 {
-	// Set the class from which user's analysis class must derive.
-	// This is normally read in from the following environment variable:
-	//
-	// TaskName.DataAnalysisTask.UserClass.Base:      [base_name]
-	//
-	// If base_name is not the name of a known (i.e. currently contained in the ROOT
-	// dictionary class table) class, it is assumed to be the uri of a plugin class.
-	// By default, we assume that the plugin extends the KVDataAnalyser class, but
-	// this can be changed using the following syntax:
-	//
-	// TaskName.DataAnalysisTask.UserClass.Base:      [uri]/[base class]
-	//
-	// Example 1:
-	// The user analysis class for task "RawAnalysis" must derive from class
-	// KVIVRawDataAnalyser which is defined in library libVAMOS.so (not loaded by default):
-	//
-	// RawAnalysis.DataAnalysisTask.UserClass.Base:    IVRawDataAnalyser
-	// +Plugin.KVDataAnalyser:   IVRawDataAnalyser   KVIVRawDataAnalyser VAMOS "KVIVRawDataAnalyser()"
-	//
-	// Example 2:
-	// The user analysis class for task "ReconIdent" must derive from class
-	// KVIVReconIdent (itself derived from TSelector) which is defined in library libVAMOS.so (not loaded by default):
-	//
-	// ReconIdent.DataAnalysisTask.UserClass.Base:     IVReconIdent/TSelector
-	// +Plugin.TSelector:    IVReconIdent    KVIVReconIdent     VAMOS    "KVIVReconIdent()"
+   // Set the class from which user's analysis class must derive.
+   // This is normally read in from the following environment variable:
+   //
+   // TaskName.DataAnalysisTask.UserClass.Base:      [base_name]
+   //
+   // If base_name is not the name of a known (i.e. currently contained in the ROOT
+   // dictionary class table) class, it is assumed to be the uri of a plugin class.
+   // By default, we assume that the plugin extends the KVDataAnalyser class, but
+   // this can be changed using the following syntax:
+   //
+   // TaskName.DataAnalysisTask.UserClass.Base:      [uri]/[base class]
+   //
+   // Example 1:
+   // The user analysis class for task "RawAnalysis" must derive from class
+   // KVIVRawDataAnalyser which is defined in library libVAMOS.so (not loaded by default):
+   //
+   // RawAnalysis.DataAnalysisTask.UserClass.Base:    IVRawDataAnalyser
+   // +Plugin.KVDataAnalyser:   IVRawDataAnalyser   KVIVRawDataAnalyser VAMOS "KVIVRawDataAnalyser()"
+   //
+   // Example 2:
+   // The user analysis class for task "ReconIdent" must derive from class
+   // KVIVReconIdent (itself derived from TSelector) which is defined in library libVAMOS.so (not loaded by default):
+   //
+   // ReconIdent.DataAnalysisTask.UserClass.Base:     IVReconIdent/TSelector
+   // +Plugin.TSelector:    IVReconIdent    KVIVReconIdent     VAMOS    "KVIVReconIdent()"
 
-	fBaseClass = base_name;
-	if(fBaseClass != "" &&  !TClass::GetClass(base_name) ){
-		// Base class is not in dictionary. Assume that base_name is a plugin.
-		fBaseIsPlugin = kTRUE;
-		KVString _base(base_name); TObjArray *toks = _base.Tokenize("/");
-		if( toks->GetEntries() > 1){
-		    // base_name = uri/base
-		    fPluginURI = ((TObjString*)toks->At(0))->String();
-		    fPluginBase = ((TObjString*)toks->At(1))->String();
-		}
-		else{
-		    // base_name = uri. default plugin base class is KVDataAnalyser
-		    fPluginURI = base_name; fPluginBase = "KVDataAnalyser";
-		}
-		delete toks;
-		// check plugin exists
-		TPluginHandler* ph = gPluginMgr->FindHandler(fPluginBase.Data(),fPluginURI.Data());
-		if(!ph){
-		    Error("SetUserBaseClass","Analysis task=%s :\nNo plugin found with URI=%s for base class %s",
-                GetName(), fPluginURI.Data(), fPluginBase.Data());
-                return;
-		}
-		// get name of plugin base class that user's analysis must derive from
-		fBaseClass = ph->GetClass();
-		if(gDebug>1) Info("SetUserBaseClass", "Analysis task=%s :\nUser analysis class derives from %s, extension of %s in plugin %s",
-            GetName(), fBaseClass.Data(), fPluginBase.Data(), fPluginURI.Data());
-	}
+   fBaseClass = base_name;
+   if (fBaseClass != "" &&  !TClass::GetClass(base_name)) {
+      // Base class is not in dictionary. Assume that base_name is a plugin.
+      fBaseIsPlugin = kTRUE;
+      KVString _base(base_name);
+      TObjArray* toks = _base.Tokenize("/");
+      if (toks->GetEntries() > 1) {
+         // base_name = uri/base
+         fPluginURI = ((TObjString*)toks->At(0))->String();
+         fPluginBase = ((TObjString*)toks->At(1))->String();
+      } else {
+         // base_name = uri. default plugin base class is KVDataAnalyser
+         fPluginURI = base_name;
+         fPluginBase = "KVDataAnalyser";
+      }
+      delete toks;
+      // check plugin exists
+      TPluginHandler* ph = gPluginMgr->FindHandler(fPluginBase.Data(), fPluginURI.Data());
+      if (!ph) {
+         Error("SetUserBaseClass", "Analysis task=%s :\nNo plugin found with URI=%s for base class %s",
+               GetName(), fPluginURI.Data(), fPluginBase.Data());
+         return;
+      }
+      // get name of plugin base class that user's analysis must derive from
+      fBaseClass = ph->GetClass();
+      if (gDebug > 1) Info("SetUserBaseClass", "Analysis task=%s :\nUser analysis class derives from %s, extension of %s in plugin %s",
+                              GetName(), fBaseClass.Data(), fPluginBase.Data(), fPluginURI.Data());
+   }
 }
 
-void KVDataAnalysisTask::SetParametersForDataSet( KVDataSet* dataset )
+void KVDataAnalysisTask::SetParametersForDataSet(KVDataSet* dataset)
 {
    //PRIVATE METHOD
    //Called by KVDataSet::SetAnalysisTasks
@@ -222,41 +223,40 @@ void KVDataAnalysisTask::SetParametersForDataSet( KVDataSet* dataset )
    //have been "tweaked" for the dataset.
 
    KVString envar = dataset->GetDataSetEnv(Form("%s.DataAnalysisTask.Analyser", GetName()));
-   if( envar != "" ) fAnalyser = envar;
+   if (envar != "") fAnalyser = envar;
    envar = dataset->GetDataSetEnv(Form("%s.DataAnalysisTask.UserClass.Base", GetName()));
-   if( envar != "" ) SetUserBaseClass(envar);
+   if (envar != "") SetUserBaseClass(envar);
    envar = dataset->GetDataSetEnv(Form("%s.DataAnalysisTask.Prereq", GetName()));
-   if( envar != "" ) SetPrereq(envar);
+   if (envar != "") SetPrereq(envar);
    envar = dataset->GetDataSetEnv(Form("%s.DataAnalysisTask.UserClass.ExtraACliCIncludes", GetName()));
-   if( envar != "" ) fExtraAClicIncludes=envar;
+   if (envar != "") fExtraAClicIncludes = envar;
    Int_t nev = (Int_t)dataset->GetDataSetEnv(Form("%s.DataAnalysisTask.StatusUpdateInterval", GetName()), 0.0);
-   if( nev>0 ) fStatusUpdateInterval=nev;
+   if (nev > 0) fStatusUpdateInterval = nev;
 }
 
 Bool_t KVDataAnalysisTask::CheckUserBaseClassIsLoaded()
 {
-    // This method checks that the base class for the user's analysis class is loaded.
-    // If this base class requires a plugin library to be loaded, it will be loaded.
-	 // First we add any required extra ACliC include paths (taken from DataAnalysisTask.UserClass.ExtraACliCIncludes)
-    // If all is OK, returns kTRUE.
-    // Returns kFALSE if plugin cannot be loaded or class is simply unknown
+   // This method checks that the base class for the user's analysis class is loaded.
+   // If this base class requires a plugin library to be loaded, it will be loaded.
+   // First we add any required extra ACliC include paths (taken from DataAnalysisTask.UserClass.ExtraACliCIncludes)
+   // If all is OK, returns kTRUE.
+   // Returns kFALSE if plugin cannot be loaded or class is simply unknown
 
-		if(fExtraAClicIncludes!="") {
-			gSystem->AddIncludePath(fExtraAClicIncludes.Data());
-			Info("CheckUserBaseClassIsLoaded", "Added ACliC include path: %s", fExtraAClicIncludes.Data());
-		}
-    TClass *cl = TClass::GetClass(fBaseClass.Data()); // class in dictionary already ?
-    if(cl) return kTRUE;
-    if(fBaseIsPlugin){
-        // base class is in a plugin library. load it now.
-        TPluginHandler* ph = LoadPlugin(fPluginBase.Data(), fPluginURI.Data());
-        if(ph) return kTRUE;
-        Error("CheckUserBaseClassIsLoaded", "Analysis task=%s : Failed to load plugin class=%s base=%s uri=%s",
+   if (fExtraAClicIncludes != "") {
+      gSystem->AddIncludePath(fExtraAClicIncludes.Data());
+      Info("CheckUserBaseClassIsLoaded", "Added ACliC include path: %s", fExtraAClicIncludes.Data());
+   }
+   TClass* cl = TClass::GetClass(fBaseClass.Data()); // class in dictionary already ?
+   if (cl) return kTRUE;
+   if (fBaseIsPlugin) {
+      // base class is in a plugin library. load it now.
+      TPluginHandler* ph = LoadPlugin(fPluginBase.Data(), fPluginURI.Data());
+      if (ph) return kTRUE;
+      Error("CheckUserBaseClassIsLoaded", "Analysis task=%s : Failed to load plugin class=%s base=%s uri=%s",
             GetName(), fBaseClass.Data(), fPluginBase.Data(), fPluginURI.Data());
-    }
-    else{
-        Error("CheckUserBaseClassIsLoaded", "Analysis task=%s : User analysis base class %s is unknown",
+   } else {
+      Error("CheckUserBaseClassIsLoaded", "Analysis task=%s : User analysis base class %s is unknown",
             GetName(), fBaseClass.Data());
-    }
-    return kFALSE;
+   }
+   return kFALSE;
 }

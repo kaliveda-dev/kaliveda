@@ -32,8 +32,8 @@ to gIDGridManager.
 KVDP2toIDGridConvertor::KVDP2toIDGridConvertor()
 {
    // Default constructor
-	fGridClass = 0;
-	fGrids = 0;
+   fGridClass = 0;
+   fGrids = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,29 +41,29 @@ KVDP2toIDGridConvertor::KVDP2toIDGridConvertor()
 KVDP2toIDGridConvertor::~KVDP2toIDGridConvertor()
 {
    // Destructor
-	if( fGrids ){
-		fGrids->Clear();
-		delete fGrids;
-	}
+   if (fGrids) {
+      fGrids->Clear();
+      delete fGrids;
+   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void KVDP2toIDGridConvertor::SetGridClass(const Char_t* cl)
 {
-	fGridClass = TClass::GetClass(cl);
-	if(!fGridClass) Error( KV__ERROR(SetGridClass), "Unknown grid class %s", cl );
+   fGridClass = TClass::GetClass(cl);
+   if (!fGridClass) Error(KV__ERROR(SetGridClass), "Unknown grid class %s", cl);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void KVDP2toIDGridConvertor::Convert(const Char_t* filename)
 {
-	if( fGrids ) fGrids->Clear();
-	else fGrids = new TList;
-	ReadFile(filename);
-	if(gIDGridManager) gIDGridManager->GetGrids()->AddAll(fGrids);
-	else Error( KV__ERROR(Convert), "gIDGridManager=0x0: create an ID grid manager first!");
+   if (fGrids) fGrids->Clear();
+   else fGrids = new TList;
+   ReadFile(filename);
+   if (gIDGridManager) gIDGridManager->GetGrids()->AddAll(fGrids);
+   else Error(KV__ERROR(Convert), "gIDGridManager=0x0: create an ID grid manager first!");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,45 +71,45 @@ void KVDP2toIDGridConvertor::Convert(const Char_t* filename)
 void KVDP2toIDGridConvertor::ReadFile(const Char_t* filename)
 {
    // Read grids in file and add to fGrids list
-	
-	if(!fGridClass){
-		Error( KV__ERROR(ReadFile),
-				"Set class of ID grids to generate first!");
-		return;
-	}
-	
+
+   if (!fGridClass) {
+      Error(KV__ERROR(ReadFile),
+            "Set class of ID grids to generate first!");
+      return;
+   }
+
    ifstream datfile;
-	datfile.open(filename);
+   datfile.open(filename);
 
    if (!datfile.good()) {
-      Error( KV__ERROR(ReadFile),
+      Error(KV__ERROR(ReadFile),
             "Problem reading file %s", filename);
       return;
    }
    KVString s;
 
-	s.ReadLine(datfile);
-	
+   s.ReadLine(datfile);
+
    while (datfile.good()) {
 
-		if(s==""){ 
-			s.ReadLine(datfile);
-			continue;
-		}
-		
+      if (s == "") {
+         s.ReadLine(datfile);
+         continue;
+      }
+
       if (!s.BeginsWith('#')) { //'#' sign signals comments
          int ring, modu, frun, lrun, totpoints;
          if (sscanf(s.Data(), "%d %d %d %d", &ring, &modu, &frun, &lrun) !=
-             4) {
-            Error( KV__ERROR(ReadFile), "Problem reading file %s\nLast line read: %s",
+               4) {
+            Error(KV__ERROR(ReadFile), "Problem reading file %s\nLast line read: %s",
                   filename, s.Data());
             return;
          };
-         KVIDGrid *grid = (KVIDGrid *) fGridClass->New();//create new grid
-         
-			//add to list of grids
+         KVIDGrid* grid = (KVIDGrid*) fGridClass->New(); //create new grid
+
+         //add to list of grids
          fGrids->Add(grid);
-			
+
          grid->GetParameters()->SetValue("First run", frun);
          grid->GetParameters()->SetValue("Last run", lrun);
          grid->GetParameters()->SetValue("Ring min", ring);
@@ -126,49 +126,49 @@ void KVDP2toIDGridConvertor::ReadFile(const Char_t* filename)
             totpoints += 2 * npoints;
             if (z > 0) {
                //identification line
-               KVIDLine *line = (KVIDLine*)grid->NewLine("id");
+               KVIDLine* line = (KVIDLine*)grid->NewLine("id");
                line->SetZ(z);
                line->SetA(a);
                line->Set(npoints);
                grid->Add("id", line);
             } else {
                //"ok" line
-               KVIDLine *line = (KVIDLine*)grid->NewLine("ok");
+               KVIDLine* line = (KVIDLine*)grid->NewLine("ok");
                line->Set(npoints);
                grid->Add("ok", line);
             }
          }
-			ReadLineCoords(grid, datfile);
+         ReadLineCoords(grid, datfile);
          //calculate line widths in grid
          grid->CalculateLineWidths();
       }
-		s.ReadLine(datfile);
+      s.ReadLine(datfile);
    }
-	datfile.close();
+   datfile.close();
 }
 
-void KVDP2toIDGridConvertor::ReadLineCoords(KVIDGrid* grid, ifstream &datfile)
+void KVDP2toIDGridConvertor::ReadLineCoords(KVIDGrid* grid, ifstream& datfile)
 {
-	// Read coordinates of lines in the order they were created.
-	// We assume that the 'ID' lines are first, then the 'OK' lines
-	
-	 TIter nextID(grid->GetIdentifiers());
-	 KVIDentifier *line;
-	 while ((line = (KVIDentifier *) nextID())) {
-		 //read in points
-		 for (int i = 0; i < line->GetN(); i++) {
-			 Double_t x, y;
-			 datfile >> x >> y;
-			 line->SetPoint(i, x, y);
-		 }
-	 }
-	 TIter nextOK(grid->GetCuts());
-	 while ((line = (KVIDentifier *) nextOK())) {
-		 //read in points
-		 for (int i = 0; i < line->GetN(); i++) {
-			 Double_t x, y;
-			 datfile >> x >> y;
-			 line->SetPoint(i, x, y);
-		 }
-	 }
-} 
+   // Read coordinates of lines in the order they were created.
+   // We assume that the 'ID' lines are first, then the 'OK' lines
+
+   TIter nextID(grid->GetIdentifiers());
+   KVIDentifier* line;
+   while ((line = (KVIDentifier*) nextID())) {
+      //read in points
+      for (int i = 0; i < line->GetN(); i++) {
+         Double_t x, y;
+         datfile >> x >> y;
+         line->SetPoint(i, x, y);
+      }
+   }
+   TIter nextOK(grid->GetCuts());
+   while ((line = (KVIDentifier*) nextOK())) {
+      //read in points
+      for (int i = 0; i < line->GetN(); i++) {
+         Double_t x, y;
+         datfile >> x >> y;
+         line->SetPoint(i, x, y);
+      }
+   }
+}

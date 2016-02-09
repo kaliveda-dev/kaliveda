@@ -32,135 +32,193 @@ $Id: KVDBRun.h,v 1.15 2009/03/12 14:01:02 franklan Exp $
 #define KV__SET_DBL(__param,__val) fParameters.SetValue(__param,__val);
 #define KV__SET_STR(__param,__val) fParameters.SetValue(__param,__val);
 
-class KVDBRun:public KVDBRecord {
+class KVDBRun: public KVDBRecord {
 
    RQ_OBJECT("KVDBRun")
-	Bool_t fBlockSignals;//!
+   Bool_t fBlockSignals;//!
 
 protected:
 
-       KVNameValueList fParameters;//list of named parameters for run
-       TDatime fDatime;             //!set dynamically with date&time of ROOT file corresponding to run
-       TString fKVVersion;             //!set dynamically with KaliVeda version used to generate ROOT file corresponding to run
-       TString fUserName;             //!set dynamically with name of user who generated ROOT file corresponding to run
+   KVNameValueList fParameters;//list of named parameters for run
+   TDatime fDatime;             //!set dynamically with date&time of ROOT file corresponding to run
+   TString fKVVersion;             //!set dynamically with KaliVeda version used to generate ROOT file corresponding to run
+   TString fUserName;             //!set dynamically with name of user who generated ROOT file corresponding to run
 
- public:
+public:
 
-   void SetKVVersion(const Char_t* V) { fKVVersion=V; };
-   const Char_t* GetKVVersion() const { return fKVVersion.Data(); };
-   void SetUserName(const Char_t* U) { fUserName = U; };
-   const Char_t* GetUserName() const { return fUserName.Data(); };
-   
-  	void Modified() // *SIGNAL*
-	{
-		// Signal sent out when run properties change (used by GUI)
-		if(!fBlockSignals) Emit("Modified()");
-	};
-	void BlockSignals(Bool_t yes=kTRUE)
-	{
-		// if yes=kTRUE, block 'Modified()' signal
-		// if yes=kFALSE, allow 'Modified()' signal
-		fBlockSignals = yes;
-	};
+   void SetKVVersion(const Char_t* V)
+   {
+      fKVVersion = V;
+   };
+   const Char_t* GetKVVersion() const
+   {
+      return fKVVersion.Data();
+   };
+   void SetUserName(const Char_t* U)
+   {
+      fUserName = U;
+   };
+   const Char_t* GetUserName() const
+   {
+      return fUserName.Data();
+   };
 
-       //Returns kTRUE if a parameter with the given name (either integer, floating point or string) has been set.
-       //For string parameters, if the parameter exists we also check if the string is empty (unless check_whitespace=kFALSE)
-       Bool_t Has(const Char_t* param, Bool_t check_whitespace=kTRUE) const {
-         if(check_whitespace&&fParameters.HasStringParameter(param)){
-            return !(fParameters.GetTStringValue(param).IsWhitespace());
-         }
-         return (fParameters.HasIntParameter(param)||fParameters.HasDoubleParameter(param)||fParameters.HasStringParameter(param));
-       };
+   void Modified() // *SIGNAL*
+   {
+      // Signal sent out when run properties change (used by GUI)
+      if (!fBlockSignals) Emit("Modified()");
+   };
+   void BlockSignals(Bool_t yes = kTRUE)
+   {
+      // if yes=kTRUE, block 'Modified()' signal
+      // if yes=kFALSE, allow 'Modified()' signal
+      fBlockSignals = yes;
+   };
 
-    KVDBRun();
-    KVDBRun(Int_t number, const Char_t * title);
-    virtual ~ KVDBRun();
+   //Returns kTRUE if a parameter with the given name (either integer, floating point or string) has been set.
+   //For string parameters, if the parameter exists we also check if the string is empty (unless check_whitespace=kFALSE)
+   Bool_t Has(const Char_t* param, Bool_t check_whitespace = kTRUE) const
+   {
+      if (check_whitespace && fParameters.HasStringParameter(param)) {
+         return !(fParameters.GetTStringValue(param).IsWhitespace());
+      }
+      return (fParameters.HasIntParameter(param) || fParameters.HasDoubleParameter(param) || fParameters.HasStringParameter(param));
+   };
 
-    void SetNumber(Int_t n) { KVDBRecord::SetNumber(n); Modified(); }
+   KVDBRun();
+   KVDBRun(Int_t number, const Char_t* title);
+   virtual ~ KVDBRun();
 
-    TDatime & GetDatime() {
+   void SetNumber(Int_t n)
+   {
+      KVDBRecord::SetNumber(n);
+      Modified();
+   }
+
+   TDatime& GetDatime()
+   {
       return fDatime;
    };
-	const Char_t* GetDatimeString(){
-		return fDatime.AsString();
-	};
-   void SetDatime(TDatime & dat) {
+   const Char_t* GetDatimeString()
+   {
+      return fDatime.AsString();
+   };
+   void SetDatime(TDatime& dat)
+   {
       dat.Copy(fDatime);
       Modified();
    };
 
-   KVDBSystem *GetSystem() const;
-	const Char_t *GetSystemName() const
-	{
-		return (GetSystem() ? GetSystem()->GetName() : "");
-	};
+   KVDBSystem* GetSystem() const;
+   const Char_t* GetSystemName() const
+   {
+      return (GetSystem() ? GetSystem()->GetName() : "");
+   };
 
-   Int_t GetEvents() const { return GetScaler("Events"); };
-   Double_t GetTime() const { return Get("Length (min.)"); };
-   Double_t GetSize() const { return Get("Size (MB)"); };
+   Int_t GetEvents() const
+   {
+      return GetScaler("Events");
+   };
+   Double_t GetTime() const
+   {
+      return Get("Length (min.)");
+   };
+   Double_t GetSize() const
+   {
+      return Get("Size (MB)");
+   };
 
-   const Char_t *GetComments() const { return GetString("Comments"); };
-   const Char_t *GetStartDate() const { return GetString("Start Date"); };
-   const Char_t *GetDate() const {
+   const Char_t* GetComments() const
+   {
+      return GetString("Comments");
+   };
+   const Char_t* GetStartDate() const
+   {
+      return GetString("Start Date");
+   };
+   const Char_t* GetDate() const
+   {
       return GetStartDate();
    };
-   const Char_t *GetEndDate() const { return GetString("End Date"); };
+   const Char_t* GetEndDate() const
+   {
+      return GetString("End Date");
+   };
 
    //Return target used for this run (actually target of KVDBSystem associated to run)
-   KVTarget *GetTarget() const
-{
-   return (GetSystem()? GetSystem()->GetTarget() : 0);
-};
+   KVTarget* GetTarget() const
+   {
+      return (GetSystem() ? GetSystem()->GetTarget() : 0);
+   };
 
-   void SetEvents(Int_t evt_number){ SetScaler("Events", evt_number);  };
-   void SetTime(Double_t time){ Set("Length (min.)",time);  };
-   void SetSize(Double_t s){ Set("Size (MB)",s);  };
-   void SetComments(const KVString& comments){ Set("Comments",comments);  };
-   void SetStartDate(const KVString& date){ Set("Start Date",date);  };
-   void SetDate(const KVString& d) {
+   void SetEvents(Int_t evt_number)
+   {
+      SetScaler("Events", evt_number);
+   };
+   void SetTime(Double_t time)
+   {
+      Set("Length (min.)", time);
+   };
+   void SetSize(Double_t s)
+   {
+      Set("Size (MB)", s);
+   };
+   void SetComments(const KVString& comments)
+   {
+      Set("Comments", comments);
+   };
+   void SetStartDate(const KVString& date)
+   {
+      Set("Start Date", date);
+   };
+   void SetDate(const KVString& d)
+   {
       SetStartDate(d);
    };
-   void SetEndDate(const KVString& d) { Set("End Date",d); };
+   void SetEndDate(const KVString& d)
+   {
+      Set("End Date", d);
+   };
 
-   virtual void SetSystem(KVDBSystem * system);
+   virtual void SetSystem(KVDBSystem* system);
    virtual void UnsetSystem();
 
-   virtual void Print(Option_t * option = "") const;
+   virtual void Print(Option_t* option = "") const;
 
-   virtual void WriteRunListLine(std::ostream &, Char_t delim = '|') const;
+   virtual void WriteRunListLine(std::ostream&, Char_t delim = '|') const;
    virtual void ReadRunListLine(const KVString&);
-   virtual void WriteRunListHeader(std::ostream &, Char_t delim = '|') const;
+   virtual void WriteRunListHeader(std::ostream&, Char_t delim = '|') const;
 
    //Set value for the scaler with the given name for this run
-   virtual void SetScaler(const Char_t*name, Int_t val)
+   virtual void SetScaler(const Char_t* name, Int_t val)
    {
-      KV__SET_INT(name,val)
-       Modified();
+      KV__SET_INT(name, val)
+      Modified();
    };
    //Get value of scaler with the given name for this run
-   virtual Int_t GetScaler(const Char_t*name) const
+   virtual Int_t GetScaler(const Char_t* name) const
    {
       KV__GET_INT(name)
    };
    //Set numerical (non-scaler) characteristic of run
-   void Set(const Char_t*param, Double_t val)
+   void Set(const Char_t* param, Double_t val)
    {
-      KV__SET_DBL(param,val)
-       Modified();
+      KV__SET_DBL(param, val)
+      Modified();
    };
    //Get numerical (non-scaler) characteristic of run
-   Double_t Get(const Char_t*param) const
+   Double_t Get(const Char_t* param) const
    {
       KV__GET_DBL(param)
    };
    //Set characteristic of run
-   void Set(const Char_t*param, const KVString& val)
+   void Set(const Char_t* param, const KVString& val)
    {
-      KV__SET_STR(param,val)
-       Modified();
+      KV__SET_STR(param, val)
+      Modified();
    };
    //Get characteristic of run
-   const Char_t* GetString(const Char_t*param) const
+   const Char_t* GetString(const Char_t* param) const
    {
       KV__GET_STR(param)
    };

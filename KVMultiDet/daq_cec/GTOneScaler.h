@@ -8,7 +8,7 @@
 //    email                : patois@ganil.fr
 //////////////////////////////////////////////////////////////////////////
 //
-// Part of ROOTGanilTape 
+// Part of ROOTGanilTape
 //
 // GTSOnecaler
 //
@@ -34,26 +34,32 @@
 #include "gan_acq_buf.h"
 
 // ---------------------------------------------------------------------------
-class GTOneScaler : public TObject
-{
+class GTOneScaler : public TObject {
 public:
-  GTOneScaler(void);
-  GTOneScaler(scale_struct *s);
-  void Set   (scale_struct *s);
+   GTOneScaler(void);
+   GTOneScaler(scale_struct* s);
+   void Set(scale_struct* s);
 
-  UInt_t GetCount(void) const {return(fCount);}
-  
-  void ls(Option_t* opt="") const;
+   UInt_t GetCount(void) const
+   {
+      return (fCount);
+   }
+   UInt_t GetStatus(void) const
+   {
+      return (fStatus);
+   }
+
+   void ls(Option_t* opt = "") const;
 
 protected:
-  UInt_t fLabel;      // Comment here
-  Int_t  fStatus;     // Comment here
-  UInt_t fCount;      // Comment here
-  UInt_t fFreq;       // Comment here
-  UInt_t fTics;       // Comment here
-  UInt_t fReserve[3]; // Comment here
+   UInt_t fLabel;      // Comment here
+   Int_t  fStatus;     // Comment here
+   UInt_t fCount;      // Comment here
+   UInt_t fFreq;       // Comment here
+   UInt_t fTics;       // Comment here
+   UInt_t fReserve[3]; // Comment here
 public:
-  ClassDef(GTOneScaler,1) // Scaler structure
+   ClassDef(GTOneScaler, 1) // Scaler structure
 };
 
 

@@ -28,33 +28,33 @@ $Id: KVDBChIoPressures.h,v 1.4 2007/02/14 14:11:15 franklan Exp $
 #include "KVDataBase.h"
 
 
-class KVDBChIoPressures:public KVDBRecord {
- private:
+class KVDBChIoPressures: public KVDBRecord {
+private:
    static UInt_t fSetNumber;
- protected:
-    Float_t fPressures[5];      //[5]
+protected:
+   Float_t fPressures[5];      //[5]
    void InitCommon();
 
- public:
-    KVDBChIoPressures();
-    KVDBChIoPressures(Float_t p1, Float_t p2, Float_t p3, Float_t p4,
-                      Float_t p5);
-    KVDBChIoPressures(Float_t *pressures);
-    KVDBChIoPressures(KVDBChIoPressures & chiopres);
+public:
+   KVDBChIoPressures();
+   KVDBChIoPressures(Float_t p1, Float_t p2, Float_t p3, Float_t p4,
+                     Float_t p5);
+   KVDBChIoPressures(Float_t* pressures);
+   KVDBChIoPressures(KVDBChIoPressures& chiopres);
    ~KVDBChIoPressures();
 
    Float_t GetChIoPressures(UInt_t chio_number);
-   Float_t *GetChIoPressures();
+   Float_t* GetChIoPressures();
    virtual Float_t GetPressure(UInt_t chio_number);
-   virtual Float_t *GetPressures();
-   void SetPressures(Float_t p1=0, Float_t p2=0, Float_t p3=0,
-                             Float_t p4=0, Float_t p5=0);
-   void SetPressures(Float_t *pressures);
+   virtual Float_t* GetPressures();
+   void SetPressures(Float_t p1 = 0, Float_t p2 = 0, Float_t p3 = 0,
+                     Float_t p4 = 0, Float_t p5 = 0);
+   void SetPressures(Float_t* pressures);
    virtual void SetPressure(UInt_t n, Float_t pressure);
 
-   virtual void Print(Option_t * option = "") const;
+   virtual void Print(Option_t* option = "") const;
 
-    ClassDef(KVDBChIoPressures, 1)      //Database record with INDRA ChIo pressures for a set of runs
+   ClassDef(KVDBChIoPressures, 1)      //Database record with INDRA ChIo pressures for a set of runs
 };
 
 inline Float_t KVDBChIoPressures::GetChIoPressures(UInt_t chio_number)
@@ -62,7 +62,7 @@ inline Float_t KVDBChIoPressures::GetChIoPressures(UInt_t chio_number)
    return fPressures[chio_number];
 }
 
-inline Float_t *KVDBChIoPressures::GetChIoPressures()
+inline Float_t* KVDBChIoPressures::GetChIoPressures()
 {
    return fPressures;
 }
@@ -72,14 +72,14 @@ inline Float_t KVDBChIoPressures::GetPressure(UInt_t chio_number)
    return fPressures[chio_number];
 }
 
-inline Float_t *KVDBChIoPressures::GetPressures()
+inline Float_t* KVDBChIoPressures::GetPressures()
 {
    return fPressures;
 }
 
 inline void KVDBChIoPressures::SetPressures(Float_t p1, Float_t p2,
-                                            Float_t p3, Float_t p4,
-                                            Float_t p5)
+      Float_t p3, Float_t p4,
+      Float_t p5)
 {
    fPressures[CHIO_2_3] = p1;
    fPressures[CHIO_4_5] = p2;
@@ -88,7 +88,7 @@ inline void KVDBChIoPressures::SetPressures(Float_t p1, Float_t p2,
    fPressures[CHIO_13_17] = p5;
 }
 
-inline void KVDBChIoPressures::SetPressures(Float_t *pressures)
+inline void KVDBChIoPressures::SetPressures(Float_t* pressures)
 {
    for (UInt_t i = CHIO_2_3; i <= CHIO_13_17; i++) {
       fPressures[i] = pressures[i];

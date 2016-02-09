@@ -26,7 +26,7 @@ ClassImp(KVIDSi75SiLi)
 //
 //Identification subcodes are written in bits 4-7 of KVIDSubCodeManager
 //(see KVINDRACodes)
-    KVIDSi75SiLi::KVIDSi75SiLi()
+KVIDSi75SiLi::KVIDSi75SiLi()
 {
    fIDCode = kIDCode_Si75SiLi;
    fZminCode = kIDCode_Zmin;

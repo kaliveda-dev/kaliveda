@@ -32,7 +32,7 @@ $Id: KVCsI.h,v 1.26 2009/04/09 09:25:43 ebonnet Exp $
 class KVTelescope;
 class KVLightEnergyCsI;
 
-class KVCsI:public KVINDRADetector {
+class KVCsI: public KVINDRADetector {
 
    Double_t fLumiereTotale;     //total light output calculated from R and L components
    UInt_t fLumTotStatus;        //status of light calculation
@@ -41,70 +41,76 @@ class KVCsI:public KVINDRADetector {
    KVLightEnergyCsI* fCalZ1; //! light-energy calibration for Z=1
    KVLightEnergyCsI* fCal; //! light-energy calibration for Z>1
 
-	Char_t  fPinLaser;//number of pin laser used to control stability of crystal
-	Double_t fGainCorrection;//gain correction for total light output. by default equal to 1.0.
+   Char_t  fPinLaser;//number of pin laser used to control stability of crystal
+   Double_t fGainCorrection;//gain correction for total light output. by default equal to 1.0.
 
-	KVACQParam* fACQ_R;//'Rapide' acquisition parameter
-	KVACQParam* fACQ_L;//'Lente' acquisition parameter
+   KVACQParam* fACQ_R;//'Rapide' acquisition parameter
+   KVACQParam* fACQ_L;//'Lente' acquisition parameter
 
    Double_t Calculate(UShort_t mode, Double_t rapide =
-                      -1.0, Double_t lente = -1.0);
+                         -1.0, Double_t lente = -1.0);
 
    enum { kLumiere, kTau };
 
- protected:
-	void init();
+protected:
+   void init();
 
- public:
-    KVCsI();
-    KVCsI(Float_t thick, Float_t thickAl=0 /* um */);
-    virtual ~ KVCsI();
+public:
+   KVCsI();
+   KVCsI(Float_t thick, Float_t thickAl = 0 /* um */);
+   virtual ~ KVCsI();
 
-    void SetAlThickness(Float_t thickAl /* um */);
+   void SetAlThickness(Float_t thickAl /* um */);
 
-   Float_t GetR() {
+   Float_t GetR()
+   {
       return fACQ_R->GetData();
    };
-   Float_t GetL() {
+   Float_t GetL()
+   {
       return fACQ_L->GetData();
    };
-   
+
    virtual Double_t GetLumiereTotale(Double_t rapide = -1.0, Double_t lente =
-                             -1.0);
+                                        -1.0);
    virtual Double_t GetCorrectedLumiereTotale(Double_t rapide = -1.0, Double_t lente =
-                             -1.0);
+            -1.0);
    Double_t GetTauZero(Double_t rapide = -1.0, Double_t lente = -1.0);
-   void SetLumiereTotale(Double_t lum) {
+   void SetLumiereTotale(Double_t lum)
+   {
       fLumiereTotale = lum;
    };
    UInt_t GetStatusLumiere();
    Bool_t LightIsGood();
-   virtual void Clear(Option_t * opt = "");
-   virtual void Print(Option_t * option = "") const;
+   virtual void Clear(Option_t* opt = "");
+   virtual void Print(Option_t* option = "") const;
 
    void SetACQParams();
    void SetCalibrators();
 
-   Double_t GetCorrectedEnergy(KVNucleus *, Double_t lum = -1., Bool_t transmission=kTRUE);
+   Double_t GetCorrectedEnergy(KVNucleus*, Double_t lum = -1., Bool_t transmission = kTRUE);
    Double_t GetLightFromEnergy(Int_t Z, Int_t A, Double_t E = -1.);
    Double_t GetEnergyFromLight(Int_t Z, Int_t A, Double_t lum);
 
-	void SetPinLaser(Int_t n){ if(n>0&&n<255) fPinLaser = (Char_t)n; };
-	Int_t GetPinLaser()
-	{
-		// Returns number of Pin Laser used to control stability of CsI detector.
-		return (Int_t)fPinLaser;
-	};
-	void SetTotalLightGainCorrection(Double_t c)
-	{
-	    fGainCorrection = c;
-	};
-	Double_t GetTotalLightGainCorrection() const
-	{
-	    return fGainCorrection;
-	};
-	
-	void DeduceACQParameters(Int_t zz=-1,Int_t aa=-1);
+   void SetPinLaser(Int_t n)
+   {
+      if (n > 0 && n < 255) fPinLaser = (Char_t)n;
+   };
+   Int_t GetPinLaser()
+   {
+      // Returns number of Pin Laser used to control stability of CsI detector.
+      return (Int_t)fPinLaser;
+   };
+   void SetTotalLightGainCorrection(Double_t c)
+   {
+      fGainCorrection = c;
+   };
+   Double_t GetTotalLightGainCorrection() const
+   {
+      return fGainCorrection;
+   };
+
+   void DeduceACQParameters(Int_t zz = -1, Int_t aa = -1);
 
    ClassDef(KVCsI, 5)           // The CsI(Tl) detectors of the INDRA array
 };

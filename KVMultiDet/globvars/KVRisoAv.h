@@ -1,5 +1,5 @@
 //
-// D.Cussol 
+// D.Cussol
 //
 // 17/02/2004:
 // Creation d'une classe Variable Globale
@@ -11,16 +11,16 @@
 
 //#define DEBUG_KVRiso
 
-class KVRisoAv:public KVRiso {
+class KVRisoAv: public KVRiso {
 // Methodes
- public:
+public:
    KVRisoAv(void);              // constructeur par defaut
-    KVRisoAv(char *nom);
+   KVRisoAv(char* nom);
 
-    virtual ~ KVRisoAv(void);   // destructeur
+   virtual ~ KVRisoAv(void);   // destructeur
 
-   virtual void Fill(KVNucleus * c);    // Remplissage de la variable.
+   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
 
-    ClassDef(KVRisoAv, 1)       // Global variable Riso
+   ClassDef(KVRisoAv, 1)       // Global variable Riso
 };
 #endif

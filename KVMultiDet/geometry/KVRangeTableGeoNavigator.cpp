@@ -100,75 +100,75 @@ KVRangeTableGeoNavigator::KVRangeTableGeoNavigator(TGeoManager* g, KVIonRangeTab
 
 KVRangeTableGeoNavigator::~KVRangeTableGeoNavigator()
 {
-    // Destructor
+   // Destructor
 }
 
-void KVRangeTableGeoNavigator::ParticleEntersNewVolume(KVNucleus *part)
+void KVRangeTableGeoNavigator::ParticleEntersNewVolume(KVNucleus* part)
 {
-    // Overrides method in KVGeoNavigator base class.
-    // Every time a particle enters a new volume, we check the material to see
-    // if it is known (i.e. contained in the range table fRangeTable).
-    // If so, then we calculate the energy loss of the particle in this volume,
-    // reduce the particle's energy accordingly, and, if the energy falls below
-    // a certain cut-off (default 1.e-3 MeV; can be modified with
-    // SetCutOffKEForPropagation(Double_t) ), we stop the propagation.
+   // Overrides method in KVGeoNavigator base class.
+   // Every time a particle enters a new volume, we check the material to see
+   // if it is known (i.e. contained in the range table fRangeTable).
+   // If so, then we calculate the energy loss of the particle in this volume,
+   // reduce the particle's energy accordingly, and, if the energy falls below
+   // a certain cut-off (default 1.e-3 MeV; can be modified with
+   // SetCutOffKEForPropagation(Double_t) ), we stop the propagation.
 
-    Double_t de = 0;
-    Double_t e = part->GetEnergy();
-    if(e<=fCutOffEnergy) {
-        e=0.;
-        SetStopPropagation();//propagation will stop after this step
-        return;
-    }
+   Double_t de = 0;
+   Double_t e = part->GetEnergy();
+   if (e <= fCutOffEnergy) {
+      e = 0.;
+      SetStopPropagation();//propagation will stop after this step
+      return;
+   }
 
-    // calculate energy losses in known materials
-    TGeoMaterial* material = GetCurrentVolume()->GetMaterial();
-    KVIonRangeTableMaterial* irmat=0;
-    if ( (irmat = fRangeTable->GetMaterial(material)) ) {
-        de = irmat->GetLinearDeltaEOfIon(
-                    part->GetZ(), part->GetA(), e, GetStepSize(), 0.,
-                    material->GetTemperature(),
-                    material->GetPressure());
-        e -= de;
-        if(e<=fCutOffEnergy) {
-            e=0.;
-            SetStopPropagation();//propagation will stop after this step
-        }
-        //set flag to say that particle has been slowed down
-        part->SetIsDetected();
-        //If this is the first absorber that the particle crosses, we set a "reminder" of its
-        //initial energy
-        if (!part->GetPInitial()) part->SetE0();
+   // calculate energy losses in known materials
+   TGeoMaterial* material = GetCurrentVolume()->GetMaterial();
+   KVIonRangeTableMaterial* irmat = 0;
+   if ((irmat = fRangeTable->GetMaterial(material))) {
+      de = irmat->GetLinearDeltaEOfIon(
+              part->GetZ(), part->GetA(), e, GetStepSize(), 0.,
+              material->GetTemperature(),
+              material->GetPressure());
+      e -= de;
+      if (e <= fCutOffEnergy) {
+         e = 0.;
+         SetStopPropagation();//propagation will stop after this step
+      }
+      //set flag to say that particle has been slowed down
+      part->SetIsDetected();
+      //If this is the first absorber that the particle crosses, we set a "reminder" of its
+      //initial energy
+      if (!part->GetPInitial()) part->SetE0();
 
-        KVString dname; Bool_t multi;
-        TString absorber_name;
-        if(GetCurrentDetectorNameAndVolume(dname,multi)){
-            if(multi) absorber_name.Form("%s/%s", dname.Data(), GetCurrentNode()->GetName());
-            else absorber_name=dname;
-        }
-        else
-            absorber_name=irmat->GetName();
+      KVString dname;
+      Bool_t multi;
+      TString absorber_name;
+      if (GetCurrentDetectorNameAndVolume(dname, multi)) {
+         if (multi) absorber_name.Form("%s/%s", dname.Data(), GetCurrentNode()->GetName());
+         else absorber_name = dname;
+      } else
+         absorber_name = irmat->GetName();
 
-        part->GetParameters()->SetValue(Form("DE:%s",absorber_name.Data()), de);
-        part->GetParameters()->SetValue(Form("Xin:%s",absorber_name.Data()), GetEntryPoint().X());
-        part->GetParameters()->SetValue(Form("Yin:%s",absorber_name.Data()), GetEntryPoint().Y());
-        part->GetParameters()->SetValue(Form("Zin:%s",absorber_name.Data()), GetEntryPoint().Z());
-        part->GetParameters()->SetValue(Form("Xout:%s",absorber_name.Data()), GetExitPoint().X());
-        part->GetParameters()->SetValue(Form("Yout:%s",absorber_name.Data()), GetExitPoint().Y());
-        part->GetParameters()->SetValue(Form("Zout:%s",absorber_name.Data()), GetExitPoint().Z());
-        part->SetEnergy(e);
-    }
+      part->GetParameters()->SetValue(Form("DE:%s", absorber_name.Data()), de);
+      part->GetParameters()->SetValue(Form("Xin:%s", absorber_name.Data()), GetEntryPoint().X());
+      part->GetParameters()->SetValue(Form("Yin:%s", absorber_name.Data()), GetEntryPoint().Y());
+      part->GetParameters()->SetValue(Form("Zin:%s", absorber_name.Data()), GetEntryPoint().Z());
+      part->GetParameters()->SetValue(Form("Xout:%s", absorber_name.Data()), GetExitPoint().X());
+      part->GetParameters()->SetValue(Form("Yout:%s", absorber_name.Data()), GetExitPoint().Y());
+      part->GetParameters()->SetValue(Form("Zout:%s", absorber_name.Data()), GetExitPoint().Z());
+      part->SetEnergy(e);
+   }
 }
 
-void KVRangeTableGeoNavigator::PropagateParticle(KVNucleus *part, TVector3 *TheOrigin)
+void KVRangeTableGeoNavigator::PropagateParticle(KVNucleus* part, TVector3* TheOrigin)
 {
-    // Slight modification of KVGeoNavigator::PropagateParticle:
-    //   if particle hits a DEADZONE, set its energy to zero
+   // Slight modification of KVGeoNavigator::PropagateParticle:
+   //   if particle hits a DEADZONE, set its energy to zero
 
-    KVGeoNavigator::PropagateParticle(part,TheOrigin);
-    if(part->GetParameters()->HasParameter("DEADZONE")){
-        //Info("PropagateParticle","stopped in DEADZONE:%s",part->GetParameters()->GetStringValue("DEADZONE"));
-        part->SetEnergy(0);
-    }
+   KVGeoNavigator::PropagateParticle(part, TheOrigin);
+   if (part->GetParameters()->HasParameter("DEADZONE")) {
+      //Info("PropagateParticle","stopped in DEADZONE:%s",part->GetParameters()->GetStringValue("DEADZONE"));
+      part->SetEnergy(0);
+   }
 }
 

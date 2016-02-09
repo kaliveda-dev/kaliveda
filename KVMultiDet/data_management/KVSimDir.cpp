@@ -55,7 +55,7 @@ KVSimDir::KVSimDir()
 }
 
 KVSimDir::KVSimDir(const Char_t* name, const Char_t* path)
-      : KVBase(name,path)
+   : KVBase(name, path)
 {
    // Ctor with name and directory to analyse
    init();
@@ -70,7 +70,7 @@ void KVSimDir::init()
 
 //________________________________________________________________
 
-KVSimDir::KVSimDir (const KVSimDir& obj)  : KVBase()
+KVSimDir::KVSimDir(const KVSimDir& obj)  : KVBase()
 {
    // Copy constructor
    // This ctor is used to make a copy of an existing object (for example
@@ -88,7 +88,7 @@ KVSimDir::~KVSimDir()
 
 //________________________________________________________________
 
-void KVSimDir::Copy (TObject& obj) const
+void KVSimDir::Copy(TObject& obj) const
 {
    // This method copies the current state of 'this' object into 'obj'
    // You should add here any member variables, for example:
@@ -103,35 +103,35 @@ void KVSimDir::Copy (TObject& obj) const
 
 //________________________________________________________________
 
-void KVSimDir::AnalyseDirectory ()
+void KVSimDir::AnalyseDirectory()
 {
    // Read contents of directory given to ctor.
    // Each ROOT file will be analysed by AnalyseFile().
-   
+
    Info("AnalyseDirectory", "Analysing %s...", GetDirectory());
    fSimData.Clear();
    fFiltData.Clear();
    //loop over files in current directory
-	TSystemDirectory thisDir(".", GetDirectory());
-	TList* fileList=thisDir.GetListOfFiles();
-	TIter nextFile(fileList);
-	TSystemFile* aFile=0;
-	while( (aFile = (TSystemFile*)nextFile()) ){
-      
-      if(aFile->IsDirectory()) continue;
-      
-		KVString fileName = aFile->GetName();
-      if(!fileName.EndsWith(".root"))  continue; /* skip non-ROOT files */
-      
+   TSystemDirectory thisDir(".", GetDirectory());
+   TList* fileList = thisDir.GetListOfFiles();
+   TIter nextFile(fileList);
+   TSystemFile* aFile = 0;
+   while ((aFile = (TSystemFile*)nextFile())) {
+
+      if (aFile->IsDirectory()) continue;
+
+      KVString fileName = aFile->GetName();
+      if (!fileName.EndsWith(".root"))  continue; /* skip non-ROOT files */
+
       AnalyseFile(fileName);
-      
+
    }
    delete fileList;
 }
 
 //________________________________________________________________
 
-void KVSimDir::AnalyseFile (const Char_t* filename)
+void KVSimDir::AnalyseFile(const Char_t* filename)
 {
    // Analyse ROOT file given as argument.
    // If there is a TTree in the file, then we look at all of its branches until we find one
@@ -150,32 +150,32 @@ void KVSimDir::AnalyseFile (const Char_t* filename)
    // Analysis of the file stops after the first TTree with a branch satisfying one of the
    // two criteria is found (it is assumed that in each file there is only one TTree containing
    // either simulated or filtered data).
-   
+
    Info("AnalyseFile", "Analysing file %s...", filename);
    TString fullpath;
-   AssignAndDelete(fullpath, gSystem->ConcatFileName(GetDirectory(),filename));
+   AssignAndDelete(fullpath, gSystem->ConcatFileName(GetDirectory(), filename));
    TFile* file = TFile::Open(fullpath);
-   if(!file || file->IsZombie()) return;
+   if (!file || file->IsZombie()) return;
    // look for TTrees in file
-   TIter next(file->GetListOfKeys()); TKey*key;
-   while( (key=(TKey*)next()) ){
+   TIter next(file->GetListOfKeys());
+   TKey* key;
+   while ((key = (TKey*)next())) {
       TString cn = key->GetClassName();
-      if(cn=="TTree"){
+      if (cn == "TTree") {
          // look for branch with KVEvent objects
          TTree* tree = (TTree*)file->Get(key->GetName());
          TSeqCollection* branches = tree->GetListOfBranches();
          TIter nextB(branches);
          TBranchElement* branch;
-         while( (branch = (TBranchElement*)nextB()) ){
+         while ((branch = (TBranchElement*)nextB())) {
             TString branch_classname = branch->GetClassName();
-            TClass* branch_class = TClass::GetClass(branch_classname,kFALSE,kTRUE);
-            if(branch_class && branch_class->InheritsFrom("KVEvent")){
-               if(branch_class->InheritsFrom("KVSimEvent")){
-                  fSimData.Add( new KVSimFile(this, filename, tree->GetTitle(), tree->GetEntries(), tree->GetName(), branch->GetName()) );
+            TClass* branch_class = TClass::GetClass(branch_classname, kFALSE, kTRUE);
+            if (branch_class && branch_class->InheritsFrom("KVEvent")) {
+               if (branch_class->InheritsFrom("KVSimEvent")) {
+                  fSimData.Add(new KVSimFile(this, filename, tree->GetTitle(), tree->GetEntries(), tree->GetName(), branch->GetName()));
                   delete file;
                   return;
-               }
-               else if(branch_class->InheritsFrom("KVReconstructedEvent")){
+               } else if (branch_class->InheritsFrom("KVReconstructedEvent")) {
                   // filtered data. there must be TNamed called 'Dataset', 'System', & 'Run' in the file.
                   TNamed* ds = (TNamed*)file->Get("Dataset");
                   TNamed* orig = (TNamed*)file->Get("Origin");
@@ -183,15 +183,21 @@ void KVSimDir::AnalyseFile (const Char_t* filename)
                   TNamed* r = (TNamed*)file->Get("Run");
                   TNamed* g = (TNamed*)file->Get("Geometry");
                   TNamed* f = (TNamed*)file->Get("Filter");
-                  TString dataset; if(ds) dataset = ds->GetTitle();
-                  TString system; if(sys) system = sys->GetTitle();
-                  TString run; if(r) run = r->GetTitle();
-                  TString origin; if(orig) origin = orig->GetTitle();
-                  TString geometry; if(g) geometry = g->GetTitle();
-                  TString filter; if(f) filter = f->GetTitle();
+                  TString dataset;
+                  if (ds) dataset = ds->GetTitle();
+                  TString system;
+                  if (sys) system = sys->GetTitle();
+                  TString run;
+                  if (r) run = r->GetTitle();
+                  TString origin;
+                  if (orig) origin = orig->GetTitle();
+                  TString geometry;
+                  if (g) geometry = g->GetTitle();
+                  TString filter;
+                  if (f) filter = f->GetTitle();
                   Int_t run_number = run.Atoi();
-                  fFiltData.Add( new KVSimFile(this, filename, tree->GetTitle(), tree->GetEntries(), tree->GetName(), branch->GetName(),
-                        dataset, system, run_number, geometry, origin, filter) );
+                  fFiltData.Add(new KVSimFile(this, filename, tree->GetTitle(), tree->GetEntries(), tree->GetName(), branch->GetName(),
+                                              dataset, system, run_number, geometry, origin, filter));
                   delete file;
                   delete ds;
                   delete sys;
@@ -209,12 +215,12 @@ void KVSimDir::AnalyseFile (const Char_t* filename)
 
 void KVSimDir::ls(Option_t*) const
 {
-      TROOT::IndentLevel();
-      cout << "SIMULATION SET: " << GetName() << endl;
-      cout << "DIRECTORY: " << GetDirectory() << endl;
-      cout <<"CONTENTS:" << endl;
-      cout <<"--simulated data:" << endl;
-      fSimData.ls();
-      cout <<"--filtered data:" << endl;
-      fFiltData.ls();
-}   
+   TROOT::IndentLevel();
+   cout << "SIMULATION SET: " << GetName() << endl;
+   cout << "DIRECTORY: " << GetDirectory() << endl;
+   cout << "CONTENTS:" << endl;
+   cout << "--simulated data:" << endl;
+   fSimData.ls();
+   cout << "--filtered data:" << endl;
+   fFiltData.ls();
+}

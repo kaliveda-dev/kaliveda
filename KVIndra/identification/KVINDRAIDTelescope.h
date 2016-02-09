@@ -4,36 +4,40 @@
 #include "KVIDTelescope.h"
 #include "KVIDSubCodeManager.h"
 
-class KVINDRAIDTelescope:public KVIDTelescope, public KVIDSubCodeManager {
+class KVINDRAIDTelescope: public KVIDTelescope, public KVIDSubCodeManager {
 
- protected:
+protected:
    UShort_t fIDCode;            //!code corresponding to correct identification by this type of telescope
    UShort_t fZminCode;          //!code corresponding to particle stopping in first member of this type of telescope
    UChar_t fECode;              //!code corresponding to correct calibration by this type of telescope
 
- public:
+public:
 
-    KVINDRAIDTelescope();
-    virtual ~ KVINDRAIDTelescope();
+   KVINDRAIDTelescope();
+   virtual ~ KVINDRAIDTelescope();
    void init();
 
-   const Char_t *GetName() const;
-   virtual const Char_t *GetArrayName();
+   const Char_t* GetName() const;
+   virtual const Char_t* GetArrayName();
 
-   UShort_t GetIDCode() {
+   UShort_t GetIDCode()
+   {
       return fIDCode;
    };
-   UShort_t GetZminCode() {
+   UShort_t GetZminCode()
+   {
       return fZminCode;
    };
-   UChar_t GetECode() {
+   UChar_t GetECode()
+   {
       return fECode;
    };
    virtual UShort_t GetBadIDCode();
    virtual UShort_t GetCoherencyIDCode();
-  virtual  UShort_t GetMultiHitFirstStageIDCode();
+   virtual  UShort_t GetMultiHitFirstStageIDCode();
    inline void SetSubCodeManager(UChar_t n_bits,
-                                 UChar_t most_significant_bit) {
+                                 UChar_t most_significant_bit)
+   {
       SetNbits(n_bits);
       SetMSB(most_significant_bit);
    };

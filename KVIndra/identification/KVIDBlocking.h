@@ -22,19 +22,21 @@
 
 class KVIDGrid;
 
-class KVIDBlocking:public KVIDChIoSi {
+class KVIDBlocking: public KVIDChIoSi {
 
- public:
+public:
 
-   KVIDBlocking() {
+   KVIDBlocking()
+   {
    };
-   virtual ~ KVIDBlocking() {
+   virtual ~ KVIDBlocking()
+   {
    };
 
-   Bool_t SetIDGrid(KVIDGrid *);
+   Bool_t SetIDGrid(KVIDGrid*);
 
-   Double_t GetIDMapX(Option_t * opt = "");
-   Double_t GetIDMapY(Option_t * opt = "");
+   Double_t GetIDMapX(Option_t* opt = "");
+   Double_t GetIDMapY(Option_t* opt = "");
 
    ClassDef(KVIDBlocking, 1)    //Identification in FNL blocking telescopes BIC-SiB
 };

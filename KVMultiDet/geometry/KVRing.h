@@ -31,40 +31,42 @@ $Id: KVRing.h,v 1.15 2007/10/23 14:09:02 ebonnet Exp $
 
 class KVRing : public KVGeoStrucElement, public KVPosition {
 
-    void init();
+   void init();
 
 public:
 
-    KVRing();
-    virtual ~ KVRing();
+   KVRing();
+   virtual ~ KVRing();
 
-    void Add(KVBase *);
+   void Add(KVBase*);
 
-    const KVSeqCollection *GetTelescopes() const
-    {
-        return GetStructures();
-    }
-    KVTelescope *GetTelescope(Float_t phi) const;
-    KVTelescope *GetTelescope(const Char_t * name) const;
+   const KVSeqCollection* GetTelescopes() const
+   {
+      return GetStructures();
+   }
+   KVTelescope* GetTelescope(Float_t phi) const;
+   KVTelescope* GetTelescope(const Char_t* name) const;
 
-    Bool_t IsSortable() const {
-        return kTRUE;
-    };
-    Int_t Compare(const TObject * obj) const;
+   Bool_t IsSortable() const
+   {
+      return kTRUE;
+   };
+   Int_t Compare(const TObject* obj) const;
 
-    Double_t GetSolidAngle(void){
-        // redefinition of KVPosition::GetSolidAngle() to take into account
-        // only KVTelescope of the considered KVLayer which define the KVRing
-        Double_t sol_ang=0;
-        KVTelescope *tel;
-        TIter nxttel(GetTelescopes());
-        while ((tel = (KVTelescope *) nxttel())) sol_ang+=tel->GetSolidAngle();
-        return sol_ang;
-    }
-    virtual TGeoVolume* GetGeoVolume();
-    virtual void AddToGeometry();
+   Double_t GetSolidAngle(void)
+   {
+      // redefinition of KVPosition::GetSolidAngle() to take into account
+      // only KVTelescope of the considered KVLayer which define the KVRing
+      Double_t sol_ang = 0;
+      KVTelescope* tel;
+      TIter nxttel(GetTelescopes());
+      while ((tel = (KVTelescope*) nxttel())) sol_ang += tel->GetSolidAngle();
+      return sol_ang;
+   }
+   virtual TGeoVolume* GetGeoVolume();
+   virtual void AddToGeometry();
 
-    ClassDef(KVRing, 3)//Class representing one ring of an axially symmetric multidetector array
+   ClassDef(KVRing, 3)//Class representing one ring of an axially symmetric multidetector array
 };
 
 #endif

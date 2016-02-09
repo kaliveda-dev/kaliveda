@@ -21,9 +21,9 @@ $Id: KVIDSiCsI.h,v 1.10 2006/10/19 14:32:43 franklan Exp $
 
 #include "KVINDRAIDTelescope.h"
 
-class KVIDSiCsI:public KVINDRAIDTelescope {
+class KVIDSiCsI: public KVINDRAIDTelescope {
 
- public:
+public:
 
    KVIDSiCsI();
    virtual ~ KVIDSiCsI();

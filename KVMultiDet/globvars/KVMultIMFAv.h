@@ -1,5 +1,5 @@
 //
-// D.Cussol 
+// D.Cussol
 //
 // 17/02/2004:
 // Creation d'une classe Variable Globale
@@ -11,16 +11,16 @@
 
 //#define DEBUG_KVMultIMF
 
-class KVMultIMFAv:public KVMultIMF {
+class KVMultIMFAv: public KVMultIMF {
 // Methodes
- public:
+public:
    KVMultIMFAv(void);           // constructeur par defaut
-    KVMultIMFAv(char *nom);
+   KVMultIMFAv(char* nom);
 
-    virtual ~ KVMultIMFAv(void);        // destructeur
+   virtual ~ KVMultIMFAv(void);        // destructeur
 
-   virtual void Fill(KVNucleus * c);    // Remplissage de la variable.
+   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
 
-    ClassDef(KVMultIMFAv, 1)    // Multiplicity for fragments with Z >= Zmin and Vz > Vcm
+   ClassDef(KVMultIMFAv, 1)    // Multiplicity for fragments with Z >= Zmin and Vz > Vcm
 };
 #endif

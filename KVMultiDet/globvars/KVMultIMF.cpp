@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 17/02/2004:
 // Creation d'une classe Variable Globale.
@@ -16,7 +16,7 @@ ClassImp(KVMultIMF)
 //
 // Look at KVVarGlob class to have an example of use.
 //
-    /* *///
+/* *///
 Int_t KVMultIMF::nb = 0;
 Int_t KVMultIMF::nb_crea = 0;
 Int_t KVMultIMF::nb_dest = 0;
@@ -35,12 +35,12 @@ void KVMultIMF::init_KVMultIMF(void)
 }
 
 //_________________________________________________________________
-KVMultIMF::KVMultIMF(void):KVZbound()
+KVMultIMF::KVMultIMF(void): KVZbound()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    init_KVMultIMF();
    sprintf(nom, "KVMultIMF_%d", nb_crea);
@@ -53,7 +53,7 @@ KVMultIMF::KVMultIMF(void):KVZbound()
 }
 
 //_________________________________________________________________
-KVMultIMF::KVMultIMF(Char_t * nom):KVZbound(nom)
+KVMultIMF::KVMultIMF(Char_t* nom): KVZbound(nom)
 {
 //
 // Constructeur avec un nom
@@ -68,7 +68,7 @@ KVMultIMF::KVMultIMF(Char_t * nom):KVZbound(nom)
 //_________________________________________________________________
 KVMultIMF::~KVMultIMF(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVMultIMF
@@ -80,7 +80,7 @@ KVMultIMF::~KVMultIMF(void)
 }
 
 //_________________________________________________________________
-void KVMultIMF::Fill(KVNucleus * c)
+void KVMultIMF::Fill(KVNucleus* c)
 {
    //The multiplicity is incremented if the Z of nucleus *c is >=zmin
    if (c->GetZ() >= zmin)

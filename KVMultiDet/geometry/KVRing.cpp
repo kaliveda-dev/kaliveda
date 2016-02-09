@@ -47,42 +47,42 @@ KVRing::~KVRing()
 {
 }
 
-void KVRing::Add(KVBase *b)
+void KVRing::Add(KVBase* b)
 {
-    // Only KVTelescope-derived structures can be placed in a KVRing
+   // Only KVTelescope-derived structures can be placed in a KVRing
 
-    if(!b->InheritsFrom("KVTelescope")) return;
-    KVGeoStrucElement::Add(b);
+   if (!b->InheritsFrom("KVTelescope")) return;
+   KVGeoStrucElement::Add(b);
 }
 
 
 //_______________________________________________________________________________________
-KVTelescope *KVRing::GetTelescope(Float_t phi) const
+KVTelescope* KVRing::GetTelescope(Float_t phi) const
 {
    // give pointer to telescope in ring which covers azimuthal angle phi
-    TIter next(GetTelescopes());
-   KVTelescope *obj;
-   while ((obj = (KVTelescope *) next())) {     // loop over telescopes in ring
+   TIter next(GetTelescopes());
+   KVTelescope* obj;
+   while ((obj = (KVTelescope*) next())) {      // loop over telescopes in ring
       if (obj->IsInPhiRange(phi))
-          return obj;
+         return obj;
    }
    return NULL;
 }
 
 //_______________________________________________________________________________________
-KVTelescope *KVRing::GetTelescope(const Char_t * name) const
+KVTelescope* KVRing::GetTelescope(const Char_t* name) const
 {
    // give pointer to telescope in ring with name
-    return (KVTelescope *)GetStructure("TELESCOPE",name);
+   return (KVTelescope*)GetStructure("TELESCOPE", name);
 }
 
 //____________________________________________________________________________________________
-Int_t KVRing::Compare(const TObject * obj) const
+Int_t KVRing::Compare(const TObject* obj) const
 {
    // rings are sorted according to lower edge polar angle
-   if (GetThetaMin() < ((KVRing *) obj)->GetThetaMin())
+   if (GetThetaMin() < ((KVRing*) obj)->GetThetaMin())
       return -1;
-   else if (GetThetaMin() > ((KVRing *) obj)->GetThetaMin())
+   else if (GetThetaMin() > ((KVRing*) obj)->GetThetaMin())
       return 1;
    else
       return 0;
@@ -95,36 +95,38 @@ Int_t KVRing::Compare(const TObject * obj) const
 
 TGeoVolume* KVRing::GetGeoVolume()
 {
-	// Create and return TGeoVolume representing detectors in this ring.
+   // Create and return TGeoVolume representing detectors in this ring.
 
    TString name(GetName());
    name.ToUpper();
-   name.ReplaceAll(" ","_");
-   TGeoVolume *mother_vol = gGeoManager->MakeVolumeAssembly(name.Data());
+   name.ReplaceAll(" ", "_");
+   TGeoVolume* mother_vol = gGeoManager->MakeVolumeAssembly(name.Data());
    //**** BUILD & ADD TELESCOPEs ****
-   TIter next(GetTelescopes()); KVTelescope *det;
-   while( (det = (KVTelescope*)next()) ){
+   TIter next(GetTelescopes());
+   KVTelescope* det;
+   while ((det = (KVTelescope*)next())) {
       TGeoVolume* det_vol = det->GetGeoVolume();
       // position telescope in ring
       // rotate telescope to orientation corresponding to (theta,phi)
-      Double_t theta = det->GetTheta(); Double_t phi = det->GetPhi();
+      Double_t theta = det->GetTheta();
+      Double_t phi = det->GetPhi();
       TGeoRotation rot1, rot2;
-      rot2.SetAngles(phi+90., theta, 0.);
+      rot2.SetAngles(phi + 90., theta, 0.);
       rot1.SetAngles(-90., 0., 0.);
       Double_t tot_len_tel = det->GetTotalLengthInCM();
       // distance to telescope centre = distance to telescope + half total length of telescope
-      Double_t dist = det->GetDistance() + tot_len_tel/2.;
+      Double_t dist = det->GetDistance() + tot_len_tel / 2.;
       // translate telescope to correct distance from target (note: reference is CENTRE of telescope)
       Double_t trans_1 = dist;
       // translate telescope so that centre of ring is on origin
-      Double_t trans_2 = dist*TMath::Cos(theta*TMath::DegToRad());
+      Double_t trans_2 = dist * TMath::Cos(theta * TMath::DegToRad());
       // set distance for ring = distance between origin and centre of ring
       SetDistance(trans_2);// distance in cm
 
-      TGeoTranslation tran1(0,0,trans_1);
-      TGeoTranslation tran2(0,0, -trans_2);
+      TGeoTranslation tran1(0, 0, trans_1);
+      TGeoTranslation tran2(0, 0, -trans_2);
       TGeoHMatrix h = tran2 * rot2 * tran1 * rot1;
-      TGeoHMatrix *ph = new TGeoHMatrix(h);
+      TGeoHMatrix* ph = new TGeoHMatrix(h);
 
       mother_vol->AddNode(det_vol, 1, ph);
    }
@@ -134,13 +136,13 @@ TGeoVolume* KVRing::GetGeoVolume()
 void KVRing::AddToGeometry()
 {
    // Construct and position a TGeoVolume shape to represent this ring in the current geometry
-   if(!gGeoManager) return;
+   if (!gGeoManager) return;
 
    // get volume for ring
    TGeoVolume* vol = GetGeoVolume();
 
    // translate ring to correct distance
-   TGeoTranslation* tr = new TGeoTranslation(0,0,GetDistance());//distance set in GetGeoVolume()
+   TGeoTranslation* tr = new TGeoTranslation(0, 0, GetDistance()); //distance set in GetGeoVolume()
 
    // add ring volume to geometry
    gGeoManager->GetTopVolume()->AddNode(vol, 1, tr);

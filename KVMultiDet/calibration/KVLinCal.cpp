@@ -38,21 +38,21 @@ ClassImp(KVLinCal);
 //
 //By default, no pedestal correction is performed.
 
-KVLinCal::KVLinCal():KVCalibrator(2)
+KVLinCal::KVLinCal(): KVCalibrator(2)
 {
    SetType("Linear calibration");
    fPedCorr = kFALSE;
-   fPar=0;
+   fPar = 0;
 }
 
 //___________________________________________________________________________
-KVLinCal::KVLinCal(KVDetector * kvd):KVCalibrator(2)
+KVLinCal::KVLinCal(KVDetector* kvd): KVCalibrator(2)
 {
    //Create a calibration object for a specific detector (*kvd)
    SetType("Linear calibration");
    SetDetector(kvd);
    fPedCorr = kFALSE;
-   fPar=0;
+   fPar = 0;
 }
 
 //___________________________________________________________________________
@@ -62,7 +62,7 @@ void KVLinCal::SetChannelParameter(const Char_t* type)
    //Set type of acquisition parameter associated with detector which is
    //to be used for the calibration
    fACQParam = type;
-   SetType(Form("Linear calibration %s",type));
+   SetType(Form("Linear calibration %s", type));
 }
 
 //___________________________________________________________________________
@@ -77,13 +77,12 @@ Double_t KVLinCal::Compute(Double_t chan) const
 
    if (fReady) {
       Double_t chan_corr;
-      if( chan < 0 ) {
-         if(!GetParam()->Fired()) return -99.;
+      if (chan < 0) {
+         if (!GetParam()->Fired()) return -99.;
          chan_corr = GetParam()->GetData();
-      }
-      else chan_corr = chan;
-      
-      if(fPedCorr) chan_corr -= GetParam()->GetPedestal();
+      } else chan_corr = chan;
+
+      if (fPedCorr) chan_corr -= GetParam()->GetPedestal();
 
       return (GetParameter(0) + GetParameter(1) * chan_corr);
    }
@@ -92,7 +91,8 @@ Double_t KVLinCal::Compute(Double_t chan) const
 
 
 //___________________________________________________________________________
-Double_t KVLinCal::operator() (Double_t chan) {
+Double_t KVLinCal::operator()(Double_t chan)
+{
    //Overloading of "()" to allow syntax such as:
    //
    //        KVLinCal calibrator;
@@ -112,16 +112,16 @@ Double_t KVLinCal::Invert(Double_t energy)
    //calculate the corresponding channel number according to the
    //calibration parameters (useful for filtering simulations).
 
-   KVDetector *det = GetDetector();
+   KVDetector* det = GetDetector();
    Int_t channel = 0;
 
    if (fReady) {
       // linear transfer function
-      if(fPedCorr){
-         channel = (Int_t) (0.5 + (energy - GetParameter(0)) / GetParameter(1)
-                         + det->GetPedestal("GG"));
-      }else {
-         channel = (Int_t) (0.5 + (energy - GetParameter(0)) / GetParameter(1));
+      if (fPedCorr) {
+         channel = (Int_t)(0.5 + (energy - GetParameter(0)) / GetParameter(1)
+                           + det->GetPedestal("GG"));
+      } else {
+         channel = (Int_t)(0.5 + (energy - GetParameter(0)) / GetParameter(1));
       }
    }
    return (Double_t) channel;

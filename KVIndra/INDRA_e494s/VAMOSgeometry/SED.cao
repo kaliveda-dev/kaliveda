@@ -28,10 +28,11 @@ SED1.Z: -71.8
 SED2.Z: 16.7
 
 # Position of the reference trajectory in the detector reference frame
-SED1.REF.X: 0
+# 04/02/14: reference positions modified with values obtained with libKVSeDPosFitter
+SED1.REF.X: 4.08
 SED1.REF.Y: 0
-SED1.REF.Z: 0
+SED1.REF.Z: -7.84 
 
-SED2.REF.X: 0
-SED2.REF.Y: 0
-SED2.REF.Z: 0
+SED2.REF.X: 3.94
+SED2.REF.Y: 0.247
+SED2.REF.Z: -7.84

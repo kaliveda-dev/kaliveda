@@ -6,33 +6,35 @@
 
 #include "KVSimReader.h"
 
-class KVSimReader_SMF : public KVSimReader
-{
+class KVSimReader_SMF : public KVSimReader {
 
-   public:
+public:
    KVSimReader_SMF();
-	KVSimReader_SMF(KVString filename);
-	
-	void init(){
-		tree_name = "SMF";
-	}
-   
-	virtual ~KVSimReader_SMF();
+   KVSimReader_SMF(KVString filename);
 
-	virtual void ReadFile();
-	virtual Bool_t ReadHeader();
-	virtual Bool_t ReadEvent();
-	virtual Bool_t ReadNucleus();
+   void init()
+   {
+      tree_name = "SMF";
+   }
 
-	
-	void SetTimeBranching(Double_t val){  
-		KVString sval; sval.Form("%lf",val);
-		AddInfo("Branching time",sval.Data());
-	}
+   virtual ~KVSimReader_SMF();
+
+   virtual void ReadFile();
+   virtual Bool_t ReadHeader();
+   virtual Bool_t ReadEvent();
+   virtual Bool_t ReadNucleus();
 
 
+   void SetTimeBranching(Double_t val)
+   {
+      KVString sval;
+      sval.Form("%lf", val);
+      AddInfo("Branching time", sval.Data());
+   }
 
-   ClassDef(KVSimReader_SMF,1)//Read ascii file for events of the SMF code after clusterization
+
+
+   ClassDef(KVSimReader_SMF, 1) //Read ascii file for events of the SMF code after clusterization
 };
 
 #endif

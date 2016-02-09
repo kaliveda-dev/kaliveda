@@ -39,7 +39,7 @@ ClassImp(KVINDRAFNL)
 <!-- */
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////
-    KVINDRAFNL::KVINDRAFNL()
+KVINDRAFNL::KVINDRAFNL()
 {
    //Default ctor.
 }
@@ -178,8 +178,8 @@ void KVINDRAFNL::Build(Int_t run)
 
 //_________________________________________________________________________________
 
-KVINDRADetector *KVINDRAFNL::GetDetectorByType(UInt_t cou, UInt_t mod,
-                                          UInt_t type) const
+KVINDRADetector* KVINDRAFNL::GetDetectorByType(UInt_t cou, UInt_t mod,
+      UInt_t type) const
 {
    //Modified KVINDRA::GetDetectorByType
    //If the type is "ChIo_*" or "Si_*" and ring number 'cou' and
@@ -207,7 +207,7 @@ KVINDRADetector *KVINDRAFNL::GetDetectorByType(UInt_t cou, UInt_t mod,
    //GetDetectorByType(7,18,Si_GG/PG/T) -> SIB_3
    //
 
-   KVINDRADetector *det = KVINDRA::GetDetectorByType(cou, mod, type);
+   KVINDRADetector* det = KVINDRA::GetDetectorByType(cou, mod, type);
 
    if (!det) {
       if (cou == 4 && mod == 23 && (type >= ChIo_GG && type <= ChIo_T))

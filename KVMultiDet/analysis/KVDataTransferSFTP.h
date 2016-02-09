@@ -12,8 +12,8 @@ $Date: 2006/10/19 14:32:43 $
 
 #include <KVDataTransfer.h>
 
-class KVDataTransferSFTP:public KVDataTransfer {
- public:
+class KVDataTransferSFTP: public KVDataTransfer {
+public:
 
    KVDataTransferSFTP();
    virtual ~ KVDataTransferSFTP();

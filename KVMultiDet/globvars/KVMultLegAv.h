@@ -1,5 +1,5 @@
 //
-// D.Cussol 
+// D.Cussol
 //
 // 17/02/2004:
 // Creation d'une classe Variable Globale
@@ -11,16 +11,16 @@
 
 //#define DEBUG_KVMultLeg
 
-class KVMultLegAv:public KVMultLeg {
+class KVMultLegAv: public KVMultLeg {
 // Methodes
- public:
+public:
    KVMultLegAv(void);           // constructeur par defaut
-    KVMultLegAv(char *nom);
+   KVMultLegAv(char* nom);
 
-    virtual ~ KVMultLegAv(void);        // destructeur
+   virtual ~ KVMultLegAv(void);        // destructeur
 
-   virtual void Fill(KVNucleus * c);    // Remplissage de la variable.
+   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
 
-    ClassDef(KVMultLegAv, 1)    // Multiplicity for particules with Z <= Zmax and Vz > Vcm
+   ClassDef(KVMultLegAv, 1)    // Multiplicity for particules with Z <= Zmax and Vz > Vcm
 };
 #endif

@@ -24,50 +24,50 @@ class KVTestIDGridDialog {
 
    RQ_OBJECT("KVTestIDGridDialog")
 
-   TGTransientFrame *fMain;
+   TGTransientFrame* fMain;
 
-   TGHorizontalFrame *fHdataFrame;
-   TGLabel *fHdataNameLabel;
-   TGTextEntry *fHdataNameEntry;
+   TGHorizontalFrame* fHdataFrame;
+   TGLabel* fHdataNameLabel;
+   TGTextEntry* fHdataNameEntry;
 
-   TGGroupFrame *fHzrealFrame;
-   TGHorizontalFrame *fHzrealNameFrame;
-   TGLabel *fHzrealNameLabel;
-   TGTextEntry *fHzrealNameEntry;
-   TGHorizontalFrame *fHzrealBinsFrame;
-   TGLabel *fHzrealBinsLabel;
-   TGLabel *fHzrealXminLabel;
-   TGLabel *fHzrealXmaxLabel;
-   TGNumberEntry *fHzrealBinsEntry;
-   TGNumberEntry *fHzrealXminEntry;
-   TGNumberEntry *fHzrealXmaxEntry;
+   TGGroupFrame* fHzrealFrame;
+   TGHorizontalFrame* fHzrealNameFrame;
+   TGLabel* fHzrealNameLabel;
+   TGTextEntry* fHzrealNameEntry;
+   TGHorizontalFrame* fHzrealBinsFrame;
+   TGLabel* fHzrealBinsLabel;
+   TGLabel* fHzrealXminLabel;
+   TGLabel* fHzrealXmaxLabel;
+   TGNumberEntry* fHzrealBinsEntry;
+   TGNumberEntry* fHzrealXminEntry;
+   TGNumberEntry* fHzrealXmaxEntry;
 
-   TGGroupFrame *fHzvseFrame;
-   TGHorizontalFrame *fHzvseNameFrame;
-   TGLabel *fHzvseNameLabel;
-   TGTextEntry *fHzvseNameEntry;
-   TGHorizontalFrame *fHzvseXBinsFrame;
-   TGLabel *fHzvseXBinsLabel;
-   TGLabel *fHzvseXminLabel;
-   TGLabel *fHzvseXmaxLabel;
-   TGNumberEntry *fHzvseXBinsEntry;
-   TGNumberEntry *fHzvseXminEntry;
-   TGNumberEntry *fHzvseXmaxEntry;
-   TGHorizontalFrame *fHzvseYBinsFrame;
-   TGLabel *fHzvseYBinsLabel;
-   TGLabel *fHzvseYminLabel;
-   TGLabel *fHzvseYmaxLabel;
-   TGNumberEntry *fHzvseYBinsEntry;
-   TGNumberEntry *fHzvseYminEntry;
-   TGNumberEntry *fHzvseYmaxEntry;
+   TGGroupFrame* fHzvseFrame;
+   TGHorizontalFrame* fHzvseNameFrame;
+   TGLabel* fHzvseNameLabel;
+   TGTextEntry* fHzvseNameEntry;
+   TGHorizontalFrame* fHzvseXBinsFrame;
+   TGLabel* fHzvseXBinsLabel;
+   TGLabel* fHzvseXminLabel;
+   TGLabel* fHzvseXmaxLabel;
+   TGNumberEntry* fHzvseXBinsEntry;
+   TGNumberEntry* fHzvseXminEntry;
+   TGNumberEntry* fHzvseXmaxEntry;
+   TGHorizontalFrame* fHzvseYBinsFrame;
+   TGLabel* fHzvseYBinsLabel;
+   TGLabel* fHzvseYminLabel;
+   TGLabel* fHzvseYmaxLabel;
+   TGNumberEntry* fHzvseYBinsEntry;
+   TGNumberEntry* fHzvseYminEntry;
+   TGNumberEntry* fHzvseYmaxEntry;
 
-   TGHProgressBar *fProgressBar;
+   TGHProgressBar* fProgressBar;
 
-   TGHorizontalFrame *fButtonsFrame;
-   TGTextButton *fTestButton;
-   TGTextButton *fCloseButton;
+   TGHorizontalFrame* fButtonsFrame;
+   TGTextButton* fTestButton;
+   TGTextButton* fCloseButton;
 
-   KVIDGraph *fSelectedGrid;
+   KVIDGraph* fSelectedGrid;
 
    static TString fNameData;
    static TString fNameZreal;
@@ -82,17 +82,18 @@ class KVTestIDGridDialog {
    static Int_t hzvseymin;
    static Int_t hzvseymax;
 
- public:
-    KVTestIDGridDialog(const TGWindow * p = 0, const TGWindow * main =
-                       0, UInt_t w = 1, UInt_t h = 1, KVIDGraph * g = 0, TH2* data_histo=0);
-    virtual ~ KVTestIDGridDialog();
+public:
+   KVTestIDGridDialog(const TGWindow* p = 0, const TGWindow* main =
+                         0, UInt_t w = 1, UInt_t h = 1, KVIDGraph* g = 0, TH2* data_histo = 0);
+   virtual ~ KVTestIDGridDialog();
 
    void DoClose();
    void CloseWindow();
    void TestGrid();
    void DrawChart(KVCanvas* cc, Int_t zmin, Int_t zmax, Int_t nmin, Int_t nmax);
 
-   Bool_t CheckNameOK(const TString & name) {
+   Bool_t CheckNameOK(const TString& name)
+   {
       return (name != "");
    };
 

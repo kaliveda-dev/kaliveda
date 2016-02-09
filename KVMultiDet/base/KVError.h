@@ -17,9 +17,9 @@ can still use the same standard messages, by adding */
 /*
 we can then use the following to give e.g. a Warning in
 a method whose name is SomeMethod:
-   
+
    Warning( KVERROR(SomeMethod), "Something is wrong, x=%d", x);
-   
+
 the Warning will appear with "ClassName::SomeMethod",
 ClassName being the class of the actual object (i.e. name of derived
 class if object inherits from class in which SomeMethod is defined).

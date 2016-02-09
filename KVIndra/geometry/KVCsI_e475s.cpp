@@ -26,10 +26,10 @@ ClassImp(KVCsI_e475s)
 
 void KVCsI_e475s::init()
 {
-   
+
    //initialise non-persistent pointers
-	fcalibLT=0;
-   
+   fcalibLT = 0;
+
 }
 
 //______________________________________________________________________________
@@ -45,7 +45,7 @@ KVCsI_e475s::KVCsI_e475s()
 }
 
 //______________________________________________________________________________
-KVCsI_e475s::KVCsI_e475s(Float_t thick):KVCsI(thick)
+KVCsI_e475s::KVCsI_e475s(Float_t thick): KVCsI(thick)
 {
    //Make a CsI detector "thick" cm long
    //Set type of detector to "CSI"
@@ -53,60 +53,58 @@ KVCsI_e475s::KVCsI_e475s(Float_t thick):KVCsI(thick)
 
    SetType("CSI");
    init();
-	
+
 }
 
 //------------------------------
-void KVCsI_e475s::SetCalibrator(KVDBParameterSet *kvdbps)
+void KVCsI_e475s::SetCalibrator(KVDBParameterSet* kvdbps)
 //------------------------------
 {
-	KVFunctionCal *cali = new KVFunctionCal(kvdbps);
-   if(!AddCalibrator(cali)) {
-		Warning("SetCalibrator(KVDBParameterSet*)",
-                    "Addition of Calibrator %s %s failed !", kvdbps->GetName(),kvdbps->GetTitle());
-		delete cali;
-	}
-	else {
-		if (TString(cali->GetType()).Contains("(LT)")) 	fcalibLT=cali;
-		else fcalibLT=0;
-	}
+   KVFunctionCal* cali = new KVFunctionCal(kvdbps);
+   if (!AddCalibrator(cali)) {
+      Warning("SetCalibrator(KVDBParameterSet*)",
+              "Addition of Calibrator %s %s failed !", kvdbps->GetName(), kvdbps->GetTitle());
+      delete cali;
+   } else {
+      if (TString(cali->GetType()).Contains("(LT)"))  fcalibLT = cali;
+      else fcalibLT = 0;
+   }
 }
 
 //------------------------------
-void KVCsI_e475s::ChangeCalibParameters(KVDBParameterSet *kvdbps)
+void KVCsI_e475s::ChangeCalibParameters(KVDBParameterSet* kvdbps)
 //------------------------------
 {
-	if (TString(kvdbps->GetTitle()).Contains("LT")){
-		fcalibLT->ChangeCalibParameters(kvdbps);	
-	}
-	else {
-		printf("KVCsI_e475s::ChangeCalibParameters(KVDBParameterSet *kvdbps) : no calibrator defined for %s\n",kvdbps->GetTitle());
-	}
-	
+   if (TString(kvdbps->GetTitle()).Contains("LT")) {
+      fcalibLT->ChangeCalibParameters(kvdbps);
+   } else {
+      printf("KVCsI_e475s::ChangeCalibParameters(KVDBParameterSet *kvdbps) : no calibrator defined for %s\n", kvdbps->GetTitle());
+   }
+
 }
 
 //------------------------------
-Double_t KVCsI_e475s::GetOriginalValue(Float_t to,TString signal)
+Double_t KVCsI_e475s::GetOriginalValue(Float_t to, TString signal)
 //------------------------------
 {
-if (IsCalibratedBySignal(signal)) return GetCalibratorBySignal(signal)->Invert(to);
-else return 0.;
+   if (IsCalibratedBySignal(signal)) return GetCalibratorBySignal(signal)->Invert(to);
+   else return 0.;
 }
 
 //------------------------------
-Double_t KVCsI_e475s::GetCalibratedValue(Float_t from,TString signal)
+Double_t KVCsI_e475s::GetCalibratedValue(Float_t from, TString signal)
 //------------------------------
 {
-if (IsCalibratedBySignal(signal)) return GetCalibratorBySignal(signal)->Compute(from);
-else return 0.;
+   if (IsCalibratedBySignal(signal)) return GetCalibratorBySignal(signal)->Compute(from);
+   else return 0.;
 }
 
 //------------------------------
-KVFunctionCal *KVCsI_e475s::GetCalibratorBySignal(TString signal) const
+KVFunctionCal* KVCsI_e475s::GetCalibratorBySignal(TString signal) const
 //------------------------------
 {
-if (signal=="LT")	return fcalibLT;
-else 					return 0;
+   if (signal == "LT") return fcalibLT;
+   else              return 0;
 }
 
 //------------------------------
@@ -120,24 +118,24 @@ Bool_t  KVCsI_e475s::IsCalibrated() const
 Bool_t  KVCsI_e475s::IsCalibratedBySignal(TString signal) const
 //------------------------------
 {
-   return ( GetCalibratorBySignal(signal) );
-	
+   return (GetCalibratorBySignal(signal));
+
 }
 
 //------------------------------
 Double_t  KVCsI_e475s::GetCalibratedEnergy()
 //------------------------------
 {
-   return GetCalibratedValue(TMath::Max(0.,GetLumiereTotale()),"LT");
+   return GetCalibratedValue(TMath::Max(0., GetLumiereTotale()), "LT");
 }
 
 //------------------------------
-Double_t KVCsI_e475s::GetCorrectedEnergy(KVNucleus *, Double_t , Bool_t)
+Double_t KVCsI_e475s::GetCorrectedEnergy(KVNucleus*, Double_t , Bool_t)
 //------------------------------
 {
    //Do nothing more
    return GetEnergy();
-	
+
 }
 
 //------------------------------
@@ -145,10 +143,10 @@ Double_t KVCsI_e475s::GetEnergy()
 //------------------------------
 {
    Double_t ELoss = KVDetector::GetEnergy();
-   if( ELoss > 0 ) 	return KVDetector::GetEnergy();
-  	else					ELoss = 0;
+   if (ELoss > 0)    return KVDetector::GetEnergy();
+   else              ELoss = 0;
    SetEnergy(ELoss);
-  	return ELoss;
+   return ELoss;
 }
 
 //______________________________________________________________________________
@@ -160,28 +158,28 @@ Short_t KVCsI_e475s::GetCalcACQParam(KVACQParam*, Double_t) const
    // after subtraction of calculated energy losses corresponding to each identified
    // particle crossing this detector.
    // Returns -1 if fEcalc = 0 or if detector is not calibrated
-   
-	return -1;
-	/*
+
+   return -1;
+   /*
    if(!IsCalibratedBySignal(ACQ->GetType()) || GetECalc()==0) return -1;
    Double_t orig = const_cast<KVCsI_e475s*>(this)->GetOriginalValue((Float_t)GetECalc(), ACQ->GetType())
          + const_cast<KVCsI_e475s*>(this)->GetPedestal(ACQ->GetType());
    return (Short_t)orig;
-	*/
+   */
 }
 
 //______________________________________________________________________________
 
-void KVCsI_e475s::Streamer(TBuffer &R__b)
+void KVCsI_e475s::Streamer(TBuffer& R__b)
 {
    // Stream an object of class KVCsI.
    // We set the pointers to the calibrator objects
 
    if (R__b.IsReading()) {
       KVCsI_e475s::Class()->ReadBuffer(R__b, this);
-      fcalibLT  =  (KVFunctionCal *)GetCalibrator("Channel->MeV(LT)");
-   	//printf("")
-	} else {
+      fcalibLT  = (KVFunctionCal*)GetCalibrator("Channel->MeV(LT)");
+      //printf("")
+   } else {
       KVCsI_e475s::Class()->WriteBuffer(R__b, this);
    }
 }

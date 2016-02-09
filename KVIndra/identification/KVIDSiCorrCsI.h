@@ -22,30 +22,38 @@
 #include "KVRTGIDManager.h"
 #include "KVSilicon.h"
 #include "KVCsI.h"
+#include "KVMacros.h" // 'UNUSED' macro
 
-class KVIDSiCorrCsI:public KVIDSiCsI, public KVRTGIDManager{
+class KVIDSiCorrCsI: public KVIDSiCsI, public KVRTGIDManager {
 
-        KVSilicon  *fSi;    //!
-        KVCsI      *fCsI;   //!
+protected:
 
-    public:
+   KVSilicon*  fSi;    //!
+   KVCsI*      fCsI;   //!
 
-        KVIDSiCorrCsI(){};
-        virtual ~KVIDSiCorrCsI(){};
+   Double_t fThresholdX; //!
+   Double_t fThresholdY; //!
 
-        virtual void Initialize();
+   Double_t GetThesholdFromVar(const Char_t* var);
 
-        virtual Double_t GetIDMapX(Option_t *opt = ""); 
-        virtual Double_t GetIDMapY(Option_t *opt = "");
+public:
 
-        virtual Bool_t Identify(KVIdentificationResult *IDR, Double_t x=-1., Double_t y=-1.);
+   KVIDSiCorrCsI() {};
+   virtual ~KVIDSiCorrCsI() {};
 
-        virtual Bool_t SetIdentificationParameters(const KVMultiDetArray*);
-        virtual void RemoveIdentificationParameters();
+   virtual void Initialize();
 
-        void PrintFitParameters();
+   virtual Double_t GetIDMapX(Option_t* opt = "");
+   virtual Double_t GetIDMapY(Option_t* opt = "");
 
-        ClassDef(KVIDSiCorrCsI, 2)//Si-CsI identification with TGID functions for E494S/E503  
+   virtual Bool_t Identify(KVIdentificationResult* IDR, Double_t x = -1., Double_t y = -1.);
+
+   virtual Bool_t SetIdentificationParameters(const KVMultiDetArray*);
+   virtual void RemoveIdentificationParameters();
+
+   void PrintFitParameters();
+
+   ClassDef(KVIDSiCorrCsI, 2)//Si-CsI identification with TGID functions for E494S/E503
 };
 
 #endif

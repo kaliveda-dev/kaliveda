@@ -35,7 +35,7 @@ ClassImp(KVReconstructedEvent);
 //
 //      GetParticle(Int_t i)       -  returns ith reconstructed particle of event (i=1,...,GetMult())
 //      GetParticleWithName(const Char_t*)    -  returns the first particle with given name
-//      GetParticle(const Char_t*)				 -  returns the first particle belonging to a given group
+//      GetParticle(const Char_t*)            -  returns the first particle belonging to a given group
 //      UseMeanAngles()      - particle's theta & phi are taken from mean theta & phi of detectors
 //      UseRandomAngles()      - particle's theta & phi are randomized within theta & phi limits of detectors
 //      HasMeanAngles()/HasRandomAngles()   -  indicate in which of the two previous cases we find ourselves
@@ -64,8 +64,8 @@ void KVReconstructedEvent::init()
 }
 
 KVReconstructedEvent::KVReconstructedEvent(Int_t mult, const char
-                                           *classname):KVEvent(mult,
-                                                               classname)
+      *classname): KVEvent(mult,
+                              classname)
 {
    init();
    CustomStreamer();            //because KVReconstructedNucleus has a customised streamer
@@ -73,7 +73,7 @@ KVReconstructedEvent::KVReconstructedEvent(Int_t mult, const char
 
 //_______________________________________________________________________________________//
 
-void KVReconstructedEvent::Streamer(TBuffer & R__b)
+void KVReconstructedEvent::Streamer(TBuffer& R__b)
 {
    //Stream an object of class KVReconstructedEvent.
    //We set the particles' angles depending on whether mean or random angles
@@ -83,18 +83,18 @@ void KVReconstructedEvent::Streamer(TBuffer & R__b)
       R__b.ReadClassBuffer(KVReconstructedEvent::Class(), this);
       // if the multidetector object exists, update some informations
       // concerning the detectors etc. hit by this particle
-      if ( gMultiDetArray ){
-      	//set angles
-      	KVReconstructedNucleus *par;
-      	while ((par = GetNextParticle())) {
-         	if (HasMeanAngles())
+      if (gMultiDetArray) {
+         //set angles
+         KVReconstructedNucleus* par;
+         while ((par = GetNextParticle())) {
+            if (HasMeanAngles())
                par->GetAnglesFromStoppingDetector("mean");
-         	else
-                par->GetAnglesFromStoppingDetector("random");
-         	//reconstruct fAnalStatus information for KVReconstructedNucleus
-         	if (par->GetStatus() == 99)        //AnalStatus has not been set for particles in group
-            	if (par->GetGroup())
-                KVReconstructedNucleus::AnalyseParticlesInGroup( par->GetGroup() );
+            else
+               par->GetAnglesFromStoppingDetector("random");
+            //reconstruct fAnalStatus information for KVReconstructedNucleus
+            if (par->GetStatus() == 99)        //AnalStatus has not been set for particles in group
+               if (par->GetGroup())
+                  KVReconstructedNucleus::AnalyseParticlesInGroup(par->GetGroup());
          }
       }
    } else {
@@ -105,7 +105,7 @@ void KVReconstructedEvent::Streamer(TBuffer & R__b)
 
 //______________________________________________________________________________________//
 
-Bool_t KVReconstructedEvent::AnalyseDetectors(TList * kvtl)
+Bool_t KVReconstructedEvent::AnalyseDetectors(TList* kvtl)
 {
    // Loop over detectors in list
    // if any detector has fired, start construction of new detected particle
@@ -117,47 +117,47 @@ Bool_t KVReconstructedEvent::AnalyseDetectors(TList * kvtl)
    // This can be changed by calling SetPartSeedCond("any"): in this case,
    // particles will be reconstructed starting from detectors with at least 1 fired parameter.
 
-    KVDetector *d;
-    TIter next(kvtl);
-    while( (d = (KVDetector*)next()) ){
-        /*
-            If detector has fired,
-            making sure fired detector hasn't already been used to reconstruct
-            a particle, then we create and fill a new detected particle.
-        */
-        if ( (d->Fired( fPartSeedCond.Data() ) && !d->IsAnalysed()) ) {
+   KVDetector* d;
+   TIter next(kvtl);
+   while ((d = (KVDetector*)next())) {
+      /*
+          If detector has fired,
+          making sure fired detector hasn't already been used to reconstruct
+          a particle, then we create and fill a new detected particle.
+      */
+      if ((d->Fired(fPartSeedCond.Data()) && !d->IsAnalysed())) {
 
-            KVReconstructedNucleus *kvdp = AddParticle();
-            //add all active detector layers in front of this one
-            //to the detected particle's list
-            kvdp->Reconstruct(d);
+         KVReconstructedNucleus* kvdp = AddParticle();
+         //add all active detector layers in front of this one
+         //to the detected particle's list
+         kvdp->Reconstruct(d);
 
-            //set detector state so it will not be used again
-            d->SetAnalysed(kTRUE);
-        }
-    }
+         //set detector state so it will not be used again
+         d->SetAnalysed(kTRUE);
+      }
+   }
 
-    return kTRUE;
+   return kTRUE;
 }
 
 //______________________________________________________________________________
 
-void KVReconstructedEvent::Print(Option_t * option) const
+void KVReconstructedEvent::Print(Option_t* option) const
 {
    //Print out list of particles in the event.
    //If option="ok" only particles with IsOK=kTRUE are included.
 
-    cout << "     ***//***  RECONSTRUCTED EVENT #" << GetNumber() << "  ***//***" << endl;
+   cout << "     ***//***  RECONSTRUCTED EVENT #" << GetNumber() << "  ***//***" << endl;
    cout << GetTitle() << endl;  //system
    cout << GetName() << endl;   //run
-   cout << "MULTIPLICITY = " << ((KVReconstructedEvent *) this)->
-       GetMult(option) << endl << endl;
+   cout << "MULTIPLICITY = " << ((KVReconstructedEvent*) this)->
+        GetMult(option) << endl << endl;
 
-   KVReconstructedNucleus *frag = 0;
-   int i=0;
+   KVReconstructedNucleus* frag = 0;
+   int i = 0;
    while ((frag =
-           ((KVReconstructedEvent *) this)->GetNextParticle(option))) {
-       cout << "RECONSTRUCTED PARTICLE #" << ++i << endl;
+              ((KVReconstructedEvent*) this)->GetNextParticle(option))) {
+      cout << "RECONSTRUCTED PARTICLE #" << ++i << endl;
       frag->Print();
       cout << endl;
    }
@@ -174,23 +174,22 @@ void KVReconstructedEvent::IdentifyEvent()
    //Particles stopping in first member of a telescope (KVReconstructedNucleus::GetStatus=3) will
    //have their Z estimated from the energy loss in the detector (if calibrated).
 
-   KVReconstructedNucleus *d;
+   KVReconstructedNucleus* d;
    while ((d = GetNextParticle())) {
-      if (!d->IsIdentified()){
-         if(d->GetStatus() == KVReconstructedNucleus::kStatusOK){
+      if (!d->IsIdentified()) {
+         if (d->GetStatus() == KVReconstructedNucleus::kStatusOK) {
             // identifiable particles
             d->Identify();
-         }
-         else if(d->GetStatus() == KVReconstructedNucleus::kStatusStopFirstStage) {
+         } else if (d->GetStatus() == KVReconstructedNucleus::kStatusStopFirstStage) {
             // particles stopped in first member of a telescope
             // estimation of Z (minimum) from energy loss (if detector is calibrated)
             UInt_t zmin = d->GetStoppingDetector()->FindZmin(-1., d->GetMassFormula());
-            if( zmin ){
-               d->SetZ( zmin );
+            if (zmin) {
+               d->SetZ(zmin);
                d->SetIsIdentified();
                // "Identifying" telescope is taken from list of ID telescopes
                // to which stopping detector belongs
-               d->SetIdentifyingTelescope( (KVIDTelescope*)d->GetStoppingDetector()->GetIDTelescopes()->At(0) );
+               d->SetIdentifyingTelescope((KVIDTelescope*)d->GetStoppingDetector()->GetIDTelescopes()->At(0));
             }
          }
       }
@@ -202,25 +201,26 @@ void KVReconstructedEvent::IdentifyEvent()
 void KVReconstructedEvent::CalibrateEvent()
 {
    // Calculate and set energies of all identified particles in event.
-	//
-	// This will call the KVReconstructedNucleus::Calibrate() method of each
-	// uncalibrated particle (those for which KVReconstructedNucleus::IsCalibrated()
-	// returns kFALSE).
-	//
-	// In order to make sure that target energy loss corrections are correctly
-	// calculated, we first set the state of the target in the current multidetector
+   //
+   // This will call the KVReconstructedNucleus::Calibrate() method of each
+   // uncalibrated particle (those for which KVReconstructedNucleus::IsCalibrated()
+   // returns kFALSE).
+   //
+   // In order to make sure that target energy loss corrections are correctly
+   // calculated, we first set the state of the target in the current multidetector
 
-	KVTarget* t = gMultiDetArray->GetTarget();
-	if(t){
-		t->SetIncoming(kFALSE); t->SetOutgoing(kTRUE);
-	}
+   KVTarget* t = gMultiDetArray->GetTarget();
+   if (t) {
+      t->SetIncoming(kFALSE);
+      t->SetOutgoing(kTRUE);
+   }
 
-   KVReconstructedNucleus *d;
+   KVReconstructedNucleus* d;
 
    while ((d = GetNextParticle())) {
 
-      if (d->IsIdentified() && !d->IsCalibrated()){
-            d->Calibrate();
+      if (d->IsIdentified() && !d->IsCalibrated()) {
+         d->Calibrate();
       }
 
    }

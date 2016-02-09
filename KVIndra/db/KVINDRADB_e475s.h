@@ -16,28 +16,27 @@ $Date: 2007/09/21 07:44:09 $
 #include "Riostream.h"
 #include "TString.h"
 
-class KVINDRADB_e475s : public KVINDRADB
-{
+class KVINDRADB_e475s : public KVINDRADB {
    void init();
-   
-	protected:
-   
-	KVDBTable *fCalibrations;  	//-> table of calibrations
-	
-	public:
+
+protected:
+
+   KVDBTable* fCalibrations;     //-> table of calibrations
+
+public:
 
    KVINDRADB_e475s();
-   KVINDRADB_e475s(const Char_t * name);
+   KVINDRADB_e475s(const Char_t* name);
    virtual ~KVINDRADB_e475s();
 
    virtual void Build();
-	void ReadCalibrations();
-	void ReadCalibFile(std::ifstream &fin,TString,TString);
-   
-	void ReadPedestalList();
-	void ReadPedestalFile(std::ifstream &fin,TString,TString);
-	
-	ClassDef(KVINDRADB_e475s,1)//Database for E475s experiment
+   void ReadCalibrations();
+   void ReadCalibFile(std::ifstream& fin, TString, TString);
+
+   void ReadPedestalList();
+   void ReadPedestalFile(std::ifstream& fin, TString, TString);
+
+   ClassDef(KVINDRADB_e475s, 1) //Database for E475s experiment
 };
 
 #endif

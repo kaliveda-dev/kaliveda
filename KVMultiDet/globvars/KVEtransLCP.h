@@ -3,16 +3,16 @@
 #include "KVEtrans.h"
 
 
-class KVEtransLCP:public KVEtrans {
+class KVEtransLCP: public KVEtrans {
 
- public:
+public:
    KVEtransLCP(void);
-    KVEtransLCP(Char_t *);
+   KVEtransLCP(Char_t*);
 
-    virtual ~ KVEtransLCP(void);
+   virtual ~ KVEtransLCP(void);
 
-   virtual void Fill(KVNucleus * c);
+   virtual void Fill(KVNucleus* c);
 
-    ClassDef(KVEtransLCP, 1)    //Global variable total transverse energy of LCP (Z < 3)
+   ClassDef(KVEtransLCP, 1)    //Global variable total transverse energy of LCP (Z < 3)
 };
 #endif

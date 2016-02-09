@@ -28,13 +28,13 @@ ClassImp(KVChannelEnergyChIo);
 //pedestal-corrected PG channel is used to estimate the GG channel.
 
 
-KVChannelEnergyChIo::KVChannelEnergyChIo():KVCalibrator(2)
+KVChannelEnergyChIo::KVChannelEnergyChIo(): KVCalibrator(2)
 {
    SetType("Channel-Energy ChIo");
 }
 
 //___________________________________________________________________________
-KVChannelEnergyChIo::KVChannelEnergyChIo(KVDetector * kvd):KVCalibrator(2)
+KVChannelEnergyChIo::KVChannelEnergyChIo(KVDetector* kvd): KVCalibrator(2)
 {
    //Create a calibration object for a specific detector (*kvd)
    SetType("Channel-Energy ChIo");
@@ -52,7 +52,7 @@ Double_t KVChannelEnergyChIo::Compute(Double_t chan) const
    if (fReady) {
       Double_t chan_corr;
       if (chan > 4000.) {
-         chan = ((KVChIo *) GetDetector())->GetGGfromPG();
+         chan = ((KVChIo*) GetDetector())->GetGGfromPG();
       }
       chan_corr = chan - GetDetector()->GetPedestal("GG");
       return (GetParameter(0) + GetParameter(1) * chan_corr);
@@ -62,7 +62,8 @@ Double_t KVChannelEnergyChIo::Compute(Double_t chan) const
 
 
 //___________________________________________________________________________
-Double_t KVChannelEnergyChIo::operator() (Double_t chan) {
+Double_t KVChannelEnergyChIo::operator()(Double_t chan)
+{
    //Overloading of "()" to allow syntax such as:
    //
    //        KVChannelEnergyChIo calibrator;
@@ -82,13 +83,13 @@ Double_t KVChannelEnergyChIo::Invert(Double_t energy)
    //calculate the corresponding channel number according to the
    //calibration parameters (useful for filtering simulations).
 
-   KVDetector *det = GetDetector();
+   KVDetector* det = GetDetector();
    Int_t channel = 0;
 
    if (fReady) {
       // linear transfer function
-      channel = (Int_t) (0.5 + (energy - GetParameter(0)) / GetParameter(1)
-                         + det->GetPedestal("GG"));
+      channel = (Int_t)(0.5 + (energy - GetParameter(0)) / GetParameter(1)
+                        + det->GetPedestal("GG"));
    } else {
       Warning("Compute", "Parameters not correctly initialized");
    }

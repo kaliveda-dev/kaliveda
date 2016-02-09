@@ -22,24 +22,24 @@ ClassImp(KVSystemDirectory)
 KVSystemDirectory::KVSystemDirectory()
 {
    // Default constructor
-   fContents=0;
-   fSubdirs=0;
-   fTotFiles=0;
-   fTotDirs=0;
+   fContents = 0;
+   fSubdirs = 0;
+   fTotFiles = 0;
+   fTotDirs = 0;
 }
 
 KVSystemDirectory::KVSystemDirectory(const Char_t* dirname, const Char_t* path)
-      : TSystemDirectory(dirname,path)
+   : TSystemDirectory(dirname, path)
 {
    // Constructor with name for directory and path.
    // Path can be given as "." for current working directory.
    // Shell variables can be used if written as "$(VARIABLE)"
-   fContents=0;
-   fSubdirs=0;
-   fTotFiles=0;
-   fTotDirs=0;
-   TString Path=path;
-   if(Path==".") Path="$(PWD)";
+   fContents = 0;
+   fSubdirs = 0;
+   fTotFiles = 0;
+   fTotDirs = 0;
+   TString Path = path;
+   if (Path == ".") Path = "$(PWD)";
    gSystem->ExpandPathName(Path);
    SetTitle(Path);
    GetListings();
@@ -55,7 +55,7 @@ KVSystemDirectory::~KVSystemDirectory()
 }
 
 //______________________________________________________________________________
-TList *KVSystemDirectory::GetListOfFiles() const
+TList* KVSystemDirectory::GetListOfFiles() const
 {
    // Returns a TList of KVSystemFile objects representing the contents
    // of the directory.
@@ -65,7 +65,7 @@ TList *KVSystemDirectory::GetListOfFiles() const
 }
 
 //______________________________________________________________________________
-TList *KVSystemDirectory::GetListOfDirectories() const
+TList* KVSystemDirectory::GetListOfDirectories() const
 {
    // Returns a TList of KVSystemDirectory objects representing the contents
    // of the directory.
@@ -78,20 +78,20 @@ void KVSystemDirectory::GetListings()
 {
    // Fill lists of files and directories
 
-   void *dir = gSystem->OpenDirectory(GetTitle());
+   void* dir = gSystem->OpenDirectory(GetTitle());
    if (!dir) {
       Error("GetListings", "Cannot open directory %s", GetTitle());
       return;
    }
 
-   const char *file = 0;
+   const char* file = 0;
    fContents  = new TList;
    fContents->SetOwner();
    fSubdirs  = new TList;
    fSubdirs->SetOwner();
    while ((file = gSystem->GetDirEntry(dir))) {
       if (IsItDirectory(file)) {
-         TString sdirpath="";
+         TString sdirpath = "";
          if (file[0] == '.' && file[1] == '\0')
             continue;
          else if (file[0] == '.' && file[1] == '.' && file[2] == '\0')
@@ -102,45 +102,41 @@ void KVSystemDirectory::GetListings()
                sdirpath += "/";
             sdirpath += file;
          }
-         if(sdirpath!=""){
+         if (sdirpath != "") {
             KVSystemDirectory* sd = new KVSystemDirectory(file, sdirpath.Data());
             fSubdirs->Add(sd);
-            fTotDirs+=sd->GetTotalSize();
+            fTotDirs += sd->GetTotalSize();
          }
-      } 
-      else
-      {
+      } else {
          KVSystemFile* sf = new KVSystemFile(file, GetTitle());
          fContents->Add(sf);
-         fTotFiles+=sf->GetSize();
+         fTotFiles += sf->GetSize();
       }
    }
    gSystem->FreeDirectory(dir);
 }
 
-void KVSystemDirectory::ls(Option_t*opt) const
+void KVSystemDirectory::ls(Option_t* opt) const
 {
    // if opt="nosubdirs", do not list contents of subdirectories
    // default is to list recursively contents of all subdirectories
-   
+
    TROOT::IndentLevel();
    printf("%s :\n[total : %lld / files : %lld bytes]\n\n",
-         GetTitle(),GetTotalSize(),GetTotalFiles());
+          GetTitle(), GetTotalSize(), GetTotalFiles());
    TROOT::IncreaseDirLevel();
    TROOT::IncreaseDirLevel();
-   GetListOfFiles()->R__FOR_EACH(KVSystemFile,ls)();
-   if(!strcmp(opt,"nosubdirs")){
+   GetListOfFiles()->R__FOR_EACH(KVSystemFile, ls)();
+   if (!strcmp(opt, "nosubdirs")) {
       TIter next(GetListOfDirectories());
       KVSystemDirectory* sd;
-      while( (sd = (KVSystemDirectory*)next()) ){
+      while ((sd = (KVSystemDirectory*)next())) {
          TROOT::IndentLevel();
          printf("%-60s [total : %lld / files : %lld bytes]\n",
-         sd->GetTitle(),sd->GetTotalSize(),sd->GetTotalFiles());
+                sd->GetTitle(), sd->GetTotalSize(), sd->GetTotalFiles());
       }
-   }
-   else
-   {
-      GetListOfDirectories()->R__FOR_EACH(KVSystemDirectory,ls)();
+   } else {
+      GetListOfDirectories()->R__FOR_EACH(KVSystemDirectory, ls)();
    }
    TROOT::DecreaseDirLevel();
    TROOT::DecreaseDirLevel();

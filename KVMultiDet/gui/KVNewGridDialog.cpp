@@ -99,9 +99,9 @@ ClassImp(KVNewGridDialog)
 // KVNewGridDialog
 //Dialog box for creating a new grid/modifying a grid/copying a grid
 //////////////////////////////////////////
-void KVNewGridDialog::init_interface(const TGWindow * p,
-                                     const TGWindow * main, UInt_t w,
-                                     UInt_t h, Option_t *)
+void KVNewGridDialog::init_interface(const TGWindow* p,
+                                     const TGWindow* main, UInt_t w,
+                                     UInt_t h, Option_t*)
 {
    //initlalisations, creations of main dialog window
 
@@ -136,7 +136,7 @@ void KVNewGridDialog::new_grid_class_list()
 
    fClassList = new TGComboBox(fHframe);
    TString classes[] =
-       { "KVIDZGrid", "KVIDZAGrid", "KVIDGChIoSi", "KVIDGCsI" };
+   { "KVIDZGrid", "KVIDZAGrid", "KVIDGChIoSi", "KVIDGCsI" };
    for (int i = 0; i < 4; i++) {
       fClassList->AddEntry(classes[i].Data(), i + 1);
    }
@@ -178,16 +178,16 @@ void KVNewGridDialog::layout_parameter_control_widgets()
    } else
       choose_runs = kFALSE;
    if (fSelectedGrid->GetXScaleFactor() != 1.0
-       || fSelectedGrid->GetYScaleFactor() != 1.0) {
+         || fSelectedGrid->GetYScaleFactor() != 1.0) {
       choose_scales = kTRUE;
       scale_x = fSelectedGrid->GetXScaleFactor();
       scale_y = fSelectedGrid->GetYScaleFactor();
    } else
       choose_scales = kFALSE;
-        /**************Select run numbers************/
+   /**************Select run numbers************/
    fMatrixFrame = new TGCompositeFrame(fMain);
    fMatrixFrame->
-       SetLayoutManager(new TGMatrixLayout(fMatrixFrame, 4, 5, 10));
+   SetLayoutManager(new TGMatrixLayout(fMatrixFrame, 4, 5, 10));
 
    fSetRuns = new TGCheckButton(fMatrixFrame, "Set runs :", CHK_BUT_RUNS);
    //set checked according to last known state
@@ -197,13 +197,13 @@ void KVNewGridDialog::layout_parameter_control_widgets()
    fRunMinLabel = new TGLabel(fMatrixFrame, "first run");
    fRunMaxLabel = new TGLabel(fMatrixFrame, "last run");
    fRunMin =
-       new TGNumberEntry(fMatrixFrame, first_run, 5, NE_RUN_MIN,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fMatrixFrame, first_run, 5, NE_RUN_MIN,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
    fRunMax =
-       new TGNumberEntry(fMatrixFrame, last_run, 5, NE_RUN_MAX,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fMatrixFrame, last_run, 5, NE_RUN_MAX,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
 
    fMatrixFrame->AddFrame(fSetRuns);
    fMatrixFrame->AddFrame(fRunMinLabel);
@@ -211,9 +211,9 @@ void KVNewGridDialog::layout_parameter_control_widgets()
    fMatrixFrame->AddFrame(fRunMaxLabel);
    fMatrixFrame->AddFrame(fRunMax);
 
-        /**************Select ring numbers************/
+   /**************Select ring numbers************/
    fSetRings =
-       new TGCheckButton(fMatrixFrame, "Set rings :", CHK_BUT_RINGS);
+      new TGCheckButton(fMatrixFrame, "Set rings :", CHK_BUT_RINGS);
    //set checked according to last known state
    fSetRings->SetDown(choose_rings);
    fSetRings->Connect("Toggled(Bool_t)", "KVNewGridDialog", this,
@@ -221,13 +221,13 @@ void KVNewGridDialog::layout_parameter_control_widgets()
    fRingMinLabel = new TGLabel(fMatrixFrame, "ring min");
    fRingMaxLabel = new TGLabel(fMatrixFrame, "ring max");
    fRingMin =
-       new TGNumberEntry(fMatrixFrame, ring_min, 5, NE_RING_MIN,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fMatrixFrame, ring_min, 5, NE_RING_MIN,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
    fRingMax =
-       new TGNumberEntry(fMatrixFrame, ring_max, 5, NE_RING_MAX,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fMatrixFrame, ring_max, 5, NE_RING_MAX,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
 
    fMatrixFrame->AddFrame(fSetRings);
    fMatrixFrame->AddFrame(fRingMinLabel);
@@ -235,7 +235,7 @@ void KVNewGridDialog::layout_parameter_control_widgets()
    fMatrixFrame->AddFrame(fRingMaxLabel);
    fMatrixFrame->AddFrame(fRingMax);
 
-        /**************Select module numbers************/
+   /**************Select module numbers************/
    fSetMods = new TGCheckButton(fMatrixFrame, "Set mods :", CHK_BUT_MODS);
    //set checked according to last known state
    fSetMods->SetDown(choose_mods);
@@ -244,13 +244,13 @@ void KVNewGridDialog::layout_parameter_control_widgets()
    fModMinLabel = new TGLabel(fMatrixFrame, "mod min");
    fModMaxLabel = new TGLabel(fMatrixFrame, "mod max");
    fModMin =
-       new TGNumberEntry(fMatrixFrame, mod_min, 5, NE_MOD_MIN,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fMatrixFrame, mod_min, 5, NE_MOD_MIN,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
    fModMax =
-       new TGNumberEntry(fMatrixFrame, mod_max, 5, NE_MOD_MAX,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fMatrixFrame, mod_max, 5, NE_MOD_MAX,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
 
    fMatrixFrame->AddFrame(fSetMods);
    fMatrixFrame->AddFrame(fModMinLabel);
@@ -258,9 +258,9 @@ void KVNewGridDialog::layout_parameter_control_widgets()
    fMatrixFrame->AddFrame(fModMaxLabel);
    fMatrixFrame->AddFrame(fModMax);
 
-        /**************Scaling factors************/
+   /**************Scaling factors************/
    fSetScales =
-       new TGCheckButton(fMatrixFrame, "Scaling :", CHK_BUT_SCALES);
+      new TGCheckButton(fMatrixFrame, "Scaling :", CHK_BUT_SCALES);
    //set checked according to last known state
    fSetScales->SetDown(choose_scales);
    fSetScales->Connect("Toggled(Bool_t)", "KVNewGridDialog", this,
@@ -268,13 +268,13 @@ void KVNewGridDialog::layout_parameter_control_widgets()
    fScaleMinLabel = new TGLabel(fMatrixFrame, "X factor");
    fScaleMaxLabel = new TGLabel(fMatrixFrame, "Y factor");
    fScaleMin =
-       new TGNumberEntry(fMatrixFrame, scale_x, 5, NE_SCALE_X,
-                         TGNumberFormat::kNESReal,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fMatrixFrame, scale_x, 5, NE_SCALE_X,
+                        TGNumberFormat::kNESReal,
+                        TGNumberFormat::kNEAPositive);
    fScaleMax =
-       new TGNumberEntry(fMatrixFrame, scale_y, 5, NE_SCALE_Y,
-                         TGNumberFormat::kNESReal,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fMatrixFrame, scale_y, 5, NE_SCALE_Y,
+                        TGNumberFormat::kNESReal,
+                        TGNumberFormat::kNEAPositive);
 
    fMatrixFrame->AddFrame(fSetScales);
    fMatrixFrame->AddFrame(fScaleMinLabel);
@@ -287,8 +287,8 @@ void KVNewGridDialog::layout_parameter_control_widgets()
                                      10, 5));
 }
 
-void KVNewGridDialog::layout_ok_apply_cancel_buttons(Option_t *
-                                                     dialog_type)
+void KVNewGridDialog::layout_ok_apply_cancel_buttons(Option_t*
+      dialog_type)
 {
    //add "ok", "create", "copy", "cancel" etc. buttons depending on dialog_type
 
@@ -360,9 +360,9 @@ void KVNewGridDialog::layout_grid_editor()
    //new line group
    fLineButGrp = new TGGroupFrame(fHFlines, "New line");
    fRadID =
-       new TGRadioButton(fLineButGrp, new TGHotString("&ID"), kIDRadBut);
+      new TGRadioButton(fLineButGrp, new TGHotString("&ID"), kIDRadBut);
    fRadOK =
-       new TGRadioButton(fLineButGrp, new TGHotString("&OK"), kOKRadBut);
+      new TGRadioButton(fLineButGrp, new TGHotString("&OK"), kOKRadBut);
    fRadID->Connect("Pressed()", "KVNewGridDialog", this,
                    "HandleButtons(Int_t)");
    fRadID->SetState(kButtonDown);
@@ -375,8 +375,8 @@ void KVNewGridDialog::layout_grid_editor()
                          new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 5,
                                            2, 2));
    fLineClass = new TGComboBox(fLineButGrp);
-   fLineClass->AddEntry( "KVIDZALine" , 1);
-   
+   fLineClass->AddEntry("KVIDZALine" , 1);
+
    fLineClass->Resize(120, 20);
    fLineClass->Connect("Selected(const char*)", "KVNewGridDialog", this,
                        "SetLineClass(const char*)");
@@ -452,7 +452,7 @@ void KVNewGridDialog::layout_grid_editor()
                                      kLHintsExpandX, 0, 0, 0, 0));
 }
 
-void KVNewGridDialog::map_interface(Option_t * dialog_type)
+void KVNewGridDialog::map_interface(Option_t* dialog_type)
 {
    //final set up and display of dialogue box
    //layout and display window
@@ -483,15 +483,15 @@ void KVNewGridDialog::map_interface(Option_t * dialog_type)
    }
 }
 
-void KVNewGridDialog::set_selected_grid(KVIDGraph * g)
+void KVNewGridDialog::set_selected_grid(KVIDGraph* g)
 {
    //store pointer to selected grid
    fSelectedGrid = g;
 }
 
-KVNewGridDialog::KVNewGridDialog(const TGWindow * p, const TGWindow * main,
+KVNewGridDialog::KVNewGridDialog(const TGWindow* p, const TGWindow* main,
                                  UInt_t w, UInt_t h,
-                                 Option_t * dialog_type, KVIDGraph * g)
+                                 Option_t* dialog_type, KVIDGraph* g)
 {
    //Create dialogue box as child window of 'main'
    //dialog_type can be "New", "Edit" or "Copy"
@@ -525,7 +525,7 @@ KVNewGridDialog::KVNewGridDialog(const TGWindow * p, const TGWindow * main,
 
    //finish set up and draw dialogue box
    map_interface(dialog_type);
-   
+
 }
 
 KVNewGridDialog::~KVNewGridDialog()
@@ -543,39 +543,38 @@ void KVNewGridDialog::HandleButtons(Int_t id)
    //deal with radio buttons
 
    if (id == -1) {
-      TGButton *btn = (TGButton *) gTQSender;
+      TGButton* btn = (TGButton*) gTQSender;
       id = btn->WidgetId();
    }
    fLineType = id;
    switch (id) {
 
-   case kIDRadBut:
-      //user selects line type "ID"
-      //class(es) depend on grid class
-      fRadOK->SetState(kButtonUp);
-      fLineClass->RemoveAll();
-      if(fGridClass == "KVIDGCsI"){
-         fLineClass->AddEntry( "KVIDCsIRLLine" , 1);
-         fLineClassName = "KVIDCsIRLLine";
-      }
-      else {
-         fLineClass->AddEntry( "KVIDZALine" , 1);
-         fLineClassName = "KVIDZALine";
-      }
-      fLineClass->Resize(120, 20);
-      fLineClass->Select(1);
-      break;
+      case kIDRadBut:
+         //user selects line type "ID"
+         //class(es) depend on grid class
+         fRadOK->SetState(kButtonUp);
+         fLineClass->RemoveAll();
+         if (fGridClass == "KVIDGCsI") {
+            fLineClass->AddEntry("KVIDCsIRLLine" , 1);
+            fLineClassName = "KVIDCsIRLLine";
+         } else {
+            fLineClass->AddEntry("KVIDZALine" , 1);
+            fLineClassName = "KVIDZALine";
+         }
+         fLineClass->Resize(120, 20);
+         fLineClass->Select(1);
+         break;
 
-   case kOKRadBut:
-      //user selects line type "OK"
-      //class is KVIDCutLine
-      fRadID->SetState(kButtonUp);
-      fLineClass->RemoveAll();
-      fLineClass->AddEntry( "KVIDCutLine" , 1);   
-      fLineClassName = "KVIDCutLine";
-      fLineClass->Resize(120, 20);
-      fLineClass->Select(1);
-      break;
+      case kOKRadBut:
+         //user selects line type "OK"
+         //class is KVIDCutLine
+         fRadID->SetState(kButtonUp);
+         fLineClass->RemoveAll();
+         fLineClass->AddEntry("KVIDCutLine" , 1);
+         fLineClassName = "KVIDCutLine";
+         fLineClass->Resize(120, 20);
+         fLineClass->Select(1);
+         break;
    }
 }
 
@@ -610,11 +609,11 @@ void KVNewGridDialog::CloseWindow()
 void KVNewGridDialog::CreateGrid()
 {
    //if grid class is KVIDZGrid, we create a KVIDZAGrid and use SetOnlyZId(kTRUE)
-   TClass *clas = 0;
-   if(fGridClass == "KVIDZGrid") clas = TClass::GetClass("KVIDZAGrid");
+   TClass* clas = 0;
+   if (fGridClass == "KVIDZGrid") clas = TClass::GetClass("KVIDZAGrid");
    else clas = TClass::GetClass(fGridClass.Data());
-   KVIDGraph *grid = (KVIDGraph *) clas->New();
-   if(fGridClass == "KVIDZGrid") grid->SetOnlyZId(kTRUE); 
+   KVIDGraph* grid = (KVIDGraph*) clas->New();
+   if (fGridClass == "KVIDZGrid") grid->SetOnlyZId(kTRUE);
    DoClose();
 }
 
@@ -627,17 +626,17 @@ void KVNewGridDialog::ModifyGrid()
 
 void KVNewGridDialog::CopyGrid()
 {
-	if(!fSelectedGrid){
-		Error("CopyGrid", "No selected grid to copy!");
-		return;
-	}
-   KVIDGraph *grid = (KVIDGraph *) fSelectedGrid->IsA()->New();
-   fSelectedGrid->Copy((TObject &) (*grid));
+   if (!fSelectedGrid) {
+      Error("CopyGrid", "No selected grid to copy!");
+      return;
+   }
+   KVIDGraph* grid = (KVIDGraph*) fSelectedGrid->IsA()->New();
+   fSelectedGrid->Copy((TObject&)(*grid));
    ReadAndSetSelectedGridProperties(grid);
    DoClose();
 }
 
-void KVNewGridDialog::ReadAndSetSelectedGridProperties(KVIDGraph * grid)
+void KVNewGridDialog::ReadAndSetSelectedGridProperties(KVIDGraph* grid)
 {
    //Depending on state of check buttons, read and set (or reset, i.e. remove)
    //parameters describing grid characteristics
@@ -677,12 +676,12 @@ void KVNewGridDialog::ReadAndSetSelectedGridProperties(KVIDGraph * grid)
    }
 }
 
-void KVNewGridDialog::SetGridClass(const char *name)
+void KVNewGridDialog::SetGridClass(const char* name)
 {
    fGridClass = name;
 }
 
-void KVNewGridDialog::SetLineClass(const char *name)
+void KVNewGridDialog::SetLineClass(const char* name)
 {
    fLineClassName = name;
 }
@@ -794,7 +793,7 @@ void KVNewGridDialog::ReadScales()
 void KVNewGridDialog::NewLine()
 {
    //called when "New" button is pressed
-   cout << "fLineClassName=" <<fLineClassName.Data()<<endl;
+   cout << "fLineClassName=" << fLineClassName.Data() << endl;
    if (fLineType == kIDRadBut)
       fSelectedGrid->DrawAndAdd("ID", fLineClassName.Data());
    else
@@ -806,14 +805,14 @@ void KVNewGridDialog::FillLineLists()
 {
    //fill list boxes with lines from selected grid
 
-   KVIDentifier *line = 0;
+   KVIDentifier* line = 0;
    Int_t index = 0;
    //ok lines
-   KVList *oklines = fSelectedGrid->GetCuts();
+   KVList* oklines = fSelectedGrid->GetCuts();
    if (oklines->GetSize() > 0) {
 
       TIter nline(oklines);
-      while ((line = (KVIDentifier *) nline())) {
+      while ((line = (KVIDentifier*) nline())) {
 
          fOKLines->AddEntry(line->GetName(), index++);
 
@@ -824,11 +823,11 @@ void KVNewGridDialog::FillLineLists()
       fOKLines->Layout();
    }
    index = 0;
-   KVList *idlines = fSelectedGrid->GetIdentifiers();
+   KVList* idlines = fSelectedGrid->GetIdentifiers();
    if (idlines->GetSize() > 0) {
 
       TIter nline(idlines);
-      while ((line = (KVIDentifier *) nline())) {
+      while ((line = (KVIDentifier*) nline())) {
 
          fIDLines->AddEntry(line->GetName(), index++);
 
@@ -846,23 +845,23 @@ void KVNewGridDialog::SetAllLinesNonEditable()
    //is called for all lines. this is called when the Edit dialog is closed, to avoid
    //any lines remaining editable by accident.
 
-   KVIDentifier *line = 0;
+   KVIDentifier* line = 0;
    //ok lines
-   KVList *oklines = fSelectedGrid->GetCuts();
+   KVList* oklines = fSelectedGrid->GetCuts();
    if (oklines->GetSize() > 0) {
 
       TIter nline(oklines);
-      while ((line = (KVIDentifier *) nline())) {
+      while ((line = (KVIDentifier*) nline())) {
 
          line->SetEditable(kFALSE);
 
       }
    }
-   KVList *idlines = fSelectedGrid->GetIdentifiers();
+   KVList* idlines = fSelectedGrid->GetIdentifiers();
    if (idlines->GetSize() > 0) {
 
       TIter nline(idlines);
-      while ((line = (KVIDentifier *) nline())) {
+      while ((line = (KVIDentifier*) nline())) {
 
          line->SetEditable(kFALSE);
 

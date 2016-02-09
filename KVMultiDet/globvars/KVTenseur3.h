@@ -2,7 +2,7 @@
 // D.Cussol 18/12/2004
 //
 // Developpement d'un classe KVenseur3 permettant de calculer les axes
-// propres d'un evenement 
+// propres d'un evenement
 //
 
 #ifndef ROOT_KVTenseur3
@@ -12,9 +12,9 @@
 #include "KVNucleus.h"
 #include "TRotation.h"
 
-class KVTenseur3:public KVBase {
- public:
-// 
+class KVTenseur3: public KVBase {
+public:
+//
 // Champs statiques
 //
    static Int_t nb_KVTenseur3;
@@ -22,8 +22,8 @@ class KVTenseur3:public KVBase {
 //
 // Champs non statiques
 //
- private:
-    Double_t tenseur[9];
+private:
+   Double_t tenseur[9];
    Double_t vap[3];
    Double_t vep[9];
    Int_t is_diago;
@@ -31,29 +31,29 @@ class KVTenseur3:public KVBase {
 //
 // Methodes
 //
- private:
+private:
    void init_KVTenseur3(void);
    void Diago(void);
 
- public:
-    KVTenseur3(void);
-    KVTenseur3(Char_t * nom);
-    KVTenseur3(const KVTenseur3 & t);
+public:
+   KVTenseur3(void);
+   KVTenseur3(Char_t* nom);
+   KVTenseur3(const KVTenseur3& t);
 
-    virtual ~ KVTenseur3(void);
+   virtual ~ KVTenseur3(void);
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   virtual void Copy(TObject & obj) const;
+   virtual void Copy(TObject& obj) const;
 #else
-   virtual void Copy(TObject & obj);
+   virtual void Copy(TObject& obj);
 #endif
 
-    KVTenseur3 & operator =(const KVTenseur3 & a);      // operateur =
+   KVTenseur3& operator =(const KVTenseur3& a);        // operateur =
 
-   virtual void Print(Option_t * opt = "") const;
+   virtual void Print(Option_t* opt = "") const;
 
-   virtual void Fill(const TVector3 & v, Double_t w = 1.);
-   virtual void Fill(const KVNucleus & c, Double_t w = 1.);
+   virtual void Fill(const TVector3& v, Double_t w = 1.);
+   virtual void Fill(const KVNucleus& c, Double_t w = 1.);
    virtual void Reset(void);
    virtual Double_t GetThetaFlot(void);
    virtual Double_t GetPhiPlan(void);
@@ -69,8 +69,8 @@ class KVTenseur3:public KVBase {
    virtual Double_t GetVep(Int_t i, Int_t j);
    virtual void SetVep(Int_t i, Int_t j, Double_t x);
 
-   virtual void GetRotation(TRotation &);
+   virtual void GetRotation(TRotation&);
 
-    ClassDef(KVTenseur3, 1)     // Base class for tensor management
+   ClassDef(KVTenseur3, 1)     // Base class for tensor management
 };
 #endif

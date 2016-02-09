@@ -17,266 +17,270 @@ ClassImp(KVSimReader_HIPSE)
 KVSimReader_HIPSE::KVSimReader_HIPSE()
 {
    // Default constructor
-	init();
+   init();
 }
 
 KVSimReader_HIPSE::KVSimReader_HIPSE(KVString filename)
 {
    init();
-	if (!OpenFileToRead(filename)) return;
-	Run();
-	CloseFile();
+   if (!OpenFileToRead(filename)) return;
+   Run();
+   CloseFile();
 }
 
 KVSimReader_HIPSE::~KVSimReader_HIPSE()
 {
    // Destructor
-	//if (h1) delete h1; h1 = 0;
-	h1 = 0;
+   //if (h1) delete h1; h1 = 0;
+   h1 = 0;
 }
 
 
-void KVSimReader_HIPSE::ReadFile(){
+void KVSimReader_HIPSE::ReadFile()
+{
 
-	AddObject(new TH1F("impact_parameter","distri",200,0,20));
-	h1 = (TH1F* )GetLinkedObjects()->Last();
-	
-	if (!ReadHeader()) return;
+   AddObject(new TH1F("impact_parameter", "distri", 200, 0, 20));
+   h1 = (TH1F*)GetLinkedObjects()->Last();
 
-	while (IsOK()){
-		while (ReadEvent()){
-			if (nevt%1000==0) Info("ReadFile","%d evts lus",nevt);
-			h1->Fill(evt->GetParameters()->GetDoubleValue("Bparstore"));
-			if (HasToFill()) FillTree();
-		}
-	}	
-	
-	//AddObject(h1);
-	/*
-	Int_t netot = nv->GetEntries();
-	for (Int_t ne=0; ne<netot; ne+=1)	
-		AddObjectToBeWrittenWithTree(nv->RemoveAt(0));
-	*/
+   if (!ReadHeader()) return;
+
+   while (IsOK()) {
+      while (ReadEvent()) {
+         if (nevt % 1000 == 0) Info("ReadFile", "%d evts lus", nevt);
+         h1->Fill(evt->GetParameters()->GetDoubleValue("Bparstore"));
+         if (HasToFill()) FillTree();
+      }
+   }
+
+   //AddObject(h1);
+   /*
+   Int_t netot = nv->GetEntries();
+   for (Int_t ne=0; ne<netot; ne+=1)
+      AddObjectToBeWrittenWithTree(nv->RemoveAt(0));
+   */
 }
 
-Bool_t KVSimReader_HIPSE::ReadHeader(){
-	
-	Int_t res = ReadLineAndCheck(2," ");
-	switch (res){
-	case 0:
-		return kFALSE; 
-	case 1:
-		AddInfo("Aproj",GetReadPar(0).Data());
-		AddInfo("Zproj",GetReadPar(1).Data());
-		break;
-	default:
-		return kFALSE;	
-	}
-	
-	res = ReadLineAndCheck(2," ");
-	switch (res){
-	case 0:
-		return kFALSE; 
-	case 1:
-		AddInfo("Atarg",GetReadPar(0).Data());
-		AddInfo("Ztarg",GetReadPar(1).Data());
-		
-		break;
-	default:
-		
-		return kFALSE;	
-	}
+Bool_t KVSimReader_HIPSE::ReadHeader()
+{
 
-	res = ReadLineAndCheck(1," ");
-	switch (res){
-	case 0:
-		return kFALSE; 
-	case 1:
-		AddInfo("Ebeam",GetReadPar(0).Data());
-		return kTRUE;
-		
-	
-	default:
-		
-		return kFALSE;	
-	}
+   Int_t res = ReadLineAndCheck(2, " ");
+   switch (res) {
+      case 0:
+         return kFALSE;
+      case 1:
+         AddInfo("Aproj", GetReadPar(0).Data());
+         AddInfo("Zproj", GetReadPar(1).Data());
+         break;
+      default:
+         return kFALSE;
+   }
+
+   res = ReadLineAndCheck(2, " ");
+   switch (res) {
+      case 0:
+         return kFALSE;
+      case 1:
+         AddInfo("Atarg", GetReadPar(0).Data());
+         AddInfo("Ztarg", GetReadPar(1).Data());
+
+         break;
+      default:
+
+         return kFALSE;
+   }
+
+   res = ReadLineAndCheck(1, " ");
+   switch (res) {
+      case 0:
+         return kFALSE;
+      case 1:
+         AddInfo("Ebeam", GetReadPar(0).Data());
+         return kTRUE;
+
+
+      default:
+
+         return kFALSE;
+   }
 
 }
 
-Bool_t KVSimReader_HIPSE::ReadEvent(){
+Bool_t KVSimReader_HIPSE::ReadEvent()
+{
 
-	evt->Clear();
-	Int_t mult=0,mtotal=0;
+   evt->Clear();
+   Int_t mult = 0, mtotal = 0;
 
-/*---------------------------------------------
-	mul_vrai = multiplicity of charged particles
-	mult     = total multiplicity (i.e. including neutrons)
-//---------------------------------------------      
-*/
-	Int_t res = ReadLineAndCheck(2," ");
-	switch (res){
-	case 0:
-		Info("ReadEvent","case 0 line est vide"); 
-		return kFALSE; 
-	case 1:
-		evt->SetNumber(nevt);
-		mult = GetIntReadPar(0);	//mul_vrai
-		mtotal = GetIntReadPar(1);
-		evt->GetParameters()->SetValue("mult",mtotal);
-		
-		break;
-	default:
-		
-		return kFALSE;	
-	}
-	
-/*---------------------------------------------
-	Esa		 = excitation per nucleon
-	vcm		 = center of mass energy
-	Bparstore = impact parameter 
-//---------------------------------------------      	 
-*/	
-	res = ReadLineAndCheck(3," ");
-	switch (res){
-	case 0:
-		return kFALSE; 
-	case 1:
-		evt->GetParameters()->SetValue("Esa",GetDoubleReadPar(0));
-		evt->GetParameters()->SetValue("vcm",GetDoubleReadPar(1));
-		evt->GetParameters()->SetValue("Bparstore",GetDoubleReadPar(2));
-		
-		break;
-	default:
-		
-		return kFALSE;	
-	}	
+   /*---------------------------------------------
+      mul_vrai = multiplicity of charged particles
+      mult     = total multiplicity (i.e. including neutrons)
+   //---------------------------------------------
+   */
+   Int_t res = ReadLineAndCheck(2, " ");
+   switch (res) {
+      case 0:
+         Info("ReadEvent", "case 0 line est vide");
+         return kFALSE;
+      case 1:
+         evt->SetNumber(nevt);
+         mult = GetIntReadPar(0);   //mul_vrai
+         mtotal = GetIntReadPar(1);
+         evt->GetParameters()->SetValue("mult", mtotal);
 
-/*---------------------------------------------
-	energetic information 
-	excitat        : total excitation energy
-	xmassav        : Q-value
-	ekinav         : total kinetic energy at freeze-out
-	epotav         : total potential energy at freeze-out 
-	erotav         : total rotational energy at freeze-out	 
-//---------------------------------------------
-*/	
-	res = ReadLineAndCheck(2," ");
-	switch (res){
-	case 0:
-		return kFALSE; 
-	case 1:
-		evt->GetParameters()->SetValue("excitat",GetDoubleReadPar(0));
-		evt->GetParameters()->SetValue("xmassav",GetDoubleReadPar(1));
-		
-		break;
-	default:
-		
-		return kFALSE;	
-	}	
-	
-	res = ReadLineAndCheck(3," ");
-	switch (res){
-	case 0:
-		return kFALSE; 
-	case 1:
-		
-		evt->GetParameters()->SetValue("ekinav",GetDoubleReadPar(0));
-		evt->GetParameters()->SetValue("epotav",GetDoubleReadPar(1));
-		evt->GetParameters()->SetValue("erotav",GetDoubleReadPar(2));
-		break;
-	
-	default:
-		return kFALSE;	
-	}	
-	
-	evt->SetNumber(nevt);
-	for (Int_t mm=0; mm<mult; mm+=1){	
-		nuc = (KVSimNucleus* )evt->AddParticle();
-		if (!ReadNucleus()) return kFALSE;
-	}
+         break;
+      default:
 
-	nevt+=1;
-	return kTRUE;
-	
+         return kFALSE;
+   }
+
+   /*---------------------------------------------
+      Esa       = excitation per nucleon
+      vcm       = center of mass energy
+      Bparstore = impact parameter
+   //---------------------------------------------
+   */
+   res = ReadLineAndCheck(3, " ");
+   switch (res) {
+      case 0:
+         return kFALSE;
+      case 1:
+         evt->GetParameters()->SetValue("Esa", GetDoubleReadPar(0));
+         evt->GetParameters()->SetValue("vcm", GetDoubleReadPar(1));
+         evt->GetParameters()->SetValue("Bparstore", GetDoubleReadPar(2));
+
+         break;
+      default:
+
+         return kFALSE;
+   }
+
+   /*---------------------------------------------
+      energetic information
+      excitat        : total excitation energy
+      xmassav        : Q-value
+      ekinav         : total kinetic energy at freeze-out
+      epotav         : total potential energy at freeze-out
+      erotav         : total rotational energy at freeze-out
+   //---------------------------------------------
+   */
+   res = ReadLineAndCheck(2, " ");
+   switch (res) {
+      case 0:
+         return kFALSE;
+      case 1:
+         evt->GetParameters()->SetValue("excitat", GetDoubleReadPar(0));
+         evt->GetParameters()->SetValue("xmassav", GetDoubleReadPar(1));
+
+         break;
+      default:
+
+         return kFALSE;
+   }
+
+   res = ReadLineAndCheck(3, " ");
+   switch (res) {
+      case 0:
+         return kFALSE;
+      case 1:
+
+         evt->GetParameters()->SetValue("ekinav", GetDoubleReadPar(0));
+         evt->GetParameters()->SetValue("epotav", GetDoubleReadPar(1));
+         evt->GetParameters()->SetValue("erotav", GetDoubleReadPar(2));
+         break;
+
+      default:
+         return kFALSE;
+   }
+
+   evt->SetNumber(nevt);
+   for (Int_t mm = 0; mm < mult; mm += 1) {
+      nuc = (KVSimNucleus*)evt->AddParticle();
+      if (!ReadNucleus()) return kFALSE;
+   }
+
+   nevt += 1;
+   return kTRUE;
+
 }
 
-Bool_t KVSimReader_HIPSE::ReadNucleus(){
+Bool_t KVSimReader_HIPSE::ReadNucleus()
+{
 
-	Int_t res = ReadLineAndCheck(3," ");
-	switch (res){
-	case 0:
-		Info("ReadNucleus","case 0 line est vide"); 
-		return kFALSE; 
-	
-	case 1:
-		/*
-		proven = 0 -> fusion of the QP and QT
-		proven = 1 -> QP
-		proven = 2 -> QT
-		proven > 2 -> other
-		*/
-		nuc->SetZ(GetIntReadPar(1));
-		nuc->SetA(GetIntReadPar(0));
-		nuc->GetParameters()->SetValue("proven",GetDoubleReadPar(2));
-		break;
+   Int_t res = ReadLineAndCheck(3, " ");
+   switch (res) {
+      case 0:
+         Info("ReadNucleus", "case 0 line est vide");
+         return kFALSE;
 
-	default:
-		return kFALSE;	
-	}
+      case 1:
+         /*
+         proven = 0 -> fusion of the QP and QT
+         proven = 1 -> QP
+         proven = 2 -> QT
+         proven > 2 -> other
+         */
+         nuc->SetZ(GetIntReadPar(1));
+         nuc->SetA(GetIntReadPar(0));
+         nuc->GetParameters()->SetValue("proven", GetDoubleReadPar(2));
+         break;
 
-	res = ReadLineAndCheck(3," ");
-	switch (res){
-	case 0:
-		Info("ReadNucleus","case 0 line est vide"); 
-		return kFALSE; 
-	
-	case 1:
-		//Axe "faisceau dans HIPSE x -> on effectue une rotation X,Y,Z -> Y,Z,X"
-		nuc->SetPx(GetDoubleReadPar(1));
-		nuc->SetPy(GetDoubleReadPar(2));
-		nuc->SetPz(GetDoubleReadPar(0));
-		break;
-	
-	default:
-		return kFALSE;	
-	}
+      default:
+         return kFALSE;
+   }
 
-/*---------------------------------------------------------	  
-	exci(I)  : excitation energy
-	ether(I) : not used 
-	spinx(i),spiny(i),spinz(i) : angular momentum (hbar units)
-//---------------------------------------------
-*/	
-	res = ReadLineAndCheck(2," ");
-	switch (res){
-	case 0:
-		Info("ReadNucleus","case 0 line est vide"); 
-		return kFALSE; 
-	
-	case 1:
-		nuc->GetParameters()->SetValue("exci",GetDoubleReadPar(0));
-		nuc->GetParameters()->SetValue("ether",GetDoubleReadPar(1));
-		break;
-	
-	default:
-		return kFALSE;	
-	}
-	
-	res = ReadLineAndCheck(3," ");
-	switch (res){
-	case 0:
-		Info("ReadNucleus","case 0 line est vide"); 
-		return kFALSE; 
-	
-	case 1:
-		//On effectue la meme rotation que les impulsions ... à vérifier
-		nuc->SetAngMom(GetDoubleReadPar(1),GetDoubleReadPar(2),GetDoubleReadPar(0));
-		return kTRUE;
-	
-	default:
-		return kFALSE;	
-	}
-	
-	
-	
+   res = ReadLineAndCheck(3, " ");
+   switch (res) {
+      case 0:
+         Info("ReadNucleus", "case 0 line est vide");
+         return kFALSE;
+
+      case 1:
+         //Axe "faisceau dans HIPSE x -> on effectue une rotation X,Y,Z -> Y,Z,X"
+         nuc->SetPx(GetDoubleReadPar(1));
+         nuc->SetPy(GetDoubleReadPar(2));
+         nuc->SetPz(GetDoubleReadPar(0));
+         break;
+
+      default:
+         return kFALSE;
+   }
+
+   /*---------------------------------------------------------
+      exci(I)  : excitation energy
+      ether(I) : not used
+      spinx(i),spiny(i),spinz(i) : angular momentum (hbar units)
+   //---------------------------------------------
+   */
+   res = ReadLineAndCheck(2, " ");
+   switch (res) {
+      case 0:
+         Info("ReadNucleus", "case 0 line est vide");
+         return kFALSE;
+
+      case 1:
+         nuc->GetParameters()->SetValue("exci", GetDoubleReadPar(0));
+         nuc->GetParameters()->SetValue("ether", GetDoubleReadPar(1));
+         break;
+
+      default:
+         return kFALSE;
+   }
+
+   res = ReadLineAndCheck(3, " ");
+   switch (res) {
+      case 0:
+         Info("ReadNucleus", "case 0 line est vide");
+         return kFALSE;
+
+      case 1:
+         //On effectue la meme rotation que les impulsions ... à vérifier
+         nuc->SetAngMom(GetDoubleReadPar(1), GetDoubleReadPar(2), GetDoubleReadPar(0));
+         return kTRUE;
+
+      default:
+         return kFALSE;
+   }
+
+
+
 }

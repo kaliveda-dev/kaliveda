@@ -8,12 +8,12 @@
 #include "KVINDRACodeMask.h"
 #include "KVIDSubCodeManager.h"
 
-class KVINDRACodes:public KVINDRACodeMask {
+class KVINDRACodes: public KVINDRACodeMask {
 
-friend class KVINDRAReconNuc;
+   friend class KVINDRAReconNuc;
 
- private:
-        void SetIsotopeResolve(Bool_t stat = kTRUE);   //obsolete
+private:
+   void SetIsotopeResolve(Bool_t stat = kTRUE);   //obsolete
    Bool_t GetIsotopeResolve();   //obsolete
 
    static Char_t fCodeGenIdent[14][120];
@@ -24,22 +24,24 @@ friend class KVINDRAReconNuc;
    static UChar_t fEBits[16];
 
    KVIDSubCode fIDSubCodes;     //obsolete
-   inline KVIDSubCode & GetSubCodes() { //obsolete
+   inline KVIDSubCode& GetSubCodes()    //obsolete
+   {
       return fIDSubCodes;
    };
 
- public:
-   
+public:
+
    enum {
       kIsoRes = BIT(14)         //isotopic resolution achieved i.e. mass was measured
    };
 
-    KVINDRACodes();
-    virtual ~ KVINDRACodes() {
+   KVINDRACodes();
+   virtual ~ KVINDRACodes()
+   {
       fIDSubCodes = fIDSubCodes.Max();
    };
-   const Char_t *GetIDStatus();
-   const Char_t *GetEStatus();
+   const Char_t* GetIDStatus();
+   const Char_t* GetEStatus();
 
    static UShort_t VedaIDCodeToBitmask(UChar_t veda_id_code);
    static UChar_t VedaECodeToBitmask(UChar_t veda_e_code);
@@ -55,7 +57,7 @@ friend class KVINDRAReconNuc;
    void SetECode(UChar_t);
 
 
-   void Clear(Option_t * opt = "");
+   void Clear(Option_t* opt = "");
 
    ClassDef(KVINDRACodes, 2)    //Particle identification and calibration status (Veda6)
 };

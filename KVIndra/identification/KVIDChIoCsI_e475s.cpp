@@ -26,137 +26,134 @@ ClassImp(KVIDChIoCsI_e475s)
 
 KVIDChIoCsI_e475s::KVIDChIoCsI_e475s()
 {
-    // Default constructor
-    fidgrid=0;
+   // Default constructor
+   fidgrid = 0;
 
 }
 //________________________________________________________________________________________//
 
 KVIDChIoCsI_e475s::~KVIDChIoCsI_e475s()
 {
-    // Destructor
+   // Destructor
 }
 //________________________________________________________________________________________//
 
 void KVIDChIoCsI_e475s::Initialize(void)
 {
-    // Initialisation of telescope before identification.
-    // This method MUST be called once before any identification is attempted.
-    // Initialisation of grid is performed here.
-    // IsReadyForID() will return kTRUE if a grid is associated to this telescope for the current run
-    // AND both detectors are calibrated
+   // Initialisation of telescope before identification.
+   // This method MUST be called once before any identification is attempted.
+   // Initialisation of grid is performed here.
+   // IsReadyForID() will return kTRUE if a grid is associated to this telescope for the current run
+   // AND both detectors are calibrated
 
-    Bool_t ready=kTRUE;
-    fidgrid=0;
-    ready &= GetListOfIDGrids()->GetEntries();
-    if (ready) fidgrid=(KVIDZAGrid*)fIDGrids->First();
-    if (fidgrid) fidgrid->Initialize();
-    ready &= GetDetector(1)->IsCalibrated();
-    ready &= GetDetector(2)->IsCalibrated();
+   Bool_t ready = kTRUE;
+   fidgrid = 0;
+   ready &= GetListOfIDGrids()->GetEntries();
+   if (ready) fidgrid = (KVIDZAGrid*)fIDGrids->First();
+   if (fidgrid) fidgrid->Initialize();
+   ready &= GetDetector(1)->IsCalibrated();
+   ready &= GetDetector(2)->IsCalibrated();
 
-    SetBit(kReadyForID,ready);
+   SetBit(kReadyForID, ready);
 
 }
 //________________________________________________________________________________________//
 
-Double_t KVIDChIoCsI_e475s::GetIDMapX(Option_t *)
+Double_t KVIDChIoCsI_e475s::GetIDMapX(Option_t*)
 {
 
-    return ((KVCsI_e475s* )GetDetector(2))->GetCalibratedEnergy();
+   return ((KVCsI_e475s*)GetDetector(2))->GetCalibratedEnergy();
 }
 //________________________________________________________________________________________//
 
-Double_t KVIDChIoCsI_e475s::GetIDMapY(Option_t *)
+Double_t KVIDChIoCsI_e475s::GetIDMapY(Option_t*)
 {
 
-    return GetDetector(1)->GetEnergy();
+   return GetDetector(1)->GetEnergy();
 
 }
 //________________________________________________________________________________________//
 
 Bool_t KVIDChIoCsI_e475s::Identify(KVIdentificationResult* IDR, Double_t x, Double_t y)
 {
-    //Particle identification and code setting using identification grid KVIDGChIoSi
+   //Particle identification and code setting using identification grid KVIDGChIoSi
 
-		IDR->SetIDType( GetType() );
-		IDR->IDattempted = kTRUE;
-    //identification
-    Double_t varX = (x<0. ? GetIDMapX() : x);
-    Double_t varY = (y<0. ? GetIDMapY() : y);
+   IDR->SetIDType(GetType());
+   IDR->IDattempted = kTRUE;
+   //identification
+   Double_t varX = (x < 0. ? GetIDMapX() : x);
+   Double_t varY = (y < 0. ? GetIDMapY() : y);
 
-    if (fidgrid->IsIdentifiable(varX,varY))
-        fidgrid->Identify(varX,varY,IDR);
+   if (fidgrid->IsIdentifiable(varX, varY))
+      fidgrid->Identify(varX, varY, IDR);
 
-    Int_t quality = fidgrid->GetQualityCode();
+   Int_t quality = fidgrid->GetQualityCode();
 
-    if (quality == KVIDZAGrid::kICODE8)
-    {
-        // only if the final quality code is kICODE8 do we consider that it is
-        // worthwhile looking elsewhere. In all other cases, the particle has been
-        // "identified", even if we still don't know its Z and/or A (in this case
-        // we consider that we have established that they are unknowable).
-        return kFALSE;
-    }
+   if (quality == KVIDZAGrid::kICODE8) {
+      // only if the final quality code is kICODE8 do we consider that it is
+      // worthwhile looking elsewhere. In all other cases, the particle has been
+      // "identified", even if we still don't know its Z and/or A (in this case
+      // we consider that we have established that they are unknowable).
+      return kFALSE;
+   }
 
-    if (quality  == KVIDZAGrid::kICODE7)
-    {
-        // if the final quality code is kICODE7 (above last line in grid) then the estimated
-        // Z is only a minimum value (Zmin)
-        IDR->IDcode = kIDCode5;
-        return kTRUE;
-    }
+   if (quality  == KVIDZAGrid::kICODE7) {
+      // if the final quality code is kICODE7 (above last line in grid) then the estimated
+      // Z is only a minimum value (Zmin)
+      IDR->IDcode = kIDCode5;
+      return kTRUE;
+   }
 
-    if ( KVIDZAGrid::kICODE3 < quality && quality < KVIDZAGrid::kICODE7)
-    {
-        // if the final quality code is kICODE4, kICODE5 or kICODE6 then this "nucleus"
-        // corresponds to a point which is inbetween the lines, i.e. noise
-        IDR->IDcode = kIDCode10;
-        return kTRUE;
-    }
+   if (KVIDZAGrid::kICODE3 < quality && quality < KVIDZAGrid::kICODE7) {
+      // if the final quality code is kICODE4, kICODE5 or kICODE6 then this "nucleus"
+      // corresponds to a point which is inbetween the lines, i.e. noise
+      IDR->IDcode = kIDCode10;
+      return kTRUE;
+   }
 
-    // set general ID code ChIo-CsI
-    IDR->IDcode = kIDCode4;
-    return kTRUE;
+   // set general ID code ChIo-CsI
+   IDR->IDcode = kIDCode4;
+   return kTRUE;
 
 
 }
 
 //________________________________________________________________________________________//
-void KVIDChIoCsI_e475s::CalculateParticleEnergy(KVReconstructedNucleus * nuc)
+void KVIDChIoCsI_e475s::CalculateParticleEnergy(KVReconstructedNucleus* nuc)
 {
 
-    //Cette methode sert a affilier / calculer l energie incidente de la particule
-	 //pour les telescopes ChIo-CsI des couronnes au-dessus de 10
-	 //Les CsI n'ayant pas de calibration propre
-	 //Le calcul de l'énergie n'est possible seulement si le Delta E (ChIo) est calibree en MeV
-	 //Si le Delta E n'est pas calibre on ressort de la routine sans avoir rien fait
-	 
-	 //status code
-    fCalibStatus = kCalibStatus_NoCalibrations;
+   //Cette methode sert a affilier / calculer l energie incidente de la particule
+   //pour les telescopes ChIo-CsI des couronnes au-dessus de 10
+   //Les CsI n'ayant pas de calibration propre
+   //Le calcul de l'énergie n'est possible seulement si le Delta E (ChIo) est calibree en MeV
+   //Si le Delta E n'est pas calibre on ressort de la routine sans avoir rien fait
 
-    if (nuc->GetZ()==0) return;
+   //status code
+   fCalibStatus = kCalibStatus_NoCalibrations;
 
-    KVDetector* det_dE = GetDetector(1);
-    KVDetector* det_Eres = GetDetector(2);
+   if (nuc->GetZ() == 0) return;
 
-    
-	 if (!det_dE->IsCalibrated()) return;
+   KVDetector* det_dE = GetDetector(1);
+   KVDetector* det_Eres = GetDetector(2);
 
-    Double_t dE = det_dE->GetEnergy();
-    //Calcul de la perte d'energie dans les CsI
-	 //A partir de la perte dans la ChIo, en utilisant les resultats de l identification (A,Z)
-	 Double_t Eres = det_dE->GetEResFromDeltaE(nuc->GetZ(),nuc->GetA(),dE);
-    //On affecte l'energie calculee au detecteur CsI
-	 det_Eres->SetEnergyLoss(Eres);
 
-    Double_t Einc = det_dE->GetCorrectedEnergy(nuc,dE,kTRUE) + Eres;
+   if (!det_dE->IsCalibrated()) return;
 
-    fCalibStatus = kCalibStatus_Calculated;
-	
-	//La somme des deux energies devient l energie incidente de
-	//la particule identifiee / calibree	
-    nuc->SetEnergy(Einc);
-    //set angles from the dimensions of the telescope in which particle detected
-    nuc->GetAnglesFromStoppingDetector();
+   Double_t dE = det_dE->GetEnergy();
+   //Calcul de la perte d'energie dans les CsI
+   //A partir de la perte dans la ChIo, en utilisant les resultats de l identification (A,Z)
+   Double_t Eres = det_dE->GetEResFromDeltaE(nuc->GetZ(), nuc->GetA(), dE);
+   //On affecte l'energie calculee au detecteur CsI
+   det_Eres->SetEnergyLoss(Eres);
+
+   Double_t Einc = det_dE->GetCorrectedEnergy(nuc, dE, kTRUE) + Eres;
+
+   fCalibStatus = kCalibStatus_Calculated;
+
+   //La somme des deux energies devient l energie incidente de
+   //la particule identifiee / calibree
+   nuc->SetEnergy(Einc);
+   //set angles from the dimensions of the telescope in which particle detected
+   nuc->GetAnglesFromStoppingDetector();
 
 }

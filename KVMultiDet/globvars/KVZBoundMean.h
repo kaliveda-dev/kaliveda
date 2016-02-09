@@ -12,39 +12,38 @@ $Date: 2009/04/07 12:04:11 $
 
 #include "KVVarGlobMean.h"
 
-class KVZBoundMean:public KVVarGlobMean
-{
+class KVZBoundMean: public KVVarGlobMean {
 
-	  public:
+public:
 // Champs Statiques:
-	static Int_t nb;
-	static Int_t nb_crea;
-	static Int_t nb_dest;
+   static Int_t nb;
+   static Int_t nb_crea;
+   static Int_t nb_dest;
 
-	
+
 // Methodes
 
 
-	public:
-	KVZBoundMean(void);   
-	KVZBoundMean(Char_t *nom);
-	KVZBoundMean(const KVZBoundMean &a);
-	
-	virtual ~KVZBoundMean(void);
-	
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-	virtual void Copy(TObject & obj) const;
-#else
-	virtual void Copy(TObject & obj);
-#endif
- 
+public:
+   KVZBoundMean(void);
+   KVZBoundMean(Char_t* nom);
+   KVZBoundMean(const KVZBoundMean& a);
 
-	KVZBoundMean& operator = (const KVZBoundMean &a);
-		
-	void init_KVZBoundMean () ;
-	void Fill (KVNucleus*) ;
-	ClassDef(KVZBoundMean,1)//Global variable returning the mean charge of products in a selected range of Z
-	
+   virtual ~KVZBoundMean(void);
+
+#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
+   virtual void Copy(TObject& obj) const;
+#else
+   virtual void Copy(TObject& obj);
+#endif
+
+
+   KVZBoundMean& operator = (const KVZBoundMean& a);
+
+   void init_KVZBoundMean() ;
+   void Fill(KVNucleus*) ;
+   ClassDef(KVZBoundMean, 1) //Global variable returning the mean charge of products in a selected range of Z
+
 };
 
 

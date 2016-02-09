@@ -27,7 +27,7 @@ ClassImp(KVIDChIoCsI)
 //
 //ID subcodes are written in bits 4-7 of KVIDSubCodeManager
 //(see KVINDRACodes)
-    KVIDChIoCsI::KVIDChIoCsI()
+KVIDChIoCsI::KVIDChIoCsI()
 {
    //set ID code for telescope
    fIDCode = kIDCode_ChIoCsI;

@@ -8,13 +8,13 @@
 #define KVTensPCM_h
 #include "KVTensP.h"
 
-class KVTensPCM:public KVTensP {
- public:
+class KVTensPCM: public KVTensP {
+public:
    KVTensPCM(void);             // constructeur par defaut
-    KVTensPCM(Char_t * nom);
+   KVTensPCM(Char_t* nom);
 
-    virtual ~ KVTensPCM(void);  // destructeur
+   virtual ~ KVTensPCM(void);  // destructeur
 
-    ClassDef(KVTensPCM, 1)      // Global variable CM Momentum tensor
+   ClassDef(KVTensPCM, 1)      // Global variable CM Momentum tensor
 };
 #endif

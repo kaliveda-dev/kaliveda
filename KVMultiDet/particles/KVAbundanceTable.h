@@ -7,26 +7,25 @@
 #include "KVNuclDataTable.h"
 #include "KVAbundance.h"
 
-class KVAbundanceTable : public KVNuclDataTable
-{
+class KVAbundanceTable : public KVNuclDataTable {
 
-   protected:
-   
-	void init();
-	
-   public:
+protected:
+
+   void init();
+
+public:
    KVAbundanceTable();
    virtual ~KVAbundanceTable();
-	/*
-	TObjArray* tobj_rangeA;
-	TObjArray* tobj_rangeZ;
-	*/
-	virtual void Initialize();
-	
-	KVAbundance* GetAbundance(Int_t zz, Int_t aa) const;
+   /*
+   TObjArray* tobj_rangeA;
+   TObjArray* tobj_rangeZ;
+   */
+   virtual void Initialize();
+
+   KVAbundance* GetAbundance(Int_t zz, Int_t aa) const;
 
 
-   ClassDef(KVAbundanceTable,1)//Store available values of the relative abundance
+   ClassDef(KVAbundanceTable, 1) //Store available values of the relative abundance
 };
 
 #endif

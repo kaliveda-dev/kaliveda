@@ -1,5 +1,5 @@
 //
-// D.Cussol 
+// D.Cussol
 //
 // 17/04/2001:
 // Creation d'une classe de tri. Cette classe permet d'effectuer un tri et de
@@ -12,8 +12,8 @@
 
 //#define DEBUG_KVTrieurLin
 
-class KVTrieurLin:public KVTrieur {
- public:
+class KVTrieurLin: public KVTrieur {
+public:
 // Champs Statiques:
    static Int_t nb;
    static Int_t nb_crea;
@@ -24,30 +24,30 @@ class KVTrieurLin:public KVTrieur {
    Char_t nom_var[80];
 
 // Methodes
- protected:
+protected:
    void initKVTrieurLin(void);  // Initialisations
    void SetNomsCases(void);     // Initialisations des noms de cases
 
- public:
-    KVTrieurLin(void);          // constructeur par defaut
-    KVTrieurLin(Char_t * nom);
-    KVTrieurLin(Int_t nbcases, Char_t * nom);
-    KVTrieurLin(const KVTrieurLin & a); // constructeur par copie
+public:
+   KVTrieurLin(void);          // constructeur par defaut
+   KVTrieurLin(Char_t* nom);
+   KVTrieurLin(Int_t nbcases, Char_t* nom);
+   KVTrieurLin(const KVTrieurLin& a);  // constructeur par copie
 
-    virtual ~ KVTrieurLin(void);        // destructeur
+   virtual ~ KVTrieurLin(void);        // destructeur
 
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   virtual void Copy(TObject & obj) const;
+   virtual void Copy(TObject& obj) const;
 #else
-   virtual void Copy(TObject & obj);
+   virtual void Copy(TObject& obj);
 #endif
 
-    KVTrieurLin & operator =(const KVTrieurLin & a);    // operateur =
+   KVTrieurLin& operator =(const KVTrieurLin& a);      // operateur =
 
 
 
-   virtual Int_t GetNumCase(void *argus ...);   // Pour une situation donnee,
+   virtual Int_t GetNumCase(void* argus ...);   // Pour une situation donnee,
    // retourne le numero de la case
    // correspondante.
    virtual Int_t GetNumCase(Double_t x);        // Pour un x donne,
@@ -55,12 +55,12 @@ class KVTrieurLin:public KVTrieur {
    // correspondante.
 
    virtual void SetNbCases(Int_t n);    // ajuste le nombre de cases.
-   virtual void SetNomVar(Char_t * x);
+   virtual void SetNomVar(Char_t* x);
    virtual void SetXmin(Double_t x);
    virtual void SetXmax(Double_t x);
-   virtual const Char_t *GetNomVar(void);
+   virtual const Char_t* GetNomVar(void);
    virtual Double_t GetXmin(void);
    virtual Double_t GetXmax(void);
 
-    ClassDef(KVTrieurLin, 1)    // Class for linear sorting
+   ClassDef(KVTrieurLin, 1)    // Class for linear sorting
 };

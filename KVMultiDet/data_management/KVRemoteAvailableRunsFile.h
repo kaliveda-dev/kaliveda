@@ -12,8 +12,8 @@ $Date: 2008/02/08 08:19:59 $
 
 #include <KVAvailableRunsFile.h>
 
-class KVRemoteAvailableRunsFile:public KVAvailableRunsFile {
- protected:
+class KVRemoteAvailableRunsFile: public KVAvailableRunsFile {
+protected:
 
    TString fFilePath;           //full path to copy of remote file kept in temp dir
    TString fCurl;               //full path to executable used to copy files
@@ -22,19 +22,22 @@ class KVRemoteAvailableRunsFile:public KVAvailableRunsFile {
    virtual void CloseAvailableRunsFile();
    void init();
 
- public:
+public:
 
-    KVRemoteAvailableRunsFile();
-    KVRemoteAvailableRunsFile(const Char_t * type, KVDataSet * ds);
-    virtual ~ KVRemoteAvailableRunsFile();
+   KVRemoteAvailableRunsFile();
+   KVRemoteAvailableRunsFile(const Char_t* type, KVDataSet* ds);
+   virtual ~ KVRemoteAvailableRunsFile();
 
-   void Remove(Int_t, const Char_t * /*filename*/ = "") {
+   void Remove(Int_t, const Char_t* /*filename*/ = "")
+   {
       Info("Remove", "Not possible for remote available runs files");
    };
-   void Update(Bool_t /*no_existing_file*/ = kFALSE) {
+   void Update(Bool_t /*no_existing_file*/ = kFALSE)
+   {
       Info("Update", "Not possible for remote available runs files");
    };
-   void Add(Int_t, const Char_t *) {
+   void Add(Int_t, const Char_t*)
+   {
       Info("Add", "Not possible for remote available runs files");
    };
 

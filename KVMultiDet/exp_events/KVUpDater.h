@@ -14,21 +14,21 @@ $Author: franklan $
 
 class KVUpDater {
 
- protected:
+protected:
    TString fDataSet;            //!name of dataset associated
- public:
+public:
 
    KVUpDater();
    virtual ~ KVUpDater();
 
-   virtual void SetParameters(UInt_t );
+   virtual void SetParameters(UInt_t);
    virtual void SetIdentificationParameters(UInt_t) ;
-   virtual void SetCalibrationParameters(UInt_t );
-   virtual void SetTarget(KVDBRun *);
+   virtual void SetCalibrationParameters(UInt_t);
+   virtual void SetTarget(KVDBRun*);
    virtual void SetIDGrids(UInt_t);
-   virtual void SetCalibParameters(KVDBRun *);
+   virtual void SetCalibParameters(KVDBRun*);
 
-   static KVUpDater *MakeUpDater(const Char_t * uri);
+   static KVUpDater* MakeUpDater(const Char_t* uri);
 
    ClassDef(KVUpDater, 0)       //Abstract base class handling setting of multidetector parameters for each run
 };

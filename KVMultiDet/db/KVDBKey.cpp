@@ -25,7 +25,7 @@ $Id: KVDBKey.cpp,v 1.23 2007/04/19 12:41:54 franklan Exp $
 ClassImp(KVDBKey)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//   
+//
 //   A key holds a list of cross-references to KVDBRecord objects
 //The name of the key is the name of the table, prefixed by "Key:"
 //The title of the key is the name of the record
@@ -41,9 +41,9 @@ KVDBKey::KVDBKey()
 }
 
 //_____________________________________________________________________________
-KVDBKey::KVDBKey(const Char_t * name, const Char_t * title,
-                 KVDBRecord * parent)
-:KVBase(name, title)
+KVDBKey::KVDBKey(const Char_t* name, const Char_t* title,
+                 KVDBRecord* parent)
+   : KVBase(name, title)
 {
    fIsUnique = fSingle = kFALSE;
    fRecord = 0;
@@ -67,27 +67,27 @@ KVDBKey::~KVDBKey()
 }
 
 //_____________________________________________________________________________
-Bool_t KVDBKey::LinkTo(KVDBRecord * rec, Bool_t linkback)
+Bool_t KVDBKey::LinkTo(KVDBRecord* rec, Bool_t linkback)
 {
 // This function adds a record to the list of cross-references
-// if fIsUnique is kTRUE we check if there is already an object with the same name: 
+// if fIsUnique is kTRUE we check if there is already an object with the same name:
 //    if so we return kFALSE otherwise the record is added and kTRUE is returned.
 // if fSingle is kTRUE the list can handle only one object:
 //    if the list is empty the record is added and kTRUE is returned, otherwise kFALSE.
-   
+
    // check if more than one object is allowed
    if (fSingle && (GetLinks()->GetSize() > 0) && (GetLinks()->First())) {
       Warning("LinkTo(KVDBRecord*)",
-                       "%s : Only one cross-reference allowed.\nCurrent cross-reference is:%s\nCan't add new record \"%s\" in list",
-            GetName(), GetLinks()->First()->GetName(), rec->GetName());
+              "%s : Only one cross-reference allowed.\nCurrent cross-reference is:%s\nCan't add new record \"%s\" in list",
+              GetName(), GetLinks()->First()->GetName(), rec->GetName());
       return kFALSE;
    }
    // check if identical names are allowed
    if (fIsUnique) {
       if (fLinks->FindObject(rec->GetName())) {
          Warning("LinkTo(KVDBRecord*)",
-                          "%s : Cross-references must have different names.\nA record named %s already exists.\nCan't add new record \"%s\" in list",
-                          GetName(), rec->GetName(), rec->GetName());
+                 "%s : Cross-references must have different names.\nA record named %s already exists.\nCan't add new record \"%s\" in list",
+                 GetName(), rec->GetName(), rec->GetName());
          return kFALSE;
       }
    }
@@ -104,9 +104,9 @@ Bool_t KVDBKey::LinkTo(KVDBRecord * rec, Bool_t linkback)
          Error("LinkTo", "Parent table not set for key %s", GetName());
          return kFALSE;
       }
-      const Char_t *table_name = GetParent()->GetTable()->GetName();
+      const Char_t* table_name = GetParent()->GetTable()->GetName();
 
-      KVDBKey *key = rec->GetKey(table_name);
+      KVDBKey* key = rec->GetKey(table_name);
       if (!key)
          key = rec->AddKey(table_name, GetParent()->GetName());
       key->LinkTo(GetParent(), kFALSE); //linkback=kFALSE otherwise infinite circular linkage results !!!
@@ -116,7 +116,7 @@ Bool_t KVDBKey::LinkTo(KVDBRecord * rec, Bool_t linkback)
 
 //_____________________________________________________________________________
 
-void KVDBKey::Unlink(KVDBRecord * rec, Bool_t linkback)
+void KVDBKey::Unlink(KVDBRecord* rec, Bool_t linkback)
 {
    //This function removes a record from the list of cross-references
    //if linkback is kTRUE then the reference in record "rec" is also removed.
@@ -130,9 +130,9 @@ void KVDBKey::Unlink(KVDBRecord * rec, Bool_t linkback)
          Error("Unlink", "Parent not set for key %s", GetName());
          return;
       }
-      const Char_t *table_name = GetParent()->GetTable()->GetName();
+      const Char_t* table_name = GetParent()->GetTable()->GetName();
 
-      KVDBKey *key = rec->GetKey(table_name);
+      KVDBKey* key = rec->GetKey(table_name);
       if (key) key->Unlink(GetParent(), kFALSE); //linkback=kFALSE otherwise infinite circular linkage results !!!
    }
 }
@@ -145,9 +145,9 @@ void KVDBKey::UnlinkAll()
    //This function recursively removes all cross-references
    //The corresponding references to the owner of this key in all of the referecnced
    //objects will also be removed.
-   
-   KVDBRecord *rec = (KVDBRecord*)fLinks->Last();
-   if(rec){
+
+   KVDBRecord* rec = (KVDBRecord*)fLinks->Last();
+   if (rec) {
       Unlink(rec);
       UnlinkAll();
    }
@@ -156,14 +156,14 @@ void KVDBKey::UnlinkAll()
 
 //_____________________________________________________________________________
 
-void KVDBKey::AddLink(KVDBRecord * rec)
+void KVDBKey::AddLink(KVDBRecord* rec)
 {
    //Add a link to the list of links
 
    fLinks->Add(rec);
 }
 
-void KVDBKey::RemoveLink(KVDBRecord * rec)
+void KVDBKey::RemoveLink(KVDBRecord* rec)
 {
    //Remove a link from the list of links
 

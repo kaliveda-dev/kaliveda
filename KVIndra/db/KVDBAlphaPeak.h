@@ -23,13 +23,14 @@ $Id: KVDBAlphaPeak.h,v 1.4 2006/10/19 14:32:43 franklan Exp $
 #define PEAK_THORON_1 6.062
 #define PEAK_THORON_2 8.785
 
-class KVDBAlphaPeak:public KVDBPeak {
+class KVDBAlphaPeak: public KVDBPeak {
 
- public:
+public:
 
    KVDBAlphaPeak();
-   KVDBAlphaPeak(const Char_t * detname);
-    virtual ~ KVDBAlphaPeak() {
+   KVDBAlphaPeak(const Char_t* detname);
+   virtual ~ KVDBAlphaPeak()
+   {
    };
 
    ClassDef(KVDBAlphaPeak, 1)   //alpha peaks for calibration

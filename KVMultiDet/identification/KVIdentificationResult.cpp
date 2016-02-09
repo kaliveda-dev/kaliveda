@@ -38,67 +38,67 @@ which can be accessed directly.
 
 void KVIdentificationResult::Copy(TObject& obj) const
 {
-	// Copy this to obj
-	KVBase::Copy(obj);
-	KVIdentificationResult& id = (KVIdentificationResult&)obj;
-	id.IDattempted = IDattempted;
-	id.IDOK = IDOK;
-	id.IDcode = IDcode;
-	id.Zident = Zident;
-	id.Aident = Aident;
-	id.IDquality = IDquality;
-	id.Z = Z;
-	id.A = A;
-	id.PID = PID;
-    id.deltaEpedestal = deltaEpedestal;
+   // Copy this to obj
+   KVBase::Copy(obj);
+   KVIdentificationResult& id = (KVIdentificationResult&)obj;
+   id.IDattempted = IDattempted;
+   id.IDOK = IDOK;
+   id.IDcode = IDcode;
+   id.Zident = Zident;
+   id.Aident = Aident;
+   id.IDquality = IDquality;
+   id.Z = Z;
+   id.A = A;
+   id.PID = PID;
+   id.deltaEpedestal = deltaEpedestal;
 }
 
 void KVIdentificationResult::Clear(Option_t*)
 {
-	// Reset to initial values
-	SetIDType("");
-	SetComment("");
-	IDattempted = kFALSE;
-	IDOK = kFALSE;
-	IDcode = -1;
-	Zident = kFALSE;
-	Aident = kFALSE;
-	IDquality = -1;
-	Z = -1;
-	A = -1;
-	PID = -1.0;
-    deltaEpedestal = deltaEpedestal_UNKNOWN;
+   // Reset to initial values
+   SetIDType("");
+   SetComment("");
+   IDattempted = kFALSE;
+   IDOK = kFALSE;
+   IDcode = -1;
+   Zident = kFALSE;
+   Aident = kFALSE;
+   IDquality = -1;
+   Z = -1;
+   A = -1;
+   PID = -1.0;
+   deltaEpedestal = deltaEpedestal_UNKNOWN;
 }
 
-void KVIdentificationResult::Print(Option_t* ) const
+void KVIdentificationResult::Print(Option_t*) const
 {
-	printf("Identification #%d  -  Type:%s ", GetNumber(), GetIDType());
-	if(!IDattempted) {
-		printf("   => not attempted\n\n");
-		return;
-	}
-	if(IDOK) printf("   => SUCCESS\n");
-	else printf("   => FAILURE\n");
-	printf("  Quality code = %d (%s)\n", IDquality, GetLabel());
-	if(Zident) printf("  Z identified = %d", Z);
-    else printf("  Z returned = %d", Z);
-	if(Aident) printf("    A identified = %d", A);
-    else printf("  A returned = %d", A);
-    if(Zident||Aident) printf("    PID = %f\n", PID);
-    printf("  delta-E pedestal : ");
-    switch(deltaEpedestal){
+   printf("Identification #%d  -  Type:%s ", GetNumber(), GetIDType());
+   if (!IDattempted) {
+      printf("   => not attempted\n\n");
+      return;
+   }
+   if (IDOK) printf("   => SUCCESS\n");
+   else printf("   => FAILURE\n");
+   printf("  Quality code = %d (%s)\n", IDquality, GetLabel());
+   if (Zident) printf("  Z identified = %d", Z);
+   else printf("  Z returned = %d", Z);
+   if (Aident) printf("    A identified = %d", A);
+   else printf("  A returned = %d", A);
+   if (Zident || Aident) printf("    PID = %f\n", PID);
+   printf("  delta-E pedestal : ");
+   switch (deltaEpedestal) {
 
-        case deltaEpedestal_NO:
-        printf("NO\n");
-        break;
+      case deltaEpedestal_NO:
+         printf("NO\n");
+         break;
 
-        case deltaEpedestal_YES:
-        printf("YES\n");
-        break;
+      case deltaEpedestal_YES:
+         printf("YES\n");
+         break;
 
-        default:
-        case deltaEpedestal_UNKNOWN:
-        printf("UNKNOWN\n");
-        break;
-    }
+      default:
+      case deltaEpedestal_UNKNOWN:
+         printf("UNKNOWN\n");
+         break;
+   }
 }

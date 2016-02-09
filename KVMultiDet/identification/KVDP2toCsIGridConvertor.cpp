@@ -42,69 +42,70 @@ void KVDP2toCsIGridConvertor::Convert(const Char_t* id_and_imf_file, const Char_
 {
    //Read ID and Gamma-line files for CsI R-L identifications.
    //Initialise grids in KVIDCsI telescopes
-	
-	if( fGrids ) fGrids->Clear();
-	else fGrids = new TList;
-	ReadFile(id_and_imf_file);
-	// set name of all IMF lines
-	TIter nextGrid( fGrids );
-	KVIDGrid* grid; KVIDentifier* line;
-	while( (grid = (KVIDGrid*)nextGrid()) ){ 
-		TIter nextOK(grid->GetCuts());
-		while ((line = (KVIDentifier *) nextOK())) {
-			line->SetName("IMF_line");
-		}
-	}
-	ReadGammaFile(gamma_file);		
-	if(gIDGridManager) gIDGridManager->GetGrids()->AddAll(fGrids);
-	else Error( KV__ERROR(Convert), "gIDGridManager=0x0: create an ID grid manager first!");
+
+   if (fGrids) fGrids->Clear();
+   else fGrids = new TList;
+   ReadFile(id_and_imf_file);
+   // set name of all IMF lines
+   TIter nextGrid(fGrids);
+   KVIDGrid* grid;
+   KVIDentifier* line;
+   while ((grid = (KVIDGrid*)nextGrid())) {
+      TIter nextOK(grid->GetCuts());
+      while ((line = (KVIDentifier*) nextOK())) {
+         line->SetName("IMF_line");
+      }
+   }
+   ReadGammaFile(gamma_file);
+   if (gIDGridManager) gIDGridManager->GetGrids()->AddAll(fGrids);
+   else Error(KV__ERROR(Convert), "gIDGridManager=0x0: create an ID grid manager first!");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void KVDP2toCsIGridConvertor::ReadGammaFile(const Char_t* gammafile)
-{	
+{
    ifstream gamfile;
-	gamfile.open(gammafile);
+   gamfile.open(gammafile);
 
    if (!gamfile.good()) {
-      Error( KV__ERROR(ReadGammaFile),
+      Error(KV__ERROR(ReadGammaFile),
             "Problem reading file %s", gammafile);
       return;
    }
-	KVString s;
-      
-	s.ReadLine(gamfile);
-   
-	while (gamfile.good()) {
+   KVString s;
 
-		if(s==""){ 
-			s.ReadLine(gamfile);
-			continue;
-		}
-		
+   s.ReadLine(gamfile);
+
+   while (gamfile.good()) {
+
+      if (s == "") {
+         s.ReadLine(gamfile);
+         continue;
+      }
+
       if (!s.BeginsWith('#')) { //'#' sign signals comments
          int ring, modu, frun, lrun;
          if (sscanf(s.Data(), "%d %d %d %d", &ring, &modu, &frun, &lrun) !=
-             4) {
-            Error( KV__ERROR(ReadGammaFile), "Problem reading file %s\nLast line read: %s",
-						gammafile, s.Data());
+               4) {
+            Error(KV__ERROR(ReadGammaFile), "Problem reading file %s\nLast line read: %s",
+                  gammafile, s.Data());
             return;
          };
          //get grid for this ring,mod
          TString name;
          name.
-             Form
-             ("CsI R-L Grid First run=%d Last run=%d Ring min=%d Ring max=%d Mod min=%d Mod max=%d",
-              frun, lrun, ring, ring, modu, modu);
-         KVIDGrid *grid = (KVIDGrid*)fGrids->FindObject(name.Data());
-         if (!grid){
-            Error( KV__ERROR(ReadGammaFile), "Can't find grid %s", name.Data());
-			}
+         Form
+         ("CsI R-L Grid First run=%d Last run=%d Ring min=%d Ring max=%d Mod min=%d Mod max=%d",
+          frun, lrun, ring, ring, modu, modu);
+         KVIDGrid* grid = (KVIDGrid*)fGrids->FindObject(name.Data());
+         if (!grid) {
+            Error(KV__ERROR(ReadGammaFile), "Can't find grid %s", name.Data());
+         }
          int npoints;
          gamfile >> npoints;
          //found gamma line
-         KVIDLine *line = 0;
+         KVIDLine* line = 0;
          if (grid) {
             line = grid->NewLine("ok");
             line->SetName("gamma_line");
@@ -119,7 +120,7 @@ void KVDP2toCsIGridConvertor::ReadGammaFile(const Char_t* gammafile)
                line->SetPoint(i, x, y);
          }
       }
-		s.ReadLine(gamfile);
+      s.ReadLine(gamfile);
    }
-	gamfile.close();
+   gamfile.close();
 }

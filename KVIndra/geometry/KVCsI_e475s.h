@@ -16,38 +16,40 @@ $Date: 2009/05/22 14:54:47 $
 #include "KVString.h"
 #include "KVDataSet.h"
 
-class KVCsI_e475s : public KVCsI
-{
+class KVCsI_e475s : public KVCsI {
 
-   protected:
-	KVFunctionCal *fcalibLT;//!channel-energy function conversion (LT)
-	void init();
-	
-	public:
+protected:
+   KVFunctionCal* fcalibLT;//!channel-energy function conversion (LT)
+   void init();
+
+public:
    KVCsI_e475s();
    KVCsI_e475s(Float_t thick);
-   virtual ~KVCsI_e475s(){ };
-	
-	void SetCalibrators(){};
-	void SetCalibrator(KVDBParameterSet *kvdbps);
-	void ChangeCalibParameters(KVDBParameterSet *kvdbps);
+   virtual ~KVCsI_e475s() { };
 
-	Double_t GetOriginalValue(Float_t to,TString signal);
-	Double_t GetCalibratedValue(Float_t from,TString signal);
+   void SetCalibrators() {};
+   void SetCalibrator(KVDBParameterSet* kvdbps);
+   void ChangeCalibParameters(KVDBParameterSet* kvdbps);
 
-	KVFunctionCal *GetCalibratorBySignal(TString signal) const;
-	Bool_t 	IsCalibrated() const;
-	Bool_t	IsCalibratedBySignal(TString signal) const;
+   Double_t GetOriginalValue(Float_t to, TString signal);
+   Double_t GetCalibratedValue(Float_t from, TString signal);
 
-	Double_t	GetCalibratedEnergy();
-	Double_t	GetEnergy();
- 
- 	Double_t GetLightFromEnergy(UInt_t , UInt_t , Double_t  = -1.){return -1;};
-    Double_t GetCorrectedEnergy(KVNucleus*, Double_t e = -1., Bool_t transmission=kTRUE);
+   KVFunctionCal* GetCalibratorBySignal(TString signal) const;
+   Bool_t   IsCalibrated() const;
+   Bool_t   IsCalibratedBySignal(TString signal) const;
+
+   Double_t GetCalibratedEnergy();
+   Double_t GetEnergy();
+
+   Double_t GetLightFromEnergy(UInt_t , UInt_t , Double_t  = -1.)
+   {
+      return -1;
+   };
+   Double_t GetCorrectedEnergy(KVNucleus*, Double_t e = -1., Bool_t transmission = kTRUE);
 
    Short_t GetCalcACQParam(KVACQParam*, Double_t) const;
 
-	ClassDef(KVCsI_e475s,1)//derivation of KVCsI class for E475s experiment
+   ClassDef(KVCsI_e475s, 1) //derivation of KVCsI class for E475s experiment
 };
 
 

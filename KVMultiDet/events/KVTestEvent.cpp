@@ -54,7 +54,7 @@ ClassImp(KVTestEvent);
 //replaced with a flat angular distribution (see KVPosition::GetRandomDirection)
 ///////////////////////////////////////////////////////////////////////////////
 
-KVTestEvent::KVTestEvent():KVEvent()
+KVTestEvent::KVTestEvent(): KVEvent()
 {
    //Default constructor
 
@@ -78,7 +78,7 @@ void KVTestEvent::init()
    strcpy(fOption, "");
 }
 
-KVTestEvent::KVTestEvent(UInt_t mult, Option_t * t):KVEvent(mult)
+KVTestEvent::KVTestEvent(UInt_t mult, Option_t* t): KVEvent(mult)
 {
    //Constructor with arguments
    //
@@ -154,12 +154,12 @@ void KVTestEvent::Generate()
 
    for (UInt_t i = 1; i <= fGenMult; i++) {
       UInt_t z =
-          gRandom->Integer(fUpper_Limit_Z - fLower_Limit_Z + 1) +
-          fLower_Limit_Z;
+         gRandom->Integer(fUpper_Limit_Z - fLower_Limit_Z + 1) +
+         fLower_Limit_Z;
       Float_t ke =
-          gRandom->Uniform(fUpper_Limit_E - fLower_Limit_E) +
-          fLower_Limit_E;
-      KVNucleus *kvn = AddParticle();
+         gRandom->Uniform(fUpper_Limit_E - fLower_Limit_E) +
+         fLower_Limit_E;
+      KVNucleus* kvn = AddParticle();
       kvn->SetZ(z);
       if (kAMeV)
          ke *= kvn->GetA();
@@ -171,10 +171,10 @@ void KVTestEvent::Generate()
 void KVTestEvent::Print(Option_t*) const
 {
 //
-//Print out list of all particles in event 
+//Print out list of all particles in event
 //
-   cout << "\nKVTestEvent with " << ((KVEvent *) this)->
-       GetMult() << " nuclei:" << endl;
+   cout << "\nKVTestEvent with " << ((KVEvent*) this)->
+        GetMult() << " nuclei:" << endl;
    cout << "----------------------------------------" << endl;
    cout << "Zmin=" << fLower_Limit_Z << " Zmax=" << fUpper_Limit_Z << endl;
    cout << "Emin=" << fLower_Limit_E << " Emax=" << fUpper_Limit_E;
@@ -183,11 +183,11 @@ void KVTestEvent::Print(Option_t*) const
    else
       cout << " (MeV)" << endl;
    cout << "Thetamin=" << fLower_Limit_theta << " Thetamax=" <<
-       fUpper_Limit_theta << endl;
+        fUpper_Limit_theta << endl;
    cout << "Phimin=" << fLower_Limit_phi << " Phimax=" << fUpper_Limit_phi
-       << endl;
+        << endl;
    cout << "----------------------------------------" << endl;
-   for (Int_t i = 1; i <= ((KVEvent *) this)->GetMult(); i++) {
+   for (Int_t i = 1; i <= ((KVEvent*) this)->GetMult(); i++) {
       GetParticle(i)->Print();
    }
 }

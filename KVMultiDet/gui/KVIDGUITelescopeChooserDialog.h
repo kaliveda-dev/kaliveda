@@ -100,30 +100,29 @@ $Date: 2009/03/03 14:27:15 $
 #include "TList.h"
 #include "KVIDTelescope.h"
 
-class KVIDGUITelescopeChooserDialog
-{
+class KVIDGUITelescopeChooserDialog {
 
-	RQ_OBJECT("KVIDGUITelescopeChooserDialog")
-			
-	TList 					*fSelection;		// list of selected telescopes
-	KVMultiDetArray 		*fMultiDet; 		// multidetector array geometry
-	TGTransientFrame  	*fMainFrame1428;	// main frame
-	TGComboBox  			*fComboBox994; 	// combo box with list of ID telescope types
-	TGListBox 				*fListBox980;		// list of telescopes of selected type
-	Bool_t               *fCancelPress;
-	
-   public:
+   RQ_OBJECT("KVIDGUITelescopeChooserDialog")
+
+   TList*                fSelection;      // list of selected telescopes
+   KVMultiDetArray*      fMultiDet;       // multidetector array geometry
+   TGTransientFrame*     fMainFrame1428;  // main frame
+   TGComboBox*           fComboBox994;    // combo box with list of ID telescope types
+   TGListBox*            fListBox980;     // list of telescopes of selected type
+   Bool_t*               fCancelPress;
+
+public:
    KVIDGUITelescopeChooserDialog(KVMultiDetArray* MDA, TList* selection, Bool_t*,
-			const TGWindow * p, const TGWindow * main, UInt_t w = 1, UInt_t h = 1);
+                                 const TGWindow* p, const TGWindow* main, UInt_t w = 1, UInt_t h = 1);
    virtual ~KVIDGUITelescopeChooserDialog();
-	void DoClose();
-	void CloseWindow();
-	void GetSelection();
-	void HighlightSelectedTelescopes();
+   void DoClose();
+   void CloseWindow();
+   void GetSelection();
+   void HighlightSelectedTelescopes();
 
-	void FillTelescopeListWithType(const char*);
+   void FillTelescopeListWithType(const char*);
 
-   ClassDef(KVIDGUITelescopeChooserDialog,1)//ID Grid Manager dialog for choice of ID telescope(s)
+   ClassDef(KVIDGUITelescopeChooserDialog, 1) //ID Grid Manager dialog for choice of ID telescope(s)
 };
 
 #endif

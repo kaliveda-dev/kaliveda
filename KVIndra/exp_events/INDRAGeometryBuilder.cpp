@@ -26,33 +26,34 @@ ClassImp(INDRAGeometryBuilder)
 <h4>Build INDRA geometry from Huguet CAO infos</h4>
 <!-- */
 // --> END_HTML
-// N.B. - the Ring 1 Si-CsI detectors (>=INDRA_camp4) 
+// N.B. - the Ring 1 Si-CsI detectors (>=INDRA_camp4)
 //        are described using the same geometry as for the
 //        1st campaign phoswich detectors (no CAO data available)
 ////////////////////////////////////////////////////////////////////////////////
 
-void INDRAGeometryBuilder:: CorrectCoordinates(Double_t *coo, Double_t& offX, Double_t &offY)
+void INDRAGeometryBuilder:: CorrectCoordinates(Double_t* coo, Double_t& offX, Double_t& offY)
 {
-    // calculate offset in X and Y
-    // correct coordinates for offset
-    // return offset TGeoTranslation
+   // calculate offset in X and Y
+   // correct coordinates for offset
+   // return offset TGeoTranslation
 
-    offX=offY=0;
-    for(int i=0;i<8;i++){
-        offX+=coo[2*i];
-        offY+=coo[2*i+1];
-    }
-    offX/=8.;offY/=8.;
-    for(int i=0;i<8;i++){
-        coo[2*i]-=offX;
-        coo[2*i+1]-=offY;
-    }
+   offX = offY = 0;
+   for (int i = 0; i < 8; i++) {
+      offX += coo[2 * i];
+      offY += coo[2 * i + 1];
+   }
+   offX /= 8.;
+   offY /= 8.;
+   for (int i = 0; i < 8; i++) {
+      coo[2 * i] -= offX;
+      coo[2 * i + 1] -= offY;
+   }
 }
 
 INDRAGeometryBuilder::INDRAGeometryBuilder()
 {
    // Default constructor
-    fEtalonVol=0;
+   fEtalonVol = 0;
 }
 
 //________________________________________________________________
@@ -65,7 +66,7 @@ INDRAGeometryBuilder::INDRAGeometryBuilder(const INDRAGeometryBuilder& obj)  : K
    // implement it.
    // If your class allocates memory in its constructor(s) then it is ESSENTIAL :-)
 
-    fEtalonVol=0;
+   fEtalonVol = 0;
    obj.Copy(*this);
 }
 
@@ -112,8 +113,8 @@ void INDRAGeometryBuilder::ReadDetCAO(const Char_t* detname, Int_t ring)
 
    TEnv infos;
    TString path = Form("%s.cao", detname);
-   SearchKVFile(path.Data(),path,"data");
-   infos.ReadFile(path,kEnvAll);
+   SearchKVFile(path.Data(), path, "data");
+   infos.ReadFile(path, kEnvAll);
 
    Double_t unit_converter = 0.1;// distances in file given in mm: convert to cm
 
@@ -227,19 +228,19 @@ void INDRAGeometryBuilder::MakeFrame(TString det_type, Int_t ring_num)
       vertices[2 * i + 1] = corners[i].Y();
    }
 
-   Double_t dz = 0.99*fTotalThickness / 2.;
+   Double_t dz = 0.99 * fTotalThickness / 2.;
    TString vol_name;
    vol_name.Form("STRUCT_%s_%02d", det_type.Data(), ring_num);
    fFrameVolume = gGeoManager->MakeVolumeAssembly(vol_name);
    fFrameVolume->SetMedium(gGeoManager->GetMedium("Vacuum"));
    vol_name.Form("DEADZONE_%s_%02d", det_type.Data(), ring_num);
    TGeoMedium* med = fFrameMat.GetGeoMedium();
-   Double_t offX,offY;
-   CorrectCoordinates(vertices,offX,offY);
-   TGeoTranslation* offset  = new TGeoTranslation(offX,offY,0);
+   Double_t offX, offY;
+   CorrectCoordinates(vertices, offX, offY);
+   TGeoTranslation* offset  = new TGeoTranslation(offX, offY, 0);
    TGeoVolume* frame = gGeoManager->MakeArb8(vol_name.Data(), med, dz, vertices);
    frame->SetLineColor(med->GetMaterial()->GetDefaultColor());
-   fFrameVolume->AddNode(frame,1,offset);
+   fFrameVolume->AddNode(frame, 1, offset);
 }
 
 //________________________________________________________________
@@ -273,7 +274,7 @@ void INDRAGeometryBuilder::PlaceFrame(Double_t phi, Int_t copy_no)
 
    TGeoTranslation tran(0, 0, trans_z);
    TGeoHMatrix h = rot2 * tran * rot1;
-   TGeoHMatrix *ph = new TGeoHMatrix(h);
+   TGeoHMatrix* ph = new TGeoHMatrix(h);
 
    // add detector volume to geometry
    gGeoManager->GetTopVolume()->AddNode(fFrameVolume, copy_no, ph);
@@ -292,18 +293,18 @@ void INDRAGeometryBuilder::PlaceDetector()
 
 Bool_t INDRAGeometryBuilder::CheckDetectorPresent(TString detname)
 {
-      KVDetector* thisdetector = gIndra->GetDetector(detname);
-      if (!thisdetector || !thisdetector->IsPresent()) {
-         //Info("CheckDetectorPresent", "%s is absent", detname.Data());
-			return kFALSE;
-      }
-		if(!fLayers){
-			// get info on detector structure from first detector which is present on ring
-         fLayers = thisdetector->GetListOfAbsorbers();
-         fActiveLayer = 1 + thisdetector->GetListOfAbsorbers()->IndexOf(thisdetector->GetActiveLayer());
-         fTotalThickness = thisdetector->GetTotalThicknessInCM();
-		}
-		return kTRUE;
+   KVDetector* thisdetector = gIndra->GetDetector(detname);
+   if (!thisdetector || !thisdetector->IsPresent()) {
+      //Info("CheckDetectorPresent", "%s is absent", detname.Data());
+      return kFALSE;
+   }
+   if (!fLayers) {
+      // get info on detector structure from first detector which is present on ring
+      fLayers = thisdetector->GetListOfAbsorbers();
+      fActiveLayer = 1 + thisdetector->GetListOfAbsorbers()->IndexOf(thisdetector->GetActiveLayer());
+      fTotalThickness = thisdetector->GetTotalThicknessInCM();
+   }
+   return kTRUE;
 }
 
 //void INDRAGeometryBuilder::MakeRing(TGeoVolume* MOTHER, const Char_t* det, int ring)
@@ -328,160 +329,160 @@ void INDRAGeometryBuilder::MakeRing(const Char_t* det, int ring)
         0.5 * (fInnerFront[0].Phi() + fInnerFront[1].Phi())*TMath::RadToDeg() << endl;
 
 // check presence of all detectors of ring
-	Int_t npresent=0;
-	Int_t ntotal=0;
-	fLayers = 0;//will force CheckDetectorPresent() to get infos from first detector present
-   for (i=1; i <= Ndets; i++) {
-      		if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
-      		else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
-				ntotal++;
-				npresent+=(Int_t)CheckDetectorPresent(fDetName);
+   Int_t npresent = 0;
+   Int_t ntotal = 0;
+   fLayers = 0;//will force CheckDetectorPresent() to get infos from first detector present
+   for (i = 1; i <= Ndets; i++) {
+      if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
+      else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
+      ntotal++;
+      npresent += (Int_t)CheckDetectorPresent(fDetName);
 
       innerMod += fInnerDmod;
 
       if (fInnerPads == 3) {
-      		if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
-      		else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
-				ntotal++;
-				npresent+=(Int_t)CheckDetectorPresent(fDetName);
+         if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
+         else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
+         ntotal++;
+         npresent += (Int_t)CheckDetectorPresent(fDetName);
          innerMod += fInnerDmod;
-      		if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
-      		else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
-				ntotal++;
-				npresent+=(Int_t)CheckDetectorPresent(fDetName);
+         if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
+         else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
+         ntotal++;
+         npresent += (Int_t)CheckDetectorPresent(fDetName);
          innerMod += fInnerDmod;
       } else {
          if (fInnerPads == 2) {
-      			if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
-      			else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
-				ntotal++;
-				npresent+=(Int_t)CheckDetectorPresent(fDetName);
+            if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
+            else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
+            ntotal++;
+            npresent += (Int_t)CheckDetectorPresent(fDetName);
             innerMod += fInnerDmod;
          }
          if (fOuterPads) {
-      			if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, outerMod);
-      			else fDetName.Form("%s_%02d%02d", det, fOuterRing, outerMod);
-				ntotal++;
-				npresent+=(Int_t)CheckDetectorPresent(fDetName);
+            if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, outerMod);
+            else fDetName.Form("%s_%02d%02d", det, fOuterRing, outerMod);
+            ntotal++;
+            npresent += (Int_t)CheckDetectorPresent(fDetName);
             outerMod += fOuterDmod;
             if (fOuterPads == 2) {
-      				if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, outerMod);
-      				else fDetName.Form("%s_%02d%02d", det, fOuterRing, outerMod);
-					ntotal++;
-					npresent+=(Int_t)CheckDetectorPresent(fDetName);
+               if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, outerMod);
+               else fDetName.Form("%s_%02d%02d", det, fOuterRing, outerMod);
+               ntotal++;
+               npresent += (Int_t)CheckDetectorPresent(fDetName);
                outerMod += fOuterDmod;
             }
          }
-		}
-	}
-	if(!npresent) {
-		Info("MakeRing", "Detector type %s  ring number %d : ABSENT", det, ring);
-		return;
-	}
-	Info("MakeRing", "Detector type %s  ring number %d : %d/%d detectors present", det, ring, npresent, ntotal);
-	
-	i=1;
-      /* build and add frame */
-      MakeFrame(det,ring);
+      }
+   }
+   if (!npresent) {
+      Info("MakeRing", "Detector type %s  ring number %d : ABSENT", det, ring);
+      return;
+   }
+   Info("MakeRing", "Detector type %s  ring number %d : %d/%d detectors present", det, ring, npresent, ntotal);
 
-      // make pads in inner ring
-      MakeDetector("A1", fInnerFront, fInnerCentre);
+   i = 1;
+   /* build and add frame */
+   MakeFrame(det, ring);
+
+   // make pads in inner ring
+   MakeDetector("A1", fInnerFront, fInnerCentre);
+   PlaceDetector();
+   if (fInnerPads == 3) {
+      MakeDetector("A2", fOuterFront, fOuterCentre);
       PlaceDetector();
-      if (fInnerPads == 3) {
-         MakeDetector("A2", fOuterFront, fOuterCentre);
-         PlaceDetector();
+      TVector3 reflex[4];
+      ReflectPad(fInnerFront, fFrameCentre.Phi(), reflex);
+      TVector3 refcent;
+      CalculateCentre(reflex, refcent);
+      MakeDetector("A3", reflex, refcent);
+      PlaceDetector();
+   } else {
+      if (fInnerPads == 2) {
          TVector3 reflex[4];
          ReflectPad(fInnerFront, fFrameCentre.Phi(), reflex);
          TVector3 refcent;
          CalculateCentre(reflex, refcent);
-         MakeDetector("A3", reflex, refcent);
+         MakeDetector("A2", reflex, refcent);
          PlaceDetector();
-      } else {
-         if (fInnerPads == 2) {
+      }
+      if (fOuterPads) {
+         // make pads in outer ring
+         MakeDetector("B1", fOuterFront, fOuterCentre);
+         PlaceDetector();
+         if (fOuterPads == 2) {
             TVector3 reflex[4];
-            ReflectPad(fInnerFront, fFrameCentre.Phi(), reflex);
+            ReflectPad(fOuterFront, fFrameCentre.Phi(), reflex);
             TVector3 refcent;
             CalculateCentre(reflex, refcent);
-            MakeDetector("A2", reflex, refcent);
+            MakeDetector("B2", reflex, refcent);
             PlaceDetector();
-         }
-         if (fOuterPads) {
-            // make pads in outer ring
-            MakeDetector("B1", fOuterFront, fOuterCentre);
-            PlaceDetector();
-            if (fOuterPads == 2) {
-               TVector3 reflex[4];
-               ReflectPad(fOuterFront, fFrameCentre.Phi(), reflex);
-               TVector3 refcent;
-               CalculateCentre(reflex, refcent);
-               MakeDetector("B2", reflex, refcent);
-               PlaceDetector();
-            }
          }
       }
+   }
 
    innerMod = fInnerModmin;
    outerMod = fOuterModmin;
-	
-   for (i=1; i <= Ndets; i++) {
-	
-		// check absence of whole block
-		ntotal=0;
-		npresent=0;
-       if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
-       else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
-		 ntotal++;
-		 npresent+=(Int_t)CheckDetectorPresent(fDetName);
+
+   for (i = 1; i <= Ndets; i++) {
+
+      // check absence of whole block
+      ntotal = 0;
+      npresent = 0;
+      if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
+      else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
+      ntotal++;
+      npresent += (Int_t)CheckDetectorPresent(fDetName);
 
       innerMod += fInnerDmod;
 
       if (fInnerPads == 3) {
-      		if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
-      		else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
-				ntotal++;
-				npresent+=(Int_t)CheckDetectorPresent(fDetName);
+         if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
+         else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
+         ntotal++;
+         npresent += (Int_t)CheckDetectorPresent(fDetName);
          innerMod += fInnerDmod;
-      		if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
-      		else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
-				ntotal++;
-				npresent+=(Int_t)CheckDetectorPresent(fDetName);
+         if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
+         else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
+         ntotal++;
+         npresent += (Int_t)CheckDetectorPresent(fDetName);
          innerMod += fInnerDmod;
       } else {
          if (fInnerPads == 2) {
-      			if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
-      			else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
-				ntotal++;
-				npresent+=(Int_t)CheckDetectorPresent(fDetName);
+            if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, innerMod);
+            else fDetName.Form("%s_%02d%02d", det, fInnerRing, innerMod);
+            ntotal++;
+            npresent += (Int_t)CheckDetectorPresent(fDetName);
             innerMod += fInnerDmod;
          }
          if (fOuterPads) {
-      			if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, outerMod);
-      			else fDetName.Form("%s_%02d%02d", det, fOuterRing, outerMod);
-				ntotal++;
-				npresent+=(Int_t)CheckDetectorPresent(fDetName);
+            if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, outerMod);
+            else fDetName.Form("%s_%02d%02d", det, fOuterRing, outerMod);
+            ntotal++;
+            npresent += (Int_t)CheckDetectorPresent(fDetName);
             outerMod += fOuterDmod;
             if (fOuterPads == 2) {
-      				if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, outerMod);
-      				else fDetName.Form("%s_%02d%02d", det, fOuterRing, outerMod);
-					ntotal++;
-					npresent+=(Int_t)CheckDetectorPresent(fDetName);
+               if (!strcmp(det, "PHOS")) fDetName.Form("%s_%02d", det, outerMod);
+               else fDetName.Form("%s_%02d%02d", det, fOuterRing, outerMod);
+               ntotal++;
+               npresent += (Int_t)CheckDetectorPresent(fDetName);
                outerMod += fOuterDmod;
             }
          }
-		}
-		if(!npresent) Info("MakeRing", "\tBlock %d: ABSENT", i);
-		else if(npresent<ntotal){
-		     Info("MakeRing", "\tBlock %d: %d/%d detectors present", i, npresent,ntotal);
-			  Info("MakeRing", "\tCASE NOT TREATED. ALL DETECTORS PRESENT.");
-	   }
-		if(npresent) PlaceFrame(phi,i);
-		
-		if(((ring>9&&ring<13) && i==1)||(ring>12&&i==2)) {
-		   	fEtalonTheta[ring-10] = fFrameCentre.Theta()*TMath::RadToDeg();
-		   	fEtalonPhi[ring-10] = phi;
-		   	fEtalonTheta[ring-9] = fFrameCentre.Theta()*TMath::RadToDeg();
-		   	fEtalonPhi[ring-9] = phi;
-		}
+      }
+      if (!npresent) Info("MakeRing", "\tBlock %d: ABSENT", i);
+      else if (npresent < ntotal) {
+         Info("MakeRing", "\tBlock %d: %d/%d detectors present", i, npresent, ntotal);
+         Info("MakeRing", "\tCASE NOT TREATED. ALL DETECTORS PRESENT.");
+      }
+      if (npresent) PlaceFrame(phi, i);
+
+      if (((ring > 9 && ring < 13) && i == 1) || (ring > 12 && i == 2)) {
+         fEtalonTheta[ring - 10] = fFrameCentre.Theta() * TMath::RadToDeg();
+         fEtalonPhi[ring - 10] = phi;
+         fEtalonTheta[ring - 9] = fFrameCentre.Theta() * TMath::RadToDeg();
+         fEtalonPhi[ring - 9] = phi;
+      }
       phi += deltaPhi;
    }
 
@@ -493,22 +494,22 @@ void INDRAGeometryBuilder::MakeDetector(const Char_t* det, TVector3* som, TVecto
 {
 
    // make volume corresponding to the actual detector
-   
+
    TVector3 corners[8]; // 8 vertices of the volume
    Double_t vertices[16];
 
    // Check whether this is a real multi-layer detector
    // i.e. make sure all "layers" have non-zero thickness
    Bool_t multi_layer = fLayers->GetSize() > 1;
-   if(multi_layer){
-       TIter next(fLayers);
-       KVMaterial *abs;
-       Int_t no_abs = 0;
-       while ((abs = (KVMaterial*)next())) {
-           Double_t thick = abs->GetThickness();
-           if(thick>0.0) no_abs++;
-       }
-       multi_layer = (no_abs>1);
+   if (multi_layer) {
+      TIter next(fLayers);
+      KVMaterial* abs;
+      Int_t no_abs = 0;
+      while ((abs = (KVMaterial*)next())) {
+         Double_t thick = abs->GetThickness();
+         if (thick > 0.0) no_abs++;
+      }
+      multi_layer = (no_abs > 1);
    }
    if (multi_layer) {
       fDetVolume = gGeoManager->MakeVolumeAssembly(Form("DET_%s", det));
@@ -521,19 +522,22 @@ void INDRAGeometryBuilder::MakeDetector(const Char_t* det, TVector3* som, TVecto
 
    /**** BUILD & ADD LAYERS ****/
    TIter next(fLayers);
-   KVMaterial *abs;
+   KVMaterial* abs;
    Double_t depth_in_det = 0.;
    Int_t no_abs = 1;
 
-   Double_t offX,offY;//offset of each layer
+   Double_t offX, offY; //offset of each layer
    fDetectorPosition = 0;
 
    while ((abs = (KVMaterial*)next())) {
       // get medium for absorber
       TGeoMedium* med = abs->GetGeoMedium();
       Double_t thick = abs->GetThickness();
-      
-      if(thick==0.0) {no_abs++; continue;} // ignore zero thickness layers
+
+      if (thick == 0.0) {
+         no_abs++;   // ignore zero thickness layers
+         continue;
+      }
 
       // calculate coordinates of back plane
       CalculateBackPlaneCoordinates(frontPlane, frontCentre, thick, backPlane);
@@ -549,30 +553,29 @@ void INDRAGeometryBuilder::MakeDetector(const Char_t* det, TVector3* som, TVecto
 
       Double_t dz = thick / 2.;
       TString vol_name;
-      if(multi_layer){
-        if (no_abs == fActiveLayer) vol_name = Form("ACTIVE_%s",det);
-        else vol_name = Form("%s_%d_%s", det, no_abs, abs->GetName());
-      }
-      else
-          vol_name = Form("DET_%s", det);
-      CorrectCoordinates(vertices,offX,offY);
-      TGeoVolume *vol =
+      if (multi_layer) {
+         if (no_abs == fActiveLayer) vol_name = Form("ACTIVE_%s", det);
+         else vol_name = Form("%s_%d_%s", det, no_abs, abs->GetName());
+      } else
+         vol_name = Form("DET_%s", det);
+      CorrectCoordinates(vertices, offX, offY);
+      TGeoVolume* vol =
          gGeoManager->MakeArb8(vol_name.Data(), med, dz, vertices);
       vol->SetLineColor(med->GetMaterial()->GetDefaultColor());
       if (multi_layer) {
          /*** position absorber in mother ***/
          Double_t trans_z = -fTotalThickness / 2. + depth_in_det + dz; // (note: reference is CENTRE of absorber)
-         TGeoTranslation *tr = new TGeoTranslation(offX,offY,trans_z);
+         TGeoTranslation* tr = new TGeoTranslation(offX, offY, trans_z);
          fDetVolume->AddNode(vol, no_abs, tr);
       } else {
          // single absorber: mother is absorber is detector is mother is ...
          fDetVolume = vol;
-         fDetectorPosition = new TGeoTranslation(offX,offY,0);
+         fDetectorPosition = new TGeoTranslation(offX, offY, 0);
       }
-      
+
       depth_in_det += thick;
       no_abs++;
-      
+
       // front of next absorber is back of current absorber
       for (int i = 0; i < 4; i++) frontPlane[i] = backPlane[i];
       frontCentre = backCentre;
@@ -598,7 +601,7 @@ void INDRAGeometryBuilder::CalculateCentre(TVector3* corners, TVector3& inter)
 
 
 void INDRAGeometryBuilder::CalculateCornersInPlane(TVector3* plane, Double_t thetamin,
-                                                   Double_t thetamax, Double_t phimin, Double_t phimax, TVector3* corners)
+      Double_t thetamax, Double_t phimin, Double_t phimax, TVector3* corners)
 {
    // fill TVector3 corners[4] array in usual order:
    //       corners[3] : theta-min, phi-min
@@ -669,17 +672,17 @@ TGeoManager* INDRAGeometryBuilder::Build(Bool_t withTarget, Bool_t closeGeometry
    }
    if (gGeoManager) delete gGeoManager;
 
-   TGeoManager *geom = new TGeoManager("INDRA", Form("INDRA geometry for dataset %s", gDataSet->GetName()));
-   TGeoMaterial*matVacuum = new TGeoMaterial("Vacuum", 0, 0, 0);
+   TGeoManager* geom = new TGeoManager("INDRA", Form("INDRA geometry for dataset %s", gDataSet->GetName()));
+   TGeoMaterial* matVacuum = new TGeoMaterial("Vacuum", 0, 0, 0);
    matVacuum->SetTitle("Vacuum");
-   TGeoMedium*Vacuum = new TGeoMedium("Vacuum", 1, matVacuum);
-   TGeoVolume *top = geom->MakeBox("WORLD", Vacuum,  500, 500, 500);
+   TGeoMedium* Vacuum = new TGeoMedium("Vacuum", 1, matVacuum);
+   TGeoVolume* top = geom->MakeBox("WORLD", Vacuum,  500, 500, 500);
    geom->SetTopVolume(top);
 
-   if(gIndra->GetDetector("PHOS_01")) MakeRing("PHOS", 1);
+   if (gIndra->GetDetector("PHOS_01")) MakeRing("PHOS", 1);
    else {
-      MakeRing("SI",1);
-      MakeRing("CSI",1);
+      MakeRing("SI", 1);
+      MakeRing("CSI", 1);
    }
    for (int ring = 2; ring <= 16; ring += 2) {
       MakeRing("CI", ring);
@@ -690,11 +693,11 @@ TGeoManager* INDRAGeometryBuilder::Build(Bool_t withTarget, Bool_t closeGeometry
          MakeRing("CSI", ring + 1);
       }
    }
-   for(int ring = 10; ring <= 17; ring++){
-      if(gIndra->GetDetector(Form("SI75_%d",ring))) MakeEtalon(ring);
+   for (int ring = 10; ring <= 17; ring++) {
+      if (gIndra->GetDetector(Form("SI75_%d", ring))) MakeEtalon(ring);
    }
-   if(withTarget) BuildTarget();
-   if(closeGeometry) gGeoManager->CloseGeometry();
+   if (withTarget) BuildTarget();
+   if (closeGeometry) gGeoManager->CloseGeometry();
    gGeoManager->DefaultColors();
    return gGeoManager;
 }
@@ -711,35 +714,35 @@ void INDRAGeometryBuilder::Build(KVNumberList& rings, KVNameValueList& detectors
    //
    // Possible detector types are "CI", "SI", "CSI", "PHOS"
    // If you want to see the target in the previous example, use dets.SetValue("TARGET",1)
-    //
-    // Include "ring+100" in number list to build etalon telescope for "ring"
-    //
-    // This method will not destroy any pre-existing geometry (gGeoManager),
-    // but will create one if none exists.
-    // Also it will not close the geometry, leaving the possibility to add ancillary
-    // detectors.
+   //
+   // Include "ring+100" in number list to build etalon telescope for "ring"
+   //
+   // This method will not destroy any pre-existing geometry (gGeoManager),
+   // but will create one if none exists.
+   // Also it will not close the geometry, leaving the possibility to add ancillary
+   // detectors.
 
    if (!gIndra) {
       Error("Build", "You must build the geometry with gDataSet->BuildMultiDetector() before calling this method");
       return;
    }
    if (!gGeoManager) {
-       new TGeoManager("INDRA", Form("INDRA geometry for dataset %s", gDataSet->GetName()));
+      new TGeoManager("INDRA", Form("INDRA geometry for dataset %s", gDataSet->GetName()));
 
-       TGeoMaterial*matVacuum = gGeoManager->GetMaterial("Vacuum");
-       if(!matVacuum) {
-           matVacuum = new TGeoMaterial("Vacuum", 0, 0, 0);
-           matVacuum->SetTitle("Vacuum");
-       }
-       TGeoMedium*Vacuum = gGeoManager->GetMedium("Vacuum");
-       if(!Vacuum) Vacuum = new TGeoMedium("Vacuum", 1, matVacuum);
-       TGeoVolume *top = gGeoManager->MakeBox("WORLD", Vacuum,  500, 500, 500);
-       gGeoManager->SetTopVolume(top);
+      TGeoMaterial* matVacuum = gGeoManager->GetMaterial("Vacuum");
+      if (!matVacuum) {
+         matVacuum = new TGeoMaterial("Vacuum", 0, 0, 0);
+         matVacuum->SetTitle("Vacuum");
+      }
+      TGeoMedium* Vacuum = gGeoManager->GetMedium("Vacuum");
+      if (!Vacuum) Vacuum = new TGeoMedium("Vacuum", 1, matVacuum);
+      TGeoVolume* top = gGeoManager->MakeBox("WORLD", Vacuum,  500, 500, 500);
+      gGeoManager->SetTopVolume(top);
    }
-   if (rings.Contains(1)){
-      if(detectors.HasParameter("PHOS")) MakeRing("PHOS", 1);
-      if(detectors.HasParameter("SI"))MakeRing("SI", 1);
-      if(detectors.HasParameter("CSI"))MakeRing("CSI", 1);
+   if (rings.Contains(1)) {
+      if (detectors.HasParameter("PHOS")) MakeRing("PHOS", 1);
+      if (detectors.HasParameter("SI"))MakeRing("SI", 1);
+      if (detectors.HasParameter("CSI"))MakeRing("CSI", 1);
    }
    for (int ring = 2; ring <= 16; ring += 2) {
       if (rings.Contains(ring) && detectors.HasParameter("CI")) MakeRing("CI", ring);
@@ -752,8 +755,8 @@ void INDRAGeometryBuilder::Build(KVNumberList& rings, KVNameValueList& detectors
          if (rings.Contains(ring + 1) && detectors.HasParameter("CSI"))MakeRing("CSI", ring + 1);
       }
    }
-   for(int ring = 10; ring <= 17; ring++){
-      if(rings.Contains(ring+100)) MakeEtalon(ring);
+   for (int ring = 10; ring <= 17; ring++) {
+      if (rings.Contains(ring + 100)) MakeEtalon(ring);
    }
 
    if (detectors.HasParameter("TARGET"))BuildTarget();
@@ -761,115 +764,108 @@ void INDRAGeometryBuilder::Build(KVNumberList& rings, KVNameValueList& detectors
 
 void INDRAGeometryBuilder::BuildEtalonVolumes()
 {
-    KVMaterial mat_si("Si");
-    KVMaterial mat_li("Li");
-    KVMaterial mat_al("Al");
-    TGeoMedium *Silicon = mat_si.GetGeoMedium();
-    TGeoMedium *Lithium = mat_li.GetGeoMedium();
-    TGeoMedium *Alu = mat_al.GetGeoMedium();
+   KVMaterial mat_si("Si");
+   KVMaterial mat_li("Li");
+   KVMaterial mat_al("Al");
+   TGeoMedium* Silicon = mat_si.GetGeoMedium();
+   TGeoMedium* Lithium = mat_li.GetGeoMedium();
+   TGeoMedium* Alu = mat_al.GetGeoMedium();
 
-    Double_t sili_diameter_total = 2.54;
-    Double_t holder_thickness = 0.05;
-    Double_t holder_length = 1.0;
-    Double_t sili_diameter_active = 2.36;
-    Double_t sili_silicon_thickness = 0.22;
-    Double_t sili_lithium_thickness = 0.0044;
-    Double_t si75_thickness = 0.008;
-    Double_t si75_diameter_active = 2.2;
+   Double_t sili_diameter_total = 2.54;
+   Double_t holder_thickness = 0.05;
+   Double_t holder_length = 1.0;
+   Double_t sili_diameter_active = 2.36;
+   Double_t sili_silicon_thickness = 0.22;
+   Double_t sili_lithium_thickness = 0.0044;
+   Double_t si75_thickness = 0.008;
+   Double_t si75_diameter_active = 2.2;
 
-    fEtalonVol = new TGeoVolumeAssembly("STRUCT_ETALON");
-    fEtalonVol->SetMedium(gGeoManager->GetMedium("Vacuum"));
+   fEtalonVol = new TGeoVolumeAssembly("STRUCT_ETALON");
+   fEtalonVol->SetMedium(gGeoManager->GetMedium("Vacuum"));
 
-    TGeoVolume* holder = gGeoManager->MakeTube("DEADZONE_ETALON_HOLDER", Alu,
-          (sili_diameter_total)/2., (sili_diameter_total+2*holder_thickness)/2., holder_length/2.);
-    holder->SetLineColor(holder->GetMaterial()->GetDefaultColor());
-    fEtalonVol->AddNode(holder, 1);
+   TGeoVolume* holder = gGeoManager->MakeTube("DEADZONE_ETALON_HOLDER", Alu,
+                        (sili_diameter_total) / 2., (sili_diameter_total + 2 * holder_thickness) / 2., holder_length / 2.);
+   holder->SetLineColor(holder->GetMaterial()->GetDefaultColor());
+   fEtalonVol->AddNode(holder, 1);
 
-    Double_t w = sili_silicon_thickness + sili_lithium_thickness;
-    TGeoVolume* sili_dz = gGeoManager->MakeTube("DEADZONE_SILI", Alu,
-          sili_diameter_active/2., (sili_diameter_total)/2., w/2.);
-    sili_dz->SetLineColor(sili_dz->GetMaterial()->GetDefaultColor());
+   Double_t w = sili_silicon_thickness + sili_lithium_thickness;
+   TGeoVolume* sili_dz = gGeoManager->MakeTube("DEADZONE_SILI", Alu,
+                         sili_diameter_active / 2., (sili_diameter_total) / 2., w / 2.);
+   sili_dz->SetLineColor(sili_dz->GetMaterial()->GetDefaultColor());
 
-    fEtalonVol->AddNode(sili_dz, 1, new TGeoTranslation(0,0,holder_length/4.));
+   fEtalonVol->AddNode(sili_dz, 1, new TGeoTranslation(0, 0, holder_length / 4.));
 
-    TGeoVolumeAssembly* sili = new TGeoVolumeAssembly("DET_SILI");
-    sili->SetMedium(gGeoManager->GetMedium("Vacuum"));
-    TGeoVolume* sili_si = gGeoManager->MakeTube("ACTIVE_SILI", Silicon,
-          0., (sili_diameter_active)/2., (sili_silicon_thickness)/2.);
-    TGeoVolume* sili_li = gGeoManager->MakeTube("SILI_LI", Lithium,
-          0., (sili_diameter_active)/2., (sili_lithium_thickness)/2.);
-    sili_si->SetLineColor(sili_si->GetMaterial()->GetDefaultColor());
-    sili_li->SetLineColor(sili_li->GetMaterial()->GetDefaultColor());
-    sili->AddNode(sili_si, 1, new TGeoTranslation(0,0,-(w/2.-sili_silicon_thickness/2.)));
-    sili->AddNode(sili_li, 1, new TGeoTranslation(0,0,w/2.-sili_lithium_thickness/2.));
-    fEtalonVol->AddNode(sili, 1, new TGeoTranslation(0,0,holder_length/4.));
+   TGeoVolumeAssembly* sili = new TGeoVolumeAssembly("DET_SILI");
+   sili->SetMedium(gGeoManager->GetMedium("Vacuum"));
+   TGeoVolume* sili_si = gGeoManager->MakeTube("ACTIVE_SILI", Silicon,
+                         0., (sili_diameter_active) / 2., (sili_silicon_thickness) / 2.);
+   TGeoVolume* sili_li = gGeoManager->MakeTube("SILI_LI", Lithium,
+                         0., (sili_diameter_active) / 2., (sili_lithium_thickness) / 2.);
+   sili_si->SetLineColor(sili_si->GetMaterial()->GetDefaultColor());
+   sili_li->SetLineColor(sili_li->GetMaterial()->GetDefaultColor());
+   sili->AddNode(sili_si, 1, new TGeoTranslation(0, 0, -(w / 2. - sili_silicon_thickness / 2.)));
+   sili->AddNode(sili_li, 1, new TGeoTranslation(0, 0, w / 2. - sili_lithium_thickness / 2.));
+   fEtalonVol->AddNode(sili, 1, new TGeoTranslation(0, 0, holder_length / 4.));
 
-    TGeoVolume* si75 = gGeoManager->MakeTube("DET_SI75", Silicon,
-          0., (si75_diameter_active)/2., (si75_thickness)/2.);
-    TGeoVolume* si75_dz = gGeoManager->MakeTube("DEADZONE_SI75", Alu,
-          (si75_diameter_active)/2., (sili_diameter_total)/2., (si75_thickness)/2.);
+   TGeoVolume* si75 = gGeoManager->MakeTube("DET_SI75", Silicon,
+                      0., (si75_diameter_active) / 2., (si75_thickness) / 2.);
+   TGeoVolume* si75_dz = gGeoManager->MakeTube("DEADZONE_SI75", Alu,
+                         (si75_diameter_active) / 2., (sili_diameter_total) / 2., (si75_thickness) / 2.);
 
-    fEtalonVol->AddNode(si75_dz, 1);
-    fEtalonVol->AddNode(si75, 1);
+   fEtalonVol->AddNode(si75_dz, 1);
+   fEtalonVol->AddNode(si75, 1);
 
 }
 
 void INDRAGeometryBuilder::MakeEtalon(int RING)
 {
    // Build and add etalon telescope for ring
-    //Double_t theta[] = {51.075000,63.340000,79.435000,100.685000,118.235000,133.905000,149.790000,166.435000};
-    //Double_t phi[] = {37.500000,37.500000,37.500000,90.000000,78.750000,78.750000,90.000000,90.000000};
-	Double_t dist[] = {17.4005,17.4005,17.4005,16.7005,16.7005,16.7005,17.4005,17.4005,};
+   //Double_t theta[] = {51.075000,63.340000,79.435000,100.685000,118.235000,133.905000,149.790000,166.435000};
+   //Double_t phi[] = {37.500000,37.500000,37.500000,90.000000,78.750000,78.750000,90.000000,90.000000};
+   Double_t dist[] = {17.4005, 17.4005, 17.4005, 16.7005, 16.7005, 16.7005, 17.4005, 17.4005,};
 
-	if(!fEtalonVol) BuildEtalonVolumes();
-	
-	cout << "Etalons " << RING << " : " << fEtalonTheta[RING-10] << "  " << fEtalonPhi[RING-10] << endl;
-	TGeoTranslation trans;
-	trans.SetDz(dist[RING-10]);
-	TGeoRotation rot1,rot2;
-	TGeoHMatrix h;
-	TGeoHMatrix* ph=0;
-	
+   if (!fEtalonVol) BuildEtalonVolumes();
+
+   cout << "Etalons " << RING << " : " << fEtalonTheta[RING - 10] << "  " << fEtalonPhi[RING - 10] << endl;
+   TGeoTranslation trans;
+   trans.SetDz(dist[RING - 10]);
+   TGeoRotation rot1, rot2;
+   TGeoHMatrix h;
+   TGeoHMatrix* ph = 0;
+
 //    rot2.SetAngles(phi[RING-10]+90., theta[RING-10], 0.);
 //    rot1.SetAngles(-1.*phi[RING-10], 0., 0.);
-   rot2.SetAngles(fEtalonPhi[RING-10]+90., fEtalonTheta[RING-10], 0.);
-   rot1.SetAngles(-1.*fEtalonPhi[RING-10], 0., 0.);
+   rot2.SetAngles(fEtalonPhi[RING - 10] + 90., fEtalonTheta[RING - 10], 0.);
+   rot1.SetAngles(-1.*fEtalonPhi[RING - 10], 0., 0.);
 //    if(RING==13){
 //       TGeoTranslation p(4.5,0,0);
 //       h = p * rot2 * trans * rot1;
 //    }
-    if(RING==10){
-      TGeoTranslation p(1.5,2.5,0);
+   if (RING == 10) {
+      TGeoTranslation p(1.5, 2.5, 0);
       h = rot2 * trans * p * rot1;
-	 }
-    else if(RING==11){
-      TGeoTranslation p(1.5,-1.5,0);
+   } else if (RING == 11) {
+      TGeoTranslation p(1.5, -1.5, 0);
       h = rot2 * trans * p * rot1;
-	 }
-    else if(RING==12){
-      TGeoTranslation p(1.5,0,0);
+   } else if (RING == 12) {
+      TGeoTranslation p(1.5, 0, 0);
       h = rot2 * trans * p * rot1;
-	 }
-    else if(RING==13){
-      TGeoTranslation p(-4,-0.5,0);
+   } else if (RING == 13) {
+      TGeoTranslation p(-4, -0.5, 0);
       h = rot2 * trans * p * rot1;
-	 }
-    else if(RING==14){
-      TGeoTranslation p(-1.7,1.75,0);
+   } else if (RING == 14) {
+      TGeoTranslation p(-1.7, 1.75, 0);
       h = rot2 * trans * p * rot1;
-	 }
-    else if(RING==15){
-      TGeoTranslation p(-1.7,-3,0);
+   } else if (RING == 15) {
+      TGeoTranslation p(-1.7, -3, 0);
       h = rot2 * trans * p * rot1;
-	 }
-    else if(RING==16){
-      TGeoTranslation p(0,2.5,0);
+   } else if (RING == 16) {
+      TGeoTranslation p(0, 2.5, 0);
       h = rot2 * trans * p * rot1;
-	 }
-    else {
-      TGeoTranslation p(0,-2.25,0);
+   } else {
+      TGeoTranslation p(0, -2.25, 0);
       h = rot2 * trans * p * rot1;
-	 }
+   }
    ph = new TGeoHMatrix(h);
-   gGeoManager->GetTopVolume()->AddNode(fEtalonVol,RING,ph);
-}   
+   gGeoManager->GetTopVolume()->AddNode(fEtalonVol, RING, ph);
+}

@@ -26,17 +26,17 @@ ClassImp(KVIVRawDataReconstructor)
 KVIVRawDataReconstructor::KVIVRawDataReconstructor()
 {
    //Default constructor
-	fIVevent    = NULL;
-	fINDRADetEv = NULL;
-	fVAMOSDetEv = NULL;
-	fNbVAMOSrecon = 0;
+   fIVevent    = NULL;
+   fINDRADetEv = NULL;
+   fVAMOSDetEv = NULL;
+   fNbVAMOSrecon = 0;
 }
 //________________________________________________________________
 
 KVIVRawDataReconstructor::~KVIVRawDataReconstructor()
 {
    //Destructor
-	fIVevent = NULL;
+   fIVevent = NULL;
 }
 //________________________________________________________________
 
@@ -52,7 +52,7 @@ void KVIVRawDataReconstructor::InitRun()
    // If no value is set for the current dataset (second variable), the value of the
    // first variable will be used. If neither is defined, the new file will be written in the same repository as
    // the raw file (if possible, i.e. if repository is not remote).
-   
+
    // Create new KVIVReconEvent used to reconstruct & store events
    // The condition used to seed new reconstructed particles (see KVReconstructedEvent::AnalyseTelescopes)
    // is set by reading the value of the environment variables:
@@ -60,87 +60,91 @@ void KVIVRawDataReconstructor::InitRun()
    //     [name of dataset].Reconstruction.DataAnalysisTask.ParticleSeedCond:     [all/any]
    // If no value is set for the current dataset (second variable), the value of the
    // first variable will be used.
- 
-	if(!recev) recev = fIVevent = new KVIVReconEvent;
-	KVINDRARawDataReconstructor::InitRun();
-	
-	//Remove the first branch 'INDRAReconEvent' of tree created by KVINDRARawDataReconstructor::InitRun()
-	//and replace it by new branch 'IVReconEvent' with a KVIVReconEvent object
-	TObjArray *branches = tree->GetListOfBranches();
-	delete branches->RemoveAt(0);	
-	branches->Compress();
-   KVEvent::MakeEventBranch(tree,"IVReconEvent","KVIVReconEvent",&fIVevent);
 
-	//Detector events for INDRA and VAMOS
-	fINDRADetEv = new KVDetectorEvent;
-	fVAMOSDetEv = new KVDetectorEvent;
+   if (!recev) recev = fIVevent = new KVIVReconEvent;
+   KVINDRARawDataReconstructor::InitRun();
 
-  	//initialise number of reconstructed VAMOS events
-	fNbVAMOSrecon = 0;
+   //Remove the first branch 'INDRAReconEvent' of tree created by KVINDRARawDataReconstructor::InitRun()
+   //and replace it by new branch 'IVReconEvent' with a KVIVReconEvent object
+   TObjArray* branches = tree->GetListOfBranches();
+   delete branches->RemoveAt(0);
+   branches->Compress();
+   KVEvent::MakeEventBranch(tree, "IVReconEvent", "KVIVReconEvent", &fIVevent);
+
+   //Detector events for INDRA and VAMOS
+   fINDRADetEv = new KVDetectorEvent;
+   fVAMOSDetEv = new KVDetectorEvent;
+
+   //initialise number of reconstructed VAMOS events
+   fNbVAMOSrecon = 0;
 }
 //________________________________________________________________
 
-void KVIVRawDataReconstructor::preAnalysis(){
-	// Before the reconstruction of a new event:
-	//  - Fill the detector events for INDRA and VAMOS.
-	//  - Initialize VAMOS spectrometer
+void KVIVRawDataReconstructor::preAnalysis()
+{
+   // Before the reconstruction of a new event:
+   //  - Fill the detector events for INDRA and VAMOS.
+   //  - Initialize VAMOS spectrometer
 
-	KVINDRARawDataReconstructor::preAnalysis();
+   KVINDRARawDataReconstructor::preAnalysis();
 
-	KVSeqCollection* fired = fRunFile->GetFiredDataParameters();
-    gIndra->GetDetectorEvent(fINDRADetEv, fired);
-    gVamos->GetDetectorEvent(fVAMOSDetEv, fired);
+   KVSeqCollection* fired = fRunFile->GetFiredDataParameters();
+   gIndra->GetDetectorEvent(fINDRADetEv, fired);
+   gVamos->GetDetectorEvent(fVAMOSDetEv, fired);
 
-	// INDRA event reconstruction
-	// Exchange fDetEv with fINDRADetEv in order that GetDetectorEvent()
-	// returns the INDRA event for KVINDRARawDataReconstructor::Analysis()
-	KVDetectorEvent *tmp = fDetEv;
-	fDetEv = fINDRADetEv;
-	fINDRADetEv = tmp;
+   // INDRA event reconstruction
+   // Exchange fDetEv with fINDRADetEv in order that GetDetectorEvent()
+   // returns the INDRA event for KVINDRARawDataReconstructor::Analysis()
+   KVDetectorEvent* tmp = fDetEv;
+   fDetEv = fINDRADetEv;
+   fINDRADetEv = tmp;
 
 
-	gVamos->Initialize();
+   gVamos->Initialize();
 }
 //________________________________________________________________
 
-Bool_t KVIVRawDataReconstructor::Analysis(){
-	// Analysis of event measured with the INDRA multidetector array and the VAMOS
-	// spectrometer.
-	//
-	// First, the reconstruction of the VAMOS event is done and then the INDRA event is
-	// reconstructed by calling the Analysis method of the mother class
-	// KVINDRARawDataReconstructor;
-	
-	// VAMOS event reconstruction
-	if( fVAMOSDetEv->GetMult()>0){
-                fIVevent->ReconstructVAMOSEvent( gVamos, fVAMOSDetEv );
- 		fNbVAMOSrecon++;
-	}
+Bool_t KVIVRawDataReconstructor::Analysis()
+{
+   // Analysis of event measured with the INDRA multidetector array and the VAMOS
+   // spectrometer.
+   //
+   // First, the reconstruction of the VAMOS event is done and then the INDRA event is
+   // reconstructed by calling the Analysis method of the mother class
+   // KVINDRARawDataReconstructor;
 
-	// INDRA event reconstruction
-   	return  KVINDRARawDataReconstructor::Analysis();
+   // VAMOS event reconstruction
+   if (fVAMOSDetEv->GetMult() > 0) {
+      fIVevent->ReconstructVAMOSEvent(gVamos, fVAMOSDetEv);
+      fNbVAMOSrecon++;
+   }
+
+   // INDRA event reconstruction
+   return  KVINDRARawDataReconstructor::Analysis();
 }
 //________________________________________________________________
 
-void  KVIVRawDataReconstructor::postAnalysis(){
-	// Clear the detector events of INDRA and VAMOS. It is very
-	// important to do that in postAnalysis and not in the preAnalysis
-	// method because calling KVDetectorEvent::Clear() will also clear
-	// the ACQ parameters of the detectors of this event.
-	fINDRADetEv->Clear();
-	fVAMOSDetEv->Clear();
+void  KVIVRawDataReconstructor::postAnalysis()
+{
+   // Clear the detector events of INDRA and VAMOS. It is very
+   // important to do that in postAnalysis and not in the preAnalysis
+   // method because calling KVDetectorEvent::Clear() will also clear
+   // the ACQ parameters of the detectors of this event.
+   fINDRADetEv->Clear();
+   fVAMOSDetEv->Clear();
 }
 
 
 //________________________________________________________________
 
-void KVIVRawDataReconstructor::EndRun(){
-	fIVevent    = NULL;
-	SafeDelete( fINDRADetEv );
-	SafeDelete( fVAMOSDetEv );
-   
+void KVIVRawDataReconstructor::EndRun()
+{
+   fIVevent    = NULL;
+   SafeDelete(fINDRADetEv);
+   SafeDelete(fVAMOSDetEv);
+
    cout << endl << " *** Number of reconstructed VAMOS events : "
-            << fNbVAMOSrecon << " ***" << endl;
+        << fNbVAMOSrecon << " ***" << endl;
 
-	KVINDRARawDataReconstructor::EndRun();
+   KVINDRARawDataReconstructor::EndRun();
 }

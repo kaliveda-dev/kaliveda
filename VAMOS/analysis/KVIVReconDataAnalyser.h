@@ -6,17 +6,16 @@
 
 #include "KVINDRAReconDataAnalyser.h"
 
-class KVIVReconDataAnalyser : public KVINDRAReconDataAnalyser
-{
+class KVIVReconDataAnalyser : public KVINDRAReconDataAnalyser {
 
-   public:
+public:
    KVIVReconDataAnalyser();
    virtual ~KVIVReconDataAnalyser();
 
    void preAnalysis();
    void preInitRun();
 
-   ClassDef(KVIVReconDataAnalyser,1)//For analysing reconstructed INDRA+VAMOS data
+   ClassDef(KVIVReconDataAnalyser, 1) //For analysing reconstructed INDRA+VAMOS data
 };
 
 #endif

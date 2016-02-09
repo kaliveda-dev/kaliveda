@@ -28,14 +28,14 @@ ClassImp(KVRList);
 //   Adds a few functionalities such as FindObjectByType()
 //
 
-KVBase *KVRList::FindObjectByName(const Char_t * name) const
+KVBase* KVRList::FindObjectByName(const Char_t* name) const
 {
    //Look for object with name "name" in the list
-   return (KVBase *) TRefArray::FindObject(name);
+   return (KVBase*) TRefArray::FindObject(name);
 }
 
 //_______________________________________________________________________________
-KVBase *KVRList::FindObjectByType(const Char_t * type) const
+KVBase* KVRList::FindObjectByType(const Char_t* type) const
 {
    //
    // Find an object in this list using its type. Requires a sequential
@@ -44,10 +44,9 @@ KVBase *KVRList::FindObjectByType(const Char_t * type) const
    //
 
    if (type) {
-      if (GetSize())            //make sure list contains some objects
-      {
+      if (GetSize()) {          //make sure list contains some objects
          for (Int_t i = 0; i < GetSize(); i++) {
-            KVBase *obj = (KVBase *) At(i);
+            KVBase* obj = (KVBase*) At(i);
             if (obj->GetType() && !strcmp(type, obj->GetType()))
                return obj;
          }
@@ -58,7 +57,7 @@ KVBase *KVRList::FindObjectByType(const Char_t * type) const
 }
 
 //_______________________________________________________________________________
-KVBase *KVRList::FindObjectByLabel(const Char_t * type) const
+KVBase* KVRList::FindObjectByLabel(const Char_t* type) const
 {
    //
    // Find an object in this list using its label. Requires a sequential
@@ -67,10 +66,9 @@ KVBase *KVRList::FindObjectByLabel(const Char_t * type) const
    //
 
    if (type) {
-      if (GetSize())            //make sure list contains some objects
-      {
+      if (GetSize()) {          //make sure list contains some objects
          for (Int_t i = 0; i < GetSize(); i++) {
-            KVBase *obj = (KVBase *) At(i);
+            KVBase* obj = (KVBase*) At(i);
             if (obj->GetLabel() && !strcmp(type, obj->GetLabel()))
                return obj;
          }
@@ -81,7 +79,7 @@ KVBase *KVRList::FindObjectByLabel(const Char_t * type) const
 }
 
 //_______________________________________________________________________________
-KVBase *KVRList::FindObject(const Char_t * name, const Char_t * type) const
+KVBase* KVRList::FindObject(const Char_t* name, const Char_t* type) const
 {
 //
 // Find an object in this list using its type and name. Requires a sequential
@@ -90,12 +88,11 @@ KVBase *KVRList::FindObject(const Char_t * name, const Char_t * type) const
 //
 
    if (type && name) {
-      if (GetSize())            //make sure list contains some objects
-      {
+      if (GetSize()) {          //make sure list contains some objects
          for (Int_t i = 0; i < GetSize(); i++) {
-            KVBase *obj = (KVBase *) At(i);
+            KVBase* obj = (KVBase*) At(i);
             if (!strcmp(type, obj->GetType())
-                && !strcmp(name, obj->GetName()))
+                  && !strcmp(name, obj->GetName()))
                return obj;
          }
       }
@@ -107,9 +104,9 @@ KVBase *KVRList::FindObject(const Char_t * name, const Char_t * type) const
 //_______________________________________________________________________________
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVRList::Copy(TObject & obj) const
+void KVRList::Copy(TObject& obj) const
 #else
-void KVRList::Copy(TObject & obj)
+void KVRList::Copy(TObject& obj)
 #endif
 {
    //
@@ -118,46 +115,44 @@ void KVRList::Copy(TObject & obj)
    //copying the references, i.e. no new objects are created
    //
    obj.Clear();
-   if (this->GetSize())         //make sure list contains some objects
-   {
+   if (this->GetSize()) {       //make sure list contains some objects
       for (Int_t i = 0; i < this->GetSize(); i++) {
-         ((KVRList &) obj).Add(this->At(i));
+         ((KVRList&) obj).Add(this->At(i));
       }
    }
 }
 
-void KVRList::Print(Option_t * opt) const
+void KVRList::Print(Option_t* opt) const
 {
    //Print description of all objects in list
 #ifdef KV_DEBUG
    Info("Print", "List size: %d elements", this->GetSize());
 #endif
-   if (this->GetSize())         //make sure list contains some objects
-   {
+   if (this->GetSize()) {       //make sure list contains some objects
       for (Int_t i = 0; i < this->GetSize(); i++) {
          if (At(i))
-            ((KVBase *) At(i))->Print(opt);
+            ((KVBase*) At(i))->Print(opt);
          else
             Error("Print", "Object %d does not exist", i);
       }
    }
 }
 
-void KVRList::Execute(const char *method, const char *params,
-                      Int_t * error)
+void KVRList::Execute(const char* method, const char* params,
+                      Int_t* error)
 {
    //Redefinition of TObject::Execute method.
    //TObject::Execute is called for each object in the list in order, meaning that for each
    //object the method "method" is executed with arguments "params".
    TIter next(this);
-   TObject *obj;
+   TObject* obj;
    while ((obj = next())) {
       obj->Execute(method, params, error);
    }
 }
 
 
-KVBase *KVRList::FindObject(KVBase * obj) const
+KVBase* KVRList::FindObject(KVBase* obj) const
 {
-   return (KVBase *) TRefArray::FindObject(obj);
+   return (KVBase*) TRefArray::FindObject(obj);
 }

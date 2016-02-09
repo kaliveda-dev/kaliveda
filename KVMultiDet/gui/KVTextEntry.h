@@ -12,30 +12,29 @@ $Date: 2007/12/11 16:03:45 $
 
 #include "TGTextEntry.h"
 
-class KVTextEntry : public TGTextEntry
-{
+class KVTextEntry : public TGTextEntry {
 
-   public:
-   KVTextEntry(const TGWindow *p, TGTextBuffer *text, Int_t id = -1,
+public:
+   KVTextEntry(const TGWindow* p, TGTextBuffer* text, Int_t id = -1,
                GContext_t norm = GetDefaultGC()(),
                FontStruct_t font = GetDefaultFontStruct(),
                UInt_t option = kSunkenFrame | kDoubleBorder,
                Pixel_t back = GetWhitePixel())
-         : TGTextEntry(p,text,id,norm,font,option,back)
+      : TGTextEntry(p, text, id, norm, font, option, back)
    {};
-   KVTextEntry(const TGWindow *parent = 0, const char *text = 0, Int_t id = -1)
-         : TGTextEntry(parent,text,id)
+   KVTextEntry(const TGWindow* parent = 0, const char* text = 0, Int_t id = -1)
+      : TGTextEntry(parent, text, id)
    {};
-   KVTextEntry(const TString &contents, const TGWindow *parent, Int_t id = -1)
-         : TGTextEntry(contents, parent, id)
+   KVTextEntry(const TString& contents, const TGWindow* parent, Int_t id = -1)
+      : TGTextEntry(contents, parent, id)
    {};
-   virtual ~KVTextEntry(){};
+   virtual ~KVTextEntry() {};
 
-   virtual  void        SetText(const char *text, Bool_t /*emit*/ = kTRUE);                               //*MENU*
+   virtual  void        SetText(const char* text, Bool_t /*emit*/ = kTRUE);                               //*MENU*
    virtual  void        SetMaxLength(Int_t maxlen);                              //*MENU*
-   virtual  void        Insert(const char *);
+   virtual  void        Insert(const char*);
 
-   ClassDef(KVTextEntry,0)//TGTextEntry without any limit on the length of the text
+   ClassDef(KVTextEntry, 0) //TGTextEntry without any limit on the length of the text
 };
 
 #endif

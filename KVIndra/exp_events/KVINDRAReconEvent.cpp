@@ -63,12 +63,12 @@ void KVINDRAReconEvent::init()
 {
    //default initialisations
    fCodeMask = 0;
-   fHitGroups=0;
+   fHitGroups = 0;
 }
 
 
-KVINDRAReconEvent::KVINDRAReconEvent(Int_t mult, const char *classname)
-:KVReconstructedEvent(mult, classname)
+KVINDRAReconEvent::KVINDRAReconEvent(Int_t mult, const char* classname)
+   : KVReconstructedEvent(mult, classname)
 {
    init();
 }
@@ -84,45 +84,45 @@ KVINDRAReconEvent::~KVINDRAReconEvent()
 
 /////////////////////////////////////////////////////////////////////////////
 
-KVINDRAReconNuc *KVINDRAReconEvent::GetParticle(Int_t npart) const
+KVINDRAReconNuc* KVINDRAReconEvent::GetParticle(Int_t npart) const
 {
    //
    //Access to event member with index npart (1<=npart<=fMult)
    //
 
-   return (KVINDRAReconNuc *) (KVReconstructedEvent::GetParticle(npart));
+   return (KVINDRAReconNuc*)(KVReconstructedEvent::GetParticle(npart));
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-KVINDRAReconNuc *KVINDRAReconEvent::AddParticle()
+KVINDRAReconNuc* KVINDRAReconEvent::AddParticle()
 {
    //Wrapper for KVEvent::GetNextParticle casting result to KVINDRAReconNuc*
 
-   KVINDRAReconNuc *tmp = (KVINDRAReconNuc *) (KVReconstructedEvent::AddParticle());
+   KVINDRAReconNuc* tmp = (KVINDRAReconNuc*)(KVReconstructedEvent::AddParticle());
    return tmp;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void KVINDRAReconEvent::Streamer(TBuffer & R__b)
+void KVINDRAReconEvent::Streamer(TBuffer& R__b)
 {
    //Stream an object of class KVINDRAReconEvent.
    //We loop over the newly-read particles in order to set their
    //IsOK() status by comparison with the event's code mask.
 
-    if (R__b.IsReading()) {
-        R__b.ReadClassBuffer(KVINDRAReconEvent::Class(), this);
-        KVINDRAReconNuc *par;
-        while ((par = GetNextParticle())) {
-            par->SetIsOK(CheckCodes(par->GetCodes()));
-        }
-    } else {
-        R__b.WriteClassBuffer(KVINDRAReconEvent::Class(), this);
-    }
+   if (R__b.IsReading()) {
+      R__b.ReadClassBuffer(KVINDRAReconEvent::Class(), this);
+      KVINDRAReconNuc* par;
+      while ((par = GetNextParticle())) {
+         par->SetIsOK(CheckCodes(par->GetCodes()));
+      }
+   } else {
+      R__b.WriteClassBuffer(KVINDRAReconEvent::Class(), this);
+   }
 }
 
 //______________________________________________________________________________
-void KVINDRAReconEvent::Print(Option_t * option) const
+void KVINDRAReconEvent::Print(Option_t* option) const
 {
    //Print out list of particles in the event.
    //If option="ok" only particles with IsOK=kTRUE are included.
@@ -130,16 +130,16 @@ void KVINDRAReconEvent::Print(Option_t * option) const
    cout << GetTitle() << endl;  //system
    cout << GetName() << endl;   //run
    cout << "Event number: " << GetNumber() << endl << endl;
-   cout << "MULTIPLICITY = " << ((KVINDRAReconEvent *) this)->
-       GetMult(option) << endl << endl;
+   cout << "MULTIPLICITY = " << ((KVINDRAReconEvent*) this)->
+        GetMult(option) << endl << endl;
 
-   KVINDRAReconNuc *frag = 0;
-   while ((frag = ((KVINDRAReconEvent *) this)->GetNextParticle(option))) {
+   KVINDRAReconNuc* frag = 0;
+   while ((frag = ((KVINDRAReconEvent*) this)->GetNextParticle(option))) {
       frag->Print();
    }
 }
 
-KVINDRAReconNuc *KVINDRAReconEvent::GetNextParticle(Option_t * opt)
+KVINDRAReconNuc* KVINDRAReconEvent::GetNextParticle(Option_t* opt)
 {
    //Use this method to iterate over the list of particles in the event.
    //
@@ -155,7 +155,7 @@ KVINDRAReconNuc *KVINDRAReconEvent::GetNextParticle(Option_t * opt)
    //              ... your code here ...
    //      }
 
-   return (KVINDRAReconNuc *) KVEvent::GetNextParticle(opt);
+   return (KVINDRAReconNuc*) KVEvent::GetNextParticle(opt);
 }
 
 //______________________________________________________________________________________________
@@ -195,7 +195,7 @@ void KVINDRAReconEvent::AcceptIDCodes(UShort_t code)
    //as the 'IsOK' status of all particles of the current event are automatically updated
    //when the code mask is changed using this method.
    GetCodeMask()->SetIDMask(code);
-   KVINDRAReconNuc *par = 0;
+   KVINDRAReconNuc* par = 0;
    while ((par = GetNextParticle())) {
       if (CheckCodes(par->GetCodes()))
          par->SetIsOK();
@@ -220,7 +220,7 @@ void KVINDRAReconEvent::AcceptECodes(UChar_t code)
    //as the 'IsOK' status of all particles of the current event are automatically updated
    //when the code mask is changed using this method.
    GetCodeMask()->SetEMask(code);
-   KVINDRAReconNuc *par = 0;
+   KVINDRAReconNuc* par = 0;
    while ((par = GetNextParticle())) {
       if (CheckCodes(par->GetCodes()))
          par->SetIsOK();
@@ -246,21 +246,21 @@ void KVINDRAReconEvent::ChangeFragmentMasses(UChar_t mass_formula)
    //Only particles with 'acceptable' ID & E codes stopping in (or passing through)
    //a CsI detector are affected; particles whose mass was measured
    //(i.e. having KVReconstructedNucleus::IsAMeasured()==kTRUE)
-	//are not affected by the change of mass formula.
+   //are not affected by the change of mass formula.
 
    ResetGetNextParticle();
    KVINDRAReconNuc* frag;
-   while( (frag = (KVINDRAReconNuc*)GetNextParticle("ok")) ){
+   while ((frag = (KVINDRAReconNuc*)GetNextParticle("ok"))) {
 
-      if( !frag->IsAMeasured() ){
+      if (!frag->IsAMeasured()) {
 
          Float_t oldA = (Float_t)frag->GetA();
          frag->SetMassFormula(mass_formula);
 
-         if( frag->GetCsI() ){
+         if (frag->GetCsI()) {
             Float_t oldECsI = frag->GetEnergyCsI();
             Float_t oldE = frag->GetEnergy();
-            Float_t newECsI = oldECsI*((Float_t)frag->GetA()/oldA);
+            Float_t newECsI = oldECsI * ((Float_t)frag->GetA() / oldA);
             frag->GetCsI()->SetEnergy(newECsI);
             frag->SetEnergy(oldE - oldECsI + newECsI);
          }
@@ -276,270 +276,263 @@ void KVINDRAReconEvent::IdentifyEvent()
    // Performs event identification (see KVReconstructedEvent::IdentifyEvent), and then
    // particles stopping in first member of a telescope (GetStatus() == KVReconstructedNucleus::kStatusStopFirstStage) are
    // labelled with VEDA ID code kIDCode5 (Zmin)
-	// 
-	//   When CsI identification gives a gamma, we unset the 'analysed' state of all detectors
-	// in front of the CsI and reanalyse the group in order to reconstruct and identify charged particles
-	// stopping in them.
-	//
+   //
+   //   When CsI identification gives a gamma, we unset the 'analysed' state of all detectors
+   // in front of the CsI and reanalyse the group in order to reconstruct and identify charged particles
+   // stopping in them.
+   //
    // Unidentified particles receive the general ID code for non-identified particles (kIDCode14)
 
    KVReconstructedEvent::IdentifyEvent();
-   KVINDRAReconNuc *d=0;
-	int mult = GetMult();
-	KVUniqueNameList gammaGroups;//list of groups with gammas identified in CsI
-	ResetGetNextParticle();
-	
-   while((d = GetNextParticle())){
-      if (d->IsIdentified()&&d->GetStatus() == KVReconstructedNucleus::kStatusStopFirstStage) {
-         	d->SetIDCode( kIDCode5 ); // Zmin
-		}
-      else if (d->IsIdentified()&&d->GetCodes().TestIDCode(kIDCode0)){
-				// gamma identified in CsI
-				// reset analysed state of all detectors in front of CsI
-			if(d->GetCsI()){
-				if(d->GetCsI()->GetAlignedDetectors()){
-					TIter next(d->GetCsI()->GetAlignedDetectors());
-					KVDetector*det=(KVDetector*)next();//first detector = CsI
-					while( (det = (KVDetector*)next()) ) det->SetAnalysed(kFALSE);
-					gammaGroups.Add(d->GetGroup());
-				}
-				else
-				{
-					Error("IdentifyEvent", "particule id gamma, no aligned detectors???");
-					d->Print();
-				}	
-			}
-			else
-			{
-				Error("IdentifyEvent", "particule identified as gamma, has no CsI!!");
-				d->Print();
-			}
-		}
-   }
-	
-	// perform secondary reconstruction in groups with detected gammas
-	int ngamG = gammaGroups.GetEntries();
-        if(ngamG){
-           for(int i=0; i<ngamG; i++){
-              gIndra->AnalyseGroupAndReconstructEvent(this, (KVGroup*)gammaGroups.At(i));
-           }
-        }
-        if(GetMult()>mult) {
-		/*Info("IdentifyEvent", "Event#%d: Secondary reconstruction (gammas) -> %d new particles",
-			GetNumber(), GetMult()-mult);*/
+   KVINDRAReconNuc* d = 0;
+   int mult = GetMult();
+   KVUniqueNameList gammaGroups;//list of groups with gammas identified in CsI
+   ResetGetNextParticle();
 
-		// identify new particles generated in secondary reconstruction 
-   	KVReconstructedEvent::IdentifyEvent();
-		ResetGetNextParticle();
-	
-   	while((d = GetNextParticle())){
-      	if (d->IsIdentified()&&d->GetStatus() == KVReconstructedNucleus::kStatusStopFirstStage) {
-         	d->SetIDCode( kIDCode5 ); // Zmin
-			}
-      	else if(!d->IsIdentified()){
-         	d->SetIDCode( kIDCode14 );
-      	}
-		}
-		/*
-		for(int i=mult+1; i<=GetMult(); i++){
-			d = GetParticle(i);
-			if(d->IsIdentified())
-				printf("\t%2d: Ring %2d Module %2d Z=%2d  A=%3d  code=%d\n",i,d->GetRingNumber(),
-						d->GetModuleNumber(),d->GetZ(),d->GetA(),d->GetCodes().GetVedaIDCode());
-			else
-				printf("\t%2d: Ring %2d Module %2d UNIDENTIFIED status=%d\n", i,d->GetRingNumber(),
-						d->GetModuleNumber(), d->GetStatus());
-		}
-		*/
-	}
+   while ((d = GetNextParticle())) {
+      if (d->IsIdentified() && d->GetStatus() == KVReconstructedNucleus::kStatusStopFirstStage) {
+         d->SetIDCode(kIDCode5);   // Zmin
+      } else if (d->IsIdentified() && d->GetCodes().TestIDCode(kIDCode0)) {
+         // gamma identified in CsI
+         // reset analysed state of all detectors in front of CsI
+         if (d->GetCsI()) {
+            if (d->GetCsI()->GetAlignedDetectors()) {
+               TIter next(d->GetCsI()->GetAlignedDetectors());
+               KVDetector* det = (KVDetector*)next(); //first detector = CsI
+               while ((det = (KVDetector*)next())) det->SetAnalysed(kFALSE);
+               gammaGroups.Add(d->GetGroup());
+            } else {
+               Error("IdentifyEvent", "particule id gamma, no aligned detectors???");
+               d->Print();
+            }
+         } else {
+            Error("IdentifyEvent", "particule identified as gamma, has no CsI!!");
+            d->Print();
+         }
+      }
+   }
+
+   // perform secondary reconstruction in groups with detected gammas
+   int ngamG = gammaGroups.GetEntries();
+   if (ngamG) {
+      for (int i = 0; i < ngamG; i++) {
+         gIndra->AnalyseGroupAndReconstructEvent(this, (KVGroup*)gammaGroups.At(i));
+      }
+   }
+   if (GetMult() > mult) {
+      /*Info("IdentifyEvent", "Event#%d: Secondary reconstruction (gammas) -> %d new particles",
+         GetNumber(), GetMult()-mult);*/
+
+      // identify new particles generated in secondary reconstruction
+      KVReconstructedEvent::IdentifyEvent();
+      ResetGetNextParticle();
+
+      while ((d = GetNextParticle())) {
+         if (d->IsIdentified() && d->GetStatus() == KVReconstructedNucleus::kStatusStopFirstStage) {
+            d->SetIDCode(kIDCode5);   // Zmin
+         } else if (!d->IsIdentified()) {
+            d->SetIDCode(kIDCode14);
+         }
+      }
+      /*
+      for(int i=mult+1; i<=GetMult(); i++){
+         d = GetParticle(i);
+         if(d->IsIdentified())
+            printf("\t%2d: Ring %2d Module %2d Z=%2d  A=%3d  code=%d\n",i,d->GetRingNumber(),
+                  d->GetModuleNumber(),d->GetZ(),d->GetA(),d->GetCodes().GetVedaIDCode());
+         else
+            printf("\t%2d: Ring %2d Module %2d UNIDENTIFIED status=%d\n", i,d->GetRingNumber(),
+                  d->GetModuleNumber(), d->GetStatus());
+      }
+      */
+   }
 }
 
 void KVINDRAReconEvent::SecondaryIdentCalib()
 {
-	// Perform identifications and calibrations of particles not included
+   // Perform identifications and calibrations of particles not included
    // in first round (methods IdentifyEvent() and CalibrateEvent()).
    //
    // Here we treat particles with GetStatus()==KVReconstructedNucleus::kStatusOKafterSub
    // after subtracting the energy losses of all previously calibrated particles in group from the
    // measured energy losses in the detectors they crossed.
-   
-   if(!fHitGroups)
-   	fHitGroups = new KVUniqueNameList;
+
+   if (!fHitGroups)
+      fHitGroups = new KVUniqueNameList;
    else
-   	fHitGroups->Clear();
+      fHitGroups->Clear();
    // build list of hit groups
-   KVINDRAReconNuc*d;
-   while((d = GetNextParticle())) fHitGroups->Add(d->GetGroup());
-   
+   KVINDRAReconNuc* d;
+   while ((d = GetNextParticle())) fHitGroups->Add(d->GetGroup());
+
    //loop over hit groups
    TIter next_grp(fHitGroups);
    KVGroup* grp;
-   while( (grp = (KVGroup*)next_grp()) ){
-   	SecondaryAnalyseGroup(grp);
+   while ((grp = (KVGroup*)next_grp())) {
+      SecondaryAnalyseGroup(grp);
    }
 
-	// set "unidentified" code for any remaining unidentified particle	
-	ResetGetNextParticle();
-   while((d = GetNextParticle())){
-   	if(!d->IsIdentified()){
-         d->SetIDCode( kIDCode14 );
+   // set "unidentified" code for any remaining unidentified particle
+   ResetGetNextParticle();
+   while ((d = GetNextParticle())) {
+      if (!d->IsIdentified()) {
+         d->SetIDCode(kIDCode14);
       }
-	}
+   }
 }
 
 void KVINDRAReconEvent::SecondaryAnalyseGroup(KVGroup* grp)
 {
-	// Perform identifications and calibrations of particles not included
+   // Perform identifications and calibrations of particles not included
    // in first round (methods IdentifyEvent() and CalibrateEvent()).
    //
    // Here we treat particles with GetStatus()==KVReconstructedNucleus::kStatusOKafterSub
    // after subtracting the energy losses of all previously calibrated particles in group from the
    // measured energy losses in the detectors they crossed.
-   
+
    // loop over al identified & calibrated particles in group and subtract calculated
    // energy losses from all detectors
    KVINDRAReconNuc* nuc;
    TList sixparts;
    TIter parts(grp->GetParticles());
-   while( (nuc = (KVINDRAReconNuc*)parts()) ){
-   	if(nuc->IsIdentified() && nuc->IsCalibrated()){
-   		nuc->SubtractEnergyFromAllDetectors();
-        // reconstruct particles from pile-up in silicon detectors revealed by coherency CsIR/L - SiCsI
-        if(nuc->IsSiPileup() && nuc->GetSi()->GetEnergy()>0.1){
+   while ((nuc = (KVINDRAReconNuc*)parts())) {
+      if (nuc->IsIdentified() && nuc->IsCalibrated()) {
+         nuc->SubtractEnergyFromAllDetectors();
+         // reconstruct particles from pile-up in silicon detectors revealed by coherency CsIR/L - SiCsI
+         if (nuc->IsSiPileup() && nuc->GetSi()->GetEnergy() > 0.1) {
             KVINDRAReconNuc* SIX = AddParticle();
             SIX->Reconstruct(nuc->GetSi());
             sixparts.Add(SIX);
-        }
-        // reconstruct particles from pile-up in si75 detectors revealed by coherency
-        if(nuc->IsSi75Pileup()){
+         }
+         // reconstruct particles from pile-up in si75 detectors revealed by coherency
+         if (nuc->IsSi75Pileup()) {
             KVINDRAReconNuc* SIX = AddParticle();
             SIX->Reconstruct(nuc->GetSi75());
             sixparts.Add(SIX);
-        }
-        // reconstruct particles from pile-up in sili detectors revealed by coherency
-        if(nuc->IsSiLiPileup()){
+         }
+         // reconstruct particles from pile-up in sili detectors revealed by coherency
+         if (nuc->IsSiLiPileup()) {
             KVINDRAReconNuc* SIX = AddParticle();
             SIX->Reconstruct(nuc->GetSiLi());
             sixparts.Add(SIX);
-        }
+         }
 
-        // reconstruct particles from pile-up in ChIo detectors revealed by coherency CsIR/L - ChIoCsI
-        if(nuc->IsChIoPileup() && nuc->GetChIo()->GetEnergy()>1.0){
+         // reconstruct particles from pile-up in ChIo detectors revealed by coherency CsIR/L - ChIoCsI
+         if (nuc->IsChIoPileup() && nuc->GetChIo()->GetEnergy() > 1.0) {
             KVINDRAReconNuc* SIX = AddParticle();
             SIX->Reconstruct(nuc->GetChIo());
             sixparts.Add(SIX);
-        }
-    }
+         }
+      }
    }
    // reanalyse group
    KVReconstructedNucleus::AnalyseParticlesInGroup(grp);
-   
-   Int_t nident=0;//number of particles identified in each step
-   if(sixparts.GetEntries()){   // identify any particles added by coherency CsIR/L - SiCsI
-   	KVINDRAReconNuc* SIX;
-   	TIter nextsix(&sixparts);
-   	while( (SIX = (KVINDRAReconNuc*)nextsix()) ){
-   		if( SIX->GetStatus() == KVReconstructedNucleus::kStatusOK ){
-   			SIX->Identify();
-   			if(SIX->IsIdentified()) {
-   				nident++;
-   				if(SIX->GetCodes().TestIDCode( kIDCode5 )) SIX->SetIDCode( kIDCode7 );
-   				else SIX->SetIDCode( kIDCode6 );
-   				SIX->Calibrate();
-   				if(SIX->IsCalibrated()) SIX->SubtractEnergyFromAllDetectors();
-   			}
-   			else {
-                // failure of ChIo-Si identification: particle stopped in ChIo ?
-                // estimation of Z (minimum) from energy loss (if detector is calibrated)
-                UInt_t zmin = ((KVDetector*)SIX->GetDetectorList()->Last())->FindZmin(-1., SIX->GetMassFormula());
-                if( zmin ){
-                    SIX->SetZ( zmin );
-                    SIX->SetIsIdentified();
-                    SIX->SetIDCode( kIDCode7 );
-                    // "Identifying" telescope is taken from list of ID telescopes
-                    // to which stopping detector belongs
-                    SIX->SetIdentifyingTelescope( (KVIDTelescope*)SIX->GetStoppingDetector()->GetIDTelescopes()->Last() );
-                    SIX->Calibrate();
-                }
+
+   Int_t nident = 0; //number of particles identified in each step
+   if (sixparts.GetEntries()) { // identify any particles added by coherency CsIR/L - SiCsI
+      KVINDRAReconNuc* SIX;
+      TIter nextsix(&sixparts);
+      while ((SIX = (KVINDRAReconNuc*)nextsix())) {
+         if (SIX->GetStatus() == KVReconstructedNucleus::kStatusOK) {
+            SIX->Identify();
+            if (SIX->IsIdentified()) {
+               nident++;
+               if (SIX->GetCodes().TestIDCode(kIDCode5)) SIX->SetIDCode(kIDCode7);
+               else SIX->SetIDCode(kIDCode6);
+               SIX->Calibrate();
+               if (SIX->IsCalibrated()) SIX->SubtractEnergyFromAllDetectors();
+            } else {
+               // failure of ChIo-Si identification: particle stopped in ChIo ?
+               // estimation of Z (minimum) from energy loss (if detector is calibrated)
+               UInt_t zmin = ((KVDetector*)SIX->GetDetectorList()->Last())->FindZmin(-1., SIX->GetMassFormula());
+               if (zmin) {
+                  SIX->SetZ(zmin);
+                  SIX->SetIsIdentified();
+                  SIX->SetIDCode(kIDCode7);
+                  // "Identifying" telescope is taken from list of ID telescopes
+                  // to which stopping detector belongs
+                  SIX->SetIdentifyingTelescope((KVIDTelescope*)SIX->GetStoppingDetector()->GetIDTelescopes()->Last());
+                  SIX->Calibrate();
+               }
             }
-   		}
-   	}
+         }
+      }
    }
-   if(nident){ // newly-identified particles may change status of others in group
-   	// reanalyse group
-        KVReconstructedNucleus::AnalyseParticlesInGroup(grp);
-   	nident=0;
+   if (nident) { // newly-identified particles may change status of others in group
+      // reanalyse group
+      KVReconstructedNucleus::AnalyseParticlesInGroup(grp);
+      nident = 0;
    }
-   
+
    TIter parts2(grp->GetParticles()); // list may have changed if we have added particles
    // identify & calibrate any remaining particles with status=KVReconstructedNucleus::kStatusOK
-   while( (nuc = (KVINDRAReconNuc*)parts2()) ){
-        if(!nuc->IsIdentified() && nuc->GetStatus()==KVReconstructedNucleus::kStatusOK){
-   		nuc->ResetNSegDet();
-   		nuc->Identify();
-   		if(nuc->IsIdentified()) {
-   			nident++;
-   			nuc->Calibrate();
-   			if(nuc->IsCalibrated()) nuc->SubtractEnergyFromAllDetectors();
-   		}
-   	}
+   while ((nuc = (KVINDRAReconNuc*)parts2())) {
+      if (!nuc->IsIdentified() && nuc->GetStatus() == KVReconstructedNucleus::kStatusOK) {
+         nuc->ResetNSegDet();
+         nuc->Identify();
+         if (nuc->IsIdentified()) {
+            nident++;
+            nuc->Calibrate();
+            if (nuc->IsCalibrated()) nuc->SubtractEnergyFromAllDetectors();
+         }
+      }
    }
-   if(nident){ // newly-identified particles may change status of others in group
-   	// reanalyse group
-        KVReconstructedNucleus::AnalyseParticlesInGroup(grp);
-   	nident=0;
+   if (nident) { // newly-identified particles may change status of others in group
+      // reanalyse group
+      KVReconstructedNucleus::AnalyseParticlesInGroup(grp);
+      nident = 0;
    }
-   
+
    // any kStatusOKafterShare particles ?
    TList shareChIo;
    parts2.Reset();
-   while( (nuc = (KVINDRAReconNuc*)parts2()) ){
-   	if(!nuc->IsIdentified() && nuc->GetStatus()==KVReconstructedNucleus::kStatusOKafterShare){
-   		shareChIo.Add(nuc);
-   	}
+   while ((nuc = (KVINDRAReconNuc*)parts2())) {
+      if (!nuc->IsIdentified() && nuc->GetStatus() == KVReconstructedNucleus::kStatusOKafterShare) {
+         shareChIo.Add(nuc);
+      }
    }
    Int_t nshares = shareChIo.GetEntries();
-   if(nshares){
-   	KVChIo* theChIo = ((KVINDRAReconNuc*)shareChIo.At(0))->GetChIo();
-   	if(theChIo && nshares>1){
-   		// divide chio energy equally
-   		Double_t Eshare = theChIo->GetEnergyLoss()/nshares;
-   		theChIo->SetEnergyLoss(Eshare);
-   		// modify PG and GG of ChIo according to new energy loss
-   		Double_t volts = theChIo->GetVoltsFromEnergy(Eshare);
-   		Double_t GG = theChIo->GetCanalGGFromVolts(volts);	
-   		Double_t PG = theChIo->GetCanalPGFromVolts(volts);
-			theChIo->GetACQParam("PG")->SetData(TMath::Min(4095,(Int_t)PG));
-			theChIo->GetACQParam("GG")->SetData(TMath::Min(4095,(Int_t)GG));
-		}
-   	// now try to identify
-   	TIter nextSh(&shareChIo);
-   	while( (nuc = (KVINDRAReconNuc*)nextSh()) ){
-   		nuc->SetNSegDet(10);
-   		nuc->Identify();
-   		if(nuc->IsIdentified()) {
-   			nuc->SetIDCode( kIDCode8 );
-   			nuc->Calibrate();
-   		}
-   	}
+   if (nshares) {
+      KVChIo* theChIo = ((KVINDRAReconNuc*)shareChIo.At(0))->GetChIo();
+      if (theChIo && nshares > 1) {
+         // divide chio energy equally
+         Double_t Eshare = theChIo->GetEnergyLoss() / nshares;
+         theChIo->SetEnergyLoss(Eshare);
+         // modify PG and GG of ChIo according to new energy loss
+         Double_t volts = theChIo->GetVoltsFromEnergy(Eshare);
+         Double_t GG = theChIo->GetCanalGGFromVolts(volts);
+         Double_t PG = theChIo->GetCanalPGFromVolts(volts);
+         theChIo->GetACQParam("PG")->SetData(TMath::Min(4095, (Int_t)PG));
+         theChIo->GetACQParam("GG")->SetData(TMath::Min(4095, (Int_t)GG));
+      }
+      // now try to identify
+      TIter nextSh(&shareChIo);
+      while ((nuc = (KVINDRAReconNuc*)nextSh())) {
+         nuc->SetNSegDet(10);
+         nuc->Identify();
+         if (nuc->IsIdentified()) {
+            nuc->SetIDCode(kIDCode8);
+            nuc->Calibrate();
+         }
+      }
    }
-   
+
    // any remaining stopped in first stage particles ?
    parts2.Reset();
-   while( (nuc = (KVINDRAReconNuc*)parts2()) ){
-       if(!nuc->IsIdentified() && nuc->GetStatus()==KVReconstructedNucleus::kStatusStopFirstStage){
-           // estimation of Z (minimum) from energy loss (if detector is calibrated)
-           UInt_t zmin = ((KVDetector*)nuc->GetDetectorList()->Last())->FindZmin(-1., nuc->GetMassFormula());
-           if( zmin ){
-               nuc->SetZ( zmin );
-               nuc->SetIsIdentified();
-               nuc->SetIDCode( kIDCode5 );
-               // "Identifying" telescope is taken from list of ID telescopes
-               // to which stopping detector belongs
-               nuc->SetIdentifyingTelescope( (KVIDTelescope*)nuc->GetStoppingDetector()->GetIDTelescopes()->Last() );
-               nuc->Calibrate();
-           }
-       }
+   while ((nuc = (KVINDRAReconNuc*)parts2())) {
+      if (!nuc->IsIdentified() && nuc->GetStatus() == KVReconstructedNucleus::kStatusStopFirstStage) {
+         // estimation of Z (minimum) from energy loss (if detector is calibrated)
+         UInt_t zmin = ((KVDetector*)nuc->GetDetectorList()->Last())->FindZmin(-1., nuc->GetMassFormula());
+         if (zmin) {
+            nuc->SetZ(zmin);
+            nuc->SetIsIdentified();
+            nuc->SetIDCode(kIDCode5);
+            // "Identifying" telescope is taken from list of ID telescopes
+            // to which stopping detector belongs
+            nuc->SetIdentifyingTelescope((KVIDTelescope*)nuc->GetStoppingDetector()->GetIDTelescopes()->Last());
+            nuc->Calibrate();
+         }
+      }
    }
 }
 

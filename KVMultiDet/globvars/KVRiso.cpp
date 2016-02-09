@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 17/02/2004:
 // Creation d'une classe Variable Globale.
@@ -14,7 +14,7 @@ ClassImp(KVRiso)
 //   Global variable returning the Riso variable. It is defined as follow:
 //
 //           Etrans
-//   Riso= ---------- 
+//   Riso= ----------
 //           2*Epar
 //
 //
@@ -84,12 +84,12 @@ void KVRiso::init_KVRiso(void)
 }
 
 //_________________________________________________________________
-KVRiso::KVRiso(void):KVVarGlob()
+KVRiso::KVRiso(void): KVVarGlob()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    init_KVRiso();
    sprintf(nom, "KVRiso_%d", nb_crea);
@@ -102,7 +102,7 @@ KVRiso::KVRiso(void):KVVarGlob()
 }
 
 //_________________________________________________________________
-KVRiso::KVRiso(Char_t * nom):KVVarGlob(nom)
+KVRiso::KVRiso(Char_t* nom): KVVarGlob(nom)
 {
 //
 // Constructeur avec un nom
@@ -114,16 +114,16 @@ KVRiso::KVRiso(Char_t * nom):KVVarGlob(nom)
 }
 
 //_________________________________________________________________
-KVRiso::KVRiso(const KVRiso & a):KVVarGlob()
+KVRiso::KVRiso(const KVRiso& a): KVVarGlob()
 {
-// 
+//
 // Contructeur par Copy
 //
    init_KVRiso();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVRiso &) a).Copy(*this);
+   ((KVRiso&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVRiso
    cout << nb << " crees...(Copy) " << endl;
@@ -133,7 +133,7 @@ KVRiso::KVRiso(const KVRiso & a):KVVarGlob()
 //_________________________________________________________________
 KVRiso::~KVRiso(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVRiso
@@ -146,9 +146,9 @@ KVRiso::~KVRiso(void)
 
 //_________________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVRiso::Copy(TObject & a) const
+void KVRiso::Copy(TObject& a) const
 #else
-void KVRiso::Copy(TObject & a)
+void KVRiso::Copy(TObject& a)
 #endif
 {
 // Methode de Copy
@@ -158,16 +158,16 @@ void KVRiso::Copy(TObject & a)
    cout << "Copy de " << GetName() << "..." << endl;
 #endif
    KVVarGlob::Copy(a);
-   ((KVRiso &) a).Riso = Riso;
-   ((KVRiso &) a).Epar = Epar;
-   ((KVRiso &) a).Etrans = Etrans;
+   ((KVRiso&) a).Riso = Riso;
+   ((KVRiso&) a).Epar = Epar;
+   ((KVRiso&) a).Etrans = Etrans;
 #ifdef DEBUG_KVRiso
    cout << "Nom de la Copy (resultat) : " << a.GetName() << endl;
 #endif
 }
 
 //_________________________________________________________________
-KVRiso & KVRiso::operator =(const KVRiso & a)
+KVRiso& KVRiso::operator =(const KVRiso& a)
 {
 //
 // Operateur =
@@ -178,7 +178,7 @@ KVRiso & KVRiso::operator =(const KVRiso & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVRiso &) a).Copy(*this);
+   ((KVRiso&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVRiso
    cout << "Nom de la Copy par egalite: " << GetName() << endl;
@@ -232,7 +232,7 @@ Double_t KVRiso::getvalue_void(void) const
    // Retourne la valeur de Riso
 
    //calculate Riso if not already calculated
-   const_cast < KVRiso * >(this)->CalculateRatio();
+   const_cast < KVRiso* >(this)->CalculateRatio();
    return Riso;
 }
 
@@ -249,26 +249,26 @@ Double_t KVRiso::getvalue_int(Int_t i)
 //  2                   Sum of transverse kinetic energies
 //
    switch (i) {
-   case 0:
-      return getvalue_void();
-      break;
-   case 1:
-      return Epar;
-      break;
-   case 2:
-      return Etrans;
-      break;
-   default:
-      Warning("GetValue(Int_t i)", "Index not valid. Riso returned.");
-      return getvalue_void();
-      break;
+      case 0:
+         return getvalue_void();
+         break;
+      case 1:
+         return Epar;
+         break;
+      case 2:
+         return Etrans;
+         break;
+      default:
+         Warning("GetValue(Int_t i)", "Index not valid. Riso returned.");
+         return getvalue_void();
+         break;
    }
 }
 
 //_________________________________________________________________
-Double_t *KVRiso::GetValuePtr(void)
+Double_t* KVRiso::GetValuePtr(void)
 {
-// On retourne un tableau de valeurs. il est organise comme suit 
+// On retourne un tableau de valeurs. il est organise comme suit
 //
 //  Index   Meaning
 //----------------------------------------
@@ -284,7 +284,7 @@ Double_t *KVRiso::GetValuePtr(void)
 }
 
 //_________________________________________________________________
-void KVRiso::Fill(KVNucleus * c)
+void KVRiso::Fill(KVNucleus* c)
 {
 //
 // Routine de remplissage

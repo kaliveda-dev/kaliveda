@@ -25,7 +25,7 @@ $Id: KVTestEvent.h,v 1.8 2006/10/19 14:32:43 franklan Exp $
 class TRandom3;
 class KVNucleus;
 
-class KVTestEvent:public KVEvent {
+class KVTestEvent: public KVEvent {
 
    UInt_t fUpper_Limit_Z;       //!max Z of nuclei
    UInt_t fLower_Limit_Z;       //! min Z of nuclei
@@ -39,22 +39,23 @@ class KVTestEvent:public KVEvent {
    Char_t fOption[12];          //![12] option string
    UInt_t fGenMult;             //!multiplicity of nuclei to generate
 
- public:
+public:
 
-    KVTestEvent();
-    virtual ~ KVTestEvent();
+   KVTestEvent();
+   virtual ~ KVTestEvent();
    void init();
-    KVTestEvent(UInt_t mult, Option_t * t = "isotropic");
+   KVTestEvent(UInt_t mult, Option_t* t = "isotropic");
 
    void SetZRange(UInt_t zlo, UInt_t zhi);
    void SetERange(Float_t elo, Float_t ehi);
    void SetERangeAMeV(Float_t elo, Float_t ehi);
    void SetThetaRange(Float_t thmin, Float_t thmax);
    void SetPhiRange(Float_t phmin, Float_t phmax);
-   void SetMult(UInt_t m) {
+   void SetMult(UInt_t m)
+   {
       fGenMult = m;
    } void Generate();
-   virtual void Print(Option_t * t = "") const;
+   virtual void Print(Option_t* t = "") const;
 
    ClassDef(KVTestEvent, 1)     //A simple event generator to test charged particle array response
 };

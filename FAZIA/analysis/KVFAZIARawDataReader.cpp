@@ -27,7 +27,7 @@
 
 ClassImp(KVFAZIARawDataReader)
 
-void KVFAZIARawDataReader::Begin(TTree * /*tree*/)
+void KVFAZIARawDataReader::Begin(TTree* /*tree*/)
 {
    // The Begin() function is called at the start of the query.
    // When running with PROOF Begin() is only called on the client.
@@ -37,7 +37,7 @@ void KVFAZIARawDataReader::Begin(TTree * /*tree*/)
 
 }
 
-void KVFAZIARawDataReader::SlaveBegin(TTree * /*tree*/)
+void KVFAZIARawDataReader::SlaveBegin(TTree* /*tree*/)
 {
    // The SlaveBegin() function is called after the Begin() function.
    // When running with PROOF SlaveBegin() is called on each slave server.

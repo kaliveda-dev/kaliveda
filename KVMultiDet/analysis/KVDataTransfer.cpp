@@ -20,19 +20,19 @@ $Date: 2007/05/31 09:59:22 $
 ClassImp(KVDataTransfer)
 ////////////////////////////////////////////////////////////////////////////////
 // Transfers data between data repositories
-// 
+//
 // If the user has defined two or more repositories in her $HOME/.kvrootrc file,
 // e.g. as in the example #3 given in $KVROOT/KVFiles/.kvrootrc:
-// 
+//
 //    #Case 3: user has data files on his machine or on a locally-mounted disk, and can access
 //    #a remote data repository using xrootd via an SSH tunnel on port 10000 (the example given
 //    #is for the xrootd server at ccali centre de calcul).
-// 
+//
 //    #definition of local repository
 //    DataRepository: default
 //    default.DataRepository.Type: local
 //    default.DataRepository.RootDir: $(HOME)/Data
-// 
+//
 //    #definition of remote repository
 //    +DataRepository: ccali
 //    ccali.DataRepository.Type: remote
@@ -46,13 +46,13 @@ ClassImp(KVDataTransfer)
 //    ccali.DataRepository.FileTransfer.server:    ccbbftp.in2p3.fr
 //    #if your login name is not the same as for ccali, give it here
 //    ccali.DataRepository.FileTransfer.user:
-// 
+//
 // then it is possible to transfer files from one to the other by running one of the following
 // commands on the local machine:
-// 
+//
 //    KVDataTransfer::NewTransfer("ccali", "default")->Run() // transfer from ccali to local machine
 //    KVDataTransfer::NewTransfer("default", "ccali")->Run() // transfer from local machine to ccali
-//    
+//
 // The same menu-driven approach as for submitting analysis tasks is used to
 // allow the user to choose among the available datasets, systems and runs to
 // transfer. The transferred files are copied in to the target repository, creating any
@@ -73,7 +73,7 @@ ClassImp(KVDataTransfer)
 //
 //    ccali.DataRepository.FileTransfer.type:    c:\cygwin\bin\bbftp.exe
 ////////////////////////////////////////////////////////////////////////////////
-    KVDataTransfer::KVDataTransfer()
+KVDataTransfer::KVDataTransfer()
 {
    //Default constructor.
    //Use KVDataTransfer::NewTransfer to create a new data transfer object with the correct
@@ -91,8 +91,8 @@ KVDataTransfer::~KVDataTransfer()
 
 //_________________________________________________________________
 
-KVDataTransfer *KVDataTransfer::NewTransfer(const Char_t * source_rep,
-                                            const Char_t * target_rep)
+KVDataTransfer* KVDataTransfer::NewTransfer(const Char_t* source_rep,
+      const Char_t* target_rep)
 {
    //Creates a new data transfer object to transfer files between the two named data repositories.
    //The type of the created object depends on the values of the environment variables
@@ -112,43 +112,43 @@ KVDataTransfer *KVDataTransfer::NewTransfer(const Char_t * source_rep,
    // +Plugin.KVDataTransfer:   bbftp    KVDataTransferBBFTP   KVMultiDet   "KVDataTransferBBFTP()"
    // +Plugin.KVDataTransfer:   xrd    KVDataTransferXRD   KVMultiDet   "KVDataTransferXRD()"
 
-   KVDataRepository *SR =
-       gDataRepositoryManager->GetRepository(source_rep);
+   KVDataRepository* SR =
+      gDataRepositoryManager->GetRepository(source_rep);
    if (!SR) {
       ::Error("KVDataTransfer::NewTransfer",
-            "Unknown source data repository: %s", source_rep);
+              "Unknown source data repository: %s", source_rep);
       return 0;
    }
-   KVDataRepository *TR =
-       gDataRepositoryManager->GetRepository(target_rep);
+   KVDataRepository* TR =
+      gDataRepositoryManager->GetRepository(target_rep);
    if (!TR) {
       ::Error("KVDataTransfer::NewTransfer",
-            "Unknown target data repository: %s", target_rep);
+              "Unknown target data repository: %s", target_rep);
       return 0;
    }
    TString uri = "sftp";        //default plugin
    //if either one has transfer type 'bbftp'...
    if (!strcmp(SR->GetFileTransferType(), "bbftp")
-       || !strcmp(TR->GetFileTransferType(), "bbftp"))
+         || !strcmp(TR->GetFileTransferType(), "bbftp"))
       uri = "bbftp";
    //if source repository has transfer type 'xrd'...
    else if (!strcmp(SR->GetFileTransferType(), "xrd"))
       uri = "xrd";
    TString transfer_exec = SR->GetFileTransferExec();
-   if(!strcmp(TR->GetFileTransferType(), "bbftp")) transfer_exec = TR->GetFileTransferExec();
+   if (!strcmp(TR->GetFileTransferType(), "bbftp")) transfer_exec = TR->GetFileTransferExec();
    //if transfer_exec=="" then we cannot perform the transfer
-   if(transfer_exec==""){
+   if (transfer_exec == "") {
       ::Error("KVDataTransfer::NewTransfer",
-            "No file transfer executable to perform transfer");
+              "No file transfer executable to perform transfer");
       return 0;
    }
 
    //check and load plugin library
-   TPluginHandler *ph;
+   TPluginHandler* ph;
    if (!(ph = KVBase::LoadPlugin("KVDataTransfer", uri)))
       return 0;
 
-   KVDataTransfer *tran = (KVDataTransfer *) ph->ExecPlugin(0);
+   KVDataTransfer* tran = (KVDataTransfer*) ph->ExecPlugin(0);
    //set target and source repositories
    tran->fSourceRep = SR;
    tran->fTargetRep = TR;
@@ -178,7 +178,7 @@ void KVDataTransfer::Run()
    //make 'source' repository the 'active' repository
    fSourceRep->cd();
 
-   fMenus=kTRUE;
+   fMenus = kTRUE;
    fQuit = kFALSE;
    fChoozDataSet = kTRUE;
    fChoozSystem = kFALSE;
@@ -245,14 +245,14 @@ void KVDataTransfer::TransferRuns()
    ExecuteCommand();
 
    //delete temporary command file if present
-   if(fCmdFile!="") gSystem->Unlink(fCmdFile.Data());
+   if (fCmdFile != "") gSystem->Unlink(fCmdFile.Data());
 
    //update available run list for target repository
    fTargetRep->GetDataSetManager()->GetDataSet(fDataSet->GetName())->
-       UpdateAvailableRuns(fDataType.Data());
-   
+   UpdateAvailableRuns(fDataType.Data());
+
    //force user to choose new system
-   fChoozSystem=kTRUE;
+   fChoozSystem = kTRUE;
 }
 
 //_________________________________________________________________
@@ -265,13 +265,13 @@ void KVDataTransfer::CheckTargetRepository()
 
    Bool_t update = kFALSE;
    if (!fTargetRep->GetDataSetManager()->GetDataSet(fDataSet->GetName())->
-       IsAvailable()) {
+         IsAvailable()) {
       //add dataset directory to target repository
       fTargetRep->MakeSubdirectory(fDataSet);
       update = kTRUE;
    }
    if (!fTargetRep->GetDataSetManager()->GetDataSet(fDataSet->GetName())->
-       HasDataType(fDataType.Data())) {
+         HasDataType(fDataType.Data())) {
       //add subdirectory for new data type to dataset directory
       fTargetRep->MakeSubdirectory(fDataSet,
                                    fDataType.Data());
@@ -292,14 +292,14 @@ void KVDataTransfer::init()
 
 //_________________________________________________________________
 
-void KVDataTransfer::SetDataSet(const Char_t * name)
+void KVDataTransfer::SetDataSet(const Char_t* name)
 {
    //Set dataset to be analysed.
    //If 'name' is not the name of a valid and available dataset
    //in the 'source' data repository an error message is printed.
 
    fDataSet = 0;
-   KVDataSet *ds = fSourceRep->GetDataSetManager()->GetDataSet(name);
+   KVDataSet* ds = fSourceRep->GetDataSetManager()->GetDataSet(name);
    if (!ds) {
       Error("SetDataSet", "Unknown dataset %s", name);
    } else {
@@ -309,7 +309,7 @@ void KVDataTransfer::SetDataSet(const Char_t * name)
 
 //_________________________________________________________________
 
-void KVDataTransfer::SetDataSet(KVDataSet * ds)
+void KVDataTransfer::SetDataSet(KVDataSet* ds)
 {
    //Set dataset to be used for transfer.
    //If the chosen dataset is not available, an error message is printed
@@ -326,7 +326,7 @@ void KVDataTransfer::SetDataSet(KVDataSet * ds)
    //check repository
    if (ds->GetRepository() != fSourceRep) {
       fDataSet =
-          fSourceRep->GetDataSetManager()->GetDataSet(ds->GetName());
+         fSourceRep->GetDataSetManager()->GetDataSet(ds->GetName());
    }
    //check availablility
    if (!ds->IsAvailable()) {

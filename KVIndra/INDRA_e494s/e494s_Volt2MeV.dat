@@ -2,13 +2,16 @@
 # Chio: Paola calib from run 628  28/11/2012.
 # Chio 10-16 still to be done
 #In all cases, E[MeV] = a0 + a1*V[Volts]. The format of the file is:
+#  Det_Name     a0      a1      chi-square
+# chi-square given is for the linear fit to E vs. V.
 # etalon detectors added - MFR 23/11/2012
 # Si75 : utilisation de la source Am/Cm/Cf
 # SiLi runs p+C Brho=0.67
 # NB il semble que le SiLi17 soit equipe d'un preampli pour Si 300 mum
-#  Det_Name     a0      a1      chi-square
-#chi-square given is for the linear fit to E vs. V.
-
+# MFR 7/11/2014 : les lignes correspondant aux detecteurs Si 0410 0615 0807 0923
+# sont commentées. Sinon malgré les valeurs nulles KV retourne IsCalibrated()
+# puis un ECode=15, et on perd les particules identifiées dans le CsI  
+# Je commente aussi Si75_12 SI75_16 et SiLi_12
 Run Range : 1 650
 SI_0401   0            443.227      0.11561     
 SI_0402   0   	       442.054      0.146877	  
@@ -19,7 +22,7 @@ SI_0406   0   	       444.516      0.222996
 SI_0407   0   	       443.549      0.11947	  
 SI_0408   0   	       443.966      0.135171	  
 SI_0409   0   	       442.667      0.222668	  
-SI_0410   0   	       0	    0		  
+#SI_0410   0   	       0	    0		  
 SI_0411   0   	       444.864      0.106093	  
 SI_0412   0   	       444.374      0.0506944	  
 SI_0413   0   	       447.822      0.150423	  
@@ -72,7 +75,7 @@ SI_0611   0            201.728      0.597992
 SI_0612   0            204.153      0.452756	  
 SI_0613   0            207.512      0.532018	  
 SI_0614   0            206.486      0.464281	  
-SI_0615   0   	       0	    0		  
+#SI_0615   0   	       0	    0		  
 SI_0616   0            209.166      0.507371	  
 SI_0617   0            203.893      0.507512    
 SI_0618   0            203.854      0.250453	  
@@ -112,7 +115,7 @@ SI_0803   0            450.112      0.000486278
 SI_0804   0            454.19       0.0602311	  
 SI_0805   0            451.469      0.0376731	  
 SI_0806   0            453.515      0.257117	  
-SI_0807   0   	       0	    0		  
+#SI_0807   0   	       0	    0		  
 SI_0808   0   	       478.373      0.0654789	  
 SI_0809   0            455.053      0.261974	  
 SI_0810   0   	       461.7        0.0665301	  
@@ -152,19 +155,19 @@ SI_0919   0   	       482.24       1.14646
 SI_0920   0            449.503      0.161434	  
 SI_0921   0            453.996      2.79364	  
 SI_0922   0            454.45       12.2098	  
-SI_0923   0   	       0	    0		  
+#SI_0923   0   	       0	    0		  
 SI_0924   0   	       460.676      0.0318294   
 SI75_10   0.0000e+00   1.0587e+02   0.
 SI75_11   0.0000e+00   1.0229e+02   0.
-SI75_12   0.0000e+00   0.           0.
+#SI75_12   0.0000e+00   0.           0.
 SI75_13   0.0000e+00   1.0791e+02   0.
 SI75_14   0.0000e+00   1.0450e+02   0.
 SI75_15   0.0000e+00   1.0283e+02   0.
-SI75_16   0.0000e+00   0.           0.
+#SI75_16   0.0000e+00   0.           0.
 SI75_17   0.0000e+00   1.0504e+02   0.
 SILI_10   0.0000e+00   0.9694e+02   0.
 SILI_11   0.0000e+00   0.9826e+02   0.
-SILI_12   0.0000e+00   0.           0.
+#SILI_12   0.0000e+00   0.           0.
 SILI_13   0.0000e+00   0.9119e+02   0.
 SILI_14   0.0000e+00   0.9660e+02   0.
 SILI_15   0.0000e+00   0.9908e+02   0.

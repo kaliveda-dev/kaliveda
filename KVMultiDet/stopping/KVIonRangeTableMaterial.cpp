@@ -23,12 +23,12 @@ ClassImp(KVIonRangeTableMaterial)
 ////////////////////////////////////////////////////////////////////////////////
 
 KVIonRangeTableMaterial::KVIonRangeTableMaterial()
-   : KVBase(), 
-   fTable(0),
-   fState("unknown"),
-   fComposition(0),
-   fCompound(kFALSE),
-   fMixture(kFALSE),
+   : KVBase(),
+     fTable(0),
+     fState("unknown"),
+     fComposition(0),
+     fCompound(kFALSE),
+     fMixture(kFALSE),
      fDens(0.),
      fZmat(0),
      fAmat(0),
@@ -41,14 +41,14 @@ KVIonRangeTableMaterial::KVIonRangeTableMaterial()
    // Default constructor
 }
 
-KVIonRangeTableMaterial::KVIonRangeTableMaterial(const KVIonRangeTable*tab,const Char_t* name, const Char_t* symbol,
+KVIonRangeTableMaterial::KVIonRangeTableMaterial(const KVIonRangeTable* tab, const Char_t* name, const Char_t* symbol,
       const Char_t* state, Double_t density, Double_t Z, Double_t A)
-   : KVBase(name,symbol),
-      fTable(tab),
-      fState(state),
-      fComposition(0),
-   fCompound(kFALSE),
-   fMixture(kFALSE),
+   : KVBase(name, symbol),
+     fTable(tab),
+     fState(state),
+     fComposition(0),
+     fCompound(kFALSE),
+     fMixture(kFALSE),
      fDens(density),
      fZmat(Z),
      fAmat(A),
@@ -68,34 +68,33 @@ KVIonRangeTableMaterial::KVIonRangeTableMaterial(const KVIonRangeTable*tab,const
    // Densities of atomic elements are known (gNDTManager->GetValue(z, a, "ElementDensity")), they
    // will be used automatically, unless a different value is given here.
    // Densities of gases are calculated from the molar weight, temperature and pressure.
-   
-   if(Z>0 && density<0){
-      KVElementDensity*ed = (KVElementDensity*)gNDTManager->GetData(Z,A,"ElementDensity");
-      if(!ed){
-         Warning("KVIonRangeTableMaterial", 
-               "No element found in density table with Z=%f, density unknown",Z);
-      }
-      else
+
+   if (Z > 0 && density < 0) {
+      KVElementDensity* ed = (KVElementDensity*)gNDTManager->GetData(Z, A, "ElementDensity");
+      if (!ed) {
+         Warning("KVIonRangeTableMaterial",
+                 "No element found in density table with Z=%f, density unknown", Z);
+      } else
          fDens = ed->GetValue();
    }
 }
 
 //________________________________________________________________
 
-KVIonRangeTableMaterial::KVIonRangeTableMaterial (const KVIonRangeTableMaterial& obj)  : KVBase(),
+KVIonRangeTableMaterial::KVIonRangeTableMaterial(const KVIonRangeTableMaterial& obj)  : KVBase(),
    fTable(0),
-      fState("unknown"),
+   fState("unknown"),
    fComposition(0),
    fCompound(kFALSE),
    fMixture(kFALSE),
-     fDens(0.),
-     fZmat(0),
-     fAmat(0),
-     fMoleWt(0),
-     fDeltaE(0),
-     fEres(0),
-     fRange(0),
-     fStopping(0)      
+   fDens(0.),
+   fZmat(0),
+   fAmat(0),
+   fMoleWt(0),
+   fDeltaE(0),
+   fEres(0),
+   fRange(0),
+   fStopping(0)
 {
    // Copy constructor
    // This ctor is used to make a copy of an existing object (for example
@@ -118,7 +117,7 @@ KVIonRangeTableMaterial::~KVIonRangeTableMaterial()
 
 //________________________________________________________________
 
-void KVIonRangeTableMaterial::Copy (TObject& obj) const
+void KVIonRangeTableMaterial::Copy(TObject& obj) const
 {
    // This method copies the current state of 'this' object into 'obj'
    // You should add here any member variables, for example:
@@ -137,15 +136,16 @@ void KVIonRangeTableMaterial::AddCompoundElement(Int_t Z, Int_t A, Int_t Natoms)
    // Example: to define C3F8 gas:
    //      toto.AddCompoundElement(6,12,3);
    //      toto.AddCompoundElement(9,19,8);
-   
-   fCompound=kTRUE;
-   KVNucleus n(Z,A);
+
+   fCompound = kTRUE;
+   KVNucleus n(Z, A);
    Int_t nel = 0;
-   if(!fComposition) {fComposition=new KVList;}
-   else nel=fComposition->GetEntries();
-   KVNameValueList* l = new KVNameValueList(Form("Compound element %d",nel+1));
-   l->SetValue("Z",Z);
-   l->SetValue("A",A);
+   if (!fComposition) {
+      fComposition = new KVList;
+   } else nel = fComposition->GetEntries();
+   KVNameValueList* l = new KVNameValueList(Form("Compound element %d", nel + 1));
+   l->SetValue("Z", Z);
+   l->SetValue("A", A);
    l->SetValue("Ar", n.GetAtomicMass());
    l->SetValue("Natoms", Natoms);
    l->SetValue("Weight", Natoms);
@@ -160,20 +160,20 @@ void KVIonRangeTableMaterial::AddMixtureElement(Int_t Z, Int_t A, Int_t Natoms, 
    //      toto.AddMixtureElement(7,14, 2, 0.78);
    //      toto.AddMixtureElement(8,16, 2, 0.21);
    //      toto.AddMixtureElement(18, 40, 2, 0.01);
-   
-   fMixture=kTRUE;
-   KVNucleus n(Z,A);
+
+   fMixture = kTRUE;
+   KVNucleus n(Z, A);
    Int_t nel = 0;
-   if(!fComposition) fComposition=new KVList;
-   else nel=fComposition->GetEntries();
-   KVNameValueList* l = new KVNameValueList(Form("Mixture element %d",nel+1));
-   l->SetValue("Z",Z);
-   l->SetValue("A",A);
+   if (!fComposition) fComposition = new KVList;
+   else nel = fComposition->GetEntries();
+   KVNameValueList* l = new KVNameValueList(Form("Mixture element %d", nel + 1));
+   l->SetValue("Z", Z);
+   l->SetValue("A", A);
    l->SetValue("Ar", n.GetAtomicMass());
    l->SetValue("Natoms", Natoms);
    l->SetValue("Proportion", Proportion);
-   l->SetValue("Weight", Proportion*Natoms);
-   l->SetValue("Ar*Weight", n.GetAtomicMass()*Proportion*Natoms);
+   l->SetValue("Weight", Proportion * Natoms);
+   l->SetValue("Ar*Weight", n.GetAtomicMass()*Proportion * Natoms);
    fComposition->Add(l);
 }
 
@@ -182,40 +182,38 @@ void KVIonRangeTableMaterial::Initialize()
    // Correctly initialize material ready for use
    // For compound or mixed materials, calculate normalised weights of components,
    // effective Z and A, and molar weight of substance
-   
-   fMoleWt=0.;
-   if(IsCompound()||IsMixture()){
+
+   fMoleWt = 0.;
+   if (IsCompound() || IsMixture()) {
       // mixture or compound
       // calculate molar weight and effective Z & A
-      fZmat=fAmat=0;
+      fZmat = fAmat = 0;
       TIter next(fComposition);
       KVNameValueList* nvl;
-      Double_t totW=0;
-      while( (nvl = (KVNameValueList*)next()) ){
+      Double_t totW = 0;
+      while ((nvl = (KVNameValueList*)next())) {
          Double_t arw = nvl->GetDoubleValue("Ar*Weight");
          Double_t poid = nvl->GetDoubleValue("Weight");
-         fMoleWt+=arw;
-         totW+=poid;
-         fZmat+=poid*nvl->GetIntValue("Z");
-         fAmat+=poid*nvl->GetIntValue("A");
+         fMoleWt += arw;
+         totW += poid;
+         fZmat += poid * nvl->GetIntValue("Z");
+         fAmat += poid * nvl->GetIntValue("A");
       }
-      fZmat/=totW;
-      fAmat/=totW;
+      fZmat /= totW;
+      fAmat /= totW;
       next.Reset();
-      while( (nvl = (KVNameValueList*)next()) ){
+      while ((nvl = (KVNameValueList*)next())) {
          Double_t prop = nvl->GetDoubleValue("Weight");
-         nvl->SetValue("NormWeight",prop/totW);
+         nvl->SetValue("NormWeight", prop / totW);
       }
-   }
-   else
-   {
+   } else {
       // isotopically-pure elemental material
       // get mass of 1 mole of element
-      KVNucleus n(fZmat,fAmat);
-      fMoleWt=n.GetAtomicMass();
+      KVNucleus n(fZmat, fAmat);
+      fMoleWt = n.GetAtomicMass();
    }
 }
-   
+
 const KVIonRangeTable* KVIonRangeTableMaterial::GetTable() const
 {
    return fTable;
@@ -224,26 +222,26 @@ const KVIonRangeTable* KVIonRangeTableMaterial::GetTable() const
 void KVIonRangeTableMaterial::ls(Option_t*) const
 {
    printf("Material : %s (%s)   State : %s\n",
-         GetName(), GetSymbol(), fState.Data());
+          GetName(), GetSymbol(), fState.Data());
 }
 
 void KVIonRangeTableMaterial::Print(Option_t*) const
 {
    printf("Material : %s (%s)   State : %s\n",
-         GetName(), GetSymbol(), fState.Data());
+          GetName(), GetSymbol(), fState.Data());
    printf("\tEffective Z=%f, A=%f  ", fZmat, fAmat);
    if (IsGas()) printf(" Molar Weight = %f g.", fMoleWt);
    else printf(" Density = %f g/cm**3", fDens);
    printf("\n");
-   if(IsCompound()) printf("\tCompound material:\n");
-   else if(IsMixture())  printf("\tMixed material:\n");
-   if(IsCompound()||IsMixture()) {
+   if (IsCompound()) printf("\tCompound material:\n");
+   else if (IsMixture())  printf("\tMixed material:\n");
+   if (IsCompound() || IsMixture()) {
       TIter next(fComposition);
-      KVNameValueList*nvl;
-      while( (nvl=(KVNameValueList*)next()) ){
-         KVNucleus n(nvl->GetIntValue("Z"),nvl->GetIntValue("A"));
+      KVNameValueList* nvl;
+      while ((nvl = (KVNameValueList*)next())) {
+         KVNucleus n(nvl->GetIntValue("Z"), nvl->GetIntValue("A"));
          printf("\t\tElement: %s   Ar=%f g.   Natoms=%d", n.GetSymbol(), n.GetAtomicMass(), nvl->GetIntValue("Natoms"));
-         if(IsMixture()) printf("   Proportion=%f", nvl->GetDoubleValue("Proportion"));
+         if (IsMixture()) printf("   Proportion=%f", nvl->GetDoubleValue("Proportion"));
          printf("\n");
       }
    }
@@ -260,38 +258,38 @@ void KVIonRangeTableMaterial::PrintRangeTable(Int_t Z, Int_t A, Double_t isoAmat
    // in order to print the range in terms of length units.
 
    GetRangeFunction(Z, A, isoAmat);
-   printf("  ****  %s Range Table  ****\n\n",GetTable()->GetName());
+   printf("  ****  %s Range Table  ****\n\n", GetTable()->GetName());
    ls();
    printf(" Element: Z=%d A=%d\n\n", Z, A);
    printf("\tENERGY (MeV)\t\tRANGE (g/cm**2)");
    if (!IsGas() || (IsGas() && T > 0 && P > 0)) printf("\t\tLIN. RANGE");
    SetTemperatureAndPressure(T, P);
    printf("\n\n");
-   for (Double_t e = 0.1; (e <= 1.e+4 && e <=GetEmaxValid(Z,A)); e *= 10) {
+   for (Double_t e = 0.1; (e <= 1.e+4 && e <= GetEmaxValid(Z, A)); e *= 10) {
       printf("\t%10.5g\t\t%10.5g", e, fRange->Eval(e));
       if (!IsGas() || (IsGas() && T > 0 && P > 0)) printf("\t\t\t%10.5g", fRange->Eval(e) / GetDensity() / units);
       printf("\n");
    }
 }
 
-void KVIonRangeTableMaterial::PrintComposition(ostream &output) const
+void KVIonRangeTableMaterial::PrintComposition(ostream& output) const
 {
-    // Print to stream the composition of this material, in a format compatible with the VEDALOSS parameter file.
-    if(IsCompound()) output << "COMPOUND";
-    else if(IsMixture()) output << "MIXTURE";
-    else output << "ELEMENT";
-    output << endl;
-    if(IsCompound()||IsMixture()) {
-        output << fComposition->GetEntries() << endl;
-       TIter next(fComposition);
-       KVNameValueList*nvl;
-       while( (nvl=(KVNameValueList*)next()) ){
-          KVNucleus n(nvl->GetIntValue("Z"),nvl->GetIntValue("A"));
-          output << n.GetZ() << " " << n.GetA() << " " << nvl->GetIntValue("Natoms");
-          if(IsMixture()) output << " " << nvl->GetDoubleValue("Proportion");
-          output << endl;
-       }
-    }
+   // Print to stream the composition of this material, in a format compatible with the VEDALOSS parameter file.
+   if (IsCompound()) output << "COMPOUND";
+   else if (IsMixture()) output << "MIXTURE";
+   else output << "ELEMENT";
+   output << endl;
+   if (IsCompound() || IsMixture()) {
+      output << fComposition->GetEntries() << endl;
+      TIter next(fComposition);
+      KVNameValueList* nvl;
+      while ((nvl = (KVNameValueList*)next())) {
+         KVNucleus n(nvl->GetIntValue("Z"), nvl->GetIntValue("A"));
+         output << n.GetZ() << " " << n.GetA() << " " << nvl->GetIntValue("Natoms");
+         if (IsMixture()) output << " " << nvl->GetDoubleValue("Proportion");
+         output << endl;
+      }
+   }
 }
 
 Double_t KVIonRangeTableMaterial::GetRangeOfIon(Int_t Z, Int_t A, Double_t E, Double_t isoAmat)
@@ -324,7 +322,7 @@ Double_t KVIonRangeTableMaterial::GetDeltaEOfIon(Int_t Z, Int_t A, Double_t E, D
 }
 
 Double_t KVIonRangeTableMaterial::GetLinearDeltaEOfIon(Int_t Z, Int_t A, Double_t E, Double_t e,
-                                                 Double_t isoAmat, Double_t T, Double_t P)
+      Double_t isoAmat, Double_t T, Double_t P)
 {
    // Returns energy lost (in MeV) by ion (Z,A) with energy E (MeV) after thickness e (in cm).
    // Give Amat to change default (isotopic) mass of material,
@@ -336,17 +334,17 @@ Double_t KVIonRangeTableMaterial::GetLinearDeltaEOfIon(Int_t Z, Int_t A, Double_
 }
 
 Double_t KVIonRangeTableMaterial::GetEResOfIon(Int_t Z, Int_t A, Double_t E, Double_t e,
-                                         Double_t isoAmat)
+      Double_t isoAmat)
 {
    // Returns energy lost (in MeV) by ion (Z,A) with energy E (MeV) after thickness e (in g/cm**2).
    // Give Amat to change default (isotopic) mass of material,
-   
+
    TF1* f = GetEResFunction(e, Z, A, isoAmat);
    return f->Eval(E);
 }
 
 Double_t KVIonRangeTableMaterial::GetLinearEResOfIon(Int_t Z, Int_t A, Double_t E, Double_t e,
-                                               Double_t isoAmat, Double_t T, Double_t P)
+      Double_t isoAmat, Double_t T, Double_t P)
 {
    // Returns energy lost (in MeV) by ion (Z,A) with energy E (MeV) after thickness e (in cm).
    // Give Amat to change default (isotopic) mass of material,
@@ -367,7 +365,7 @@ Double_t KVIonRangeTableMaterial::GetEIncFromEResOfIon(Int_t Z, Int_t A, Double_
 }
 
 Double_t KVIonRangeTableMaterial::GetLinearEIncFromEResOfIon(Int_t Z, Int_t A, Double_t Eres, Double_t e,
-                                                       Double_t isoAmat, Double_t T, Double_t P)
+      Double_t isoAmat, Double_t T, Double_t P)
 {
    // Calculates incident energy (in MeV) of an ion (Z,A) with residual energy Eres (MeV) after thickness e (in cm).
    // Give Amat to change default (isotopic) mass of material,
@@ -383,21 +381,21 @@ Double_t KVIonRangeTableMaterial::GetEIncFromDeltaEOfIon(Int_t Z, Int_t A, Doubl
    // Calculates incident energy (in MeV) of an ion (Z,A) from energy loss DeltaE (MeV) in thickness e (in g/cm**2).
    // Give Amat to change default (isotopic) mass of material,
    GetDeltaEFunction(e, Z, A, isoAmat);
-   Double_t e1,e2;
-   fDeltaE->GetRange(e1,e2);
-   switch(type){
+   Double_t e1, e2;
+   fDeltaE->GetRange(e1, e2);
+   switch (type) {
       case KVIonRangeTable::kEmin:
-         e2=GetEIncOfMaxDeltaEOfIon(Z,A,e,isoAmat);
+         e2 = GetEIncOfMaxDeltaEOfIon(Z, A, e, isoAmat);
          break;
       case KVIonRangeTable::kEmax:
-         e1=GetEIncOfMaxDeltaEOfIon(Z,A,e,isoAmat);
+         e1 = GetEIncOfMaxDeltaEOfIon(Z, A, e, isoAmat);
          break;
    }
-   return fDeltaE->GetX(DeltaE,e1,e2);
+   return fDeltaE->GetX(DeltaE, e1, e2);
 }
 
 Double_t KVIonRangeTableMaterial::GetLinearEIncFromDeltaEOfIon(Int_t Z, Int_t A, Double_t deltaE, Double_t e, enum KVIonRangeTable::SolType type,
-                                                         Double_t isoAmat, Double_t T, Double_t P)
+      Double_t isoAmat, Double_t T, Double_t P)
 {
    // Calculates incident energy (in MeV) of an ion (Z,A) from energy loss DeltaE (MeV) in thickness e (in cm).
    // Give Amat to change default (isotopic) mass of material,
@@ -414,29 +412,29 @@ Double_t KVIonRangeTableMaterial::GetPunchThroughEnergy(Int_t Z, Int_t A, Double
    // given thickness e (in g/cm**2). At this energy the residual energy of the ion is (just) zero,
    // for all energies above this energy the residual energy is > 0.
    // Give Amat to change default (isotopic) mass of material.
-   
-   return GetRangeFunction(Z,A,isoAmat)->GetX(e);
+
+   return GetRangeFunction(Z, A, isoAmat)->GetX(e);
 }
 
-Double_t KVIonRangeTableMaterial::GetLinearPunchThroughEnergy(Int_t Z, Int_t A, Double_t e, Double_t isoAmat, Double_t T, Double_t P) 
+Double_t KVIonRangeTableMaterial::GetLinearPunchThroughEnergy(Int_t Z, Int_t A, Double_t e, Double_t isoAmat, Double_t T, Double_t P)
 {
    // Calculate incident energy (in MeV) for ion (Z,A) for which the range is equal to the
    // given thickness e (in cm). At this energy the residual energy of the ion is (just) zero,
    // for all energies above this energy the residual energy is > 0.
    // Give Amat to change default (isotopic) mass of material.
    // give temperature (degrees C) & pressure (torr) (T,P) for gaseous materials.
-   
+
    SetTemperatureAndPressure(T, P);
    e *= GetDensity();
-   return GetPunchThroughEnergy(Z,A,e,isoAmat);
+   return GetPunchThroughEnergy(Z, A, e, isoAmat);
 }
 
 Double_t KVIonRangeTableMaterial::GetMaxDeltaEOfIon(Int_t Z, Int_t A, Double_t e, Double_t isoAmat)
 {
    // Calculate maximum energy loss (in MeV) of ion (Z,A) in given thickness e (in g/cm**2).
    // Give Amat to change default (isotopic) mass of material.
-   
-   return GetDeltaEFunction(e,Z,A,isoAmat)->GetMaximum();
+
+   return GetDeltaEFunction(e, Z, A, isoAmat)->GetMaximum();
 }
 
 Double_t KVIonRangeTableMaterial::GetEIncOfMaxDeltaEOfIon(Int_t Z, Int_t A, Double_t e, Double_t isoAmat)
@@ -444,8 +442,8 @@ Double_t KVIonRangeTableMaterial::GetEIncOfMaxDeltaEOfIon(Int_t Z, Int_t A, Doub
    // Calculate incident energy (in MeV) corresponding to maximum energy loss of ion (Z,A)
    // in given thickness e (in g/cm**2).
    // Give Amat to change default (isotopic) mass of material.
-   
-   return GetDeltaEFunction(e,Z,A,isoAmat)->GetMaximumX();
+
+   return GetDeltaEFunction(e, Z, A, isoAmat)->GetMaximumX();
 }
 
 Double_t KVIonRangeTableMaterial::GetLinearMaxDeltaEOfIon(Int_t Z, Int_t A, Double_t e, Double_t isoAmat, Double_t T, Double_t P)
@@ -453,10 +451,10 @@ Double_t KVIonRangeTableMaterial::GetLinearMaxDeltaEOfIon(Int_t Z, Int_t A, Doub
    // Calculate maximum energy loss (in MeV) of ion (Z,A) in given thickness e (in cm).
    // Give Amat to change default (isotopic) mass of material.
    // give temperature (degrees C) & pressure (torr) (T,P) for gaseous materials.
-   
+
    SetTemperatureAndPressure(T, P);
    e *= GetDensity();
-   return GetMaxDeltaEOfIon(Z,A,e,isoAmat);
+   return GetMaxDeltaEOfIon(Z, A, e, isoAmat);
 }
 
 Double_t KVIonRangeTableMaterial::GetLinearEIncOfMaxDeltaEOfIon(Int_t Z, Int_t A, Double_t e, Double_t isoAmat, Double_t T, Double_t P)
@@ -465,37 +463,35 @@ Double_t KVIonRangeTableMaterial::GetLinearEIncOfMaxDeltaEOfIon(Int_t Z, Int_t A
    // in given thickness e (in cm).
    // Give Amat to change default (isotopic) mass of material.
    // give temperature (degrees C) & pressure (torr) (T,P) for gaseous materials.
-   
+
    SetTemperatureAndPressure(T, P);
    e *= GetDensity();
-   return GetEIncOfMaxDeltaEOfIon(Z,A,e,isoAmat);
+   return GetEIncOfMaxDeltaEOfIon(Z, A, e, isoAmat);
 }
 
 TGeoMaterial* KVIonRangeTableMaterial::GetTGeoMaterial() const
 {
-	// Create and return pointer to a TGeoMaterial or TGeoMixture (for compound materials)
-	// with the properties of this material.
-	// gGeoManager must exist.
-	
-	TGeoMaterial* gmat=0x0;
-	if(!gGeoManager) return gmat;
-	if(IsCompound()){
-		gmat = new TGeoMixture(GetTitle(), GetComposition()->GetEntries(), GetDensity());
-		TIter next(GetComposition());
-		KVNameValueList* nvl;
-		while((nvl = (KVNameValueList*)next())){
-         KVNucleus n( nvl->GetIntValue("Z"), nvl->GetIntValue("A") );
-			TGeoElement* gel = gGeoManager->GetElementTable()->FindElement( n.GetSymbol("EL") );
-			float poids = nvl->GetDoubleValue( "NormWeight" );
-			((TGeoMixture*)gmat)->AddElement(gel, poids);
-		}
-	}
-	else
-	{
-		gmat = new TGeoMaterial( GetTitle(), GetMass(), GetZ(), GetDensity() );
-	}
+   // Create and return pointer to a TGeoMaterial or TGeoMixture (for compound materials)
+   // with the properties of this material.
+   // gGeoManager must exist.
+
+   TGeoMaterial* gmat = 0x0;
+   if (!gGeoManager) return gmat;
+   if (IsCompound()) {
+      gmat = new TGeoMixture(GetTitle(), GetComposition()->GetEntries(), GetDensity());
+      TIter next(GetComposition());
+      KVNameValueList* nvl;
+      while ((nvl = (KVNameValueList*)next())) {
+         KVNucleus n(nvl->GetIntValue("Z"), nvl->GetIntValue("A"));
+         TGeoElement* gel = gGeoManager->GetElementTable()->FindElement(n.GetSymbol("EL"));
+         float poids = nvl->GetDoubleValue("NormWeight");
+         ((TGeoMixture*)gmat)->AddElement(gel, poids);
+      }
+   } else {
+      gmat = new TGeoMaterial(GetTitle(), GetMass(), GetZ(), GetDensity());
+   }
    // set state of material
-   if(IsGas()) gmat->SetState(TGeoMaterial::kMatStateGas);
+   if (IsGas()) gmat->SetState(TGeoMaterial::kMatStateGas);
    else gmat->SetState(TGeoMaterial::kMatStateSolid);
-	return gmat;
+   return gmat;
 }

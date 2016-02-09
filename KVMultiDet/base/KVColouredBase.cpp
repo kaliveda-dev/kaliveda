@@ -22,7 +22,7 @@ KVColouredBase::KVColouredBase() : fColour("white")
 //________________________________________________________________
 
 KVColouredBase::KVColouredBase(const Char_t* name, const Char_t* title, const Char_t* colour)
-       : KVBase(name, title), fColour(colour)
+   : KVBase(name, title), fColour(colour)
 {
    // Write your code here
 }

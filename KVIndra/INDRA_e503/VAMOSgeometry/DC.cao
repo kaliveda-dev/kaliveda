@@ -1,0 +1,38 @@
+# size of the emissive foil (41*11 cm)
+# size of the frame (59*25 cm )
+DC.WIDTH: 59
+DC.HEIGHT: 25
+
+# number of absorber (i.e. volumes)
+DC.NABS: 3
+
+# thickness in cm
+
+# first mylar windows 0.9 um
+DC.ABS.1.MATERIAL: Myl
+DC.ABS.1.THICK: 0.00009
+
+# gaz 
+DC.ABS.2.MATERIAL: C4H10
+DC.ABS.2.THICK: 24.76
+
+# second mylar windows 0.9 um
+DC.ABS.3.MATERIAL: Myl
+DC.ABS.3.THICK: 0.00009
+
+#active absorber (i.e. volume)
+DC.ACTIVEABS: 2
+
+DC.X: 0
+DC.Y: 0
+DC1.Z: -51.65
+DC2.Z: 34.65
+
+# Position of the reference trajectory in the detector reference frame
+DC1.REF.X: 4.06
+DC1.REF.Y: 0
+DC1.REF.Z: 0
+
+DC2.REF.X: 4.22
+DC2.REF.Y: 0.386
+DC2.REF.Z: 0

@@ -34,9 +34,9 @@ void KVDBPeak::init()
    fSignal = "";
    fRing = 0;
    fModule = 0;
-	SetRunList("");
-	SetRingList("");
-	SetModuleList("");
+   SetRunList("");
+   SetRingList("");
+   SetModuleList("");
 }
 
 KVDBPeak::KVDBPeak()
@@ -45,9 +45,9 @@ KVDBPeak::KVDBPeak()
    init();
 }
 
-KVDBPeak::KVDBPeak(const Char_t * detname, const Char_t * type,
-                   UShort_t pnum):KVDBParameterSet(Form("%s_%s", detname,
-                                                        type), type, pnum)
+KVDBPeak::KVDBPeak(const Char_t* detname, const Char_t* type,
+                   UShort_t pnum): KVDBParameterSet(Form("%s_%s", detname,
+                            type), type, pnum)
 {
    //create a calibration peak of type "type" for detector "detname" with pnum parameters
    //the name of the peak is "detname_type"

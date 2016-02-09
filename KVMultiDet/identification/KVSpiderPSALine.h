@@ -6,16 +6,15 @@
 
 #include "KVSpiderLine.h"
 
-class KVSpiderPSALine : public KVSpiderLine
-{
+class KVSpiderPSALine : public KVSpiderLine {
 
-   public:
+public:
    KVSpiderPSALine();
-   KVSpiderPSALine (const KVSpiderPSALine&) ;
+   KVSpiderPSALine(const KVSpiderPSALine&) ;
    virtual ~KVSpiderPSALine();
-   void Copy (TObject&) const;
+   void Copy(TObject&) const;
 
-   ClassDef(KVSpiderPSALine,1)//KVSpiderLine specialized for PSA matrix
+   ClassDef(KVSpiderPSALine, 1) //KVSpiderLine specialized for PSA matrix
 };
 
 #endif

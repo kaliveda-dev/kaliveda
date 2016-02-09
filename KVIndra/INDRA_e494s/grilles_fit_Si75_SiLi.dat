@@ -5,8 +5,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs=80-532
 IDTelescopes=/SI75_SILI_1002/
-<VARX> 
-<VARY> 
+<VARX> SiLi coder data > 172.0
+<VARY> Si75 coder data > 170.0 
 ZMIN=1  ZMAX=8
 Lambda= 2.5517625808716e+01
 Mu= 8.0591279268265e-01
@@ -22,8 +22,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs=80-532
 IDTelescopes=/SI75_SILI_1102/
-<VARX> 
-<VARY> 
+<VARX> SiLi coder data > 170.0
+<VARY> Si75 coder data > 172.0 
 ZMIN=1  ZMAX=5
 Lambda= 2.5086702346802e+01
 Mu= 8.2765179872513e-01
@@ -39,8 +39,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs=80-532
 IDTelescopes=/SI75_SILI_1304/
-<VARX> 
-<VARY> 
+<VARX> SiLi coder data > 168.0
+<VARY> Si75 coder data > 168.0 
 ZMIN=1  ZMAX=4
 Lambda= 2.8393486022949e+01
 Mu= 7.5289165973663e-01
@@ -56,8 +56,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs=80-532
 IDTelescopes=/SI75_SILI_1403/
-<VARX> 
-<VARY> 
+<VARX> SiLi coder data > 169.0
+<VARY> Si75 coder data > 168.0 
 ZMIN=1  ZMAX=3
 Lambda= 2.5927082061768e+01
 Mu= 7.0834505558014e-01
@@ -73,8 +73,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs=80-532
 IDTelescopes=/SI75_SILI_1503/
-<VARX> 
-<VARY> 
+<VARX> SiLi coder data > 171.0
+<VARY> Si75 coder data > 168.0 
 ZMIN=1  ZMAX=3
 Lambda= 2.6400472640991e+01
 Mu= 7.3026829957962e-01
@@ -90,8 +90,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs=80-532
 IDTelescopes=/SI75_SILI_1702/
-<VARX> 
-<VARY> 
+<VARX> SiLi coder data > 172.0
+<VARY> Si75 coder data > 169.0 
 ZMIN=1  ZMAX=3
 Lambda= 2.5138261795044e+01
 Mu= 7.1274900436401e-01

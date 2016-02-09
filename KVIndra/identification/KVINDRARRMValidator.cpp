@@ -16,7 +16,7 @@ ClassImp(KVINDRARRMValidator)
 //      - a list of modules
 //Each list is kept in an object of the KVNumberList, which handles very general lists such
 //as "1-3, 7, 10-19, 21".
-    KVINDRARRMValidator::KVINDRARRMValidator()
+KVINDRARRMValidator::KVINDRARRMValidator()
 {
    //Default constructor. Does nothing.
 }

@@ -20,21 +20,22 @@
 
 #include "KVINDRAIDTelescope.h"
 
-class KVIDChIoCsI:public KVINDRAIDTelescope {
+class KVIDChIoCsI: public KVINDRAIDTelescope {
 
- public:
+public:
 
    KVIDChIoCsI();
-   virtual ~ KVIDChIoCsI() {
+   virtual ~ KVIDChIoCsI()
+   {
    };
    virtual Bool_t CanIdentify(Int_t Z, Int_t /*A*/)
    {
-       // Used for filtering simulations
-       // Returns kTRUE if this telescope is theoretically capable of identifying a given nucleus,
-       // without considering thresholds etc.
-       // For INDRA ChIo-CsI telescopes, identification is possible for Z>1
-       // (protons are difficult to distinguish from pedestal)
-       return (Z>1);
+      // Used for filtering simulations
+      // Returns kTRUE if this telescope is theoretically capable of identifying a given nucleus,
+      // without considering thresholds etc.
+      // For INDRA ChIo-CsI telescopes, identification is possible for Z>1
+      // (protons are difficult to distinguish from pedestal)
+      return (Z > 1);
    }
 
    ClassDef(KVIDChIoCsI, 1)     //INDRA identification using ChIo-CsI matrices

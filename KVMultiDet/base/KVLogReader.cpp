@@ -12,7 +12,7 @@ ClassImp(KVLogReader)
 //////////////////////////////
 //For reading CCIN2P3 log files
 //
-    KVLogReader::KVLogReader()
+KVLogReader::KVLogReader()
 {
    fFMT = "%d";
    Reset();
@@ -25,10 +25,10 @@ void KVLogReader::Reset()
    fStatus = "";
    fOK = kFALSE;
    fGotRequests = kFALSE;
-	fGotStatus = kFALSE;
+   fGotStatus = kFALSE;
 }
 
-void KVLogReader::ReadFile(const Char_t * fname)
+void KVLogReader::ReadFile(const Char_t* fname)
 {
    //Open file 'fname' and read contents
 
@@ -37,7 +37,7 @@ void KVLogReader::ReadFile(const Char_t * fname)
    ifstream filestream(fname);
    if (!filestream.good()) {
       cout << "Error in KVLogReader::ReadFile - cannot open file " << fname
-          << endl;
+           << endl;
       return;
    }
    TString line;
@@ -50,7 +50,7 @@ void KVLogReader::ReadFile(const Char_t * fname)
    filestream.close();
 }
 
-void KVLogReader::ReadLine(TString & line, Bool_t & ok)
+void KVLogReader::ReadLine(TString& line, Bool_t& ok)
 {
    //analyse contents of line read from log file
    //if line contains "segmentation" then we put ok=kFALSE to stop reading file
@@ -84,13 +84,13 @@ Double_t KVLogReader::GetCPUratio() const
    return (fCPUreq ? fCPUused / fCPUreq : 0.);
 }
 
-void KVLogReader::ReadStorageReq(TString & line)
+void KVLogReader::ReadStorageReq(TString& line)
 {
    //Read lines "DISK_REQ:                 3GB" and "MEM_REQ:         150MB"
    //and fill corresponding variable with appropriate value
-   TObjArray *toks = line.Tokenize("*: ");
-   TString type = ((TObjString *) toks->At(0))->GetString();
-   KVString stor = ((TObjString *) toks->At(1))->GetString();
+   TObjArray* toks = line.Tokenize("*: ");
+   TString type = ((TObjString*) toks->At(0))->GetString();
+   KVString stor = ((TObjString*) toks->At(1))->GetString();
    Int_t size = ReadStorage(stor);
    if (type == "DISK_REQ")
       fSCRreq = size;
@@ -98,16 +98,16 @@ void KVLogReader::ReadStorageReq(TString & line)
       fMEMreq = size;
    // both requests must be present in the logfile otherwise
    // something very wrong has happened
-   if( fSCRreq && fMEMreq ) fGotRequests = kTRUE;
+   if (fSCRreq && fMEMreq) fGotRequests = kTRUE;
    delete toks;
 }
 
-void KVLogReader::ReadJobname(TString & line)
+void KVLogReader::ReadJobname(TString& line)
 {
    //read line of type "* Jobname:                 run4049                            *"
    //with name of job.
-   TObjArray *toks = line.Tokenize("*: ");
-   fJobname = ((TObjString *) toks->At(1))->GetString();
+   TObjArray* toks = line.Tokenize("*: ");
+   fJobname = ((TObjString*) toks->At(1))->GetString();
    delete toks;
 }
 
@@ -119,23 +119,24 @@ Int_t KVLogReader::GetRunNumber() const
    return run;
 }
 
-Bool_t KVLogReader::Incomplete() const {
-	// job considered incomplete if
-	//  - it was not 'killed'
-	//  - it did not end in segmentation fault/violation
-	//  AND
-	//  - the end of job status report was not found
-	//  - OR the disk & memory requests were not found
-	//  - OR the status indicates the job was incomplete
-	
-      return (
-	(!Killed() && !SegFault())
-	&&
-	(
-		(!fGotStatus)
-		||(!fGotRequests)
-		|| (fStatus == "VEDA Fortran out of time")
-		|| (fStatus.BeginsWith("rfcp"))
-	)
-      );
+Bool_t KVLogReader::Incomplete() const
+{
+   // job considered incomplete if
+   //  - it was not 'killed'
+   //  - it did not end in segmentation fault/violation
+   //  AND
+   //  - the end of job status report was not found
+   //  - OR the disk & memory requests were not found
+   //  - OR the status indicates the job was incomplete
+
+   return (
+             (!Killed() && !SegFault())
+             &&
+             (
+                (!fGotStatus)
+                || (!fGotRequests)
+                || (fStatus == "VEDA Fortran out of time")
+                || (fStatus.BeginsWith("rfcp"))
+             )
+          );
 };

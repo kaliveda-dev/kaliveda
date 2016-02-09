@@ -43,14 +43,14 @@ Bool_t KVCVSUpdateChecker::NeedsUpdate(const Char_t* filename)
    //     cvs -q -z3 status [filename] | grep "Needs Patch" >& /dev/null
    //     cd [working directory]
    // If the return value of the second line is 0, then the file(s) need updating.
-   
+
    KVString cmd("cvs -q -z3 status ");
-   if( strcmp(filename,"") ) cmd+=filename;
-   cmd+=" | grep \"Needs Patch\" >& /dev/null";
+   if (strcmp(filename, "")) cmd += filename;
+   cmd += " | grep \"Needs Patch\" >& /dev/null";
    GotoSourceDir();
-   Int_t retcod = gSystem->Exec( cmd.Data() );
+   Int_t retcod = gSystem->Exec(cmd.Data());
    GotoWorkingDir();
-   return (retcod==0); // return value = 0 means at least one file Needs Patch
+   return (retcod == 0); // return value = 0 means at least one file Needs Patch
 }
 
 void KVCVSUpdateChecker::Update(const Char_t* filename)
@@ -59,11 +59,11 @@ void KVCVSUpdateChecker::Update(const Char_t* filename)
    // If "filename" is not in the top-level directory, give the full-path relative
    // to the top-level directory.
    // If "filename" is not given (default), updates the whole source tree.
-   
+
    KVString cmd("cvs -q -z3 update -dP ");
-   if( strcmp(filename,"") ) cmd+=filename;
+   if (strcmp(filename, "")) cmd += filename;
    //cmd+=" >& /dev/null";
    GotoSourceDir();
-   /*Int_t retcod = */gSystem->Exec( cmd.Data() );
+   /*Int_t retcod = */gSystem->Exec(cmd.Data());
    GotoWorkingDir();
 }

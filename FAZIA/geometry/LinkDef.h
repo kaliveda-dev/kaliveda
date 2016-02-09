@@ -10,17 +10,4 @@
 #pragma link C++ class KVFAZIASYM+;
 #pragma link C++ class KVISOFAZIA+;
 #pragma link C++ class KVFAZIADetector+;
-#pragma link C++ class KVSignal+;
-#pragma link C++ class KVChargeSignal+;
-#pragma link C++ class KVCurrentSignal+;
-#pragma link C++ class KVPSAResult+;
-#pragma link C++ class KVDigitalFilter+;
-#pragma link C++ class KVFAZIARawEvent+;
-#pragma link C++ class KVFAZIAReconNuc+;
-#pragma link C++ class KVQH1+;
-#pragma link C++ class KVQL1+;
-#pragma link C++ class KVQ2+;
-#pragma link C++ class KVQ3+;
-#pragma link C++ class KVI1+;
-#pragma link C++ class KVI2+;
 #endif

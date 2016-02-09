@@ -1,5 +1,0 @@
-BUILD_KALIVEDA_MODULE(reconstruction
-	PARENT ${KVSUBPROJECT}
-	KVMOD_DEPENDS base geometry
-	EXTRA_LIBS ${KVIndra_LIB_LIST} ${KVMultiDet_LIB_LIST}
-)

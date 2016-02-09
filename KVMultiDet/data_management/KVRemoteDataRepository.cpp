@@ -31,8 +31,8 @@ ccali.DataRepository.ReadProtocol:     root
 ccali.DataRepository.XRDServer:      ccxrdsn012:1999
 ccali.DataRepository.XRDRootDir:       /hpss/in2p3.fr/group/indra
 ccali.DataRepository.XRDTunnel.host:       ccali.in2p3.fr
-ccali.DataRepository.XRDTunnel.port:          10000       
-ccali.DataRepository.XRDTunnel.user:       
+ccali.DataRepository.XRDTunnel.port:          10000
+ccali.DataRepository.XRDTunnel.user:
 ccali.DataRepository.RemoteAvailableRuns.protocol:  curl
 ccali.DataRepository.RemoteAvailableRuns.url:   http://indra.in2p3.fr/KaliVedaDoc
 ccali.DataRepository.FileTransfer.type:    bbftp
@@ -79,8 +79,8 @@ KVRemoteDataRepository::~KVRemoteDataRepository()
 
 //___________________________________________________________________________
 
-Bool_t KVRemoteDataRepository::CheckSubdirExists(const Char_t* ,
-                                                 const Char_t*)
+Bool_t KVRemoteDataRepository::CheckSubdirExists(const Char_t*,
+      const Char_t*)
 {
    //Returns kTRUE if the following path is valid
    //      /root_of_data_repository/dir/[subdir]
@@ -94,9 +94,9 @@ Bool_t KVRemoteDataRepository::CheckSubdirExists(const Char_t* ,
 //___________________________________________________________________________
 
 Bool_t KVRemoteDataRepository::GetFileInfo(KVDataSet*,
-                                           const Char_t * ,
-                                           const Char_t * ,
-                                           FileStat_t & )
+      const Char_t*,
+      const Char_t*,
+      FileStat_t&)
 {
    //Checks if the run file of given type is physically present in dataset subdirectory,
    //i.e. (schematically), if
@@ -115,8 +115,8 @@ Bool_t KVRemoteDataRepository::GetFileInfo(KVDataSet*,
 //___________________________________________________________________________
 
 Bool_t KVRemoteDataRepository::CheckFileStatus(KVDataSet*,
-                                               const Char_t *  ,
-                                               const Char_t *  )
+      const Char_t*,
+      const Char_t*)
 {
    //Checks if the run file of given type is physically present in dataset subdirectory,
    //i.e. (schematically), if
@@ -134,9 +134,9 @@ Bool_t KVRemoteDataRepository::CheckFileStatus(KVDataSet*,
 //___________________________________________________________________________
 
 void KVRemoteDataRepository::CopyFileFromRepository(KVDataSet*,
-                                                    const Char_t * ,
-                                                    const Char_t * ,
-                                                    const Char_t * )
+      const Char_t*,
+      const Char_t*,
+      const Char_t*)
 {
    //Copy file [datasetdir]/[datatype]/[filename] from the repository to [destination]
    //We check if the file to copy exists.
@@ -147,10 +147,10 @@ void KVRemoteDataRepository::CopyFileFromRepository(KVDataSet*,
 
 //___________________________________________________________________________
 
-void KVRemoteDataRepository::CopyFileToRepository(const Char_t * ,
-                                                  KVDataSet*,
-                                                  const Char_t *  ,
-                                                  const Char_t *  )
+void KVRemoteDataRepository::CopyFileToRepository(const Char_t*,
+      KVDataSet*,
+      const Char_t*,
+      const Char_t*)
 {
    //Copy file [source] to [datasetdir]/[datatype]/[filename] in the repository
    //For remote repositories, this uses the bbftp protocol (if available).
@@ -161,7 +161,7 @@ void KVRemoteDataRepository::CopyFileToRepository(const Char_t * ,
 //___________________________________________________________________________
 
 void KVRemoteDataRepository::MakeSubdirectory(KVDataSet*,
-                                              const Char_t *  )
+      const Char_t*)
 {
    //Create a new subdirectory in the repository
    //Impossible on distant data repositories.
@@ -170,8 +170,8 @@ void KVRemoteDataRepository::MakeSubdirectory(KVDataSet*,
 
 //___________________________________________________________________________
 
-KVUniqueNameList *KVRemoteDataRepository::GetDirectoryListing(KVDataSet*,
-                                                    const Char_t * )
+KVUniqueNameList* KVRemoteDataRepository::GetDirectoryListing(KVDataSet*,
+      const Char_t*)
 {
    //Impossible on distant data repositories.
    //Will return 0 (null pointer).
@@ -182,9 +182,9 @@ KVUniqueNameList *KVRemoteDataRepository::GetDirectoryListing(KVDataSet*,
 //___________________________________________________________________________
 
 void KVRemoteDataRepository::DeleteFile(KVDataSet*,
-                                        const Char_t *  ,
-                                        const Char_t *  ,
-                                        Bool_t  )
+                                        const Char_t*,
+                                        const Char_t*,
+                                        Bool_t)
 {
    //Delete repository file [datasetdir]/[datatype]/[filename]
    //Impossible on distant data repositories.
@@ -193,7 +193,7 @@ void KVRemoteDataRepository::DeleteFile(KVDataSet*,
 
 //___________________________________________________________________________
 
-KVDataSetManager *KVRemoteDataRepository::NewDataSetManager()
+KVDataSetManager* KVRemoteDataRepository::NewDataSetManager()
 {
    //Create and return pointer to new data set manager
    return (new KVRemoteDataSetManager);
@@ -201,14 +201,14 @@ KVDataSetManager *KVRemoteDataRepository::NewDataSetManager()
 
 //___________________________________________________________________________
 
-const Char_t *KVRemoteDataRepository::GetFullPathToTransferFile(KVDataSet *
-                                                                dataset,
-                                                                const
-                                                                Char_t *
-                                                                datatype,
-                                                                const
-                                                                Char_t *
-                                                                runfile)
+const Char_t* KVRemoteDataRepository::GetFullPathToTransferFile(KVDataSet*
+      dataset,
+      const
+      Char_t*
+      datatype,
+      const
+      Char_t*
+      runfile)
 {
    //Used by KVDataTransfer.
    //Returns the full path needed to transfer a runfile belonging to the given dataset
@@ -226,8 +226,8 @@ const Char_t *KVRemoteDataRepository::GetFullPathToTransferFile(KVDataSet *
 
    static TString path;
    path =
-       KVDataRepository::GetFullPathToTransferFile(dataset, datatype,
-                                                   runfile);
+      KVDataRepository::GetFullPathToTransferFile(dataset, datatype,
+            runfile);
    if (fLocalrootdir.Contains("/"))
 //      path.ReplaceAll("\\", "/");
       path = gSystem->UnixPathName(path.Data());
@@ -238,11 +238,11 @@ const Char_t *KVRemoteDataRepository::GetFullPathToTransferFile(KVDataSet *
 
 //___________________________________________________________________________
 
-const Char_t *KVRemoteDataRepository::GetFullPathToOpenFile(KVDataSet * dataset,
-                                                      const Char_t *
-                                                      datatype,
-                                                      const Char_t *
-                                                      runfile)
+const Char_t* KVRemoteDataRepository::GetFullPathToOpenFile(KVDataSet* dataset,
+      const Char_t*
+      datatype,
+      const Char_t*
+      runfile)
 {
    //When accessing remote data repositories, the operating system corresponding
    //to the remote file system may not be the same as the local operating system
@@ -252,15 +252,15 @@ const Char_t *KVRemoteDataRepository::GetFullPathToOpenFile(KVDataSet * dataset,
    //depending on whether the root directory of this repository contains '/' or '\'
    static TString path;
    path =
-       KVDataRepository::GetFullPathToOpenFile(dataset, datatype,
-                                                   runfile);
+      KVDataRepository::GetFullPathToOpenFile(dataset, datatype,
+            runfile);
    if (fLocalrootdir.Contains("/"))
       path = gSystem->UnixPathName(path.Data());
    else if (fLocalrootdir.Contains("\\"))
       path.ReplaceAll("/", "\\");
    return path.Data();
 }
- 
+
 //______________________________________________________________________________________________//
 
 Bool_t KVRemoteDataRepository::IsConnected()
@@ -275,39 +275,40 @@ Bool_t KVRemoteDataRepository::IsConnected()
    //Configure using the following environment variables:
    //
    // ccali.DataRepository.XRDTunnel.host:       ccali.in2p3.fr
-   // ccali.DataRepository.XRDTunnel.port:          10000 
+   // ccali.DataRepository.XRDTunnel.port:          10000
    //
    //The host and port to use are obligatory. Optionally you may also change the following:
-   //    
+   //
    // ccali.DataRepository.XRDTunnel.retry:  #max number of tries before giving up on connection, default = 30
    //
    // ccali.DataRepository.XRDTunnel.user:  #username for login to tunnel host. default is local username.
-   
-   if( fXRDtunnel ){
+
+   if (fXRDtunnel) {
       //check existence of SSH tunnel to xrootd server
-      TSocket *sock=new TSocket("localhost", fXRDtunPort);
+      TSocket* sock = new TSocket("localhost", fXRDtunPort);
       Int_t iRetry = 0;
-      if(!sock->IsValid()){
+      if (!sock->IsValid()) {
          //open tunnel
-         TString command="xterm -e \"ssh -X -L";
+         TString command = "xterm -e \"ssh -X -L";
          command += fXRDtunSpec;
          command += " ";
          command += Form("%s@%s\" &", fXRDtunUser.Data(), fXRDtunHost.Data());
-         gSystem->Exec( command.Data() );
+         gSystem->Exec(command.Data());
          cout << "Waiting for connection to xrootd server via SSH tunnel ";
-         while(!sock->IsValid() && iRetry < fXRDtunRetry){
-            cout << ".";cout.flush();
+         while (!sock->IsValid() && iRetry < fXRDtunRetry) {
+            cout << ".";
+            cout.flush();
             gSystem->Sleep(2000);
             sock->Close();
             delete sock;
-            sock=new TSocket("localhost", fXRDtunPort);
+            sock = new TSocket("localhost", fXRDtunPort);
             iRetry++;
          }
          cout << endl;
       }
       sock->Close();
       delete sock;
-      if(iRetry==fXRDtunRetry){
+      if (iRetry == fXRDtunRetry) {
          cout << "Connection timeout " << endl;
          return kFALSE;
       }

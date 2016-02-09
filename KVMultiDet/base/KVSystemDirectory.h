@@ -6,35 +6,34 @@
 
 #include "TSystemDirectory.h"
 
-class KVSystemDirectory : public TSystemDirectory
-{
+class KVSystemDirectory : public TSystemDirectory {
    TList* fContents;//contents of directory
    TList* fSubdirs;//subdirectories of directory
    Long64_t fTotFiles;//total size of files in directory
    Long64_t fTotDirs;//total size of files in subdirectories
-	virtual void	GetListings();
-   
-   public:
+   virtual void   GetListings();
+
+public:
    KVSystemDirectory();
    KVSystemDirectory(const Char_t* dirname, const Char_t* path);
    virtual ~KVSystemDirectory();
-	virtual TList*	GetListOfFiles() const;
-	virtual TList*	GetListOfDirectories() const;
-	Long64_t GetTotalFiles() const
+   virtual TList* GetListOfFiles() const;
+   virtual TList* GetListOfDirectories() const;
+   Long64_t GetTotalFiles() const
    {
       return fTotFiles;
    };
-	Long64_t GetTotalSubdirs() const
+   Long64_t GetTotalSubdirs() const
    {
       return fTotDirs;
    };
-	Long64_t GetTotalSize() const
+   Long64_t GetTotalSize() const
    {
-      return (fTotDirs+fTotFiles);
+      return (fTotDirs + fTotFiles);
    };
    void ls(Option_t* option = "") const;
-   
-   ClassDef(KVSystemDirectory,1)//TSystemDirectory which uses KVSystemFile
+
+   ClassDef(KVSystemDirectory, 1) //TSystemDirectory which uses KVSystemFile
 };
 
 #endif

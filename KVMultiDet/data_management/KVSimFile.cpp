@@ -21,25 +21,25 @@ using namespace std;
 KVSimFile::KVSimFile()
 {
    // Default constructor
-   fFiltered=kFALSE;
+   fFiltered = kFALSE;
 }
 
 KVSimFile::KVSimFile(KVSimDir* parent, const Char_t* filename, const Char_t* treeinfo, Long64_t treeEntries, const Char_t* treename, const Char_t* branchname)
-      : KVBase(filename,treeinfo), fSimDir(parent), fFiltered(kFALSE), fEvents(treeEntries), fTreeName(treename), fBranchName(branchname)
+   : KVBase(filename, treeinfo), fSimDir(parent), fFiltered(kFALSE), fEvents(treeEntries), fTreeName(treename), fBranchName(branchname)
 {
    // Default constructor for simulated events file
 }
-   
+
 KVSimFile::KVSimFile(KVSimDir* parent, const Char_t* filename, const Char_t* treeinfo, Long64_t treeEntries, const Char_t* treename, const Char_t* branchname,
-                        const Char_t* dataset, const Char_t* system, Int_t run_number, const Char_t* geo_type, const Char_t* orig_file, const Char_t* filt_type)
-      : KVBase(filename,treeinfo), fSimDir(parent), fFiltered(kTRUE), fEvents(treeEntries), fDataSet(dataset), fSystem(system),
-      fRunNumber(run_number), fGeoType(geo_type), fTreeName(treename), fBranchName(branchname), fOrigFile(orig_file), fFiltType(filt_type)
+                     const Char_t* dataset, const Char_t* system, Int_t run_number, const Char_t* geo_type, const Char_t* orig_file, const Char_t* filt_type)
+   : KVBase(filename, treeinfo), fSimDir(parent), fFiltered(kTRUE), fEvents(treeEntries), fDataSet(dataset), fSystem(system),
+     fRunNumber(run_number), fGeoType(geo_type), fTreeName(treename), fBranchName(branchname), fOrigFile(orig_file), fFiltType(filt_type)
 {
    // Default constructor for filtered (reconstructed) simulated events file
 }
 //________________________________________________________________
 
-KVSimFile::KVSimFile (const KVSimFile& obj)  : KVBase()
+KVSimFile::KVSimFile(const KVSimFile& obj)  : KVBase()
 {
    // Copy constructor
    // This ctor is used to make a copy of an existing object (for example
@@ -57,7 +57,7 @@ KVSimFile::~KVSimFile()
 
 //________________________________________________________________
 
-void KVSimFile::Copy (TObject& obj) const
+void KVSimFile::Copy(TObject& obj) const
 {
    // This method copies the current state of 'this' object into 'obj'
    // You should add here any member variables, for example:
@@ -72,19 +72,19 @@ void KVSimFile::Copy (TObject& obj) const
 
 void KVSimFile::ls(Option_t*) const
 {
-      TROOT::IndentLevel();
-      if(!fFiltered) cout << "SIMULATED EVENTS FILE : " << GetName() <<endl;
-      else cout << "FILTERED EVENTS FILE : " << GetName() <<endl;
-      cout << "--treename: " << GetTreeName() << endl;
-      cout << "--branchname: " << GetBranchName() << endl;
-      cout << "--infos: " << GetTitle() << endl;
-      cout << "--events: " << fEvents << endl;
-      if(fFiltered){
-         cout << "--Filtering conditions:" << endl;
-         cout << "----dataset:" << fDataSet << endl;
-         cout << "----system:" << fSystem << endl;
-         cout << "----run:" << fRunNumber << endl;
-         cout << "----geometry:" << fGeoType << endl;
-         cout << "----filter:" << fFiltType << endl;
-      }
-}   
+   TROOT::IndentLevel();
+   if (!fFiltered) cout << "SIMULATED EVENTS FILE : " << GetName() << endl;
+   else cout << "FILTERED EVENTS FILE : " << GetName() << endl;
+   cout << "--treename: " << GetTreeName() << endl;
+   cout << "--branchname: " << GetBranchName() << endl;
+   cout << "--infos: " << GetTitle() << endl;
+   cout << "--events: " << fEvents << endl;
+   if (fFiltered) {
+      cout << "--Filtering conditions:" << endl;
+      cout << "----dataset:" << fDataSet << endl;
+      cout << "----system:" << fSystem << endl;
+      cout << "----run:" << fRunNumber << endl;
+      cout << "----geometry:" << fGeoType << endl;
+      cout << "----filter:" << fFiltType << endl;
+   }
+}

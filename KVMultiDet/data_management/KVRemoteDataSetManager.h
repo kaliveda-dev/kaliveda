@@ -13,21 +13,21 @@ $Date: 2007/09/20 11:30:17 $
 #include <KVDataSetManager.h>
 #include "Riostream.h"
 
-class KVRemoteDataSetManager:public KVDataSetManager {
+class KVRemoteDataSetManager: public KVDataSetManager {
 
- protected:
+protected:
    Bool_t OpenAvailableDatasetsFile();
    TString fCurl;               //full path to executable used to copy files
 
 
- public:
+public:
 
-    KVRemoteDataSetManager();
-    virtual ~ KVRemoteDataSetManager();
+   KVRemoteDataSetManager();
+   virtual ~ KVRemoteDataSetManager();
 
    virtual void CheckAvailability();
 
-    ClassDef(KVRemoteDataSetManager, 2) //Handles data sets in remote data repository
+   ClassDef(KVRemoteDataSetManager, 2) //Handles data sets in remote data repository
 };
 
 #endif

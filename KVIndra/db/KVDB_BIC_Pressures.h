@@ -16,26 +16,25 @@ $Date: 2007/02/14 14:13:05 $
 #define BIC_2 1
 #define BIC_3 2
 
-class KVDB_BIC_Pressures : public KVDBChIoPressures
-{
+class KVDB_BIC_Pressures : public KVDBChIoPressures {
    void init();
-   
-   public:
+
+public:
 
    KVDB_BIC_Pressures();
    KVDB_BIC_Pressures(Float_t*);
    virtual ~KVDB_BIC_Pressures();
 
-   void SetPressures(Float_t *pressures)
+   void SetPressures(Float_t* pressures)
    {
-      for (UInt_t i =BIC_1; i <= BIC_3; i++) {
+      for (UInt_t i = BIC_1; i <= BIC_3; i++) {
          fPressures[i] = pressures[i];
       }
    };
 
-   void Print(Option_t* opt="") const;
-   
-   ClassDef(KVDB_BIC_Pressures,1)//Database entry for BIC pressures (experiment E416A)
+   void Print(Option_t* opt = "") const;
+
+   ClassDef(KVDB_BIC_Pressures, 1) //Database entry for BIC pressures (experiment E416A)
 };
 
 #endif

@@ -9,7 +9,7 @@ KVVarGlobMeanTemplate::KVVarGlobMeanTemplate(void): KVVarGlobMean()
 }
 
 //_________________________________________________________________
-KVVarGlobMeanTemplate::KVVarGlobMeanTemplate(Char_t *nom): KVVarGlobMean(nom)
+KVVarGlobMeanTemplate::KVVarGlobMeanTemplate(Char_t* nom): KVVarGlobMean(nom)
 {
 //
 // Constructeur avec un nom (may not be modified)
@@ -18,7 +18,7 @@ KVVarGlobMeanTemplate::KVVarGlobMeanTemplate(Char_t *nom): KVVarGlobMean(nom)
 }
 
 //_________________________________________________________________
-KVVarGlobMeanTemplate::KVVarGlobMeanTemplate(const KVVarGlobMeanTemplate &a): KVVarGlobMean()
+KVVarGlobMeanTemplate::KVVarGlobMeanTemplate(const KVVarGlobMeanTemplate& a): KVVarGlobMean()
 {
 //
 // Copy constructor (may not be modified)
@@ -36,7 +36,7 @@ KVVarGlobMeanTemplate::~KVVarGlobMeanTemplate(void)
 }
 
 //_________________________________________________________________
-void KVVarGlobMeanTemplate::Copy(TObject&a) const
+void KVVarGlobMeanTemplate::Copy(TObject& a) const
 {
    // Copy properties of 'this' object into the KVVarGlob object referenced by 'a'
 
@@ -55,7 +55,7 @@ void KVVarGlobMeanTemplate::Copy(TObject&a) const
 }
 
 //_________________________________________________________________
-KVVarGlobMeanTemplate& KVVarGlobMeanTemplate::operator = (const KVVarGlobMeanTemplate &a)
+KVVarGlobMeanTemplate& KVVarGlobMeanTemplate::operator = (const KVVarGlobMeanTemplate& a)
 {
 //
 // Operator = (may not be modified)

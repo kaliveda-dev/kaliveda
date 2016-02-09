@@ -15,26 +15,25 @@ $Date: 2009/04/06 15:21:31 $
 #include "KVChIo.h"
 #include "KVCsI.h"
 
-class KVIDChIoCsI_camp5 : public KVIDChIoCsI
-{
+class KVIDChIoCsI_camp5 : public KVIDChIoCsI {
 
    KVIDZAGrid* fGGgrid;//! grid used for ChIo(GG)-CsI(R) charge identification
    KVIDZAGrid* fPGgrid;//! grid used for ChIo(PG)-CsI(R) charge identification
-	KVChIo* fChIo;//!the chio
-	KVCsI* fCsI;//!the csi
-	Double_t fCsIRPedestal;//!CsI Rapide pedestal for current run
-	Double_t fCsILPedestal;//!CsI Lente pedestal for current run
+   KVChIo* fChIo;//!the chio
+   KVCsI* fCsI;//!the csi
+   Double_t fCsIRPedestal;//!CsI Rapide pedestal for current run
+   Double_t fCsILPedestal;//!CsI Lente pedestal for current run
 
-   public:
+public:
    KVIDChIoCsI_camp5();
    virtual ~KVIDChIoCsI_camp5();
 
    virtual void Initialize(void);
-   virtual Double_t GetIDMapX(Option_t * opt = "");
-   virtual Double_t GetIDMapY(Option_t * opt = "");
-   Bool_t Identify(KVIdentificationResult*, Double_t x=-1., Double_t y=-1.);
+   virtual Double_t GetIDMapX(Option_t* opt = "");
+   virtual Double_t GetIDMapY(Option_t* opt = "");
+   Bool_t Identify(KVIdentificationResult*, Double_t x = -1., Double_t y = -1.);
 
-   ClassDef(KVIDChIoCsI_camp5,1)//ChIo-CsI id with grids for INDRA_camp5
+   ClassDef(KVIDChIoCsI_camp5, 1) //ChIo-CsI id with grids for INDRA_camp5
 };
 
 #endif

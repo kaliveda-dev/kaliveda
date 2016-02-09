@@ -1,0 +1,72 @@
+
+# Time of Flight correction parameters (Silicon:CsI).
+#
+# The format of this file is designed so that it can be easily read by the
+# KVIVDB_e503 parser in a generic way. By doing this we avoid having to define a
+# separate method to read each file as the format is now regulated. 
+#
+# Any field can be made a parameter by prefixing it like this: 
+#     +parameter: some_name = value. 
+#
+# Beware that the parameter will be converted to a Double_t and that 'some_name'
+# is optional and is not used in the program, it is used purely to convey to the
+# human reader what the value of that parameter is.  Parameters will be added in
+# the order they are specified. 
+#
+# Any line without a +something will be ignored by the parser. 
+#
+# WARNING: If you change the record_ids then you will also need to change the
+# hard-coded values in KVIVUpDater_e503.
+#
+
+[entry]
++record_id: = tof_chiosi_4840
+system = 4840
++run_range: = 327-360
++parameter: tof0 = 108.0
+biny_low = 497
+biny_high = 507
+tof_low = 76.63
+tof_low_err = 0.49
+tof_good = 118.42
+tof_good_err = 0.30
++parameter: delta_t = 41.79
+
+[entry]
++record_id: = tof_chiosi_4848
+system = 4848
++run_range: = 379-424
++parameter: tof0 = 103.3
+biny_low = 497
+biny_high = 507
+tof_low = 76.78
+tof_low_err = 0.77
+tof_good = 119.20
+tof_good_err = 0.60
++parameter: delta_t = 42.42
+
+[entry]
++record_id: = tof_chiosi_4048
+system = 4048
++run_range: = 455-509
++parameter: tof0 = 0
+biny_low = 0
+biny_high = 0
+tof_low = 0
+tof_low_err = 0
+tof_good = 0
+tof_good_err = 0
++parameter: delta_t = 42.11
+
+[entry]
++record_id: = tof_chiosi_4040
+system = 4040
++run_range: = 511-550
++parameter: tof0 = 0
+biny_low = 0
+biny_high = 0
+tof_low = 0
+tof_low_err = 0
+tof_good = 0
+tof_good_err = 0
++parameter: delta_t = 42.11

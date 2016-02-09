@@ -16,25 +16,24 @@ $Date: 2009/04/15 09:44:19 $
 
 class KVReconstructedNucleus;
 
-class KVIDSiCsI_e475s : public KVIDSiCsI
-{
+class KVIDSiCsI_e475s : public KVIDSiCsI {
 
-	private:
-	KVIDZAGrid*	fidgrid;//!
+private:
+   KVIDZAGrid* fidgrid;//!
 
-   public:
+public:
    KVIDSiCsI_e475s();
    virtual ~KVIDSiCsI_e475s();
 
-	virtual void Initialize(void);
+   virtual void Initialize(void);
 
-	virtual Double_t GetIDMapX(Option_t * opt = "");
-   virtual Double_t GetIDMapY(Option_t * opt = "");
-	virtual Bool_t Identify(KVIdentificationResult*, Double_t x =-1., Double_t y=-1.);
+   virtual Double_t GetIDMapX(Option_t* opt = "");
+   virtual Double_t GetIDMapY(Option_t* opt = "");
+   virtual Bool_t Identify(KVIdentificationResult*, Double_t x = -1., Double_t y = -1.);
 
-	virtual void CalculateParticleEnergy(KVReconstructedNucleus * nuc);
+   virtual void CalculateParticleEnergy(KVReconstructedNucleus* nuc);
 
-   ClassDef(KVIDSiCsI_e475s,1)//derivation of KVIDSiCsI class for E475s experiment
+   ClassDef(KVIDSiCsI_e475s, 1) //derivation of KVIDSiCsI class for E475s experiment
 };
 
 #endif

@@ -75,15 +75,15 @@ ClassImp(KVClassFactory)
 KVClassFactory::KVClassFactory()
 {
    fHasBaseClass = kFALSE;
-      fBaseClassTObject=kFALSE;
-      fBaseClass = NULL;
+   fBaseClassTObject = kFALSE;
+   fBaseClass = NULL;
 }
 
-KVClassFactory::KVClassFactory(const Char_t * classname,
-                               const Char_t * classdesc,
-                               const Char_t * base_class,
+KVClassFactory::KVClassFactory(const Char_t* classname,
+                               const Char_t* classdesc,
+                               const Char_t* base_class,
                                Bool_t withTemplate,
-                               const Char_t * templateFile)
+                               const Char_t* templateFile)
 {
    //Create a new class with the following characteristics:
    //
@@ -93,8 +93,8 @@ KVClassFactory::KVClassFactory(const Char_t * classname,
    //   withTemplate = kTRUE if template files for the '.h' and '.cpp' are to be used
    //   templateFile = base name of template files
    //
-	//         *(if the class has several base classes, give a comma-separated list)
-	//
+   //         *(if the class has several base classes, give a comma-separated list)
+   //
    //Only classname and classdesc have to be given.
    //By default we create a new base class without use of template files.
    //
@@ -114,7 +114,7 @@ KVClassFactory::KVClassFactory(const Char_t * classname,
    //      if templateFile="classTemplate" we look for classTemplate.h & classTemplate.cpp in $TEMPLATEDIR, $HOME or $PWD directories.
    //      the dummy classname "classTemplate" will be replaced everywhere by 'classname'
 
-    fBaseClass = NULL;
+   fBaseClass = NULL;
    SetClassName(classname);
    SetClassDesc(classdesc);
    SetBaseClass(base_class);
@@ -144,7 +144,7 @@ void KVClassFactory::SetTemplate(Bool_t temp, const Char_t* templateFile)
    fWithTemplate = temp;
    fTemplateBase = templateFile;
 
-   if(temp){
+   if (temp) {
       //if we want to use template files for the new class,
       //we have to make sure they exist;
       if (!CheckTemplateFiles(GetBaseClass(), templateFile)) {
@@ -158,9 +158,9 @@ void KVClassFactory::SetTemplate(Bool_t temp, const Char_t* templateFile)
 //___________________________________________________
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVClassFactory::Copy(TObject & obj) const
+void KVClassFactory::Copy(TObject& obj) const
 #else
-void KVClassFactory::Copy(TObject & obj)
+void KVClassFactory::Copy(TObject& obj)
 #endif
 {
    //Copy the state of this KVClassFactory to the one referenced by 'obj'
@@ -170,18 +170,19 @@ void KVClassFactory::Copy(TObject & obj)
    ((KVClassFactory&)obj).SetBaseClass(GetBaseClass());
    ((KVClassFactory&)obj).SetTemplate(WithTemplate(), GetTemplateBase());
    ((KVClassFactory&)obj).SetWhoWhen();
-   if( fMethods.GetEntries() ){
-      TIter next( &fMethods ); KVClassMethod* meth;
-      while( (meth = (KVClassMethod*)next()) ) ((KVClassFactory&)obj).AddMethod( *meth );
+   if (fMethods.GetEntries()) {
+      TIter next(&fMethods);
+      KVClassMethod* meth;
+      while ((meth = (KVClassMethod*)next()))((KVClassFactory&)obj).AddMethod(*meth);
    }
-   if( fHeadInc.GetEntries() ) fHeadInc.Copy( ((KVClassFactory&)obj).fHeadInc );
-   if( fImpInc.GetEntries() ) fImpInc.Copy( ((KVClassFactory&)obj).fImpInc );
+   if (fHeadInc.GetEntries()) fHeadInc.Copy(((KVClassFactory&)obj).fHeadInc);
+   if (fImpInc.GetEntries()) fImpInc.Copy(((KVClassFactory&)obj).fImpInc);
 }
 
 KVClassFactory::KVClassFactory(const KVClassFactory& obj) : TObject()
 {
    //ctor par copie
-    fBaseClass= NULL;
+   fBaseClass = NULL;
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    obj.Copy(*this);
 #else
@@ -190,7 +191,7 @@ KVClassFactory::KVClassFactory(const KVClassFactory& obj) : TObject()
 }
 
 //___________________________________________________
-void KVClassFactory::WriteWhoWhen(ofstream & file)
+void KVClassFactory::WriteWhoWhen(ofstream& file)
 {
    //Write date of creation and name of USER who called ClassFactory
 
@@ -199,7 +200,7 @@ void KVClassFactory::WriteWhoWhen(ofstream & file)
 }
 
 //___________________________________________________
-void KVClassFactory::WritePreProc(ofstream & file)
+void KVClassFactory::WritePreProc(ofstream& file)
 {
    //Write pre-processor directives in file
    //i.e. '#ifndef __TOTO_H' etc.
@@ -214,25 +215,25 @@ void KVClassFactory::WritePreProc(ofstream & file)
    file << "#define " << tmp.Data() << "\n" << endl;
    //base class(es) ?
    if (fHasBaseClass) {
-		if(WithMultipleBaseClasses()){
-			fBaseClassName.Begin(",");
-			while( !fBaseClassName.End() )
-				file << "#include \"" << fBaseClassName.Next(kTRUE) << ".h\"" << endl;
-			file << endl;
-		}
-		else
-	file << "#include \"" << fBaseClassName.Data() << ".h\"\n" << endl;
+      if (WithMultipleBaseClasses()) {
+         fBaseClassName.Begin(",");
+         while (!fBaseClassName.End())
+            file << "#include \"" << fBaseClassName.Next(kTRUE) << ".h\"" << endl;
+         file << endl;
+      } else
+         file << "#include \"" << fBaseClassName.Data() << ".h\"\n" << endl;
    }
-   if( fHeadInc.GetSize() ){
-      TIter next(&fHeadInc); TObjString* str;
-      while( (str = (TObjString*)next()) ){
+   if (fHeadInc.GetSize()) {
+      TIter next(&fHeadInc);
+      TObjString* str;
+      while ((str = (TObjString*)next())) {
          file << "#include \"" << str->String().Data() << "\"\n" << endl;
       }
    }
 }
 
 //___________________________________________________
-void KVClassFactory::WriteClassDec(ofstream & file)
+void KVClassFactory::WriteClassDec(ofstream& file)
 {
    // Write the class declaration in the header file
    // This will include a default (public) constructor & destructor and
@@ -241,24 +242,24 @@ void KVClassFactory::WriteClassDec(ofstream & file)
 
    file << "class " << fClassName.Data();
    if (fHasBaseClass) {
-		file << " : ";
-		if(WithMultipleBaseClasses()){
-			fBaseClassName.Begin(",");
-			file << "public " << fBaseClassName.Next(kTRUE);
-			while( !fBaseClassName.End() ) file << ", public " << fBaseClassName.Next(kTRUE);
-		}
-		else
-	file << "public " << fBaseClassName.Data();
+      file << " : ";
+      if (WithMultipleBaseClasses()) {
+         fBaseClassName.Begin(",");
+         file << "public " << fBaseClassName.Next(kTRUE);
+         while (!fBaseClassName.End()) file << ", public " << fBaseClassName.Next(kTRUE);
+      } else
+         file << "public " << fBaseClassName.Data();
    }
    file << "\n{" << endl;
 
    // protected members
    KVList* prem = (KVList*)fMembers.GetSubListWithMethod("protected", "GetAccess");
-   if( prem->GetEntries() ){
+   if (prem->GetEntries()) {
       file << "\n   protected:" << endl;
       KVString line;
-      TIter next( prem ); KVClassMember* meth;
-      while( (meth = (KVClassMember*)next()) ){
+      TIter next(prem);
+      KVClassMember* meth;
+      while ((meth = (KVClassMember*)next())) {
          meth->WriteDeclaration(line);
          file << "   " << line.Data() << endl;
       }
@@ -267,11 +268,12 @@ void KVClassFactory::WriteClassDec(ofstream & file)
 
    // private methods
    KVList* priv = (KVList*)fMethods.GetSubListWithMethod("private", "GetAccess");
-   if( priv->GetEntries() ){
+   if (priv->GetEntries()) {
       file << "   private:" << endl;
       KVString line;
-      TIter next( priv ); KVClassMethod* meth;
-      while( (meth = (KVClassMethod*)next()) ){
+      TIter next(priv);
+      KVClassMethod* meth;
+      while ((meth = (KVClassMethod*)next())) {
          meth->WriteDeclaration(line);
          file << "   " << line.Data() << endl;
       }
@@ -280,11 +282,12 @@ void KVClassFactory::WriteClassDec(ofstream & file)
 
    // protected methods
    KVList* prot = (KVList*)fMethods.GetSubListWithMethod("protected", "GetAccess");
-   if( prot->GetEntries() ){
+   if (prot->GetEntries()) {
       file << "\n   protected:" << endl;
       KVString line;
-      TIter next( prot ); KVClassMethod* meth;
-      while( (meth = (KVClassMethod*)next()) ){
+      TIter next(prot);
+      KVClassMethod* meth;
+      while ((meth = (KVClassMethod*)next())) {
          meth->WriteDeclaration(line);
          file << "   " << line.Data() << endl;
       }
@@ -295,30 +298,32 @@ void KVClassFactory::WriteClassDec(ofstream & file)
    file << "\n   public:" << endl;
    //default ctor
    file << "   " << fClassName.Data() << "();" << endl;
-	//any other ctors ?
+   //any other ctors ?
    KVList* ctor = (KVList*)fMethods.GetSubListWithMethod("1", "IsConstructor");
-	if( ctor->GetEntries() ){
+   if (ctor->GetEntries()) {
       KVString line;
-      TIter next( ctor ); KVClassMethod* meth;
-      while( (meth = (KVClassMethod*)next()) ){
+      TIter next(ctor);
+      KVClassMethod* meth;
+      while ((meth = (KVClassMethod*)next())) {
          meth->WriteDeclaration(line);
          file << "   " << line.Data() << endl;
       }
-	}
-	delete ctor;
-	// default dtor
+   }
+   delete ctor;
+   // default dtor
    file << "   virtual ~" << fClassName.Data() << "();" << endl;
 
    // public methods
    KVList* pub = (KVList*)fMethods.GetSubListWithMethod("public", "GetAccess");
-   if( pub->GetEntries() ){
+   if (pub->GetEntries()) {
       KVString line;
-      TIter next( pub ); KVClassMethod* meth;
-      while( (meth = (KVClassMethod*)next()) ){
-			if(!meth->IsConstructor() ){
-         	meth->WriteDeclaration(line);
-         	file << "   " << line.Data() << endl;
-			}
+      TIter next(pub);
+      KVClassMethod* meth;
+      while ((meth = (KVClassMethod*)next())) {
+         if (!meth->IsConstructor()) {
+            meth->WriteDeclaration(line);
+            file << "   " << line.Data() << endl;
+         }
       }
    }
    delete pub;
@@ -336,21 +341,22 @@ void KVClassFactory::WriteClassImp()
 
    ofstream file_cpp;
 
-   file_cpp.open( GetImpFileName() );
+   file_cpp.open(GetImpFileName());
 
    WriteWhoWhen(file_cpp);
 
    file_cpp << "#include \"" << fClassName.Data() << ".h\"" << endl;
-   if( fImpInc.GetSize() ){
-      TIter next(&fImpInc); TObjString* str;
-      while( (str = (TObjString*)next()) ){
+   if (fImpInc.GetSize()) {
+      TIter next(&fImpInc);
+      TObjString* str;
+      while ((str = (TObjString*)next())) {
          file_cpp << "#include \"" << str->String().Data() << "\"" << endl;
       }
    }
    file_cpp << endl << "ClassImp(" << fClassName.Data() << ")\n" << endl;
    file_cpp <<
-       "////////////////////////////////////////////////////////////////////////////////"
-       << endl;
+            "////////////////////////////////////////////////////////////////////////////////"
+            << endl;
    file_cpp << "// BEGIN_HTML <!--" << endl;
    file_cpp << "/* -->" << endl;
    file_cpp << "<h2>" << fClassName.Data() << "</h2>" << endl;
@@ -358,38 +364,40 @@ void KVClassFactory::WriteClassImp()
    file_cpp << "<!-- */" << endl;
    file_cpp << "// --> END_HTML" << endl;
    file_cpp <<
-       "////////////////////////////////////////////////////////////////////////////////\n"
-       << endl;
+            "////////////////////////////////////////////////////////////////////////////////\n"
+            << endl;
    file_cpp << fClassName.Data() << "::" << fClassName.
-       Data() << "()" << endl;
+            Data() << "()" << endl;
    file_cpp << "{\n   // Default constructor\n}\n" << endl;
-	// any other ctors ?
+   // any other ctors ?
    KVList* ctor = (KVList*)fMethods.GetSubListWithMethod("1", "IsConstructor");
-	if( ctor->GetEntries() ){
+   if (ctor->GetEntries()) {
       KVString line;
-      TIter next( ctor ); KVClassMethod* meth;
-      while( (meth = (KVClassMethod*)next()) ){
+      TIter next(ctor);
+      KVClassMethod* meth;
+      while ((meth = (KVClassMethod*)next())) {
          meth->WriteImplementation(line);
          line.Prepend("//________________________________________________________________\n\n");
          file_cpp << line.Data() << endl;
       }
-	}
-	delete ctor;
+   }
+   delete ctor;
 
    file_cpp << fClassName.Data() << "::~" << fClassName.
-       Data() << "()" << endl;
+            Data() << "()" << endl;
    file_cpp << "{\n   // Destructor\n}\n" << endl;
 
    //write implementations of added methods
-   if( fMethods.GetSize() ){
+   if (fMethods.GetSize()) {
       KVString line;
-      TIter next( &fMethods ); KVClassMethod* meth;
-      while( (meth = (KVClassMethod*)next()) ){
-			if( !meth->IsConstructor() ){
-         	meth->WriteImplementation(line);
-         	line.Prepend("//________________________________________________________________\n\n");
-         	file_cpp << line.Data() << endl;
-			}
+      TIter next(&fMethods);
+      KVClassMethod* meth;
+      while ((meth = (KVClassMethod*)next())) {
+         if (!meth->IsConstructor()) {
+            meth->WriteImplementation(line);
+            line.Prepend("//________________________________________________________________\n\n");
+            file_cpp << line.Data() << endl;
+         }
       }
    }
 
@@ -405,7 +413,7 @@ void KVClassFactory::WriteClassHeader()
 
    ofstream file_h;
 
-   file_h.open( GetHeaderFileName() );
+   file_h.open(GetHeaderFileName());
 
    WriteWhoWhen(file_h);
    WritePreProc(file_h);
@@ -417,17 +425,17 @@ void KVClassFactory::WriteClassHeader()
 }
 
 //___________________________________________________
-void KVClassFactory::MakeClass(const Char_t * classname,
-                               const Char_t * classdesc,
-                               const Char_t * base_class,
+void KVClassFactory::MakeClass(const Char_t* classname,
+                               const Char_t* classdesc,
+                               const Char_t* base_class,
                                Bool_t withTemplate,
-                               const Char_t * templateFile)
+                               const Char_t* templateFile)
 {
    //Static method for generating skeleton header and implementation files for a new class.
    //Give a name for the class and a short description, used for HTML doc.
    //The optional string 'base_class' gives the name(s) of the parent class(es)*, in case of inheritance;
    //if not given, the new class will be a base class.
-	//    *(in case of several base classes, give a comma-separated list)
+   //    *(in case of several base classes, give a comma-separated list)
    //
    //if withTemplate=kTRUE, we use a template for the class structure, defined in a '.h' and a '.cpp' file,
    //as follows:
@@ -491,34 +499,34 @@ void KVClassFactory::MakeClass(const Char_t * classname,
 // }
 
    KVClassFactory cf(classname, classdesc, base_class, withTemplate, templateFile);
-   if(!cf.IsZombie()) cf.GenerateCode();
+   if (!cf.IsZombie()) cf.GenerateCode();
 }
 
 void KVClassFactory::GenerateCode()
 {
    //Generate header and implementation file for currently-defined class
 
-   if(IsZombie()) {
+   if (IsZombie()) {
       Warning("GenerateCode", "Object is zombie. No code will be generated.");
       return;
    }
-   
+
    if (fWithTemplate) {
       WriteClassWithTemplateHeader();
       WriteClassWithTemplateImp();
    } else {
-       if(fBaseClassTObject){
-          // check for base class which inherits from TObject
-          // if so, we add a skeleton Copy(const TObject&) method
-          // and use it in the copy ctor
-          AddTObjectCopyMethod();
-          //AddCopyConstructor(kTRUE);
-       }
+      if (fBaseClassTObject) {
+         // check for base class which inherits from TObject
+         // if so, we add a skeleton Copy(const TObject&) method
+         // and use it in the copy ctor
+         AddTObjectCopyMethod();
+         //AddCopyConstructor(kTRUE);
+      }
 //       else
 //          AddCopyConstructor(kFALSE);
-       AddAllBaseConstructors();
-       WriteClassHeader();
-       WriteClassImp();
+      AddAllBaseConstructors();
+      WriteClassHeader();
+      WriteClassImp();
    }
 }
 
@@ -527,7 +535,7 @@ KVClassMember* KVClassFactory::AddMember(const Char_t* name, const Char_t* type,
    // Add a member variable to the class, with name 'f[name]' according to ROOT convention.
    // The access type is by default "protected", in accordance with OO-encapsulation.
 
-   KVClassMember* m = new KVClassMember(name,type,comment,access);
+   KVClassMember* m = new KVClassMember(name, type, comment, access);
    fMembers.Add(m);
    return m;
 }
@@ -538,7 +546,7 @@ void KVClassFactory::SetWhoWhen()
    //Set date, time and user name based on current environment
    //If available, we use the full name of the current user, otherwise we use the login name.
 
-   UserGroup_t *user = gSystem->GetUserInfo();
+   UserGroup_t* user = gSystem->GetUserInfo();
    fAuthor = user->fRealName;
    if (fAuthor == "")
       fAuthor = user->fUser;
@@ -560,60 +568,54 @@ Ssiz_t KVClassFactory::FindNextUncommentedLine(TString& file, Ssiz_t beg)
    Ssiz_t beg_cur_line = beg;
    Bool_t nonWS = kFALSE;
 
-   while( pos < file.Length() ){
+   while (pos < file.Length()) {
 
-      if( file(pos) == ' ' || file(pos) == '\t' ){
+      if (file(pos) == ' ' || file(pos) == '\t') {
          // skip whitespace & tab
          pos++;
-      }
-      else if( file(pos) == '\n' ){
+      } else if (file(pos) == '\n') {
          // reached newline without seeing comment
          // if there is non-whitespace stuff on line, this is OK
-         if( nonWS ) return beg_cur_line;
+         if (nonWS) return beg_cur_line;
          pos++;
          beg_cur_line = pos;
-      }
-      else if( file(pos) == '/' ){
+      } else if (file(pos) == '/') {
 
-         if( file(pos+1) == '*' ){
+         if (file(pos + 1) == '*') {
             // beginning of comment block
             // was there non-whitespace stuff before this ?
-            if( nonWS ) return beg_cur_line;
-            Ssiz_t len = file.Index("*/", pos+2); // find end of comment
-            if( len > -1 ) pos = len+2;
+            if (nonWS) return beg_cur_line;
+            Ssiz_t len = file.Index("*/", pos + 2); // find end of comment
+            if (len > -1) pos = len + 2;
             else {
                // end of comment block not found in rest of file
                // return -1
-               pos=-1;
+               pos = -1;
                break;
             }
-         }
-         else if( file(pos+1) == '/' ){
+         } else if (file(pos + 1) == '/') {
             // beginning of 1-line comment
             // was there non-whitespace stuff before this ?
-            if( nonWS ) return beg_cur_line;
-            Ssiz_t len = file.Index('\n', pos+2); // find end of line
-            if( len > 0 ){
-               pos = len+1;
+            if (nonWS) return beg_cur_line;
+            Ssiz_t len = file.Index('\n', pos + 2); // find end of line
+            if (len > 0) {
+               pos = len + 1;
                beg_cur_line = pos;
-            }
-            else {
+            } else {
                // end of comment not found in rest of file
                // return -1
-               pos=-1;
+               pos = -1;
                break;
             }
          }
-      }
-      else
-      {
+      } else {
          //non-whitespace stuff
-         nonWS=kTRUE;
+         nonWS = kTRUE;
          pos++;
       }
    }
    // no new line at end of first uncommented file which is also the last line in the file
-   if(nonWS && pos>-1) return beg_cur_line;
+   if (nonWS && pos > -1) return beg_cur_line;
    return pos;
 }
 
@@ -625,7 +627,7 @@ void KVClassFactory::WriteClassWithTemplateHeader()
 
    ofstream file_h;
 
-   file_h.open( GetHeaderFileName() );
+   file_h.open(GetHeaderFileName());
 
    WriteWhoWhen(file_h);
    WritePreProc(file_h);
@@ -636,8 +638,8 @@ void KVClassFactory::WriteClassWithTemplateHeader()
    if (!KVBase::SearchAndOpenKVFile(fTemplateH.Data(), file_h_template)) {
       //this should never happen!
       cout <<
-          "<KVClassFactory::WriteClassWithTemplateHeader>: cannot open " <<
-          fTemplateH.Data() << endl;
+           "<KVClassFactory::WriteClassWithTemplateHeader>: cannot open " <<
+           fTemplateH.Data() << endl;
       return;
    }
 
@@ -650,10 +652,10 @@ void KVClassFactory::WriteClassWithTemplateHeader()
    if ((class_ind = headFile.Index("ClassDef")) > -1) {
 
       // find end of line just before ClassDef
-      Ssiz_t end_of_line=class_ind;
-      while( headFile(--end_of_line)!='\n' ) ;
+      Ssiz_t end_of_line = class_ind;
+      while (headFile(--end_of_line) != '\n') ;
       //cut file into two parts: before ClassDef line, after ClassDef line
-      TString part1 = headFile(0, end_of_line+1);
+      TString part1 = headFile(0, end_of_line + 1);
       //keep part of file from "ClassDef" onwards.
       TString subs = headFile(class_ind, headFile.Length() - 1);
       //find next newline character i.e. the end of ClassDef line
@@ -667,16 +669,17 @@ void KVClassFactory::WriteClassWithTemplateHeader()
       part2 += "\n";
 
       KVString part_add;
-   //write declarations of added methods
-   if( fMethods.GetSize() ){
-      KVString line;
-      TIter next( &fMethods ); KVClassMethod* meth;
-      while( (meth = (KVClassMethod*)next()) ){
-         meth->WriteDeclaration(line);
-         part_add += line;
-         part_add += "\n";
+      //write declarations of added methods
+      if (fMethods.GetSize()) {
+         KVString line;
+         TIter next(&fMethods);
+         KVClassMethod* meth;
+         while ((meth = (KVClassMethod*)next())) {
+            meth->WriteDeclaration(line);
+            part_add += line;
+            part_add += "\n";
+         }
       }
-   }
 
       //stick all parts together
       headFile = part1 + part_add + part2 + part3;
@@ -698,21 +701,22 @@ void KVClassFactory::WriteClassWithTemplateImp()
 
    ofstream file_cpp;
 
-   file_cpp.open( GetImpFileName() );
+   file_cpp.open(GetImpFileName());
 
    WriteWhoWhen(file_cpp);
 
    file_cpp << "#include \"" << fClassName.Data() << ".h\"" << endl;
-   if( fImpInc.GetSize() ){
-      TIter next(&fImpInc); TObjString* str;
-      while( (str = (TObjString*)next()) ){
+   if (fImpInc.GetSize()) {
+      TIter next(&fImpInc);
+      TObjString* str;
+      while ((str = (TObjString*)next())) {
          file_cpp << "#include \"" << str->String().Data() << "\"" << endl;
       }
    }
    file_cpp << endl << "ClassImp(" << fClassName.Data() << ")\n" << endl;
    file_cpp <<
-       "////////////////////////////////////////////////////////////////////////////////"
-       << endl;
+            "////////////////////////////////////////////////////////////////////////////////"
+            << endl;
    file_cpp << "// BEGIN_HTML <!--" << endl;
    file_cpp << "/* -->" << endl;
    file_cpp << "<h2>" << fClassName.Data() << "</h2>" << endl;
@@ -720,18 +724,18 @@ void KVClassFactory::WriteClassWithTemplateImp()
    file_cpp << "<!-- */" << endl;
    file_cpp << "// --> END_HTML" << endl;
    file_cpp <<
-       "////////////////////////////////////////////////////////////////////////////////\n"
-       << endl;
+            "////////////////////////////////////////////////////////////////////////////////\n"
+            << endl;
 
    TString cppFile;
    ifstream file_cpp_template;
 
    //open file whose full path was stored in fTemplateCPP
    if (!KVBase::
-       SearchAndOpenKVFile(fTemplateCPP.Data(), file_cpp_template)) {
+         SearchAndOpenKVFile(fTemplateCPP.Data(), file_cpp_template)) {
       //this should never happen!
       cout << "<KVClassFactory::WriteClassWithTemplateImp>: cannot open "
-          << fTemplateCPP.Data() << endl;
+           << fTemplateCPP.Data() << endl;
       return;
    }
 
@@ -741,10 +745,11 @@ void KVClassFactory::WriteClassWithTemplateImp()
                                   fClassName.Data());
 
    //write implementations of added methods
-   if( fMethods.GetSize() ){
+   if (fMethods.GetSize()) {
       KVString line;
-      TIter next( &fMethods ); KVClassMethod* meth;
-      while( (meth = (KVClassMethod*)next()) ){
+      TIter next(&fMethods);
+      KVClassMethod* meth;
+      while ((meth = (KVClassMethod*)next())) {
          meth->WriteImplementation(line);
          line.Prepend("\n//________________________________________________________________\n");
          file_cpp << line.Data();
@@ -757,8 +762,8 @@ void KVClassFactory::WriteClassWithTemplateImp()
 
 //______________________________________________________
 
-Bool_t KVClassFactory::CheckTemplateFiles(const Char_t * base_class,
-                                          const Char_t * templateFile)
+Bool_t KVClassFactory::CheckTemplateFiles(const Char_t* base_class,
+      const Char_t* templateFile)
 {
    //Check that we have the necessary template files to generate the new class.
    //
@@ -790,12 +795,12 @@ Bool_t KVClassFactory::CheckTemplateFiles(const Char_t * base_class,
    //we look for the template .h file in $TEMPLATEDIR, in $HOME and in $PWD
    //if found, fTemplateH contains the full path to the file.
    //if not found, we return kFALSE as we cannot proceed with the class generation.
-   if (!KVBase::SearchKVFile(KVBase::GetTEMPLATEDIRFilePath(filename), fTemplateH)){
-      if(!KVBase::SearchKVFile(filename, fTemplateH)) return kFALSE;
+   if (!KVBase::SearchKVFile(KVBase::GetTEMPLATEDIRFilePath(filename), fTemplateH)) {
+      if (!KVBase::SearchKVFile(filename, fTemplateH)) return kFALSE;
    }
    filename = fTemplateClassName + ".cpp";
    //same treatment for '.cpp' file
-   if (!KVBase::SearchKVFile(KVBase::GetTEMPLATEDIRFilePath(filename), fTemplateCPP)){
+   if (!KVBase::SearchKVFile(KVBase::GetTEMPLATEDIRFilePath(filename), fTemplateCPP)) {
       if (!KVBase::SearchKVFile(filename.Data(), fTemplateCPP)) return kFALSE;
    }
    return kTRUE;
@@ -809,7 +814,7 @@ void KVClassFactory::AddMethod(const KVClassMethod& kvcm)
    //copying the informations held in kvcm
 
    KVClassMethod* meth = new KVClassMethod(kvcm);
-   fMethods.Add( meth );
+   fMethods.Add(meth);
 }
 
 //______________________________________________________
@@ -821,21 +826,21 @@ KVClassMethod* KVClassFactory::AddMethod(const Char_t* name, const Char_t* retur
    // User must give return type and name of method.
    // Optional arguments determine access type (public, protected or private)
    // and if the method is 'virtual' and/or 'const'
-	//
-	// If another method with the same name already exists, user should keep the returned
-	// pointer to the new KVClassMethod object and use KVClassMethod::AddArgument(),
-	// KVClassMethod::SetMethodBody() in order to define arguments, method body, etc.
-	// instead of using the AddMethodArgument, AddMethodBody methods
+   //
+   // If another method with the same name already exists, user should keep the returned
+   // pointer to the new KVClassMethod object and use KVClassMethod::AddArgument(),
+   // KVClassMethod::SetMethodBody() in order to define arguments, method body, etc.
+   // instead of using the AddMethodArgument, AddMethodBody methods
 
    KVClassMethod* meth = new KVClassMethod;
-   fMethods.Add( meth );
+   fMethods.Add(meth);
    meth->SetName(name);
    meth->SetClassName(fClassName);
-   meth->SetReturnType( return_type );
+   meth->SetReturnType(return_type);
    meth->SetAccess(access);
-   meth->SetVirtual( isVirtual );
-   meth->SetConst( isConst );
-	return meth;
+   meth->SetVirtual(isVirtual);
+   meth->SetConst(isConst);
+   return meth;
 }
 
 //______________________________________________________
@@ -846,29 +851,29 @@ KVClassMethod* KVClassFactory::AddConstructor(const Char_t* argument_type,
    // Add a constructor with arguments to the class (by default, a default constructor is always defined).
    //
    // Optional argument 'access' determines access type (public, protected or private)    [default: "public"]
-	//
-	// If more than one argument is needed, user should keep the returned pointer
-	// to the new KVClassMethod object and use KVClassMethod::AddArgument() in order to add further arguments.
-	//
-	// In order to define the implementation of the ctor method, user should keep the returned pointer
-	// to the new KVClassMethod object and use KVClassMethod::SetMethodBody(KVString&).
+   //
+   // If more than one argument is needed, user should keep the returned pointer
+   // to the new KVClassMethod object and use KVClassMethod::AddArgument() in order to add further arguments.
+   //
+   // In order to define the implementation of the ctor method, user should keep the returned pointer
+   // to the new KVClassMethod object and use KVClassMethod::SetMethodBody(KVString&).
 
    KVClassMethod* meth = new KVClassMethod;
-   fMethods.Add( meth );
-	// use type of first argument as name of ctor method
+   fMethods.Add(meth);
+   // use type of first argument as name of ctor method
    meth->SetName(argument_type);
    meth->SetClassName(fClassName);
-   if(fHasBaseClass) meth->SetBaseClass(fBaseClassName);
+   if (fHasBaseClass) meth->SetBaseClass(fBaseClassName);
    meth->SetConstructor();
    meth->SetAccess(access);
-	meth->AddArgument( argument_type, argument_name, default_value );
-	return meth;
+   meth->AddArgument(argument_type, argument_name, default_value);
+   return meth;
 }
 
 //______________________________________________________
 
 void KVClassFactory::AddMethodArgument(const Char_t* method_name, const Char_t* argument_type,
-      const Char_t* argument_name, const Char_t* default_value)
+                                       const Char_t* argument_name, const Char_t* default_value)
 {
    //Add an argument to the method 'method_name' added to the class using AddMethod.
    //User must give type of argument.
@@ -876,28 +881,28 @@ void KVClassFactory::AddMethodArgument(const Char_t* method_name, const Char_t* 
    //Optional argument default_value gives default value.
 
    KVClassMethod* meth = (KVClassMethod*)fMethods.FindObjectByName(method_name);
-   if( !meth ){
+   if (!meth) {
       Error("AddMethodArgument",
-            "Method %s not found.", method_name );
+            "Method %s not found.", method_name);
       return;
    }
-   meth->AddArgument( argument_type, argument_name, default_value );
+   meth->AddArgument(argument_type, argument_name, default_value);
 }
 
 //______________________________________________________
 
-void KVClassFactory::AddMethodBody(const Char_t* method_name, KVString &body)
+void KVClassFactory::AddMethodBody(const Char_t* method_name, KVString& body)
 {
    //Set the body of the code for method 'method_name' added to the class using AddMethod.
    //N.B. does not work for implementing constructors, see AddConstructor
 
    KVClassMethod* meth = (KVClassMethod*)fMethods.FindObjectByName(method_name);
-   if( !meth ){
+   if (!meth) {
       Error("AddMethodBody",
-            "Method %s not found.", method_name );
+            "Method %s not found.", method_name);
       return;
    }
-   meth->SetMethodBody( body );
+   meth->SetMethodBody(body);
 }
 
 //______________________________________________________
@@ -908,7 +913,7 @@ void KVClassFactory::AddHeaderIncludeFile(const Char_t* filename)
    //i.e. we will add a line
    //   #include "filename"
    //to the .h file
-   fHeadInc.Add( new TObjString(filename) );
+   fHeadInc.Add(new TObjString(filename));
 }
 
 //______________________________________________________
@@ -919,7 +924,7 @@ void KVClassFactory::AddImplIncludeFile(const Char_t* filename)
    //i.e. we will add a line
    //   #include "filename"
    //to the .cpp file
-   fImpInc.Add( new TObjString(filename) );
+   fImpInc.Add(new TObjString(filename));
 //   Info("AddImplIncludeFile", "Called for %s %#x. List now contains %d filenames.",
 //         ClassName(), (long)this, fImpInc.GetEntries());
 }
@@ -956,57 +961,55 @@ void KVClassFactory::AddGetSetMethods(const KVNameValueList& nvl)
    //   Double_t GetPI() const;
 
    int npars = nvl.GetNpar();
-   for(int i=0; i<npars; i++){
+   for (int i = 0; i < npars; i++) {
       KVNamedParameter* par = nvl.GetParameter(i);
-      if(par->IsString()){
-         KVClassMember* v = AddMember(par->GetName(),"TString","member automatically generated by KVClassFactory::AddGetSetMethods");
-         KVClassMethod* m = AddMethod(Form("Set%s",par->GetName()), "void");
+      if (par->IsString()) {
+         KVClassMember* v = AddMember(par->GetName(), "TString", "member automatically generated by KVClassFactory::AddGetSetMethods");
+         KVClassMethod* m = AddMethod(Form("Set%s", par->GetName()), "void");
          m->AddArgument("const TString&");
          m->SetMethodBody(
-Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
-"\n"
-"    %s=arg1;", v->GetName())
+            Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
+                 "\n"
+                 "    %s=arg1;", v->GetName())
          );
-         m = AddMethod(Form("Get%s",par->GetName()), "const TString&", "public", kFALSE, kTRUE);
+         m = AddMethod(Form("Get%s", par->GetName()), "const TString&", "public", kFALSE, kTRUE);
          m->SetMethodBody(
-Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
-"\n"
-"    return %s;", v->GetName())
-                  );
+            Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
+                 "\n"
+                 "    return %s;", v->GetName())
+         );
          // make sure #include "TString.h" appears in header file
-         if( ! fHeadInc.FindObject("TString.h") ) AddHeaderIncludeFile("TString.h");
-      }
-      else if(par->IsInt()){
-         KVClassMember* v = AddMember(par->GetName(),"Int_t","member automatically generated by KVClassFactory::AddGetSetMethods");
-         KVClassMethod* m = AddMethod(Form("Set%s",par->GetName()), "void");
+         if (! fHeadInc.FindObject("TString.h")) AddHeaderIncludeFile("TString.h");
+      } else if (par->IsInt()) {
+         KVClassMember* v = AddMember(par->GetName(), "Int_t", "member automatically generated by KVClassFactory::AddGetSetMethods");
+         KVClassMethod* m = AddMethod(Form("Set%s", par->GetName()), "void");
          m->AddArgument("Int_t");
          m->SetMethodBody(
-Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
-"\n"
-"    %s=arg1;", v->GetName())
+            Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
+                 "\n"
+                 "    %s=arg1;", v->GetName())
          );
-         m = AddMethod(Form("Get%s",par->GetName()), "Int_t", "public", kFALSE, kTRUE);
+         m = AddMethod(Form("Get%s", par->GetName()), "Int_t", "public", kFALSE, kTRUE);
          m->SetMethodBody(
-Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
-"\n"
-"    return %s;", v->GetName())
-                  );
-      }
-      else if(par->IsDouble()){
-         KVClassMember* v = AddMember(par->GetName(),"Double_t","member automatically generated by KVClassFactory::AddGetSetMethods");
-         KVClassMethod* m = AddMethod(Form("Set%s",par->GetName()), "void");
+            Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
+                 "\n"
+                 "    return %s;", v->GetName())
+         );
+      } else if (par->IsDouble()) {
+         KVClassMember* v = AddMember(par->GetName(), "Double_t", "member automatically generated by KVClassFactory::AddGetSetMethods");
+         KVClassMethod* m = AddMethod(Form("Set%s", par->GetName()), "void");
          m->AddArgument("Double_t");
          m->SetMethodBody(
-Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
-"\n"
-"    %s=arg1;", v->GetName())
+            Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
+                 "\n"
+                 "    %s=arg1;", v->GetName())
          );
-         m = AddMethod(Form("Get%s",par->GetName()), "Double_t", "public", kFALSE, kTRUE);
+         m = AddMethod(Form("Get%s", par->GetName()), "Double_t", "public", kFALSE, kTRUE);
          m->SetMethodBody(
-Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
-"\n"
-"    return %s;", v->GetName())
-                  );
+            Form("    // Method automatically generated by KVClassFactory::AddGetSetMethods\n"
+                 "\n"
+                 "    return %s;", v->GetName())
+         );
       }
    }
 }
@@ -1019,20 +1022,20 @@ void KVClassFactory::AddTObjectCopyMethod()
    AddMethod("Copy", "void", "public", kFALSE, kTRUE);
    AddMethodArgument("Copy", "TObject&", "obj");
    KVString body("   // This method copies the current state of 'this' object into 'obj'\n");
-   body+="   // You should add here any member variables, for example:\n";
-   body+="   //    (supposing a member variable ";
-   body+=fClassName;
-   body+="::fToto)\n";
-   body+="   //    CastedObj.fToto = fToto;\n";
-   body+="   // or\n";
-   body+="   //    CastedObj.SetToto( GetToto() );\n\n   ";
+   body += "   // You should add here any member variables, for example:\n";
+   body += "   //    (supposing a member variable ";
+   body += fClassName;
+   body += "::fToto)\n";
+   body += "   //    CastedObj.fToto = fToto;\n";
+   body += "   // or\n";
+   body += "   //    CastedObj.SetToto( GetToto() );\n\n   ";
    // call Copy method for base class
-   body+=fBaseClassName;
-   body+="::Copy(obj);\n   //";
-   body+=fClassName;
-   body+="& CastedObj = (";
-   body+=fClassName;
-   body+="&)obj;";
+   body += fBaseClassName;
+   body += "::Copy(obj);\n   //";
+   body += fClassName;
+   body += "& CastedObj = (";
+   body += fClassName;
+   body += "&)obj;";
    AddMethodBody("Copy", body);
 }
 
@@ -1040,16 +1043,16 @@ void KVClassFactory::AddCopyConstructor(Bool_t withTObjectCopy)
 {
    // Adds copy constructor
    // If class inherits from TObject, this just calls the Copy method
-   
-   KVClassMethod*ctor = AddConstructor(Form("const %s&", fClassName.Data()), "obj");
+
+   KVClassMethod* ctor = AddConstructor(Form("const %s&", fClassName.Data()), "obj");
    ctor->SetCopyCtor();
    KVString body = "   // Copy constructor\n";
-   body+="   // This ctor is used to make a copy of an existing object (for example\n";
-   body+="   // when a method returns an object), and it is always a good idea to\n";
-   body+="   // implement it.\n";
-   body+="   // If your class allocates memory in its constructor(s) then it is ESSENTIAL :-)\n";
-   if(withTObjectCopy){
-      body+="\n   obj.Copy(*this);";
+   body += "   // This ctor is used to make a copy of an existing object (for example\n";
+   body += "   // when a method returns an object), and it is always a good idea to\n";
+   body += "   // implement it.\n";
+   body += "   // If your class allocates memory in its constructor(s) then it is ESSENTIAL :-)\n";
+   if (withTObjectCopy) {
+      body += "\n   obj.Copy(*this);";
    }
    ctor->SetMethodBody(body);
 }
@@ -1062,40 +1065,38 @@ ClassImp(KVClassMember)
 /////////////////////////////////////////////////////////////////////////////////////
 //Helper classes for KVClassFactory
 
-void KVClassMethod::WriteDeclaration(KVString&decl)
+void KVClassMethod::WriteDeclaration(KVString& decl)
 {
    //Write declaration in the KVString object
 
    decl = GetAccess();
    decl += ":\n   ";
-   if(fVirtual) decl += "virtual ";
-        if(!IsConstructor()){
-        decl += GetReturnType();
-        decl += " ";
-        decl += GetName();
-        }
-        else decl += GetClassName();
+   if (fVirtual) decl += "virtual ";
+   if (!IsConstructor()) {
+      decl += GetReturnType();
+      decl += " ";
+      decl += GetName();
+   } else decl += GetClassName();
    decl += "(";
-   for(int i = 1; i<=fNargs; i++){
+   for (int i = 1; i <= fNargs; i++) {
       decl += fFields.GetStringValue(Form("Arg_%d", i));
-      if( fFields.HasParameter( Form("Arg_%d_name", i)) ){
+      if (fFields.HasParameter(Form("Arg_%d_name", i))) {
          decl += " ";
          decl += fFields.GetStringValue(Form("Arg_%d_name", i));
-      }
-      else
-          decl += Form(" arg%d",i);
-      if( fFields.HasParameter( Form("Arg_%d_default", i)) ){
+      } else
+         decl += Form(" arg%d", i);
+      if (fFields.HasParameter(Form("Arg_%d_default", i))) {
          decl += " = ";
          decl += fFields.GetStringValue(Form("Arg_%d_default", i));
       }
-      if( i < fNargs ) decl += ", ";
+      if (i < fNargs) decl += ", ";
    }
    decl += ")";
-   if(fConst) decl += " const";
+   if (fConst) decl += " const";
    decl += ";";
 }
 
-void KVClassMember::WriteDeclaration(KVString&decl)
+void KVClassMember::WriteDeclaration(KVString& decl)
 {
    //Write declaration in the KVString object
 
@@ -1107,59 +1108,56 @@ void KVClassMember::WriteDeclaration(KVString&decl)
    decl += GetComment();
 }
 
-void KVClassMethod::WriteImplementation(KVString&decl)
+void KVClassMethod::WriteImplementation(KVString& decl)
 {
    //Write skeleton implementation in the KVString object
    //All constructors call the default ctor of the base class (if defined)
    decl = GetReturnType();
-	if(!IsConstructor()){
-   	decl += " ";
-	}
+   if (!IsConstructor()) {
+      decl += " ";
+   }
    decl += GetClassName();
    decl += "::";
-	if(!IsConstructor())
-   	decl += GetName();
-	else
-		decl += GetClassName();
+   if (!IsConstructor())
+      decl += GetName();
+   else
+      decl += GetClassName();
    decl += "(";
-   for(int i = 1; i<=fNargs; i++){
+   for (int i = 1; i <= fNargs; i++) {
       decl += fFields.GetStringValue(Form("Arg_%d", i));
-      if( fFields.HasParameter( Form("Arg_%d_name", i)) ){
+      if (fFields.HasParameter(Form("Arg_%d_name", i))) {
          decl += " ";
          decl += fFields.GetStringValue(Form("Arg_%d_name", i));
-      }
-      else
-          decl += Form(" arg%d", i);
-      if( i < fNargs ) decl += ", ";
+      } else
+         decl += Form(" arg%d", i);
+      if (i < fNargs) decl += ", ";
    }
    decl += ")";
-   if(fConst) decl += " const";
-   if(IsConstructor() && fFields.HasParameter("BaseClass"))
-   {
-      decl+=" : ";
-      decl+=fFields.GetStringValue("BaseClass");
-      decl+="(";
-      if(!IsCopyCtor() && fNargs){
-          for(int i=1; i<=fNargs; i++){
-              if( fFields.HasParameter( Form("Arg_%d_name", i)) ){
-                 decl += fFields.GetStringValue(Form("Arg_%d_name", i));
-              }
-              else
-                  decl += Form("arg%d",i);
-              if( i < fNargs ) decl += ", ";
-          }
+   if (fConst) decl += " const";
+   if (IsConstructor() && fFields.HasParameter("BaseClass")) {
+      decl += " : ";
+      decl += fFields.GetStringValue("BaseClass");
+      decl += "(";
+      if (!IsCopyCtor() && fNargs) {
+         for (int i = 1; i <= fNargs; i++) {
+            if (fFields.HasParameter(Form("Arg_%d_name", i))) {
+               decl += fFields.GetStringValue(Form("Arg_%d_name", i));
+            } else
+               decl += Form("arg%d", i);
+            if (i < fNargs) decl += ", ";
+         }
       }
-      decl+=")";
+      decl += ")";
    }
    decl += "\n{\n";
-   if( !strcmp(GetAccess(), "private") ) decl += "   // PRIVATE method\n";
-   else if( !strcmp(GetAccess(), "protected") ) decl += "   // PROTECTED method\n";
-   if( fFields.HasParameter("Body") ){
+   if (!strcmp(GetAccess(), "private")) decl += "   // PRIVATE method\n";
+   else if (!strcmp(GetAccess(), "protected")) decl += "   // PROTECTED method\n";
+   if (fFields.HasParameter("Body")) {
       //write body of method
       decl += fFields.GetStringValue("Body");
    } else {
       decl += "   // Write your code here";
-      if( fFields.HasParameter("ReturnType") && strcmp(fFields.GetStringValue("ReturnType"),"void")){
+      if (fFields.HasParameter("ReturnType") && strcmp(fFields.GetStringValue("ReturnType"), "void")) {
          decl += "\n   return (";
          decl += GetReturnType();
          decl += ")0;";
@@ -1186,7 +1184,7 @@ KVClassMethod::KVClassMethod(const KVClassMethod& obj) : KVClassMember()
 
 //__________________________________________________________________________________
 
-void KVClassMember::Copy(TObject & obj) const
+void KVClassMember::Copy(TObject& obj) const
 {
    //copy this to obj
    KVBase::Copy(obj);
@@ -1195,30 +1193,30 @@ void KVClassMember::Copy(TObject & obj) const
 
 //__________________________________________________________________________________
 
-void KVClassMethod::Copy(TObject & obj) const
+void KVClassMethod::Copy(TObject& obj) const
 {
    //copy this to obj
    KVClassMember::Copy(obj);
    ((KVClassMethod&)obj).SetVirtual(IsVirtual());
    ((KVClassMethod&)obj).SetVirtual(IsVirtual());
    ((KVClassMethod&)obj).SetConstructor(IsConstructor());
-   fFields.Copy( ((KVClassMethod&)obj).fFields );
+   fFields.Copy(((KVClassMethod&)obj).fFields);
    ((KVClassMethod&)obj).SetNargs(fNargs);
 }
 
 //__________________________________________________________________________________
-void KVClassMethod::Print(Option_t* ) const
+void KVClassMethod::Print(Option_t*) const
 {
    // print the KVClass method
    cout << "KVClassMethod object -----> " << GetName() << endl;
    fFields.Print();
    cout << "This method is " << GetAccess() << endl;
-   if(fConst) cout << "This method is CONST" << endl;
-   if(fVirtual) cout << "This method is VIRTUAL" << endl;
+   if (fConst) cout << "This method is CONST" << endl;
+   if (fVirtual) cout << "This method is VIRTUAL" << endl;
 }
 
 //__________________________________________________________________________________
-void KVClassMember::Print(Option_t* ) const
+void KVClassMember::Print(Option_t*) const
 {
    // print the KVClass member
    cout << "KVClassMember object -----> " << GetType() << " " << GetName() << endl;
@@ -1229,40 +1227,39 @@ void KVClassMember::Print(Option_t* ) const
 
 void KVClassFactory::AddAllBaseConstructors()
 {
-    // Add constructors with the same signature as all base class constructors
-    // (apart from the default ctor or any copy constructors, which are a special case)
-    // By default, all constructors are 'public'.
+   // Add constructors with the same signature as all base class constructors
+   // (apart from the default ctor or any copy constructors, which are a special case)
+   // By default, all constructors are 'public'.
 
-    if(!fBaseClass) return;
+   if (!fBaseClass) return;
 
-    KVHashList clist;
-    clist.AddAll(fBaseClass->GetListOfMethods());
-    KVSeqCollection* constructors = clist.GetSubListWithName(fBaseClassName);
-    TIter next_ctor(constructors);
-    TMethod* method;
-    while( (method = (TMethod*)next_ctor()) )
-    {
-        if(!method->GetNargs()) continue; // ignore default ctor
-        TList* args = method->GetListOfMethodArgs();
-        TMethodArg* arg = (TMethodArg*)args->First();
-        TString typenam=arg->GetFullTypeName();
-        if(typenam.Contains(fBaseClassName)) continue; // ignore copy ctor
-        KVClassMethod* ctor;
-        if(arg->GetDefault()) ctor = AddConstructor( typenam, arg->GetName(), arg->GetDefault() );
-        else ctor = AddConstructor(typenam, arg->GetName());
-        for(int i=1; i<method->GetNargs(); i++){
-            arg = (TMethodArg*)args->At(i);
-            if(arg->GetDefault()) ctor->AddArgument( arg->GetFullTypeName(), arg->GetName(), arg->GetDefault() );
-            else ctor->AddArgument(arg->GetFullTypeName(), arg->GetName());
-        }
-    }
+   KVHashList clist;
+   clist.AddAll(fBaseClass->GetListOfMethods());
+   KVSeqCollection* constructors = clist.GetSubListWithName(fBaseClassName);
+   TIter next_ctor(constructors);
+   TMethod* method;
+   while ((method = (TMethod*)next_ctor())) {
+      if (!method->GetNargs()) continue; // ignore default ctor
+      TList* args = method->GetListOfMethodArgs();
+      TMethodArg* arg = (TMethodArg*)args->First();
+      TString typenam = arg->GetFullTypeName();
+      if (typenam.Contains(fBaseClassName)) continue; // ignore copy ctor
+      KVClassMethod* ctor;
+      if (arg->GetDefault()) ctor = AddConstructor(typenam, arg->GetName(), arg->GetDefault());
+      else ctor = AddConstructor(typenam, arg->GetName());
+      for (int i = 1; i < method->GetNargs(); i++) {
+         arg = (TMethodArg*)args->At(i);
+         if (arg->GetDefault()) ctor->AddArgument(arg->GetFullTypeName(), arg->GetName(), arg->GetDefault());
+         else ctor->AddArgument(arg->GetFullTypeName(), arg->GetName());
+      }
+   }
 
-    delete constructors;
+   delete constructors;
 }
 
 
-KVClassMember::KVClassMember(const Char_t*name, const Char_t*type, const Char_t*comment, const Char_t*access)
-   : KVBase(Form("f%s",name),type)
+KVClassMember::KVClassMember(const Char_t* name, const Char_t* type, const Char_t* comment, const Char_t* access)
+   : KVBase(Form("f%s", name), type)
 {
    // New class member variable
    SetComment(comment);

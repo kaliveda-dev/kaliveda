@@ -25,9 +25,9 @@ ClassImp(KVCalculateChIoSiGridDialog)
 ////////////////////////////////////////////////////////////////
 // KVCalculateChIoSiGridDialog
 ////////////////////////////////////////////////////////////////
-    KVCalculateChIoSiGridDialog::
-KVCalculateChIoSiGridDialog(const TGWindow * p, const TGWindow * main,
-                            UInt_t w, UInt_t h, KVIDGrid * g)
+KVCalculateChIoSiGridDialog::
+KVCalculateChIoSiGridDialog(const TGWindow* p, const TGWindow* main,
+                            UInt_t w, UInt_t h, KVIDGrid* g)
 {
    //Dialog box for calculating new grid
    fMain = new TGTransientFrame(p, main, w, h);
@@ -39,84 +39,84 @@ KVCalculateChIoSiGridDialog(const TGWindow * p, const TGWindow * main,
    // use hierarchical cleaning
    fMain->SetCleanup(kDeepCleanup);
 
-        /**************Select Zmax for grid************/
+   /**************Select Zmax for grid************/
    fHFa = new TGHorizontalFrame(fMain);
 
    fZmaxLabel = new TGLabel(fHFa, "Calculate lines from Z=1 to Zmax= ");
 
    fZmax =
-       new TGNumberEntry(fHFa, zmax_grid, 5, NE_ZMAX,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHFa, zmax_grid, 5, NE_ZMAX,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
 
    fHFa->AddFrame(fZmax, new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
    fHFa->AddFrame(fZmaxLabel, new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
 
-        /**************Change ChIo pressure************/
+   /**************Change ChIo pressure************/
    fHFb = new TGHorizontalFrame(fMain);
    fSetPressure =
-       new TGCheckButton(fHFb, "Change ChIo pressure :", CHK_BUT_PRESSURE);
+      new TGCheckButton(fHFb, "Change ChIo pressure :", CHK_BUT_PRESSURE);
    //set checked according to last known state
    fSetPressure->SetDown(set_pressure);
    fSetPressure->Connect("Toggled(Bool_t)", "KVCalculateChIoSiGridDialog",
                          this, "SetPressure(Bool_t)");
    fChIoPressure =
-       new TGNumberEntry(fHFb, chio_press, 5, NE_PRESSURE,
-                         TGNumberFormat::kNESReal,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHFb, chio_press, 5, NE_PRESSURE,
+                        TGNumberFormat::kNESReal,
+                        TGNumberFormat::kNEAPositive);
 
    fHFb->AddFrame(fChIoPressure,
                   new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
    fHFb->AddFrame(fSetPressure,
                   new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
 
-        /**************Change Si PHD************/
+   /**************Change Si PHD************/
    fHFc = new TGHorizontalFrame(fMain);
    fSetPHD =
-       new TGCheckButton(fHFc, "Simulate Silicon PHD", CHK_BUT_PHD);
+      new TGCheckButton(fHFc, "Simulate Silicon PHD", CHK_BUT_PHD);
    //set checked according to last known state
    fSetPHD->SetDown(set_phd);
    fSetPHD->Connect("Toggled(Bool_t)", "KVCalculateChIoSiGridDialog", this,
                     "SetPHD(Bool_t)");
-/*    fPHDparam =
-       new TGNumberEntry(fHFc, phd_param, 5, NE_PHD,
-                         TGNumberFormat::kNESReal,
-                         TGNumberFormat::kNEAPositive);
- */
+   /*    fPHDparam =
+          new TGNumberEntry(fHFc, phd_param, 5, NE_PHD,
+                            TGNumberFormat::kNESReal,
+                            TGNumberFormat::kNEAPositive);
+    */
 //   fHFc->AddFrame(fPHDparam, new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
    fMassFormula = new TGComboBox(fHFc);
-   fMassFormula->AddEntry("Stable",0);
-   fMassFormula->AddEntry("Veda ",1);
-   fMassFormula->AddEntry("EAL",2);
-   fMassFormula->AddEntry("EPAX",3);
-   fMassFormula->AddEntry("2*Z",4);
-   fMassFormula->Resize(104,22);
+   fMassFormula->AddEntry("Stable", 0);
+   fMassFormula->AddEntry("Veda ", 1);
+   fMassFormula->AddEntry("EAL", 2);
+   fMassFormula->AddEntry("EPAX", 3);
+   fMassFormula->AddEntry("2*Z", 4);
+   fMassFormula->Resize(104, 22);
    fMassFormula->Select(0);
    fSelectedGrid->SetMassFormula(0);
    fMassFormula->Connect("Selected(Int_t)", "KVCalculateChIoSiGridDialog", this,
-                       "SetMassFormula(Int_t)");
+                         "SetMassFormula(Int_t)");
    fHFc->AddFrame(fMassFormula, new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
-   
+
    fHFc->AddFrame(fSetPHD, new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
 
-        /**************Change points/line************/
+   /**************Change points/line************/
    fHFd = new TGHorizontalFrame(fMain);
    fSetPoints =
-       new TGCheckButton(fHFd, "Number of points/line :", CHK_BUT_NPOINTS);
+      new TGCheckButton(fHFd, "Number of points/line :", CHK_BUT_NPOINTS);
    //set checked according to last known state
    fSetPoints->SetDown(set_npoints);
    fSetPoints->Connect("Toggled(Bool_t)", "KVCalculateChIoSiGridDialog",
                        this, "SetNpoints(Bool_t)");
    fNumberPoints =
-       new TGNumberEntry(fHFd, npoints, 5, NE_PHD,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHFd, npoints, 5, NE_PHD,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
 
    fHFd->AddFrame(fNumberPoints,
                   new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
    fHFd->AddFrame(fSetPoints, new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
 
-        /**************OK, apply & cancel buttons************/
+   /**************OK, apply & cancel buttons************/
    fHframe2 = new TGHorizontalFrame(fMain, 150, 50);
    fCancel = new TGTextButton(fHframe2, "&Cancel");
    fCancel->Connect("Clicked()", "KVCalculateChIoSiGridDialog", this,
@@ -277,15 +277,15 @@ void KVCalculateChIoSiGridDialog::CalculateGrid()
    else
       npoints = 20;
    cout << "Calculate grid with zmax=" << zmax_grid << " ChIo press=" <<
-       chio_press << " PHD param=" << phd_param << " npoints=" << npoints
-       << endl;
+        chio_press << " PHD param=" << phd_param << " npoints=" << npoints
+        << endl;
    //fSelectedGrid->MakeELossGrid(zmax_grid, set_phd, chio_press, npoints);
    fSelectedGrid->Draw();
    //update all canvases
-   TSeqCollection *Clist = gROOT->GetListOfCanvases();
+   TSeqCollection* Clist = gROOT->GetListOfCanvases();
    if (Clist->GetSize() > 0) {
-      Clist->R__FOR_EACH(TCanvas, Modified) ();
-      Clist->R__FOR_EACH(TCanvas, Update) ();
+      Clist->R__FOR_EACH(TCanvas, Modified)();
+      Clist->R__FOR_EACH(TCanvas, Update)();
    }
    gIDGridManager->Modified();
 //      DoClose();
@@ -295,7 +295,7 @@ void KVCalculateChIoSiGridDialog::SetMassFormula(Int_t mf)
 {
    //Called when user selects a mass formula in the combo box
    cout << "KVCalculateChIoSiGridDialog::SetMassFormula called with mf=" << mf << endl;
-   if(mf==3){
+   if (mf == 3) {
       //EPAX not implemented
       Warning("SetMassFormula", "EPAX mass formula not implemented. Will use Charity EAL formula.");
       fSelectedGrid->SetMassFormula(KVNucleus::kEALMass);

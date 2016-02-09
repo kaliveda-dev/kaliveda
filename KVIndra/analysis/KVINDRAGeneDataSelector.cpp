@@ -56,7 +56,7 @@ i.e.</p>
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-void KVINDRAGeneDataSelector::Begin(TTree * /*tree*/)
+void KVINDRAGeneDataSelector::Begin(TTree* /*tree*/)
 {
    // The Begin() function is called at the start of the query.
    // When running with PROOF Begin() is only called on the client.
@@ -68,7 +68,7 @@ void KVINDRAGeneDataSelector::Begin(TTree * /*tree*/)
 
 }
 
-void KVINDRAGeneDataSelector::SlaveBegin(TTree * /*tree*/)
+void KVINDRAGeneDataSelector::SlaveBegin(TTree* /*tree*/)
 {
    // The SlaveBegin() function is called after the Begin() function.
    // When running with PROOF SlaveBegin() is called on each slave server.
@@ -100,9 +100,9 @@ Bool_t KVINDRAGeneDataSelector::Process(Long64_t entry)
 
    fTreeEntry = entry;
    GetEntry(entry);
-   
+
    Analysis();
-    
+
    // Testing whether EndRun() should be called
    if (AtEndOfRun()) {
       EndRun();                 //user routine end of run
@@ -110,7 +110,7 @@ Bool_t KVINDRAGeneDataSelector::Process(Long64_t entry)
       gIndra = 0;               // the pointers to the detectors and the TRef's
       needToCallEndRun = kFALSE;
    }
-   
+
    return kTRUE;
 }
 
@@ -141,7 +141,7 @@ Bool_t KVINDRAGeneDataSelector::AtEndOfRun(void)
 {
 //
 // Check whether the end of run is reached for the current tree
-//   
+//
 
    Bool_t ok = (fTreeEntry + 1 == fChain->GetTree()->GetEntries());
 
@@ -150,10 +150,10 @@ Bool_t KVINDRAGeneDataSelector::AtEndOfRun(void)
 
 //_______________________________________________________________________//
 
-void KVINDRAGeneDataSelector::Make(const Char_t * kvsname)
+void KVINDRAGeneDataSelector::Make(const Char_t* kvsname)
 {
    //Automatic generation of derived class for gene data analysis
-   
+
    KVClassFactory cf(kvsname, "User gene data analysis class", "KVINDRAGeneDataSelector");
    cf.AddMethod("InitAnalysis", "void");
    cf.AddMethod("InitRun", "void");

@@ -17,7 +17,7 @@ ClassImp(KVFAZIAIDSiCsI)
 KVFAZIAIDSiCsI::KVFAZIAIDSiCsI()
 {
    // Default constructor
-	SetType("Si-CsI");
+   SetType("Si-CsI");
 }
 
 KVFAZIAIDSiCsI::~KVFAZIAIDSiCsI()

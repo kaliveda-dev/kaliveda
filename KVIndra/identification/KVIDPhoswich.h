@@ -21,16 +21,16 @@
 #include "KVINDRAIDTelescope.h"
 
 
-class KVIDPhoswich:public KVINDRAIDTelescope {
+class KVIDPhoswich: public KVINDRAIDTelescope {
 
- public:
+public:
 
    KVIDPhoswich();
    virtual ~ KVIDPhoswich();
 
-   const Char_t *GetArrayName();
+   const Char_t* GetArrayName();
 
-    ClassDef(KVIDPhoswich, 1)   //INDRA identification using Phoswich R-L matrices
+   ClassDef(KVIDPhoswich, 1)   //INDRA identification using Phoswich R-L matrices
 };
 
 #endif

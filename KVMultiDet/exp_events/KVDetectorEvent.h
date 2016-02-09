@@ -25,34 +25,36 @@ $Id: KVDetectorEvent.h,v 1.8 2006/10/19 14:32:43 franklan Exp $
 #include "KVEvent.h"
 #include "KVGroup.h"
 
-class KVDetectorEvent:public KVBase {
+class KVDetectorEvent: public KVBase {
 
- private:
+private:
 
-   KVUniqueNameList * fHitGroups;        //->list of groups hit by particles in the event
+   KVUniqueNameList* fHitGroups;         //->list of groups hit by particles in the event
 
- public:
+public:
 
-    KVDetectorEvent();
-    virtual ~ KVDetectorEvent();
+   KVDetectorEvent();
+   virtual ~ KVDetectorEvent();
    virtual void init();
-   void AddGroup(KVGroup * grp)
+   void AddGroup(KVGroup* grp)
    {
       fHitGroups->Add(grp);
    };
-   virtual void Clear(Option_t * opt = "");
-   virtual void Print(Option_t * t = "") const;
-   KVUniqueNameList *GetGroups() {
+   virtual void Clear(Option_t* opt = "");
+   virtual void Print(Option_t* t = "") const;
+   KVUniqueNameList* GetGroups()
+   {
       return fHitGroups;
    };
-   Bool_t ContainsGroup(KVGroup * grp)
+   Bool_t ContainsGroup(KVGroup* grp)
    {
-      return (fHitGroups->FindObject(grp->GetName())!=0);
+      return (fHitGroups->FindObject(grp->GetName()) != 0);
    };
-   virtual UInt_t GetMult() const {
-         return fHitGroups->GetSize();
+   virtual UInt_t GetMult() const
+   {
+      return fHitGroups->GetSize();
    };
-   
+
    ClassDef(KVDetectorEvent, 2) // List of hit groups in a multidetector array
 };
 #endif

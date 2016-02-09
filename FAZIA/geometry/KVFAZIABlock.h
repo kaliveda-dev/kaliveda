@@ -13,7 +13,8 @@ public:
    KVFAZIABlock();
    virtual ~KVFAZIABlock();
 
-   Double_t GetTotalSideWithBlindage() const {
+   Double_t GetTotalSideWithBlindage() const
+   {
       // Total length of one side of block including blindage
       return fTotSidWBlind;
    }

@@ -38,32 +38,32 @@ KVINDRAUpDater_e416a::~KVINDRAUpDater_e416a()
    //Destructor
 }
 
-void KVINDRAUpDater_e416a::SetChIoPressures(KVDBRun * kvrun)
+void KVINDRAUpDater_e416a::SetChIoPressures(KVDBRun* kvrun)
 {
    //Update ChIo and BIC pressures for this run with values in database
-   
+
    KVINDRAUpDater::SetChIoPressures(kvrun);
-   
+
    //set BIC pressures
-   KVRList *param_list = kvrun->GetLinks("BIC Pressures");
+   KVRList* param_list = kvrun->GetLinks("BIC Pressures");
    if (!param_list) {
       return;
    }
-   if(param_list->GetSize()>1){
+   if (param_list->GetSize() > 1) {
       Warning("SetChIoPressures",
-            "There are %d sets of BIC pressures for this run. Check file %s",
-            param_list->GetSize(), gIndraDB->GetCalibFileName("BICPressures"));
+              "There are %d sets of BIC pressures for this run. Check file %s",
+              param_list->GetSize(), gIndraDB->GetCalibFileName("BICPressures"));
    }
-   KVDB_BIC_Pressures *kvps=(KVDB_BIC_Pressures *)param_list->At(0);
+   KVDB_BIC_Pressures* kvps = (KVDB_BIC_Pressures*)param_list->At(0);
    cout << "--> Setting BIC pressures" << endl;
    cout << "       BIC_1: " << kvps->
-          GetPressure(BIC_1) << " Torr" << endl;
+        GetPressure(BIC_1) << " Torr" << endl;
    cout << "       BIC_2: " << kvps->
-          GetPressure(BIC_2) << " Torr" << endl;
+        GetPressure(BIC_2) << " Torr" << endl;
    cout << "       BIC_3: " << kvps->
-          GetPressure(BIC_3) << " Torr" << endl;
+        GetPressure(BIC_3) << " Torr" << endl;
    gIndra->GetDetector("BIC_1")->SetPressure(kvps->GetPressure(BIC_1));
    gIndra->GetDetector("BIC_2")->SetPressure(kvps->GetPressure(BIC_2));
    gIndra->GetDetector("BIC_3")->SetPressure(kvps->GetPressure(BIC_3));
 }
-   
+

@@ -30,39 +30,39 @@ class KVNewGridDialog {
 
    RQ_OBJECT("KVNewGridDialog")
 
- protected:
-   TGTransientFrame * fMain;
-   TGComboBox *fClassList;
-   TGHorizontalFrame *fHframe;
-   TGHorizontalFrame *fHframe2;
+protected:
+   TGTransientFrame* fMain;
+   TGComboBox* fClassList;
+   TGHorizontalFrame* fHframe;
+   TGHorizontalFrame* fHframe2;
 
-   TGCompositeFrame *fMatrixFrame;
+   TGCompositeFrame* fMatrixFrame;
 
-   TGCheckButton *fSetRuns;
-   TGNumberEntry *fRunMin;
-   TGNumberEntry *fRunMax;
-   TGLabel *fRunMinLabel;
-   TGLabel *fRunMaxLabel;
-   TGCheckButton *fSetRings;
-   TGNumberEntry *fRingMin;
-   TGNumberEntry *fRingMax;
-   TGLabel *fRingMinLabel;
-   TGLabel *fRingMaxLabel;
-   TGCheckButton *fSetMods;
-   TGNumberEntry *fModMin;
-   TGNumberEntry *fModMax;
-   TGLabel *fModMinLabel;
-   TGLabel *fModMaxLabel;
-   TGCheckButton *fSetScales;
-   TGNumberEntry *fScaleMin;
-   TGNumberEntry *fScaleMax;
-   TGLabel *fScaleMinLabel;
-   TGLabel *fScaleMaxLabel;
+   TGCheckButton* fSetRuns;
+   TGNumberEntry* fRunMin;
+   TGNumberEntry* fRunMax;
+   TGLabel* fRunMinLabel;
+   TGLabel* fRunMaxLabel;
+   TGCheckButton* fSetRings;
+   TGNumberEntry* fRingMin;
+   TGNumberEntry* fRingMax;
+   TGLabel* fRingMinLabel;
+   TGLabel* fRingMaxLabel;
+   TGCheckButton* fSetMods;
+   TGNumberEntry* fModMin;
+   TGNumberEntry* fModMax;
+   TGLabel* fModMinLabel;
+   TGLabel* fModMaxLabel;
+   TGCheckButton* fSetScales;
+   TGNumberEntry* fScaleMin;
+   TGNumberEntry* fScaleMax;
+   TGLabel* fScaleMinLabel;
+   TGLabel* fScaleMaxLabel;
 
-   TGTextButton *fCreate;
-   TGTextButton *fCancel;
-   TGTextButton *fApply;
-   TGLabel *fClassLabel;
+   TGTextButton* fCreate;
+   TGTextButton* fCancel;
+   TGTextButton* fApply;
+   TGLabel* fClassLabel;
    static TString fGridClass;
    static Int_t fClassIndex;
 
@@ -112,26 +112,26 @@ class KVNewGridDialog {
       NE_SCALE_Y
    };
 
-   KVIDGraph *fSelectedGrid;
+   KVIDGraph* fSelectedGrid;
 
-        /**********grid lines lists and buttons******************/
-   TGHorizontalFrame *fHFlines;
-   TGGroupFrame *fLineButGrp;
-   TGTextButton *fNewLine;      //add new line
-   TGTextButton *fUpdate;       //add new line
-   TGTextButton *fRemove;       //remove selected line
-   TGHorizontalFrame *fButsHorFrame;
-   TGRadioButton *fRadOK;
-   TGRadioButton *fRadID;
-   TGComboBox *fLineClass;
+   /**********grid lines lists and buttons******************/
+   TGHorizontalFrame* fHFlines;
+   TGGroupFrame* fLineButGrp;
+   TGTextButton* fNewLine;      //add new line
+   TGTextButton* fUpdate;       //add new line
+   TGTextButton* fRemove;       //remove selected line
+   TGHorizontalFrame* fButsHorFrame;
+   TGRadioButton* fRadOK;
+   TGRadioButton* fRadID;
+   TGComboBox* fLineClass;
    TString fLineClassName;
    Int_t fLineType;
-   TGVerticalFrame *fVFLBoxes;
-   TGGroupFrame *fGFOK;
-   TGListBox *fOKLines;
-   TGGroupFrame *fGFID;
-   TGListBox *fIDLines;
-   KVIDentifier *fSelectedLine;
+   TGVerticalFrame* fVFLBoxes;
+   TGGroupFrame* fGFOK;
+   TGListBox* fOKLines;
+   TGGroupFrame* fGFID;
+   TGListBox* fIDLines;
+   KVIDentifier* fSelectedLine;
    Int_t fLastSelectedIDLine;
    Int_t fLastSelectedOKLine;
    Color_t fLastSelectedLineColor;
@@ -143,23 +143,24 @@ class KVNewGridDialog {
       kOKRadBut
    };
 
-   virtual void set_selected_grid(KVIDGraph * g);
-   virtual void init_interface(const TGWindow * p, const TGWindow * main,
-                               UInt_t w, UInt_t h, Option_t * dialog_type);
+   virtual void set_selected_grid(KVIDGraph* g);
+   virtual void init_interface(const TGWindow* p, const TGWindow* main,
+                               UInt_t w, UInt_t h, Option_t* dialog_type);
    virtual void new_grid_class_list();
    virtual void layout_parameter_control_widgets();
-   virtual void layout_ok_apply_cancel_buttons(Option_t * dialog_type);
+   virtual void layout_ok_apply_cancel_buttons(Option_t* dialog_type);
    virtual void layout_grid_editor();
-   virtual void map_interface(Option_t * dialog_type);
+   virtual void map_interface(Option_t* dialog_type);
 
- public:
+public:
 
-    KVNewGridDialog() {
+   KVNewGridDialog()
+   {
       fMain = 0;
    };
-   KVNewGridDialog(const TGWindow * p, const TGWindow * main, UInt_t w =
-                   1, UInt_t h = 1, Option_t * type = "New", KVIDGraph * g =
-                   0);
+   KVNewGridDialog(const TGWindow* p, const TGWindow* main, UInt_t w =
+                      1, UInt_t h = 1, Option_t* type = "New", KVIDGraph* g =
+                      0);
    virtual ~ KVNewGridDialog();
 
    void DoClose();
@@ -167,8 +168,9 @@ class KVNewGridDialog {
    void CreateGrid();
    void ModifyGrid();
    void CopyGrid();
-   void SetGridClass(const char *name);
-   void SetClassIndex(Int_t index) {
+   void SetGridClass(const char* name);
+   void SetClassIndex(Int_t index)
+   {
       fClassIndex = index;
    };
    virtual void SelectRuns(Bool_t);
@@ -185,11 +187,11 @@ class KVNewGridDialog {
    void UpdateLineLists();
    void SelectOKLine(Int_t);
    void SelectIDLine(Int_t);
-   void SetLineClass(const char *name);
+   void SetLineClass(const char* name);
    void DeselectOKLine();
    void DeselectIDLine();
    void HandleButtons(Int_t id = -1);
-   virtual void ReadAndSetSelectedGridProperties(KVIDGraph *);
+   virtual void ReadAndSetSelectedGridProperties(KVIDGraph*);
    void SetAllLinesNonEditable();
    void RemoveSelectedLine();
 

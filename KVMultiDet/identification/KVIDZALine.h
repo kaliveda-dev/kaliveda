@@ -15,50 +15,59 @@ $Id: KVIDZALine.h,v 1.6 2009/03/13 13:04:11 franklan Exp $
 #include "KVNucleus.h"
 #include "TGraphErrors.h"
 
-class KVIDZALine:public KVIDLine {
+class KVIDZALine: public KVIDLine {
 
-friend class KVIDZAGrid;
+   friend class KVIDZAGrid;
 
 protected:
 
-      Double_t fWidth;                                // the "width" of the line
-      TGraphErrors *fLineWithWidth;      //! used to display width of line
+   Double_t fWidth;                                // the "width" of the line
+   TGraphErrors* fLineWithWidth;      //! used to display width of line
 
    virtual void SetAsymWidth(Double_t d_l, Double_t d_r);
 
    // redeclared as 'protected' method, to avoid users setting name
    // directly (name is generated from A & Z of line)
-   virtual void SetName(const char *name){TGraph::SetName(name);};
-   virtual void WriteAsciiFile_extras(std::ofstream &, const Char_t * name_prefix ="");
-   virtual void ReadAsciiFile_extras(std::ifstream &);
+   virtual void SetName(const char* name)
+   {
+      TGraph::SetName(name);
+   };
+   virtual void WriteAsciiFile_extras(std::ofstream&, const Char_t* name_prefix = "");
+   virtual void ReadAsciiFile_extras(std::ifstream&);
 
 public:
 
-    KVIDZALine();
-    KVIDZALine(const KVIDZALine&);
+   KVIDZALine();
+   KVIDZALine(const KVIDZALine&);
 
-    virtual ~ KVIDZALine();
-    void Copy(TObject &obj) const;
+   virtual ~ KVIDZALine();
+   void Copy(TObject& obj) const;
 
-   Double_t GetWidth() const {return fWidth;};
-   void SetWidth(Double_t w) {fWidth = w;};
+   Double_t GetWidth() const
+   {
+      return fWidth;
+   };
+   void SetWidth(Double_t w)
+   {
+      fWidth = w;
+   };
 
    TGraphErrors* GetLineWithWidth();
 
-   inline virtual Int_t Compare(const TObject *) const;
+   inline virtual Int_t Compare(const TObject*) const;
 
-   virtual void Print(Option_t * opt = "") const;
+   virtual void Print(Option_t* opt = "") const;
 
-   void ReadAsciiFile_KVIDZLine(std::ifstream &);
+   void ReadAsciiFile_KVIDZLine(std::ifstream&);
 
    //virtual Int_t GetID() const { return GetA();}
 
-    ClassDef(KVIDZALine, 2)//Base class for identification ridge lines corresponding to different nuclear species
+   ClassDef(KVIDZALine, 2)//Base class for identification ridge lines corresponding to different nuclear species
 };
 
 //_____________________________________________________________________________________________
 
-inline Int_t KVIDZALine::Compare(const TObject * obj) const
+inline Int_t KVIDZALine::Compare(const TObject* obj) const
 {
    //Used to sort lists of KVIDZALines.
    //Sorts the lines as a function of increasing Z, then increasing A
@@ -74,7 +83,7 @@ inline Int_t KVIDZALine::Compare(const TObject * obj) const
       return -1;
    // same Z: compare A
    int aline1 = GetA();
-   int aline2 = ((KVIDZALine *)obj)->GetA();
+   int aline2 = ((KVIDZALine*)obj)->GetA();
    if (aline1 > aline2)
       return 1;
    if (aline1 < aline2)
@@ -82,14 +91,13 @@ inline Int_t KVIDZALine::Compare(const TObject * obj) const
    return 0;
 }
 
-class KVIDZLine : public KVIDZALine
-{
+class KVIDZLine : public KVIDZALine {
 
-	public:
-	KVIDZLine();
-	virtual ~KVIDZLine(){};
+public:
+   KVIDZLine();
+   virtual ~KVIDZLine() {};
 
-	ClassDef(KVIDZLine,3)//FOR BACKWARDS COMPATIBILITY ONLY. OBSOLETE.
+   ClassDef(KVIDZLine, 3) //FOR BACKWARDS COMPATIBILITY ONLY. OBSOLETE.
 };
 
 #endif

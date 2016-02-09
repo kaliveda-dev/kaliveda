@@ -12,13 +12,13 @@ $Date: 2007/11/20 16:45:22 $
 
 #include <KVBatchSystem.h>
 
-class KVRootBatch:public KVBatchSystem {
- public:
+class KVRootBatch: public KVBatchSystem {
+public:
 
    KVRootBatch(const Char_t* name);
    virtual ~ KVRootBatch();
 
-   virtual void PrintJobs(Option_t * opt = ""); 
+   virtual void PrintJobs(Option_t* opt = "");
 
    ClassDef(KVRootBatch, 1)  //Run KaliVeda analysis task in an Xterm window
 };

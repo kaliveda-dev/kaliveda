@@ -56,19 +56,19 @@ KVLayer::~KVLayer()
 
 //_______________________________________________________________________________________
 
-Int_t KVLayer::Compare(const TObject * obj) const
+Int_t KVLayer::Compare(const TObject* obj) const
 {
-    //For sorting lists of layer according to layer number.
-   if (GetNumber() < ((KVLayer *) obj)->GetNumber())
+   //For sorting lists of layer according to layer number.
+   if (GetNumber() < ((KVLayer*) obj)->GetNumber())
       return -1;
-   else if (GetNumber() > ((KVLayer *) obj)->GetNumber())
+   else if (GetNumber() > ((KVLayer*) obj)->GetNumber())
       return 1;
    else
       return 0;
 }
 
 //____________________________________________________________________________________
-const Char_t *KVLayer::GetName() const
+const Char_t* KVLayer::GetName() const
 {
    //If name of layer has not been explicitly set with SetName(Char_t*),
    //return name as Layer 1, Layer 2 etc.
@@ -86,33 +86,34 @@ const Char_t *KVLayer::GetName() const
 
 TGeoVolume* KVLayer::GetGeoVolume()
 {
-	// Create and return TGeoVolume representing detectors in this layer
-	
-	TGeoVolume *mother_vol = gGeoManager->MakeVolumeAssembly(GetName());
-	//**** BUILD & ADD Rings ****
-    TIter next(GetStructures()); KVRing*det;
-	while( (det = (KVRing*)next()) ){
-		TGeoVolume* det_vol = det->GetGeoVolume();
-		// position ring in layer
-        TGeoTranslation* tr = new TGeoTranslation(0,0,det->GetDistance());//distance set in KVRing::GetGeoVolume()
-		mother_vol->AddNode(det_vol, 1, tr);
-	}
-	return mother_vol;
+   // Create and return TGeoVolume representing detectors in this layer
+
+   TGeoVolume* mother_vol = gGeoManager->MakeVolumeAssembly(GetName());
+   //**** BUILD & ADD Rings ****
+   TIter next(GetStructures());
+   KVRing* det;
+   while ((det = (KVRing*)next())) {
+      TGeoVolume* det_vol = det->GetGeoVolume();
+      // position ring in layer
+      TGeoTranslation* tr = new TGeoTranslation(0, 0, det->GetDistance()); //distance set in KVRing::GetGeoVolume()
+      mother_vol->AddNode(det_vol, 1, tr);
+   }
+   return mother_vol;
 }
 
 void KVLayer::AddToGeometry()
 {
-	// Construct and position a TGeoVolume shape to represent this layer in the current geometry
-	if(!gGeoManager) return;
+   // Construct and position a TGeoVolume shape to represent this layer in the current geometry
+   if (!gGeoManager) return;
 
-	// get volume for layer
-	TGeoVolume* vol = GetGeoVolume();
+   // get volume for layer
+   TGeoVolume* vol = GetGeoVolume();
 
-	// add to geometry
-	TGeoTranslation* tr = new TGeoTranslation(0,0,0);	
+   // add to geometry
+   TGeoTranslation* tr = new TGeoTranslation(0, 0, 0);
 
-	// add ring volume to geometry
-	gGeoManager->GetTopVolume()->AddNode(vol, 1, tr);
+   // add ring volume to geometry
+   gGeoManager->GetTopVolume()->AddNode(vol, 1, tr);
 }
 
 

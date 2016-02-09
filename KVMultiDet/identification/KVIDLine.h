@@ -16,44 +16,43 @@ $Id: KVIDLine.h,v 1.16 2009/03/03 14:27:15 franklan Exp $
 #include "TH2.h"
 #include "KVIDentifier.h"
 
-class KVIDLine : public KVIDentifier
-{
+class KVIDLine : public KVIDentifier {
 
- public:
+public:
 
    KVIDLine();
-   KVIDLine(const TGraph & gr);
-   KVIDLine(const KVIDLine &);
+   KVIDLine(const TGraph& gr);
+   KVIDLine(const KVIDLine&);
 
-    virtual ~ KVIDLine();
+   virtual ~ KVIDLine();
 
-	virtual void WaitForPrimitive();
-	virtual void ExecuteEvent(Int_t event, Int_t px, Int_t py);
+   virtual void WaitForPrimitive();
+   virtual void ExecuteEvent(Int_t event, Int_t px, Int_t py);
 
-   inline Double_t DistanceToLine(Double_t px, Double_t py, Int_t &);
+   inline Double_t DistanceToLine(Double_t px, Double_t py, Int_t&);
    inline Double_t DistanceToLine(Double_t px, Double_t py, Double_t xp1,
                                   Double_t yp1, Double_t xp2, Double_t yp2,
-                                  Int_t &);
-   inline Bool_t WhereAmI(Double_t px, Double_t py, Option_t * opt);
-   inline Bool_t PosRelToLine(Option_t * opt, Double_t px, Double_t py,
+                                  Int_t&);
+   inline Bool_t WhereAmI(Double_t px, Double_t py, Option_t* opt);
+   inline Bool_t PosRelToLine(Option_t* opt, Double_t px, Double_t py,
                               Double_t xp1, Double_t yp1, Double_t xp2,
                               Double_t yp2);
 
-   inline void GetStartPoint(Double_t & x, Double_t & y) const;
-   inline void GetEndPoint(Double_t & x, Double_t & y) const;
+   inline void GetStartPoint(Double_t& x, Double_t& y) const;
+   inline void GetEndPoint(Double_t& x, Double_t& y) const;
    inline Bool_t IsBetweenEndPoints(Double_t x, Double_t y,
-                                    const Char_t * axis = "") const;
+                                    const Char_t* axis = "") const;
 
-	static KVIDLine *MakeIDLine(TObject *obj,Double_t xdeb=-1.,Double_t xfin=-1.,Double_t np=1.,Bool_t save=kFALSE);
-//	static KVIDLine *MakeIDLine(TH2 *obj,TCutG *cut,Double_t xdeb=-1.,Double_t xfin=-1.,Double_t np=1.,Bool_t save=kFALSE);
+   static KVIDLine* MakeIDLine(TObject* obj, Double_t xdeb = -1., Double_t xfin = -1., Double_t np = 1., Bool_t save = kFALSE);
+// static KVIDLine *MakeIDLine(TH2 *obj,TCutG *cut,Double_t xdeb=-1.,Double_t xfin=-1.,Double_t np=1.,Bool_t save=kFALSE);
 
-    ClassDef(KVIDLine, 2)       //Base class for lines/cuts used for particle identification
+   ClassDef(KVIDLine, 2)       //Base class for lines/cuts used for particle identification
 };
 
 //______________________________________________________________________________
 
 inline Double_t KVIDLine::DistanceToLine(Double_t px, Double_t py,
-                                         Int_t & i_near)
+      Int_t& i_near)
 {
    //Compute the closest distance of approach from point px,py to this line.
    //The units of px, py are the same as the coordinates of the graph
@@ -116,9 +115,9 @@ inline Double_t KVIDLine::DistanceToLine(Double_t px, Double_t py,
 //_________________________________________________________________________________________________________________________________________
 
 inline Double_t KVIDLine::DistanceToLine(Double_t px, Double_t py,
-                                         Double_t xp1, Double_t yp1,
-                                         Double_t xp2, Double_t yp2,
-                                         Int_t & i_nearest_point)
+      Double_t xp1, Double_t yp1,
+      Double_t xp2, Double_t yp2,
+      Int_t& i_nearest_point)
 {
    //Given a line segment defined by endpoints (xp1,yp1) and (xp2,yp2) find the
    //  shortest distance between point (px,py) and the line.
@@ -166,7 +165,7 @@ inline Double_t KVIDLine::DistanceToLine(Double_t px, Double_t py,
 
 //______________________________________________________________________________
 
-inline Bool_t KVIDLine::PosRelToLine(Option_t * opt, Double_t px,
+inline Bool_t KVIDLine::PosRelToLine(Option_t* opt, Double_t px,
                                      Double_t py, Double_t xp1,
                                      Double_t yp1, Double_t xp2,
                                      Double_t yp2)
@@ -218,7 +217,7 @@ inline Bool_t KVIDLine::PosRelToLine(Option_t * opt, Double_t px,
 
 //______________________________________________________________________________
 
-inline Bool_t KVIDLine::WhereAmI(Double_t px, Double_t py, Option_t * opt)
+inline Bool_t KVIDLine::WhereAmI(Double_t px, Double_t py, Option_t* opt)
 {
    //The relative position of point (px,py) with respect to the line is tested.
    //The option string can be "left", "right", "above" or "below".
@@ -227,58 +226,88 @@ inline Bool_t KVIDLine::WhereAmI(Double_t px, Double_t py, Option_t * opt)
    //First of all, the closest segment/point of the line to the point is found.
    //Then the relative position of the point and this segment/point is tested.
 
+   Double_t* XX, *YY;
+   Double_t  xx,  yy;
+   Int_t    sign  = 1;
 
-   //Find closest point/segment
-   Int_t i_close = 0;
-   Double_t d = DistanceToLine(px, py, i_close);
-   if (d < 0) {
-      //negative distance => closest point
-      if (!strcmp(opt, "left")) {
-         return (px < fX[i_close]);
-      } else if (!strcmp(opt, "right")) {
-         return (px > fX[i_close]);
-      } else if (!strcmp(opt, "above")) {
-         return (py > fY[i_close]);
-      } else if (!strcmp(opt, "below")) {
-         return (py < fY[i_close]);
+   if (!strcmp(opt, "left")) {
+      XX = fY;
+      xx = py;
+      YY = fX;
+      yy = px;
+   } else if (!strcmp(opt, "right")) {
+      XX = fY;
+      xx = py;
+      YY = fX;
+      yy = px;
+      sign = -1;
+   } else if (!strcmp(opt, "above")) {
+      XX = fX;
+      xx = px;
+      YY = fY;
+      yy = py;
+      sign = -1;
+   } else if (!strcmp(opt, "below")) {
+      XX = fX;
+      xx = px;
+      YY = fY;
+      yy = py;
+   } else return kFALSE;
+
+   Int_t i_start     = 0;
+   Int_t i_stop      = fNpoints - 1;
+   Int_t prev_i_stop = 0;
+   Bool_t same_sign = TMath::Sign(1., XX[i_start] - xx) == TMath::Sign(1., XX[i_stop] - xx);
+   while ((i_start < i_stop - 1) || same_sign) {
+
+      if (same_sign && (prev_i_stop == 0))  break;
+      else if (same_sign) {
+         i_start = i_stop;
+         i_stop  = prev_i_stop;
+      } else {
+         prev_i_stop = i_stop;
+         i_stop = (Int_t)((i_start + i_stop) / 2 + 0.5);
       }
-      return kFALSE;
-   } else {
-      //positive distance => closest segment
-      return PosRelToLine(opt, px, py, fX[i_close], fY[i_close],
-                          fX[i_close + 1], fY[i_close + 1]);
+
+      same_sign = TMath::Sign(1., XX[i_start] - xx) == TMath::Sign(1., XX[i_stop] - xx);
    }
-   return kFALSE;
+
+   Double_t a = (YY[i_stop] - YY[i_start]) / (XX[i_stop] - XX[i_start]);
+   Double_t b = YY[i_start] - a * XX[i_start];
+
+   Bool_t res = (sign * yy < sign * (a * xx + b));
+
+   return res;
 }
 
 //_____________________________________________________________________________________________
 
-inline void KVIDLine::GetStartPoint(Double_t & x, Double_t & y) const
+inline void KVIDLine::GetStartPoint(Double_t& x, Double_t& y) const
 {
    //Coordinates of first point in line
 #if ROOT_VERSION_CODE >= ROOT_VERSION(4,0,3)
    GetPoint(0, x, y);
 #else
-   const_cast < KVIDLine * >(this)->GetPoint(0, x, y);
+   const_cast < KVIDLine* >(this)->GetPoint(0, x, y);
 #endif
 }
 
 //_____________________________________________________________________________________________
 
-inline void KVIDLine::GetEndPoint(Double_t & x, Double_t & y) const
+inline void KVIDLine::GetEndPoint(Double_t& x, Double_t& y) const
 {
    //Coordinates of last point in line
 #if ROOT_VERSION_CODE >= ROOT_VERSION(4,0,3)
    GetPoint((GetN() - 1), x, y);
 #else
-   const_cast < KVIDLine * >(this)->GetPoint((GetN() - 1), x, y);
+   const_cast < KVIDLine* >(this)->GetPoint((GetN() - 1), x, y);
 #endif
 }
 
 //_____________________________________________________________________________________________
 
 inline Bool_t KVIDLine::IsBetweenEndPoints(Double_t x, Double_t y,
-                                           const Char_t * axis) const
+      const Char_t* axis) const
 {
    //Returns kTRUE for point (x,y) if :
    // axis = "" (default) and both x and y lie inside the endpoints of the line x1 < x < x2, y1 < y < y2

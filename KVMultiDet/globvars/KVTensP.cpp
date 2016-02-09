@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 18/02/2004:
 // Creation d'une classe Variable Globale.
@@ -21,7 +21,7 @@ ClassImp(KVTensP)
 //(see KVParticle::AddGroup and KVParticle::BelongsToGroup).
 //Note that the condition on the particle's Z is still used, thus
 //if e.g., SetZmin(10) and  SetPartGroup("alpha") are used, only
-//particles belonging to group "alpha" and Z>=10 will be included. 
+//particles belonging to group "alpha" and Z>=10 will be included.
 //
 //By default the tensor is calculated from particle momenta
 //in the default (laboratory) frame.
@@ -93,12 +93,12 @@ void KVTensP::init_KVTensP(void)
 
 
 //_________________________________________________________________
-KVTensP::KVTensP(void):KVVarGlob()
+KVTensP::KVTensP(void): KVVarGlob()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    init_KVTensP();
    sprintf(nom, "KVTensP_%d", nb_crea);
@@ -111,7 +111,7 @@ KVTensP::KVTensP(void):KVVarGlob()
 }
 
 //_________________________________________________________________
-KVTensP::KVTensP(const Char_t * nom):KVVarGlob(nom)
+KVTensP::KVTensP(const Char_t* nom): KVVarGlob(nom)
 {
 //
 // Constructeur avec un nom
@@ -123,7 +123,7 @@ KVTensP::KVTensP(const Char_t * nom):KVVarGlob(nom)
 }
 
 //_________________________________________________________________
-KVTensP::KVTensP(const Char_t * nom, const Char_t * frame):KVVarGlob(nom)
+KVTensP::KVTensP(const Char_t* nom, const Char_t* frame): KVVarGlob(nom)
 {
    //Set name of object, and name of frame for calculation of tensor
 
@@ -135,16 +135,16 @@ KVTensP::KVTensP(const Char_t * nom, const Char_t * frame):KVVarGlob(nom)
 }
 
 //_________________________________________________________________
-KVTensP::KVTensP(const KVTensP & a) : KVVarGlob()
+KVTensP::KVTensP(const KVTensP& a) : KVVarGlob()
 {
-// 
+//
 // Contructeur par Copy
 //
    init_KVTensP();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVTensP &) a).Copy(*this);
+   ((KVTensP&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVTensP
    cout << nb << " crees...(Copy) " << endl;
@@ -154,7 +154,7 @@ KVTensP::KVTensP(const KVTensP & a) : KVVarGlob()
 //_________________________________________________________________
 KVTensP::~KVTensP(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVTensP
@@ -170,21 +170,21 @@ KVTensP::~KVTensP(void)
 
 //_________________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVTensP::Copy(TObject & a) const
+void KVTensP::Copy(TObject& a) const
 #else
-void KVTensP::Copy(TObject & a)
+void KVTensP::Copy(TObject& a)
 #endif
 {
 //
 // Methode de Copy
 //
    KVVarGlob::Copy(a);
-   ((KVTensP &) a).SetZmin(GetZmin());
-   ((KVTensP &) a).SetTensor(GetTensor());
+   ((KVTensP&) a).SetZmin(GetZmin());
+   ((KVTensP&) a).SetTensor(GetTensor());
 }
 
 //_________________________________________________________________
-KVTensP & KVTensP::operator =(const KVTensP & a)
+KVTensP& KVTensP::operator =(const KVTensP& a)
 {
 //
 // Operateur =
@@ -195,7 +195,7 @@ KVTensP & KVTensP::operator =(const KVTensP & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVTensP &) a).Copy(*this);
+   ((KVTensP&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVTensP
    cout << "Nom de la Copy par egalite: " << GetName() << endl;
@@ -221,7 +221,7 @@ void KVTensP::Reset(void)
 
 //_________________________________________________________________
 
-void KVTensP::Fill(KVNucleus * c)
+void KVTensP::Fill(KVNucleus* c)
 {
    //Add the particle's contribution to the momentum tensor.
    //
@@ -250,25 +250,25 @@ void KVTensP::Fill(KVNucleus * c)
 //_________________________________________________________________
 Double_t KVTensP::getvalue_void(void) const
 {
-	// On retourne la valeur de la variable Theta_flot.
+   // On retourne la valeur de la variable Theta_flot.
    return tenseurP->GetThetaFlot();
 }
 
 //_________________________________________________________________
-Double_t *KVTensP::GetValuePtr(void)
+Double_t* KVTensP::GetValuePtr(void)
 {
-    // On retourne un tableau de valeurs. il est organise comme suit
-    //
-    // Index  Meaning
-    //--------------------------------------
-    // 0      Theta flow
-    // 1      Sphericity
-    // 2      Coplanarity
-    // 3      Phi of the reaction plane
-    // 4      Value of the 1st eigenvalue
-    // 5      Value of the 2nd eigenvalue
-    // 6      Value of the 3rd eigenvalue
-    //
+   // On retourne un tableau de valeurs. il est organise comme suit
+   //
+   // Index  Meaning
+   //--------------------------------------
+   // 0      Theta flow
+   // 1      Sphericity
+   // 2      Coplanarity
+   // 3      Phi of the reaction plane
+   // 4      Value of the 1st eigenvalue
+   // 5      Value of the 2nd eigenvalue
+   // 6      Value of the 3rd eigenvalue
+   //
 
    fVal[0] = tenseurP->GetThetaFlot();
    fVal[3] = tenseurP->GetPhiPlan();
@@ -283,51 +283,51 @@ Double_t *KVTensP::GetValuePtr(void)
 //_________________________________________________________________
 Double_t KVTensP::getvalue_int(Int_t i)
 {
-    // on retourne la ieme valeur du tableau
-    //
-    // Index   Meaning
-    //---------------------------------------
-    // 0       Theta flow
-    // 1       Sphericity
-    // 2       Coplanarity
-    // 3       Phi of the reaction plane
-    // 4       Value of the 1st eigenvalue
-    // 5       Value of the 2nd eigenvalue
-    // 6       Value of the 3rd eigenvalue
+   // on retourne la ieme valeur du tableau
+   //
+   // Index   Meaning
+   //---------------------------------------
+   // 0       Theta flow
+   // 1       Sphericity
+   // 2       Coplanarity
+   // 3       Phi of the reaction plane
+   // 4       Value of the 1st eigenvalue
+   // 5       Value of the 2nd eigenvalue
+   // 6       Value of the 3rd eigenvalue
 
    Double_t rval = 0;
    switch (i) {
-   case 0:
-      rval = tenseurP->GetThetaFlot();
-      break;
+      case 0:
+         rval = tenseurP->GetThetaFlot();
+         break;
 
-   case 3:
-      rval = tenseurP->GetPhiPlan();
-      break;
+      case 3:
+         rval = tenseurP->GetPhiPlan();
+         break;
 
-   case 4:
-      rval = tenseurP->GetVap(1);
-      break;
+      case 4:
+         rval = tenseurP->GetVap(1);
+         break;
 
-   case 5:
-      rval = tenseurP->GetVap(2);
-      break;
+      case 5:
+         rval = tenseurP->GetVap(2);
+         break;
 
-   case 6:
-      rval = tenseurP->GetVap(3);
-      break;
+      case 6:
+         rval = tenseurP->GetVap(3);
+         break;
 
-   case 1:
-      rval = tenseurP->GetSphericite();
-      break;
+      case 1:
+         rval = tenseurP->GetSphericite();
+         break;
 
-   case 2:
-      rval = tenseurP->GetCoplanarite();
-      break;
+      case 2:
+         rval = tenseurP->GetCoplanarite();
+         break;
 
-   default:
-      rval = 0.;
-      break;
+      default:
+         rval = 0.;
+         break;
    }
    return rval;
 }
@@ -335,7 +335,7 @@ Double_t KVTensP::getvalue_int(Int_t i)
 
 //_________________________________________________________________
 
-void KVTensP::SetTensor(const KVTenseur3 * KVT)
+void KVTensP::SetTensor(const KVTenseur3* KVT)
 {
    //copy tenseur values into "this" tenseur
    KVT->Copy(*tenseurP);

@@ -1,11 +1,11 @@
 /***************************************************************************
-$Id: KVCalibrator.cpp,v 1.20 2007/02/27 11:57:58 franklan Exp $ 
+$Id: KVCalibrator.cpp,v 1.20 2007/02/27 11:57:58 franklan Exp $
                          kvcalibrator.cpp  -  description
                              -------------------
     begin                : mer sep 18 2002
     copyright            : (C) 2002 by Alexis Mignon
     email                : mignon@ganil.fr
-    
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -47,14 +47,14 @@ void KVCalibrator::init()
 }
 
 //___________________________________________________________________________
-KVCalibrator::KVCalibrator():KVBase("Calibrator", "KVCalibrator")
+KVCalibrator::KVCalibrator(): KVBase("Calibrator", "KVCalibrator")
 {
    init();
 }
 
 //___________________________________________________________________________
-KVCalibrator::KVCalibrator(UShort_t pnum):KVBase("Calibrator",
-       "KVCalibrator")
+KVCalibrator::KVCalibrator(UShort_t pnum): KVBase("Calibrator",
+         "KVCalibrator")
 {
    //Create a generic calibration object with pnum coefficients in its formula
    init();
@@ -66,8 +66,8 @@ KVCalibrator::KVCalibrator(UShort_t pnum):KVBase("Calibrator",
 }
 
 //___________________________________________________________________________
-KVCalibrator::KVCalibrator(const Char_t * name, const Char_t * type,
-                           UShort_t pnum):KVBase(name, type)
+KVCalibrator::KVCalibrator(const Char_t* name, const Char_t* type,
+                           UShort_t pnum): KVBase(name, type)
 {
    //Create a generic calibration object with pnum coefficients in its formula
    init();
@@ -88,14 +88,14 @@ KVCalibrator::~KVCalibrator()
 }
 
 //
-KVCalibrator::KVCalibrator(const KVCalibrator & obj) : KVBase()
+KVCalibrator::KVCalibrator(const KVCalibrator& obj) : KVBase()
 {
    //copy ctor
    init();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    obj.Copy(*this);
 #else
-   ((KVCalibrator &) obj).Copy(*this);
+   ((KVCalibrator&) obj).Copy(*this);
 #endif
 }
 
@@ -104,11 +104,11 @@ void KVCalibrator::Print(Option_t*) const
 {
    //Print a description of the calibration object, including a list of its parameters
    cout << "_________________________________________________" << endl
-       << "KVCalibrator :" << endl
-       << "  Name : " << GetName() << endl
-       << "  Type : " << GetType() << endl
-       << "  Number of Parameters : " << GetNumberParams() << endl
-       << "  Parameters :" << endl;
+        << "KVCalibrator :" << endl
+        << "  Name : " << GetName() << endl
+        << "  Type : " << GetType() << endl
+        << "  Number of Parameters : " << GetNumberParams() << endl
+        << "  Parameters :" << endl;
    for (UShort_t i = 0; i < GetNumberParams(); i++) {
       cout << "    " << GetParameter(i) << endl;
    }
@@ -120,23 +120,23 @@ void KVCalibrator::Print(Option_t*) const
 
 //____________________________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVCalibrator::Copy(TObject & obj) const
+void KVCalibrator::Copy(TObject& obj) const
 #else
-void KVCalibrator::Copy(TObject & obj)
+void KVCalibrator::Copy(TObject& obj)
 #endif
 {
    //
    //Copy this to obj
    //
    KVBase::Copy(obj);
-   ((KVCalibrator &) obj).SetDetector(GetDetector());
-   ((KVCalibrator &) obj).SetNumberParams(GetNumberParams());
+   ((KVCalibrator&) obj).SetDetector(GetDetector());
+   ((KVCalibrator&) obj).SetNumberParams(GetNumberParams());
    if (GetNumberParams()) {
       for (UShort_t i = 0; i < GetNumberParams(); i++) {
-         ((KVCalibrator &) obj).SetParameter(i, GetParameter(i));
+         ((KVCalibrator&) obj).SetParameter(i, GetParameter(i));
       }
    }
-   ((KVCalibrator &) obj).SetStatus(GetStatus());
+   ((KVCalibrator&) obj).SetStatus(GetStatus());
 }
 
 //____________________________________________________________________________
@@ -155,10 +155,10 @@ void KVCalibrator::SetNumberParams(Int_t npar)
 
 //____________________________________________________________________________
 
-void KVCalibrator::SetDetector(KVDetector * kvd)
+void KVCalibrator::SetDetector(KVDetector* kvd)
 {
    //The name of the calibration object is set to the full name of the detector,
-   //i.e. TYPE_RINGMODULE 
+   //i.e. TYPE_RINGMODULE
    fDetector = kvd;
    SetNameFromDetector();
 }
@@ -176,9 +176,9 @@ void KVCalibrator::SetParameters(Double_t val, ...)
    va_start(ap, val);
 
    int arg_n = 0;
-   SetParameter( arg_n++, val );
+   SetParameter(arg_n++, val);
    while (arg_n < fParamNumber) {
-      SetParameter( arg_n, (Double_t) va_arg(ap, Double_t) );
+      SetParameter(arg_n, (Double_t) va_arg(ap, Double_t));
       arg_n++;
    }
 
@@ -196,7 +196,7 @@ void KVCalibrator::SetNameFromDetector()
    SetName(GetDetector()->GetName());
 }
 
-void KVCalibrator::Streamer(TBuffer & R__b)
+void KVCalibrator::Streamer(TBuffer& R__b)
 {
    // Stream an object of class KVCalibrator.
    //customised in case no parameters are initialised (fPar null pointer)
@@ -232,20 +232,20 @@ void KVCalibrator::Streamer(TBuffer & R__b)
    }
 }
 
-TGraph *KVCalibrator::MakeGraph(Double_t xmin, Double_t xmax,
+TGraph* KVCalibrator::MakeGraph(Double_t xmin, Double_t xmax,
                                 Int_t npoints) const
 {
    //Creates a TGraph with npoints points (default 50 points) showing the calibration
    //formula between input values xmin and xmax (npoints equally-spaced points).
    //User should delete the TGraph after use.
-   TGraph *tmp = 0;
+   TGraph* tmp = 0;
    if (GetStatus()) {           // check calibrator is ready
       if (GetNumberParams()) {  // check calibrator is ready
          if (npoints > 1) {
             Double_t dx = (xmax - xmin) / ((Double_t) npoints - 1.0);
             if (dx) {
-               Double_t *xval = new Double_t[npoints];
-               Double_t *yval = new Double_t[npoints];
+               Double_t* xval = new Double_t[npoints];
+               Double_t* yval = new Double_t[npoints];
                for (register int i = 0; i < npoints; i++) {
                   xval[i] = xmin + dx * ((Double_t) i);
                   yval[i] = Compute(xval[i]);

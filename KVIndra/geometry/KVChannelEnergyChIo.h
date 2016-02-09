@@ -20,16 +20,17 @@ $Id: KVChannelEnergyChIo.h,v 1.3 2007/02/27 11:56:33 franklan Exp $
 
 #include "KVCalibrator.h"
 
-class KVChannelEnergyChIo:public KVCalibrator {
+class KVChannelEnergyChIo: public KVCalibrator {
 
- public:
+public:
    KVChannelEnergyChIo();
-   KVChannelEnergyChIo(KVDetector * kvd);
-   virtual ~ KVChannelEnergyChIo() {
+   KVChannelEnergyChIo(KVDetector* kvd);
+   virtual ~ KVChannelEnergyChIo()
+   {
    };
 
    virtual Double_t Compute(Double_t chan) const;
-   virtual Double_t operator() (Double_t chan);
+   virtual Double_t operator()(Double_t chan);
    virtual Double_t Invert(Double_t volts);
 
 //      Double_t GetChi2() const { return GetParameter(2); };

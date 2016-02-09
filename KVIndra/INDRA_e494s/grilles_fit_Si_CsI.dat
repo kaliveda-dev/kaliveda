@@ -5,8 +5,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0401/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.6659000396729e+01
 Alpha= 1.1299369335175e+00
@@ -27,8 +27,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0402/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.6271324157715e+01
 Alpha= 1.1371904611588e+00
@@ -49,8 +49,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0403/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.3041877746582e+01
 Alpha= 1.2300751209259e+00
@@ -71,8 +71,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0404/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 1.1425494194031e+01
 Alpha= 2.1818418502808e+00
@@ -93,8 +93,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0405/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.4060165405273e+01
 Alpha= 1.1709052324295e+00
@@ -115,8 +115,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-334
 IDTelescopes=/SI_CSI_0406/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.2177898406982e+01
 Alpha= 1.1702411174774e+00
@@ -137,8 +137,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs=335-532
 IDTelescopes=/SI_CSI_0406/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 18.5 
 ZMIN=1  ZMAX=20
 Lambda= 2.3939746856689e+01
 Alpha= 1.3025697469711e+00
@@ -159,8 +159,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0407/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.4052761077881e+01
 Alpha= 1.1917114257812e+00
@@ -181,8 +181,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0408/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.7306890487671e+00
 Alpha= 2.0522291660309e+00
@@ -203,8 +203,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0409/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.4023452758789e+01
 Alpha= 1.1814283132553e+00
@@ -225,8 +225,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0411/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.5005577087402e+01
 Alpha= 1.1751356124878e+00
@@ -247,8 +247,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0412/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.3420089721680e+01
 Alpha= 1.1330848932266e+00
@@ -269,8 +269,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0413/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 6.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.5352813720703e+01
 Alpha= 1.1706637144089e+00
@@ -291,8 +291,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0414/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 4.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.5736042022705e+01
 Alpha= 1.1866272687912e+00
@@ -313,8 +313,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0415/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 4.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.3952751159668e+01
 Alpha= 1.1826910972595e+00
@@ -335,8 +335,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0416/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 4.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.5608623504639e+01
 Alpha= 1.1717187166214e+00
@@ -357,8 +357,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0419/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.4477493286133e+01
 Alpha= 1.1727956533432e+00
@@ -379,8 +379,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0420/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.3865634918213e+01
 Alpha= 1.1799001693726e+00
@@ -401,8 +401,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0423/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.7125373840332e+01
 Alpha= 1.1853007078171e+00
@@ -423,8 +423,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0424/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.5364250183105e+01
 Alpha= 1.2048140764236e+00
@@ -445,8 +445,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0501/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.8079776763916e+01
 Alpha= 1.1620405912399e+00
@@ -467,8 +467,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0502/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.6619476318359e+01
 Alpha= 1.1419136524200e+00
@@ -489,8 +489,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0503/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.5248729705811e+01
 Alpha= 1.1542191505432e+00
@@ -511,8 +511,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0504/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.4349037170410e+01
 Alpha= 1.1054809093475e+00
@@ -533,8 +533,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0505/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.1134904861450e+01
 Alpha= 1.1646105051041e+00
@@ -555,8 +555,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0506/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.4201538085938e+01
 Alpha= 1.1775044202805e+00
@@ -577,8 +577,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0507/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.0438684463501e+01
 Alpha= 1.1958923339844e+00
@@ -599,8 +599,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0508/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.3640926361084e+01
 Alpha= 1.1567416191101e+00
@@ -621,8 +621,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0509/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 1.4000793457031e+01
 Alpha= 1.3577311038971e+00
@@ -643,8 +643,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0510/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.5966476440430e+01
 Alpha= 1.1712093353271e+00
@@ -665,8 +665,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0511/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 8.6935348510742e+00
 Alpha= 1.7537204027176e+00
@@ -687,8 +687,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0512/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 6.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.6790420532227e+01
 Alpha= 1.1353675127029e+00
@@ -709,8 +709,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0513/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 1.1493643760681e+01
 Alpha= 1.5420784950256e+00
@@ -731,8 +731,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs=80-261
 IDTelescopes=/SI_CSI_0514/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 6.0 
 ZMIN=1  ZMAX=20
 Lambda= 2.9972196578979e+01
 Alpha= 1.2062379121780e+00
@@ -753,8 +753,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs=262-532
 IDTelescopes=/SI_CSI_0514/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 6.5 
 ZMIN=1  ZMAX=20
 Lambda= 2.9866041183472e+01
 Alpha= 1.2569948434830e+00
@@ -775,8 +775,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0515/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.4447570800781e+01
 Alpha= 1.1720247268677e+00
@@ -797,8 +797,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0516/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 6.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.4182876586914e+01
 Alpha= 1.1748468875885e+00
@@ -819,8 +819,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0519/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 6.5 
 ZMIN=1  ZMAX=20
 Lambda= 3.4803203582764e+01
 Alpha= 1.1766794919968e+00
@@ -841,8 +841,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0520/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 6.5 
 ZMIN=1  ZMAX=20
 Lambda= 3.5771286010742e+01
 Alpha= 1.1792558431625e+00
@@ -863,8 +863,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0521/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 6.5
 ZMIN=1  ZMAX=20
 Lambda= 3.7763637542725e+01
 Alpha= 1.1642156839371e+00
@@ -885,8 +885,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0522/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 6.5 
 ZMIN=1  ZMAX=20
 Lambda= 3.4968151092529e+01
 Alpha= 1.1641201972961e+00
@@ -907,8 +907,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0523/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.5765563964844e+01
 Alpha= 1.1563743352890e+00
@@ -929,8 +929,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0524/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.8558753967285e+01
 Alpha= 1.1595293283463e+00
@@ -951,8 +951,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0601/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.9590820312500e+01
 Alpha= 1.2215262651443e+00
@@ -973,8 +973,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0602/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.5086750030518e+01
 Alpha= 1.1947208642960e+00
@@ -995,8 +995,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0603/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.5794719696045e+01
 Alpha= 1.1927051544189e+00
@@ -1017,8 +1017,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0604/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 9.0
 ZMIN=1  ZMAX=20
 Lambda= 4.9417362213135e+01
 Alpha= 1.2129141092300e+00
@@ -1039,8 +1039,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0605/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.8268447875977e+01
 Alpha= 1.2540001869202e+00
@@ -1061,8 +1061,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0606/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.3590473175049e+01
 Alpha= 1.2060979604721e+00
@@ -1083,8 +1083,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0607/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.9464656829834e+01
 Alpha= 1.2372800111771e+00
@@ -1105,8 +1105,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0608/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.3963218688965e+01
 Alpha= 1.2500311136246e+00
@@ -1127,8 +1127,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0609/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.1802955627441e+01
 Alpha= 1.2333863973618e+00
@@ -1149,8 +1149,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0610/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.3708477020264e+01
 Alpha= 1.2013899087906e+00
@@ -1171,8 +1171,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0611/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.0322395324707e+01
 Alpha= 1.2324455976486e+00
@@ -1193,8 +1193,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0612/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.0200271606445e+01
 Alpha= 1.2202575206757e+00
@@ -1215,8 +1215,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0613/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 9.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.9784755706787e+01
 Alpha= 1.2496364116669e+00
@@ -1237,8 +1237,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0614/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 9.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.6716205596924e+01
 Alpha= 1.2376439571381e+00
@@ -1259,8 +1259,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0616/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 11.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.1465206146240e+01
 Alpha= 1.2201576232910e+00
@@ -1281,8 +1281,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0617/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.0412258148193e+01
 Alpha= 1.2368303537369e+00
@@ -1303,8 +1303,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0618/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2062965393066e+01
 Alpha= 1.2363032102585e+00
@@ -1325,8 +1325,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0619/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 9.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2462413787842e+01
 Alpha= 1.2492032051086e+00
@@ -1347,8 +1347,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0620/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 9.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2591438293457e+01
 Alpha= 1.2635986804962e+00
@@ -1369,8 +1369,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0621/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.6823104858398e+01
 Alpha= 1.2294924259186e+00
@@ -1391,8 +1391,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0622/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.3553501129150e+01
 Alpha= 1.2624994516373e+00
@@ -1413,8 +1413,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0623/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.1268356323242e+01
 Alpha= 1.2380950450897e+00
@@ -1435,8 +1435,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0624/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 13.0 
 ZMIN=1  ZMAX=20
 Lambda= 7.3980064392090e+01
 Alpha= 1.2272838354111e+00
@@ -1457,8 +1457,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0701/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 10.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.3194221496582e+01
 Alpha= 1.2423391342163e+00
@@ -1479,8 +1479,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0702/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 9.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.6980117797852e+01
 Alpha= 1.2266573905945e+00
@@ -1501,8 +1501,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0703/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.0497486114502e+01
 Alpha= 1.2062124013901e+00
@@ -1523,8 +1523,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0704/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 11.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.1911399841309e+01
 Alpha= 1.2381016016006e+00
@@ -1545,8 +1545,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0705/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.4988071441650e+01
 Alpha= 1.2506728172302e+00
@@ -1567,8 +1567,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0706/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 11.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.1757202148438e+01
 Alpha= 1.2299001216888e+00
@@ -1589,8 +1589,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0707/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.9285057067871e+01
 Alpha= 1.2225700616837e+00
@@ -1611,8 +1611,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0708/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 9.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.9178955078125e+01
 Alpha= 1.2325744628906e+00
@@ -1633,8 +1633,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0709/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 1.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.4644508361816e+01
 Alpha= 1.2427862882614e+00
@@ -1655,8 +1655,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0710/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 1.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.6191547393799e+01
 Alpha= 1.2491981983185e+00
@@ -1677,8 +1677,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0711/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.7362968444824e+01
 Alpha= 1.2250431776047e+00
@@ -1699,8 +1699,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0712/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 1.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.6735862731934e+01
 Alpha= 1.2202342748642e+00
@@ -1721,8 +1721,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0713/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.8101577758789e+01
 Alpha= 1.2107198238373e+00
@@ -1743,8 +1743,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0714/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 1.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.8240150451660e+01
 Alpha= 1.2457830905914e+00
@@ -1765,8 +1765,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0715/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.0291549682617e+01
 Alpha= 1.2412410974503e+00
@@ -1787,8 +1787,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0716/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 1.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.6818168640137e+01
 Alpha= 1.2262719869614e+00
@@ -1809,8 +1809,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0717/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 1.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.7180297851562e+01
 Alpha= 1.2351989746094e+00
@@ -1831,8 +1831,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0718/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.3190731048584e+01
 Alpha= 1.2538967132568e+00
@@ -1853,8 +1853,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0719/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.4055267333984e+01
 Alpha= 1.2478655576706e+00
@@ -1875,8 +1875,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0720/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.7190937042236e+01
 Alpha= 1.2456887960434e+00
@@ -1897,8 +1897,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0721/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.1513042449951e+01
 Alpha= 1.2612099647522e+00
@@ -1919,8 +1919,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0722/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.9366294860840e+01
 Alpha= 1.2491734027863e+00
@@ -1941,8 +1941,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0723/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.8430229187012e+01
 Alpha= 1.2469882965088e+00
@@ -1963,8 +1963,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0724/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.9127140045166e+01
 Alpha= 1.2854627370834e+00
@@ -1985,8 +1985,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0801/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.3515487670898e+01
 Alpha= 1.1768959760666e+00
@@ -2007,8 +2007,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0802/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.4401420593262e+01
 Alpha= 1.1795228719711e+00
@@ -2029,8 +2029,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0803/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.1897670745850e+01
 Alpha= 1.1649814844131e+00
@@ -2051,8 +2051,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0804/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.8735351562500e+01
 Alpha= 1.1878815889359e+00
@@ -2073,8 +2073,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0805/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.3366634368896e+01
 Alpha= 1.1819387674332e+00
@@ -2095,8 +2095,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0806/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.9065719604492e+01
 Alpha= 1.1697866916656e+00
@@ -2117,8 +2117,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0807/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.0321220397949e+01
 Alpha= 1.1758748292923e+00
@@ -2139,8 +2139,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0808/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2729038238525e+01
 Alpha= 1.1841367483139e+00
@@ -2161,8 +2161,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0809/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.0523674011230e+01
 Alpha= 1.1790499687195e+00
@@ -2183,8 +2183,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0810/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.0063701629639e+01
 Alpha= 1.1708756685257e+00
@@ -2205,8 +2205,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0811/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.1992530822754e+01
 Alpha= 1.1854985952377e+00
@@ -2227,8 +2227,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0812/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 4.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2607624053955e+01
 Alpha= 1.1729773283005e+00
@@ -2249,8 +2249,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0813/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2648292541504e+01
 Alpha= 1.1723235845566e+00
@@ -2271,8 +2271,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0814/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2113731384277e+01
 Alpha= 1.1647609472275e+00
@@ -2293,8 +2293,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0815/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.0415931701660e+01
 Alpha= 1.1856917142868e+00
@@ -2315,8 +2315,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0816/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 3.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.4488304138184e+01
 Alpha= 1.1757571697235e+00
@@ -2337,8 +2337,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0817/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.1889423370361e+01
 Alpha= 1.1809654235840e+00
@@ -2359,8 +2359,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0818/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.8168571472168e+01
 Alpha= 1.1839487552643e+00
@@ -2381,8 +2381,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0819/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.9298076629639e+01
 Alpha= 1.1844753026962e+00
@@ -2403,8 +2403,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0820/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.0705928802490e+01
 Alpha= 1.1757518053055e+00
@@ -2425,8 +2425,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0821/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2141517639160e+01
 Alpha= 1.1672480106354e+00
@@ -2447,8 +2447,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0822/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.4398097991943e+01
 Alpha= 1.1766834259033e+00
@@ -2469,8 +2469,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0823/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2194412231445e+01
 Alpha= 1.1504886150360e+00
@@ -2491,8 +2491,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0824/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 9.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.3514755249023e+01
 Alpha= 1.1693425178528e+00
@@ -2513,8 +2513,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0901/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.7821224212646e+01
 Alpha= 1.1819363832474e+00
@@ -2535,8 +2535,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0902/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.4721839904785e+01
 Alpha= 1.1603980064392e+00
@@ -2557,8 +2557,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0903/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2184349060059e+01
 Alpha= 1.1943104267120e+00
@@ -2579,8 +2579,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0904/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.4960998535156e+01
 Alpha= 1.1665245294571e+00
@@ -2601,8 +2601,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0905/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.4554855346680e+01
 Alpha= 1.1589261293411e+00
@@ -2623,8 +2623,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0906/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2321910858154e+01
 Alpha= 1.1789894104004e+00
@@ -2645,8 +2645,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0907/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.8194702148438e+01
 Alpha= 1.1524388790131e+00
@@ -2667,8 +2667,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs=80-261
 IDTelescopes=/SI_CSI_0908/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.6246421813965e+01
 Alpha= 1.2157694101334e+00
@@ -2689,8 +2689,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 262-532
 IDTelescopes=/SI_CSI_0908/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 6.2820999145508e+01
 Alpha= 1.1901143789291e+00
@@ -2711,8 +2711,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0909/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.4846900939941e+01
 Alpha= 1.1368329524994e+00
@@ -2733,8 +2733,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0910/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.4502777099609e+01
 Alpha= 1.1870359182358e+00
@@ -2755,8 +2755,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0911/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.3092643737793e+01
 Alpha= 1.1666913032532e+00
@@ -2777,8 +2777,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0912/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.2056907653809e+01
 Alpha= 1.1701977252960e+00
@@ -2799,8 +2799,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0913/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.3609371185303e+01
 Alpha= 1.1824398040771e+00
@@ -2821,8 +2821,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0914/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.4019149780273e+01
 Alpha= 1.1504572629929e+00
@@ -2843,8 +2843,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0915/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 2.8779367446899e+01
 Alpha= 1.3355237245560e+00
@@ -2865,8 +2865,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs=80-261
 IDTelescopes=/SI_CSI_0916/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.3391883850098e+01
 Alpha= 1.2386651039124e+00
@@ -2887,8 +2887,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 262-532
 IDTelescopes=/SI_CSI_0916/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.9436996459961e+01
 Alpha= 1.2079485654831e+00
@@ -2909,8 +2909,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0917/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 9.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.0472370147705e+01
 Alpha= 1.2072451114655e+00
@@ -2931,8 +2931,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0918/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 5.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.6664974212646e+01
 Alpha= 1.1756954193115e+00
@@ -2953,8 +2953,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0919/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.1668117523193e+01
 Alpha= 1.1962975263596e+00
@@ -2975,8 +2975,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0920/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 3.8331085205078e+01
 Alpha= 1.2072666883469e+00
@@ -2997,8 +2997,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0921/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.4445484161377e+01
 Alpha= 1.1714745759964e+00
@@ -3019,8 +3019,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0922/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 4.9525535583496e+01
 Alpha= 1.1769125461578e+00
@@ -3041,8 +3041,8 @@ ZorA=0
 Functional=KVTGIDFunctions::fede
 Runs= 80-532
 IDTelescopes=/SI_CSI_0924/
-<VARX> 
-<VARY> 
+<VARX> CsI total light 
+<VARY> Si coder data > 7.0 
 ZMIN=1  ZMAX=20
 Lambda= 5.5649288177490e+01
 Alpha= 1.1728793382645e+00
@@ -3055,4 +3055,3 @@ Pdx=-1.8809797286987e+01
 Pdy= 9.6860176324844e-01
 Eta= 1.6135599136353e+01
 !
-

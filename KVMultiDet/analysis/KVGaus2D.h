@@ -7,22 +7,21 @@
 #include "KVAutoFit.h"
 #include "TF1.h"
 
-class KVGaus2D : public KVAutoFit
-{
+class KVGaus2D : public KVAutoFit {
 
-	protected:
-	
-	virtual Bool_t NewFunction_2D();
-	virtual TF1* ReloadFunction_2D(const Char_t*, Int_t);
-	virtual Double_t f2D(Double_t *xx,Double_t *para);	
-	
-	public:
+protected:
+
+   virtual Bool_t NewFunction_2D();
+   virtual TF1* ReloadFunction_2D(const Char_t*, Int_t);
+   virtual Double_t f2D(Double_t* xx, Double_t* para);
+
+public:
 
    KVGaus2D();
-   KVGaus2D (const KVGaus2D&) ;
+   KVGaus2D(const KVGaus2D&) ;
    virtual ~KVGaus2D();
 
-   ClassDef(KVGaus2D,1)//Fit gaussien a deux dimensions
+   ClassDef(KVGaus2D, 1) //Fit gaussien a deux dimensions
 };
 
 #endif

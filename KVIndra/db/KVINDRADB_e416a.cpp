@@ -23,7 +23,7 @@ ClassImp(KVINDRADB_e416a)
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-KVINDRADB_e416a::KVINDRADB_e416a(const Char_t * name):KVINDRADB(name)
+KVINDRADB_e416a::KVINDRADB_e416a(const Char_t* name): KVINDRADB(name)
 {
    //Default constructor
    fBICPressures = AddTable("BIC Pressures", "Pressures of BIC");
@@ -72,33 +72,33 @@ void KVINDRADB_e416a::ReadBICPressures()
    UInt_t frun = 0, lrun = 0;
    UInt_t run_ranges[MAX_NUM_RUN_RANGES][2];
    UInt_t rr_number = 0;
-   Bool_t prev_rr = kFALSE;     //was the previous line a run range indication ? 
+   Bool_t prev_rr = kFALSE;     //was the previous line a run range indication ?
    Bool_t read_pressure = kFALSE; // have we read any pressures recently ?
 
-   KVDB_BIC_Pressures *parset=0;
-   TList *par_list = new TList();
+   KVDB_BIC_Pressures* parset = 0;
+   TList* par_list = new TList();
 
-         //any ChIo not in list is assumed absent (pressure = 0)
-         Float_t pressure[3] = { 0, 0, 0 };
-         
+   //any ChIo not in list is assumed absent (pressure = 0)
+   Float_t pressure[3] = { 0, 0, 0 };
+
    while (fin.good()) {         // parcours du fichier
 
       sline.ReadLine(fin);
       if (sline.BeginsWith("Run Range :")) {    // run range found
          if (!prev_rr) {        // New set of run ranges to read
-            
+
             //have we just finished reading some pressures ?
-            if (read_pressure){
+            if (read_pressure) {
                parset = new KVDB_BIC_Pressures(pressure);
                GetTable("BIC Pressures")->AddRecord(parset);
-               par_list->Add(parset);               
+               par_list->Add(parset);
                LinkListToRunRanges(par_list, rr_number, run_ranges);
                par_list->Clear();
-               for(register int zz=0;zz<3;zz++) pressure[zz]=0.;
-               read_pressure=kFALSE;
+               for (register int zz = 0; zz < 3; zz++) pressure[zz] = 0.;
+               read_pressure = kFALSE;
             }
             rr_number = 0;
-            
+
          }
          if (sscanf(sline.Data(), "Run Range : %u %u", &frun, &lrun) != 2) {
             Warning("ReadBICPressures()",
@@ -117,33 +117,33 @@ void KVINDRADB_e416a::ReadBICPressures()
          }
       }                         // Run Range found
       if (fin.eof()) {          //fin du fichier
-            //have we just finished reading some pressures ?
-            if (read_pressure){
-               parset = new KVDB_BIC_Pressures(pressure);
-               GetTable("BIC Pressures")->AddRecord(parset);
-               par_list->Add(parset);               
-               LinkListToRunRanges(par_list, rr_number, run_ranges);
-               par_list->Clear();
-               for(register int zz=0;zz<3;zz++) pressure[zz]=0.;
-               read_pressure=kFALSE;
-            }
+         //have we just finished reading some pressures ?
+         if (read_pressure) {
+            parset = new KVDB_BIC_Pressures(pressure);
+            GetTable("BIC Pressures")->AddRecord(parset);
+            par_list->Add(parset);
+            LinkListToRunRanges(par_list, rr_number, run_ranges);
+            par_list->Clear();
+            for (register int zz = 0; zz < 3; zz++) pressure[zz] = 0.;
+            read_pressure = kFALSE;
+         }
       }
       if (sline.BeginsWith("BIC")) {  //line with BIC pressure data
-         
+
          prev_rr = kFALSE;
-               
+
          //split up BIC name and pressure
          TObjArray* toks = sline.Tokenize(' ');
          TString chio = ((TObjString*)(*toks)[0])->String();
          KVString press = ((TObjString*)(*toks)[1])->String();
          delete toks;
-         
-         read_pressure=kTRUE;
-         
-         if( chio == "BIC_1" ) pressure[0] = press.Atof();
-         else if( chio == "BIC_2" ) pressure[1] = press.Atof();
-         else if( chio == "BIC_3" ) pressure[2] = press.Atof();
-         else read_pressure=kFALSE;
+
+         read_pressure = kTRUE;
+
+         if (chio == "BIC_1") pressure[0] = press.Atof();
+         else if (chio == "BIC_2") pressure[1] = press.Atof();
+         else if (chio == "BIC_3") pressure[2] = press.Atof();
+         else read_pressure = kFALSE;
 
       }                         //line with BIC pressure data
    }                            //parcours du fichier

@@ -8,13 +8,13 @@
 //    email                : patois@ganil.fr
 //////////////////////////////////////////////////////////////////////////
 //
-// Part of ROOTGanilTape 
+// Part of ROOTGanilTape
 //
 // GTDataParameters
 //
 // Handle parameters data names and related offsets in the event buffer.
 // Data on GANIL Tapes are labelled with a string name.
-// They are also known from theyr relative position (offset or index)in 
+// They are also known from theyr relative position (offset or index)in
 // the data buffer.
 // This class handle conversion between those two representation.
 //
@@ -48,88 +48,86 @@ ClassImp(GTDataParameters);
 //______________________________________________________________________________
 GTDataParameters::GTDataParameters(void)
 {
-  //Default constructor. Don't create anything yet.
-  fList = new TList;
-  fList->SetOwner();  // As owners of the data in tree, they will be deleted
-                     // when we'll delete the tree itself
+   //Default constructor. Don't create anything yet.
+   fList = new TList;
+   fList->SetOwner();  // As owners of the data in tree, they will be deleted
+   // when we'll delete the tree itself
 }
 
 //______________________________________________________________________________
 GTDataParameters::~GTDataParameters(void)
 {
-  delete fList;
+   delete fList;
 }
 
 
 //______________________________________________________________________________
-char * GTDataParameters::CopyParam (char *Dest, char *Source) const
+char* GTDataParameters::CopyParam(char* Dest, char* Source) const
 {
-  // Small utility routine to copy a char string.
-  char c;
+   // Small utility routine to copy a char string.
+   char c;
    do {
-     c = *Source++;
-     if ( (c == ',') || (c == 0x0d) )
-       c = '\0';
-     *Dest++ = c;
-   } while ( c != '\0' );
-  return( Source );
+      c = *Source++;
+      if ((c == ',') || (c == 0x0d))
+         c = '\0';
+      *Dest++ = c;
+   } while (c != '\0');
+   return (Source);
 }
 
 
 //______________________________________________________________________________
-int GTDataParameters::Fill(const char *buffParam)
+int GTDataParameters::Fill(const char* buffParam)
 {
-  // Data from the parameter buffet (buffParam) have been read from disk and is
-  // parsed by this routine who create the list of labels and corresponding 
-  // index.
+   // Data from the parameter buffet (buffParam) have been read from disk and is
+   // parsed by this routine who create the list of labels and corresponding
+   // index.
    //Returns largest parameter number (not necessarily same as total number of parameters)
-  
-  char *CurrPointer;
-  char NomParam[20], chaine[20];
-  int  NumPar, NbBits;
-    
-  CurrPointer = (char *)buffParam;
-  
-  fMaxIndex=0;
-  
-  while ( strncmp(CurrPointer, "    ",4) != 0 &&  
-	  strncmp(CurrPointer, "!!!!",4) != 0   )
-  {
-    CurrPointer = CopyParam(NomParam, CurrPointer);
-    CurrPointer = CopyParam( chaine, CurrPointer);
-    sscanf( chaine,"%d",&NumPar);
-    CurrPointer = CopyParam( chaine, CurrPointer);
-    sscanf( chaine,"%d",&NbBits);
-    GTDataPar *par=new GTDataPar(NomParam,NumPar,NbBits);
-    fList->Add(par);
-    fMaxIndex = TMath::Max(par->Index(), fMaxIndex);
-  }
-  return(fMaxIndex);
+
+   char* CurrPointer;
+   char NomParam[20], chaine[20];
+   int  NumPar, NbBits;
+
+   CurrPointer = (char*)buffParam;
+
+   fMaxIndex = 0;
+
+   while (strncmp(CurrPointer, "    ", 4) != 0 &&
+          strncmp(CurrPointer, "!!!!", 4) != 0) {
+      CurrPointer = CopyParam(NomParam, CurrPointer);
+      CurrPointer = CopyParam(chaine, CurrPointer);
+      sscanf(chaine, "%d", &NumPar);
+      CurrPointer = CopyParam(chaine, CurrPointer);
+      sscanf(chaine, "%d", &NbBits);
+      GTDataPar* par = new GTDataPar(NomParam, NumPar, NbBits);
+      fList->Add(par);
+      fMaxIndex = TMath::Max(par->Index(), fMaxIndex);
+   }
+   return (fMaxIndex);
 }
 
 //______________________________________________________________________________
-int GTDataParameters::GetIndex (const TString parName) const
+int GTDataParameters::GetIndex(const TString parName) const
 {
-  // Return the index number corresponding to a text label.
-  GTDataPar *par=(GTDataPar*)fList->FindObject(parName);
-  if (!par)
-  {
-    cout << "Parameter "<<parName<<" not found!"<<endl;
-    return(-1);
-  }
-  return(par->Index());
+   // Return the index number corresponding to a text label.
+   GTDataPar* par = (GTDataPar*)fList->FindObject(parName);
+   if (!par) {
+      cout << "Parameter " << parName << " not found!" << endl;
+      return (-1);
+   }
+   return (par->Index());
 }
 
 //______________________________________________________________________________
-const char* GTDataParameters::GetParName (const int index) const
+const char* GTDataParameters::GetParName(const int index) const
 {
    // Return the text label name corresponding to a parameter number
    TIter next(fList);
-   GTDataPar *par;
-   while( (par = (GTDataPar*)next()) ){
-      if( par->Index() == index ) return par->GetName();
+   GTDataPar* par;
+   while ((par = (GTDataPar*)next())) {
+      if (par->Index() == index) return par->GetName();
    }
-   return("");
+   return ("");
 }
 
 //______________________________________________________________________________
@@ -137,9 +135,9 @@ GTDataPar* GTDataParameters::GetPar(const int index) const
 {
    // Return the parameter corresponding to the parameter number
    TIter next(fList);
-   GTDataPar *par;
-   while( (par = (GTDataPar*)next()) ){
-      if( par->Index() == index ) return par;
+   GTDataPar* par;
+   while ((par = (GTDataPar*)next())) {
+      if (par->Index() == index) return par;
    }
    return 0;
 }

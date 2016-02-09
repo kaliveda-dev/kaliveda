@@ -24,74 +24,80 @@ class KVNucleus;
 class TObjArray;
 
 class KVElasticScatter {
-   TH1F *fDepth;                //depth of scattering point in target
-   TH1F *fTheta;                //angle of scattered particle
+   TH1F* fDepth;                //depth of scattering point in target
+   TH1F* fTheta;                //angle of scattered particle
    Int_t  fBinE;                //Number of bins of the Energy histogram
 
    Double_t fEnergy;            //energy of projectile
-   KVNucleus *fProj;            //scattered nucleus
-   KVNucleus *fTarg;            //target nucleus
+   KVNucleus* fProj;            //scattered nucleus
+   KVNucleus* fTarg;            //target nucleus
 
-   KV2Body *fKinematics;        //kinematics calculation
+   KV2Body* fKinematics;        //kinematics calculation
 
-   KVTelescope *fTelescope;     //telescope where particle will be detected
-   KVDetector *fDetector;       //detector where particle will be detected
-   TList *fAlignedDetectors;    //all aligned detectors
+   KVTelescope* fTelescope;     //telescope where particle will be detected
+   KVDetector* fDetector;       //detector where particle will be detected
+   TList* fAlignedDetectors;    //all aligned detectors
    Int_t fNDets;                //number of aligned detectors
-   KVTarget *fTarget;           //target for current run
+   KVTarget* fTarget;           //target for current run
    Bool_t fMultiLayer;          //kTRUE for multilayer target
 
-   TVector3 fBeamDirection;     //beam direction vector 
+   TVector3 fBeamDirection;     //beam direction vector
    Int_t fIntLayer;             //index of interaction layer in multilayer target
 
    Double_t fExx;               //excited state of target nucleus
 
-   TObjArray *fHistos;          //energy loss histograms for all hit detectors
-    KVNameValueList* fDetInd;    //detector type-index association
+   TObjArray* fHistos;          //energy loss histograms for all hit detectors
+   KVNameValueList* fDetInd;    //detector type-index association
 
- public:
+public:
 
-    KVElasticScatter();
-    virtual ~ KVElasticScatter();
+   KVElasticScatter();
+   virtual ~ KVElasticScatter();
 
    void SetRun(Int_t run);
    void SetProjectile(Int_t Z, Int_t A);
    void SetEnergy(Double_t E);
-   void SetTargetScatteringLayer(const Char_t * name);
+   void SetTargetScatteringLayer(const Char_t* name);
    //Set the number of bins of the GetEnergy() histogram
-   //Default value is 500; this function has to be called before 
+   //Default value is 500; this function has to be called before
    //using CalculateScattering.
-   void SetEbinning(Int_t nbins=500);
-   void SetDetector(const Char_t * det);
+   void SetEbinning(Int_t nbins = 500);
+   void SetDetector(const Char_t* det);
    void CalculateScattering(Int_t N);
    //To simulate inelastic scattering i.e. where the target nucleus is left in
    //an excited state, use this method to set the excitation energy (in MeV).
    //This value will be used for all subsequent calculations.
    //Use SetTargetExcitedState(0) to return to elastic scattering.
-   void SetTargetExcitedState(Double_t ex) {
+   void SetTargetExcitedState(Double_t ex)
+   {
       fExx = ex;
    };
 
    //Return pointer to histogram of 'depth' of scattering point in target (in mg/cm2)
-   TH1F *GetDepth() {
+   TH1F* GetDepth()
+   {
       return fDepth;
    };
    //Return pointer to energy loss histogram for chosen detector (in MeV)
-   TH1F *GetEnergy() {
+   TH1F* GetEnergy()
+   {
       return GetEnergy(fNDets - 1);
    };
    //Return pointer to polar angle distribution of scattered particle (in degrees)
-   TH1F *GetTheta() {
+   TH1F* GetTheta()
+   {
       return fTheta;
    };
-   TH1F *GetEnergy(const Char_t * type);
-   TH1F *GetEnergy(Int_t index);
+   TH1F* GetEnergy(const Char_t* type);
+   TH1F* GetEnergy(Int_t index);
    //Returns the number of detectors crossed by the scattered particle
-   Int_t GetNDets() const {
+   Int_t GetNDets() const
+   {
       return fNDets;
    };
    //Returns the number of bins of the GetEnergy histogram
-   Int_t GetEbinning(void) {
+   Int_t GetEbinning(void)
+   {
       return fBinE;
    };
 

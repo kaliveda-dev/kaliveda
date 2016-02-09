@@ -7,16 +7,15 @@
 #include "KVIDChIoSi.h"
 #include "KVINDRACodes.h"
 
-class KVIDChIoSiLi : public KVIDChIoSi
-{
+class KVIDChIoSiLi : public KVIDChIoSi {
 
-   public:
+public:
    KVIDChIoSiLi();
-   KVIDChIoSiLi (const KVIDChIoSiLi&) ;
+   KVIDChIoSiLi(const KVIDChIoSiLi&) ;
    virtual ~KVIDChIoSiLi();
-   void Copy (TObject&) const;
+   void Copy(TObject&) const;
 
-   ClassDef(KVIDChIoSiLi,1)//Identification in ChIo-SiLi matrices of INDRA
+   ClassDef(KVIDChIoSiLi, 1) //Identification in ChIo-SiLi matrices of INDRA
 };
 
 #endif

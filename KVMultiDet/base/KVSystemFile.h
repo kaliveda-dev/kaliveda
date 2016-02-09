@@ -8,26 +8,25 @@
 #include "TSystem.h"
 #include "TDatime.h"
 
-class KVSystemFile : public TSystemFile
-{
-	FileStat_t fFileInfos;
-   UserGroup_t *fUserInfo;
-	
-   public:
+class KVSystemFile : public TSystemFile {
+   FileStat_t fFileInfos;
+   UserGroup_t* fUserInfo;
+
+public:
    KVSystemFile();
-   KVSystemFile (const Char_t* filename, const Char_t* dirname);
+   KVSystemFile(const Char_t* filename, const Char_t* dirname);
    virtual ~KVSystemFile();
-   
+
    void ls(Option_t* option = "") const;
-   
+
    const Char_t* GetUser() const
    {
-      if(fUserInfo) return fUserInfo->fUser;
+      if (fUserInfo) return fUserInfo->fUser;
       return "";
    };
    const Char_t* GetGroup() const
    {
-      if(fUserInfo) return fUserInfo->fGroup;
+      if (fUserInfo) return fUserInfo->fGroup;
       return "";
    };
    Long64_t GetSize() const
@@ -40,7 +39,7 @@ class KVSystemFile : public TSystemFile
       return when.AsSQLString();
    };
 
-   ClassDef(KVSystemFile,1)//TSystemFile with added info on file size etc.
+   ClassDef(KVSystemFile, 1) //TSystemFile with added info on file size etc.
 };
 
 #endif

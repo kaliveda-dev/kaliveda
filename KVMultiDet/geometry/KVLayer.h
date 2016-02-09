@@ -25,20 +25,21 @@ class KVLayer : public KVGeoStrucElement {
 
 public:
 
-    KVLayer();
-    virtual ~ KVLayer();
+   KVLayer();
+   virtual ~ KVLayer();
 
-    Bool_t IsSortable() const {
-        return kTRUE;
-    };
-    Int_t Compare(const TObject * obj) const;
+   Bool_t IsSortable() const
+   {
+      return kTRUE;
+   };
+   Int_t Compare(const TObject* obj) const;
 
-    const Char_t *GetName() const;
+   const Char_t* GetName() const;
 
-    virtual TGeoVolume* GetGeoVolume();
-    virtual void AddToGeometry();
+   virtual TGeoVolume* GetGeoVolume();
+   virtual void AddToGeometry();
 
-    ClassDef(KVLayer, 3)         //Layer of telescopes at the "same distance" from the target in a multidetector array
+   ClassDef(KVLayer, 3)         //Layer of telescopes at the "same distance" from the target in a multidetector array
 };
 
 #endif

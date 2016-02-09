@@ -3,17 +3,20 @@
 #pragma link off all classes;
 #pragma link off all functions;
 #pragma link C++ global gVamos;
-#pragma link C++ class KVVAMOSReconNuc-;
-#pragma link C++ class KVVAMOSReconEvent-;
-#pragma link C++ class KVVAMOS+;
-#pragma link C++ class KVVAMOSReconGeoNavigator+;
+
 #pragma link C++ class KVINDRA_VAMOS+;
-#pragma link C++ class KVVAMOSDetector+;
-#pragma link C++ class KVHarpeeSi-;
-#pragma link C++ class KVHarpeeIC+;
-#pragma link C++ class KVDriftChamber+;
-#pragma link C++ class KVSeD+;
 #pragma link C++ class KVIVReconEvent+;
-#pragma link C++ class KVVAMOSTransferMatrix-; //customized streamer
-#pragma link C++ class KVIVUpDater;
+#pragma link C++ class KVVAMOSReconEvent-;
+#pragma link C++ class KVVAMOSReconNuc-;
+
+// Identification correction (idc) namespace
+#pragma link C++ namespace idc;
+#pragma link C++ class idc::CorrectionData+;
+#pragma link C++ class idc::AbsorberEnergies+;
+#pragma link C++ function idc::Identify;
+#pragma link C++ function idc::ApplyCorrections;
+#pragma link C++ function idc::ApplyIcSiCorrections;
+#pragma link C++ function idc::ApplySiCsiCorrections;
+#pragma link C++ function idc::CorrectAoverQ;
+
 #endif

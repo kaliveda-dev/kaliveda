@@ -12,17 +12,16 @@ $Date: 2008/04/11 09:58:58 $
 
 #include "KVTensP.h"
 
-class KVTensE : public KVTensP
-{
+class KVTensE : public KVTensP {
 
-   public:
-   KVTensE(){};
-   KVTensE(const Char_t * nom):KVTensP(nom){};
-   KVTensE(const Char_t * nom, const Char_t * frame):KVTensP(nom,frame){};
-   virtual ~KVTensE(){};
-   void Fill(KVNucleus * c);
+public:
+   KVTensE() {};
+   KVTensE(const Char_t* nom): KVTensP(nom) {};
+   KVTensE(const Char_t* nom, const Char_t* frame): KVTensP(nom, frame) {};
+   virtual ~KVTensE() {};
+   void Fill(KVNucleus* c);
 
-   ClassDef(KVTensE,1)//Kinetic energy tensor
+   ClassDef(KVTensE, 1) //Kinetic energy tensor
 };
 
 #endif

@@ -58,12 +58,12 @@ lox2.Lock(); // filename given to ctor
 lox.Release();
 lox2.Release();
 </pre>
-<p>Note that Release() is called automatically in the dtor in case e.g. the KVLockfile goes out of scope.</p>      
+<p>Note that Release() is called automatically in the dtor in case e.g. the KVLockfile goes out of scope.</p>
 <!-- */
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-KVLockfile::KVLockfile(const Char_t* filename):fFile(filename), fLockfile("lockfile")
+KVLockfile::KVLockfile(const Char_t* filename): fFile(filename), fLockfile("lockfile")
 {
    // Default constructor
    init();
@@ -75,7 +75,7 @@ KVLockfile::~KVLockfile()
 {
    // Destructor
    // If file is still locked, we call Release
-   if(locked) Release();
+   if (locked) Release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,35 +86,35 @@ void KVLockfile::init()
    //Look for 'lockfile' executable and store path if found
    //Set value of have_exec accordingly
    have_exec = FindExecutable(fLockfile);
-   sleeptime=8;//time to wait before retrying lock
-   retries=-1;//number of times to retry
-   locktimeout=0;//time after which lock automatically opens
-   suspend=16;//suspend time after timeout
+   sleeptime = 8; //time to wait before retrying lock
+   retries = -1; //number of times to retry
+   locktimeout = 0; //time after which lock automatically opens
+   suspend = 16; //suspend time after timeout
    locked = kFALSE;
 }
-Bool_t KVLockfile::FindExecutable(TString & exec, const Char_t * path)
+Bool_t KVLockfile::FindExecutable(TString& exec, const Char_t* path)
 {
    //copied from KVBase to avoid circular dependency
 
-   TString spath(path), backup(exec), backup2(exec),expandexec(exec);
+   TString spath(path), backup(exec), backup2(exec), expandexec(exec);
    gSystem->ExpandPathName(expandexec);
    if (gSystem->IsAbsoluteFileName(expandexec.Data())) {
       //executable given as absolute path
       //we check if it exists
-      if (!gSystem->AccessPathName(expandexec)){
+      if (!gSystem->AccessPathName(expandexec)) {
          exec = expandexec;
          return kTRUE;
       } else {
          //try with ".exe" in case of Windows system
-         if(!expandexec.EndsWith(".exe")){
+         if (!expandexec.EndsWith(".exe")) {
             expandexec += ".exe";
-            if (!gSystem->AccessPathName(expandexec)){
+            if (!gSystem->AccessPathName(expandexec)) {
                exec = expandexec;
                return kTRUE;
             }
          }
       }
-		exec=backup;
+      exec = backup;
       return kFALSE;
    }
    gSystem->ExpandPathName(spath);
@@ -127,7 +127,7 @@ Bool_t KVLockfile::FindExecutable(TString & exec, const Char_t * path)
          return kTRUE;
       }
    }
-	exec=backup2;
+   exec = backup2;
    return kFALSE;
 }
 
@@ -136,23 +136,23 @@ Bool_t KVLockfile::FindExecutable(TString & exec, const Char_t * path)
 void KVLockfile::writecmd()
 {
    //Writes lockfile command with current values of parameters
-   if(locktimeout)
+   if (locktimeout)
       cmd.Form("%s -%d -r%d -l%d -s%d %s.lock",
-         fLockfile.Data(),
-         sleeptime,
-         retries,
-         locktimeout,
-         suspend,
-         fFile.Data()
-         );
+               fLockfile.Data(),
+               sleeptime,
+               retries,
+               locktimeout,
+               suspend,
+               fFile.Data()
+              );
    else
       cmd.Form("%s -%d -r%d -s%d %s.lock",
-         fLockfile.Data(),
-         sleeptime,
-         retries,
-         suspend,
-         fFile.Data()
-         );
+               fLockfile.Data(),
+               sleeptime,
+               retries,
+               suspend,
+               fFile.Data()
+              );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -168,22 +168,21 @@ int KVLockfile::testlock()
 
 Bool_t KVLockfile::Lock(const Char_t* filename)
 {
-   if(!have_exec){
+   if (!have_exec) {
       locked = kTRUE;
       return kTRUE;
    }
-   if(locked){
+   if (locked) {
       cout << "<Error in KVLockfile::Lock: file " << fFile.Data() << " is already locked. Release it first>" << endl;
       return kFALSE;
    }
-   if(strcmp(filename,"")) fFile = filename;
+   if (strcmp(filename, "")) fFile = filename;
    writecmd();
-   if( !testlock() ) {
+   if (!testlock()) {
       //cout << "<Info in KVLockfile::Lock : Locked " << fFile.Data() << ">" << endl;
       locked = kTRUE;
       return kTRUE;
-   }
-   else {
+   } else {
       cout << "<Error in KVLockfile::Lock: can't get a lock for file " << fFile.Data() << ">" << endl;
       locked = kFALSE;
       return kFALSE;
@@ -194,15 +193,15 @@ Bool_t KVLockfile::Lock(const Char_t* filename)
 
 Bool_t KVLockfile::Release()
 {
-   if(!have_exec){
+   if (!have_exec) {
       locked = kFALSE;
       return kTRUE;
    }
-   if(!locked){
+   if (!locked) {
       cout << "<Error in KVLockfile::Release: file is not locked. Lock it first>" << endl;
       return kFALSE;
    }
    //cout << "<Info in KVLockfile::Release : Released " << fFile.Data() << ">" << endl;
-   locked=kFALSE;
-   return (gSystem->Unlink( Form("%s.lock", fFile.Data()) ) != -1);
+   locked = kFALSE;
+   return (gSystem->Unlink(Form("%s.lock", fFile.Data())) != -1);
 }

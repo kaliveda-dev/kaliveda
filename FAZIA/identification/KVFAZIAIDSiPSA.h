@@ -7,17 +7,16 @@
 #include "KVFAZIAIDTelescope.h"
 #include "TGraph.h"
 
-class KVFAZIAIDSiPSA : public KVFAZIAIDTelescope
-{
+class KVFAZIAIDSiPSA : public KVFAZIAIDTelescope {
 
-	TGraph *fRearThreshold;//! Z-dependent threshold extracted from published article
-	
-   public:
+   TGraph* fRearThreshold;//! Z-dependent threshold extracted from published article
+
+public:
    KVFAZIAIDSiPSA();
    virtual ~KVFAZIAIDSiPSA();
-	Bool_t CheckTheoreticalIdentificationThreshold(KVNucleus*, Double_t = 0.);
+   Bool_t CheckTheoreticalIdentificationThreshold(KVNucleus*, Double_t = 0.);
 
-   ClassDef(KVFAZIAIDSiPSA,1)//PSA identification in first silicon of FAZIA telescopes
+   ClassDef(KVFAZIAIDSiPSA, 1) //PSA identification in first silicon of FAZIA telescopes
 };
 
 #endif

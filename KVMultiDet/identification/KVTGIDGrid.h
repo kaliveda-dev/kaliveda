@@ -14,25 +14,24 @@ $Date: 2009/03/03 14:27:15 $
 
 class KVTGID;
 
-class KVTGIDGrid : public KVIDZAGrid
-{
-	protected:
-	KVTGID		*fTGID;		//KVTGID used to generate grid
-	
-   public:
+class KVTGIDGrid : public KVIDZAGrid {
+protected:
+   KVTGID*      fTGID;     //KVTGID used to generate grid
+
+public:
    KVTGIDGrid();
    KVTGIDGrid(KVTGID*, KVIDZAGrid* = 0);
    virtual ~KVTGIDGrid();
-	void WriteToAsciiFile(std::ofstream &);
-	void ReadFromAsciiFile(std::ifstream &);
+   void WriteToAsciiFile(std::ofstream&);
+   void ReadFromAsciiFile(std::ifstream&);
    virtual void Generate(Double_t xmax, Double_t xmin,
-                                Int_t ID_min = 0, Int_t ID_max = 0, 
-				Int_t npoints = 50, Bool_t logscale = kTRUE);//  *MENU* *ARGS={xmax=>fXmax,xmin=>fXmin}
-	
-	const KVTGID* GetTGID() const;
-   virtual void AddIdentifier(KVIDentifier *id);
+                         Int_t ID_min = 0, Int_t ID_max = 0,
+                         Int_t npoints = 50, Bool_t logscale = kTRUE);//  *MENU* *ARGS={xmax=>fXmax,xmin=>fXmin}
 
-   ClassDef(KVTGIDGrid,1)//Grid representing result of fit
+   const KVTGID* GetTGID() const;
+   virtual void AddIdentifier(KVIDentifier* id);
+
+   ClassDef(KVTGIDGrid, 1) //Grid representing result of fit
 };
 
 #endif

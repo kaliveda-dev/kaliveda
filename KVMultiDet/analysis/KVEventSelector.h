@@ -31,16 +31,16 @@ protected :
       kDeleteGVList = BIT(14),
    };
 
-   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
+   TTree*          fChain;   //!pointer to the analyzed TTree or TChain
 
    // Declaration of leaf types
-   KVEvent     *Event;
+   KVEvent*     Event;
 
    // List of branches
-   TBranch        *b_Event;   //!
+   TBranch*        b_Event;   //!
 
    //List of global variables
-   KVGVList *gvlist;            //!
+   KVGVList* gvlist;            //!
 
    KVString fBranchName; //name of branch which contains events to analyse
 
@@ -57,7 +57,7 @@ protected :
 
    Bool_t fNotifyCalled; // avoid multiple calls to Notify/InitRun
    KVString fCombinedOutputFile;// optional name for single results file with trees and histos
-   
+
    //parsed list of options given to TTree::Process
    KVNameValueList fOptionList;
 
@@ -66,22 +66,24 @@ protected :
    void FillTH2(TH2* h2, Double_t one, Double_t two, Double_t three);
    void FillTProfile2D(TProfile2D* h2, Double_t one, Double_t two, Double_t three, Double_t four);
    void FillTH3(TH3* h3, Double_t one, Double_t two, Double_t three, Double_t four);
-   
+
 
 public:
-	TFile* writeFile;//!
+   TFile* writeFile;//!
    TProofOutputFile* mergeFile;//! for merging with PROOF
    TString tree_file_name;
    Bool_t CreateTreeFile(const Char_t* filename = "");
-	
+
    virtual void ParseOptions();
-	
-    KVEventSelector(TTree * /*tree*/ = 0) : fChain(0), gvlist(0), fBranchName("data"), fPartCond(0), fFirstEvent(kTRUE),
-      fEventsRead(0), fEventsReadInterval(100), fNotifyCalled(kFALSE) {
+
+   KVEventSelector(TTree* /*tree*/ = 0) : fChain(0), gvlist(0), fBranchName("data"), fPartCond(0), fFirstEvent(kTRUE),
+      fEventsRead(0), fEventsReadInterval(100), fNotifyCalled(kFALSE)
+   {
       lhisto = new KVHashList();
       ltree = new KVHashList();
    }
-   virtual ~KVEventSelector() {
+   virtual ~KVEventSelector()
+   {
       //delete global variable list if it belongs to us, i.e. if created by a call to GetGVList
       if (TestBit(kDeleteGVList)) {
          delete gvlist;
@@ -96,79 +98,98 @@ public:
       delete ltree;
       ltree = 0;
    };
-   void SetEventsReadInterval(Long64_t N) { fEventsReadInterval = N; };
-   virtual Int_t   Version() const {
+   void SetEventsReadInterval(Long64_t N)
+   {
+      fEventsReadInterval = N;
+   };
+   virtual Int_t   Version() const
+   {
       return 3;
    }
-   virtual void    Begin(TTree *tree);
-   virtual void    SlaveBegin(TTree *tree);
-   virtual void    Init(TTree *tree);
+   virtual void    Begin(TTree* tree);
+   virtual void    SlaveBegin(TTree* tree);
+   virtual void    Init(TTree* tree);
    virtual Bool_t  Notify();
    virtual Bool_t  Process(Long64_t entry);
-   virtual Int_t   GetEntry(Long64_t entry, Int_t getall = 0) {
+   virtual Int_t   GetEntry(Long64_t entry, Int_t getall = 0)
+   {
       return fChain ? fChain->GetTree()->GetEntry(entry, getall) : 0;
    }
-   virtual void    SetObject(TObject *obj) {
+   virtual void    SetObject(TObject* obj)
+   {
       fObject = obj;
    }
-   virtual void    SetInputList(TList *input) {
+   virtual void    SetInputList(TList* input)
+   {
       fInput = input;
    }
-   virtual TList  *GetOutputList() const {
+   virtual TList*  GetOutputList() const
+   {
       return fOutput;
    }
    virtual void    SlaveTerminate();
    virtual void    Terminate();
 
-   void SetBranchName(const Char_t* n) {
+   void SetBranchName(const Char_t* n)
+   {
       fBranchName = n;
    };
-   const Char_t* GetBranchName() const {
+   const Char_t* GetBranchName() const
+   {
       return fBranchName.Data();
    };
    virtual void SetAnalysisFrame()
    {
    };
 
-   KVEvent* GetEvent() const {
+   KVEvent* GetEvent() const
+   {
       return Event;
    }
 
    /* user entry points */
-   virtual void InitAnalysis() {
+   virtual void InitAnalysis()
+   {
       AbstractMethod("InitAnalysis");
    };
-   virtual void InitRun() {
+   virtual void InitRun()
+   {
       AbstractMethod("InitRun");
    };
-   virtual Bool_t Analysis() {
+   virtual Bool_t Analysis()
+   {
       //AbstractMethod("Analysis");
       return kTRUE;
    };
-   virtual void EndRun() {
+   virtual void EndRun()
+   {
       AbstractMethod("EndRun");
    };
-   virtual void EndAnalysis() {
+   virtual void EndAnalysis()
+   {
       AbstractMethod("EndAnalysis");
    };
    //handling global variables for analysis
-   virtual void SetGVList(KVGVList * list) {
+   virtual void SetGVList(KVGVList* list)
+   {
       //Use a user-defined list of global variables for the analysis.
       //In this case it is the user's responsibility to delete the list
       //at the end of the analysis.
       gvlist = list;
    };
-   virtual KVGVList *GetGVList(void) const {
+   virtual KVGVList* GetGVList(void) const
+   {
       //Access to the internal list of global variables
       //If the list does not exist, it is created.
       //In this case it will be automatically deleted with the KVSelector object.
       if (!gvlist) {
-         const_cast < KVEventSelector *>(this)->gvlist = new KVGVList;
-         const_cast < KVEventSelector *>(this)->SetBit(kDeleteGVList);
+         const_cast < KVEventSelector*>(this)->gvlist = new KVGVList;
+         const_cast < KVEventSelector*>(this)->SetBit(kDeleteGVList);
       }
       return gvlist;
    };
-   virtual void AddGV(KVVarGlob *vg) {
+   virtual void AddGV(KVVarGlob* vg)
+   {
       //Add the global variable "vg" to the list of variables for the analysis.
       //This is equivalent to GetGVList()->Add( vg ).
       if (!vg)
@@ -176,8 +197,9 @@ public:
       else
          GetGVList()->Add(vg);
    };
-   virtual KVVarGlob *AddGV(const Char_t * class_name, const Char_t * name);
-   virtual KVVarGlob *GetGV(const Char_t *name) const {
+   virtual KVVarGlob* AddGV(const Char_t* class_name, const Char_t* name);
+   virtual KVVarGlob* GetGV(const Char_t* name) const
+   {
       //Access the global variable with name "name" in the list of variables
       //for the analysis.
       //This is equivalent to GetGVList()->GetGV( name ).
@@ -185,7 +207,8 @@ public:
       return GetGVList()->GetGV(name);
    };
    virtual void RecalculateGlobalVariables();
-   Bool_t AtEndOfRun(void) {
+   Bool_t AtEndOfRun(void)
+   {
       // Check whether the end of run is reached for the current tree
       return (fTreeEntry + 1 == fChain->GetTree()->GetEntries());
    };
@@ -201,28 +224,29 @@ public:
    KVHashList* GetHistoList() const;
    KVHashList* GetTreeList() const;
 
-	TH1* GetHisto(const Char_t* name) const;
+   TH1* GetHisto(const Char_t* name) const;
    TTree* GetTree(const Char_t* name) const;
 
-   virtual void SaveHistos(const Char_t* filename ="", Option_t* option = "recreate", Bool_t onlyfilled=kFALSE);
+   virtual void SaveHistos(const Char_t* filename = "", Option_t* option = "recreate", Bool_t onlyfilled = kFALSE);
 
-   virtual void SetOpt(const Char_t* option, const Char_t* value);   
+   virtual void SetOpt(const Char_t* option, const Char_t* value);
    virtual Bool_t IsOptGiven(const Char_t* option);
    virtual const TString& GetOpt(const Char_t* option) const;
    virtual void UnsetOpt(const Char_t* opt);
-   
-	virtual void SetAdditionalBranchAddress() {
+
+   virtual void SetAdditionalBranchAddress()
+   {
       //if user wants to read additional branches of the tree
-		//
+      //
    };
-	
+
    ClassDef(KVEventSelector, 0)//General purpose analysis class for TTrees containing KVEvent objects
 };
 
 #endif
 
 #ifdef KVEventSelector_cxx
-void KVEventSelector::Init(TTree *tree)
+void KVEventSelector::Init(TTree* tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -231,23 +255,22 @@ void KVEventSelector::Init(TTree *tree)
    // code, but the routine can be extended by the user if needed.
    // Init() will be called many times when running on PROOF
    // (once per file to be processed).
-	
-	// Set object pointer
+
+   // Set object pointer
    Event = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
    fChain->SetMakeClass(1);
-	
-	if (strcmp(GetBranchName(),"")  && fChain->GetBranch(GetBranchName()) )
-	{
-   	Info("Init", "Analysing data in branch : %s", GetBranchName());
-   	fChain->SetBranchAddress(GetBranchName() , &Event, &b_Event);
-	}
-	//user additional branches addressing
-	SetAdditionalBranchAddress();
-	fEventsRead=0;
-	
+
+   if (strcmp(GetBranchName(), "")  && fChain->GetBranch(GetBranchName())) {
+      Info("Init", "Analysing data in branch : %s", GetBranchName());
+      fChain->SetBranchAddress(GetBranchName() , &Event, &b_Event);
+   }
+   //user additional branches addressing
+   SetAdditionalBranchAddress();
+   fEventsRead = 0;
+
 }
 
 Bool_t KVEventSelector::Notify()

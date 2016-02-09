@@ -29,9 +29,9 @@ using namespace std;
 
 ClassImp(KVWidget)
 //__________________________________________________________________________________________
-    // Class holding all information relative to widgets in KVBrowser i.e. widget ID for
-    // interface, an identifier for the function associated to the widget, and a pointer
-    // to the object concerned.
+// Class holding all information relative to widgets in KVBrowser i.e. widget ID for
+// interface, an identifier for the function associated to the widget, and a pointer
+// to the object concerned.
 Long_t KVWidget::fCurrentID;
 
 KVWidget::KVWidget()
@@ -56,7 +56,7 @@ KVWidget::~KVWidget()
 
 //_______________________________________________________________________________
 
-KVWidget::KVWidget(TObject * obj, Long_t func)
+KVWidget::KVWidget(TObject* obj, Long_t func)
 {
 // Create a new widget associating the detector object *obj with the function func
    fWidID = fCurrentID++;
@@ -77,38 +77,38 @@ void KVWidget::Action(Long_t parm) const
    // perform the action associated with the widget
 
    switch (fFunction) {
-   case CLOSE_BROWSER:
-      cout << "CLOSE_BROWSER for " << fObject->
-          ClassName() << " " << fObject->GetName() << endl;
-      //((KVDetectorBrowser *) fObject)->CloseWindow();
-      break;
-   case kDET_CHOOSE_MATERIAL:
+      case CLOSE_BROWSER:
+         cout << "CLOSE_BROWSER for " << fObject->
+              ClassName() << " " << fObject->GetName() << endl;
+         //((KVDetectorBrowser *) fObject)->CloseWindow();
+         break;
+      case kDET_CHOOSE_MATERIAL:
 //                        cout << "CHOOSE MATERIAL: ";
 //                    co        ut << ((KVMaterial*)((KVDetector*)fObject)->GetMaterialsList()->At(parm))->GetName() << endl;
-/*                    ((	KVDetector*)fObject)->SetMaterial(
-                       ((	KVMaterial*)((KVDetector*)fObject)->GetMaterialsList()->At(parm))
-                       );	
-  */
-      break;
-   case kDET_SET_THICKNESS:
+         /*                    ((   KVDetector*)fObject)->SetMaterial(
+                                ((  KVMaterial*)((KVDetector*)fObject)->GetMaterialsList()->At(parm))
+                                );
+           */
+         break;
+      case kDET_SET_THICKNESS:
 //                       cout << "SET THICKNESS:";
-      ((KVDetector *) fObject)->
-          SetThickness(((TGNumberEntry *) GetWidget())->GetNumber());
-      break;
-   case kDB_TABLE_LIST:
-      cout << "TABLE LIST: ";
-      ((KVDataBaseBrowser *) fObject)->FillRecordsList(parm);
-      break;
-   case kDB_RECORD_LIST:
-      cout << "RECORD LIST: ";
-      break;
-   default:
-      cout << "KVWidget: Unknown widget or action" << endl;
+         ((KVDetector*) fObject)->
+         SetThickness(((TGNumberEntry*) GetWidget())->GetNumber());
+         break;
+      case kDB_TABLE_LIST:
+         cout << "TABLE LIST: ";
+         ((KVDataBaseBrowser*) fObject)->FillRecordsList(parm);
+         break;
+      case kDB_RECORD_LIST:
+         cout << "RECORD LIST: ";
+         break;
+      default:
+         cout << "KVWidget: Unknown widget or action" << endl;
    }
 }
 
 //___   ____________________________________________________________________________
-void KVWidget::Print(Option_t *) const
+void KVWidget::Print(Option_t*) const
 {
    cout << " KVWidget ID = " << fWidID << endl;
    Action();

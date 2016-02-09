@@ -412,7 +412,7 @@ function(BUILD_KALIVEDA_SUBPROJECT)
 	file(GLOB module_list RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *)
 	
 	#---remove dataset dirs, etc.
-	set(to_be_removed CMakeLists.txt etc data factory examples doc)
+	set(to_be_removed CMakeLists.txt etc data factory examples doc tools)
 	list(REMOVE_ITEM module_list ${to_be_removed} ${ARG_DATASETS} ${ARG_IGNORE_DIRS})
 	
 	#---configure modules

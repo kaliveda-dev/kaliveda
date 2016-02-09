@@ -15,18 +15,31 @@ ClassImp(KVLifeTime)
 ////////////////////////////////////////////////////////////////////////////////
 
 //_________________________________
-KVLifeTime::KVLifeTime(const Char_t* name): KVNuclData(name)
+KVLifeTime::KVLifeTime(const Char_t* name): KVNuclData(name, "s")
 {
    // Default constructor
-	init();
+   init();
 
+}
+
+KVLifeTime::KVLifeTime(const KVLifeTime& o) : KVNuclData()
+{
+   // Copy ctor
+   o.Copy(*this);
+}
+
+void KVLifeTime::Copy(TObject& object) const
+{
+   KVNuclData::Copy(object);
+   KVLifeTime& lt = (KVLifeTime&)object;
+   lt.SetResonance(IsAResonance());
 }
 
 //_________________________________
 KVLifeTime::KVLifeTime(): KVNuclData()
 {
    // Default constructor
-	init();
+   init();
 
 }
 
@@ -39,14 +52,7 @@ KVLifeTime::~KVLifeTime()
 //_________________________________
 void KVLifeTime::init()
 {
-	
-	SetResonnance(kFALSE);
-	
-}
 
-//_________________________________
-const Char_t* KVLifeTime::GetUnit() const{
+   SetResonance(kFALSE);
 
-	if (IsAResonnance())	return "MeV";
-	else return "s";
 }

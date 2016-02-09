@@ -30,7 +30,7 @@ ClassImp(KVUniqueNameList)
 // object will be deleted as well as being replaced.
 //
 // ============== EXAMPLES ===============
-// 
+//
 // TNamed* a = new TNamed("A1", "an object");
 // TNamed* b = new TNamed("B1", "another object");
 // TNamed* c = a;
@@ -44,11 +44,11 @@ ClassImp(KVUniqueNameList)
 // aList.Add(c);
 // aList.Add(d);
 // aList.ls();
-// OBJ: TList	TList	Doubly linked list : 0
-//  OBJ: TNamed	A1	an object : 0 at: 0x6c21770
-//  OBJ: TNamed	B1	another object : 0 at: 0x6c0fc40
-//  OBJ: TNamed	A1	an object : 0 at: 0x6c21770
-//  OBJ: TNamed	A1	an object with the same name as another : 0 at: 0x6c0acf0
+// OBJ: TList  TList Doubly linked list : 0
+//  OBJ: TNamed   A1 an object : 0 at: 0x6c21770
+//  OBJ: TNamed   B1 another object : 0 at: 0x6c0fc40
+//  OBJ: TNamed   A1 an object : 0 at: 0x6c21770
+//  OBJ: TNamed   A1 an object with the same name as another : 0 at: 0x6c0acf0
 //
 // === Example 1 - unique name list, no replace
 //
@@ -58,9 +58,9 @@ ClassImp(KVUniqueNameList)
 // UNlist1.Add(c);
 // UNlist1.Add(d);
 // UNlist1.ls();
-// OBJ: KVUniqueNameList	KVUniqueNameList	Optimised list in which objects can only be placed once : 0
-//  OBJ: TNamed	A1	an object : 0 at: 0x6c21770
-//  OBJ: TNamed	B1	another object : 0 at: 0x6c0fc40//
+// OBJ: KVUniqueNameList   KVUniqueNameList  Optimised list in which objects can only be placed once : 0
+//  OBJ: TNamed   A1 an object : 0 at: 0x6c21770
+//  OBJ: TNamed   B1 another object : 0 at: 0x6c0fc40//
 //
 // === Example 2 - unique name list, with replace
 //
@@ -70,9 +70,9 @@ ClassImp(KVUniqueNameList)
 // UNlist2.Add(c);
 // UNlist2.Add(d);
 // UNlist2.ls();
-// OBJ: KVUniqueNameList	KVUniqueNameList	Optimised list in which objects can only be placed once : 0
-//  OBJ: TNamed	B1	another object : 0 at: 0x6c0fc40
-//  OBJ: TNamed	A1	an object with the same name as another : 0 at: 0x6c0acf0
+// OBJ: KVUniqueNameList   KVUniqueNameList  Optimised list in which objects can only be placed once : 0
+//  OBJ: TNamed   B1 another object : 0 at: 0x6c0fc40
+//  OBJ: TNamed   A1 an object with the same name as another : 0 at: 0x6c0acf0
 //
 // === Example 3 - unique name list which owns its objects, with replace
 //
@@ -81,21 +81,21 @@ ClassImp(KVUniqueNameList)
 // UNlist3.Add(b);
 // UNlist3.Add(d);
 // UNlist3.ls();
-// OBJ: KVUniqueNameList	KVUniqueNameList	Optimised list in which objects can only be placed once : 0
-//  OBJ: TNamed	B1	another object : 0 at: 0x6c0fc40
-//  OBJ: TNamed	A1	an object with the same name as another : 0 at: 0x6c0acf0
-// 
+// OBJ: KVUniqueNameList   KVUniqueNameList  Optimised list in which objects can only be placed once : 0
+//  OBJ: TNamed   B1 another object : 0 at: 0x6c0fc40
+//  OBJ: TNamed   A1 an object with the same name as another : 0 at: 0x6c0acf0
+//
 // a->ls();
-// 
+//
 //  *** Break *** segmentation violation  (1st object "A1" has been deleted)
-// 
+//
 // N.B.: in the last example we do NOT do UNlist3.Add(c) which would have
 // deleted the object pointed to by both *a and *c, and then tried to
 // add this deleted object back in to the list
 ////////////////////////////////////////////////////////////////////////////////
 
 KVUniqueNameList::KVUniqueNameList(Bool_t R)
-     : fReplace(R)
+   : fReplace(R)
 {
    // Default constructor
 }
@@ -113,15 +113,14 @@ Bool_t KVUniqueNameList::checkObjInList(TObject* obj)
    // If fReplace==kTRUE the previous object is removed from the list.
    // If IsOwner()==kTRUE the previous object is removed AND deleted.
    // In the latter two cases the new object can always be added (returns kTRUE)
-   
+
    TObject* old_obj = FindObject(obj->GetName());
-   if(!old_obj) return kTRUE;
-   else
-   {
-      if(fReplace){
-	 Remove(old_obj);
-	 if(IsOwner()) delete old_obj;
-	 return kTRUE;
+   if (!old_obj) return kTRUE;
+   else {
+      if (fReplace) {
+         Remove(old_obj);
+         if (IsOwner()) delete old_obj;
+         return kTRUE;
       }
    }
    return kFALSE;

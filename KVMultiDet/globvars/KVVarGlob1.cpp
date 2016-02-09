@@ -1,11 +1,11 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 17/02/2004
 // Creation d'une classe Variable Globale.
 // Elle est utilisee dans les analyses ROOT.
 // Cette Classe traite le cas ou 1 valeur est attendue (Etrans, Multiplicite,
-//                                                      Etot, etc..) 
+//                                                      Etot, etc..)
 //
 
 #include "TMath.h"
@@ -23,12 +23,12 @@ ClassImp(KVVarGlob1)
 //      virtual void Init(void)                 initiates the internal fields
 //      virtual void Reset(void)                resets internal fields before the treatment
 //      virtual void Fill(KVNucleus *c)         tells how to compute the global variable using a KVNucleus
-//       
-// A call to the protected method FillVar(Double_t v) adds v to the current value. 
+//
+// A call to the protected method FillVar(Double_t v) adds v to the current value.
 // A call to the GetValue() method returns the value of the variable.
 // Have a look to the KVEkin class to have an example of how to implement a global variable deriving from
 // KVVarGlob1. Look at KVVarGlob class to have an example of use.
-// 
+//
 Int_t KVVarGlob1::nb = 0;
 Int_t KVVarGlob1::nb_crea = 0;
 Int_t KVVarGlob1::nb_dest = 0;
@@ -47,14 +47,14 @@ void KVVarGlob1::init(void)
 }
 
 //_________________________________________________________________
-KVVarGlob1::KVVarGlob1(void):KVVarGlob()
+KVVarGlob1::KVVarGlob1(void): KVVarGlob()
 {
 //
 // Createur par default
 //
    TString nom;
    init();
-   nom.Form( "KVVarGlob1_%d", nb_crea);
+   nom.Form("KVVarGlob1_%d", nb_crea);
    SetName(nom.Data());
    SetTitle(nom.Data());
 #ifdef DEBUG_KVVarGlob1
@@ -63,7 +63,7 @@ KVVarGlob1::KVVarGlob1(void):KVVarGlob()
 }
 
 //_________________________________________________________________
-KVVarGlob1::KVVarGlob1(Char_t * nom):KVVarGlob(nom)
+KVVarGlob1::KVVarGlob1(Char_t* nom): KVVarGlob(nom)
 {
 //
 // Constructeur avec un nom
@@ -75,16 +75,16 @@ KVVarGlob1::KVVarGlob1(Char_t * nom):KVVarGlob(nom)
 }
 
 //_________________________________________________________________
-KVVarGlob1::KVVarGlob1(const KVVarGlob1 & a):KVVarGlob(a)
+KVVarGlob1::KVVarGlob1(const KVVarGlob1& a): KVVarGlob(a)
 {
-// 
+//
 // Contructeur par Copy
 //
    init();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVVarGlob1 &) a).Copy(*this);
+   ((KVVarGlob1&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVVarGlob1
    cout << nb << " crees...(Copy) " << endl;
@@ -94,7 +94,7 @@ KVVarGlob1::KVVarGlob1(const KVVarGlob1 & a):KVVarGlob(a)
 //_________________________________________________________________
 KVVarGlob1::~KVVarGlob1(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVVarGlob1
@@ -106,7 +106,7 @@ KVVarGlob1::~KVVarGlob1(void)
 }
 
 //_________________________________________________________________
-KVVarGlob1 & KVVarGlob1::operator =(const KVVarGlob1 & a)
+KVVarGlob1& KVVarGlob1::operator =(const KVVarGlob1& a)
 {
 //
 // Operateur =
@@ -117,7 +117,7 @@ KVVarGlob1 & KVVarGlob1::operator =(const KVVarGlob1 & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVVarGlob1 &) a).Copy(*this);
+   ((KVVarGlob1&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVVarGlob1
    cout << "Nom de la Copy par egalite: " << GetName() << endl;
@@ -144,24 +144,24 @@ void KVVarGlob1::Reset(void)
 //_________________________________________________________________
 Double_t KVVarGlob1::getvalue_void(void) const
 {
-	// On retourne la valeur de la
-	// variable.
+   // On retourne la valeur de la
+   // variable.
    return var;
 }
 
 //_________________________________________________________________
 Double_t KVVarGlob1::getvalue_int(Int_t)
 {
-	// there is only one value, so whatever the value of i,
-	// this method returns the same as getvalue_void
+   // there is only one value, so whatever the value of i,
+   // this method returns the same as getvalue_void
    return getvalue_void();
 }
 
 //_________________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVVarGlob1::Copy(TObject & a) const
+void KVVarGlob1::Copy(TObject& a) const
 #else
-void KVVarGlob1::Copy(TObject & a)
+void KVVarGlob1::Copy(TObject& a)
 #endif
 {
    // Methode de Copy
@@ -171,14 +171,14 @@ void KVVarGlob1::Copy(TObject & a)
    //in turn calls KVBase::Copy, copying the name and title/label of the object), then setting the value
    //of "var" in "a".
 
-   ((KVVarGlob1 &) a).Reset();
+   ((KVVarGlob1&) a).Reset();
    KVVarGlob::Copy(a);
-   ((KVVarGlob1 &) a).SetValue(GetValue());
+   ((KVVarGlob1&) a).SetValue(GetValue());
 }
 
 //_________________________________________________________________
 
-void KVVarGlob1::MakeClass(const Char_t * classname, const Char_t * classdesc, int type)
+void KVVarGlob1::MakeClass(const Char_t* classname, const Char_t* classdesc, int type)
 {
    //Creates skeleton '.h' and '.cpp' files for a new global variable class which
    //inherits from this class. Give a name for the new class and a short description
@@ -190,24 +190,24 @@ void KVVarGlob1::MakeClass(const Char_t * classname, const Char_t * classdesc, i
    // A skeleton Fill2(KVNucleus*,KVNucleus*) method will be generated.
    // For a N-body variable, call MakeClass with type = KVVarGlob::kNBody.
    // A skeleton FillN(KVEvent*) method will be generated.
-   
+
    // basic class template
    KVClassFactory cf(classname, classdesc, "KVVarGlob1", kTRUE);
-   
+
    KVString body;
-   
+
    // add 'init' method
    KVVarGlob::AddInitMethod(classname, cf, body, type);
-   
+
    // add 'Fill', 'Fill2', or 'FillN' method
    KVVarGlob::AddFillMethod(cf, type);
-   
+
    // body of 'Fill', 'Fill2', or 'FillN' method
    KVVarGlob1::FillMethodBody(body, type);
-   
+
    // add body of method
    KVVarGlob::AddFillMethodBody(cf, body, type);
-      
+
    cf.GenerateCode();
 }
 
@@ -215,35 +215,35 @@ void KVVarGlob1::FillMethodBody(KVString& body, int type)
 {
    // PRIVATE method used by MakeClass.
    // body of 'Fill', 'Fill2', or 'FillN' method
-   switch(type){
+   switch (type) {
       case kTwoBody:
          body = "   // Calculation of contribution to 2-body global variable of pair (n1,n2) of nuclei.\n";
-         body+= "   // NOTE: this method will be called for EVERY pair of nuclei in the event\n";
-         body+= "   // (i.e. n1-n2 and n2-n1), including pairs of identical nuclei (n1 = n2).\n";
-         body+= "   // If you want to calculate a global variable using only each non-identical pair once,\n";
-         body+= "   // then make sure in your implementation that you check n1!=n2 and divide the\n";
-         body+= "   // contribution to any sum by 2 (or use a weight=0.5) to avoid double-counting.\n";
-   body += "   //\n";
-   body += "   // Use the FillVar(v) method to increment the quantity of the global variable.\n";
-   body += "   // The value, v, is to be evaluated from the properties of the\n";
-   body += "   // two KVNucleus pointers passed as argument.\n";
+         body += "   // NOTE: this method will be called for EVERY pair of nuclei in the event\n";
+         body += "   // (i.e. n1-n2 and n2-n1), including pairs of identical nuclei (n1 = n2).\n";
+         body += "   // If you want to calculate a global variable using only each non-identical pair once,\n";
+         body += "   // then make sure in your implementation that you check n1!=n2 and divide the\n";
+         body += "   // contribution to any sum by 2 (or use a weight=0.5) to avoid double-counting.\n";
+         body += "   //\n";
+         body += "   // Use the FillVar(v) method to increment the quantity of the global variable.\n";
+         body += "   // The value, v, is to be evaluated from the properties of the\n";
+         body += "   // two KVNucleus pointers passed as argument.\n";
          break;
       case kNBody:
          body = "   // Calculation of contribution to N-body global variable of particles in event e.\n";
-   body += "   //\n";
-   body += "   // Use the FillVar(v) method to increment the quantity of the global variable.\n";
-   body += "   // The value, v, is to be evaluated from the properties of the\n";
-   body += "   // KVEvent pointer passed as argument.\n";
+         body += "   //\n";
+         body += "   // Use the FillVar(v) method to increment the quantity of the global variable.\n";
+         body += "   // The value, v, is to be evaluated from the properties of the\n";
+         body += "   // KVEvent pointer passed as argument.\n";
          break;
       default:
          body = "   // Calculation of contribution to 1-body global variable of nucleus n1\n";
-   body += "   //\n";
-   body += "   // Use the FillVar(v) method to increment the quantity of the global variable.\n";
-   body += "   // The value, v, is to be evaluated from the properties of the \n";
-   body += "   // KVNucleus passed as argument. For example, to evaluate the sum of the charge\n";
-   body += "   // of all fragments, you may proceed as follows:\n";
-   body += "   //\n";
-   body += "   // FillVar(n->GetZ());\n";
+         body += "   //\n";
+         body += "   // Use the FillVar(v) method to increment the quantity of the global variable.\n";
+         body += "   // The value, v, is to be evaluated from the properties of the \n";
+         body += "   // KVNucleus passed as argument. For example, to evaluate the sum of the charge\n";
+         body += "   // of all fragments, you may proceed as follows:\n";
+         body += "   //\n";
+         body += "   // FillVar(n->GetZ());\n";
    }
 }
-   
+

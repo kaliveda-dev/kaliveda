@@ -10,7 +10,7 @@
 class Hexa_t;
 
 template < class T > class Binary_t {
- private:
+private:
    UChar_t fNBitsRep;           //number of bits used to represent value
    UChar_t fNBits;              //number of bits used to store value = kBitsPerByte*sizeof(T)
    T fVal;                      //decimal used to store value
@@ -20,17 +20,18 @@ template < class T > class Binary_t {
 
    void init();
 
- public:
+public:
    Binary_t();
    Binary_t(const T);
-   Binary_t(const Char_t *);
-   Binary_t(const Binary_t &);
-   virtual ~ Binary_t() {
+   Binary_t(const Char_t*);
+   Binary_t(const Binary_t&);
+   virtual ~ Binary_t()
+   {
    };
    void Set(const T);
-   void Set(const Char_t *);
+   void Set(const Char_t*);
    T Value() const;
-   const Char_t *String(UChar_t nbits = 0);
+   const Char_t* String(UChar_t nbits = 0);
 
    Long64_t Max() const;
 
@@ -42,33 +43,40 @@ template < class T > class Binary_t {
    void WriteSubvalue(const T, UChar_t msb, UChar_t nbits);
    T Subvalue(UChar_t msb, UChar_t nbits);
    //equals operators
-   Binary_t < T > &operator=(const Binary_t < T > &);
-   Binary_t < T > &operator=(const T);
-   Binary_t < T > &operator=(const Char_t *);
+   Binary_t < T >& operator=(const Binary_t < T >&);
+   Binary_t < T >& operator=(const T);
+   Binary_t < T >& operator=(const Char_t*);
 //      Binary_t<T>& operator=(const Hexa_t&);
    //convertors
-   operator       Int_t() const {
+   operator       Int_t() const
+   {
       return (Int_t) Value();
    };
-   operator       T() const {
+   operator       T() const
+   {
       return Value();
    };
-   operator       Float_t() const {
+   operator       Float_t() const
+   {
       return (Float_t) Value();
    };
-   operator       Double_t() const {
+   operator       Double_t() const
+   {
       return (Double_t) Value();
    };
-   operator       const char *() {
+   operator       const char* ()
+   {
       return String();
    };
 
    Hexa_t Hexa() const;
 
-   void SetNBits(UChar_t nbits) {
+   void SetNBits(UChar_t nbits)
+   {
       fNBitsRep = nbits;
    };
-   UChar_t GetNBits() const {
+   UChar_t GetNBits() const
+   {
       return (fNBitsRep);
    };
 
@@ -78,29 +86,29 @@ template < class T > class Binary_t {
 //      Binary_t<T> operator+(const Char_t* c1);
 //      Binary_t<T> operator+(const Hexa_t& h1);
    //or
-      Binary_t<T> operator|(const Binary_t<T>& b1);
+   Binary_t<T> operator|(const Binary_t<T>& b1);
 //      Binary_t operator|(const Long64_t l1);
 //      Binary_t operator|(const Char_t* c1);
 //      Binary_t operator|(const Hexa_t& h1);
 //      //and
-     Binary_t<T> operator&(const Binary_t<T>& b1);
+   Binary_t<T> operator&(const Binary_t<T>& b1);
 //      Binary_t operator&(const Long64_t l1);
 //      Binary_t operator&(const Char_t* c1);
 //      Binary_t operator&(const Hexa_t& h1);
 
-   Bool_t operator==(const Binary_t < T > &);
-   Bool_t operator!=(const Binary_t < T > &);
+   Bool_t operator==(const Binary_t < T >&);
+   Bool_t operator!=(const Binary_t < T >&);
    Bool_t operator!=(const Char_t*);
 
-   void Print(Option_t * opt = "") const;
+   void Print(Option_t* opt = "") const;
 
    ClassDef(Binary_t, 1)        //a binary number
 };
 
-        //addtion
+//addtion
 // Binary_t operator+(const Long64_t l1, const Binary_t& b2);
 // Binary_t operator+(const Char_t* c1, const Binary_t& b2);
-        //bitwise OR
+//bitwise OR
 // Binary_t operator|(const Long64_t l1, const Binary_t& b2);
 // Binary_t operator|(const Char_t* c1, const Binary_t& b2);
 //      //bitwise AND
@@ -115,7 +123,7 @@ template < class T > class Binary_t {
 template < class T > void Binary_t < T >::init()
 {
    //Default initialisation; set fNBits = kBitsPerByte*sizeof(T)
-   fNBits = (UChar_t) (kBitsPerByte * sizeof(T));
+   fNBits = (UChar_t)(kBitsPerByte * sizeof(T));
 }
 
 template < class T > Binary_t < T >::Binary_t()
@@ -126,7 +134,7 @@ template < class T > Binary_t < T >::Binary_t()
    init();
 }
 
-template < class T > Binary_t < T >::Binary_t(const Binary_t < T > &b)
+template < class T > Binary_t < T >::Binary_t(const Binary_t < T >& b)
 {
    //copy constructor
    init();
@@ -142,7 +150,7 @@ template < class T > Binary_t < T >::Binary_t(const T val)
    init();
 }
 
-template < class T > Binary_t < T >::Binary_t(const Char_t * val)
+template < class T > Binary_t < T >::Binary_t(const Char_t* val)
 {
    //Create binary number from string containing binary value
    Set(val);
@@ -162,7 +170,7 @@ template < class T > T Binary_t < T >::Value() const
    return (fVal);
 }
 
-template < class T > void Binary_t < T >::Set(const Char_t * val)
+template < class T > void Binary_t < T >::Set(const Char_t* val)
 {
    //Set value from string containing binary number
    //If their are more bits in string than number can hold, we only use
@@ -175,13 +183,13 @@ template < class T > void Binary_t < T >::Set(const Char_t * val)
    idx_min = idx_min * (idx_min > 0);
    for (Int_t i = nbits - 1; i >= idx_min; i--) {
       if (val[i] - '0') {       //if a '1' is present here...
-         fVal += (T) (1 << ibit);
+         fVal += (T)(1 << ibit);
       }
       ibit++;
    }
 }
 
-template < class T > const Char_t *Binary_t < T >::String(UChar_t nbits)
+template < class T > const Char_t* Binary_t < T >::String(UChar_t nbits)
 {
    //Return string containing binary representation of number
    //By default, shortest possible representation is returned.
@@ -199,7 +207,7 @@ template < class T > const Char_t *Binary_t < T >::String(UChar_t nbits)
       fDumString = "0";
       setbits = 1;
    } else {
-      fDumString="";
+      fDumString = "";
       T cont = Value();
       while (cont) {
          if (cont % 2)
@@ -214,9 +222,9 @@ template < class T > const Char_t *Binary_t < T >::String(UChar_t nbits)
    //if number is too short for required number of bits, lzos>0 and equals number of zeroes to pad with
    //if number is too long for required number of bits, lzos<0
    Int_t lzos =
-       (nbits ? (Int_t) nbits -
-        (Int_t) setbits : (GetNBits()? (Int_t) GetNBits() -
-                           (Int_t) setbits : 0));
+      (nbits ? (Int_t) nbits -
+       (Int_t) setbits : (GetNBits() ? (Int_t) GetNBits() -
+                          (Int_t) setbits : 0));
    if (lzos > 0) {
       //Add 'lzos' leading zeroes
       fDumString.Prepend('0', lzos);
@@ -227,15 +235,15 @@ template < class T > const Char_t *Binary_t < T >::String(UChar_t nbits)
    return fDumString.Data();
 }
 
-template < class T > Binary_t < T > &Binary_t < T >::operator=(const T val)
+template < class T > Binary_t < T >& Binary_t < T >::operator=(const T val)
 {
    //Assign a decimal value to the binary number
    Set(val);
    return (*this);
 }
 
-template < class T > Binary_t < T > &Binary_t <
-    T >::operator=(const Char_t * val)
+template < class T > Binary_t < T >& Binary_t <
+T >::operator=(const Char_t* val)
 {
    //Assign a binary value (as a string) to the binary number
    Set(val);
@@ -249,31 +257,31 @@ template < class T > Binary_t < T > &Binary_t <
 //      return (*this);
 // }
 
-template < class T > Binary_t < T > &Binary_t <
-    T >::operator=(const Binary_t & val)
+template < class T > Binary_t < T >& Binary_t <
+T >::operator=(const Binary_t& val)
 {
    //Assign a  value to the binary number
    Set(val.Value());
    return (*this);
 }
 
-template <class T> Bool_t Binary_t<T>::operator==(const Binary_t < T > &b2)
+template <class T> Bool_t Binary_t<T>::operator==(const Binary_t < T >& b2)
 {
-    // Test equality
-    return (fVal == b2.fVal);
+   // Test equality
+   return (fVal == b2.fVal);
 }
 
-template <class T> Bool_t Binary_t<T>::operator!=(const Binary_t < T > &b2)
+template <class T> Bool_t Binary_t<T>::operator!=(const Binary_t < T >& b2)
 {
-    // Test inequality
-    return (fVal != b2.fVal);
+   // Test inequality
+   return (fVal != b2.fVal);
 }
 
 template <class T> Bool_t Binary_t<T>::operator!=(const Char_t* b2)
 {
-    // Test inequality
-    Binary_t<T> Bb2(b2);
-    return ((*this) != Bb2);
+   // Test inequality
+   Binary_t<T> Bb2(b2);
+   return ((*this) != Bb2);
 }
 
 //--------------------------------------------------addition operators
@@ -316,12 +324,12 @@ template <class T> Bool_t Binary_t<T>::operator!=(const Char_t* b2)
 
 //--------------------------------------------------bitwise OR operators
 
- template <class T> Binary_t<T> Binary_t<T>::operator|(const Binary_t<T>& b1)
- {
-      //bitwise OR of two binary numbers
-      Binary_t<T> tmp(fVal | b1.Value());
-      return tmp;
- }
+template <class T> Binary_t<T> Binary_t<T>::operator|(const Binary_t<T>& b1)
+{
+   //bitwise OR of two binary numbers
+   Binary_t<T> tmp(fVal | b1.Value());
+   return tmp;
+}
 
 // Binary_t Binary_t<T>::operator|(const Hexa_t& b1)
 // {
@@ -358,11 +366,11 @@ template <class T> Bool_t Binary_t<T>::operator!=(const Char_t* b2)
 // //--------------------------------------------------bitwise AND operators
 //
 template <class T> Binary_t<T> Binary_t<T>::operator&(const Binary_t<T>& b1)
- {
-      //bitwise AND of two binary numbers
-      Binary_t<T> tmp(fVal & b1.Value());
-      return tmp;
- }
+{
+   //bitwise AND of two binary numbers
+   Binary_t<T> tmp(fVal & b1.Value());
+   return tmp;
+}
 
 // Binary_t operator&(const Binary_t& b1, const T l2)
 // {
@@ -399,17 +407,17 @@ template < class T > void Binary_t < T >::SetBit(UChar_t nbit)
    //Set bit 'nbit' to 1
    //The least significant bit is numbered 0.
 
-      SETBIT(fVal, nbit);
+   SETBIT(fVal, nbit);
 }
 
 template < class T > void Binary_t < T >::SetBit(UChar_t nbit, T val)
 {
    //Set bit 'nbit' to 1 to the same value as the equivalent bit in 'val'
 
-      if (TESTBIT(val, nbit))
-         SetBit(nbit);
-      else
-         ResetBit(nbit);
+   if (TESTBIT(val, nbit))
+      SetBit(nbit);
+   else
+      ResetBit(nbit);
 }
 
 template < class T > void Binary_t < T >::ResetBit(UChar_t nbit)
@@ -435,8 +443,8 @@ template < class T > Hexa_t Binary_t < T >::Hexa() const
 }
 
 template < class T > void Binary_t < T >::WriteSubvalue(const T val,
-                                                        UChar_t msb,
-                                                        UChar_t nbits)
+      UChar_t msb,
+      UChar_t nbits)
 {
    //Write the value 'val' in the 'nbits' bits from bit 'msb' (Most Significant Bit) to
    //bit (msb-nbits+1).
@@ -449,7 +457,7 @@ template < class T > void Binary_t < T >::WriteSubvalue(const T val,
    _msb = (Int_t) msb;
    _nbits = (Int_t) nbits;
    if (_nbits < 1 || _nbits > _fNBits || _msb > (_fNBits - 1)
-       || (_msb - _nbits + 1) < 0) {
+         || (_msb - _nbits + 1) < 0) {
       std::cout << "Error in <Binary_t<T>::WriteSubvalue> : ";
       if (_nbits < 1)
          std::cout << "nbits<1";
@@ -475,12 +483,12 @@ template < class T > void Binary_t < T >::WriteSubvalue(const T val,
 template < class T > void Binary_t < T >::Print(Option_t*) const
 {
    std::cout << "Binary number : " << const_cast<Binary_t<T>*>(this)->String() << " : fNBits=" << (int) fNBits
-       << " fNBitsRep=" << (int) fNBitsRep << " fVal=" << (Long64_t)
-       Value() << std::endl;
+             << " fNBitsRep=" << (int) fNBitsRep << " fVal=" << (Long64_t)
+             Value() << std::endl;
 }
 
 template < class T > T Binary_t < T >::Subvalue(UChar_t firstbit,
-                                                UChar_t nbits)
+      UChar_t nbits)
 {
    //Returns the decimal value of a part of this binary number.
    //The bits (firstbit, firstbit-1, firstbit-2, ... , firstbit-nbits+1) [see BIT NUMBERING CONVENTION]
@@ -508,7 +516,7 @@ template < class T > T Binary_t < T >::Subvalue(UChar_t firstbit,
 template < class T > Long64_t Binary_t < T >::Max() const
 {
    //Returns maximum value that can be stored in number, i.e. when all bits = 1
-   return (Long64_t)pow(2.0, (int)fNBits)-1;
+   return (Long64_t)pow(2.0, (int)fNBits) - 1;
 }
 
 //_____________________________________________________________________________//

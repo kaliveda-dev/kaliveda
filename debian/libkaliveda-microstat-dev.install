@@ -1,0 +1,10 @@
+/usr/share/kaliveda/examples/MicroStat/MicroStat_example2.C
+/usr/share/kaliveda/examples/MicroStat/MicroStat_example.C
+/usr/lib/libMicroStatmontecarlo.so
+/usr/lib/libMicroStatweights.so
+/usr/lib/libMicroStatweights.rootmap
+/usr/lib/libMicroStatmontecarlo.rootmap
+/usr/include/kaliveda/mcweight.h
+/usr/include/kaliveda/StatWeight.h
+/usr/include/kaliveda/mdweight.h
+/usr/include/kaliveda/MCSampler.h

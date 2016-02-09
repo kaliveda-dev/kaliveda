@@ -3,7 +3,7 @@ $Id: KVINDRADB4.cpp,v 1.18 2007/04/26 16:40:58 franklan Exp $
                           KVINDRADB4.cpp  -  description
                              -------------------
     begin                : mars 2004
-	copyright            : (C) 2004 by daniel cussol
+   copyright            : (C) 2004 by daniel cussol
     email                : cussol@in2p3.fr
  ***************************************************************************/
 
@@ -31,15 +31,15 @@ ClassImp(KVINDRADB4)
 //   Cette base contiendra la liste:
 //         - des runs (unique)
 //         - des systemes (unique)
-//   
+//
 //    la mention (unique) signifie que 2 enregistrements ne peuvent avoir
 //    le meme nom
-//    Ce ne peut etre le cas des parametres de calibration puisque plusieurs 
+//    Ce ne peut etre le cas des parametres de calibration puisque plusieurs
 //    peuvent exister pour un meme detecteur et que les parametres portent le nom
 //    du detecteur correspondant
 //
 //
-KVINDRADB4::KVINDRADB4(const Char_t * name):KVINDRADB(name)
+KVINDRADB4::KVINDRADB4(const Char_t* name): KVINDRADB(name)
 {
    //default ctor
 }
@@ -80,14 +80,14 @@ void KVINDRADB4::GoodRunLine()
    //      set properties of run objects
    //kFirstRun & kLastRun are set
 
-   KVRunListLine *csv_line = GetLineReader();
+   KVRunListLine* csv_line = GetLineReader();
 
    //run number
    Int_t run_n = csv_line->GetIntField("RUN");
 
    if (!run_n) {
       cout << "run_n = 0 ?????????  line number =" << GetRLLineNumber() <<
-          endl;
+           endl;
       GetLineReader()->Print();
       return;
    }
@@ -95,15 +95,15 @@ void KVINDRADB4::GoodRunLine()
    kFirstRun = TMath::Min(kFirstRun, run_n);
 
 
-        /*********************************************
-		WE CREATE A NEW RUN AND ADD
-		IT TO THE DATABASE. WE SET ALL
-		AVAILABLE INFORMATIONS ON
-		RUN FROM THE FILE. ERROR IF
-		DBASE RUN ALREADY EXISTS =>
-		SAME RUN APPEARS TWICE
-	*********************************************/
-   KVINDRADBRun *run = (KVINDRADBRun *) GetRun(run_n);
+   /*********************************************
+   WE CREATE A NEW RUN AND ADD
+    IT TO THE DATABASE. WE SET ALL
+    AVAILABLE INFORMATIONS ON
+    RUN FROM THE FILE. ERROR IF
+    DBASE RUN ALREADY EXISTS =>
+    SAME RUN APPEARS TWICE
+   *********************************************/
+   KVINDRADBRun* run = (KVINDRADBRun*) GetRun(run_n);
    if (!run) {
 
       run = new KVINDRADBRun(run_n);

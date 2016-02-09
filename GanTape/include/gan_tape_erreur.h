@@ -26,7 +26,7 @@ extern "C" {
 
 #define ACQ_OK             0
 #define ACQ_ERRPARAM      -1
-#define ACQ_ISNOTATAPE    -2 
+#define ACQ_ISNOTATAPE    -2
 #define ACQ_NOTALLOC      -3
 #define ACQ_ALRALLOC      -4
 #define ACQ_NOTMOUNT      -5
@@ -35,20 +35,20 @@ extern "C" {
 #define ACQ_ENDOFTAPE     -8
 #define ACQ_ERRDURREAD    -9
 #define ACQ_DEVWRITLOCK   -10
-#define ACQ_ENDOFBUFFER	  -11
+#define ACQ_ENDOFBUFFER   -11
 #define ACQ_INVDATABUF    -12
-#define ACQ_RAFBUFOVF	  -13
+#define ACQ_RAFBUFOVF     -13
 #define ACQ_ERREVNTLEN    -14
 #define ACQ_INVARG        -15
 #define ACQ_ERRDATABUF    -16
 #define ACQ_BADEVENTFORM  -17
 
-#else 	/****************************************************************/
+#else    /****************************************************************/
 #error "Ce package n'est pas compatible avec votre OS"
 #endif /*****************************************************************/
 
 
-/* Erreurs implementees uniquement pour Exemple_relecture	*/
+/* Erreurs implementees uniquement pour Exemple_relecture   */
 /* Attention, ils doivent etre utilises a la fois sous UINIX et sous VMS */
 
 #define ACQ_UNKBUF        -100 /* Type de buffer inconnu */
@@ -61,7 +61,7 @@ extern "C" {
 #define ACQ_NOIMPLEMENTED -107 /* functionnality non implemented for this OS */
 #define ACQ_INVSCALERBUF  -108 /* This buffer is not a scaler block */
 
-void gan_tape_erreur ( int , const char * );
+void gan_tape_erreur(int , const char*);
 
 #ifdef __cplusplus
 }

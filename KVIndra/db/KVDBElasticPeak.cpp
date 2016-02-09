@@ -38,8 +38,8 @@ KVDBElasticPeak::KVDBElasticPeak()
    init();
 }
 
-KVDBElasticPeak::KVDBElasticPeak(const Char_t * detname)
-:KVDBPeak(detname, "elastic", 7)
+KVDBElasticPeak::KVDBElasticPeak(const Char_t* detname)
+   : KVDBPeak(detname, "elastic", 7)
 {
    //create elastic peak parameter set for detector "detname"
    init();

@@ -6,13 +6,7 @@
 #include "TEnv.h"
 #include "TSystem.h"
 #include "TClass.h"
-#ifdef __WITHOUT_TMACRO
-#warning "KVDataSelector source files can not be automatically backed-up \
-with this version of ROOT (no TMacro class). If you lose the sources for your \
-selection, you will not be able to regenerate them."
-#else
 #include "TMacro.h"
-#endif
 #include "TROOT.h"
 #include "KVBase.h"
 #include "KVDataSet.h"
@@ -27,7 +21,7 @@ selection, you will not be able to regenerate them."
 #include <KVINDRADB.h>
 
 KVString KVSelector::fBranchName = "INDRAReconEvent";
-   
+
 using namespace std;
 
 ClassImp(KVSelector)
@@ -144,15 +138,15 @@ ClassImp(KVSelector)
 //
 //////////////////////////////////////////////////////////////////
 
-KVSelector::KVSelector(TTree *)
+KVSelector::KVSelector(TTree*)
 {
    //ctor
-   fChain=0;
+   fChain = 0;
    callnotif = 0;
    gvlist = 0;                  // Global variable list set to nul.
    lhisto = new KVHashList();
-  	ltree = new KVHashList();
-	//create stopwatch
+   ltree = new KVHashList();
+   //create stopwatch
    fTimer = new TStopwatch;
    // event list
    fEvtList = 0;
@@ -166,9 +160,9 @@ KVSelector::KVSelector(TTree *)
    fGeneData = 0;
    fRawData = 0;
    data = 0;
-   dataselector_lock.SetTimeout( 60 ); // 60-second timeout in case of problems
-   dataselector_lock.SetSuspend( 5 ); // suspension after timeout
-   dataselector_lock.SetSleeptime( 1 ); // try lock every second
+   dataselector_lock.SetTimeout(60);   // 60-second timeout in case of problems
+   dataselector_lock.SetSuspend(5);   // suspension after timeout
+   dataselector_lock.SetSleeptime(1);   // try lock every second
 }
 
 KVSelector::~KVSelector()
@@ -183,47 +177,47 @@ KVSelector::~KVSelector()
    }
    delete fTimer;
    SafeDelete(fPartCond);
-	lhisto->Clear();
-	delete lhisto;
-	ltree->Clear();
-	delete ltree;
+   lhisto->Clear();
+   delete lhisto;
+   ltree->Clear();
+   delete ltree;
 }
 
-void KVSelector::Init(TTree * tree)
+void KVSelector::Init(TTree* tree)
 {
-       if(fChain) return;//Init has already been called
+   if (fChain) return; //Init has already been called
 
-    //delete any status file from previous job with same name from launch directory
-    gDataAnalyser->DeleteBatchStatusFile();
+   //delete any status file from previous job with same name from launch directory
+   gDataAnalyser->DeleteBatchStatusFile();
 
-    if(!tree) return;
-       
-	//   Set branch addresses
+   if (!tree) return;
+
+   //   Set branch addresses
    fChain = tree;
    fChain->SetMakeClass(1);
 
    if (fChain->InheritsFrom("TChain"))
-      fTreeOffset = ((TChain *) fChain)->GetTreeOffset();
+      fTreeOffset = ((TChain*) fChain)->GetTreeOffset();
    else
       fTreeOffset = 0;
 
-	data=0;b_data=0;
-   fChain->SetBranchAddress( fBranchName.Data() , &data, &b_data);
+   data = 0;
+   b_data = 0;
+   fChain->SetBranchAddress(fBranchName.Data() , &data, &b_data);
 
 //
 // Builds a TEventList by adding the contents of the lists for each run
 //
    BuildEventList();
-   if (fKVDataSelector)         // Init of the KVDataSelector if needed
-   {
+   if (fKVDataSelector) {       // Init of the KVDataSelector if needed
       fKVDataSelector->Init();
    }
-	// tell the data analyser who we are
-	gDataAnalyser->RegisterUserClass(this);
-	gDataAnalyser->preInitAnalysis();
+   // tell the data analyser who we are
+   gDataAnalyser->RegisterUserClass(this);
+   gDataAnalyser->preInitAnalysis();
    InitAnalysis();              //user initialisations for analysis
-	gDataAnalyser->postInitAnalysis();
-	
+   gDataAnalyser->postInitAnalysis();
+
    if (gvlist) {
       gvlist->Init();
    }
@@ -235,15 +229,15 @@ Bool_t KVSelector::Notify()
    // Get branch pointers.
 
    cout << "Analyse du fichier " << fChain->GetCurrentFile()->GetName()
-       << " : " << fChain->GetTree()->GetEntries() << endl;
+        << " : " << fChain->GetTree()->GetEntries() << endl;
    NbTreeEntry = (Int_t) fChain->GetTree()->GetEntries();
    fCurrentTreeNumber = fChain->GetTreeNumber();
 
    needToCallEndRun = kTRUE;
 
    Int_t nrun =
-       gDataAnalyser->GetRunNumberFromFileName(fChain->GetCurrentFile()->GetName());
-      fCurrentRun = ((KVINDRADB *) gDataBase)->GetRun(nrun);
+      gDataAnalyser->GetRunNumberFromFileName(fChain->GetCurrentFile()->GetName());
+   fCurrentRun = ((KVINDRADB*) gDataBase)->GetRun(nrun);
 
    if (fEvtList)
       needToSelect = !(fTEVLexist[fCurrentTreeNumber]);
@@ -258,72 +252,72 @@ Bool_t KVSelector::Notify()
    }
 
    cout << endl << " ===================  New Run  =================== " <<
-       endl << endl;
+        endl << endl;
 
-      fCurrentRun->Print();
-      if (fCurrentRun->GetSystem()) {
-         if(fCurrentRun->GetSystem()->GetKinematics())
-             fCurrentRun->GetSystem()->GetKinematics()->Print();
-      }
+   fCurrentRun->Print();
+   if (fCurrentRun->GetSystem()) {
+      if (fCurrentRun->GetSystem()->GetKinematics())
+         fCurrentRun->GetSystem()->GetKinematics()->Print();
+   }
 
    cout << endl << " ================================================= " <<
-       endl << endl;
-   
-	// Retrieving the pointer to the raw data tree
+        endl << endl;
+
+   // Retrieving the pointer to the raw data tree
    fRawData = (TTree*) fChain->GetCurrentFile()->Get("RawData");
-	// Retrieving the pointer to the gene tree
+   // Retrieving the pointer to the gene tree
    fGeneData = (TTree*) fChain->GetCurrentFile()->Get("GeneData");
-   if(!fGeneData) {
+   if (!fGeneData) {
       cout << "  --> No pulser & laser data for this run !!!" << endl << endl;
    } else {
       cout << "  --> Pulser & laser data tree contains " << fGeneData->GetEntries()
-            << " events" << endl << endl;
+           << " events" << endl << endl;
    }
-   
+
    if (needToSelect) {
       cout << " Building new TEventList : " << fKVDataSelector->
-          GetTEventList()->GetName()
-          << endl;
+           GetTEventList()->GetName()
+           << endl;
    }
 
-	gDataAnalyser->preInitRun();
+   gDataAnalyser->preInitRun();
    Info("Notify", "Data written with series %s, release %d",
-         ((KVINDRAReconDataAnalyser*)gDataAnalyser)->GetDataSeries().Data(),
-         ((KVINDRAReconDataAnalyser*)gDataAnalyser)->GetDataReleaseNumber());
+        ((KVINDRAReconDataAnalyser*)gDataAnalyser)->GetDataSeries().Data(),
+        ((KVINDRAReconDataAnalyser*)gDataAnalyser)->GetDataReleaseNumber());
 
    InitRun();                   //user initialisations for run
-	gDataAnalyser->postInitRun();
+   gDataAnalyser->postInitRun();
    return kTRUE;
 }
 
-void KVSelector::Begin(TTree *)
+void KVSelector::Begin(TTree*)
 {
-    // Function called before starting the event loop.
-    // When running with PROOF Begin() is only called in the client.
+   // Function called before starting the event loop.
+   // When running with PROOF Begin() is only called in the client.
 
-    // Get the option and the name of the DataSelector if needed
-    ParseOptions();
+   // Get the option and the name of the DataSelector if needed
+   ParseOptions();
 
-    if(IsOptGiven("DataSelector")) SetDataSelector( GetOpt("DataSelector") );
-    else
-        SetDataSelector();
+   if (IsOptGiven("DataSelector")) SetDataSelector(GetOpt("DataSelector"));
+   else
+      SetDataSelector();
 
-    totentry = 0;
+   totentry = 0;
 
-    //start stopwatch, after first resetting it (in case this is not the first time the analysis is run)
-    fTimer->Start(kTRUE);
+   //start stopwatch, after first resetting it (in case this is not the first time the analysis is run)
+   fTimer->Start(kTRUE);
 }
 
-void KVSelector::SlaveBegin(TTree *)
+void KVSelector::SlaveBegin(TTree*)
 {
    // Function called before starting the event loop.
    // When running with PROOF SlaveBegin() is called in each slave
    // Initialize the tree branches.
 
-/*    Init(tree);
+   /*    Init(tree);
 
-   TString option = GetOption();
- */
+      TString option = GetOption();
+    */
 }
 
 #ifdef __WITHOUT_TSELECTOR_LONG64_T
@@ -346,33 +340,33 @@ Bool_t KVSelector::Process(Long64_t entry)      //for ROOT versions > 4.00/08
 
    fTreeEntry = entry;
 
-   if(gDataAnalyser->CheckStatusUpdateInterval(totentry)) gDataAnalyser->DoStatusUpdate(totentry);
-   
+   if (gDataAnalyser->CheckStatusUpdateInterval(totentry)) gDataAnalyser->DoStatusUpdate(totentry);
+
    // read event
    fChain->GetTree()->GetEntry(fTreeEntry);
-	// read raw data associated to event
+   // read raw data associated to event
    gDataAnalyser->preAnalysis();
-   
+
    //additional selection criteria ?
-   if(fPartCond){
-      KVNucleus* part=0;
-      while( (part = (KVNucleus*)GetEvent()->GetNextParticle("ok")) ){
-         
-         part->SetIsOK( fPartCond->Test(part) );
-         
+   if (fPartCond) {
+      KVNucleus* part = 0;
+      while ((part = (KVNucleus*)GetEvent()->GetNextParticle("ok"))) {
+
+         part->SetIsOK(fPartCond->Test(part));
+
       }
    }
-   
+
    //change masses ?
-   if( TestBit(kChangeMasses) ) GetEvent()->ChangeFragmentMasses(fNewMassFormula);
-      
+   if (TestBit(kChangeMasses)) GetEvent()->ChangeFragmentMasses(fNewMassFormula);
+
    totentry++;
 
    //calculate momenta of particles in reaction cm frame
    if (fCurrentRun->GetSystem() && fCurrentRun->GetSystem()->GetKinematics()) {
 
-       GetEvent()->SetFrame("CM",
-                            fCurrentRun->GetSystem()->GetKinematics()->GetCMVelocity());
+      GetEvent()->SetFrame("CM",
+                           fCurrentRun->GetSystem()->GetKinematics()->GetCMVelocity());
 
    }
 
@@ -385,18 +379,18 @@ Bool_t KVSelector::Process(Long64_t entry)      //for ROOT versions > 4.00/08
       ok_anal = fKVDataSelector->ProcessCurrentEntry(); //Data Selection and user analysis
    } else
       ok_anal = Analysis();     //user analysis
-	gDataAnalyser->postAnalysis();
-	
+   gDataAnalyser->postAnalysis();
+
    // Testing whether EndRun() should be called
    if (AtEndOfRun()) {
       TString mes("End of run after ");
       mes += (totentry);
       mes += " events.";
       Info("Process", "%s", mes.Data());
-	
-	gDataAnalyser->preEndRun();
+
+      gDataAnalyser->preEndRun();
       EndRun();                 //user routine end of run
-	gDataAnalyser->postEndRun();
+      gDataAnalyser->postEndRun();
       needToCallEndRun = kFALSE;
 
       // save the new Built TEventList
@@ -420,14 +414,14 @@ void KVSelector::Terminate()
 {
    // Function called at the end of the event loop.
    // When running with PROOF Terminate() is only called in the client.
-   
+
    fTimer->Stop();//stop stopwatch straight away so that 'Events/CPU sec' etc. only
-                           //includes time actually spent analysing data
+   //includes time actually spent analysing data
 
    if (needToCallEndRun) {
-	gDataAnalyser->preEndRun();
+      gDataAnalyser->preEndRun();
       EndRun();
-	gDataAnalyser->postEndRun();
+      gDataAnalyser->postEndRun();
    }
 
    if (needToSelect) {
@@ -435,16 +429,16 @@ void KVSelector::Terminate()
    }
 
    cout << endl << " ====================== END ====================== " <<
-       endl << endl;
+        endl << endl;
    cout << "   Total number of events read     = " << totentry << endl;
    cout << "   Real time = " << fTimer->RealTime() << " sec." << endl;
    cout << "    CPU time = " << fTimer->CpuTime() << " sec." << endl;
    cout << "   Events/Real sec. = " << totentry /
-       fTimer->RealTime() << endl;
+        fTimer->RealTime() << endl;
    cout << "    Events/CPU sec. = " << totentry /
-       fTimer->CpuTime() << endl;
+        fTimer->CpuTime() << endl;
    cout << endl << " ====================== END ====================== " <<
-       endl << endl;
+        endl << endl;
 
    if (fEvtList) {
       fChain->SetEventList(0);
@@ -452,25 +446,25 @@ void KVSelector::Terminate()
       fEvtList = 0;
    }
 
-	gDataAnalyser->preEndAnalysis();
+   gDataAnalyser->preEndAnalysis();
    EndAnalysis();               //user end of analysis routine
-	gDataAnalyser->postEndAnalysis();
+   gDataAnalyser->postEndAnalysis();
 
-    //delete job status file from $HOME directory
-    gDataAnalyser->DeleteBatchStatusFile();
+   //delete job status file from $HOME directory
+   gDataAnalyser->DeleteBatchStatusFile();
 }
 
-void KVSelector::Make(const Char_t * kvsname)
+void KVSelector::Make(const Char_t* kvsname)
 {
    // Automatic generation of KVSelector-derived class for KaliVeda analysis
-   KVClassFactory cf(kvsname,"User analysis class","KVSelector",kTRUE);
+   KVClassFactory cf(kvsname, "User analysis class", "KVSelector", kTRUE);
    cf.AddImplIncludeFile("KVINDRAReconNuc.h");
    cf.AddImplIncludeFile("KVBatchSystem.h");
    cf.AddImplIncludeFile("KVINDRA.h");
    cf.GenerateCode();
 }
 
-void KVSelector::SetGVList(KVGVList * list)
+void KVSelector::SetGVList(KVGVList* list)
 {
    //Use a user-defined list of global variables for the analysis.
    //In this case it is the user's responsibility to delete the list
@@ -478,7 +472,7 @@ void KVSelector::SetGVList(KVGVList * list)
    gvlist = list;
 }
 
-KVGVList *KVSelector::GetGVList(void)
+KVGVList* KVSelector::GetGVList(void)
 {
    //Access to the internal list of global variables
    //If the list does not exist, it is created.
@@ -490,7 +484,7 @@ KVGVList *KVSelector::GetGVList(void)
    return gvlist;
 }
 
-void KVSelector::AddGV(KVVarGlob * vg)
+void KVSelector::AddGV(KVVarGlob* vg)
 {
    //Add the global variable "vg" to the list of variables for the analysis.
    //This is equivalent to GetGVList()->Add( vg ).
@@ -500,17 +494,17 @@ void KVSelector::AddGV(KVVarGlob * vg)
       GetGVList()->Add(vg);
 }
 
-KVVarGlob *KVSelector::GetGV(const Char_t * name) const
+KVVarGlob* KVSelector::GetGV(const Char_t* name) const
 {
    //Access the global variable with name "name" in the list of variables
    //for the analysis.
    //This is equivalent to GetGVList()->GetGV( name ).
 
-   return (const_cast < KVSelector * >(this)->GetGVList()->GetGV(name));
+   return (const_cast < KVSelector* >(this)->GetGVList()->GetGV(name));
 }
 
-KVVarGlob *KVSelector::AddGV(const Char_t * class_name,
-                             const Char_t * name)
+KVVarGlob* KVSelector::AddGV(const Char_t* class_name,
+                             const Char_t* name)
 {
    //Add a global variable to the list of variables for the analysis.
    //
@@ -539,11 +533,11 @@ KVVarGlob *KVSelector::AddGV(const Char_t * class_name,
    //
    //Returns pointer to new global variable object in case more than the usual default initialisation is necessary.
 
-   KVVarGlob *vg = 0;
-   TClass *clas = gROOT->GetClass(class_name);
+   KVVarGlob* vg = 0;
+   TClass* clas = gROOT->GetClass(class_name);
    if (!clas) {
       //class not in dictionary - user-defined class ? Look for plugin.
-      TPluginHandler *ph = KVBase::LoadPlugin("KVVarGlob", class_name);
+      TPluginHandler* ph = KVBase::LoadPlugin("KVVarGlob", class_name);
       if (!ph) {
          //not found
          Error("AddGV(const Char_t*,const Char_t*)",
@@ -551,7 +545,7 @@ KVVarGlob *KVSelector::AddGV(const Char_t * class_name,
                class_name);
          return 0;
       } else {
-         vg = (KVVarGlob *) ph->ExecPlugin(0);
+         vg = (KVVarGlob*) ph->ExecPlugin(0);
       }
    } else if (!clas->InheritsFrom("KVVarGlob")) {
       Error("AddGV(const Char_t*,const Char_t*)",
@@ -559,7 +553,7 @@ KVVarGlob *KVSelector::AddGV(const Char_t * class_name,
             class_name);
       return 0;
    } else {
-      vg = (KVVarGlob *) clas->New();
+      vg = (KVVarGlob*) clas->New();
    }
    vg->SetName(name);
    AddGV(vg);
@@ -640,45 +634,45 @@ void KVSelector::BuildEventList(void)
    if (fDataSelector.Length()) {
       Info("BuildEventList()",
            "Building TEventList for the KVDataSelector \"%s\".",
-                GetDataSelector());
-      TObjArray *lof = 0;
-      Long64_t *toff = 0;
+           GetDataSelector());
+      TObjArray* lof = 0;
+      Long64_t* toff = 0;
       if (fTreeOffset) {
          cout << "Analysis from a chain of trees." << endl;
-         lof = ((TChain *) fChain)->GetListOfFiles();
+         lof = ((TChain*) fChain)->GetListOfFiles();
          toff = fTreeOffset;
       } else {
          cout << "Analysis from a single tree." << endl;
          lof = new TObjArray();
          lof->
-             Add(new
-                 TNamed("SingleRun", fChain->GetCurrentFile()->GetName()));
+         Add(new
+             TNamed("SingleRun", fChain->GetCurrentFile()->GetName()));
          toff = new Long64_t[2];
          toff[0] = 0;
          toff[1] = fChain->GetEntries();
       }
 
       fEvtList =
-          new TEventList("chainEventList", "TEvent list for this TChain");
+         new TEventList("chainEventList", "TEvent list for this TChain");
 
 
       // Opening the file which contains the TEventLists
       TString searchname(GetDataSelectorFileName());
       TString fname = searchname;
       cout << "File to open : " << fname.Data() << endl;
-      TFile *fileDataSelector = 0;
+      TFile* fileDataSelector = 0;
       if (KVBase::FindFile("", searchname)) {
          //get lock on file to avoid interference with other processes
-         if(dataselector_lock.Lock(fname.Data())) fileDataSelector = new TFile(fname.Data());
+         if (dataselector_lock.Lock(fname.Data())) fileDataSelector = new TFile(fname.Data());
       } else {
          cout << "The file \"" << fname.
-             Data() << "\" does not exist." << endl;
+              Data() << "\" does not exist." << endl;
       }
 
       fTEVLexist = new Bool_t[lof->GetEntries()];
       for (Int_t tn = 0; tn < lof->GetEntries(); tn++) {
          fTEVLexist[tn] = kFALSE;
-         TString fname(((TNamed *) lof->At(tn))->GetTitle());
+         TString fname(((TNamed*) lof->At(tn))->GetTitle());
          cout << fname.Data() << endl;
          Int_t nrun = gDataAnalyser->GetRunNumberFromFileName(fname.Data());
          if (nrun) {
@@ -686,11 +680,11 @@ void KVSelector::BuildEventList(void)
             cout << "Recherche de " << Form("%s_run%d;1",
                                             GetDataSelector(),
                                             nrun) << endl;
-            TEventList *revtList = 0;
+            TEventList* revtList = 0;
             if (fileDataSelector) {
                revtList =
-                   (TEventList *) fileDataSelector->
-                   Get(Form("%s_run%d;1", GetDataSelector(), nrun));
+                  (TEventList*) fileDataSelector->
+                  Get(Form("%s_run%d;1", GetDataSelector(), nrun));
             }
             if (revtList) {
                for (Int_t i = 0; i < revtList->GetN(); i++) {
@@ -700,7 +694,7 @@ void KVSelector::BuildEventList(void)
             } else {
                cout << "Liste introuvable..." << endl;
                for (Int_t i = fTreeOffset[tn]; i < fTreeOffset[tn + 1];
-                    i++) {
+                     i++) {
                   fEvtList->Enter(i);
                }
             }
@@ -734,14 +728,14 @@ Bool_t KVSelector::AtEndOfRun(void)
 {
 //
 // Check whether the end of run is reached for the current tree
-//   
+//
 
    Bool_t ok = (fTreeEntry + 1 == fChain->GetTree()->GetEntries());
 
    if (fEvtList) {
       Long64_t globEntry = 0;
       if (fTreeOffset)
-         globEntry = ((TChain *) fChain)->GetChainEntryNumber(fTreeEntry);
+         globEntry = ((TChain*) fChain)->GetChainEntryNumber(fTreeEntry);
       else
          globEntry = fTreeEntry;
       Int_t index = fEvtList->GetIndex(globEntry);
@@ -765,40 +759,40 @@ void KVSelector::LoadDataSelector(void)
    Bool_t deleteSources = kFALSE;
    if (fDataSelector.Length()) {
       fKVDataSelector = 0;
-      TClass *clas = gROOT->GetClass(fDataSelector.Data());
+      TClass* clas = gROOT->GetClass(fDataSelector.Data());
       cout << clas << " / " << fDataSelector.Data() << endl;
       if (!clas) {
          //if the class is not present, first check whether the declaration and
          //the implementation files are present in the user's working directory
          TString fileC(Form("%s.cpp", fDataSelector.Data()));
          TString fileh(Form("%s.h", fDataSelector.Data()));
-         
+
 #ifdef __WITHOUT_TMACRO
-         if (gSystem->AccessPathName(fileC.Data()) || gSystem->AccessPathName(fileh.Data())){
-               Warning("LoadDataSelector(void)",
-                       Form
-                       ("No implementation and/or declaration file found for \"%s\".",
-                        fDataSelector.Data()));            
+         if (gSystem->AccessPathName(fileC.Data()) || gSystem->AccessPathName(fileh.Data())) {
+            Warning("LoadDataSelector(void)",
+                    Form
+                    ("No implementation and/or declaration file found for \"%s\".",
+                     fDataSelector.Data()));
 #else
          TMacro mC;
          if (!mC.ReadFile(fileC.Data()) || !mC.ReadFile(fileh.Data())) {
-            
+
             // Load .cpp and .h files from the TEventList's root file
             TString searchname(GetDataSelectorFileName());
             TString fname = searchname;
-            TFile *fileDataSelector = 0;
-            
+            TFile* fileDataSelector = 0;
+
             if (KVBase::FindFile("", fname)) {
-               if(dataselector_lock.Lock(fname.Data())) fileDataSelector = new TFile(fname.Data());
+               if (dataselector_lock.Lock(fname.Data())) fileDataSelector = new TFile(fname.Data());
             } else {
                cout << "The file \"" << fname.
-                   Data() << "\" does not exist." << endl;
+                    Data() << "\" does not exist." << endl;
             }
-            TMacro *macC = 0;
-            TMacro *mach = 0;
+            TMacro* macC = 0;
+            TMacro* mach = 0;
             if (fileDataSelector) {
-               macC = (TMacro *) fileDataSelector->Get(fileC.Data());
-               mach = (TMacro *) fileDataSelector->Get(fileh.Data());
+               macC = (TMacro*) fileDataSelector->Get(fileC.Data());
+               mach = (TMacro*) fileDataSelector->Get(fileh.Data());
             }
             if (macC && mach) {
                macC->SaveSource(fileC.Data());
@@ -809,58 +803,57 @@ void KVSelector::LoadDataSelector(void)
             } else {
                Warning("LoadDataSelector(void)",
                        "No implementation and/or declaration file found for \"%s\".",
-                        fDataSelector.Data());
+                       fDataSelector.Data());
             }
-            if(fileDataSelector){
+            if (fileDataSelector) {
                fileDataSelector->Close();
                dataselector_lock.Release();
             }
 #endif
          } else {
             cout << "Files " << fileC.Data() << " and " << fileh.Data() <<
-                " found." << endl;
+                 " found." << endl;
          }
          //class not in dictionary - user-defined class ? Add a plugin.
          gROOT->GetPluginManager()->AddHandler("KVDataSelector",
                                                fDataSelector.Data(),
                                                fDataSelector.Data(),
                                                Form("%s.cpp+",
-                                                    fDataSelector.Data()),
+                                                     fDataSelector.Data()),
                                                Form("%s()",
-                                                    fDataSelector.Data()));
-         TPluginHandler *ph =
-             KVBase::LoadPlugin("KVDataSelector", fDataSelector.Data());
+                                                     fDataSelector.Data()));
+         TPluginHandler* ph =
+            KVBase::LoadPlugin("KVDataSelector", fDataSelector.Data());
          if (!ph) {
             //not found
             Error("LoadDataSelector(void)",
                   "Called with class_name=%s.\nClass is unknown: not in standard libraries, and plugin (user-defined class) not found",
                   fDataSelector.Data());
          } else {
-            fKVDataSelector = (KVDataSelector *) ph->ExecPlugin(0);
+            fKVDataSelector = (KVDataSelector*) ph->ExecPlugin(0);
             fKVDataSelector->SetKVSelector(this);
             cout << "Apres Plugin " << fKVDataSelector->IsA()->
-                GetName() << " : " << fKVDataSelector->
-                GetKVSelector() << endl;
+                 GetName() << " : " << fKVDataSelector->
+                 GetKVSelector() << endl;
          }
-         
-      } 
-      else if (!clas->InheritsFrom("KVDataSelector")) {
+
+      } else if (!clas->InheritsFrom("KVDataSelector")) {
          Error("LoadDataSelector(void)",
                "%s is not a valid class deriving from KVDataSelector.",
                fDataSelector.Data());
       } else {
-         fKVDataSelector = (KVDataSelector *) clas->New();
+         fKVDataSelector = (KVDataSelector*) clas->New();
          fKVDataSelector->SetKVSelector(this);
          cout << "Apres clas->New() " << fKVDataSelector->IsA()->
-             GetName() << " : " << fKVDataSelector->
-             GetKVSelector() << endl;
+              GetName() << " : " << fKVDataSelector->
+              GetKVSelector() << endl;
       }
       if (deleteSources) {
          cout << "Removing files \"" << fDataSelector.
-             Data() << "*.*\" ..." << endl;
+              Data() << "*.*\" ..." << endl;
          gSystem->
-             Exec(Form
-                  ("rm %s.[c,h]*", fDataSelector.Data()));
+         Exec(Form
+              ("rm %s.[c,h]*", fDataSelector.Data()));
       }
    } else {
       fKVDataSelector = 0;
@@ -876,7 +869,7 @@ void KVSelector::SaveCurrentDataSelection(void)
 // Save the newly built TEventList in the DataSelection root file
 //
    if (fKVDataSelector) {
-      TFile *curfile = gFile;
+      TFile* curfile = gFile;
       TString option;
       TString searchname(GetDataSelectorFileName());
       TString fname = searchname;
@@ -886,30 +879,30 @@ void KVSelector::SaveCurrentDataSelection(void)
          option = "recreate";
       }
       cout << "File to open : " << fname.Data() << " : " << option.
-          Data() << endl;
-      TFile *fileDataSelector = 0;
-      if(dataselector_lock.Lock(fname.Data())) fileDataSelector = new TFile(fname.Data(), option.Data());
+           Data() << endl;
+      TFile* fileDataSelector = 0;
+      if (dataselector_lock.Lock(fname.Data())) fileDataSelector = new TFile(fname.Data(), option.Data());
       if (!fileDataSelector || (fileDataSelector && fileDataSelector->IsZombie())) {
          Error("SaveCurrentDataSelection(void)",
                "Opening the file \"%s\" with the option \"%s\" is not possible.\nNothing saved.",
-                fname.Data(), option.Data());
+               fname.Data(), option.Data());
          gFile = curfile;
          return;
       }
       cout << "Saving the TEventList \"" << fKVDataSelector->
-          GetTEventList()->GetName() << "\"..." << endl;
+           GetTEventList()->GetName() << "\"..." << endl;
       cout << fKVDataSelector->GetTEventList()->
-          GetN() << " entries selected." << endl;
+           GetN() << " entries selected." << endl;
       fKVDataSelector->GetTEventList()->Write();
-      
+
 #ifndef __WITHOUT_TMACRO
       TObject
-          * oC =
-          fileDataSelector->
-          Get(Form("%s.cpp;1", fKVDataSelector->IsA()->GetName()));
-      TObject * oh =
-          fileDataSelector->
-          Get(Form("%s.h;1", fKVDataSelector->IsA()->GetName()));
+      * oC =
+         fileDataSelector->
+         Get(Form("%s.cpp;1", fKVDataSelector->IsA()->GetName()));
+      TObject* oh =
+         fileDataSelector->
+         Get(Form("%s.h;1", fKVDataSelector->IsA()->GetName()));
       if (!oC || !oh) {
          cout << "Saving the source files..." << endl;
          TMacro mC(Form("%s.cpp", fKVDataSelector->IsA()->GetName()));
@@ -926,7 +919,7 @@ void KVSelector::SaveCurrentDataSelection(void)
          mh.Write();
       }
 #endif
-      
+
       cout << "Done" << endl;
       fileDataSelector->Close();
       dataselector_lock.Release();
@@ -937,26 +930,26 @@ void KVSelector::SaveCurrentDataSelection(void)
 }
 
 //____________________________________________________________________________
-const Char_t *KVSelector::GetDataSelectorFileName(void)
+const Char_t* KVSelector::GetDataSelectorFileName(void)
 {
 //
-// Gets the name of the file where the TEventLists and the KVDataSelectors 
+// Gets the name of the file where the TEventLists and the KVDataSelectors
 // are stored.
 //
    static TString fname;
    fname = "";
    fname =
-       gEnv->GetValue("DataSelector.directory",
-                      gSystem->WorkingDirectory());
+      gEnv->GetValue("DataSelector.directory",
+                     gSystem->WorkingDirectory());
    fname += "/";
    fname +=
-       gEnv->GetValue("DataSelector.fileName", "ListOfDataSelector.root");
+      gEnv->GetValue("DataSelector.fileName", "ListOfDataSelector.root");
    cout << "List Of Data Selectors : " << fname.Data() << endl;
    return fname.Data();
 }
 
 //____________________________________________________________________________
-   
+
 void KVSelector::ChangeFragmentMasses(UInt_t mass_formula)
 {
    //Call this method in your InitAnalysis() if you want to replace the masses of nuclei
@@ -977,7 +970,7 @@ void KVSelector::ChangeFragmentMasses(UInt_t mass_formula)
 }
 
 //____________________________________________________________________________
-   
+
 void KVSelector::SetParticleConditions(const KVParticleCondition& cond)
 {
    //Use this method to set criteria for selecting particles (other than the identification
@@ -1008,216 +1001,213 @@ void KVSelector::SetParticleConditions(const KVParticleCondition& cond)
    //       KVParticleCondition zgt1("_NUC_->GetZ()>1");
    //       KVParticleCondition cd = (z1 && tm1) || (zgt1 && tm2);
    //       SetParticleConditions( cd );
-   if(!fPartCond) fPartCond = new KVParticleCondition(cond);
+   if (!fPartCond) fPartCond = new KVParticleCondition(cond);
    else *fPartCond = cond;
    //set name of class to which we cast. this is for optimization to work
    fPartCond->SetParticleClassName("KVINDRAReconNuc");
 }
-  
+
 //____________________________________________________________________________
-   
+
 KVHashList* KVSelector::GetHistoList()
 {
 
-	return lhisto; 
-	
-}
- 
-//____________________________________________________________________________
-
-TH1* KVSelector::GetHisto(const Char_t* histo_name) {
-
-	return (TH1* )lhisto->FindObject(histo_name);
-
-}
-   
-//____________________________________________________________________________
-   
-void KVSelector::FillHisto(KVString sname,Double_t one,Double_t two,Double_t three,Double_t four)
-{
-	
-	//Find in the list, if there is an histogram named "sname"
-	//If not print an error message
-	//If yes redirect to the right method according to its closest mother class
-	//to fill it
-	TH1* h1=0;
-	if ( (h1 = GetHisto(sname.Data())) ){
-		if ( h1->InheritsFrom("TH3") )
-			FillTH3((TH3* )h1,one,two,three,four);
-		else if ( h1->InheritsFrom("TProfile2D") )
-			FillTProfile2D((TProfile2D* )h1,one,two,three,four);
-		else if ( h1->InheritsFrom("KVDalitzPlot") )
-			FillKVDalitz((KVDalitzPlot* )h1,one,two,three);
-		else if ( h1->InheritsFrom("TH2") )
-			FillTH2((TH2* )h1,one,two,three);
-		else if ( h1->InheritsFrom("TProfile") )
-			FillTProfile((TProfile* )h1,one,two,three);
-		else if ( h1->InheritsFrom("TH1") )
-			FillTH1(h1,one,two);
-		else 
-			Warning("FillHisto","%s -> Classe non prevue ...",lhisto->FindObject(sname.Data())->ClassName());
-	}
-	else { 
-		Warning("FillHisto","%s introuvable",sname.Data());
-	}
+   return lhisto;
 
 }
 
 //____________________________________________________________________________
-   
-void KVSelector::FillTH1(TH1* h1,Double_t one,Double_t two)
+
+TH1* KVSelector::GetHisto(const Char_t* histo_name)
 {
 
-	h1->Fill(one,two);
-	
-}
-	
-//____________________________________________________________________________
-   
-void KVSelector::FillTProfile(TProfile* h1,Double_t one,Double_t two,Double_t three)
-{
-	
-	h1->Fill(one,two,three);
+   return (TH1*)lhisto->FindObject(histo_name);
 
 }
-	
+
 //____________________________________________________________________________
-   
-void KVSelector::FillTH2(TH2* h2,Double_t one,Double_t two,Double_t three)
+
+void KVSelector::FillHisto(KVString sname, Double_t one, Double_t two, Double_t three, Double_t four)
 {
 
-	h2->Fill(one,two,three);
+   //Find in the list, if there is an histogram named "sname"
+   //If not print an error message
+   //If yes redirect to the right method according to its closest mother class
+   //to fill it
+   TH1* h1 = 0;
+   if ((h1 = GetHisto(sname.Data()))) {
+      if (h1->InheritsFrom("TH3"))
+         FillTH3((TH3*)h1, one, two, three, four);
+      else if (h1->InheritsFrom("TProfile2D"))
+         FillTProfile2D((TProfile2D*)h1, one, two, three, four);
+      else if (h1->InheritsFrom("KVDalitzPlot"))
+         FillKVDalitz((KVDalitzPlot*)h1, one, two, three);
+      else if (h1->InheritsFrom("TH2"))
+         FillTH2((TH2*)h1, one, two, three);
+      else if (h1->InheritsFrom("TProfile"))
+         FillTProfile((TProfile*)h1, one, two, three);
+      else if (h1->InheritsFrom("TH1"))
+         FillTH1(h1, one, two);
+      else
+         Warning("FillHisto", "%s -> Classe non prevue ...", lhisto->FindObject(sname.Data())->ClassName());
+   } else {
+      Warning("FillHisto", "%s introuvable", sname.Data());
+   }
 
 }
-	
+
 //____________________________________________________________________________
-   
-void KVSelector::FillTProfile2D(TProfile2D* h2,Double_t one,Double_t two,Double_t three,Double_t four)
+
+void KVSelector::FillTH1(TH1* h1, Double_t one, Double_t two)
 {
-	
-	h2->Fill(one,two,three,four);
+
+   h1->Fill(one, two);
+
 }
-	
+
 //____________________________________________________________________________
-   
-void KVSelector::FillKVDalitz(KVDalitzPlot* h2,Double_t one,Double_t two,Double_t three)
+
+void KVSelector::FillTProfile(TProfile* h1, Double_t one, Double_t two, Double_t three)
 {
-	
-	h2->FillAsDalitz(one,two,three);
+
+   h1->Fill(one, two, three);
+
 }
-	
+
 //____________________________________________________________________________
-   
-void KVSelector::FillTH3(TH3* h3,Double_t one,Double_t two,Double_t three,Double_t four)
+
+void KVSelector::FillTH2(TH2* h2, Double_t one, Double_t two, Double_t three)
 {
-	
-	h3->Fill(one,two,three,four);
+
+   h2->Fill(one, two, three);
+
 }
-	
-	
+
 //____________________________________________________________________________
-   
+
+void KVSelector::FillTProfile2D(TProfile2D* h2, Double_t one, Double_t two, Double_t three, Double_t four)
+{
+
+   h2->Fill(one, two, three, four);
+}
+
+//____________________________________________________________________________
+
+void KVSelector::FillKVDalitz(KVDalitzPlot* h2, Double_t one, Double_t two, Double_t three)
+{
+
+   h2->FillAsDalitz(one, two, three);
+}
+
+//____________________________________________________________________________
+
+void KVSelector::FillTH3(TH3* h3, Double_t one, Double_t two, Double_t three, Double_t four)
+{
+
+   h3->Fill(one, two, three, four);
+}
+
+
+//____________________________________________________________________________
+
 void KVSelector::CreateHistos()
 {
 
-	Warning("CreateHistos","To be redefined child class");
+   Warning("CreateHistos", "To be redefined child class");
 
 }
 
 //____________________________________________________________________________
-   
-void KVSelector::WriteHistoToFile(KVString filename,Option_t* option)
+
+void KVSelector::WriteHistoToFile(KVString filename, Option_t* option)
 {
 
-	//If no filename is specified, assume that the current directory is writable
-	//if filename correspond to an already opened file, write in it
-	//if not open/create it, depending on the option ("recreate" by default)
-	//and write in it
-	Bool_t IsCreated=kFALSE;
-	if (filename == ""){
-		GetHistoList()->Write();
-	}
-	else {
-		TFile* file=0;
-		if (!(file = (TFile* )gROOT->GetListOfFiles()->FindObject(filename.Data())) ){
-			IsCreated=kTRUE;
-			file = new TFile(filename.Data(),option);
-		}
-		file->cd();
-		GetHistoList()->Write();
-		if (IsCreated) file->Close();	
-	}
+   //If no filename is specified, assume that the current directory is writable
+   //if filename correspond to an already opened file, write in it
+   //if not open/create it, depending on the option ("recreate" by default)
+   //and write in it
+   Bool_t IsCreated = kFALSE;
+   if (filename == "") {
+      GetHistoList()->Write();
+   } else {
+      TFile* file = 0;
+      if (!(file = (TFile*)gROOT->GetListOfFiles()->FindObject(filename.Data()))) {
+         IsCreated = kTRUE;
+         file = new TFile(filename.Data(), option);
+      }
+      file->cd();
+      GetHistoList()->Write();
+      if (IsCreated) file->Close();
+   }
 
 }
 
 //____________________________________________________________________________
-   
+
 KVHashList* KVSelector::GetTreeList()
 {
 
-	return ltree; 
-	
-}
- 
-//____________________________________________________________________________
-
-TTree* KVSelector::GetTree(const Char_t* tree_name) {
-
-	return (TTree* )ltree->FindObject(tree_name);
+   return ltree;
 
 }
+
 //____________________________________________________________________________
-   
+
+TTree* KVSelector::GetTree(const Char_t* tree_name)
+{
+
+   return (TTree*)ltree->FindObject(tree_name);
+
+}
+//____________________________________________________________________________
+
 void KVSelector::CreateTrees()
 {
 
-	Warning("CreateTrees","To be redefined child class");
+   Warning("CreateTrees", "To be redefined child class");
 
 }
 
 //____________________________________________________________________________
-   
+
 void KVSelector::FillTree(KVString sname)
 {
-	
-	if (sname==""){
-		ltree->Execute("Fill","");
-	}
-	else {
-		TTree* tt=0;
-		if ( (tt = GetTree(sname.Data())) ){
-			tt->Fill();
-		}
-		else { 
-			Warning("FillTree","%s introuvable",sname.Data());
-		}
-	}
+
+   if (sname == "") {
+      ltree->Execute("Fill", "");
+   } else {
+      TTree* tt = 0;
+      if ((tt = GetTree(sname.Data()))) {
+         tt->Fill();
+      } else {
+         Warning("FillTree", "%s introuvable", sname.Data());
+      }
+   }
 
 }
 
 //____________________________________________________________________________
-   
-void KVSelector::WriteTreeToFile(KVString filename,Option_t* option)
+
+void KVSelector::WriteTreeToFile(KVString filename, Option_t* option)
 {
 
-	//If no filename is specified, assume that the current directory is writable
-	Bool_t IsCreated=kFALSE;
-	if (filename == ""){
-		GetTreeList()->Write();
-	}
-	else {
-		TFile* file=0;
-		//if filename correspond to an already opened file, write in it
-		//if not open/create it, depending on the option ("recreate" by default)
-		//and write in it
-		if (!(file = (TFile* )gROOT->GetListOfFiles()->FindObject(filename.Data())) ){
-			IsCreated=kTRUE;
-			file = new TFile(filename.Data(),option);
-		}
-		file->cd();
-		GetTreeList()->Write();
-		if (IsCreated) file->Close();	
-	}
+   //If no filename is specified, assume that the current directory is writable
+   Bool_t IsCreated = kFALSE;
+   if (filename == "") {
+      GetTreeList()->Write();
+   } else {
+      TFile* file = 0;
+      //if filename correspond to an already opened file, write in it
+      //if not open/create it, depending on the option ("recreate" by default)
+      //and write in it
+      if (!(file = (TFile*)gROOT->GetListOfFiles()->FindObject(filename.Data()))) {
+         IsCreated = kTRUE;
+         file = new TFile(filename.Data(), option);
+      }
+      file->cd();
+      GetTreeList()->Write();
+      if (IsCreated) file->Close();
+   }
 
 }
 
@@ -1261,9 +1251,9 @@ void KVSelector::ParseOptions()
    // Analyse comma-separated list of options given to TTree::Process
    // and store all "option=value" pairs in fOptionList.
    // Options can then be accessed using IsOptGiven(), GetOptString(), etc.
-    // This method is called by Begin
+   // This method is called by Begin
 
-    fOptionList.Clear(); // clear list
+   fOptionList.Clear(); // clear list
    KVString option = GetOption();
    option.Begin(",");
    while (!option.End()) {
@@ -1271,14 +1261,14 @@ void KVSelector::ParseOptions()
       KVString opt = option.Next();
       opt.Begin("=");
       KVString param = opt.Next();
-      KVString val=opt.Next();
-      while(!opt.End()){
-          val+="=";
-          val+=opt.Next();
+      KVString val = opt.Next();
+      while (!opt.End()) {
+         val += "=";
+         val += opt.Next();
       }
 
       SetOpt(param.Data(), val.Data());
    }
 
-    fOptionList.Print();
+   fOptionList.Print();
 }

@@ -35,7 +35,7 @@
 #include "TH1.h"
 #include "KVNumberList.h"
 
-KVINDRADB *gIndraDB;
+KVINDRADB* gIndraDB;
 
 ////////////////////////////////////////////////////////////////////////////////
 //Database containing information on runs, systems, calibrations etc. for an INDRA
@@ -68,38 +68,38 @@ void KVINDRADB::init()
    fSystems = AddTable("Systems", "List of available systems");
    fChIoPressures = AddTable("ChIo Pressures", "Pressures of ChIo");
    fTapes = AddTable("Tapes", "List of data storage tapes");
-	fCsILumCorr = AddTable("CsIGainCorr", "CsI gain corrections for total light output");
-    fPedestals = AddTable("Pedestals", "List of pedestal files");
-       fChanVolt =
-       AddTable("Channel-Volt",
-                "Calibration parameters for Channel-Volts conversion");
+   fCsILumCorr = AddTable("CsIGainCorr", "CsI gain corrections for total light output");
+   fPedestals = AddTable("Pedestals", "List of pedestal files");
+   fChanVolt =
+      AddTable("Channel-Volt",
+               "Calibration parameters for Channel-Volts conversion");
    fVoltMeVChIoSi =
-       AddTable("Volt-Energy ChIo-Si",
-                "Calibration parameters for ChIo-Si Volts-Energy conversion");
+      AddTable("Volt-Energy ChIo-Si",
+               "Calibration parameters for ChIo-Si Volts-Energy conversion");
    fLitEnerCsIZ1 =
-       AddTable("Light-Energy CsI Z=1",
-                "Calibration parameters for CsI detectors");
+      AddTable("Light-Energy CsI Z=1",
+               "Calibration parameters for CsI detectors");
    fLitEnerCsI =
-       AddTable("Light-Energy CsI Z>1",
-                "Calibration parameters for CsI detectors");
+      AddTable("Light-Energy CsI Z>1",
+               "Calibration parameters for CsI detectors");
 
-	fGains = 0;
-	fAbsentDet = 0;
-	fOoODet = 0;
-	fOoOACQPar = 0;
+   fGains = 0;
+   fAbsentDet = 0;
+   fOoODet = 0;
+   fOoOACQPar = 0;
 
-	fPulserData = 0;
+   fPulserData = 0;
 }
 
-KVINDRADB::KVINDRADB(const Char_t * name):KVDataBase(name,
-                                                     "INDRA experiment parameter database")
+KVINDRADB::KVINDRADB(const Char_t* name): KVDataBase(name,
+         "INDRA experiment parameter database")
 {
    init();
 }
 
 
-KVINDRADB::KVINDRADB():KVDataBase("KVINDRADB",
-           "INDRA experiment parameter database")
+KVINDRADB::KVINDRADB(): KVDataBase("KVINDRADB",
+                                      "INDRA experiment parameter database")
 {
    init();
 }
@@ -111,12 +111,12 @@ KVINDRADB::~KVINDRADB()
 
    if (gIndraDB == this)
       gIndraDB = 0;
-	SafeDelete(fPulserData);
+   SafeDelete(fPulserData);
 }
 
 
 //_____________________________________________________________________
-void KVINDRADB::LinkRecordToRunRange(KVDBRecord * rec, UInt_t first_run,
+void KVINDRADB::LinkRecordToRunRange(KVDBRecord* rec, UInt_t first_run,
                                      UInt_t last_run)
 {
    //If the KVDBRecord 'rec' (i.e. set of calibration parameters, reaction system, etc.) is
@@ -125,36 +125,36 @@ void KVINDRADB::LinkRecordToRunRange(KVDBRecord * rec, UInt_t first_run,
    //will have a link to the record.
 
    for (UInt_t ii = first_run; ii <= last_run; ii++) {
-      LinkRecordToRun(rec,ii);
+      LinkRecordToRun(rec, ii);
    }
 }
 //_____________________________________________________________________
-void KVINDRADB::LinkRecordToRunRange(KVDBRecord * rec, KVNumberList nl)
+void KVINDRADB::LinkRecordToRunRange(KVDBRecord* rec, KVNumberList nl)
 {
    //If the KVDBRecord 'rec' (i.e. set of calibration parameters, reaction system, etc.) is
    //associated to, or valid for, a range of runs, we use this method in order to link the record
    //and the runs. The list of associated runs will be kept with the record, and each of the runs
    //will have a link to the record.
-	nl.Begin(); 
-	while (!nl.End()){
-		Int_t rr = nl.Next();
-		//Info("LinkRecordToRunRange","run number %d",rr);
-   	LinkRecordToRun(rec,rr);
-	}
+   nl.Begin();
+   while (!nl.End()) {
+      Int_t rr = nl.Next();
+      //Info("LinkRecordToRunRange","run number %d",rr);
+      LinkRecordToRun(rec, rr);
+   }
 }
 
 //_____________________________________________________________________
-void KVINDRADB::LinkRecordToRun(KVDBRecord * rec, Int_t rnumber)
+void KVINDRADB::LinkRecordToRun(KVDBRecord* rec, Int_t rnumber)
 {
 
-	KVDBRun *run = GetRun(rnumber);
-	if (run)
-		rec->AddLink("Runs", run);
+   KVDBRun* run = GetRun(rnumber);
+   if (run)
+      rec->AddLink("Runs", run);
 
 }
 
 //_____________________________________________________________________
-void KVINDRADB::LinkRecordToRunRanges(KVDBRecord * rec, UInt_t rr_number,
+void KVINDRADB::LinkRecordToRunRanges(KVDBRecord* rec, UInt_t rr_number,
                                       UInt_t run_ranges[][2])
 {
    //Call LinkRecordToRunRange for a set of run ranges stored in the two-dimensional array
@@ -170,7 +170,7 @@ void KVINDRADB::LinkRecordToRunRanges(KVDBRecord * rec, UInt_t rr_number,
 }
 
 //______________________________________________________________________________
-void KVINDRADB::LinkListToRunRanges(TList * list, UInt_t rr_number,
+void KVINDRADB::LinkListToRunRanges(TList* list, UInt_t rr_number,
                                     UInt_t run_ranges[][2])
 {
    //Link the records contained in the list to the set of runs (see LinkRecordToRunRanges).
@@ -186,13 +186,13 @@ void KVINDRADB::LinkListToRunRanges(TList * list, UInt_t rr_number,
       return;
    }
    TIter next(list);
-   KVDBRecord *rec;
+   KVDBRecord* rec;
    for (UInt_t ru_ra = 0; ru_ra < rr_number; ru_ra++) {
       UInt_t first_run = run_ranges[ru_ra][0];
       UInt_t last_run = run_ranges[ru_ra][1];
       for (UInt_t i = first_run; i <= last_run; i++) {
-         KVDBRun *run = GetRun(i);
-         while ((rec = (KVDBRecord *) next())) {
+         KVDBRun* run = GetRun(i);
+         while ((rec = (KVDBRecord*) next())) {
             if (run)
                rec->AddLink("Runs", run);
          }
@@ -201,7 +201,7 @@ void KVINDRADB::LinkListToRunRanges(TList * list, UInt_t rr_number,
    }
 }
 //______________________________________________________________________________
-void KVINDRADB::LinkListToRunRange(TList * list, KVNumberList nl)
+void KVINDRADB::LinkListToRunRange(TList* list, KVNumberList nl)
 {
    //Link the records contained in the list to the set of runs (see LinkRecordToRunRanges).
 
@@ -216,10 +216,10 @@ void KVINDRADB::LinkListToRunRange(TList * list, KVNumberList nl)
       return;
    }
    TIter next(list);
-   KVDBRecord *rec;
-  	while ((rec = (KVDBRecord *) next())) {
-   	LinkRecordToRunRange(rec, nl);
-	}
+   KVDBRecord* rec;
+   while ((rec = (KVDBRecord*) next())) {
+      LinkRecordToRunRange(rec, nl);
+   }
 }
 
 //____________________________________________________________________________
@@ -258,20 +258,19 @@ void KVINDRADB::ReadSystemList()
       TString line;
 
       char next_char = fin.peek();
-      while( next_char!='+' && fin.good() ){
+      while (next_char != '+' && fin.good()) {
          line.ReadLine(fin, kFALSE);
          next_char = fin.peek();
       }
 
-      while( fin.good() && !fin.eof() && next_char=='+' ){
+      while (fin.good() && !fin.eof() && next_char == '+') {
          KVDBSystem* sys = new KVDBSystem("NEW SYSTEM");
          AddSystem(sys);
          sys->Load(fin);
          next_char = fin.peek();
       }
       fin.close();
-   }
-   else {
+   } else {
       Error("ReadSystemList()", "Could not open file %s",
             GetCalibFileName("Systems"));
    }
@@ -280,9 +279,9 @@ void KVINDRADB::ReadSystemList()
    KVDBSystem* sys = 0;
    TIter nextRun(GetRuns());
    KVDBRun* run;
-   while ( (run = (KVDBRun*)nextRun()) ) {
-      if(!run->GetSystem()){
-         if(!sys) {
+   while ((run = (KVDBRun*)nextRun())) {
+      if (!run->GetSystem()) {
+         if (!sys) {
             sys = new KVDBSystem("[unknown]");
             AddSystem(sys);
          }
@@ -296,7 +295,7 @@ void KVINDRADB::ReadSystemList()
 
 //____________________________________________________________________________
 
-KVList *KVINDRADB::GetCalibrationPeaks(Int_t run, KVDetector * detector,
+KVList* KVINDRADB::GetCalibrationPeaks(Int_t run, KVDetector* detector,
                                        Int_t peak_type, Int_t signal_type,
                                        Double_t peak_energy)
 {
@@ -344,7 +343,7 @@ KVList *KVINDRADB::GetCalibrationPeaks(Int_t run, KVDetector * detector,
 
    TString sline;
    Int_t frun = 0, lrun = 0;
-   KVList *peak_list = new KVList();
+   KVList* peak_list = new KVList();
 
    //set to true after reading a run range corresponding to 'run'
    Bool_t ok_for_this_run = kFALSE;
@@ -363,8 +362,7 @@ KVList *KVINDRADB::GetCalibrationPeaks(Int_t run, KVDetector * detector,
                     "Bad format in line :\n%s\nUnable to read run range values",
                     sline.Data());
          } else {
-            if (TMath::Range(frun, lrun, run) == run)   //frun <= run <= lrun
-            {
+            if (TMath::Range(frun, lrun, run) == run) { //frun <= run <= lrun
                ok_for_this_run = kTRUE;
             } else
                ok_for_this_run = kFALSE;
@@ -384,11 +382,11 @@ KVList *KVINDRADB::GetCalibrationPeaks(Int_t run, KVDetector * detector,
 
             //find corresponding detector
 
-            KVDetector *pic_det =
-                //the chio's in the file are written with the
-                //ring,module of the Si/CsI in coinc
-                (sign > ChIo_T) ? gIndra->GetDetectorByType(cour, modu, sign)
-                : gIndra->GetDetectorByType(cour, modu, CsI_R)->GetChIo();
+            KVDetector* pic_det =
+               //the chio's in the file are written with the
+               //ring,module of the Si/CsI in coinc
+               (sign > ChIo_T) ? gIndra->GetDetectorByType(cour, modu, sign)
+               : gIndra->GetDetectorByType(cour, modu, CsI_R)->GetChIo();
 
             //is it the right detector ?
             if (detector && detector != pic_det)
@@ -402,49 +400,49 @@ KVList *KVINDRADB::GetCalibrationPeaks(Int_t run, KVDetector * detector,
             if (signal_type && signal_type != sign)
                continue;
 
-            KVDBPeak *peak = 0;
-            KVDBSystem *sys = 0;
+            KVDBPeak* peak = 0;
+            KVDBSystem* sys = 0;
 
             switch (typ2) {     //what type of peak
 
-            case kAlpha8MeVSG:
+               case kAlpha8MeVSG:
 
-               peak = new KVDBAlphaPeak(pic_det->GetName());
-               peak->SetGas(kFALSE);
-               peak->SetEnergy(PEAK_THORON_2);
-               break;
+                  peak = new KVDBAlphaPeak(pic_det->GetName());
+                  peak->SetGas(kFALSE);
+                  peak->SetEnergy(PEAK_THORON_2);
+                  break;
 
-            case kAlpha6MeVSG:
+               case kAlpha6MeVSG:
 
-               peak = new KVDBAlphaPeak(pic_det->GetName());
-               peak->SetGas(kFALSE);
-               peak->SetEnergy(PEAK_THORON_1);
-               break;
+                  peak = new KVDBAlphaPeak(pic_det->GetName());
+                  peak->SetGas(kFALSE);
+                  peak->SetEnergy(PEAK_THORON_1);
+                  break;
 
-            case kElastic:
+               case kElastic:
 
-               peak = new KVDBElasticPeak(pic_det->GetName());
-               sys = (KVDBSystem *) GetRun(first)->GetSystem();
-               if (sys) {
-                  peak->SetEnergy(sys->GetEbeam() * sys->GetAbeam());
-                  ((KVDBElasticPeak *) peak)->SetZproj(sys->GetZbeam());
-                  ((KVDBElasticPeak *) peak)->SetAproj(sys->GetAbeam());
-               }
-               break;
+                  peak = new KVDBElasticPeak(pic_det->GetName());
+                  sys = (KVDBSystem*) GetRun(first)->GetSystem();
+                  if (sys) {
+                     peak->SetEnergy(sys->GetEbeam() * sys->GetAbeam());
+                     ((KVDBElasticPeak*) peak)->SetZproj(sys->GetZbeam());
+                     ((KVDBElasticPeak*) peak)->SetAproj(sys->GetAbeam());
+                  }
+                  break;
 
-            case kAlpha8MeV:
+               case kAlpha8MeV:
 
-               peak = new KVDBAlphaPeak(pic_det->GetName());
-               peak->SetGas(kTRUE);
-               peak->SetEnergy(PEAK_THORON_2);
-               break;
+                  peak = new KVDBAlphaPeak(pic_det->GetName());
+                  peak->SetGas(kTRUE);
+                  peak->SetEnergy(PEAK_THORON_2);
+                  break;
 
-            case kAlpha6MeV:
+               case kAlpha6MeV:
 
-               peak = new KVDBAlphaPeak(pic_det->GetName());
-               peak->SetGas(kTRUE);
-               peak->SetEnergy(PEAK_THORON_1);
-               break;
+                  peak = new KVDBAlphaPeak(pic_det->GetName());
+                  peak->SetGas(kTRUE);
+                  peak->SetEnergy(PEAK_THORON_1);
+                  break;
 
             }                   //what type of peak
 
@@ -452,17 +450,17 @@ KVList *KVINDRADB::GetCalibrationPeaks(Int_t run, KVDetector * detector,
             if (peak && peak_energy > 0) {
                if (typ2 == kElastic) {
                   if (!
-                      ((TMath::
-                        Abs(peak->GetEnergy() /
-                            (((KVDBElasticPeak *) peak)->GetAproj()) -
-                            peak_energy))
-                       <= 0.1 * (peak->GetEnergy() /
-                                 ((KVDBElasticPeak *) peak)->GetAproj())))
+                        ((TMath::
+                          Abs(peak->GetEnergy() /
+                              (((KVDBElasticPeak*) peak)->GetAproj()) -
+                              peak_energy))
+                         <= 0.1 * (peak->GetEnergy() /
+                                   ((KVDBElasticPeak*) peak)->GetAproj())))
                      continue;  //read next line
                } else {
                   if (!
-                      (TMath::Abs(peak->GetEnergy() - peak_energy) <=
-                       0.1 * peak->GetEnergy()))
+                        (TMath::Abs(peak->GetEnergy() - peak_energy) <=
+                         0.1 * peak->GetEnergy()))
                      continue;
                }
             }
@@ -485,15 +483,15 @@ KVList *KVINDRADB::GetCalibrationPeaks(Int_t run, KVDetector * detector,
 
                //Set gain associated with peak.
                //This is the gain of the detector during the first run used to trace the peak.
-               KVDBRun *kvrun = (KVDBRun *) GetRun(first);
-               KVRList *param_list = kvrun->GetLinks("Gains");
+               KVDBRun* kvrun = (KVDBRun*) GetRun(first);
+               KVRList* param_list = kvrun->GetLinks("Gains");
                if (!param_list) {
                   //no gains defined - everybody has gain=1
                   peak->SetGain(1.00);
                } else {
-                  KVDBParameterSet *kvdbps =
-                      (KVDBParameterSet *) param_list->
-                      FindObjectByName(pic_det->GetName());
+                  KVDBParameterSet* kvdbps =
+                     (KVDBParameterSet*) param_list->
+                     FindObjectByName(pic_det->GetName());
                   if (!kvdbps) {
                      //no gain defined for this detector for this run - gain=1
                      peak->SetGain(1.00);
@@ -567,8 +565,8 @@ void KVINDRADB::ReadGainList()
    Float_t gain;
 
    Char_t det_name[80];
-   KVDBParameterSet *parset = 0;
-   TList *par_list = new TList();
+   KVDBParameterSet* parset = 0;
+   TList* par_list = new TList();
 
    while (fin.good()) {         //reading the file
       sline.ReadLine(fin);
@@ -655,11 +653,11 @@ void KVINDRADB::ReadChIoPressures()
    Bool_t prev_rr = kFALSE;     //was the previous line a run range indication ?
    Bool_t read_pressure = kFALSE; // have we read any pressures recently ?
 
-   KVDBChIoPressures *parset=0;
-   TList *par_list = new TList();
+   KVDBChIoPressures* parset = 0;
+   TList* par_list = new TList();
 
-         //any ChIo not in list is assumed absent (pressure = 0)
-         Float_t pressure[5] = { 0, 0, 0, 0, 0 };
+   //any ChIo not in list is assumed absent (pressure = 0)
+   Float_t pressure[5] = { 0, 0, 0, 0, 0 };
 
    while (fin.good()) {         // parcours du fichier
 
@@ -668,14 +666,14 @@ void KVINDRADB::ReadChIoPressures()
          if (!prev_rr) {        // New set of run ranges to read
 
             //have we just finished reading some pressures ?
-            if (read_pressure){
+            if (read_pressure) {
                parset = new KVDBChIoPressures(pressure);
                GetTable("ChIo Pressures")->AddRecord(parset);
                par_list->Add(parset);
                LinkListToRunRanges(par_list, rr_number, run_ranges);
                par_list->Clear();
-               for(register int zz=0;zz<5;zz++) pressure[zz]=0.;
-               read_pressure=kFALSE;
+               for (register int zz = 0; zz < 5; zz++) pressure[zz] = 0.;
+               read_pressure = kFALSE;
             }
             rr_number = 0;
 
@@ -697,37 +695,38 @@ void KVINDRADB::ReadChIoPressures()
          }
       }                         // Run Range found
       if (fin.eof()) {          //fin du fichier
-            //have we just finished reading some pressures ?
-            if (read_pressure){
-               parset = new KVDBChIoPressures(pressure);
-               GetTable("ChIo Pressures")->AddRecord(parset);
-               par_list->Add(parset);
-               LinkListToRunRanges(par_list, rr_number, run_ranges);
-               par_list->Clear();
-               for(register int zz=0;zz<5;zz++) pressure[zz]=0.;
-               read_pressure=kFALSE;
-            }
+         //have we just finished reading some pressures ?
+         if (read_pressure) {
+            parset = new KVDBChIoPressures(pressure);
+            GetTable("ChIo Pressures")->AddRecord(parset);
+            par_list->Add(parset);
+            LinkListToRunRanges(par_list, rr_number, run_ranges);
+            par_list->Clear();
+            for (register int zz = 0; zz < 5; zz++) pressure[zz] = 0.;
+            read_pressure = kFALSE;
+         }
       }
       if (sline.BeginsWith("ChIos")) {  //line with chio pressure data
 
          prev_rr = kFALSE;
 
          //take off 'ChIos' and any leading whitespace
-         sline.Remove(0, 5); sline.Strip(TString::kLeading);
+         sline.Remove(0, 5);
+         sline.Strip(TString::kLeading);
          //split up ChIo ring numbers and pressure
          TObjArray* toks = sline.Tokenize(' ');
          TString chio = ((TObjString*)(*toks)[0])->String();
          KVString press = ((TObjString*)(*toks)[1])->String();
          delete toks;
 
-         read_pressure=kTRUE;
+         read_pressure = kTRUE;
 
-         if( chio == "2_3" ) pressure[0] = press.Atof();
-         else if( chio == "4_5" ) pressure[1] = press.Atof();
-         else if( chio == "6_7" ) pressure[2] = press.Atof();
-         else if( chio == "8_12" ) pressure[3] = press.Atof();
-         else if( chio == "13_17" ) pressure[4] = press.Atof();
-         else read_pressure=kFALSE;
+         if (chio == "2_3") pressure[0] = press.Atof();
+         else if (chio == "4_5") pressure[1] = press.Atof();
+         else if (chio == "6_7") pressure[2] = press.Atof();
+         else if (chio == "8_12") pressure[3] = press.Atof();
+         else if (chio == "13_17") pressure[4] = press.Atof();
+         else read_pressure = kFALSE;
 
       }                         //line with ChIo pressure data
    }                            //parcours du fichier
@@ -738,7 +737,7 @@ void KVINDRADB::ReadChIoPressures()
 //__________________________________________________________________________________________________________________
 
 Double_t KVINDRADB::GetEventCrossSection(Int_t run, Double_t Q_apres_cible,
-                                         Double_t Coul_par_top) const
+      Double_t Coul_par_top) const
 {
    //Returns calculated cross-section [mb] per event for the run in question.
    //See KVINDRADBRun::GetEventCrossSection()
@@ -750,7 +749,7 @@ Double_t KVINDRADB::GetEventCrossSection(Int_t run, Double_t Q_apres_cible,
 //__________________________________________________________________________________________________________________
 
 Double_t KVINDRADB::GetTotalCrossSection(Int_t run, Double_t Q_apres_cible,
-                                         Double_t Coul_par_top) const
+      Double_t Coul_par_top) const
 {
    //Returns calculated total measured cross-section [mb] for the run in question.
    //See KVINDRADBRun::GetTotalCrossSection()
@@ -762,15 +761,15 @@ Double_t KVINDRADB::GetTotalCrossSection(Int_t run, Double_t Q_apres_cible,
 //__________________________________________________________________________________________________________________
 
 Double_t KVINDRADB::GetEventCrossSection(Int_t run1, Int_t run2,
-                                         Double_t Q_apres_cible,
-                                         Double_t Coul_par_top) const
+      Double_t Q_apres_cible,
+      Double_t Coul_par_top) const
 {
    // Returns calculated average cross-section [mb] per event for the runs in question.
    // It is assumed that all runs correspond to the same reaction,
    // with the same beam & target characteristics and multiplicity trigger.
    // The target thickness etc. are taken from the first run.
-   
-   KVTarget *targ = GetRun(run1)->GetTarget();
+
+   KVTarget* targ = GetRun(run1)->GetTarget();
    if (!targ) {
       Error("GetEventCrossSection", "No target for run %d", run1);
       return 0;
@@ -781,8 +780,8 @@ Double_t KVINDRADB::GetEventCrossSection(Int_t run1, Int_t run2,
       if (!GetRun(run))
          continue;              //skip non-existent runs
       sum_xsec +=
-          GetRun(run)->GetNIncidentIons(Q_apres_cible,
-                                        Coul_par_top) * (1. - GetRun(run)->GetTempsMort());
+         GetRun(run)->GetNIncidentIons(Q_apres_cible,
+                                       Coul_par_top) * (1. - GetRun(run)->GetTempsMort());
    }
    //average X-section [mb] per event = 1e27 / (no. atoms in target * SUM(no. of projectile nuclei * (1 - TM)) )
    return (1.e27 / (targ->GetAtomsPerCM2() * sum_xsec));
@@ -791,8 +790,8 @@ Double_t KVINDRADB::GetEventCrossSection(Int_t run1, Int_t run2,
 //__________________________________________________________________________________________________________________
 
 Double_t KVINDRADB::GetTotalCrossSection(Int_t run1, Int_t run2,
-                                         Double_t Q_apres_cible,
-                                         Double_t Coul_par_top) const
+      Double_t Q_apres_cible,
+      Double_t Coul_par_top) const
 {
    //Returns calculated total measured cross-section [mb] for the runs in question.
    //This is SUM (GetEventCrossSection(run1,run2) * SUM( events )
@@ -812,23 +811,23 @@ Double_t KVINDRADB::GetTotalCrossSection(Int_t run1, Int_t run2,
 //__________________________________________________________________________________________________________________
 
 
-Double_t KVINDRADB::GetEventCrossSection(const Char_t * system_name,
-                                         Int_t mult_trig,
-                                         Double_t Q_apres_cible,
-                                         Double_t Coul_par_top) const
+Double_t KVINDRADB::GetEventCrossSection(const Char_t* system_name,
+      Int_t mult_trig,
+      Double_t Q_apres_cible,
+      Double_t Coul_par_top) const
 {
    //Returns calculated average cross-section [mb] per event for all runs of the named system* with trigger multiplicity 'mul_trig'.
    //                                               *to see the list of all system names, use gIndraDB->GetSystems()->ls()
    //See KVINDRADBRun::GetNIncidentIons() for meaning of other arguments
 
-   KVDBSystem *system = GetSystem(system_name);
+   KVDBSystem* system = GetSystem(system_name);
    if (!system) {
       Error("GetEventCrossSection",
             "System %s unknown. Check list of systems (gIndraDB->GetSystems()->ls()).",
             system_name);
       return 0.;
    }
-   KVTarget *targ = system->GetTarget();
+   KVTarget* targ = system->GetTarget();
    if (!targ) {
       Error("GetEventCrossSection", "No target defined for system %s",
             system_name);
@@ -837,14 +836,14 @@ Double_t KVINDRADB::GetEventCrossSection(const Char_t * system_name,
    //loop over all runs of system, only using those with correct trigger multiplicity
    Double_t sum_xsec = 0;
    TIter next_run(system->GetRuns());
-   KVINDRADBRun *run;
-   while ((run = (KVINDRADBRun *) next_run())) {
+   KVINDRADBRun* run;
+   while ((run = (KVINDRADBRun*) next_run())) {
 
       if (run->GetTrigger() != mult_trig)
          continue;              //skip runs with bad trigger
       sum_xsec +=
-          run->GetNIncidentIons(Q_apres_cible,
-                                Coul_par_top) * (1. - run->GetTempsMort());
+         run->GetNIncidentIons(Q_apres_cible,
+                               Coul_par_top) * (1. - run->GetTempsMort());
 
    }
    //average X-section [mb] per event = 1e27 / (no. atoms in target * SUM(no. of projectile nuclei * (1 - temps mort)))
@@ -853,16 +852,16 @@ Double_t KVINDRADB::GetEventCrossSection(const Char_t * system_name,
 
 //__________________________________________________________________________________________________________________
 
-Double_t KVINDRADB::GetTotalCrossSection(const Char_t * system_name,
-                                         Int_t mult_trig,
-                                         Double_t Q_apres_cible,
-                                         Double_t Coul_par_top) const
+Double_t KVINDRADB::GetTotalCrossSection(const Char_t* system_name,
+      Int_t mult_trig,
+      Double_t Q_apres_cible,
+      Double_t Coul_par_top) const
 {
    //Returns calculated total cross-section [mb] for all events in all runs of the named system* with trigger multiplicity 'mul_trig'.
    //                                               *to see the list of all system names, use gIndraDB->GetSystems()->ls()
    //See KVINDRADBRun::GetNIncidentIons() for meaning of other arguments
 
-   KVDBSystem *system = GetSystem(system_name);
+   KVDBSystem* system = GetSystem(system_name);
    if (!system) {
       Error("GetTotalCrossSection",
             "System %s unknown. Check list of systems (gIndraDB->GetSystems()->ls()).",
@@ -872,8 +871,8 @@ Double_t KVINDRADB::GetTotalCrossSection(const Char_t * system_name,
    Int_t sum = 0;
    //loop over all runs of system, only using those with correct trigger multiplicity
    TIter next_run(system->GetRuns());
-   KVINDRADBRun *run;
-   while ((run = (KVINDRADBRun *) next_run())) {
+   KVINDRADBRun* run;
+   while ((run = (KVINDRADBRun*) next_run())) {
 
       if (run->GetTrigger() != mult_trig)
          continue;              //skip runs with bad trigger
@@ -891,22 +890,22 @@ Double_t KVINDRADB::GetTotalCrossSection(TH1* events_histo, Double_t Q_apres_cib
    // Calculate the cross-section [mb] for a given selection of events in several runs,
    // given by the TH1, which is a distribution of run numbers (i.e. a histogram filled with
    // the number of selected events for each run, the run number is on the x-axis of the histogram).
-   
+
    Info("GetTotalCrossSection", "Calculating cross-section for q=%f", Q_apres_cible);
    Double_t xsec = 0, ninc = 0;
-   KVTarget *targ = 0;
-   for(int i = 1; i<=events_histo->GetNbinsX(); i++){
+   KVTarget* targ = 0;
+   for (int i = 1; i <= events_histo->GetNbinsX(); i++) {
       Double_t events = events_histo->GetBinContent(i);
-      if(events==0) continue;
+      if (events == 0) continue;
       int run_num = events_histo->GetBinCenter(i);
       KVINDRADBRun* run = GetRun(run_num);
-      if(!targ) targ = run->GetTarget();
+      if (!targ) targ = run->GetTarget();
       ninc +=
-          run->GetNIncidentIons(Q_apres_cible,
-                                Coul_par_top);
-      xsec += events/(1. - run->GetTempsMort());
+         run->GetNIncidentIons(Q_apres_cible,
+                               Coul_par_top);
+      xsec += events / (1. - run->GetTempsMort());
       cout << "Run#" << run_num << "   Events : " << events
-         << "   Dead time : " << run->GetTempsMort() << endl;
+           << "   Dead time : " << run->GetTempsMort() << endl;
    }
    return (1.e27 / (ninc * targ->GetAtomsPerCM2())) * xsec;
 }
@@ -924,23 +923,22 @@ void KVINDRADB::WriteRunListFile() const
    KVBase::SearchAndOpenKVFile(GetDBEnv("Runlist"), rlistf, fDataSet.Data());
    TDatime now;
    rlistf << "# " << GetDBEnv("Runlist") << " file written by "
-         << ClassName() << "::WriteRunListFile on " << now.AsString() << endl;
+          << ClassName() << "::WriteRunListFile on " << now.AsString() << endl;
    cout << GetDBEnv("Runlist") << " file written by "
-         << ClassName() << "::WriteRunListFile on " << now.AsString() << endl;
-   if (GetRuns() && GetRuns()->GetEntries()>0){
-   	TIter next_run(GetRuns());
-   	//write header in file
-   	((KVDBRun *) GetRuns()->At(0))->WriteRunListHeader(rlistf, GetDBEnv("Runlist.Separator")[0]);
-   	KVDBRun *run;
-   	while ((run = (KVDBRun *) next_run())) {
+        << ClassName() << "::WriteRunListFile on " << now.AsString() << endl;
+   if (GetRuns() && GetRuns()->GetEntries() > 0) {
+      TIter next_run(GetRuns());
+      //write header in file
+      ((KVDBRun*) GetRuns()->At(0))->WriteRunListHeader(rlistf, GetDBEnv("Runlist.Separator")[0]);
+      KVDBRun* run;
+      while ((run = (KVDBRun*) next_run())) {
 
-   	   run->WriteRunListLine(rlistf, GetDBEnv("Runlist.Separator")[0]);
+         run->WriteRunListLine(rlistf, GetDBEnv("Runlist.Separator")[0]);
 
-   	}
+      }
+   } else {
+      Warning("WriteRunListFile()", "run list is empty !!!");
    }
-   else{
-   	Warning("WriteRunListFile()","run list is empty !!!");
-   }   
    rlistf.close();
 }
 
@@ -956,14 +954,15 @@ void KVINDRADB::WriteSystemsFile() const
 
    ofstream sysfile;
    KVBase::SearchAndOpenKVFile(GetDBEnv("Systems"), sysfile, fDataSet.Data());
-   TIter next(GetSystems()); KVDBSystem* sys;
+   TIter next(GetSystems());
+   KVDBSystem* sys;
    TDatime now;
    sysfile << "# " << GetDBEnv("Systems") << " file written by "
-         << ClassName() << "::WriteSystemsFile on " << now.AsString() << endl;
+           << ClassName() << "::WriteSystemsFile on " << now.AsString() << endl;
    cout << GetDBEnv("Systems") << " file written by "
-         << ClassName() << "::WriteSystemsFile on " << now.AsString() << endl;
-   while( (sys = (KVDBSystem*)next()) ){
-      if(strcmp(sys->GetName(),"[unknown]")){//do not write dummy 'unknown' system
+        << ClassName() << "::WriteSystemsFile on " << now.AsString() << endl;
+   while ((sys = (KVDBSystem*)next())) {
+      if (strcmp(sys->GetName(), "[unknown]")) { //do not write dummy 'unknown' system
          sys->Save(sysfile);
          sysfile << endl;
       }
@@ -978,13 +977,13 @@ void KVINDRADB::Save(const Char_t* what)
    //Save (in the appropriate text file) the informations on:
    // what = "Systems" : write Systems.dat file
    // what = "Runlist" : write Runlist.csv
-   if( !strcmp(what, "Systems") ) WriteSystemsFile();
-   else if( !strcmp(what, "Runlist") ) WriteRunListFile();
+   if (!strcmp(what, "Systems")) WriteSystemsFile();
+   else if (!strcmp(what, "Runlist")) WriteRunListFile();
 }
 
 //__________________________________________________________________________________________________________________
 
-Bool_t KVINDRADB::OpenCalibFile(const Char_t * type, ifstream & fs) const
+Bool_t KVINDRADB::OpenCalibFile(const Char_t* type, ifstream& fs) const
 {
    //Find and open calibration parameter file of given type. Return kTRUE if all OK.
    //types are defined in $KVROOT/KVFiles/.kvrootrc by lines such as
@@ -1008,14 +1007,14 @@ Bool_t KVINDRADB::OpenCalibFile(const Char_t * type, ifstream & fs) const
 
 //__________________________________________________________________________________________________________________
 
-const Char_t *KVINDRADB::GetDBEnv(const Char_t * type) const
+const Char_t* KVINDRADB::GetDBEnv(const Char_t* type) const
 {
    //Will look for gEnv->GetValue name "name_of_dataset.INDRADB.type"
    //then "INDRADB.type" if no dataset-specific value is found.
 
    if (!gDataSetManager)
       return "";
-   KVDataSet *ds = gDataSetManager->GetDataSet(fDataSet.Data());
+   KVDataSet* ds = gDataSetManager->GetDataSet(fDataSet.Data());
    if (!ds)
       return "";
    return ds->GetDataSetEnv(Form("INDRADB.%s", type));
@@ -1052,7 +1051,9 @@ void KVINDRADB::Build()
    kLastRun = 0;
    ReadRunList(runlist_fullpath.Data());
    //new style runlist
-   if( IsNewRunList() ){ ReadNewRunList(); };
+   if (IsNewRunList()) {
+      ReadNewRunList();
+   };
 
    ReadSystemList();
    ReadChIoPressures();
@@ -1061,16 +1062,16 @@ void KVINDRADB::Build()
    ReadVoltEnergyChIoSi();
    ReadCalibCsI();
    ReadPedestalList();
-	ReadAbsentDetectors();
-	ReadOoOACQParams();
-	ReadOoODetectors();
+   ReadAbsentDetectors();
+   ReadOoOACQParams();
+   ReadOoODetectors();
 
-	// read all available mean pulser data and store in tree
-	if( !fPulserData ) fPulserData = new KVINDRAPulserDataTree;
-	fPulserData->SetRunList( GetRuns() );
-	fPulserData->Build();
+   // read all available mean pulser data and store in tree
+   if (!fPulserData) fPulserData = new KVINDRAPulserDataTree;
+   fPulserData->SetRunList(GetRuns());
+   fPulserData->Build();
 
-	ReadCsITotalLightGainCorrections();
+   ReadCsITotalLightGainCorrections();
 }
 
 
@@ -1091,16 +1092,16 @@ void KVINDRADB::ReadNewRunList()
    KVString line;
    KVINDRADBRun* run;
 
-   while( fin.good() && !fin.eof() ){
-      line.ReadLine( fin );
+   while (fin.good() && !fin.eof()) {
+      line.ReadLine(fin);
 
-      if( line.Length()>1 && !line.BeginsWith("#") && !line.BeginsWith("Version") ){
+      if (line.Length() > 1 && !line.BeginsWith("#") && !line.BeginsWith("Version")) {
          run = new KVINDRADBRun;
-         run->ReadRunListLine( line );
-         if( run->GetNumber()<1 ){
+         run->ReadRunListLine(line);
+         if (run->GetNumber() < 1) {
             delete run;
          } else {
-            AddRun( run );
+            AddRun(run);
             kLastRun = TMath::Max(kLastRun, run->GetNumber());
             kFirstRun = TMath::Min(kFirstRun, run->GetNumber());
          }
@@ -1118,27 +1119,27 @@ void KVINDRADB::GoodRunLine()
    //      set properties of run and tape objects
    //kFirstRun & kLastRun are set
 
-   KVRunListLine *csv_line = GetLineReader();
+   KVRunListLine* csv_line = GetLineReader();
 
    //run number
    Int_t run_n = csv_line->GetIntField(GetDBEnv("Runlist.Run"));
 
    if (!run_n) {
       cout << "run_n = 0 ?????????  line number =" << GetRLLineNumber() <<
-          endl;
+           endl;
       GetLineReader()->Print();
       return;
    }
    kLastRun = TMath::Max(kLastRun, run_n);
    kFirstRun = TMath::Min(kFirstRun, run_n);
 
-        /*********************************************
-		IF LINE HAS A TAPE NUMBER WE
-		LOOK FOR THE TAPE IN THE DATA
-		BASE. IF IT DOESN'T EXIST WE
-		CREATE IT.
-	*********************************************/
-   KVDBTape *tape = 0;
+   /*********************************************
+   IF LINE HAS A TAPE NUMBER WE
+    LOOK FOR THE TAPE IN THE DATA
+    BASE. IF IT DOESN'T EXIST WE
+    CREATE IT.
+   *********************************************/
+   KVDBTape* tape = 0;
    //tape number (if tape field is filled)
    if (csv_line->HasFieldValue(GetDBEnv("Runlist.Tape"))) {
       Int_t tape_n = csv_line->GetIntField(GetDBEnv("Runlist.Tape"));
@@ -1150,15 +1151,15 @@ void KVINDRADB::GoodRunLine()
       }
    }
 
-        /*********************************************
-		WE CREATE A NEW RUN AND ADD
-		IT TO THE DATABASE. WE SET ALL
-		AVAILABLE INFORMATIONS ON
-		RUN FROM THE FILE. ERROR IF
-		DBASE RUN ALREADY EXISTS =>
-		SAME RUN APPEARS TWICE
-	*********************************************/
-   KVINDRADBRun *run = GetRun(run_n);
+   /*********************************************
+   WE CREATE A NEW RUN AND ADD
+    IT TO THE DATABASE. WE SET ALL
+    AVAILABLE INFORMATIONS ON
+    RUN FROM THE FILE. ERROR IF
+    DBASE RUN ALREADY EXISTS =>
+    SAME RUN APPEARS TWICE
+   *********************************************/
+   KVINDRADBRun* run = GetRun(run_n);
    if (!run) {
 
       run = new KVINDRADBRun(run_n);
@@ -1266,113 +1267,123 @@ void KVINDRADB::GoodRunLine()
 
 //____________________________________________________________________________
 
-void KVINDRADB::WriteObjects(TFile * file)
+void KVINDRADB::WriteObjects(TFile* file)
 {
-	// Write associated objects (i.e. KVINDRAPulserDataTree's TTree) in file
-	if( fPulserData ) fPulserData->WriteTree(file);
+   // Write associated objects (i.e. KVINDRAPulserDataTree's TTree) in file
+   if (fPulserData) fPulserData->WriteTree(file);
 }
 
 //____________________________________________________________________________
 
-void KVINDRADB::ReadObjects(TFile *file)
+void KVINDRADB::ReadObjects(TFile* file)
 {
-	// Read associated objects (i.e. KVINDRAPulserDataTree's TTree) from file
-	if( !fPulserData ) fPulserData = new KVINDRAPulserDataTree;
-	fPulserData->ReadTree(file);
+   // Read associated objects (i.e. KVINDRAPulserDataTree's TTree) from file
+   if (!fPulserData) fPulserData = new KVINDRAPulserDataTree;
+   fPulserData->ReadTree(file);
 }
 
 //____________________________________________________________________________
 
 void KVINDRADB::ReadCsITotalLightGainCorrections()
 {
-	// Read in gain corrections for CsI total light output.
-	// Looks for directory
-	//    $KVROOT/KVFiles/[dataset name]/[lumcorrdir]
-	// where [lumcorrdir] is defined in .kvrootrc by one of the two variables
-	//    INDRADB.CsILumCorr:   [lumcorrdir]
-	//    [dataset name].INDRADB.CsILumCorr:   [lumcorrdir]
-	// the latter value takes precedence for a given dataset over the former, generic, value.
-	//
-	// If the directory is not found we look for a compressed archive file
-	//    $KVROOT/KVFiles/[dataset name]/[lumcorrdir].tgz
-	//
-	// The files in the directory containing the corrections for each run have
-	// names with the format given by
-	//    INDRADB.CsILumCorr.FileName:   [format]
-	//    [dataset name].INDRADB.CsILumCorr.FileName:   [format]
-	// the latter value takes precedence for a given dataset over the former, generic, value.
-	// The [format] should include a placeholder for the run number, e.g.
-	//    INDRADB.CsILumCorr.FileName:   run%04d.cor
-	//    INDRADB.CsILumCorr.FileName:   Run%d.corrLum
-	// etc. etc.
-	//
-	// The contents of each file should be in the following format:
-	//    CSI_0221_R    1.00669
-	//    CSI_0321_R    1.01828
-	//    CSI_0322_R    1.00977
-	// i.e.
-	//   name_of_detector   correction
-	//Any other lines are ignored.
+   // Read in gain corrections for CsI total light output.
+   // Looks for directory
+   //    $KVROOT/KVFiles/[dataset name]/[lumcorrdir]
+   // where [lumcorrdir] is defined in .kvrootrc by one of the two variables
+   //    INDRADB.CsILumCorr:   [lumcorrdir]
+   //    [dataset name].INDRADB.CsILumCorr:   [lumcorrdir]
+   // the latter value takes precedence for a given dataset over the former, generic, value.
+   //
+   // If the directory is not found we look for a compressed archive file
+   //    $KVROOT/KVFiles/[dataset name]/[lumcorrdir].tgz
+   //
+   // The files in the directory containing the corrections for each run have
+   // names with the format given by
+   //    INDRADB.CsILumCorr.FileName:   [format]
+   //    [dataset name].INDRADB.CsILumCorr.FileName:   [format]
+   // the latter value takes precedence for a given dataset over the former, generic, value.
+   // The [format] should include a placeholder for the run number, e.g.
+   //    INDRADB.CsILumCorr.FileName:   run%04d.cor
+   //    INDRADB.CsILumCorr.FileName:   Run%d.corrLum
+   // etc. etc.
+   //
+   // The contents of each file should be in the following format:
+   //    CSI_0221_R    1.00669
+   //    CSI_0321_R    1.01828
+   //    CSI_0322_R    1.00977
+   // i.e.
+   //   name_of_detector   correction
+   //Any other lines are ignored.
 
-			Info("ReadCsITotalLightGainCorrections",
-					"Reading corrections...");
+   Info("ReadCsITotalLightGainCorrections",
+        "Reading corrections...");
 
-	// get name of directory for this dataset from .kvrootrc
-	TString search;
-	search = GetDBEnv("CsILumCorr");
-	if( search=="" ){
-		Error("ReadCsITotalLightGainCorrections", "INDRADB.CsILumCorr is not defined. Check .kvrootrc files.");
-	}
+   // get name of directory for this dataset from .kvrootrc
+   TString search;
+   search = GetDBEnv("CsILumCorr");
+   if (search == "") {
+      Error("ReadCsITotalLightGainCorrections", "INDRADB.CsILumCorr is not defined. Check .kvrootrc files.");
+   }
 
-	KVTarArchive gain_cor(search.Data(), GetDataSetDir());
-	if(!gain_cor.IsOK()){
-		Info("ReadCsITotalLightGainCorrections","No corrections found");
-		return;
-	}
+   KVTarArchive gain_cor(search.Data(), GetDataSetDir());
+   if (!gain_cor.IsOK()) {
+      Info("ReadCsITotalLightGainCorrections", "No corrections found");
+      return;
+   }
 
-	TString filefmt;
-	filefmt = GetDBEnv("CsILumCorr.FileName");
-	if( filefmt=="" ){
-		Error("ReadCsITotalLightGainCorrections", "INDRADB.CsILumCorr.FileName is not defined. Check .kvrootrc files.");
-	}
+   TString filefmt;
+   filefmt = GetDBEnv("CsILumCorr.FileName");
+   if (filefmt == "") {
+      Error("ReadCsITotalLightGainCorrections", "INDRADB.CsILumCorr.FileName is not defined. Check .kvrootrc files.");
+   }
 
-	// boucle sur tous les runs
-	TIter next_run(GetRuns());
-	KVINDRADBRun* run=0;
-	while( (run=(KVINDRADBRun*)next_run()) ){
+   // boucle sur tous les runs
+   TIter next_run(GetRuns());
+   KVINDRADBRun* run = 0;
+   while ((run = (KVINDRADBRun*)next_run())) {
 
-		Int_t run_num = run->GetNumber();
-		TString filepath; filepath.Form(filefmt.Data(),run_num);
-		filepath.Prepend("/");
-		filepath.Prepend(search.Data());
-		ifstream filereader;
-		if( KVBase::SearchAndOpenKVFile(filepath, filereader, fDataSet.Data()) ){
+      Int_t run_num = run->GetNumber();
+      TString filepath;
+      filepath.Form(filefmt.Data(), run_num);
+      filepath.Prepend("/");
+      filepath.Prepend(search.Data());
+      ifstream filereader;
+      if (KVBase::SearchAndOpenKVFile(filepath, filereader, fDataSet.Data())) {
 
-			KVString line;
-			line.ReadLine(filereader);
-			while( filereader.good() ){
+         KVString line;
+         line.ReadLine(filereader);
+         while (filereader.good()) {
 
-				line.Begin(" "); if(line.End()) {line.ReadLine(filereader);continue;}
-				KVString det_name = line.Next(kTRUE);
-				if(!det_name.BeginsWith("CSI_")){line.ReadLine(filereader);continue;}
-				if(line.End()){line.ReadLine(filereader);continue;}
-				Double_t correction = line.Next(kTRUE).Atof();
+            line.Begin(" ");
+            if (line.End()) {
+               line.ReadLine(filereader);
+               continue;
+            }
+            KVString det_name = line.Next(kTRUE);
+            if (!det_name.BeginsWith("CSI_")) {
+               line.ReadLine(filereader);
+               continue;
+            }
+            if (line.End()) {
+               line.ReadLine(filereader);
+               continue;
+            }
+            Double_t correction = line.Next(kTRUE).Atof();
 
-				KVDBParameterSet* cps = new KVDBParameterSet(det_name.Data(),
-						"CsI Total Light Gain Correction", 1);
+            KVDBParameterSet* cps = new KVDBParameterSet(det_name.Data(),
+                  "CsI Total Light Gain Correction", 1);
 
-				cps->SetParameters(correction);
-				fCsILumCorr->AddRecord(cps);
-				cps->AddLink("Runs",run);
-				line.ReadLine(filereader);
-			}
-			filereader.close();
-		}
-		else{
-			Warning("ReadCsITotalLightGainCorrections","Run %d: no correction", run_num);
-		}
+            cps->SetParameters(correction);
+            fCsILumCorr->AddRecord(cps);
+            cps->AddLink("Runs", run);
+            line.ReadLine(filereader);
+         }
+         filereader.close();
+      } else {
+         Warning("ReadCsITotalLightGainCorrections", "Run %d: no correction", run_num);
+      }
 
-	}
+   }
 
 }
 
@@ -1405,8 +1416,8 @@ void KVINDRADB::ReadChannelVolt()
 
    Char_t det_name[80];
    Char_t cal_type[80];
-   KVDBParameterSet *parset;
-   TList *par_list = new TList();
+   KVDBParameterSet* parset;
+   TList* par_list = new TList();
 
 
    while (fin.good()) {         //reading the file
@@ -1449,22 +1460,22 @@ void KVINDRADB::ReadChannelVolt()
          } else {               //parameters correctly read
             // naming detector
             switch (sign) {
-            case ChIo_GG:
-               sprintf(det_name, "CI_%02u%02u_GG", cour, modu);
-               strcpy(cal_type, "Channel-Volt GG");
-               break;
-            case ChIo_PG:
-               sprintf(det_name, "CI_%02u%02u_PG", cour, modu);
-               strcpy(cal_type, "Channel-Volt PG");
-               break;
-            case Si_GG:
-               sprintf(det_name, "SI_%02u%02u_GG", cour, modu);
-               strcpy(cal_type, "Channel-Volt GG");
-               break;
-            case Si_PG:
-               sprintf(det_name, "SI_%02u%02u_PG", cour, modu);
-               strcpy(cal_type, "Channel-Volt PG");
-               break;
+               case ChIo_GG:
+                  sprintf(det_name, "CI_%02u%02u_GG", cour, modu);
+                  strcpy(cal_type, "Channel-Volt GG");
+                  break;
+               case ChIo_PG:
+                  sprintf(det_name, "CI_%02u%02u_PG", cour, modu);
+                  strcpy(cal_type, "Channel-Volt PG");
+                  break;
+               case Si_GG:
+                  sprintf(det_name, "SI_%02u%02u_GG", cour, modu);
+                  strcpy(cal_type, "Channel-Volt GG");
+                  break;
+               case Si_PG:
+                  sprintf(det_name, "SI_%02u%02u_PG", cour, modu);
+                  strcpy(cal_type, "Channel-Volt PG");
+                  break;
             }
             parset = new KVDBParameterSet(det_name, cal_type, 5);
             parset->SetParameters(a0, a1, a2, dum1, dum2);
@@ -1477,7 +1488,7 @@ void KVINDRADB::ReadChannelVolt()
    delete par_list;
    fin.close();
 
-	/********** ETALONS ***************/
+   /********** ETALONS ***************/
 
    ifstream fin2;
    if (!OpenCalibFile("ElectronicCalibration.Etalons", fin2)) {
@@ -1490,8 +1501,8 @@ void KVINDRADB::ReadChannelVolt()
    frun = lrun = 0;
    rr_number = 0;
    prev_rr = kFALSE;     // was the last line a run range indication ?
-	par_list = new TList;
-   TObjArray* toks=0;
+   par_list = new TList;
+   TObjArray* toks = 0;
    while (fin2.good()) {         //reading the file
       sline.ReadLine(fin2);
       if (fin2.eof()) {          //fin du fichier
@@ -1531,9 +1542,11 @@ void KVINDRADB::ReadChannelVolt()
                     "Bad format in line :\n%s\nUnable to read",
                     sline.Data());
          } else {               //parameters correctly read
-            KVString gain; gain.Form("%s",det_name);
+            KVString gain;
+            gain.Form("%s", det_name);
             toks = gain.Tokenize("_");
-            KVString scal_type; scal_type.Form("Channel-Volt %s",((TObjString*)toks->At(2))->GetString().Data());
+            KVString scal_type;
+            scal_type.Form("Channel-Volt %s", ((TObjString*)toks->At(2))->GetString().Data());
             delete toks;
             parset = new KVDBParameterSet(det_name, scal_type.Data(), 3);
             parset->SetParameters(a0, a1, a2);
@@ -1571,8 +1584,8 @@ void KVINDRADB::ReadVoltEnergyChIoSi()
    Bool_t prev_rr = kFALSE;     // was the last line a run range indication ?
 
    Char_t det_name[80];
-   KVDBParameterSet *parset;
-   TList *par_list = new TList();
+   KVDBParameterSet* parset;
+   TList* par_list = new TList();
 
    Float_t a0, a1, chi;         // calibration parameters
 
@@ -1610,7 +1623,7 @@ void KVINDRADB::ReadVoltEnergyChIoSi()
       }                         //Run Range found
       if (sline.BeginsWith("SI") || sline.BeginsWith("CI")) {   //data line
          if (sscanf(sline.Data(), "%7s %f %f %f", det_name, &a0, &a1, &chi)
-             != 4) {
+               != 4) {
             Warning("ReadVoltEnergyAlpha()",
                     "Bad format in line :\n%s\nUnable to read parameters",
                     sline.Data());
@@ -1658,8 +1671,8 @@ void KVINDRADB::ReadPedestalList()
          line.Remove(0, 1);
 
          if (sscanf
-             (line.Data(), "Run Range : %u %u", &runlist[0][0],
-              &runlist[0][1]) != 2) {
+               (line.Data(), "Run Range : %u %u", &runlist[0][0],
+                &runlist[0][1]) != 2) {
             Warning("ReadPedestalList()", "Format problem in line \n%s",
                     line.Data());
          }
@@ -1673,9 +1686,9 @@ void KVINDRADB::ReadPedestalList()
          sscanf(line.Data(), "%s", filename_csi);
 
          TList RRList;
-         KVDBRecord *dummy = 0;
+         KVDBRecord* dummy = 0;
          dummy =
-             new KVDBRecord(filename_chio, "ChIo/Si/Etalons pedestals");
+            new KVDBRecord(filename_chio, "ChIo/Si/Etalons pedestals");
          dummy->AddKey("Runs", "Runs for which to use this pedestal file");
          fPedestals->AddRecord(dummy);
          RRList.Add(dummy);
@@ -1709,17 +1722,18 @@ void KVINDRADB::ReadLightEnergyCsI(const Char_t* zrange, KVDBTable* table)
    //and add them to the KVDBTable whose pointer is given as 2nd argument.
    //These calibrations are valid for all runs
 
-    ifstream fin;
-   TString filename; filename.Form("CalibCsI.%s", zrange);
-   if (!OpenCalibFile( filename.Data() , fin)) {
+   ifstream fin;
+   TString filename;
+   filename.Form("CalibCsI.%s", zrange);
+   if (!OpenCalibFile(filename.Data() , fin)) {
       Error("ReadLightEnergyCsI()", "Could not open file %s",
-            GetCalibFileName( filename.Data() ));
+            GetCalibFileName(filename.Data()));
       return;
    }
    Info("ReadLightEnergyCsI()",
         "Reading Light-Energy CsI calibration parameters (%s)...", zrange);
 
-  //need description of INDRA geometry
+   //need description of INDRA geometry
    if (!gIndra) {
       KVMultiDetArray::MakeMultiDetector(fDataSet.Data());
    }
@@ -1729,8 +1743,8 @@ void KVINDRADB::ReadLightEnergyCsI(const Char_t* zrange, KVDBTable* table)
 
    TString sline;
 
-   KVDBParameterSet *parset;
-   TList *par_list = new TList();
+   KVDBParameterSet* parset;
+   TList* par_list = new TList();
 
    Float_t a2, a1, a3, a4;    // calibration parameters
    Int_t ring, mod;
@@ -1740,24 +1754,22 @@ void KVINDRADB::ReadLightEnergyCsI(const Char_t* zrange, KVDBTable* table)
       if (fin.good()) {
          if (!sline.BeginsWith("#")) {  //skip comments
             if (sscanf
-                (sline.Data(), "%d %d %f %f %f %f", &ring, &mod, &a1,
-                 &a2, &a3, &a4) != 6) {
+                  (sline.Data(), "%d %d %f %f %f %f", &ring, &mod, &a1,
+                   &a2, &a3, &a4) != 6) {
                Warning("ReadLightEnergyCsI()",
                        "Bad format in line :\n%s\nUnable to read parameters",
                        sline.Data());
                return;
             } else {            //parameters correctly read
-               KVCsI *csi =
-                   (KVCsI *) gIndra->GetDetectorByType(ring, mod, CsI_R);
+               KVCsI* csi =
+                  (KVCsI*) gIndra->GetDetectorByType(ring, mod, CsI_R);
                if (!csi) {
                   Warning("ReadLightEnergyCsI()", "Read calibration for non-existent detector CSI_%02d%02d",
                           ring, mod);
-               }
-               else
-               {
+               } else {
                   parset =
-                   new KVDBParameterSet(csi->GetName(), Form("Light-Energy CsI %s", zrange),
-                                        4);
+                     new KVDBParameterSet(csi->GetName(), Form("Light-Energy CsI %s", zrange),
+                                          4);
                   parset->SetParameters(a1, a2, a3, a4);
                   table->AddRecord(parset);
                   par_list->Add(parset);
@@ -1782,33 +1794,33 @@ void KVINDRADB::ReadLightEnergyCsI(const Char_t* zrange, KVDBTable* table)
 //__________________________________________________________________________________________________________________
 
 Double_t KVINDRADB::GetEventCrossSection(KVNumberList runs,
-                                         Double_t Q_apres_cible,
-                                         Double_t Coul_par_top) const
+      Double_t Q_apres_cible,
+      Double_t Coul_par_top) const
 {
    // Returns calculated average cross-section [mb] per event for the runs in question.
    // It is assumed that all runs correspond to the same reaction,
    // with the same beam & target characteristics and multiplicity trigger.
    // The target thickness etc. are taken from the first run.
-   
+
    runs.Begin();
    Int_t run1 = runs.Next();
-   KVTarget *targ = GetRun(run1)->GetTarget();
+   KVTarget* targ = GetRun(run1)->GetTarget();
    if (!targ) {
       Error("GetEventCrossSection", "No target for run %d", run1);
       return 0;
    }
    Double_t sum_xsec = 0;
    runs.Begin();
-   while(!runs.End()){
-   
-   	int run = runs.Next();
+   while (!runs.End()) {
+
+      int run = runs.Next();
       if (!GetRun(run))
          continue;              //skip non-existent runs
       sum_xsec +=
-          GetRun(run)->GetNIncidentIons(Q_apres_cible,
-                                        Coul_par_top) * (1. - GetRun(run)->GetTempsMort());                                       
+         GetRun(run)->GetNIncidentIons(Q_apres_cible,
+                                       Coul_par_top) * (1. - GetRun(run)->GetTempsMort());
    }
-   
+
    //average X-section [mb] per event = 1e27 / (no. atoms in target * SUM(no. of projectile nuclei * (1 - TM)) )
    return (1.e27 / (targ->GetAtomsPerCM2() * sum_xsec));
 }
@@ -1816,16 +1828,16 @@ Double_t KVINDRADB::GetEventCrossSection(KVNumberList runs,
 //__________________________________________________________________________________________________________________
 
 Double_t KVINDRADB::GetTotalCrossSection(KVNumberList runs,
-                                         Double_t Q_apres_cible,
-                                         Double_t Coul_par_top) const
+      Double_t Q_apres_cible,
+      Double_t Coul_par_top) const
 {
    //Returns calculated total measured cross-section [mb] for the runs in question.
    //This is SUM (GetEventCrossSection(run1,run2) * SUM( events )
    //where SUM(events) is the total number of events measured in all the runs
    Int_t sum = 0;
    runs.Begin();
-   while(!runs.End()) {
-			int run = runs.Next();
+   while (!runs.End()) {
+      int run = runs.Next();
       if (!GetRun(run))
          continue;              //skip non-existent runs
       sum += GetRun(run)->GetEvents();
@@ -1839,69 +1851,68 @@ Double_t KVINDRADB::GetTotalCrossSection(KVNumberList runs,
 
 void KVINDRADB::PrintRuns(KVNumberList& nl) const
 {
-	// Print compact listing of runs in the number list like this:
-	//
-	// root [9] gIndraDB->PrintRuns("8100-8120")
-	// RUN     SYSTEM                          TRIGGER         EVENTS          COMMENTS
-	// ------------------------------------------------------------------------------------------------------------------
-	// 8100    129Xe + 58Ni 8 MeV/A            M>=2            968673
-	// 8101    129Xe + 58Ni 8 MeV/A            M>=2            969166
-	// 8102    129Xe + 58Ni 8 MeV/A            M>=2            960772
-	// 8103    129Xe + 58Ni 8 MeV/A            M>=2            970029
-	// 8104    129Xe + 58Ni 8 MeV/A            M>=2            502992          disjonction ht chassis 1
-	// 8105    129Xe + 58Ni 8 MeV/A            M>=2            957015          intensite augmentee a 200 pA
-	
-	printf("RUN\tSYSTEM\t\t\t\tTRIGGER\t\tEVENTS\t\tCOMMENTS\n");
-	printf("------------------------------------------------------------------------------------------------------------------\n");
-	nl.Begin();
-	while( !nl.End() ){
-		KVINDRADBRun* run = GetRun(nl.Next());
-		if(!run) continue;
-		printf("%4d\t%-30s\t%s\t\t%d\t\t%s\n",
-				run->GetNumber(), (run->GetSystem()?run->GetSystem()->GetName():"            "), run->GetTriggerString(),
-				run->GetEvents(), run->GetComments());
-	}
+   // Print compact listing of runs in the number list like this:
+   //
+   // root [9] gIndraDB->PrintRuns("8100-8120")
+   // RUN     SYSTEM                          TRIGGER         EVENTS          COMMENTS
+   // ------------------------------------------------------------------------------------------------------------------
+   // 8100    129Xe + 58Ni 8 MeV/A            M>=2            968673
+   // 8101    129Xe + 58Ni 8 MeV/A            M>=2            969166
+   // 8102    129Xe + 58Ni 8 MeV/A            M>=2            960772
+   // 8103    129Xe + 58Ni 8 MeV/A            M>=2            970029
+   // 8104    129Xe + 58Ni 8 MeV/A            M>=2            502992          disjonction ht chassis 1
+   // 8105    129Xe + 58Ni 8 MeV/A            M>=2            957015          intensite augmentee a 200 pA
+
+   printf("RUN\tSYSTEM\t\t\t\tTRIGGER\t\tEVENTS\t\tCOMMENTS\n");
+   printf("------------------------------------------------------------------------------------------------------------------\n");
+   nl.Begin();
+   while (!nl.End()) {
+      KVINDRADBRun* run = GetRun(nl.Next());
+      if (!run) continue;
+      printf("%4d\t%-30s\t%s\t\t%d\t\t%s\n",
+             run->GetNumber(), (run->GetSystem() ? run->GetSystem()->GetName() : "            "), run->GetTriggerString(),
+             run->GetEvents(), run->GetComments());
+   }
 }
 
 //____________________________________________________________________________
 void KVINDRADB::ReadAbsentDetectors()
 {
-	//Lit le fichier ou sont listés les détecteurs retirés au cours 
-	//de la manip
-	TString fp;
-	if (!KVBase::SearchKVFile(GetCalibFileName("AbsentDet"), fp, fDataSet.Data())){
-		Error("ReadAbsentDetectors","Fichier %s, inconnu au bataillon",GetCalibFileName("AbsentDet"));
-		return;
-	}
-	Info("ReadAbsentDetectors()", "Lecture des detecteurs absents...");
-	fAbsentDet = AddTable("Absent Detectors", "Name of physically absent detectors");
-	
-	KVDBRecord* dbrec = 0;
-	TEnv env;
-	TEnvRec* rec = 0;
-	env.ReadFile(fp.Data(),kEnvAll);
-	TIter it(env.GetTable());
-	
-	while ( (rec = (TEnvRec* )it.Next()) ){
-		KVString srec(rec->GetName());
-		KVNumberList nl(rec->GetValue());
-		cout << rec->GetValue() << endl;
-		if ( srec.Contains(",") ){
-			srec.Begin(",");
-			while (!srec.End()){
-				dbrec = new KVDBRecord(srec.Next(),"Absent Detector");
-				dbrec->AddKey("Runs", "List of Runs");
-				fAbsentDet->AddRecord(dbrec);
-				LinkRecordToRunRange(dbrec,nl);
-			}
-		}
-		else {
-			dbrec = new KVDBRecord(rec->GetName(),"Absent Detector");
-			dbrec->AddKey("Runs", "List of Runs");
-			fAbsentDet->AddRecord(dbrec);
-			LinkRecordToRunRange(dbrec,nl);
-		}
-	}
+   //Lit le fichier ou sont listés les détecteurs retirés au cours
+   //de la manip
+   TString fp;
+   if (!KVBase::SearchKVFile(GetCalibFileName("AbsentDet"), fp, fDataSet.Data())) {
+      Error("ReadAbsentDetectors", "Fichier %s, inconnu au bataillon", GetCalibFileName("AbsentDet"));
+      return;
+   }
+   Info("ReadAbsentDetectors()", "Lecture des detecteurs absents...");
+   fAbsentDet = AddTable("Absent Detectors", "Name of physically absent detectors");
+
+   KVDBRecord* dbrec = 0;
+   TEnv env;
+   TEnvRec* rec = 0;
+   env.ReadFile(fp.Data(), kEnvAll);
+   TIter it(env.GetTable());
+
+   while ((rec = (TEnvRec*)it.Next())) {
+      KVString srec(rec->GetName());
+      KVNumberList nl(rec->GetValue());
+      cout << rec->GetValue() << endl;
+      if (srec.Contains(",")) {
+         srec.Begin(",");
+         while (!srec.End()) {
+            dbrec = new KVDBRecord(srec.Next(), "Absent Detector");
+            dbrec->AddKey("Runs", "List of Runs");
+            fAbsentDet->AddRecord(dbrec);
+            LinkRecordToRunRange(dbrec, nl);
+         }
+      } else {
+         dbrec = new KVDBRecord(rec->GetName(), "Absent Detector");
+         dbrec->AddKey("Runs", "List of Runs");
+         fAbsentDet->AddRecord(dbrec);
+         LinkRecordToRunRange(dbrec, nl);
+      }
+   }
 
 }
 
@@ -1909,42 +1920,41 @@ void KVINDRADB::ReadAbsentDetectors()
 void KVINDRADB::ReadOoODetectors()
 {
 
-	//Lit le fichier ou sont listés les détecteurs ne marchant plus au cours 
-	//de la manip
-	TString fp;
-	if (!KVBase::SearchKVFile(GetCalibFileName("OoODet"), fp, fDataSet.Data())){
-		Error("ReadOoODetectors","Fichier %s, inconnu au bataillon",GetCalibFileName("OoODet"));
-		return;
-	}
-	Info("ReadOoODetectors()", "Lecture des detecteurs hors service ...");
-	fOoODet = AddTable("OoO Detectors", "Name of out of order detectors");
-	
-	KVDBRecord* dbrec = 0;
-	TEnv env;
-	TEnvRec* rec = 0;
-	env.ReadFile(fp.Data(),kEnvAll);
-	TIter it(env.GetTable());
-	
-	while ( (rec = (TEnvRec* )it.Next()) ){
-		KVString srec(rec->GetName());
-		KVNumberList nl(rec->GetValue());
-		cout << rec->GetValue() << endl;
-		if ( srec.Contains(",") ){
-			srec.Begin(",");
-			while (!srec.End()){
-				dbrec = new KVDBRecord(srec.Next(),"OoO Detector");
-				dbrec->AddKey("Runs", "List of Runs");
-				fOoODet->AddRecord(dbrec);
-				LinkRecordToRunRange(dbrec,nl);
-			}
-		}
-		else {
-			dbrec = new KVDBRecord(rec->GetName(),"OoO Detector");
-			dbrec->AddKey("Runs", "List of Runs");
-			fOoODet->AddRecord(dbrec);
-			LinkRecordToRunRange(dbrec,nl);
-		}
-	}
+   //Lit le fichier ou sont listés les détecteurs ne marchant plus au cours
+   //de la manip
+   TString fp;
+   if (!KVBase::SearchKVFile(GetCalibFileName("OoODet"), fp, fDataSet.Data())) {
+      Error("ReadOoODetectors", "Fichier %s, inconnu au bataillon", GetCalibFileName("OoODet"));
+      return;
+   }
+   Info("ReadOoODetectors()", "Lecture des detecteurs hors service ...");
+   fOoODet = AddTable("OoO Detectors", "Name of out of order detectors");
+
+   KVDBRecord* dbrec = 0;
+   TEnv env;
+   TEnvRec* rec = 0;
+   env.ReadFile(fp.Data(), kEnvAll);
+   TIter it(env.GetTable());
+
+   while ((rec = (TEnvRec*)it.Next())) {
+      KVString srec(rec->GetName());
+      KVNumberList nl(rec->GetValue());
+      cout << rec->GetValue() << endl;
+      if (srec.Contains(",")) {
+         srec.Begin(",");
+         while (!srec.End()) {
+            dbrec = new KVDBRecord(srec.Next(), "OoO Detector");
+            dbrec->AddKey("Runs", "List of Runs");
+            fOoODet->AddRecord(dbrec);
+            LinkRecordToRunRange(dbrec, nl);
+         }
+      } else {
+         dbrec = new KVDBRecord(rec->GetName(), "OoO Detector");
+         dbrec->AddKey("Runs", "List of Runs");
+         fOoODet->AddRecord(dbrec);
+         LinkRecordToRunRange(dbrec, nl);
+      }
+   }
 
 }
 
@@ -1952,42 +1962,41 @@ void KVINDRADB::ReadOoODetectors()
 void KVINDRADB::ReadOoOACQParams()
 {
 
-	//Lit le fichier ou sont listés les parametres d acquisition ne marchant plus au cours 
-	//de la manip
-	TString fp;
-	if (!KVBase::SearchKVFile(GetCalibFileName("OoOACQPar"), fp, fDataSet.Data())){
-		Error("ReadNotWorkingACQParams","Fichier %s, inconnu au bataillon",GetCalibFileName("OoOACQPar"));
-		return;
-	}
-	Info("ReadNotWorkingACQParams()", "Lecture des parametres d acq hors service ...");
-	fOoOACQPar = AddTable("OoO ACQPars", "Name of not working acq parameters");
-	
-	KVDBRecord* dbrec = 0;
-	TEnv env;
-	TEnvRec* rec = 0;
-	env.ReadFile(fp.Data(),kEnvAll);
-	TIter it(env.GetTable());
-	
-	while ( (rec = (TEnvRec* )it.Next()) ){
-		KVString srec(rec->GetName());
-		KVNumberList nl(rec->GetValue());
-		cout << rec->GetValue() << endl;
-		if ( srec.Contains(",") ){
-			srec.Begin(",");
-			while (!srec.End()){
-				dbrec = new KVDBRecord(srec.Next(),"OoO ACQPar");
-				dbrec->AddKey("Runs", "List of Runs");
-				fOoOACQPar->AddRecord(dbrec);
-				LinkRecordToRunRange(dbrec,nl);
-			}
-		}
-		else {
-			dbrec = new KVDBRecord(rec->GetName(),"OoO ACQPar");
-			dbrec->AddKey("Runs", "List of Runs");
-			fOoOACQPar->AddRecord(dbrec);
-			LinkRecordToRunRange(dbrec,nl);
-		}
-	}
+   //Lit le fichier ou sont listés les parametres d acquisition ne marchant plus au cours
+   //de la manip
+   TString fp;
+   if (!KVBase::SearchKVFile(GetCalibFileName("OoOACQPar"), fp, fDataSet.Data())) {
+      Error("ReadNotWorkingACQParams", "Fichier %s, inconnu au bataillon", GetCalibFileName("OoOACQPar"));
+      return;
+   }
+   Info("ReadNotWorkingACQParams()", "Lecture des parametres d acq hors service ...");
+   fOoOACQPar = AddTable("OoO ACQPars", "Name of not working acq parameters");
+
+   KVDBRecord* dbrec = 0;
+   TEnv env;
+   TEnvRec* rec = 0;
+   env.ReadFile(fp.Data(), kEnvAll);
+   TIter it(env.GetTable());
+
+   while ((rec = (TEnvRec*)it.Next())) {
+      KVString srec(rec->GetName());
+      KVNumberList nl(rec->GetValue());
+      cout << rec->GetValue() << endl;
+      if (srec.Contains(",")) {
+         srec.Begin(",");
+         while (!srec.End()) {
+            dbrec = new KVDBRecord(srec.Next(), "OoO ACQPar");
+            dbrec->AddKey("Runs", "List of Runs");
+            fOoOACQPar->AddRecord(dbrec);
+            LinkRecordToRunRange(dbrec, nl);
+         }
+      } else {
+         dbrec = new KVDBRecord(rec->GetName(), "OoO ACQPar");
+         dbrec->AddKey("Runs", "List of Runs");
+         fOoOACQPar->AddRecord(dbrec);
+         LinkRecordToRunRange(dbrec, nl);
+      }
+   }
 
 }
 

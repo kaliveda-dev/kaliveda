@@ -6,20 +6,25 @@
 
 #include "KVBase.h"
 
-class KVColouredBase : public KVBase
-{
-   protected:
+class KVColouredBase : public KVBase {
+protected:
    TString fColour;
 
-   public:
+public:
    KVColouredBase();
    KVColouredBase(const Char_t* name, const Char_t* title = "", const Char_t* colour = "white");
    virtual ~KVColouredBase();
-   
-   void SetColour(const Char_t* c) { fColour = c; }
-   const Char_t* GetLVEntryColour() const { return fColour; }
 
-   ClassDef(KVColouredBase,1)//A basic coloured object for coloured list views
+   void SetColour(const Char_t* c)
+   {
+      fColour = c;
+   }
+   const Char_t* GetLVEntryColour() const
+   {
+      return fColour;
+   }
+
+   ClassDef(KVColouredBase, 1) //A basic coloured object for coloured list views
 };
 
 #endif

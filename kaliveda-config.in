@@ -73,18 +73,13 @@ buildir=@CMAKE_BINARY_DIR@
 libdir=@CMAKE_INSTALL_FULL_LIBDIR@
 incdir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
 bindir=@CMAKE_INSTALL_FULL_BINDIR@
-#features= "@features@"
-get_lib_list KVMultiDet "$libdir"
-multidetlibs="$lib_list"
-get_lib_list BackTrack "$libdir"
-backtracklibs="$lib_list"
-get_lib_list KVIndra $libdir
-indralibs="$lib_list"
-get_lib_list VAMOS $libdir
-vamoslibs=$lib_list
-get_lib_list FAZIA $libdir
-fazialibs=$lib_list
-libs="$fazialibs $vamoslibs $indralibs $backtracklibs $multidetlibs"
+# get list of all installed libraries
+modules="@subprojlist@"
+libs=""
+for module in $modules; do
+   get_lib_list $module "$libdir"
+   libs="$libs $lib_list"
+done
 
 usage="\
 Usage: `basename $0` [--version] [--libs] [--incdir] [--libdir] [--bindir] [--buildir] [--srcdir] [--help]"

@@ -28,7 +28,7 @@ ClassImp(KVGANILDataReader)
    If the dataset corresponding to the data to be read is known i.e. if gDataSet has been defined and points
    to the correct dataset, this will allow to build the necessary multidetector object if it has not already
    been done, and to set the calibration parameters etc. as a function of the run number.
-	<br><br>
+   <br><br>
    If not (i.e. if no information is available on detectors, calibrations, geometry, etc.),
    then a list of KVACQParam objects will be generated and connected ready for reading the data.
    <br><br>
@@ -59,7 +59,7 @@ You need to add "SCALERS" to the option given to method <a href="#KVGANILDataRea
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-KVGANILDataReader::KVGANILDataReader(const Char_t * file)
+KVGANILDataReader::KVGANILDataReader(const Char_t* file)
 {
    //Open and initialise a GANIL data file for reading.
    //By default, Scaler buffers are ignored.
@@ -71,9 +71,9 @@ KVGANILDataReader::KVGANILDataReader(const Char_t * file)
    //If the dataset corresponding to the data to be read is known i.e. if gDataSet has been defined and points
    //to the correct dataset, this will allow to build the necessary multidetector object if it has not already
    //been done, and to set the calibration parameters etc. as a function of the run number.
-	//
+   //
    //If not (i.e. if no information is available on detectors, calibrations, geometry, etc.),
-	//then a list of KVACQParam objects will be generated and connected ready for reading the data.
+   //then a list of KVACQParam objects will be generated and connected ready for reading the data.
 
    init();
    OpenFile(file);
@@ -82,16 +82,19 @@ KVGANILDataReader::KVGANILDataReader(const Char_t * file)
 KVGANILDataReader::~KVGANILDataReader()
 {
    // Destructor
-   if(fGanilData) { delete fGanilData; fGanilData=0; }
+   if (fGanilData) {
+      delete fGanilData;
+      fGanilData = 0;
+   }
    fParameters->Clear();
    delete fParameters;
-   if(fExtParams){
-		fExtParams->Delete("slow");
-		delete fExtParams;
+   if (fExtParams) {
+      fExtParams->Delete("slow");
+      delete fExtParams;
    }
    delete fFired;
-   if(ParVal) delete [] ParVal;
-   if(ParNum) delete [] ParNum;
+   if (ParVal) delete [] ParVal;
+   if (ParNum) delete [] ParNum;
 }
 
 void KVGANILDataReader::init()
@@ -183,12 +186,12 @@ void KVGANILDataReader::SetUserTree(TTree* T, Option_t* opt)
    make_arrays = option.Contains("ARRAYS");
    make_leaves = option.Contains("LEAVES");
    Bool_t make_scalers = option.Contains("SCALERS");
-   if(make_scalers){
-   	fGanilData->SetScalerBuffersManagement(GTGanilData::kAutoWriteScaler);
+   if (make_scalers) {
+      fGanilData->SetScalerBuffersManagement(GTGanilData::kAutoWriteScaler);
    }
 
    fUserTree = T;
-   if( make_arrays ){
+   if (make_arrays) {
       Int_t maxParFired = GetRawDataParameters()->GetEntries();
       ParVal = new UShort_t[maxParFired];
       ParNum = new UInt_t[maxParFired];
@@ -196,15 +199,15 @@ void KVGANILDataReader::SetUserTree(TTree* T, Option_t* opt)
       fUserTree->Branch("ParNum", ParNum, "ParNum[NbParFired]/i");
       fUserTree->Branch("ParVal", ParVal, "ParVal[NbParFired]/s");
    }
-   if( make_leaves ){
-      TIter next_rawpar( GetRawDataParameters() );
+   if (make_leaves) {
+      TIter next_rawpar(GetRawDataParameters());
       KVACQParam* acqpar;
-      while( (acqpar = (KVACQParam*)next_rawpar()) ){
+      while ((acqpar = (KVACQParam*)next_rawpar())) {
          TString leaf;
          leaf.Form("%s/S", acqpar->GetName());
          // for parameters with <=8 bits only use 1 byte for storage
-         if(acqpar->GetNbBits()<=8) leaf += "1";
-         fUserTree->Branch( acqpar->GetName(), *(acqpar->ConnectData()), leaf.Data() );
+         if (acqpar->GetNbBits() <= 8) leaf += "1";
+         fUserTree->Branch(acqpar->GetName(), *(acqpar->ConnectData()), leaf.Data());
       }
    }
 
@@ -218,37 +221,37 @@ void KVGANILDataReader::SetUserTree(TTree* T, Option_t* opt)
 
    // add list of parameter names in fUserTree->GetUserInfos()
    // and if option="arrays" add aliases for each parameter & its multiplicity
-	
-	// TObjArray has to be as big as the largest parameter number in the list
-	// of raw data parameters. So first loop over parameters to find max param number.
-    UInt_t maxpar = 0;
+
+   // TObjArray has to be as big as the largest parameter number in the list
+   // of raw data parameters. So first loop over parameters to find max param number.
+   UInt_t maxpar = 0;
    TIter next(GetRawDataParameters());
    KVACQParam* par;
-	while( (par=(KVACQParam*)next()) ) if (par->GetNumber()>maxpar) maxpar=par->GetNumber();
-	
-   TObjArray *parlist = new TObjArray(maxpar,1);
+   while ((par = (KVACQParam*)next())) if (par->GetNumber() > maxpar) maxpar = par->GetNumber();
+
+   TObjArray* parlist = new TObjArray(maxpar, 1);
    parlist->SetName("ParameterList");
-	
-	next.Reset();
-   while( (par = (KVACQParam*)next()) ){
-      parlist->AddAt( new TNamed( par->GetName(), Form("index=%d",par->GetNumber()) ), par->GetNumber() );
-      if( make_arrays ){
-          fUserTree->SetAlias( par->GetName(), Form("Sum$((ParNum==%d)*ParVal)", par->GetNumber() ) );
-          fUserTree->SetAlias( Form("%s_M", par->GetName()), Form("Sum$(ParNum==%d)", par->GetNumber() ) );
+
+   next.Reset();
+   while ((par = (KVACQParam*)next())) {
+      parlist->AddAt(new TNamed(par->GetName(), Form("index=%d", par->GetNumber())), par->GetNumber());
+      if (make_arrays) {
+         fUserTree->SetAlias(par->GetName(), Form("Sum$((ParNum==%d)*ParVal)", par->GetNumber()));
+         fUserTree->SetAlias(Form("%s_M", par->GetName()), Form("Sum$(ParNum==%d)", par->GetNumber()));
       }
    }
    fUserTree->GetUserInfo()->Add(parlist);
 }
 
-void KVGANILDataReader::OpenFile(const Char_t * file)
+void KVGANILDataReader::OpenFile(const Char_t* file)
 {
-   	//Open and initialise a GANIL data file for reading.
-	//By default, scaler buffers are ignored.
-	//This can be changed by changing the value of
-	//
-	//	KVGANILDataReader.ScalerBuffersManagement:       kSkipScaler
-	//	
-	//If file cannot be opened, this object will be made a zombie. Do not use.
+   //Open and initialise a GANIL data file for reading.
+   //By default, scaler buffers are ignored.
+   //This can be changed by changing the value of
+   //
+   // KVGANILDataReader.ScalerBuffersManagement:       kSkipScaler
+   //
+   //If file cannot be opened, this object will be made a zombie. Do not use.
    //To test if file is open, use IsOpen().
    //The basename of the file (excluding any path) can be obtained using GetName()
    //The full pathname of the file can be obtained using GetTitle()
@@ -256,48 +259,52 @@ void KVGANILDataReader::OpenFile(const Char_t * file)
    //If the dataset corresponding to the data to be read is known i.e. if gDataSet has been defined and points
    //to the correct dataset, this will allow to build the necessary multidetector object if it has not already
    //been done, and to set the calibration parameters etc. as a function of the run number.
-	//
+   //
    //If not (i.e. if no information is available on detectors, calibrations, geometry, etc.),
-	//then a list of KVACQParam objects will be generated and connected ready for reading the data.
-	//This list can be obtained with method GetRawDataParameters().
+   //then a list of KVACQParam objects will be generated and connected ready for reading the data.
+   //This list can be obtained with method GetRawDataParameters().
 
-   if(fGanilData){ delete fGanilData; fGanilData=0; }
+   if (fGanilData) {
+      delete fGanilData;
+      fGanilData = 0;
+   }
 
    fGanilData = NewGanTapeInterface();
 
    fGanilData->SetFileName(file);
-   SetName( gSystem->BaseName(file) );
+   SetName(gSystem->BaseName(file));
    SetTitle(file);
-   
+
    // handling scaler buffers
-   TString what_scale = gEnv->GetValue("KVGANILDataReader.ScalerBuffersManagement","kSkipScaler");
+   TString what_scale = gEnv->GetValue("KVGANILDataReader.ScalerBuffersManagement", "kSkipScaler");
    what_scale.Prepend("GTGanilData::");
    Long_t ws = gInterpreter->ProcessLine(what_scale);
    fGanilData->SetScalerBuffersManagement((GTGanilData::ScalerWhat_t)ws);
-   
+
    fGanilData->Open();
 
    //test whether file has been opened
-   if(!fGanilData->IsOpen()){
+   if (!fGanilData->IsOpen()) {
       //if initial attempt fails, we try to open the file as a 'raw' TFile
       //This may work when we are attempting to open a remote file i.e.
       //via rfio, and a subsequent attempt to open the file using the GanTape
       //routines may then succeed.
-      TUrl rawtfile(file,kTRUE); rawtfile.SetOptions("filetype=raw");
-      TFile* rawfile=TFile::Open(rawtfile.GetUrl());
-      if(!rawfile){
-         Error("OpenFile","File cannot be opened: %s",
-            file);
+      TUrl rawtfile(file, kTRUE);
+      rawtfile.SetOptions("filetype=raw");
+      TFile* rawfile = TFile::Open(rawtfile.GetUrl());
+      if (!rawfile) {
+         Error("OpenFile", "File cannot be opened: %s",
+               file);
          MakeZombie();
          return;
       }
       //TFile::Open managed to open file! Try again...
       delete rawfile;
       fGanilData->Open();
-      if(!fGanilData->IsOpen()){
+      if (!fGanilData->IsOpen()) {
          //failed again ??!
-         Error("OpenFile","File cannot be opened: %s",
-            file);
+         Error("OpenFile", "File cannot be opened: %s",
+               file);
          MakeZombie();
          return;
       }
@@ -314,22 +321,22 @@ void KVGANILDataReader::OpenFile(const Char_t * file)
 
 void KVGANILDataReader::ConnectRawDataParameters()
 {
-        //Private utility method called by KVGANILDataReader ctor.
-	//fParameters is filled with a KVACQParam for every acquisition parameter in the file.
-	//If there exists a gMultiDetArray corresponding to this data, we use the KVACQParams
-	//already defined for the detectors of the array whenever possible.
-	//For any parameters for which no KVACQParam already exists (a fortiori if no
-	//gMultiDetArray exists) we create new KVACQParam objects which will be deleted
-	//with this KVGANILDataReader (these objects can be accessed from the list
-	//returned by GetUnknownParameters()).
-	//To access the full list of data parameters in the file after this method has been
-	//called (i.e. after the file is opened), use GetRawDataParameters().
+   //Private utility method called by KVGANILDataReader ctor.
+   //fParameters is filled with a KVACQParam for every acquisition parameter in the file.
+   //If there exists a gMultiDetArray corresponding to this data, we use the KVACQParams
+   //already defined for the detectors of the array whenever possible.
+   //For any parameters for which no KVACQParam already exists (a fortiori if no
+   //gMultiDetArray exists) we create new KVACQParam objects which will be deleted
+   //with this KVGANILDataReader (these objects can be accessed from the list
+   //returned by GetUnknownParameters()).
+   //To access the full list of data parameters in the file after this method has been
+   //called (i.e. after the file is opened), use GetRawDataParameters().
 
-   TIter next( fGanilData->GetListOfDataParameters() );
-   KVACQParam *par;
+   TIter next(fGanilData->GetListOfDataParameters());
+   KVACQParam* par;
    GTDataPar* daq_par;
    while ((daq_par = (GTDataPar*) next())) {//loop over all parameters
-      par=CheckACQParam( daq_par->GetName() );
+      par = CheckACQParam(daq_par->GetName());
       fGanilData->Connect(par->GetName(), par->ConnectData());
       par->SetNumber(daq_par->Index());
       par->SetNbBits(daq_par->Bits());
@@ -339,23 +346,23 @@ void KVGANILDataReader::ConnectRawDataParameters()
 
 //___________________________________________________________________________
 
-KVACQParam* KVGANILDataReader::CheckACQParam( const Char_t* par_name )
+KVACQParam* KVGANILDataReader::CheckACQParam(const Char_t* par_name)
 {
    //Check the named acquisition parameter.
    //We look for a corresponding parameter in the list of acq params belonging to
    //the current KVMultiDetArray (if one exists).
    //If none is found, we create a new acq param which is added to the list of "unknown parameters"
 
-   KVACQParam *par;
-   if( !gMultiDetArray || !(par = gMultiDetArray->GetACQParam( par_name )) ){
+   KVACQParam* par;
+   if (!gMultiDetArray || !(par = gMultiDetArray->GetACQParam(par_name))) {
       //create new unknown parameter
       par = new KVACQParam;
-      par->SetName( par_name );
-		if(!fExtParams){
-			fExtParams=new KVHashList;
-			fExtParams->SetOwner(kTRUE);
-		}
-      fExtParams->Add( par );
+      par->SetName(par_name);
+      if (!fExtParams) {
+         fExtParams = new KVHashList;
+         fExtParams->SetOwner(kTRUE);
+      }
+      fExtParams->Add(par);
    }
    return par;
 }
@@ -373,12 +380,13 @@ Bool_t KVGANILDataReader::GetNextEvent()
 
    Bool_t ok = fGanilData->Next();
    FillFiredParameterList();
-   if( fUserTree ){
-      if( make_arrays ){
+   if (fUserTree) {
+      if (make_arrays) {
          NbParFired = fFired->GetEntries();
-         TIter next(fFired); KVACQParam* par;
-         int i=0;
-         while( (par = (KVACQParam*)next()) ){
+         TIter next(fFired);
+         KVACQParam* par;
+         int i = 0;
+         while ((par = (KVACQParam*)next())) {
             ParVal[i] = par->GetCoderData();
             ParNum[i] = par->GetNumber();
             i++;
@@ -389,7 +397,7 @@ Bool_t KVGANILDataReader::GetNextEvent()
    return ok;
 }
 
- //___________________________________________________________________________
+//___________________________________________________________________________
 
 GTGanilData* KVGANILDataReader::NewGanTapeInterface()
 {
@@ -399,15 +407,15 @@ GTGanilData* KVGANILDataReader::NewGanTapeInterface()
 
    //check and load plugin library
    TString dsname = "any";
-   if(gDataSet) dsname = gDataSet->GetName();
-   TPluginHandler *ph=LoadPlugin("GTGanilData", dsname);
-   if (!ph){
-   	// default: GTGanilData
+   if (gDataSet) dsname = gDataSet->GetName();
+   TPluginHandler* ph = LoadPlugin("GTGanilData", dsname);
+   if (!ph) {
+      // default: GTGanilData
       return (new GTGanilData);
    }
 
    //execute constructor/macro for plugin
-   return ((GTGanilData *) ph->ExecPlugin(0));
+   return ((GTGanilData*) ph->ExecPlugin(0));
 }
 
 //____________________________________________________________________________
@@ -417,36 +425,55 @@ GTGanilData* KVGANILDataReader::GetGanTapeInterface()
    return fGanilData;
 }
 
- //____________________________________________________________________________
+//____________________________________________________________________________
 
- KVGANILDataReader* KVGANILDataReader::Open(const Char_t* filename, Option_t*)
- {
-    //Static method, used by KVDataSet::Open
-    return new KVGANILDataReader(filename);
- }
+KVGANILDataReader* KVGANILDataReader::Open(const Char_t* filename, Option_t*)
+{
+   //Static method, used by KVDataSet::Open
+   return new KVGANILDataReader(filename);
+}
 
- //____________________________________________________________________________
+//____________________________________________________________________________
 
 void KVGANILDataReader::FillFiredParameterList()
 {
-    // clears and then fills list fFired with all fired acquisition parameters in event
+   // clears and then fills list fFired with all fired acquisition parameters in event
    fFired->Clear();
    TIter next(fParameters);
-   KVACQParam *par;
-   while( (par = (KVACQParam*)next()) ) if(par->Fired()) fFired->Add(par);
+   KVACQParam* par;
+   while ((par = (KVACQParam*)next())) if (par->Fired()) fFired->Add(par);
 }
 
- //____________________________________________________________________________
-   Bool_t KVGANILDataReader::HasScalerBuffer() const { return fGanilData->IsScalerBuffer(); }
+//____________________________________________________________________________
+Bool_t KVGANILDataReader::HasScalerBuffer() const
+{
+   return fGanilData->IsScalerBuffer();
+}
 
 Int_t KVGANILDataReader::GetNumberOfScalers() const
 {
-	return fGanilData->GetScalers()->GetNbChannel();
+   return fGanilData->GetScalers()->GetNbChannel();
 }
+
+//____________________________________________________________________________
 
 UInt_t KVGANILDataReader::GetScalerCount(Int_t index) const
 {
-	return fGanilData->GetScalers()->GetScalerPtr(index)->GetCount();
+   return fGanilData->GetScalers()->GetScalerPtr(index)->GetCount();
+}
+
+//____________________________________________________________________________
+
+Int_t KVGANILDataReader::GetScalerStatus(Int_t index) const
+{
+   return fGanilData->GetScalers()->GetScalerPtr(index)->GetStatus();
+}
+
+//____________________________________________________________________________
+
+Int_t KVGANILDataReader::GetEventCount() const
+{
+   return fGanilData->GetEventCount();
 }
 
 

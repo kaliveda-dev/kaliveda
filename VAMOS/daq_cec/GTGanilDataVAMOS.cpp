@@ -21,18 +21,16 @@ $Date: 2007/11/21 11:23:00 $
 #include <gan_tape_get_parametres.h>
 extern "C"
 {
-  typedef struct SCALE
-  {
-    UNSINT32 Length; /* Nb bytes utils suivant ce mot */
-    UNSINT32 Nb_channel; 
-    UNSINT32 Acq_status;
-    UNSINT32 Reserve[2];
-    union JBUS_SCALE
-    {
-      scale_struct UnScale[NB_MAX_CHANNEL];
-      UNSINT16 Info_jbus  [NB_MAX_JBUS];
-    } jbus_scale;
-  } scale;
+   typedef struct SCALE {
+      UNSINT32 Length; /* Nb bytes utils suivant ce mot */
+      UNSINT32 Nb_channel;
+      UNSINT32 Acq_status;
+      UNSINT32 Reserve[2];
+      union JBUS_SCALE {
+         scale_struct UnScale[NB_MAX_CHANNEL];
+         UNSINT16 Info_jbus  [NB_MAX_JBUS];
+      } jbus_scale;
+   } scale;
 }
 
 #include "GTGanilDataVAMOS.h"
@@ -51,16 +49,16 @@ Based on classes from the VAMOS analysis package kindly contributed by Maurycy R
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-bool AutoswBuf,Swbufon;
+bool AutoswBuf, Swbufon;
 Int_t BufSize;
 
-GTGanilDataVAMOS::GTGanilDataVAMOS():GTGanilData()
+GTGanilDataVAMOS::GTGanilDataVAMOS(): GTGanilData()
 {
    //Default constructor
    Par = new Parameters;
 }
 
-GTGanilDataVAMOS::GTGanilDataVAMOS(const TString filename):GTGanilData(filename)
+GTGanilDataVAMOS::GTGanilDataVAMOS(const TString filename): GTGanilData(filename)
 {
    //Open file "filename" for reading
    Par = new Parameters;
@@ -75,28 +73,28 @@ GTGanilDataVAMOS::~GTGanilDataVAMOS()
 void GTGanilDataVAMOS::ReadParameters(void)
 {
    // PRIVATE
-   // Read the data parameters from the current buffer, put it in the 
+   // Read the data parameters from the current buffer, put it in the
    // parameter list.
    //This method includes the initialisation of the VAMOS parameter
    //list held in Parameters* Par
-   
+
    do {
       ReadBuffer();
-      if (strcmp (fHeader, PARAM_Id) == 0 ){
-         
+      if (strcmp(fHeader, PARAM_Id) == 0) {
+
          //fill normal parameter list
          fDataArraySize = fDataParameters->Fill(fBuffer->les_donnees.cas.Buf_param);
          //fill VAMOS parameter list
          Par->Fill(fBuffer->les_donnees.cas.Buf_param);
-         
+
       }
-   } while (strcmp (fHeader, PARAM_Id) == 0);
-  
-   fDataArray = new UShort_t[fDataArraySize+1]; // Data buffer is allocated
-   for(Int_t i=1; i<=fDataArraySize; i++){
-      fDataArray[i] = (Short_t)-1;
-   }   
-   
+   } while (strcmp(fHeader, PARAM_Id) == 0);
+
+   fDataArray = new UShort_t[fDataArraySize + 1]; // Data buffer is allocated
+   for (Int_t i = 1; i <= fDataArraySize; i++) {
+      fDataArray[i] = (Short_t) - 1;
+   }
+
 }
 
 //______________________________________________________________________________
@@ -108,47 +106,47 @@ bool GTGanilDataVAMOS::EventUnravelling(CTRL_EVENT* pCtrlEvent)
    // from the given event.
    // WARNING: temporary the default: we dont check that it's really the case
    // Before reading event, all parameters have their value set to -1 (65535 - fDataArray is UShort_t)
-	// Parameters which are not fired in the event will have value -1 (65535 - cast back to Short_t for real value)
+   // Parameters which are not fired in the event will have value -1 (65535 - cast back to Short_t for real value)
    //
    //VAMOS parameters are treated here:
    //    clear all parameters
    //    check no parameters occur twice in same event (if so, the VAMOS treatment is skipped)
 
-   Short_t *brutData     = &(pCtrlEvent->ct_par);
+   Short_t* brutData     = &(pCtrlEvent->ct_par);
    Int_t eventLength = pCtrlEvent->ct_len;
 
-   for(Int_t i=1; i<=fDataArraySize; i++){
-	   fDataArray[i] = (Short_t)-1;
+   for (Int_t i = 1; i <= fDataArraySize; i++) {
+      fDataArray[i] = (Short_t) - 1;
    }
    Par->Clear();
-  
-  bool fOK;
 
-  fOK = true;
+   bool fOK;
 
-  //VAMOS double parameter check
-  for(Int_t k=0;k<eventLength-6-2;k+=2){
-     for(Int_t l=k+2;l<eventLength-6;l+=2){
-        if(brutData[k] == brutData[l]){
-           fOK=false;
-        }
-	  }
-  }
-  
-  for(Int_t i=0;i<eventLength;i+=2){
-     //normal GTGanilData/INDRA treatment
-     if (brutData[i]<=fDataArraySize && brutData[i]>=1){
-        fDataArray[brutData[i]]=brutData[i+1];
-     }
-     //VAMOS treatment
-     if((i<(eventLength-6)) && fOK){
-        if(brutData[i] > 0 && brutData[i+1] > 0){
-           Par->GetData(brutData+i);
-        }
-     }
-  }
-  
-  return(true);
+   fOK = true;
+
+   //VAMOS double parameter check
+   for (Int_t k = 0; k < eventLength - 6 - 2; k += 2) {
+      for (Int_t l = k + 2; l < eventLength - 6; l += 2) {
+         if (brutData[k] == brutData[l]) {
+            fOK = false;
+         }
+      }
+   }
+
+   for (Int_t i = 0; i < eventLength; i += 2) {
+      //normal GTGanilData/INDRA treatment
+      if (brutData[i] <= fDataArraySize && brutData[i] >= 1) {
+         fDataArray[brutData[i]] = brutData[i + 1];
+      }
+      //VAMOS treatment
+      if ((i < (eventLength - 6)) && fOK) {
+         if (brutData[i] > 0 && brutData[i + 1] > 0) {
+            Par->GetData(brutData + i);
+         }
+      }
+   }
+
+   return (true);
 }
 
 //_______________________________________________________________________

@@ -33,20 +33,30 @@ class KVINDRATriggerInfo {
    Binary16_t fSTAT_EVE;        // value of register STAT_EVE for event
    Binary16_t fR_DEC;           // value of register R_DEC for event
    Binary16_t fVXCONFIG;        // value of register VXCONFIG for event
-   KVACQParam *fSTAT_EVE_PAR;   // STAT_EVE parameter read from raw data
-   KVACQParam *fR_DEC_PAR;      // R_DEC parameter read from raw data
-   KVACQParam *fVXCONFIG_PAR;   // VXCONFIG parameter read from raw data
+   KVACQParam* fSTAT_EVE_PAR;   // STAT_EVE parameter read from raw data
+   KVACQParam* fR_DEC_PAR;      // R_DEC parameter read from raw data
+   KVACQParam* fVXCONFIG_PAR;   // VXCONFIG parameter read from raw data
 
- public:
+public:
 
-    KVINDRATriggerInfo();
-    virtual ~ KVINDRATriggerInfo() {
+   KVINDRATriggerInfo();
+   virtual ~ KVINDRATriggerInfo()
+   {
    };
 
-   void SetSTAT_EVE_PAR(KVACQParam *p){ fSTAT_EVE_PAR = p; };     
-   void SetR_DEC_PAR(KVACQParam *p){ fR_DEC_PAR = p; };
-   void SetVXCONFIG_PAR(KVACQParam *p){ fVXCONFIG_PAR = p; };
-   
+   void SetSTAT_EVE_PAR(KVACQParam* p)
+   {
+      fSTAT_EVE_PAR = p;
+   };
+   void SetR_DEC_PAR(KVACQParam* p)
+   {
+      fR_DEC_PAR = p;
+   };
+   void SetVXCONFIG_PAR(KVACQParam* p)
+   {
+      fVXCONFIG_PAR = p;
+   };
+
    inline void SetSTAT_EVE(Binary16_t);
    inline void SetR_DEC(Binary16_t);
    inline void SetCONFIG(Binary16_t);
@@ -55,10 +65,12 @@ class KVINDRATriggerInfo {
    inline Binary16_t GetR_DEC();
    inline Binary16_t GetCONFIG();
 
-   inline Bool_t IsPhysics() {
+   inline Bool_t IsPhysics()
+   {
       return (PHY_EVT() && !MRQ());
    };
-   inline Bool_t IsGene() {
+   inline Bool_t IsGene()
+   {
       return (GEN_ELEC() || GEN_TST() || GEN_LAS());
    };
 
@@ -67,13 +79,16 @@ class KVINDRATriggerInfo {
    inline Bool_t GEN_ELEC();
    inline Bool_t GEN_TST();
    inline Bool_t GEN_LAS();
-   inline Bool_t IsPulser() {
+   inline Bool_t IsPulser()
+   {
       return GEN_ELEC();
    };
-   inline Bool_t IsLaser() {
+   inline Bool_t IsLaser()
+   {
       return GEN_LAS();
    };
-   inline Bool_t IsTest() {
+   inline Bool_t IsTest()
+   {
       return GEN_TST();
    };
    virtual Bool_t IsINDRAEvent()
@@ -83,7 +98,7 @@ class KVINDRATriggerInfo {
       return fSTAT_EVE_PAR->Fired();
    };
 
-   void Print(Option_t * opt = "");
+   void Print(Option_t* opt = "");
 
    ClassDef(KVINDRATriggerInfo, 3)      //Information on INDRA event from DAQ trigger
 };

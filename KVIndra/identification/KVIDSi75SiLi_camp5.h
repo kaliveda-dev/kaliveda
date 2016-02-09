@@ -13,26 +13,25 @@ $Date: 2009/04/06 15:22:02 $
 #include "KVIDSi75SiLi.h"
 #include "KVIDZAGrid.h"
 
-class KVIDSi75SiLi_camp5 : public KVIDSi75SiLi
-{
+class KVIDSi75SiLi_camp5 : public KVIDSi75SiLi {
    KVIDZAGrid* fGGgrid;//! grid used for Si75(GG)-SiLi(PG) charge & mass identification
    KVIDZAGrid* fPGgrid;//! grid used for Si75(PG)-SiLi(PG) charge & mass identification
    KVIDZAGrid* fPGZgrid;//! grid used for Si75(PG)-SiLi(PG) charge identification
-	KVDetector* fSi75;//!
-	KVDetector* fSiLi;//!
+   KVDetector* fSi75;//!
+   KVDetector* fSiLi;//!
 
-   public:
+public:
 
    KVIDSi75SiLi_camp5();
    virtual ~KVIDSi75SiLi_camp5();
 
    virtual void Initialize(void);
-   Bool_t Identify(KVIdentificationResult*, Double_t x=-1., Double_t y=-1.);
+   Bool_t Identify(KVIdentificationResult*, Double_t x = -1., Double_t y = -1.);
 
-   virtual Double_t GetIDMapX(Option_t * opt = "");
-   virtual Double_t GetIDMapY(Option_t * opt = "");
+   virtual Double_t GetIDMapX(Option_t* opt = "");
+   virtual Double_t GetIDMapY(Option_t* opt = "");
 
-   ClassDef(KVIDSi75SiLi_camp5,1)//Identification in Si75-SiLi telescopes for INDRA_camp5 dataset
+   ClassDef(KVIDSi75SiLi_camp5, 1) //Identification in Si75-SiLi telescopes for INDRA_camp5 dataset
 };
 
 #endif

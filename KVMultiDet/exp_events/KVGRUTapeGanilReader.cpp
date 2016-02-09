@@ -28,68 +28,67 @@ KVGRUTapeGanilReader::KVGRUTapeGanilReader(const Char_t* filename)
    fExtParams = 0;
    fParameters = new KVHashList;
    fParameters->SetCleanup(kTRUE);
-   fFired = new KVHashList; 
+   fFired = new KVHashList;
    fGRUAcq = 0;
-   
-   GTape *client = new GTape( filename );
+
+   GTape* client = new GTape(filename);
    client->Open();
    // check connection OK
-   if(!client->GetIsOpen()){
-   	fStatus = kSTATUS_NOHOST;
-	return;
-	}
-	
+   if (!client->GetIsOpen()) {
+      fStatus = kSTATUS_NOHOST;
+      return;
+   }
+
    fGRUAcq = new GAcq(client);
    TString expname = "e651";
    expname.ToLower();
-	// read (and print) status of acquisition, including run number
-	fGRUAcq->SetConfGanilAcq(kTRUE);
-	//fGRUAcq->GetRunStatus(kTRUE);
-    fGRUAcq->Infos();
+   // read (and print) status of acquisition, including run number
+   fGRUAcq->SetConfGanilAcq(kTRUE);
+   //fGRUAcq->GetRunStatus(kTRUE);
+   fGRUAcq->Infos();
    fGRUAcq->EventInit((char*)expname.Data());
    fGRUAcq->SetSpectraMode(0);
    fGRUAcq->SetUserMode(0);
-   
-	Int_t run = fGRUAcq->GetRunNumber();
-      
-   fReadFirstBuffer=kTRUE;
-   
+
+   Int_t run = fGRUAcq->GetRunNumber();
+
+   fReadFirstBuffer = kTRUE;
+
    ConnectRawDataParameters();
-	
-	fStatus = kSTATUS_OK;
+
+   fStatus = kSTATUS_OK;
 }
 
 void KVGRUTapeGanilReader::ConnectRawDataParameters()
 {
-	GEvent* the_event=(GEvent*)fGRUAcq->GetEvent();
-	DataParameters* the_parameters=fGRUAcq->GetDataParameters();
-	Int_t nbparams = the_parameters->GetNbParameters();
-	TString par_name;
-	for(int i=0; i<nbparams; i++)
-	{
-		par_name = the_parameters->GetParName(i);
-		KVACQParam* par = CheckACQParam( par_name.Data() );
-		the_event->Connect(par_name.Data(), par->ConnectData());
-		par->SetNumber( the_parameters->GetIndex(par_name.Data()) );
-		par->SetNbBits( the_parameters->GetNbits(par_name.Data()) );
-		fParameters->Add(par);
-	}
+   GEvent* the_event = (GEvent*)fGRUAcq->GetEvent();
+   DataParameters* the_parameters = fGRUAcq->GetDataParameters();
+   Int_t nbparams = the_parameters->GetNbParameters();
+   TString par_name;
+   for (int i = 0; i < nbparams; i++) {
+      par_name = the_parameters->GetParName(i);
+      KVACQParam* par = CheckACQParam(par_name.Data());
+      the_event->Connect(par_name.Data(), par->ConnectData());
+      par->SetNumber(the_parameters->GetIndex(par_name.Data()));
+      par->SetNbBits(the_parameters->GetNbits(par_name.Data()));
+      fParameters->Add(par);
+   }
 }
 
 KVACQParam* KVGRUTapeGanilReader::CheckACQParam(const Char_t* par_name)
 {
-   KVACQParam *par;
-   if( !gMultiDetArray || !(par = gMultiDetArray->GetACQParam( par_name )) ){
+   KVACQParam* par;
+   if (!gMultiDetArray || !(par = gMultiDetArray->GetACQParam(par_name))) {
       //create new unknown parameter
       par = new KVACQParam;
-      par->SetName( par_name );
-      if(!fExtParams){
-          fExtParams=new KVHashList;
-          fExtParams->SetOwner(kTRUE);
+      par->SetName(par_name);
+      if (!fExtParams) {
+         fExtParams = new KVHashList;
+         fExtParams->SetOwner(kTRUE);
       }
-      fExtParams->Add( par );
+      fExtParams->Add(par);
    }
-   return par;	
+   return par;
 }
 
 KVGRUTapeGanilReader::~KVGRUTapeGanilReader()
@@ -97,66 +96,66 @@ KVGRUTapeGanilReader::~KVGRUTapeGanilReader()
    // Destructor
    fParameters->Clear();
    delete fParameters;
-   if(fExtParams){
+   if (fExtParams) {
       fExtParams->Delete("slow");
       delete fExtParams;
    }
    delete fFired;
-   if(fGRUAcq) delete fGRUAcq;
+   if (fGRUAcq) delete fGRUAcq;
 }
 
 Bool_t KVGRUTapeGanilReader::GetNextEvent()
 {
-	// Get next event from buffer
-	// Returns kTRUE if an event is read.
-	// Returns kFALSE if no acquisition running (check status)
-	// Returns kFALSE if no buffer/event read after fTimeout seconds (check status)
-	
-	fStatus=kSTATUS_OK;
-	if(fReadFirstBuffer){
-		// first time we call, we need to read a buffer
-		fReadFirstBuffer=kFALSE;
-		fGRUAcq->GetDeviceIn()->ReadBuffer();
-		fGRUAcq->GetEvent()->RazEvent();
-        Info("GetNextEvent","ReadFirstBuffer: looking for event buffer");
-		while(!fGRUAcq->GetDeviceIn()->GetCurrentBuffer()->IsAeventBuffer()){
-			fGRUAcq->GetDeviceIn()->ReadBuffer();
-		}
-        Info("GetNextEvent","ReadFirstBuffer: got event buffer");
-	}
-	int Status = fGRUAcq->GetEvent()->NextEvent(fGRUAcq->GetDeviceIn()->GetCurrentBuffer());
-        Info("GetNextEvent","Status = %0#x", Status);
-	if (Status != ACQ_OK) {
-		// we have read all events in buffer. get a new buffer.
-        Info("GetNextEvent","we have read all events in buffer. get a new buffer.");
-		fGRUAcq->GetDeviceIn()->ReadBuffer();
-		fGRUAcq->GetEvent()->RazEvent();
-        Info("GetNextEvent","looking for event buffer");
-		while(!fGRUAcq->GetDeviceIn()->GetCurrentBuffer()->IsAeventBuffer()){
-			fGRUAcq->GetDeviceIn()->ReadBuffer();
-		}
-        Info("GetNextEvent","got buffer, Status = %0#x", Status);
-		while(Status != ACQ_OK){
-			Status = fGRUAcq->GetEvent()->NextEvent(fGRUAcq->GetDeviceIn()->GetCurrentBuffer());
-        	Info("GetNextEvent","Status = %0#x", Status);
-		}
-	}
-	FillFiredParameterList();
-	return kTRUE;
+   // Get next event from buffer
+   // Returns kTRUE if an event is read.
+   // Returns kFALSE if no acquisition running (check status)
+   // Returns kFALSE if no buffer/event read after fTimeout seconds (check status)
+
+   fStatus = kSTATUS_OK;
+   if (fReadFirstBuffer) {
+      // first time we call, we need to read a buffer
+      fReadFirstBuffer = kFALSE;
+      fGRUAcq->GetDeviceIn()->ReadBuffer();
+      fGRUAcq->GetEvent()->RazEvent();
+      Info("GetNextEvent", "ReadFirstBuffer: looking for event buffer");
+      while (!fGRUAcq->GetDeviceIn()->GetCurrentBuffer()->IsAeventBuffer()) {
+         fGRUAcq->GetDeviceIn()->ReadBuffer();
+      }
+      Info("GetNextEvent", "ReadFirstBuffer: got event buffer");
+   }
+   int Status = fGRUAcq->GetEvent()->NextEvent(fGRUAcq->GetDeviceIn()->GetCurrentBuffer());
+   Info("GetNextEvent", "Status = %0#x", Status);
+   if (Status != ACQ_OK) {
+      // we have read all events in buffer. get a new buffer.
+      Info("GetNextEvent", "we have read all events in buffer. get a new buffer.");
+      fGRUAcq->GetDeviceIn()->ReadBuffer();
+      fGRUAcq->GetEvent()->RazEvent();
+      Info("GetNextEvent", "looking for event buffer");
+      while (!fGRUAcq->GetDeviceIn()->GetCurrentBuffer()->IsAeventBuffer()) {
+         fGRUAcq->GetDeviceIn()->ReadBuffer();
+      }
+      Info("GetNextEvent", "got buffer, Status = %0#x", Status);
+      while (Status != ACQ_OK) {
+         Status = fGRUAcq->GetEvent()->NextEvent(fGRUAcq->GetDeviceIn()->GetCurrentBuffer());
+         Info("GetNextEvent", "Status = %0#x", Status);
+      }
+   }
+   FillFiredParameterList();
+   return kTRUE;
 }
 
-KVGRUTapeGanilReader* KVGRUTapeGanilReader::Open(const Char_t*filename, Option_t*)
+KVGRUTapeGanilReader* KVGRUTapeGanilReader::Open(const Char_t* filename, Option_t*)
 {
-	return new KVGRUTapeGanilReader(filename);
+   return new KVGRUTapeGanilReader(filename);
 }
 
 void KVGRUTapeGanilReader::FillFiredParameterList()
 {
-    // clears and then fills list fFired with all fired acquisition parameters in event
+   // clears and then fills list fFired with all fired acquisition parameters in event
    fFired->Clear();
    TIter next(fParameters);
-   KVACQParam *par;
-   while( (par = (KVACQParam*)next()) ) {
-   		if(par->Fired()) fFired->Add(par);
-   	}
+   KVACQParam* par;
+   while ((par = (KVACQParam*)next())) {
+      if (par->Fired()) fFired->Add(par);
+   }
 }

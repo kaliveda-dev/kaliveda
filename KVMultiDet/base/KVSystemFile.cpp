@@ -19,18 +19,18 @@ ClassImp(KVSystemFile)
 KVSystemFile::KVSystemFile()
 {
    // Default constructor
-   fUserInfo=0;
+   fUserInfo = 0;
 }
 
 //________________________________________________________________
 
 KVSystemFile::KVSystemFile(const Char_t* filename, const Char_t* dirname)
-	: TSystemFile(filename,dirname)
+   : TSystemFile(filename, dirname)
 {
    // Get file infos
    TString path;
-   AssignAndDelete(path, gSystem->ConcatFileName(dirname,filename));
-   gSystem->GetPathInfo(path,fFileInfos);
+   AssignAndDelete(path, gSystem->ConcatFileName(dirname, filename));
+   gSystem->GetPathInfo(path, fFileInfos);
    fUserInfo = gSystem->GetUserInfo(fFileInfos.fUid);
 }
 
@@ -45,5 +45,5 @@ void KVSystemFile::ls(Option_t*) const
 {
    TROOT::IndentLevel();
    printf("[%s:%s]\t%s\t%12lld\t%s\n",
-         GetUser(), GetGroup(), GetDate(), GetSize(), GetName());
+          GetUser(), GetGroup(), GetDate(), GetSize(), GetName());
 }

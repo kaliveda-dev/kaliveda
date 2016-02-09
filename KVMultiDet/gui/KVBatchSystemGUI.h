@@ -10,32 +10,34 @@
 #include <TGButton.h>
 #include "KVListView.h"
 
-class KVBatchSystemGUI : public KVBase
-{
-    RQ_OBJECT("KVBatchSystemGUI")
-    TGMainFrame *MainFrame;
-    TGPictureButton *BrefreshDir;
-    TGPictureButton *BremDir;
-    TGPictureButton *BalterJobs;
-    KVListView* fLVJobs;
-    TList* selected_jobs;
-    TTimer* fTimer;
-    KVList* jobs;
-    static Bool_t fOpen;//kTRUE if GUI is already open
+class KVBatchSystemGUI : public KVBase {
+   RQ_OBJECT("KVBatchSystemGUI")
+   TGMainFrame* MainFrame;
+   TGPictureButton* BrefreshDir;
+   TGPictureButton* BremDir;
+   TGPictureButton* BalterJobs;
+   KVListView* fLVJobs;
+   TList* selected_jobs;
+   TTimer* fTimer;
+   KVList* jobs;
+   static Bool_t fOpen;//kTRUE if GUI is already open
 
-   public:
+public:
    KVBatchSystemGUI();
    virtual ~KVBatchSystemGUI();
    void DoClose();
    void CloseWindow();
-   
-   static Bool_t IsOpen() { return fOpen; }
+
+   static Bool_t IsOpen()
+   {
+      return fOpen;
+   }
 
    void Refresh();
    void KillJobs();
    void AlterJobs();
 
-   ClassDef(KVBatchSystemGUI,1)//GUI for batch system jobs
+   ClassDef(KVBatchSystemGUI, 1) //GUI for batch system jobs
 };
 
 #endif

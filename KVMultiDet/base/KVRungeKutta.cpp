@@ -70,15 +70,15 @@ Double_t KVRungeKutta::c3 = 250.0 / 621.0;
 Double_t KVRungeKutta::c4 = 125.0 / 594.0;
 Double_t KVRungeKutta::c6 = 512.0 / 1771.0;
 Double_t KVRungeKutta::dc5 = -277.00 / 14336.0;
-   
+
 KVRungeKutta::KVRungeKutta(Int_t N, Double_t PREC, Double_t MINSTEP)
-	: KVBase("RK4NR", "Runge-Kutta ODE integrator with adaptive step-size control"),
-	nvar(N), eps(PREC), hmin(MINSTEP)
+   : KVBase("RK4NR", "Runge-Kutta ODE integrator with adaptive step-size control"),
+     nvar(N), eps(PREC), hmin(MINSTEP)
 {
    // Set up integrator for N independent variables
    // PREC = required precision (default: 1.e-8)
    // MINSTEP = minimum allowed stepsize (default: 0)
-   
+
    y = new Double_t [N];
    yscal = new Double_t [N];
    dydx = new Double_t [N];
@@ -95,7 +95,7 @@ KVRungeKutta::KVRungeKutta(Int_t N, Double_t PREC, Double_t MINSTEP)
    dc3 = c3 - 18575.0 / 48384.0;
    dc4 = c4 - 13525.0 / 55296.0;
    dc6 = c6 - 0.25;
-   
+
    fInitialDeriv = kFALSE;
 }
 
@@ -115,59 +115,59 @@ KVRungeKutta::~KVRungeKutta()
    delete [] ak6;
 }
 
-void KVRungeKutta::Integrate(Double_t *ystart, Double_t x1, Double_t x2, Double_t h1)
+void KVRungeKutta::Integrate(Double_t* ystart, Double_t x1, Double_t x2, Double_t h1)
 {
    // Runge-Kutta driver with adaptive stepsize control.
    // Integrate nvar starting values ystart[0,...,nvar-1] from x1 to x2 with accuracy eps.
    // h1 should be set as a guessed first stepsize.
    // after call, GetNGoodSteps() and GetNBadSteps() give the number of good
    // and bad (but retried and fixed) steps taken,
-   // and ystart values are replaced by values at the end of the integration interval. 
+   // and ystart values are replaced by values at the end of the integration interval.
 
    x = x1;
-   Double_t h = TMath::Sign ( h1, x2 - x1 );
+   Double_t h = TMath::Sign(h1, x2 - x1);
    nok = nbad = 0;
-   fOK=kTRUE;
-   
-   for (register int i = 0; i < nvar; i++ ) y[i] = ystart[i];
-   
-   for (register int nstp = 1; nstp <= MAXSTP; nstp++ ) {//Take at most MAXSTP steps.
-      
+   fOK = kTRUE;
+
+   for (register int i = 0; i < nvar; i++) y[i] = ystart[i];
+
+   for (register int nstp = 1; nstp <= MAXSTP; nstp++) { //Take at most MAXSTP steps.
+
       // calculate derivatives before performing step
       fInitialDeriv = kTRUE;
-      CalcDerivs( x, y, dydx );
+      CalcDerivs(x, y, dydx);
       fInitialDeriv = kFALSE;
-      
-      for ( Int_t i = 0; i < nvar; i++ )
-         yscal[i] = TMath::Abs( y[i] ) + TMath::Abs( dydx[i] * h ) + TINY;
-         
-      if ( ( x + h - x2 ) * ( x + h - x1 ) > 0.0 ) h = x2 - x;
-      
-      rkqs (h);
-      if(!fOK) {
-      	Error("Integrate", "integration stopped at x=%g", x);
-      	return;
-      }
-      
-      if ( hdid == h ) ++nok;
-      else ++nbad;
-      if ( ( x - x2 ) * ( x2 - x1 ) >= 0.0 ) {
-         for ( register int i = 0; i < nvar; i++ ) ystart[i] = y[i];
+
+      for (Int_t i = 0; i < nvar; i++)
+         yscal[i] = TMath::Abs(y[i]) + TMath::Abs(dydx[i] * h) + TINY;
+
+      if ((x + h - x2) * (x + h - x1) > 0.0) h = x2 - x;
+
+      rkqs(h);
+      if (!fOK) {
+         Error("Integrate", "integration stopped at x=%g", x);
          return;
       }
-      
-      if ( TMath::Abs( hnext ) <= hmin ){
-      	Error ("Integrate",  "Step size %g too small", hnext );
-      	Error("Integrate", "integration stopped at x=%g", x);
-      	return;
+
+      if (hdid == h) ++nok;
+      else ++nbad;
+      if ((x - x2) * (x2 - x1) >= 0.0) {
+         for (register int i = 0; i < nvar; i++) ystart[i] = y[i];
+         return;
+      }
+
+      if (TMath::Abs(hnext) <= hmin) {
+         Error("Integrate",  "Step size %g too small", hnext);
+         Error("Integrate", "integration stopped at x=%g", x);
+         return;
       }
       h = hnext;
    }
-   Error ( "Integrate", "Too many steps" );
+   Error("Integrate", "Too many steps");
    Error("Integrate", "integration stopped at x=%g", x);
 }
 
-void KVRungeKutta::rkqs (Double_t htry)
+void KVRungeKutta::rkqs(Double_t htry)
 {
    // Fifth-order Runge-Kutta step with monitoring of local truncation error to ensure accuracy and
    // adjust stepsize. Input are the dependent variable vector y[1..n] and its derivative dydx[1..n]
@@ -180,53 +180,53 @@ void KVRungeKutta::rkqs (Double_t htry)
    Double_t errmax, htemp, xnew;
 
    Double_t h = htry;
-   for ( ;; ) {
-      rkck (h);
+   for (;;) {
+      rkck(h);
       errmax = 0.0;
-      for ( register int i = 0; i < nvar; i++ ) errmax = TMath::Max( errmax, TMath::Abs( yerr[i] / yscal[i] ) );
+      for (register int i = 0; i < nvar; i++) errmax = TMath::Max(errmax, TMath::Abs(yerr[i] / yscal[i]));
       errmax /= eps;
-      if ( errmax <= 1.0 ) break;
-      htemp = SAFETY * h * TMath::Power( errmax, PSHRNK );
-      h = ( h >= 0.0 ? TMath::Max( htemp, 0.1 * h ) : TMath::Min( htemp, 0.1 * h ) );
+      if (errmax <= 1.0) break;
+      htemp = SAFETY * h * TMath::Power(errmax, PSHRNK);
+      h = (h >= 0.0 ? TMath::Max(htemp, 0.1 * h) : TMath::Min(htemp, 0.1 * h));
       xnew = x + h;
-      if ( xnew == x ) {
-      	Error( "rkqs", "stepsize underflow" );
-      	fOK = kFALSE;
-      	return;
+      if (xnew == x) {
+         Error("rkqs", "stepsize underflow");
+         fOK = kFALSE;
+         return;
       }
    }
-   if ( errmax > ERRCON ) hnext = SAFETY * h * TMath::Power( errmax, PGROW );
+   if (errmax > ERRCON) hnext = SAFETY * h * TMath::Power(errmax, PGROW);
    else hnext = 5.0 * h;
-   x += ( hdid = h );
-   for ( register int i = 0; i < nvar; i++ ) y[i] = yout[i];
+   x += (hdid = h);
+   for (register int i = 0; i < nvar; i++) y[i] = yout[i];
 }
 
-void KVRungeKutta::rkck (Double_t h)
+void KVRungeKutta::rkck(Double_t h)
 {
    // Given values for n variables y[1..n] and their derivatives dydx[1..n] known at x, use
    // the fifth-order Cash-Karp Runge-Kutta method to advance the solution over an interval h
    // and return the incremented variables as yout[1..n]. Also return an estimate of the local
    // truncation error in yout using the embedded fourth-order method. The user supplies the routine
    // derivs(x,y,dydx) , which returns derivatives dydx at x.
-  
-   for ( register int i=0; i<nvar; i++ )
+
+   for (register int i = 0; i < nvar; i++)
       ytemp[i] = y[i] + b21 * h * dydx[i];
-   CalcDerivs ( x + a2*h, ytemp, ak2 );
-   for ( register int i=0; i<nvar; i++ )
-      ytemp[i] = y[i] + h * ( b31 * dydx[i] + b32 * ak2[i] );
-   CalcDerivs ( x + a3*h, ytemp, ak3 );
-   for ( register int i=0; i<nvar; i++ )
-      ytemp[i] = y[i] + h * ( b41 * dydx[i] + b42 * ak2[i] + b43 * ak3[i] );
-   CalcDerivs ( x + a4*h, ytemp, ak4 );
-   for ( register int i=0; i<nvar; i++ )
-      ytemp[i] = y[i] + h * ( b51 * dydx[i] + b52 * ak2[i] + b53 * ak3[i] + b54 * ak4[i] );
-   CalcDerivs ( x + a5*h, ytemp, ak5 );
-   for ( register int i=0; i<nvar; i++ )
-      ytemp[i] = y[i] + h * ( b61 * dydx[i] + b62 * ak2[i] + b63 * ak3[i] + b64 * ak4[i] + b65 * ak5[i] );
-   CalcDerivs ( x + a6*h, ytemp, ak6 );
-   for ( register int i=0; i<nvar; i++ )
-      yout[i] = y[i] + h * ( c1 * dydx[i] + c3 * ak3[i] + c4 * ak4[i] + c6 * ak6[i] );
-   for ( register int i=0; i<nvar; i++ )
-      yerr[i] = h * ( dc1 * dydx[i] + dc3 * ak3[i] + dc4 * ak4[i] + dc5 * ak5[i] + dc6 * ak6[i] );
+   CalcDerivs(x + a2 * h, ytemp, ak2);
+   for (register int i = 0; i < nvar; i++)
+      ytemp[i] = y[i] + h * (b31 * dydx[i] + b32 * ak2[i]);
+   CalcDerivs(x + a3 * h, ytemp, ak3);
+   for (register int i = 0; i < nvar; i++)
+      ytemp[i] = y[i] + h * (b41 * dydx[i] + b42 * ak2[i] + b43 * ak3[i]);
+   CalcDerivs(x + a4 * h, ytemp, ak4);
+   for (register int i = 0; i < nvar; i++)
+      ytemp[i] = y[i] + h * (b51 * dydx[i] + b52 * ak2[i] + b53 * ak3[i] + b54 * ak4[i]);
+   CalcDerivs(x + a5 * h, ytemp, ak5);
+   for (register int i = 0; i < nvar; i++)
+      ytemp[i] = y[i] + h * (b61 * dydx[i] + b62 * ak2[i] + b63 * ak3[i] + b64 * ak4[i] + b65 * ak5[i]);
+   CalcDerivs(x + a6 * h, ytemp, ak6);
+   for (register int i = 0; i < nvar; i++)
+      yout[i] = y[i] + h * (c1 * dydx[i] + c3 * ak3[i] + c4 * ak4[i] + c6 * ak6[i]);
+   for (register int i = 0; i < nvar; i++)
+      yerr[i] = h * (dc1 * dydx[i] + dc3 * ak3[i] + dc4 * ak4[i] + dc5 * ak5[i] + dc6 * ak6[i]);
 }
 

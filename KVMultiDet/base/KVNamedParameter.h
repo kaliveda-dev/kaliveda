@@ -16,16 +16,19 @@ class KVNamedParameter : public TNamed {
    enum {
       kBitMask = 0x0001c000
    };
-   void ResetBits() {
+   void ResetBits()
+   {
       ResetBit(kBitMask);
    };
 
-   Int_t GetType() const {
+   Int_t GetType() const
+   {
       // compare this value with the values kIsString, kIsDouble, etc.
       return TestBits(kBitMask);
    };
 
-   void SetType(UInt_t f) {
+   void SetType(UInt_t f)
+   {
       ResetBits();
       SetBit(f);
    };
@@ -56,23 +59,29 @@ public:
 
    virtual void Clear(Option_t* = "");
 
-   Bool_t IsString() const {
+   Bool_t IsString() const
+   {
       return GetType() == kIsString;
    };
-   Bool_t IsDouble() const {
+   Bool_t IsDouble() const
+   {
       return GetType() == kIsDouble;
    };
-   Bool_t IsInt() const {
+   Bool_t IsInt() const
+   {
       return GetType() == kIsInt;
    };
-   Bool_t IsNumber() const { return (IsDouble()||IsInt()); }
+   Bool_t IsNumber() const
+   {
+      return (IsDouble() || IsInt());
+   }
 
    Bool_t   IsEqual(const TObject* obj) const;
    Bool_t operator== (const KVNamedParameter&) const;
    virtual void Print(Option_t* opt = "") const;
    virtual void ls(Option_t* opt = "") const;
 
-   Int_t Compare(const TObject *obj) const;
+   Int_t Compare(const TObject* obj) const;
 
    ClassDef(KVNamedParameter, 1) //A generic parameter with a name and a value
 };

@@ -73,8 +73,13 @@ datafiles=""
 tmplfiles=""
 [ -d $1/$3/factory ] && tmplfiles=`ls $1/$3/factory`
 
+# examples
+exmplfiles=""
+[ -d $1/$3/examples ] && exmplfiles=`ls $1/$3/examples`
+
 # etc
-etcfiles=`ls $1/$3/etc`
+etcfiles=""
+[ -d $1/$3/etc ] && etcfiles=`ls $1/$3/etc`
 
 # cmake helper files
 cmakefiles=`find usr/lib -name '*.cmake'`
@@ -115,6 +120,9 @@ for tmpl in $tmplfiles; do
 done
 for etc in $etcfiles; do
    echo "/usr/share/kaliveda/etc/$etc" >> $install_file
+done
+for exmpl in $exmplfiles; do
+   echo "/usr/share/kaliveda/examples/$3/$exmpl" >> $dev_install_file
 done
 for lib in $devlibs; do
    echo "/$lib" >> $dev_install_file
@@ -177,9 +185,10 @@ if [ "x$reply" = "xy" ]; then
    mkdir -p $2
 fi
 cd $2
-cmake $1 -DCMAKE_INSTALL_PREFIX=/usr -Dgnuinstall=yes -DUSE_ALL=yes -DUSE_GEMINI=no
+cmake $1 -DCMAKE_INSTALL_PREFIX=/usr -Dgnuinstall=yes -DUSE_MICROSTAT=yes -DUSE_ALL=yes -DUSE_GEMINI=no
 make -j3 install DESTDIR=$2/tmp
 makeDebFiles $1 $2 KVMultiDet kaliveda
 makeDebFiles $1 $2 KVIndra kaliveda-indra
 makeDebFiles $1 $2 VAMOS kaliveda-indravamos
 makeDebFiles $1 $2 FAZIA kaliveda-fazia
+makeDebFiles $1 $2 MicroStat kaliveda-microstat

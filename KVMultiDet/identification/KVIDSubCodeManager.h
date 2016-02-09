@@ -14,39 +14,42 @@ class KVIDSubCodeManager {
    UChar_t fMSB;                //number of the Most Significant Bit used to store code de retour (LSB = bit 0)
 
    // OBSOLETE
-   inline virtual Int_t GetIDSubCode(KVIDSubCode & concat) const;
-   virtual const Char_t *GetIDSubCodeString(KVIDSubCode & concat) const;
+   inline virtual Int_t GetIDSubCode(KVIDSubCode& concat) const;
+   virtual const Char_t* GetIDSubCodeString(KVIDSubCode& concat) const;
 
- public:
+public:
 
-    KVIDSubCodeManager(UChar_t nbits = 16, UChar_t msb = 15);
-    virtual ~ KVIDSubCodeManager() {
+   KVIDSubCodeManager(UChar_t nbits = 16, UChar_t msb = 15);
+   virtual ~ KVIDSubCodeManager()
+   {
    };
 
-   inline void SetNbits(UChar_t n) {
+   inline void SetNbits(UChar_t n)
+   {
       fNbits = n;
    };
-   inline void SetMSB(UChar_t n) {
+   inline void SetMSB(UChar_t n)
+   {
       fMSB = n;
    };
 
-   inline void SetIDSubCode(KVIDSubCode & concat, UShort_t subcod) const;
+   inline void SetIDSubCode(KVIDSubCode& concat, UShort_t subcod) const;
 
-   inline void PrintSCM(Option_t * opt = "") const;
+   inline void PrintSCM(Option_t* opt = "") const;
 
-   inline virtual const Char_t *SubCodeNotSet() const;
+   inline virtual const Char_t* SubCodeNotSet() const;
 
    ClassDef(KVIDSubCodeManager, 1)      //Handles the concatenation of identification routine codes
 };
 
-inline void KVIDSubCodeManager::SetIDSubCode(KVIDSubCode & concat,
-                                             UShort_t subcod) const
+inline void KVIDSubCodeManager::SetIDSubCode(KVIDSubCode& concat,
+      UShort_t subcod) const
 {
    //Set the relevant bits of the binary number 'concat' to the value of 'subcod'
    concat.WriteSubvalue(subcod, fMSB, fNbits);
 }
 
-inline Int_t KVIDSubCodeManager::GetIDSubCode(KVIDSubCode & concat) const
+inline Int_t KVIDSubCodeManager::GetIDSubCode(KVIDSubCode& concat) const
 {
    //Returns value of subcode written in relevant bits of 'concat'
    //If all bits of subcode = '1' it means no subcode has been set: we return -1
@@ -57,13 +60,13 @@ inline Int_t KVIDSubCodeManager::GetIDSubCode(KVIDSubCode & concat) const
    return sbv;
 }
 
-inline void KVIDSubCodeManager::PrintSCM(Option_t *) const
+inline void KVIDSubCodeManager::PrintSCM(Option_t*) const
 {
    std::cout << "KVIDSubCodeManager: fNbits=" << (int) fNbits << " fMSB=" <<
-       (int) fMSB << std::endl;
+             (int) fMSB << std::endl;
 }
 
-inline const Char_t *KVIDSubCodeManager::SubCodeNotSet() const
+inline const Char_t* KVIDSubCodeManager::SubCodeNotSet() const
 {
    return Form("----");
 }

@@ -25,59 +25,61 @@ $Id: KVDBRecord.h,v 1.19 2007/05/31 09:59:22 franklan Exp $
 #include "KVDBTable.h"
 #include "KVDBKey.h"
 
-class KVDBRecord:public TFolder {
+class KVDBRecord: public TFolder {
 
- protected:
+protected:
 
    TString fFullPathTable;  //full path to parent table in folder structure
    Int_t fNumber;               //number which can be used to identify/sort record
 
- public:
+public:
 
-    KVDBRecord();
-    KVDBRecord(const Char_t * name, const Char_t * title = "");
-    virtual ~ KVDBRecord();
+   KVDBRecord();
+   KVDBRecord(const Char_t* name, const Char_t* title = "");
+   virtual ~ KVDBRecord();
 
-   inline virtual KVDBKey *GetKey(const Char_t * key) const;
-   inline virtual TList *GetKeys() const;
-   virtual Bool_t AddLink(const Char_t * key_name, KVDBRecord * rec,
+   inline virtual KVDBKey* GetKey(const Char_t* key) const;
+   inline virtual TList* GetKeys() const;
+   virtual Bool_t AddLink(const Char_t* key_name, KVDBRecord* rec,
                           Bool_t linkback = kTRUE);
-   virtual void RemoveLink(const Char_t * key_name, KVDBRecord * rec,
-                          Bool_t linkback = kTRUE);
-   virtual Bool_t AddKey(KVDBKey * key, Bool_t check = kTRUE);
-   virtual KVDBKey *AddKey(const Char_t * name, const Char_t * title,
+   virtual void RemoveLink(const Char_t* key_name, KVDBRecord* rec,
+                           Bool_t linkback = kTRUE);
+   virtual Bool_t AddKey(KVDBKey* key, Bool_t check = kTRUE);
+   virtual KVDBKey* AddKey(const Char_t* name, const Char_t* title,
                            Bool_t check = kTRUE);
-   virtual KVDBRecord *GetLink(const Char_t * key,
-                               const Char_t * link) const;
-   virtual KVRList *GetLinks(const Char_t * key) const;
-   virtual void RemoveAllLinks(const Char_t * key);
-   virtual KVDBTable *GetTable() const;
-   virtual void SetTable(const KVDBTable * table);
-   virtual void Print(Option_t * option = "") const;
-   virtual void ls(Option_t * option = "*") const;
-   virtual Int_t GetNumber() const {
+   virtual KVDBRecord* GetLink(const Char_t* key,
+                               const Char_t* link) const;
+   virtual KVRList* GetLinks(const Char_t* key) const;
+   virtual void RemoveAllLinks(const Char_t* key);
+   virtual KVDBTable* GetTable() const;
+   virtual void SetTable(const KVDBTable* table);
+   virtual void Print(Option_t* option = "") const;
+   virtual void ls(Option_t* option = "*") const;
+   virtual Int_t GetNumber() const
+   {
       return fNumber;
    };
-   virtual void SetNumber(Int_t n) {
+   virtual void SetNumber(Int_t n)
+   {
       fNumber = n;
    };
-   virtual Int_t Compare(const TObject * obj) const;
+   virtual Int_t Compare(const TObject* obj) const;
 
    ClassDef(KVDBRecord, 3)      //Base Class for a record
 };
 
 //_____________________________________________________________________________//
 
-KVDBKey *KVDBRecord::GetKey(const Char_t * key) const
+KVDBKey* KVDBRecord::GetKey(const Char_t* key) const
 {
    TString knom(key);
    knom.Prepend("Key:");
-   return (KVDBKey *) FindObject(knom.Data());
+   return (KVDBKey*) FindObject(knom.Data());
 }
 
-TList *KVDBRecord::GetKeys() const
+TList* KVDBRecord::GetKeys() const
 {
-   return (TList *) GetListOfFolders();
+   return (TList*) GetListOfFolders();
 }
 
 #endif

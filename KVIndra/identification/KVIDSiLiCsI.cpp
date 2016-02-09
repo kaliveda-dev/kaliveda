@@ -26,7 +26,7 @@ ClassImp(KVIDSiLiCsI)
 //
 //Identification subcodes are written in bits 8-11 of KVIDSubCodeManager
 //(see KVINDRACodes)
-    KVIDSiLiCsI::KVIDSiLiCsI()
+KVIDSiLiCsI::KVIDSiLiCsI()
 {
    fIDCode = kIDCode_SiLiCsI;
    fZminCode = kIDCode_ArretSi;
@@ -38,7 +38,7 @@ KVIDSiLiCsI::~KVIDSiLiCsI()
 {
 }
 
-void KVIDSiLiCsI::Calibrate(KVReconstructedNucleus *)
+void KVIDSiLiCsI::Calibrate(KVReconstructedNucleus*)
 {
    //Redefinition of KVIDSiCsI method
    //Should take into account different structure of etalon telescope (CI - SI75 - SILI - CSI)

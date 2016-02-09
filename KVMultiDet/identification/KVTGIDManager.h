@@ -18,14 +18,14 @@ $Id: KVTGIDManager.h,v 1.10 2008/04/04 09:06:25 franklan Exp $
 class KVTGIDGrid;
 
 class KVTGIDManager {
- protected:
+protected:
    KVList fIDList;              //KVTGID objects for identifications
    Double_t fID_max;            //maximum ID of all TGID objects
    Int_t fStatus;               //! transient member used to hold status of last call to IdentZ/IdentA
 
- public:
+public:
 
-   //status codes for IdentZ/IdentA        
+   //status codes for IdentZ/IdentA
    enum ETGIDMStatus {
       kStatus_OK,               //normal identification
       kStatus_noTGID,           //no KVTGID corresponding to requested identification
@@ -35,52 +35,56 @@ class KVTGIDManager {
       kCurrentStatus            //default argument for GetStatusString
    };
 
-    KVTGIDManager();
-    virtual ~ KVTGIDManager();
+   KVTGIDManager();
+   virtual ~ KVTGIDManager();
 
-   virtual void AddTGID(KVTGID *);
-   KVTGID *GetTGID(const Char_t * name);
-   virtual void RemoveTGID(const Char_t * name);
+   virtual void AddTGID(KVTGID*);
+   KVTGID* GetTGID(const Char_t* name);
+   virtual void RemoveTGID(const Char_t* name);
    virtual void RemoveAllTGID();
-   virtual KVTGID *GetTGID(const Char_t * idt_name, const Char_t * id_type,
-                   const Char_t * grid_type);
-   const Char_t *GetTGIDName(const Char_t * idt_name,
-                             const Char_t * id_type,
-                             const Char_t * grid_type);
+   virtual KVTGID* GetTGID(const Char_t* idt_name, const Char_t* id_type,
+                           const Char_t* grid_type);
+   const Char_t* GetTGIDName(const Char_t* idt_name,
+                             const Char_t* id_type,
+                             const Char_t* grid_type);
 
-   const KVList & GetListOfIDFunctions() const {
+   const KVList& GetListOfIDFunctions() const
+   {
       return fIDList;
    };
-   Double_t GetIDmax() const {
+   Double_t GetIDmax() const
+   {
       return fID_max;
    };
 
-   virtual Double_t IdentZ(const Char_t*, Double_t, Double_t, Double_t & funLTG,
-                           const Char_t * grid_type);
-   virtual Double_t IdentA(const Char_t*, Double_t, Double_t, Double_t & funLTG,
-                           const Char_t * grid_type, Int_t Z);
+   virtual Double_t IdentZ(const Char_t*, Double_t, Double_t, Double_t& funLTG,
+                           const Char_t* grid_type);
+   virtual Double_t IdentA(const Char_t*, Double_t, Double_t, Double_t& funLTG,
+                           const Char_t* grid_type, Int_t Z);
 
-   virtual KVTGIDGrid *GetTGIDGrid(KVTGID *tgid, Double_t xmax,
-           Double_t xmin = 0., Int_t ID_min =
-                                 0, Int_t ID_max = 0, Int_t npoints = 100, Bool_t logscale = kFALSE);
+   virtual KVTGIDGrid* GetTGIDGrid(KVTGID* tgid, Double_t xmax,
+                                   Double_t xmin = 0., Int_t ID_min =
+                                      0, Int_t ID_max = 0, Int_t npoints = 100, Bool_t logscale = kFALSE);
 
-   virtual KVTGIDGrid *GetTGIDGrid(const Char_t * tgid_name, Double_t xmax,
-                                 Double_t xmin = 0., Int_t ID_min =
-                                 0, Int_t ID_max = 0, Int_t npoints = 100, Bool_t logscale = kFALSE);
-   virtual KVTGIDGrid *GetTGIDGrid(const Char_t * idt_name,
-                                 const Char_t * id_type,
-                                 const Char_t * grid_type, Double_t xmax,
-                                 Double_t xmin = 0., Int_t ID_min =
-                                 0, Int_t ID_max = 0, Int_t npoints = 100, Bool_t logscale = kFALSE);
+   virtual KVTGIDGrid* GetTGIDGrid(const Char_t* tgid_name, Double_t xmax,
+                                   Double_t xmin = 0., Int_t ID_min =
+                                      0, Int_t ID_max = 0, Int_t npoints = 100, Bool_t logscale = kFALSE);
+   virtual KVTGIDGrid* GetTGIDGrid(const Char_t* idt_name,
+                                   const Char_t* id_type,
+                                   const Char_t* grid_type, Double_t xmax,
+                                   Double_t xmin = 0., Int_t ID_min =
+                                      0, Int_t ID_max = 0, Int_t npoints = 100, Bool_t logscale = kFALSE);
 
-   inline virtual Int_t GetStatus() const {
+   inline virtual Int_t GetStatus() const
+   {
       return fStatus;
    };
-   inline void SetStatus(ETGIDMStatus s) {
+   inline void SetStatus(ETGIDMStatus s)
+   {
       fStatus = s;
    };
-   virtual const Char_t *GetStatusString(ETGIDMStatus s =
-                                         kCurrentStatus) const;
+   virtual const Char_t* GetStatusString(ETGIDMStatus s =
+         kCurrentStatus) const;
 
    ClassDef(KVTGIDManager, 1)   //Handles a set of Tassan-Got Z & A identification functionals
 };

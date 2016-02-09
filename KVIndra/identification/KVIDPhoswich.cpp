@@ -29,7 +29,7 @@ ClassImp(KVIDPhoswich)
 //
 //Identification subcodes are written in bits 0-3 of KVIDSubCodeManager
 //(see KVINDRACodes)
-    KVIDPhoswich::KVIDPhoswich()
+KVIDPhoswich::KVIDPhoswich()
 {
    fIDCode = kIDCode_Phoswich;
    fZminCode = kIDCode_ZminCsI;
@@ -41,12 +41,12 @@ KVIDPhoswich::~KVIDPhoswich()
 {
 }
 
-const Char_t *KVIDPhoswich::GetArrayName()
+const Char_t* KVIDPhoswich::GetArrayName()
 {
    // Name of telescope given in the form PHOS_R_L_Telescope-number
 
    //in order to access angular dimensions of detectors, we need their KVTelescopes
-   KVINDRATelescope *de_det = dynamic_cast<KVINDRADetector*>(GetDetector(1))->GetTelescope();
+   KVINDRATelescope* de_det = dynamic_cast<KVINDRADetector*>(GetDetector(1))->GetTelescope();
    UInt_t mod;
    mod = de_det->GetNumber();
    TString dummy;

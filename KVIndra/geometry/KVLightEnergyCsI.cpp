@@ -34,14 +34,14 @@ ClassImp(KVLightEnergyCsI);
 
 //___________________________________________________________________________
 
-Double_t CalculLumiere(Double_t * x, Double_t * par)
+Double_t CalculLumiere(Double_t* x, Double_t* par)
 {
    //Calcul de la lumiere totale a partir de Z, A d'une particule et son energie
-   // 
+   //
    // x[0] = energie (MeV)
    // par[0] = a1
    // par[1] = a2
-   // par[2] = a3 
+   // par[2] = a3
    // par[3] = a4
    // par[4] = Z
    // par[5] = A
@@ -57,14 +57,14 @@ Double_t CalculLumiere(Double_t * x, Double_t * par)
    Double_t T = 8 * A;
    Double_t c4_new = c4 / (1. + TMath::Exp((c3 - energie) / T));
    Double_t c0 = c4 / (1. + TMath::Exp(c3 / T));
-   
+
    Double_t lumcalc = c1 * energie;
-   if( c2 > 0.0 ){
+   if (c2 > 0.0) {
       Double_t xm = -c1 * c0 * c2 * TMath::Log(c2 / (c2 + c3));
-      lumcalc = lumcalc - c1* c2 * TMath::Log(1. + energie / c2)+ c1 * c2 * c4_new * TMath::Log((energie + c2) /(c3 + c2)) + xm;
+      lumcalc = lumcalc - c1 * c2 * TMath::Log(1. + energie / c2) + c1 * c2 * c4_new * TMath::Log((energie + c2) / (c3 + c2)) + xm;
    }
-       
-   return lumcalc; 
+
+   return lumcalc;
 }
 
 TF1 KVLightEnergyCsI::fLight("fLight_CsI", CalculLumiere, 0., 10000., 6);
@@ -79,13 +79,13 @@ void KVLightEnergyCsI::init()
    SetZ(1);
 }
 
-KVLightEnergyCsI::KVLightEnergyCsI():KVCalibrator(4)
+KVLightEnergyCsI::KVLightEnergyCsI(): KVCalibrator(4)
 {
    init();
 }
 
 //___________________________________________________________________________
-KVLightEnergyCsI::KVLightEnergyCsI(KVDetector * kvd):KVCalibrator(4)
+KVLightEnergyCsI::KVLightEnergyCsI(KVDetector* kvd): KVCalibrator(4)
 {
    //Create an electronic calibration object for a specific detector (*kvd)
    init();
@@ -101,10 +101,11 @@ Double_t KVLightEnergyCsI::Compute(Double_t light) const
    //
    // This is done by inversion of the light-energy function using TF1::GetX.
 
-	SetParametersOfLightEnergyFunction();
-   
+   SetParametersOfLightEnergyFunction();
+
    //invert light vs. energy function to find energy
-   Double_t xmin, xmax; fLight.GetRange(xmin,xmax);
+   Double_t xmin, xmax;
+   fLight.GetRange(xmin, xmax);
    Double_t energy = fLight.GetX(light, xmin, xmax);
 
    return energy;
@@ -122,7 +123,8 @@ void KVLightEnergyCsI::SetParametersOfLightEnergyFunction() const
 }
 
 //___________________________________________________________________________
-Double_t KVLightEnergyCsI::operator() (Double_t light) {
+Double_t KVLightEnergyCsI::operator()(Double_t light)
+{
    //Same as Compute()
 
    return Compute(light);
@@ -135,20 +137,21 @@ Double_t KVLightEnergyCsI::Invert(Double_t energy)
    //calculate the corresponding total light output according to the
    //calibration parameters (useful for filtering simulations).
 
-	SetParametersOfLightEnergyFunction();
+   SetParametersOfLightEnergyFunction();
 
    return fLight.Eval(energy);
 }
 
 //___________________________________________________________________________
-	
+
 TF1* KVLightEnergyCsI::GetLightEnergyFunction(UInt_t Z, UInt_t A)
 {
-	// Return pointer to TF1 used to calculate light-energy relationship
-	// for this detector, for given Z & A.
-	// WARNING: the same STATIC TF1 object is used by ALL CsI detectors
-	
-	SetZ(Z); SetA(A);
-	SetParametersOfLightEnergyFunction();
-	return &fLight;
+   // Return pointer to TF1 used to calculate light-energy relationship
+   // for this detector, for given Z & A.
+   // WARNING: the same STATIC TF1 object is used by ALL CsI detectors
+
+   SetZ(Z);
+   SetA(A);
+   SetParametersOfLightEnergyFunction();
+   return &fLight;
 }

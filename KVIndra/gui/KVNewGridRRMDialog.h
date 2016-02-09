@@ -12,33 +12,34 @@ $Author: franklan $
 #include "KVINDRARRMValidator.h"
 #include "TGTextEntry.h"
 
-class KVNewGridRRMDialog:public KVNewGridDialog {
+class KVNewGridRRMDialog: public KVNewGridDialog {
 
    RQ_OBJECT("KVNewGridRRMDialog")
 
- protected:
-   KVINDRARRMValidator * fRRMGrid;
-   TGTextEntry *fRunList;
-   TGTextEntry *fRingList;
-   TGTextEntry *fModList;
-   TGHorizontalFrame *fHFRuns;
-   TGHorizontalFrame *fHFRings;
-   TGHorizontalFrame *fHFModules;
-   TGHorizontalFrame *fHFScales;
+protected:
+   KVINDRARRMValidator* fRRMGrid;
+   TGTextEntry* fRunList;
+   TGTextEntry* fRingList;
+   TGTextEntry* fModList;
+   TGHorizontalFrame* fHFRuns;
+   TGHorizontalFrame* fHFRings;
+   TGHorizontalFrame* fHFModules;
+   TGHorizontalFrame* fHFScales;
    TString fRunListString;
    TString fRingListString;
    TString fModListString;
 
-   virtual void set_selected_grid(KVIDGraph * g);
+   virtual void set_selected_grid(KVIDGraph* g);
    virtual void layout_parameter_control_widgets();
 
- public:
+public:
 
-    KVNewGridRRMDialog();
-    KVNewGridRRMDialog(const TGWindow * p, const TGWindow * main,
-                       UInt_t w = 1, UInt_t h = 1, Option_t * type =
-                       "New", KVIDGraph * g = 0);
-    virtual ~ KVNewGridRRMDialog() {
+   KVNewGridRRMDialog();
+   KVNewGridRRMDialog(const TGWindow* p, const TGWindow* main,
+                      UInt_t w = 1, UInt_t h = 1, Option_t* type =
+                         "New", KVIDGraph* g = 0);
+   virtual ~ KVNewGridRRMDialog()
+   {
    };
 
    virtual void SelectRuns(Bool_t);
@@ -47,7 +48,7 @@ class KVNewGridRRMDialog:public KVNewGridDialog {
    virtual void ReadRings();
    virtual void SelectMods(Bool_t);
    virtual void ReadMods();
-   virtual void ReadAndSetSelectedGridProperties(KVIDGraph *);
+   virtual void ReadAndSetSelectedGridProperties(KVIDGraph*);
 
    ClassDef(KVNewGridRRMDialog, 0)      //Dialog box for creation of new grid in KVIDGridManagerGUI, for grids which inherit from KVINDRARRMValidator
 };

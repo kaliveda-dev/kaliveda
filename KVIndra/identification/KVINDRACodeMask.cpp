@@ -46,18 +46,18 @@ ClassImp(KVINDRACodeMask)
 //                         code = 9 : ident. incomplete dans CsI ou Phoswich (Z.min)
 //                         code =10 : ident. "entre les lignes" dans CsI
 //                         code =11 : ident. Z=2 due a l'inversion CHIO (Argon)
-// 
+//
 //                         code =14 : Particule restee non identifiee (a rejeter)
 //                         code =15 : frag. ou part. rejete
-// 
+//
 //    Nota: Pour le code 8 la contribution ChIo est partagee egalement entre
 //               toutes les particules qui s'arretent dans les modules suivants.
 //               Le Z individuel est donc surement faux mais cela permet
 //               d'avoir une assez bonne estimation du Z.total.
-// 
+//
 //               Les codes 9 et 10 sont des codes qui ont ete ajoutes pour donner
 //               au code 2 la notion d'identification sans ambiguites.
-//____________________________________________________________________________________ 
+//____________________________________________________________________________________
 //
 //NEW ID CODE MASKS
 //-----------------
@@ -111,7 +111,7 @@ Bool_t KVINDRACodeMask::TestIDCode(UShort_t code)
    //always kTRUE if no mask set (fIDMask==0)
    if (!fIDMask)
       return kTRUE;
-   return (Bool_t) ((fIDMask & code) != 0);
+   return (Bool_t)((fIDMask & code) != 0);
 }
 
 Bool_t KVINDRACodeMask::TestECode(UChar_t code)
@@ -120,5 +120,5 @@ Bool_t KVINDRACodeMask::TestECode(UChar_t code)
    //always kTRUE if no mask set (fEMask==0)
    if (!fEMask)
       return kTRUE;
-   return (Bool_t) ((fEMask & code) != 0);
+   return (Bool_t)((fEMask & code) != 0);
 }

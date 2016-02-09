@@ -1,0 +1,150 @@
+
+###################
+#Offset relativiste
+#Brho0    run1    run2    offset(ns) new_offset meanAQ sigmaAQ
+#A partir de AQ_relativiste_wooff_nostraight
+################### 
+	
+#Syeteme 40+48
+#runs 455-500: offset set on code_Ident_VAMOS=1 for Z=20 unless specified
+#runs  484     489: set on Z=14
+#run 490     492: set on z=10
+#run  493 500: on z=6
+#runs from 500 to 509: only code_Ident_vamos=2 fragments are visible, but the line is NOT straight (although the streightening function was applied). No offset value set up for the moment (P. 05/03/13)
+1.656  455     455     0.855 2.00049e+00 3.37684e-03
+1.656  456     456     0.743 2.00052 3.45702e-03
+1.656  457     457     0.706 2.00049 3.33609e-03
+1.656  458     458     0.644 2.00048 3.33212e-03
+1.656  459     459     0.510 2.00001 3.04892e-03 
+1.656  460     460     0.513 2.00047 3.41486e-03
+1.656  461     461     0.403 2.00046 3.43417e-03
+1.656  462     462     0.262 2.00000 3.11482e-03 
+1.656  463     463     0.227 2.00049 3.36492e-03
+1.656  464     464     0.134 2.00048 3.31514e-03
+1.656  465     465     0.0    0.0    0.0
+1.800  466     467     -1.073 2.00001 2.34037e-03
+1.800  468     468     -1.055 2.00005 2.33753e-03
+1.800  469     469     -1.125 2.00002 2.33074e-03   
+1.800  470     474     -1.189 1.99999 2.43134e-03
+
+1.523  475     475     1.035  2.00024 1.42022e-02
+1.523  476     476     0.890 1.99939 6.79966e-03  
+1.523  477     483     0.90 2.00 8e-3
+1.401  484     489     1.03 2.00059 5.67201e-03
+
+1.289  490     492     2.3 2.00081 8.25383e-03 
+
+1.186  493     495     3.65 2.00023 7.97710e-03
+
+1.091  496     500     4.5 1.999 0.02 
+
+1.004  501     501     0 0 0 
+
+0.923  502     504      0.0    0.0    0.0   
+
+0.849  505     506      0.0    0.0    0.0   
+
+0.782  507     508      0.0    0.0    0.0   
+
+0.719  509     509      0.0    0.0    0.0
+
+1.703	583	583	3.70	1.99994	3.350e-03
+1.687	584	584	3.70	1.99994	3.350e-03
+1.665	585	585	3.70	1.99994	3.350e-03	
+1.636	586	586	3.70	1.99994	3.350e-03	
+1.602	587	587	3.70	1.99994	3.350e-03	
+1.737	588	588	3.70	1.99994	3.350e-03	
+1.780	589	589	3.70	1.99994	3.350e-03	
+1.801	590	590	3.70	1.99994	3.350e-03
+1.780	591	591	3.70	1.99994	3.350e-03	   
+2.220	592	592	3.70	1.99994	3.350e-03
+
+#Syeteme 40+40
+#runs 531-548: offset set on code_Ident_VAMOS=1 for Z=20 unless specified
+#runs  528     530: set on Z=14
+#runs 549-550: empty for code ident vamos = 1
+#runs from 511 to 527: only code_Ident_vamos=2 fragments are visible, but the line is NOT straight (although the streightening function was applied). No offset value set up for the moment (P. 05/03/13)
+0.719    511     513        116.69     0.0     0.0   
+0.661    514     514        116.69     0.0     0.0   
+0.782    515     516        116.69     0.0     0.0   
+0.849    517     517        116.69     0.0     0.0   
+0.923    518     518        116.69     0.0     0.0   
+0.923    519     519        116.69     0.0     0.0   
+1.004    520     520   0.0    0.0    0.0
+
+1.091    521     522    0.0    0.0    0.0     
+
+1.186    523     524    0.0    0.0    0.0 
+
+1.289    525     527    0.0    0.0    0.0 
+
+1.401    528     530     4.45 2.00038 5.95405e-03 
+
+1.523    531    536    2.23	2.00038 5.12074e-03
+
+1.656    537     542    0.735 1.99998 3.66768e-03   
+
+1.800    543     547    -0.255 2.00037 2.38946e-03
+
+1.957    548    548    0.630 1.99965 5.14472e-03
+
+2.120    549     549    0.0    0.0    0.0   
+2.220    550     550    0.0    0.0    0.0
+
+#
+#Tfrag+Offset_relativiste
+#
+#Syeteme 48+40
+#the following offset were set on code_ident_vamos=1 unless otherwise specified
+#run 327-332: offset set on z=20, a=48, a/q=2.4
+#run 332: aligned on right peak, double peaks, very fuzzy
+#run 333-338  :offset set on z=20, a=44, a/q=2.2
+#run 339-347   :offset set on z=20, a=42, a/q=2.1
+#run 348-350 : offset set on Z=14, a/q=2
+#run 353-354 : offset set on Z=8, a/q=2
+#run 355-357 : offset set on Z=6, a/q=2
+#the following offset set on code_ident_vamos=2 
+#run 358 : offset set on Z=12, a/q=2, code 2 but a/q=2 is straight
+#run 359, 360: check tof first, cannot use the run as it is for setting the offset
+1.962     327    331    1.290 2.40067e+00 1.16805e-02
+2.120     332    332    -0.55 2.40033e+00 3.94800e-03
+1.8051	333	338	1.05 2.20046e+00 5.42424e-03
+1.660	339	343	1.54	2.10086e+00 7.15972e-03
+1.523     344    347     3.805 2.10055e+00 1.14677e-02
+#1.405     348    350      -0.65 2.00053e+00 7.66901e-03
+1.405     348    350     3.5 1.99912 8.12305e-03
+1.293     353    354     3.1 2.00071 6.07310e-03
+1.1894    355    356     3.5  2.00019 6.49545e-03
+1.094     357    357     3.9  2.00053 1.18100e-02
+1.008     358    358     -8.0 2.00123e+00 2.65866e-02
+0.927     359    359     0.000	0.0	0.0 
+0.853     360    360     0.000	0.0	0.0	    
+
+#Systeme 48+48
+#the following offset were set on code_ident_vamos=1 unless otherwise specified
+#run 379-383 : offset set on z=20, a=48, a/q=2.4
+#run 384-389 :offset set on z=20, a=44, a/q=2.2
+#run 390-397  :offset set on z=20, a=42, a/q=2.1
+#run 398-402 : offset set on z=14, a/q=2. Z=20, a=42 is not on a/q=2.1, though z=14,a=28 is on a/q=2, this is confusing....
+#run 403- 406: offset set on z=14, a/q=2.
+#run 407-409  : offset set on z=8, a/q=2.
+#runs 410-416 : offset set on z=6, a/q=2.
+#the following offset set on code_ident_vamos=2 
+#run 417-418 : offset set on z=14, a/q=2, line not straight
+#runs 417-424 : no good events in these runs? what kind of events are there?
+1.962     379    382    0.405 2.40007 5.53392e-03
+2.120     383    383    0.190 2.40000 4.16358e-03 
+1.805     384    389     0.79 2.20026e+00 6.06266e-03
+1.661     390    397     0.83 2.10043e+00 7.28407e-03
+1.523     398    402    1.341 2.14991 1.29298e-02
+1.405     403    403     11.425 2.00062e+00 1.27783e-02
+1.405     404    406      1.15 2.00003e+00 5.27379e-03
+1.293     407    409      2.3 2.00022 8.12610e-03
+1.190     410    416       3.33 1.99973e+00 1.09111e-02
+1.092     417    418        -2 2.00427e+00 3.25181e-02
+
+1.004     419    419        116.69	0.0	0.0    
+0.849     420      420      116.69	 0.0	 0.0  
+0.849     423      423      116.69	 0.0	 0.0  
+0.923     421    422        116.69	 0.0	 0.0   
+0.782     424    424        116.69	 0.0	 0.0    

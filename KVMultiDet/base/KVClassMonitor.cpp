@@ -44,29 +44,29 @@ KVClassMonitor::KVClassMonitor()
 {
    // Default constructor
    // fill fClassStats with all current instance counts
-	// Store current class instance statistics as 'initial' values
-	// used for global comparison by CompareToInit()
+   // Store current class instance statistics as 'initial' values
+   // used for global comparison by CompareToInit()
    SetInitStatistics();
    TIter next(gROOT->GetListOfClasses());
-   TClass *cl;
+   TClass* cl;
    while ((cl = (TClass*) next())) {
       Int_t n = cl->GetInstanceCount();
       fClassStats.SetValue(cl->GetName(), n);
-   }    
+   }
 }
 
 void KVClassMonitor::SetInitStatistics()
 {
-	// Store current class instance statistics as 'initial' values
-	// used for global comparison by CompareToInit()
-	
+   // Store current class instance statistics as 'initial' values
+   // used for global comparison by CompareToInit()
+
    gObjectTable->UpdateInstCount();
    TIter next(gROOT->GetListOfClasses());
-   TClass *cl;
+   TClass* cl;
    while ((cl = (TClass*) next())) {
       Int_t n = cl->GetInstanceCount();
       fClassStatsInit.SetValue(cl->GetName(), n);
-   }   
+   }
 }
 
 KVClassMonitor::~KVClassMonitor()
@@ -76,37 +76,37 @@ KVClassMonitor::~KVClassMonitor()
 
 void KVClassMonitor::Check()
 {
-	// update class instance statistics
-	// print warning for every class whose number has increased
-	Info("Check", "Checking class instance statistics");
+   // update class instance statistics
+   // print warning for every class whose number has increased
+   Info("Check", "Checking class instance statistics");
    gObjectTable->UpdateInstCount();
    TIter next(gROOT->GetListOfClasses());
-   TClass *cl;
+   TClass* cl;
    while ((cl = (TClass*) next())) {
       Int_t n = cl->GetInstanceCount();
       Int_t old = fClassStats.GetValue(cl->GetName(), 0);
-      if(n!=old){
-      	if(n>old) Warning("Check", "%s +%d     (%d --> %d)", cl->GetName(), n-old, old, n);
-      	else Warning("Check", "%s -%d     (%d --> %d)", cl->GetName(), old-n, old, n);
+      if (n != old) {
+         if (n > old) Warning("Check", "%s +%d     (%d --> %d)", cl->GetName(), n - old, old, n);
+         else Warning("Check", "%s -%d     (%d --> %d)", cl->GetName(), old - n, old, n);
       }
       fClassStats.SetValue(cl->GetName(), n);
-   }   	
+   }
 }
 
 void KVClassMonitor::CompareToInit()
 {
-	// compare class instance statistics to initial values
-	// print warning for every class whose number has increased
-	Info("CompareToInit", "Checking class instance statistics");
+   // compare class instance statistics to initial values
+   // print warning for every class whose number has increased
+   Info("CompareToInit", "Checking class instance statistics");
    gObjectTable->UpdateInstCount();
    TIter next(gROOT->GetListOfClasses());
-   TClass *cl;
+   TClass* cl;
    while ((cl = (TClass*) next())) {
       Int_t n = cl->GetInstanceCount();
       Int_t old = fClassStatsInit.GetValue(cl->GetName(), 0);
-      if(n!=old){
-      	if(n>old) Warning("CompareToInit", "%s +%d     (%d --> %d)", cl->GetName(), n-old, old, n);
-      	else Warning("CompareToInit", "%s -%d     (%d --> %d)", cl->GetName(), old-n, old, n);
+      if (n != old) {
+         if (n > old) Warning("CompareToInit", "%s +%d     (%d --> %d)", cl->GetName(), n - old, old, n);
+         else Warning("CompareToInit", "%s -%d     (%d --> %d)", cl->GetName(), old - n, old, n);
       }
-   }   	
+   }
 }

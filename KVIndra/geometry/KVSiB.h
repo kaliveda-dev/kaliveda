@@ -23,40 +23,45 @@
 
 class KVBIC;
 
-class KVSiB:public KVSilicon {
+class KVSiB: public KVSilicon {
 
-   KVLinCal *fLinCal;//!linear channel-energy calibration
-   
- public:
+   KVLinCal* fLinCal;//!linear channel-energy calibration
+
+public:
    KVSiB();
    KVSiB(Float_t thickness);
    virtual ~ KVSiB();
 
    void SetACQParams();
-   const Char_t *GetArrayName();
-   virtual Bool_t Fired(Option_t * opt = "any");
+   const Char_t* GetArrayName();
+   virtual Bool_t Fired(Option_t* opt = "any");
 
-   Float_t GetP1() {
+   Float_t GetP1()
+   {
       return GetACQData("P1");
    };
-   Float_t GetP2() {
+   Float_t GetP2()
+   {
       return GetACQData("P2");
    };
-   Float_t GetP3() {
+   Float_t GetP3()
+   {
       return GetACQData("P3");
    };
-   Float_t GetP4() {
+   Float_t GetP4()
+   {
       return GetACQData("P4");
    };
-   Float_t GetE() {
+   Float_t GetE()
+   {
       return GetACQData("E");
    };
-   
+
    KVBIC* GetBIC() const;
 
    void SetCalibrators();
    Double_t GetEnergy();
-    //returns kTRUE if linear calibrator fLinCal is present and has been initialised
+   //returns kTRUE if linear calibrator fLinCal is present and has been initialised
    Bool_t IsCalibrated() const
    {
       return (fLinCal && fLinCal->GetStatus());

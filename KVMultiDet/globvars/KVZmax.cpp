@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 18/02/2004
 // Creation d'une classe Variable Globale.
@@ -13,7 +13,7 @@ ClassImp(KVZmax)
 //  Global variable returning the charge of the (i+1)th heaviest fragment
 //  and the pointer to the (i+1)th heaviest fragment, where i=0,1,...,M-1
 //  with M = total multiplicity of event.
-//  
+//
 //  All nuclei of the event are sorted in descending order according to their charge
 //  (Z(0) > Z(1) > Z(2) > ... > Z(M-1)) .
 //
@@ -43,20 +43,20 @@ void KVZmax::init_KVZmax(void)
    nb_crea++;
    heaviest = 0;
    fSorted = kFALSE;
-	//set up list of indices
-	for(register int i=1;i<=50;i++)
-        SetNameIndex( Form("Zmax%d",i), i-1 );
-    fValueType='I'; // integer values
-    SetMaxNumBranches(3);
+   //set up list of indices
+   for (register int i = 1; i <= 50; i++)
+      SetNameIndex(Form("Zmax%d", i), i - 1);
+   fValueType = 'I'; // integer values
+   SetMaxNumBranches(3);
 }
 
 //_________________________________________________________________
-KVZmax::KVZmax(void):KVVarGlob1()
+KVZmax::KVZmax(void): KVVarGlob1()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    init_KVZmax();
    sprintf(nom, "KVZmax_%d", nb_crea);
@@ -69,7 +69,7 @@ KVZmax::KVZmax(void):KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVZmax::KVZmax(Char_t * nom):KVVarGlob1(nom)
+KVZmax::KVZmax(Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom
@@ -81,16 +81,16 @@ KVZmax::KVZmax(Char_t * nom):KVVarGlob1(nom)
 }
 
 //_________________________________________________________________
-KVZmax::KVZmax(const KVZmax & a) : KVVarGlob1()
+KVZmax::KVZmax(const KVZmax& a) : KVVarGlob1()
 {
-// 
+//
 // Contructeur par Copy
 //
    init_KVZmax();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVZmax &) a).Copy(*this);
+   ((KVZmax&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVZmax
    cout << nb << " crees...(Copy) " << endl;
@@ -100,7 +100,7 @@ KVZmax::KVZmax(const KVZmax & a) : KVVarGlob1()
 //_________________________________________________________________
 KVZmax::~KVZmax(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVZmax
@@ -118,9 +118,9 @@ KVZmax::~KVZmax(void)
 
 //_________________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVZmax::Copy(TObject & a) const
+void KVZmax::Copy(TObject& a) const
 #else
-void KVZmax::Copy(TObject & a)
+void KVZmax::Copy(TObject& a)
 #endif
 {
 // Methode de Copy
@@ -130,15 +130,15 @@ void KVZmax::Copy(TObject & a)
 #ifdef DEBUG_KVZmax
    cout << "Copy de " << GetName() << "..." << endl;
 #endif
-   ((KVZmax &) a).Reset();
+   ((KVZmax&) a).Reset();
    KVVarGlob1::Copy(a);
 
    //copy list of fragments if it exists
    if (heaviest) {
-      KVNucleus *tmp;
+      KVNucleus* tmp;
       TIter next(heaviest);
-      while ((tmp = (KVNucleus *) next()))
-         ((KVZmax &) a).Fill(tmp);
+      while ((tmp = (KVNucleus*) next()))
+         ((KVZmax&) a).Fill(tmp);
    }
 #ifdef DEBUG_KVZmax
    cout << "Nom de la Copy (resultat) : " << a.GetName() << endl;
@@ -146,7 +146,7 @@ void KVZmax::Copy(TObject & a)
 }
 
 //_________________________________________________________________
-KVZmax & KVZmax::operator =(const KVZmax & a)
+KVZmax& KVZmax::operator =(const KVZmax& a)
 {
 //
 // Operateur =
@@ -157,7 +157,7 @@ KVZmax & KVZmax::operator =(const KVZmax & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVZmax &) a).Copy(*this);
+   ((KVZmax&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVZmax
    cout << "Nom de la Copy par egalite: " << GetName() << endl;
@@ -170,7 +170,7 @@ void KVZmax::Init(void)
 {
 //
 // Remise a Zero de la variable et du pointeur
-//      
+//
    KVVarGlob1::Init();
    if (heaviest) {
       heaviest->SetOwner(kFALSE);
@@ -184,7 +184,7 @@ void KVZmax::Reset(void)
 {
 //
 // Remise a Zero de la variable et du pointeur
-//      
+//
    KVVarGlob1::Reset();
    if (heaviest) {
       heaviest->Clear("nodelete");
@@ -193,7 +193,7 @@ void KVZmax::Reset(void)
 }
 
 //_________________________________________________________________
-void KVZmax::Fill(KVNucleus * c)
+void KVZmax::Fill(KVNucleus* c)
 {
    //We use the TList sorting mechanism in order to rank the fragments.
    //Each new nucleus has its pointer added to the TList.
@@ -206,7 +206,7 @@ void KVZmax::Fill(KVNucleus * c)
 }
 
 //_________________________________________________________________
-KVNucleus *KVZmax::GetZmax(Int_t i)
+KVNucleus* KVZmax::GetZmax(Int_t i)
 {
    //Pointer to (i+1)th heaviest fragment (i=0 : Zmax, i=1 : Zmax2, etc.)
 
@@ -216,17 +216,17 @@ KVNucleus *KVZmax::GetZmax(Int_t i)
       heaviest->Sort();
       fSorted = kTRUE;
    }
-   return (KVNucleus *) heaviest->At(i);
+   return (KVNucleus*) heaviest->At(i);
 }
 
 //_________________________________________________________________
 Double_t KVZmax::getvalue_int(Int_t i)
 {
    //returns the Z of the (i+1)th heaviest fragment
-    // i=0 : Zmax
-    // i=1 : Zmax2
-	// etc.
-	
+   // i=0 : Zmax
+   // i=1 : Zmax2
+   // etc.
+
    if (!GetZmax(i))
       return -1.0;
    return (Double_t) GetZmax(i)->GetZ();
@@ -236,15 +236,15 @@ Double_t KVZmax::getvalue_int(Int_t i)
 Double_t KVZmax::getvalue_void(void) const
 {
    //Returns Z of heaviest fragment
-   return (const_cast < KVZmax * >(this)->getvalue_int(0));
+   return (const_cast < KVZmax* >(this)->getvalue_int(0));
 }
 
 //_________________________________________________________________
-Double_t *KVZmax::GetValuePtr(void)
+Double_t* KVZmax::GetValuePtr(void)
 {
    //Return array containing ordered list of Z (all fragments)
-	//
-	//  USER MUST DELETE ARRAY AFTER USING !!!
+   //
+   //  USER MUST DELETE ARRAY AFTER USING !!!
 
    if (!heaviest)
       return 0;
@@ -253,7 +253,7 @@ Double_t *KVZmax::GetValuePtr(void)
       heaviest->Sort();
       fSorted = kTRUE;
    }
-   Double_t *v = new Double_t[size_event];
+   Double_t* v = new Double_t[size_event];
    for (UInt_t u = 0; u < size_event; u++)
       v[u] = GetValue(u);
    return v;

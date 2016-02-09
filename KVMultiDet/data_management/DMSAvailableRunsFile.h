@@ -6,17 +6,16 @@
 
 #include "KVAvailableRunsFile.h"
 
-class DMSAvailableRunsFile : public KVAvailableRunsFile
-{
+class DMSAvailableRunsFile : public KVAvailableRunsFile {
 
-   public:
+public:
    DMSAvailableRunsFile();
    DMSAvailableRunsFile(const Char_t*, KVDataSet*);
    virtual ~DMSAvailableRunsFile();
 
    virtual void Update(Bool_t no_existing_file = kFALSE);
 
-   ClassDef(DMSAvailableRunsFile,1)//Handles list of available runs using Data Management Systems
+   ClassDef(DMSAvailableRunsFile, 1) //Handles list of available runs using Data Management Systems
 };
 
 #endif

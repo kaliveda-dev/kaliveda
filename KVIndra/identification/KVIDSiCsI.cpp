@@ -27,7 +27,7 @@ ClassImp(KVIDSiCsI)
 //
 //Identification subcodes are written in bits 8-11 of KVIDSubCodeManager
 //(see KVINDRACodes)
-    KVIDSiCsI::KVIDSiCsI()
+KVIDSiCsI::KVIDSiCsI()
 {
    //set IDCode
    fIDCode = kIDCode_SiCsI;

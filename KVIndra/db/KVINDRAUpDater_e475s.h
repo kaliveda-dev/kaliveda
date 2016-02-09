@@ -13,21 +13,20 @@ $Date: 2007/09/21 07:44:09 $
 #include "KVINDRAUpDater.h"
 #include "KVDBRun.h"
 
-class KVINDRAUpDater_e475s : public KVINDRAUpDater
-{
-   public:
+class KVINDRAUpDater_e475s : public KVINDRAUpDater {
+public:
 
    KVINDRAUpDater_e475s();
    virtual ~KVINDRAUpDater_e475s();
-	
-	
-	void SetCalibrationParameters(UInt_t );
-	void SetCalibParameters(KVDBRun * run);
-	
-	void SetPedestals(KVDBRun *);
-	
-	
-   ClassDef(KVINDRAUpDater_e475s,1)//Sets run parameters for INDRA_e475s dataset
+
+
+   void SetCalibrationParameters(UInt_t);
+   void SetCalibParameters(KVDBRun* run);
+
+   void SetPedestals(KVDBRun*);
+
+
+   ClassDef(KVINDRAUpDater_e475s, 1) //Sets run parameters for INDRA_e475s dataset
 };
 
 #endif

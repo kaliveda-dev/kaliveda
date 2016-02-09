@@ -65,7 +65,7 @@ ClassImp(KVIDSiCsI5)
 //11  KVIDSiCsI5::kZOK_A_ZtooSmall   "Z ok, A identification tried but IdentA called with Z<1",
 //12  KVIDSiCsI5::kZOK_A_ZtooLarge   "Z ok, A identification tried but IdentA called with Z larger than max Z defined for KVTGIDZA isotopic identification object"
 /////////////////////////////////////////////////////////////////////////////////////
-Double_t KVIDSiCsI5::IdentifyZ(Double_t & funLTG)
+Double_t KVIDSiCsI5::IdentifyZ(Double_t& funLTG)
 {
    //Identify Z using the following method:
    //      - first try GG matrix
@@ -78,7 +78,7 @@ Double_t KVIDSiCsI5::IdentifyZ(Double_t & funLTG)
 
    Double_t Z = -1.;
 
-   if(((KVSilicon *) GetDetector(1))->GetGG() < 4090){
+   if (((KVSilicon*) GetDetector(1))->GetGG() < 4090) {
       //try GG identification if SIGG is not saturated
       //the condition is applied directly to the raw channel number instead of GetIDMapY()
       //so that it is correct even if GetIDMapY rescales for the change in gain
@@ -112,7 +112,7 @@ Double_t KVIDSiCsI5::IdentifyZ(Double_t & funLTG)
 }
 
 //______________________________________________________________________________
-Bool_t KVIDSiCsI5::Identify(KVIdentificationResult* IDR, Double_t , Double_t )
+Bool_t KVIDSiCsI5::Identify(KVIdentificationResult* IDR, Double_t , Double_t)
 {
    //Identification of particles using Si(300)-CsI matrices for 5th campaign.
    //First of all, Z identification is attempted with KVIDSiCsI5::IdentZ.
@@ -132,9 +132,9 @@ Bool_t KVIDSiCsI5::Identify(KVIdentificationResult* IDR, Double_t , Double_t )
    Int_t ia = -1;
    Int_t iz = -1;
 
- 		IDR->SetIDType( GetType() );
-		IDR->IDattempted = kTRUE;
-  Double_t Z = IdentifyZ(funLTG_Z);
+   IDR->SetIDType(GetType());
+   IDR->IDattempted = kTRUE;
+   Double_t Z = IdentifyZ(funLTG_Z);
 
    //use KVTGIDManager::GetStatus value for IdentZ as identification subcode
    Int_t Zstatus = (GetStatus() + 3 * fWhichGrid);
@@ -152,62 +152,58 @@ Bool_t KVIDSiCsI5::Identify(KVIdentificationResult* IDR, Double_t , Double_t )
 
       mass = IdentA(GetName(), GetIDMapX("GG"), GetIDMapY("GG"), funLTG_A, "GG", iz); //IdentA(this, funLTG_A, "GG", "GG", iz);
 
-      if (GetStatus() != KVTGIDManager::kStatus_OK)     //mass ID not good ?
-      {
+      if (GetStatus() != KVTGIDManager::kStatus_OK) {   //mass ID not good ?
          //only Z identified
          IDR->Z = iz;
          IDR->PID = Z;
          IDR->Zident = kTRUE;
          //subcode says "Z ok but A failed because..."
          IDR->IDquality = k_OutOfIDRange_PG2 + GetStatus();
-      }
-		else                    //both Z and A successful ?
-      {
+      } else {                //both Z and A successful ?
          ia = TMath::Nint(mass);
          // fix 16B
-         if(iz==5 && ia==16) ia = (mass>16.0 ? 17 : 15);
+         if (iz == 5 && ia == 16) ia = (mass > 16.0 ? 17 : 15);
          // fix 9B
-         if(iz==5 && ia==9) ia = (mass>9.0 ? 10 : 8);
+         if (iz == 5 && ia == 9) ia = (mass > 9.0 ? 10 : 8);
          // fix 8Be
-         if(iz==4 && ia==8) ia = (mass>8.0 ? 9 : 7);
+         if (iz == 4 && ia == 8) ia = (mass > 8.0 ? 9 : 7);
          // fix 13Be
-         if(iz==4 && ia==13) ia = (mass>13.0 ? 14 : 12);
+         if (iz == 4 && ia == 13) ia = (mass > 13.0 ? 14 : 12);
          // fix 10Li
-         if(iz==3 && ia==10) ia = (mass>10.0 ? 11 : 9);
+         if (iz == 3 && ia == 10) ia = (mass > 10.0 ? 11 : 9);
          // fix 5He
-         if(iz==2 && ia==5) ia = (mass>5.0 ? 6 : 4);
+         if (iz == 2 && ia == 5) ia = (mass > 5.0 ? 6 : 4);
          // fix 7He
-         if(iz==2 && ia==7) ia = (mass>7.0 ? 8 : 6);
+         if (iz == 2 && ia == 7) ia = (mass > 7.0 ? 8 : 6);
          // check that mass is not too bizarre
-         KVNucleus tmp(iz,ia);
-         if(!tmp.IsKnown()){
-         	// if ia seems too light, we try with iz-1
-         	// if ia seems too heavy, we try with iz+1
-         	Info("Identify","%s : initial ID Z=%d A=%d funLTG=%g", GetName(), iz, ia, funLTG_A);
-         	Int_t iz2 = (ia < 2*iz ? iz-1 : iz+1);
-         	if(iz2>0){
-         		Double_t old_funLTG_A = funLTG_A;
-                        Double_t new_mass = IdentA(GetName(), GetIDMapX("GG"), GetIDMapY("GG"), funLTG_A, "GG", iz2); //IdentA(this, funLTG_A, "GG", "GG", iz2);
-      			// is this a better solution ?
-      			if(GetStatus() == KVTGIDManager::kStatus_OK){
-      				Int_t new_ia = TMath::Nint(new_mass);
-      				tmp.SetZ(iz2); tmp.SetA(new_ia);
-         			Info("Identify","%s : new ID Z=%d A=%d funLTG=%g", GetName(), iz2, new_ia, funLTG_A);
-      				if(tmp.IsKnown() && (TMath::Abs(funLTG_A)<TMath::Abs(old_funLTG_A))){
-      					// new nucleus is known and point is closer to line
-      					iz = iz2; ia=new_ia; mass=new_mass;
-         				Info("Identify","%s : accepted new ID", GetName());
-      				}
-      				else
-      				{
-         				Info("Identify","%s : rejected new ID", GetName());
-      				}
-      			}
-      			else
-      			{
-         			Info("Identify","%s : failed to obtain new ID with Z=%d", GetName(), iz2);
-      			}
-         	}
+         KVNucleus tmp(iz, ia);
+         if (!tmp.IsKnown()) {
+            // if ia seems too light, we try with iz-1
+            // if ia seems too heavy, we try with iz+1
+            Info("Identify", "%s : initial ID Z=%d A=%d funLTG=%g", GetName(), iz, ia, funLTG_A);
+            Int_t iz2 = (ia < 2 * iz ? iz - 1 : iz + 1);
+            if (iz2 > 0) {
+               Double_t old_funLTG_A = funLTG_A;
+               Double_t new_mass = IdentA(GetName(), GetIDMapX("GG"), GetIDMapY("GG"), funLTG_A, "GG", iz2); //IdentA(this, funLTG_A, "GG", "GG", iz2);
+               // is this a better solution ?
+               if (GetStatus() == KVTGIDManager::kStatus_OK) {
+                  Int_t new_ia = TMath::Nint(new_mass);
+                  tmp.SetZ(iz2);
+                  tmp.SetA(new_ia);
+                  Info("Identify", "%s : new ID Z=%d A=%d funLTG=%g", GetName(), iz2, new_ia, funLTG_A);
+                  if (tmp.IsKnown() && (TMath::Abs(funLTG_A) < TMath::Abs(old_funLTG_A))) {
+                     // new nucleus is known and point is closer to line
+                     iz = iz2;
+                     ia = new_ia;
+                     mass = new_mass;
+                     Info("Identify", "%s : accepted new ID", GetName());
+                  } else {
+                     Info("Identify", "%s : rejected new ID", GetName());
+                  }
+               } else {
+                  Info("Identify", "%s : failed to obtain new ID with Z=%d", GetName(), iz2);
+               }
+            }
          }
          IDR->Z = iz;
          IDR->A = ia;
@@ -230,7 +226,7 @@ Bool_t KVIDSiCsI5::Identify(KVIdentificationResult* IDR, Double_t , Double_t )
 
 //__________________________________________________________________________//
 
-void KVIDSiCsI5::Print(Option_t *) const
+void KVIDSiCsI5::Print(Option_t*) const
 {
    cout << "KVIDSiCsI5 : " << GetName() << endl;
    if (GetListOfIDFunctions().GetSize() > 0) {
@@ -246,7 +242,7 @@ void KVIDSiCsI5::Print(Option_t *) const
 
 //__________________________________________________________________________//
 
-Double_t KVIDSiCsI5::GetIDMapX(Option_t *)
+Double_t KVIDSiCsI5::GetIDMapX(Option_t*)
 {
    //Calculates current X coordinate for identification.
    //It is the CsI detector's total light output calculated from current values of 'R' and 'L'
@@ -256,12 +252,12 @@ Double_t KVIDSiCsI5::GetIDMapX(Option_t *)
 
    Double_t rapide = (Double_t)fCsI->GetR() + fCsIRPedestal;
    Double_t lente = (Double_t)fCsI->GetL() + fCsILPedestal;
-   Double_t h = (Double_t)fCsI->GetLumiereTotale(rapide,lente);
+   Double_t h = (Double_t)fCsI->GetLumiereTotale(rapide, lente);
    return h;
 }
 //__________________________________________________________________________//
 
-Double_t KVIDSiCsI5::GetPedestalX(Option_t *)
+Double_t KVIDSiCsI5::GetPedestalX(Option_t*)
 {
    //Returns pedestal of X coordinate for identification.
    //It is the CsI detector's total light output calculated values of 'R' and 'L'
@@ -271,7 +267,7 @@ Double_t KVIDSiCsI5::GetPedestalX(Option_t *)
 
    Double_t rapide = fCsIRPedestal;
    Double_t lente = fCsILPedestal;
-   Double_t h = (Double_t)fCsI->GetLumiereTotale(rapide,lente);
+   Double_t h = (Double_t)fCsI->GetLumiereTotale(rapide, lente);
    return h;
 }
 
@@ -284,23 +280,22 @@ void KVIDSiCsI5::Initialize()
    // IsReadyForID() will return kTRUE if KVTGID objects are associated
    // to this telescope for the current run.
 
-	fSi = (KVSilicon*)GetDetector(1);
-	fSiPGPedestal = fSi->GetPedestal("PG");
-	fSiGGPedestal = fSi->GetPedestal("GG");
-	fSiGain = fSi->GetGain();
-	fCsI = (KVCsI*)GetDetector(2);
-	fCsIRPedestal = fCsI->GetPedestal("R");
-	fCsILPedestal = fCsI->GetPedestal("L");
-   if( GetListOfIDFunctions().GetEntries() ){
+   fSi = (KVSilicon*)GetDetector(1);
+   fSiPGPedestal = fSi->GetPedestal("PG");
+   fSiGGPedestal = fSi->GetPedestal("GG");
+   fSiGain = fSi->GetGain();
+   fCsI = (KVCsI*)GetDetector(2);
+   fCsIRPedestal = fCsI->GetPedestal("R");
+   fCsILPedestal = fCsI->GetPedestal("L");
+   if (GetListOfIDFunctions().GetEntries()) {
       SetBit(kReadyForID);
-   }
-   else
+   } else
       ResetBit(kReadyForID);
 }
 
 //__________________________________________________________________________//
 
-Double_t KVIDSiCsI5::GetIDMapY(Option_t * opt)
+Double_t KVIDSiCsI5::GetIDMapY(Option_t* opt)
 {
    //Calculates current Y coordinate for identification.
    //It is the silicon detector's current grand gain (by default, i.e. opt="", or if opt="GG")
@@ -312,10 +307,10 @@ Double_t KVIDSiCsI5::GetIDMapY(Option_t * opt)
    Double_t si, si_ped;
    if (!strcmp(opt, "PG")) {
       si = (Double_t)fSi->GetPG();
-		si_ped = fSiPGPedestal;
+      si_ped = fSiPGPedestal;
    } else {
       si = (Double_t)fSi->GetGG();
-		si_ped = fSiGGPedestal;
+      si_ped = fSiGGPedestal;
    }
    //gain "correction"
    if (fSiGain > 1.1) si = (si - si_ped) / fSiGain + si_ped;
@@ -324,17 +319,17 @@ Double_t KVIDSiCsI5::GetIDMapY(Option_t * opt)
 
 //__________________________________________________________________________//
 
-Double_t KVIDSiCsI5::GetPedestalY(Option_t * opt)
+Double_t KVIDSiCsI5::GetPedestalY(Option_t* opt)
 {
    //Calculates current Y coordinate pedestal for identification.
    //It is the silicon detector's current grand gain (by default, i.e. opt="", or if opt="GG")
    //or petit gain (opt = "PG") pedestal.
 
-   Double_t si_ped=0.;
+   Double_t si_ped = 0.;
    if (!strcmp(opt, "PG")) {
- 		si_ped = fSiPGPedestal;
+      si_ped = fSiPGPedestal;
    } else {
-		si_ped = fSiGGPedestal;
+      si_ped = fSiGGPedestal;
    }
    return si_ped;
 }
@@ -352,15 +347,15 @@ Bool_t KVIDSiCsI5::SetIdentificationParameters(const KVMultiDetArray* MDA)
 //Parameters are read from the file with name given by the environment variable
 //INDRA_camp5.IdentificationParameterFile.SI-CSI:       [filename]
 
-   TString filename = gDataSet->GetDataSetEnv( Form("IdentificationParameterFile.%s",GetLabel()) );
-   if( filename == "" ){
+   TString filename = gDataSet->GetDataSetEnv(Form("IdentificationParameterFile.%s", GetLabel()));
+   if (filename == "") {
       Warning("SetIdentificationParameters",
-            "No filename defined. Should be given by %s.IdentificationParameterFile.%s",
-            gDataSet->GetName(), GetLabel());
+              "No filename defined. Should be given by %s.IdentificationParameterFile.%s",
+              gDataSet->GetName(), GetLabel());
       return kFALSE;
    }
    TString path;
-   if (!SearchKVFile(filename.Data(), path, gDataSet->GetName())){
+   if (!SearchKVFile(filename.Data(), path, gDataSet->GetName())) {
       Error("SetIdentificationParameters",
             "File %s not found. Should be in $KVROOT/KVFiles/%s",
             filename.Data(), gDataSet->GetName());
@@ -372,7 +367,7 @@ Bool_t KVIDSiCsI5::SetIdentificationParameters(const KVMultiDetArray* MDA)
    KVString aline;
    int zmin, zmax;
    char type[5], name[20];
-   KVIDSiCsI5 *idt = 0;
+   KVIDSiCsI5* idt = 0;
 
    aline.ReadLine(datfile);
    while (datfile.good()) {
@@ -383,7 +378,7 @@ Bool_t KVIDSiCsI5::SetIdentificationParameters(const KVMultiDetArray* MDA)
 
             aline.Remove(0, 2);
             sscanf(aline.Data(), "%s", name);
-            idt = (KVIDSiCsI5 *) MDA->GetIDTelescope(name);
+            idt = (KVIDSiCsI5*) MDA->GetIDTelescope(name);
 
             aline.ReadLine(datfile);
             Bool_t _Aident = kFALSE;
@@ -394,32 +389,32 @@ Bool_t KVIDSiCsI5::SetIdentificationParameters(const KVMultiDetArray* MDA)
             }
             sscanf(aline.Data(), "%s", type);
 
-            if (!strcmp(type, "PG2")){
+            if (!strcmp(type, "PG2")) {
                idt->SetHasPG2();
-				}
+            }
 
             aline.ReadLine(datfile);
             sscanf(aline.Data(), "ZMIN=%d  ZMAX=%d", &zmin, &zmax);
 
             //create new Tassan-Got ID object for telescope
-            KVTGID *_tgid = 0, *_tgid2 = 0;
+            KVTGID* _tgid = 0, *_tgid2 = 0;
             if (_Aident) {
                //When mass ID is possible, have to create two objects: one
                //for Z ident and the other for A ident
                //A-identification functional. Set name of parameter "Z"
                _tgid =
-                   new KVTGIDZA(idt->
-                                GetTGIDName(idt->GetName(), "A", type),
-                                "tassangot_A", 0.1, 100., 13, 11, 12);
+                  new KVTGIDZA(idt->
+                               GetTGIDName(idt->GetName(), "A", type),
+                               "tassangot_A", 0.1, 100., 13, 11, 12);
                _tgid->SetParName(10, "Z");
                _tgid2 =
-                   new KVTGIDZ(idt->GetTGIDName(idt->GetName(), "Z", type),
-                               "pichon_Z", 0.1, 100., 12, 10, 11);
+                  new KVTGIDZ(idt->GetTGIDName(idt->GetName(), "Z", type),
+                              "pichon_Z", 0.1, 100., 12, 10, 11);
             } else {
                //Z-identification functional.
                _tgid =
-                   new KVTGIDZ(idt->GetTGIDName(idt->GetName(), "Z", type),
-                               "pichon_Z", 0.1, 100., 12, 10, 11);
+                  new KVTGIDZ(idt->GetTGIDName(idt->GetName(), "Z", type),
+                              "pichon_Z", 0.1, 100., 12, 10, 11);
             }
 
             _tgid->SetIDmin((Double_t) zmin);
@@ -430,10 +425,10 @@ Bool_t KVIDSiCsI5::SetIdentificationParameters(const KVMultiDetArray* MDA)
             }
             //read line with parameters on it from file
             aline.ReadLine(datfile);
-            TObjArray *par_arr = aline.Tokenize(" ");   //split up into 1 string per parameter
+            TObjArray* par_arr = aline.Tokenize(" ");   //split up into 1 string per parameter
             for (int i = 0; i < par_arr->GetEntries(); i++) {
                //read Double_t value in string
-               KVString kvs(((TObjString *) (*par_arr)[i])->String());
+               KVString kvs(((TObjString*)(*par_arr)[i])->String());
                Double_t param = kvs.Atof();
                //set parameter of ID functional
                _tgid->SetParameter(i, param);
@@ -463,53 +458,53 @@ void KVIDSiCsI5::RemoveIdentificationParameters()
    SetHasPG2(kFALSE);
 }
 
-Double_t KVIDSiCsI5::GetMeanDEFromID(Int_t &status, Int_t Z, Int_t A, Double_t Eres)
+Double_t KVIDSiCsI5::GetMeanDEFromID(Int_t& status, Int_t Z, Int_t A, Double_t Eres)
 {
-	// Returns the Y-axis value in the 2D identification map containing isotope (Z,A)
-	// corresponding to either the given X-axis/Eres value or the current X-axis value given by GetIDMapX.
-	// If no mass information is available, just give Z.
-	//
-	// This method overrides KVIDTelescope::GetMeanDEFromID, as here we have
-	// to handle the LTG fits used for identification. This means scanning the TGID objects associated with
-	// this telescope until we find one with the right Z range, and then calculating
-	// the Y-coordinate for the current X-coordinate value.
-	//
-	// Status is same as for KVIDTelescope::GetMeanDEFromID.
+   // Returns the Y-axis value in the 2D identification map containing isotope (Z,A)
+   // corresponding to either the given X-axis/Eres value or the current X-axis value given by GetIDMapX.
+   // If no mass information is available, just give Z.
+   //
+   // This method overrides KVIDTelescope::GetMeanDEFromID, as here we have
+   // to handle the LTG fits used for identification. This means scanning the TGID objects associated with
+   // this telescope until we find one with the right Z range, and then calculating
+   // the Y-coordinate for the current X-coordinate value.
+   //
+   // Status is same as for KVIDTelescope::GetMeanDEFromID.
 
-    status = kMeanDE_OK;
-    if(!HasMassID()){
-        // mass identification not possible for telescope - ignore A
-        A=-1;
-    }
-	Double_t x = (Eres < 0 ? GetIDMapX() : Eres);
-    // loop over TGID objects
-    TIter next( &GetListOfIDFunctions() );
-    KVTGID* tgid;
-    while( (tgid=(KVTGID*)next()) ){
-        if(Z>=tgid->GetIDmin() && Z<=tgid->GetIDmax()){
-            if(A>0 && tgid->GetZorA()){
-                // this is a Z-only identification object & we require isotopic resolution
-                continue;
-            }
-            if(A>0 && !tgid->GetZorA()){
-                // get position on isotopic line (Z,A)
-                Double_t y=0;
-                tgid->SetParameter("Z", Z);
-                y = tgid->GetDistanceToLine( x, y, A );
-                return y;
-            }
-            if(A==-1 && !tgid->GetZorA()){
-                // this is an A-identifying object, but we only care about Z
-                continue;
-            }
-            if(A<0 && tgid->GetZorA()){
-                // get position on Z line
-                Double_t y=0;
-                y = tgid->GetDistanceToLine( x, y, Z );
-                return y;
-            }
-        }
-    }
-    status = kMeanDE_NoIdentifier;
-    return -1.0;
+   status = kMeanDE_OK;
+   if (!HasMassID()) {
+      // mass identification not possible for telescope - ignore A
+      A = -1;
+   }
+   Double_t x = (Eres < 0 ? GetIDMapX() : Eres);
+   // loop over TGID objects
+   TIter next(&GetListOfIDFunctions());
+   KVTGID* tgid;
+   while ((tgid = (KVTGID*)next())) {
+      if (Z >= tgid->GetIDmin() && Z <= tgid->GetIDmax()) {
+         if (A > 0 && tgid->GetZorA()) {
+            // this is a Z-only identification object & we require isotopic resolution
+            continue;
+         }
+         if (A > 0 && !tgid->GetZorA()) {
+            // get position on isotopic line (Z,A)
+            Double_t y = 0;
+            tgid->SetParameter("Z", Z);
+            y = tgid->GetDistanceToLine(x, y, A);
+            return y;
+         }
+         if (A == -1 && !tgid->GetZorA()) {
+            // this is an A-identifying object, but we only care about Z
+            continue;
+         }
+         if (A < 0 && tgid->GetZorA()) {
+            // get position on Z line
+            Double_t y = 0;
+            y = tgid->GetDistanceToLine(x, y, Z);
+            return y;
+         }
+      }
+   }
+   status = kMeanDE_NoIdentifier;
+   return -1.0;
 }

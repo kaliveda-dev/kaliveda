@@ -20,8 +20,8 @@ typedef std::vector<Int_t>::const_iterator IntArrayCIter;
 class KVNumberList : public TObject {
 
    mutable TString fString;
-   TArrayI *fLowerBounds;       //->
-   TArrayI *fUpperBounds;       //->
+   TArrayI* fLowerBounds;       //->
+   TArrayI* fUpperBounds;       //->
    mutable Int_t fNLimits;              //number of limits in arrays
    mutable Int_t fMaxNLimits;           //size of arrays
    mutable Int_t fFirstValue;           //smallest value included in list
@@ -34,48 +34,55 @@ class KVNumberList : public TObject {
    TString   fName;//name of the list
 
    mutable Bool_t fIsParsed;//!
-   
+
    void init_numberlist();
    void clear() const;
    void ParseList() const;
    void AddLimits(Int_t min, Int_t max) const;
-   void AddLimits(TString & string) const;
+   void AddLimits(TString& string) const;
    void ParseAndFindLimits(const TString& string, const Char_t delim) const;
 
-   public:
+public:
 
    KVNumberList();
-   KVNumberList(const KVNumberList &);
-   KVNumberList(const Char_t *);
-   KVNumberList(Int_t deb,Int_t fin, Int_t pas);
+   KVNumberList(const KVNumberList&);
+   KVNumberList(const Char_t*);
+   KVNumberList(Int_t deb, Int_t fin, Int_t pas);
    virtual ~ KVNumberList();
 
-   virtual void     SetName(const char *name);
-   virtual const char *GetName() const{
+   virtual void     SetName(const char* name);
+   virtual const char* GetName() const
+   {
       return fName.Data();
    }
-   
+
    /* LIST MODIFIERS */
    /* Set the number list */
-   void Set(const TString& l) { SetList(l); }
-   void Set(Int_t min, Int_t max, Int_t pas=1) { SetMinMax(min,max,pas); }
+   void Set(const TString& l)
+   {
+      SetList(l);
+   }
+   void Set(Int_t min, Int_t max, Int_t pas = 1)
+   {
+      SetMinMax(min, max, pas);
+   }
    void SetList(const TString&);
-   void SetMinMax(Int_t min, Int_t max, Int_t pas=1);
-   KVNumberList & operator=(const KVNumberList &);
-   void Copy(TObject &) const;
+   void SetMinMax(Int_t min, Int_t max, Int_t pas = 1);
+   KVNumberList& operator=(const KVNumberList&);
+   void Copy(TObject&) const;
 
    /* Add numbers/lists to the list */
    void Add(Int_t);
    void Add(const Char_t*);
    void Add(const KVNumberList&);
-   void Add(Int_t, Int_t *);
+   void Add(Int_t, Int_t*);
    void Add(const IntArray&);
 
    /* Remove numbers/lists from the list */
    void Remove(Int_t);
    void Remove(const Char_t*);
    void Remove(const KVNumberList&);
-   void Remove(Int_t n, Int_t * arr);
+   void Remove(Int_t n, Int_t* arr);
 
    /* Clear the list */
    void Clear(Option_t* = "");
@@ -92,36 +99,43 @@ class KVNumberList : public TObject {
    {
       return GetNValues();
    };
-   Bool_t IsEmpty() const {
-      if(!fIsParsed) ParseList();
+   Bool_t IsEmpty() const
+   {
+      if (!fIsParsed) ParseList();
       return (fNValues == 0);
    };
-   Bool_t IsFull(Int_t vinf=-1,Int_t vsup=-1) const;
+   Bool_t IsFull(Int_t vinf = -1, Int_t vsup = -1) const;
 
    /* LIST MEMBER ACCESS */
    Int_t At(Int_t index) const;
    Int_t operator[](Int_t index) const;
    IntArray GetArray() const;
-   const Char_t *GetList() const;
-   const Char_t *GetExpandedList() const;
-   const Char_t *AsString(Int_t maxchars=0) const;
-   
+   const Char_t* GetList() const;
+   const Char_t* GetExpandedList() const;
+   const Char_t* AsString(Int_t maxchars = 0) const;
+
    /* LIST ITERATORS */
    Int_t Next(void) const;
    void Begin(void) const;
-   Bool_t End(void) const { return (fIterIndex == fEndList); };
-      
+   Bool_t End(void) const
+   {
+      return (fIterIndex == fEndList);
+   };
+
    /* LIST ARITHMETIC OPERATIONS */
-   KVNumberList operator+(const KVNumberList &);
-   KVNumberList operator-(const KVNumberList &);
+   KVNumberList operator+(const KVNumberList&);
+   KVNumberList operator-(const KVNumberList&);
    KVNumberList GetComplementaryList() const;
-   KVNumberList GetSubList(Int_t vinf,Int_t vsup) const;
+   KVNumberList GetSubList(Int_t vinf, Int_t vsup) const;
 
    /* MISCELLANEOUS */
    /* Generate TTree::Draw selection string */
-   TString GetLogical(const Char_t *observable) const;
+   TString GetLogical(const Char_t* observable) const;
    /* Convert to c-string */
-   operator const char*() const { return GetList(); }
+   operator const char* () const
+   {
+      return GetList();
+   }
    /* Print list properties */
    void Print(Option_t* = "") const;
    void PrintLimits() const;

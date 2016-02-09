@@ -12,20 +12,22 @@ $Date: 2007/06/08 15:49:10 $
 class TFile;
 class TTree;
 
-class KVINDRAReconIdent:public KVSelector {
+class KVINDRAReconIdent: public KVSelector {
 
-   protected:
-   TFile *fIdentFile;           //new file
-   TTree *fIdentTree;           //new tree
+protected:
+   TFile* fIdentFile;           //new file
+   TTree* fIdentTree;           //new tree
    Int_t fRunNumber;
    Int_t fEventNumber;
 
- public:
-    KVINDRAReconIdent() {
+public:
+   KVINDRAReconIdent()
+   {
       fIdentFile = 0;
       fIdentTree = 0;
    };
-   virtual ~ KVINDRAReconIdent() {
+   virtual ~ KVINDRAReconIdent()
+   {
    };
 
    virtual void InitRun();

@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 17/02/2004
 // Creation d'une classe Variable Globale.
@@ -26,21 +26,21 @@ ClassImp(KVZboundAv)
 // KVGVList *gvlist=new KVGVList(); // (or KVGVList *gvlist=GetGVList(); if in a KVSelector)
 // gvlist->Add(zb5av);
 // ...
-//           
+//
 // Look at KVVarGlob class to have an example of use.
 //
 //_________________________________________________________________
-KVZboundAv::KVZboundAv(void):KVZbound()
+KVZboundAv::KVZboundAv(void): KVZbound()
 {
 //
 // Createur par default
 //
 
- SetFrame("CM");
+   SetFrame("CM");
 }
 
 //_________________________________________________________________
-KVZboundAv::KVZboundAv(char *nom):KVZbound(nom)
+KVZboundAv::KVZboundAv(char* nom): KVZbound(nom)
 {
 //
 // Constructeur avec un nom
@@ -50,7 +50,7 @@ KVZboundAv::KVZboundAv(char *nom):KVZbound(nom)
 //_________________________________________________________________
 KVZboundAv::~KVZboundAv(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVZboundAv
@@ -60,7 +60,7 @@ KVZboundAv::~KVZboundAv(void)
 
 
 //_________________________________________________________________
-void KVZboundAv::Fill(KVNucleus * c)
+void KVZboundAv::Fill(KVNucleus* c)
 {
 //
 // Routine de remplissage

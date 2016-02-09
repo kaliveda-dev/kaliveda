@@ -16,7 +16,7 @@
 
 
 #ifndef __GAN_TAPE_FILE_H
-#define __GAN_TAPE_FILE_H                     
+#define __GAN_TAPE_FILE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,19 +24,19 @@ extern "C" {
 #include "gan_tape_general.h"
 
 
-int acq_mt_open_c        ( gan_tape_desc *, mode_r_w ,int * );
-int acq_mt_close_c       ( gan_tape_desc );
-int acq_mt_read_c        ( int, char *, int * );
-int acq_mt_write_c       ( int, char *, int );
+int acq_mt_open_c(gan_tape_desc*, mode_r_w , int*);
+int acq_mt_close_c(gan_tape_desc);
+int acq_mt_read_c(int, char*, int*);
+int acq_mt_write_c(int, char*, int);
 
 
-int acq_mt_rewind_c      ( gan_tape_desc  );
-int acq_mt_skip_file_c   ( gan_tape_desc , int  );
-int acq_mt_skip_block_c  ( gan_tape_desc , int  );
-int acq_mt_skip_to_eot_c ( gan_tape_desc , int *  );
-   
+int acq_mt_rewind_c(gan_tape_desc);
+int acq_mt_skip_file_c(gan_tape_desc , int);
+int acq_mt_skip_block_c(gan_tape_desc , int);
+int acq_mt_skip_to_eot_c(gan_tape_desc , int*);
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif                          
+#endif

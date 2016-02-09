@@ -8,6 +8,8 @@
 #pragma link C++ class KVSi75+;
 #pragma link C++ class KVSiLi+;
 #pragma link C++ class KVSilicon_e475s-;
+#pragma link C++ class KVSi75_e494s+;
+#pragma link C++ class KVSiLi_e494s+;
 #pragma link C++ class KVChIo-;
 #pragma link C++ class KVChIo_e475s-;
 #pragma link C++ class KVCsI-;

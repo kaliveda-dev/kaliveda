@@ -12,8 +12,8 @@ $Date: 2007/11/20 16:45:22 $
 
 #include <KVRootBatch.h>
 
-class KVLinuxBatch:public KVRootBatch {
- public:
+class KVLinuxBatch: public KVRootBatch {
+public:
 
    KVLinuxBatch(const Char_t* name);
    virtual ~ KVLinuxBatch();

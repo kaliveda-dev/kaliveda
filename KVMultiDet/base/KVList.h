@@ -4,19 +4,18 @@
 #include "KVSeqCollection.h"
 #include "TList.h"
 
-class KVList:public KVSeqCollection
-{
+class KVList: public KVSeqCollection {
 
 public:
 
-    KVList(Bool_t owner = kTRUE);
-    virtual ~ KVList();
-    
-    void Sort(Bool_t order = kSortAscending)
-    {
-    	((TList*)fCollection)->Sort(order);
-    };
+   KVList(Bool_t owner = kTRUE);
+   virtual ~ KVList();
 
-    ClassDef(KVList, 3)//Extended version of ROOT TList
+   void Sort(Bool_t order = kSortAscending)
+   {
+      ((TList*)fCollection)->Sort(order);
+   };
+
+   ClassDef(KVList, 3)//Extended version of ROOT TList
 };
 #endif

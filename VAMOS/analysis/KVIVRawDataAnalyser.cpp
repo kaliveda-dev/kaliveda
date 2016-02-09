@@ -26,30 +26,30 @@ ClassImp(KVIVRawDataAnalyser)
 KVIVRawDataAnalyser::KVIVRawDataAnalyser()
 {
    // Default constructor
-	// Create dummy TTree for VAMOS Parameters class
-	fBidonTree = new TTree("Bidon","Dummy TTree for VAMOS Parameters class");
-	fBidonTree->SetDirectory(0); // do not associate to currently open file, we do not want to write it
+   // Create dummy TTree for VAMOS Parameters class
+   fBidonTree = new TTree("Bidon", "Dummy TTree for VAMOS Parameters class");
+   fBidonTree->SetDirectory(0); // do not associate to currently open file, we do not want to write it
 }
 
 KVIVRawDataAnalyser::~KVIVRawDataAnalyser()
 {
    // Destructor
-	// Delete dummy TTree
-	delete fBidonTree;
+   // Delete dummy TTree
+   delete fBidonTree;
 }
 
-void KVIVRawDataAnalyser::postInitRun()	
+void KVIVRawDataAnalyser::postInitRun()
 {
-	KVINDRARawDataAnalyser::postInitRun(); // initialise event counters
-   ((KVGANILDataReader*)fRunFile)->GetGanTapeInterface()->SetUserTree( fBidonTree );
+   KVINDRARawDataAnalyser::postInitRun(); // initialise event counters
+   ((KVGANILDataReader*)fRunFile)->GetGanTapeInterface()->SetUserTree(fBidonTree);
 }
 
 //_______________________________________________________________________//
 
-void KVIVRawDataAnalyser::Make(const Char_t * kvsname)
+void KVIVRawDataAnalyser::Make(const Char_t* kvsname)
 {
    //Automatic generation of derived class for raw data analysis
-   
+
    KVClassFactory cf(kvsname, "User raw data analysis class", "KVIVRawDataAnalyser");
    cf.AddMethod("InitAnalysis", "void");
    cf.AddMethod("InitRun", "void");
@@ -62,15 +62,15 @@ void KVIVRawDataAnalyser::Make(const Char_t * kvsname)
    cf.AddMethodBody("InitAnalysis", body);
    //initrun
    body = "   //Initialisation performed at beginning of each run\n";
-   body+= "   //  Int_t fRunNumber contains current run number";
+   body += "   //  Int_t fRunNumber contains current run number";
    cf.AddMethodBody("InitRun", body);
    //Analysis
    body = "   //Analysis method called for each event\n";
-   body+= "   //  Long64_t fEventNumber contains current event number\n"; 
-   body+= "   //  KVINDRATriggerInfo* fTrig contains informations on INDRA trigger for event\n"; 
-   body+= "   //  KVDetectorEvent* fDetEv gives list of hit groups for current event\n";
-   body+= "   //  Processing will stop if this method returns kFALSE\n";
-   body+= "   return kTRUE;";
+   body += "   //  Long64_t fEventNumber contains current event number\n";
+   body += "   //  KVINDRATriggerInfo* fTrig contains informations on INDRA trigger for event\n";
+   body += "   //  KVDetectorEvent* fDetEv gives list of hit groups for current event\n";
+   body += "   //  Processing will stop if this method returns kFALSE\n";
+   body += "   return kTRUE;";
    cf.AddMethodBody("Analysis", body);
    //endrunù
    body = "   //Method called at end of each run";

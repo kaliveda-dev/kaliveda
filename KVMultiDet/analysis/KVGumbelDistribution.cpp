@@ -57,24 +57,24 @@ KVGumbelDistribution::KVGumbelDistribution()
 KVGumbelDistribution::KVGumbelDistribution(const Char_t* name, Int_t k, Bool_t norm,
       Double_t xmin, Double_t xmax)
    : TF1(name, this, &KVGumbelDistribution::GDk, xmin, xmax, 3-(int)norm,
-     "KVGumbelDistribution", "GDk")
+         "KVGumbelDistribution", "GDk")
 {
    // Gumbel distribution of k-th rank
    // if norm=kTRUE: normalised PDF, 2 free parameters (a,b)
    // if norm=kFALSE: 3 parameters (a,b,Integral)
    fRank = k;
-   fkFac = TMath::Power(k,k)/TMath::Factorial(k-1);
+   fkFac = TMath::Power(k, k) / TMath::Factorial(k - 1);
    fNormalised = norm;
    SetParName(0, "a_{m}");
    SetParLimits(0, 0, 100);
    SetParName(1, "b_{m}");
    SetParLimits(1, 0, 100);
-   if(!norm) SetParName(2, "Integral");
+   if (!norm) SetParName(2, "Integral");
 }
 
 //________________________________________________________________
 
-KVGumbelDistribution::KVGumbelDistribution (const KVGumbelDistribution& obj)  : TF1()
+KVGumbelDistribution::KVGumbelDistribution(const KVGumbelDistribution& obj)  : TF1()
 {
    // Copy constructor
    // This ctor is used to make a copy of an existing object (for example
@@ -92,7 +92,7 @@ KVGumbelDistribution::~KVGumbelDistribution()
 
 //________________________________________________________________
 
-void KVGumbelDistribution::Copy (TObject& obj) const
+void KVGumbelDistribution::Copy(TObject& obj) const
 {
    // This method copies the current state of 'this' object into 'obj'
    // You should add here any member variables, for example:
@@ -118,12 +118,12 @@ Double_t KVGumbelDistribution::GDk(Double_t* x, Double_t* p)
    // par[1] = b
    // If distribution is not normalised, then we have
    // par[2] = normalisation
-   
-   if(p[1]==0.) return 0.;
-   Double_t s = (*x - p[0])/p[1];
-   Double_t gum = (fkFac/p[1]);
-   Double_t es = -fRank*(s + TMath::Exp(-s));
+
+   if (p[1] == 0.) return 0.;
+   Double_t s = (*x - p[0]) / p[1];
+   Double_t gum = (fkFac / p[1]);
+   Double_t es = -fRank * (s + TMath::Exp(-s));
    gum *= TMath::Exp(es);
-   if(!fNormalised) gum*=p[2];
+   if (!fNormalised) gum *= p[2];
    return gum;
 }

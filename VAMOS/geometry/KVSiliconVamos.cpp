@@ -20,7 +20,7 @@ ClassImp(KVSiliconVamos)
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-KVSiliconVamos::KVSiliconVamos(Float_t thick):KVSilicon(thick)
+KVSiliconVamos::KVSiliconVamos(Float_t thick): KVSilicon(thick)
 {
    // Default constructor
 }
@@ -33,10 +33,10 @@ KVSiliconVamos::~KVSiliconVamos()
 {
    // Destructor
 }
-const Char_t *KVSiliconVamos::GetName() const
+const Char_t* KVSiliconVamos::GetName() const
 {
-	// don t give any name, adapted for detectors of Vamos FP
-	  return TNamed::GetName();
+   // don t give any name, adapted for detectors of Vamos FP
+   return TNamed::GetName();
 }
 
 void KVSiliconVamos::SetACQParams()
@@ -47,7 +47,7 @@ void KVSiliconVamos::SetACQParams()
       fACQParams = new KVList();
    }
    // creer parametre d'acquisition avec meme nom que le detecteur
-   KVACQParam *par = new KVACQParam( GetName() );
+   KVACQParam* par = new KVACQParam(GetName());
    par->SetDetector(this);
    par->SetType("E");
    fACQParams->Add(par);

@@ -1,5 +1,5 @@
 #ifndef FIT_EDE_LOADED
-  
+
 /*
  *                   **************************************
  *                   * Wrapper C-Fortran pour fit_ede_f.f *
@@ -17,9 +17,9 @@
  *            The routine estimates good initial values, reasonnable limits,
  *            automatically from the data and manages the whole fit procedure
  *  fitede_c: more specific but flexible routine in which initial values
- *            have to be supplied and also limits of the parameters and 
- *            scaling factors. This routine performs a fit in the given 
- *            conditions, it is called several times by globede. It can be 
+ *            have to be supplied and also limits of the parameters and
+ *            scaling factors. This routine performs a fit in the given
+ *            conditions, it is called several times by globede. It can be
  *            invoked directly by the user in case of specific difficult cases,
  *            otherwise globede is much simpler and easier to handle.
  *   fede_c : function which returns the value of the functional (energy loss)
@@ -29,7 +29,7 @@
  * At least 1 (Z,A) pair must contain 2 points.
  */
 
-/*  
+/*
  *---------------------------------------------------------------------
  *
  *                   ******************
@@ -48,7 +48,7 @@
  *  ixt  :  =0->basic functional       <>0->extended functional
  *      * For the basic nformula :
  *        yy = ((g*E)**(mu+1)+lambda**(mu+1)*Z**2*A**mu)**(1/(mu+1))-g*E + pdy
- *      * For the extended formula :      
+ *      * For the extended formula :
  *        yy = ((g*E)**(mu+nu+1)+(lambda*Z**alpha*A**beta)**(mu+nu+1)+
  *                 xi*A**mu*(g*E)**nu)**(1/(mu+mu+1))-g*E + pdy
  *
@@ -63,9 +63,9 @@
  *             the numbers and orders of parameters are :
  *             ixt=0  ih=0   5 parameters: lambda, mu, g, pdx, pdy
  *             ixt=0  ih<>0  6 parameters: lambda, mu, g, pdx, pdy, eta
- *             ixt<>0 ih=0   9 parameters: lambda, alpha, beta, mu, nu, 
+ *             ixt<>0 ih=0   9 parameters: lambda, alpha, beta, mu, nu,
  *                                        xi, g, pdx, pdy
- *             ixt<>0 ih<>0 10 parameters: lambda, alpha, beta, mu, nu, 
+ *             ixt<>0 ih<>0 10 parameters: lambda, alpha, beta, mu, nu,
  *                                        xi, g, pdx, pdy, eta
  * istate : address where the status of parameters again constraints will be
  *          written. The number of returned values is the same as for par
@@ -74,7 +74,7 @@
  *                =2 -> parameter constrained by the upper limit
  *                =3 -> constant parameter (bl(i)=bu(i)=par(i))
  * FUNCTION VALUE : return code
- *             0 -> convergence reached 
+ *             0 -> convergence reached
  *             1 -> convergence reached, but not well marked minimum
  *             2 -> too many iterations, convergence not reached
  *            -1 -> no identification line with at least 2 points
@@ -99,7 +99,7 @@
  *  ixt  :  =0->basic functional       <>0->extended functional
  *      * For the basic nformula :
  *        yy = ((g*E)**(mu+1)+lambda**(mu+1)*Z**2*A**mu)**(1/(mu+1))-g*E + pdy
- *      * For the extended formula :      
+ *      * For the extended formula :
  *        yy = ((g*E)**(mu+nu+1)+(lambda*Z**alpha*A**beta)**(mu+nu+1)+
  *                 xi*A**mu*(g*E)**nu)**(1/(mu+mu+1))-g*E + pdy
  *
@@ -119,15 +119,15 @@
  *             stay fixed along the fit procedure, for example pdx and pdy
  *             can be fixed in this way, if in the data A is taken dependent
  *             of Z, beta should be constant, and if only one Z is present
- *             alpha should be constant.      
+ *             alpha should be constant.
  *   par : address where the fit parameters will be written, the number of
  *          returned values depend on ixt and ih :
  *             the numbers and orders of parameters are :
  *             ixt=0  ih=0   5 parameters: lambda, mu, g, pdx, pdy
  *             ixt=0  ih<>0  6 parameters: lambda, mu, g, pdx, pdy, eta
- *             ixt<>0 ih=0   9 parameters: lambda, alpha, beta, mu, nu, 
+ *             ixt<>0 ih=0   9 parameters: lambda, alpha, beta, mu, nu,
  *                                        xi, g, pdx, pdy
- *             ixt<>0 ih<>0 10 parameters: lambda, alpha, beta, mu, nu, 
+ *             ixt<>0 ih<>0 10 parameters: lambda, alpha, beta, mu, nu,
  *                                        xi, g, pdx, pdy, eta
  * istate : address where the status of parameters again constraints will be
  *          written. The number of returned values is the same as for par
@@ -136,7 +136,7 @@
  *                =2 -> parameter constrained by the upper limit
  *                =3 -> constant parameter (bl[i]=bu[i]=par[i])
  * FUNCTION VALUE : return code
- *             0 -> convergence reached 
+ *             0 -> convergence reached
  *             1 -> convergence reached, but not well marked minimum
  *             2 -> too many iterations, convergence not reached
  *            11 -> initial values inconsistent with limits :
@@ -148,18 +148,18 @@
  *                   *  DE value given by the functional *
  *                   *************************************
  *       fede_c(float Z,float A,float E)
- * ARGUMENT 
- *    Z  : Z value      
- *    A  : A value      
- *    E  : E value      
+ * ARGUMENT
+ *    Z  : Z value
+ *    A  : A value
+ *    E  : E value
  * FUNCTION VALUE : value of DE from the functional
  *     This call is only valid after having called  fitede or globede
  */
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern int globede_c(int npts,const float *zd,const float *ad,const float *xd,
-		     const float *yd,int ixt,int ih,float *par,int *istate);
+extern int globede_c(int npts, const float* zd, const float* ad, const float* xd,
+                     const float* yd, int ixt, int ih, float* par, int* istate);
 extern float fede(float z, float a, float xxx);
 #ifdef __cplusplus
 }

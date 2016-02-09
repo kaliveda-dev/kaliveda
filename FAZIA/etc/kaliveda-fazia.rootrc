@@ -16,8 +16,8 @@ INDRAFAZIA.DistanceFAZIA:   80.0
 INDRAFAZIA.ThetaMinCompactGeo: 2.0
 # Geometries
 FAZIASYM.GeoType:        compact
-FAZIASYM.DistanceFAZIA:   100.0
-FAZIASYM.ThetaMinCompactGeo: 2.0
+FAZIASYM.DistanceFAZIA:   80.0
+FAZIASYM.ThetaMinCompactGeo: 2.1
 
 +DataSet:   LNS_2014
 LNS_2014.DataSet.Title:    FAZIA commissioning at LNS (2014)
@@ -31,10 +31,11 @@ LNS_2014.KVDataSet.DataType.Subdir.root:  root
 
 +DataSet:   FAZIASYM
 FAZIASYM.DataSet.Title:    FAZIASYM experiment at LNS (2015)
-FAZIASYM.DataSet.RepositoryDir:   faziasym
+FAZIASYM.DataSet.RepositoryDir:   FAZIASYM
 FAZIASYM.DataSet.RunFileName.raw:    run%06d.root
 FAZIASYM.ReconstructedEventClassName:	KVReconstructedEvent
 FAZIASYM.DataSet.RunFileClass.raw:    TFile
+FAZIASYM.DataAnalysisTask:     RawAnalysis Reconstruction ReconAnalysis
 FAZIASYM.KVDataSet.DataType.Subdir.recon:  recon
 FAZIASYM.KVDataSet.DataType.Subdir.root:  root
 
@@ -101,6 +102,9 @@ LNS_2014.RawAnalysis.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
 LNS_2014.RawAnalysis.DataAnalysisTask.UserClass.Base:     FAZIAReader/TSelector
 ISOFAZIA.RawAnalysis.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
 ISOFAZIA.RawAnalysis.DataAnalysisTask.UserClass.Base:     FAZIAReader/TSelector
+FAZIASYM.RawAnalysis.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
+FAZIASYM.RawAnalysis.DataAnalysisTask.UserClass.Base:     FAZIAReader/TSelector
+
 +Plugin.KVDataAnalyser:   FAZIARawDataAnalyser   KVFAZIARawDataAnalyser       FAZIAanalysis "KVFAZIARawDataAnalyser()"
 +Plugin.TSelector:  FAZIAReader    KVFAZIAReader      FAZIAanalysis    "KVFAZIAReader()"
 ############
@@ -108,12 +112,16 @@ LNS_2014.Reconstruction.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
 LNS_2014.Reconstruction.DataAnalysisTask.UserClass.Base:     FAZIARawDataRecon/TSelector
 ISOFAZIA.Reconstruction.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
 ISOFAZIA.Reconstruction.DataAnalysisTask.UserClass.Base:     FAZIARawDataRecon/TSelector
+FAZIASYM.Reconstruction.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
+FAZIASYM.Reconstruction.DataAnalysisTask.UserClass.Base:     FAZIARawDataRecon/TSelector
 +Plugin.TSelector:   FAZIARawDataRecon      KVFAZIARawDataReconstructor  FAZIAanalysis "KVFAZIARawDataReconstructor()"
 ############
 LNS_2014.ReconAnalysis.DataAnalysisTask.Analyser:     FAZIAReconData
 LNS_2014.ReconAnalysis.DataAnalysisTask.UserClass.Base:     FAZIASelector/KVEventSelector
 ISOFAZIA.ReconAnalysis.DataAnalysisTask.Analyser:     FAZIAReconData
 ISOFAZIA.ReconAnalysis.DataAnalysisTask.UserClass.Base:     FAZIASelector/KVEventSelector
+FAZIASYM.ReconAnalysis.DataAnalysisTask.Analyser:     FAZIAReconData
+FAZIASYM.ReconAnalysis.DataAnalysisTask.UserClass.Base:     FAZIASelector/KVEventSelector
 +Plugin.KVDataAnalyser:   FAZIAReconData         KVFAZIAReconDataAnalyser     FAZIAanalysis "KVFAZIAReconDataAnalyser()"
 +Plugin.KVEventSelector:  FAZIASelector    KVFAZIASelector      FAZIAanalysis    "KVFAZIASelector()"
 
@@ -121,7 +129,12 @@ LNS_2014.IdentificationParameterFile.Si-Si:       SiSiGrids.dat
 LNS_2014.ActiveIdentifications:        Si-Si
 
 ISOFAZIA.IdentificationParameterFile.CsI:       IDGrid_CSIRL.dat
-ISOFAZIA.ActiveIdentifications:        CsI
+ISOFAZIA.IdentificationParameterFile.Si-Si:       Si1Si2_ISOFAZIA.dat
+ISOFAZIA.ActiveIdentifications:        CsI Si-Si
+
+# ISOFAZIA calibration files
+ISOFAZIA.FAZIADB.CalibrationFiles:     CalibrationFiles.dat
+
 #
 # parameters for the filter for signal processing
 # if you want to change these parameters for an other dataset
@@ -165,7 +178,7 @@ Q2.MinimumAmplitude: 2
 I2.BaseLineLength: 30
 I2.ChannelWidth: 4
 I2.Interpolation: 1
-I1.InterpolatedChannelWidth:			0.5		
+I2.InterpolatedChannelWidth:			0.5		
 #
 # signals of CSI
 #
@@ -229,6 +242,51 @@ ISOFAZIA.FAZIADB.Exceptions:				ISOFAZIA-PSA-Params.dat
 
 #comments associated with runs
 ISOFAZIA.FAZIADB.Comments:				Comments.txt
+
+###
+#	FAZIASYM
+###
+
+# standard values
+FAZIASYM.QL1.BaseLineLength:  	  100
+FAZIASYM.QL1.TauRC:  		  250
+FAZIASYM.QL1.ChannelWidth:        4
+FAZIASYM.QL1.ShaperRiseTime:  	  2
+FAZIASYM.QL1.ShaperFlatTop:	  1
+FAZIASYM.QL1.PZCorrection: 		  0 
+
+FAZIASYM.QH1.BaseLineLength:  	  100
+FAZIASYM.QH1.TauRC:  		  40
+FAZIASYM.QH1.ChannelWidth: 		  10
+FAZIASYM.QH1.ShaperRiseTime:  	  2
+FAZIASYM.QH1.ShaperFlatTop:	  1
+FAZIASYM.QH1.PZCorrection: 		  0 
+
+FAZIASYM.I1.BaseLineLength:	  50
+FAZIASYM.I1.ChannelWidth:  		  4
+FAZIASYM.I1.InterpolatedChannelWidth:  	  0.4
+FAZIASYM.I1.Interpolation: 		  1
+#
+FAZIASYM.Q2.BaseLineLength:	  100
+FAZIASYM.Q2.TauRC:			  40
+FAZIASYM.Q2.ChannelWidth:  		  10
+FAZIASYM.Q2.ShaperRiseTime:               2
+FAZIASYM.Q2.ShaperFlatTop: 		  1
+FAZIASYM.Q2.PZCorrection:  		  0 
+
+FAZIASYM.I2.BaseLineLength:	  50
+FAZIASYM.I2.ChannelWidth:  		  4
+FAZIASYM.I2.InterpolatedChannelWidth:  	  0.4
+FAZIASYM.I2.Interpolation: 		  1
+#
+FAZIASYM.Q3.BaseLineLength:	  100
+FAZIASYM.Q3.TauRC:			  40
+FAZIASYM.Q3.ChannelWidth:  		  10
+FAZIASYM.Q3.FastShaperRiseTime:  	  0.7
+FAZIASYM.Q3.FastShaperFlatTop:	  0.5
+FAZIASYM.Q3.ShaperRiseTime:		0.7
+FAZIASYM.Q3.ShaperFlatTop: 		10
+FAZIASYM.Q3.PZCorrection:  		  0
 
 ###
 #	Old dataset of FAZIA

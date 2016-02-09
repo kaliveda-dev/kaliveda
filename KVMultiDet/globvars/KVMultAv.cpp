@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 17/02/2004:
 // Creation d'une classe Variable Globale.
@@ -18,7 +18,7 @@ ClassImp(KVMultAv)
 // Look at KVVarGlob class to have an example of use.
 //
 //
-    /* *///
+/* *///
 Int_t KVMultAv::nb = 0;
 Int_t KVMultAv::nb_crea = 0;
 Int_t KVMultAv::nb_dest = 0;
@@ -33,16 +33,16 @@ void KVMultAv::init_KVMultAv(void)
    nb++;
    nb_crea++;
    SetFrame("CM");
-   fValueType='I';//integer values
+   fValueType = 'I'; //integer values
 }
 
 //_________________________________________________________________
-KVMultAv::KVMultAv(void):KVVarGlob1()
+KVMultAv::KVMultAv(void): KVVarGlob1()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    init_KVMultAv();
    sprintf(nom, "KVMultAv_%d", nb_crea);
@@ -55,7 +55,7 @@ KVMultAv::KVMultAv(void):KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVMultAv::KVMultAv(Char_t * nom):KVVarGlob1(nom)
+KVMultAv::KVMultAv(Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom
@@ -67,16 +67,16 @@ KVMultAv::KVMultAv(Char_t * nom):KVVarGlob1(nom)
 }
 
 //_________________________________________________________________
-KVMultAv::KVMultAv(const KVMultAv & a) : KVVarGlob1()
+KVMultAv::KVMultAv(const KVMultAv& a) : KVVarGlob1()
 {
-// 
+//
 // Contructeur par Copy
 //
    init_KVMultAv();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVMultAv &) a).Copy(*this);
+   ((KVMultAv&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVMultAv
    cout << nb << " crees...(Copy) " << endl;
@@ -86,7 +86,7 @@ KVMultAv::KVMultAv(const KVMultAv & a) : KVVarGlob1()
 //_________________________________________________________________
 KVMultAv::~KVMultAv(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVMultAv
@@ -98,7 +98,7 @@ KVMultAv::~KVMultAv(void)
 }
 
 //_________________________________________________________________
-KVMultAv & KVMultAv::operator =(const KVMultAv & a)
+KVMultAv& KVMultAv::operator =(const KVMultAv& a)
 {
 //
 // Operateur =
@@ -109,7 +109,7 @@ KVMultAv & KVMultAv::operator =(const KVMultAv & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVMultAv &) a).Copy(*this);
+   ((KVMultAv&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVMultAv
    cout << "Nom de la Copy par egalite: " << GetName() << endl;
@@ -119,9 +119,9 @@ KVMultAv & KVMultAv::operator =(const KVMultAv & a)
 
 
 //_________________________________________________________________
-void KVMultAv::Fill(KVNucleus * c)
+void KVMultAv::Fill(KVNucleus* c)
 {
    //The multiplicity is incremented if the projection of the particle's velocity
-   //along the 'z'-direction in the currently defined frame is >0. 
+   //along the 'z'-direction in the currently defined frame is >0.
    if (c->GetFrame(fFrame.Data())->GetVpar() > 0) FillVar(1.);
 }

@@ -15,9 +15,9 @@ END_HTML
 - Utilisation avec un arbre (TTree* )contenant des branches de ce type
 avec par evt un tableau de valeur de dimension fixe ou non
 Exemple:
-OBJ: TTree	tree	tree : 0 at: 0x9cfc7a8
- OBJ: TBranch	mt	mt/I : 0 at: 0x9cfcdc8
- OBJ: TBranch	tabz	tabz[mt]/I : 0 at: 0x9d00120
+OBJ: TTree  tree  tree : 0 at: 0x9cfc7a8
+ OBJ: TBranch  mt mt/I : 0 at: 0x9cfcdc8
+ OBJ: TBranch  tabz  tabz[mt]/I : 0 at: 0x9d00120
 Attention: cette classe n'est pas adapte au TChain
 
 - Methode ConnectToLeaf(TLeaf* lf) permet de lier la KVPartition a la branche tableau (tree->GetLeaf("tabz"))
@@ -33,16 +33,16 @@ On peut incrementer les entrees de l'arbre en meme temps ou non (defaut)
 Exemple:
 for (Int_t ii=0;ii<tt->GetEntries();ii+=1){
 
-	tree->GetEntry(ii);
-	...
-	...
-	par->CheckForUpdate();
+   tree->GetEntry(ii);
+   ...
+   ...
+   par->CheckForUpdate();
 
 }
 ou
 for (Int_t ii=0;ii<tt->GetEntries();ii+=1){
 
-	par->ReadEntry(ii);
+   par->ReadEntry(ii);
 
 }
 
@@ -53,12 +53,12 @@ for (Int_t ii=0;ii<tt->GetEntries();ii+=1){
 KVPartitionFromLeaf::KVPartitionFromLeaf()
 {
    // Default constructor
-	linked_leaf=0;
-	zmin=-1;
-	zmax=-1;
-	select_min = kFALSE;
-	select_max = kFALSE;
-	
+   linked_leaf = 0;
+   zmin = -1;
+   zmax = -1;
+   select_min = kFALSE;
+   select_max = kFALSE;
+
 }
 
 KVPartitionFromLeaf::~KVPartitionFromLeaf()
@@ -66,47 +66,52 @@ KVPartitionFromLeaf::~KVPartitionFromLeaf()
    // Destructor
 }
 
-void KVPartitionFromLeaf::ConnectToLeaf(TLeaf* lf){
+void KVPartitionFromLeaf::ConnectToLeaf(TLeaf* lf)
+{
 
-	linked_leaf=lf;
-	Int_t cmax;
-	(lf->GetLeafCount() ? cmax = lf->GetLeafCount()->GetMaximum() : cmax = lf->GetNdata() );
+   linked_leaf = lf;
+   Int_t cmax;
+   (lf->GetLeafCount() ? cmax = lf->GetLeafCount()->GetMaximum() : cmax = lf->GetNdata());
+
+}
+
+void KVPartitionFromLeaf::ReadEntry(Long64_t entry)
+{
+
+   Clear();
+   if (entry != -1) linked_leaf->GetBranch()->GetEntry(entry);
+
+   Int_t mult;
+   (linked_leaf->GetLeafCount() ? mult = linked_leaf->GetLeafCount()->GetValue(0) : mult = linked_leaf->GetNdata());
+
+   for (Int_t mm = 0; mm < mult; mm += 1) {
+      Int_t val = TMath::Nint(linked_leaf->GetValue(mm));
+      if ((!select_min || (select_min && val >= zmin)) && (!select_max || (select_max && val <= zmax))) {
+         Add(val);
+      }
+   }
+   CheckForUpdate();
 
 }
 
-void KVPartitionFromLeaf::ReadEntry(Long64_t entry){
-	
-	Clear();
-	if (entry!=-1) linked_leaf->GetBranch()->GetEntry(entry);
-	
-	Int_t mult;
-	(linked_leaf->GetLeafCount() ? mult = linked_leaf->GetLeafCount()->GetValue(0) : mult = linked_leaf->GetNdata() );
-	
-	for (Int_t mm=0;mm<mult;mm+=1){
-		Int_t val = TMath::Nint(linked_leaf->GetValue(mm));
-		if ( ( !select_min || (select_min && val>=zmin) ) && ( !select_max || (select_max && val<=zmax) ) ) {
-			Add(val);
-		}
-	}
-	CheckForUpdate();
-	
-}
+void KVPartitionFromLeaf::SetZmin(Int_t val)
+{
 
-void KVPartitionFromLeaf::SetZmin(Int_t val){
-	
-	zmin = val;
-	select_min = ( (zmin==-1) ? kFALSE : kTRUE);
+   zmin = val;
+   select_min = ((zmin == -1) ? kFALSE : kTRUE);
 
 }
-void KVPartitionFromLeaf::SetZmax(Int_t val){
-	
-	zmax = val;
-	select_max = ( (zmax==-1) ? kFALSE : kTRUE);
+void KVPartitionFromLeaf::SetZmax(Int_t val)
+{
+
+   zmax = val;
+   select_max = ((zmax == -1) ? kFALSE : kTRUE);
 
 }
-void KVPartitionFromLeaf::SetZminZmax(Int_t vmin,Int_t vmax){
-	
-	SetZmin(vmin);
-	SetZmax(vmax);
+void KVPartitionFromLeaf::SetZminZmax(Int_t vmin, Int_t vmax)
+{
+
+   SetZmin(vmin);
+   SetZmax(vmax);
 
 }

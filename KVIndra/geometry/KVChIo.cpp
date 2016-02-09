@@ -39,9 +39,9 @@ ClassImp(KVChIo);
 void KVChIo::init()
 {
    //initialise non-persistent pointers
-   fChVoltGG=0;
-   fChVoltPG=0;
-   fVoltE=0;
+   fChVoltGG = 0;
+   fChVoltPG = 0;
+   fVoltE = 0;
    fSegment = 0;
 }
 
@@ -56,7 +56,7 @@ KVChIo::KVChIo()
 }
 
 //______________________________________________________________________________
-KVChIo::KVChIo(Float_t pressure, Float_t thick):KVINDRADetector("Myl", 2.5*KVUnits::um)
+KVChIo::KVChIo(Float_t pressure, Float_t thick): KVINDRADetector("Myl", 2.5 * KVUnits::um)
 {
    // Make an INDRA ChIo: 2.5micron mylar windows enclosing 'thick' cm of C3F8,
    // give gas pressure in mbar
@@ -64,11 +64,11 @@ KVChIo::KVChIo(Float_t pressure, Float_t thick):KVINDRADetector("Myl", 2.5*KVUni
    // The type of these detectors is "CI"
 
    //gas layer
-   KVMaterial *mat = new KVMaterial("C3F8", thick, pressure*KVUnits::mbar);
+   KVMaterial* mat = new KVMaterial("C3F8", thick, pressure * KVUnits::mbar);
    AddAbsorber(mat);
    SetActiveLayer(mat);         //gas is the active layer
    // mylar for second window
-   mat = new KVMaterial("Myl", 2.5*KVUnits::um);
+   mat = new KVMaterial("Myl", 2.5 * KVUnits::um);
    AddAbsorber(mat);
 
    SetType("CI");
@@ -84,8 +84,8 @@ KVChIo::~KVChIo()
 //____________________________________________________________________________________________
 void KVChIo::SetMylarThicknesses(Float_t thickF, Float_t thickB)
 {
-    if(thickF>0.) ((KVMaterial*)fAbsorbers->At(0))->SetThickness(thickF*KVUnits::um);
-    if(thickF>0.) ((KVMaterial*)fAbsorbers->At(2))->SetThickness(thickB*KVUnits::um);
+   if (thickF > 0.)((KVMaterial*)fAbsorbers->At(0))->SetThickness(thickF * KVUnits::um);
+   if (thickF > 0.)((KVMaterial*)fAbsorbers->At(2))->SetThickness(thickB * KVUnits::um);
 }
 
 //____________________________________________________________________________________________
@@ -99,10 +99,10 @@ Int_t KVChIo::GetCanalPGFromVolts(Float_t volts)
    //Returns -1 if PG <-> Volts calibration is not available
 
 
-      if (!fChVoltPG || !fChVoltPG->GetStatus())
-         return -1;
-      Int_t chan = TMath::Nint(fChVoltPG->Invert(volts) + GetPedestal("PG") - fChVoltPG->Invert(0));
-      return chan;
+   if (!fChVoltPG || !fChVoltPG->GetStatus())
+      return -1;
+   Int_t chan = TMath::Nint(fChVoltPG->Invert(volts) + GetPedestal("PG") - fChVoltPG->Invert(0));
+   return chan;
 
 }
 
@@ -116,28 +116,28 @@ Int_t KVChIo::GetCanalGGFromVolts(Float_t volts)
    //
    //Returns GG calculated from PG if GG <-> Volts calibration is not available
 
-      if (!fChVoltGG || !fChVoltGG->GetStatus()){
-         return GetGGfromPG(GetCanalPGFromVolts(volts));
-      }
-      Int_t chan = TMath::Nint(fChVoltGG->Invert(volts) + GetPedestal("GG") - fChVoltGG->Invert(0));
-      return chan;
+   if (!fChVoltGG || !fChVoltGG->GetStatus()) {
+      return GetGGfromPG(GetCanalPGFromVolts(volts));
+   }
+   Int_t chan = TMath::Nint(fChVoltGG->Invert(volts) + GetPedestal("GG") - fChVoltGG->Invert(0));
+   return chan;
 }
 
 //____________________________________________________________________________________________
 Double_t KVChIo::GetCanalPGFromVoltsDouble(Float_t volts)
 {
-      if (!fChVoltPG || !fChVoltPG->GetStatus())
-         return -1;
-      return fChVoltPG->InvertDouble(volts) + GetPedestal("PG") - fChVoltPG->InvertDouble(0);
+   if (!fChVoltPG || !fChVoltPG->GetStatus())
+      return -1;
+   return fChVoltPG->InvertDouble(volts) + GetPedestal("PG") - fChVoltPG->InvertDouble(0);
 }
 
 //____________________________________________________________________________________________
 Double_t KVChIo::GetCanalGGFromVoltsDouble(Float_t volts)
 {
-      if (!fChVoltGG || !fChVoltGG->GetStatus()){
-         return GetGGfromPG(GetCanalPGFromVoltsDouble(volts));
-      }
-      return fChVoltGG->InvertDouble(volts) + GetPedestal("GG") - fChVoltGG->InvertDouble(0);
+   if (!fChVoltGG || !fChVoltGG->GetStatus()) {
+      return GetGGfromPG(GetCanalPGFromVoltsDouble(volts));
+   }
+   return fChVoltGG->InvertDouble(volts) + GetPedestal("GG") - fChVoltGG->InvertDouble(0);
 }
 
 //___________________________________________________________________________________________
@@ -158,15 +158,15 @@ void KVChIo::SetACQParams()
 void KVChIo::SetCalibrators()
 {
    //Set up calibrators for this detector. Call once name has been set.
-   KVCalibrator*c=new KVChannelVolt("GG", this);
-   if(!AddCalibrator(c)) delete c;
-   c=new KVChannelVolt("PG", this);
-   if(!AddCalibrator(c)) delete c;
-   c=new KVVoltEnergy(this);
-   if(!AddCalibrator(c)) delete c;
-   fVoltE = (KVVoltEnergy *) GetCalibrator("Volt-Energy");
-   fChVoltPG  =  (KVChannelVolt *) GetCalibrator("Channel-Volt PG");
-   fChVoltGG  =  (KVChannelVolt *) GetCalibrator("Channel-Volt GG");
+   KVCalibrator* c = new KVChannelVolt("GG", this);
+   if (!AddCalibrator(c)) delete c;
+   c = new KVChannelVolt("PG", this);
+   if (!AddCalibrator(c)) delete c;
+   c = new KVVoltEnergy(this);
+   if (!AddCalibrator(c)) delete c;
+   fVoltE = (KVVoltEnergy*) GetCalibrator("Volt-Energy");
+   fChVoltPG  = (KVChannelVolt*) GetCalibrator("Channel-Volt PG");
+   fChVoltGG  = (KVChannelVolt*) GetCalibrator("Channel-Volt GG");
 }
 
 //__________________________________________________________________________________________________________________________
@@ -190,8 +190,8 @@ Double_t KVChIo::GetELossMylar(UInt_t z, UInt_t a, Double_t egas, Bool_t stopped
    if (egas <= 0.)
       return 0.0;               //check measured (calibrated) energy in gas is reasonable (>0)
 
-	KVNucleus tmp(z,a);
-	Double_t emylar = GetCorrectedEnergy(&tmp,egas,!stopped) - egas;
+   KVNucleus tmp(z, a);
+   Double_t emylar = GetCorrectedEnergy(&tmp, egas, !stopped) - egas;
    return emylar;
 }
 
@@ -204,8 +204,8 @@ Double_t KVChIo::GetCalibratedEnergy()
    //(we require that at least one acquisition parameter have a value
    //greater than the current pedestal value)
 
-   if (IsCalibrated() && Fired("Pany")){
-      return (fVoltE->Compute( GetVolts() ));
+   if (IsCalibrated() && Fired("Pany")) {
+      return (fVoltE->Compute(GetVolts()));
    }
    return 0;
 }
@@ -216,24 +216,25 @@ Double_t KVChIo::GetVoltsFromEnergy(Double_t e)
 {
    //Inverts calibration, i.e. calculates volts for a given energy loss (in MeV)
 
-   if (fVoltE->GetStatus()){
-      return (fVoltE->Invert( e ));
+   if (fVoltE->GetStatus()) {
+      return (fVoltE->Invert(e));
    }
    return 0;
 }
 
 //____________________________________________________________________________________________
 
-Double_t KVChIo::GetEnergyFromVolts(Double_t volts){
-        //Calculate energy in MeV from calibrated detector signal in
-        //Volts. If 'volts' is not given, the value in volt returned
-        //by GetVolts().
+Double_t KVChIo::GetEnergyFromVolts(Double_t volts)
+{
+   //Calculate energy in MeV from calibrated detector signal in
+   //Volts. If 'volts' is not given, the value in volt returned
+   //by GetVolts().
 
-        if (fVoltE && fVoltE->GetStatus()){
-                if(!volts) volts = GetVolts();
-        return fVoltE->Compute( volts );
-        }
-        return 0.;
+   if (fVoltE && fVoltE->GetStatus()) {
+      if (!volts) volts = GetVolts();
+      return fVoltE->Compute(volts);
+   }
+   return 0.;
 }
 
 //____________________________________________________________________________________________
@@ -247,17 +248,17 @@ Double_t KVChIo::GetVoltsFromCanalPG(Double_t chan)
    //Any change in the coder pedestal between the current run and the effective pedestal
    //of the channel-volt calibration (GetCanal(V=0)) is automatically corrected for.
 
-      if (!fChVoltPG || !fChVoltPG->GetStatus())
-         return 0;
+   if (!fChVoltPG || !fChVoltPG->GetStatus())
+      return 0;
 
-      if (!chan) {
-         chan = GetPG();
-      }
-      if (chan < -0.5)
-         return 0.;          //PG parameter absent
-      //correct for pedestal drift
-      chan = chan - (Double_t) GetPedestal("PG") + fChVoltPG->Invert(0.);
-      return (fChVoltPG->Compute(chan));
+   if (!chan) {
+      chan = GetPG();
+   }
+   if (chan < -0.5)
+      return 0.;          //PG parameter absent
+   //correct for pedestal drift
+   chan = chan - (Double_t) GetPedestal("PG") + fChVoltPG->Invert(0.);
+   return (fChVoltPG->Compute(chan));
 }
 
 //____________________________________________________________________________________________
@@ -270,17 +271,17 @@ Double_t KVChIo::GetVoltsFromCanalGG(Double_t chan)
    //Any change in the coder pedestal between the current run and the effective pedestal
    //of the channel-volt calibration (GetCanal(V=0)) is automatically corrected for.
 
-      if (!fChVoltGG || !fChVoltGG->GetStatus())
-         return 0;
+   if (!fChVoltGG || !fChVoltGG->GetStatus())
+      return 0;
 
-      if (!chan) {
-         chan = GetGG();
-      }
-      if (chan < -0.5)
-         return 0.;          //GG parameter absent
-      //correct for pedestal drift
-      chan = chan - (Double_t) GetPedestal("GG") + fChVoltGG->Invert(0);
-      return (fChVoltGG->Compute(chan));
+   if (!chan) {
+      chan = GetGG();
+   }
+   if (chan < -0.5)
+      return 0.;          //GG parameter absent
+   //correct for pedestal drift
+   chan = chan - (Double_t) GetPedestal("GG") + fChVoltGG->Invert(0);
+   return (fChVoltGG->Compute(chan));
 
 }
 
@@ -294,12 +295,11 @@ Double_t KVChIo::GetVolts()
    //we convert PG to GG and use the GG calibration)
    //Returns 0 if no calibration available
 
-      if (fChVoltPG && fChVoltPG->GetStatus()) {
-         return GetVoltsFromCanalPG();
-      }
-      else if (fChVoltGG && fChVoltGG->GetStatus()) {
-         return GetVoltsFromCanalGG(GetGGfromPG());
-      }
+   if (fChVoltPG && fChVoltPG->GetStatus()) {
+      return GetVoltsFromCanalPG();
+   } else if (fChVoltGG && fChVoltGG->GetStatus()) {
+      return GetVoltsFromCanalGG(GetGGfromPG());
+   }
 
    return 0;
 }
@@ -318,26 +318,26 @@ Double_t KVChIo::GetEnergy()
 
    //fELoss already set, return its value
    Double_t ELoss = KVDetector::GetEnergy();
-   if(IsSimMode()) return ELoss; // in simulation mode, return calculated energy loss in active layer
-   if( ELoss > 0 ) return ELoss;
+   if (IsSimMode()) return ELoss; // in simulation mode, return calculated energy loss in active layer
+   if (ELoss > 0) return ELoss;
    ELoss = GetCalibratedEnergy();
-   if( ELoss < 0 ) ELoss = 0;
+   if (ELoss < 0) ELoss = 0;
    SetEnergy(ELoss);
    return ELoss;
 }
 
 //______________________________________________________________________________
 
-void KVChIo::Streamer(TBuffer &R__b)
+void KVChIo::Streamer(TBuffer& R__b)
 {
    // Stream an object of class KVChIo.
    // We set the pointers to the calibrator objects
 
    if (R__b.IsReading()) {
       KVChIo::Class()->ReadBuffer(R__b, this);
-      fVoltE = (KVVoltEnergy *) GetCalibrator("Volt-Energy");
-      fChVoltPG  =  (KVChannelVolt *) GetCalibrator("Channel-Volt PG");
-      fChVoltGG  =  (KVChannelVolt *) GetCalibrator("Channel-Volt GG");
+      fVoltE = (KVVoltEnergy*) GetCalibrator("Volt-Energy");
+      fChVoltPG  = (KVChannelVolt*) GetCalibrator("Channel-Volt PG");
+      fChVoltGG  = (KVChannelVolt*) GetCalibrator("Channel-Volt GG");
    } else {
       KVChIo::Class()->WriteBuffer(R__b, this);
    }
@@ -351,24 +351,24 @@ Short_t KVChIo::GetCalcACQParam(KVACQParam* ACQ, Double_t ECalc) const
    // given calculated energy loss in the detector
    // Returns -1 if detector is not calibrated
 
-   if(!IsCalibrated()) return -1;
-   Double_t volts = const_cast<KVChIo*>(this)->GetVoltsFromEnergy( ECalc );
-   if(ACQ->IsType("PG")) return (Short_t)const_cast<KVChIo*>(this)->GetCanalPGFromVolts(volts);
-   else if(ACQ->IsType("GG")) return (Short_t)const_cast<KVChIo*>(this)->GetCanalGGFromVolts(volts);
+   if (!IsCalibrated()) return -1;
+   Double_t volts = const_cast<KVChIo*>(this)->GetVoltsFromEnergy(ECalc);
+   if (ACQ->IsType("PG")) return (Short_t)const_cast<KVChIo*>(this)->GetCanalPGFromVolts(volts);
+   else if (ACQ->IsType("GG")) return (Short_t)const_cast<KVChIo*>(this)->GetCanalGGFromVolts(volts);
    return -1;
 }
 
 //______________________________________________________________________________
 
-void KVChIo::DeduceACQParameters(Int_t,Int_t)
+void KVChIo::DeduceACQParameters(Int_t, Int_t)
 {
 
-	Double_t volts = GetVoltsFromEnergy(GetEnergy());
-	Int_t cipg = (Int_t)GetCanalPGFromVolts(volts);
-	Int_t cigg = (Int_t)GetCanalGGFromVolts(volts);
-	//cout << "chio: pg = " << cipg << " gg = " << cigg << endl;
-	GetACQParam("PG")->SetData((UShort_t)TMath::Min(4095,cipg));
-	GetACQParam("GG")->SetData((UShort_t)TMath::Min(4095,cigg));
-	GetACQParam("T")->SetData(110);
+   Double_t volts = GetVoltsFromEnergy(GetEnergy());
+   Int_t cipg = (Int_t)GetCanalPGFromVolts(volts);
+   Int_t cigg = (Int_t)GetCanalGGFromVolts(volts);
+   //cout << "chio: pg = " << cipg << " gg = " << cigg << endl;
+   GetACQParam("PG")->SetData((UShort_t)TMath::Min(4095, cipg));
+   GetACQParam("GG")->SetData((UShort_t)TMath::Min(4095, cigg));
+   GetACQParam("T")->SetData(110);
 
 }

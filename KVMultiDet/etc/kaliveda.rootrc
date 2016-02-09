@@ -274,7 +274,10 @@ KVTreeAnalyzer.LogScale:         off
 KVTreeAnalyzer.UserBinning:           off
 KVTreeAnalyzer.UserWeight:       off
 KVTreeAnalyzer.NewCanvas:      off
-KVTreeAnalyzer.Normalize:      off
+KVTreeAnalyzer.NormalizeIntegral:      off
+KVTreeAnalyzer.NormalizeEvents:      off
+# can we use PROOF to generate TEntryList? only with latest ROOT versions (20/11/2015)
+KVTreeAnalyzer.PROOFSelections:     off
 
 # Controls auto-update option and refresh interval (in seconds) for KVBatchSystemGUI
 KVBatchSystemGUI.AutoUpdate:       no

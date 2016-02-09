@@ -76,20 +76,20 @@ void KVQuadMoment::Init(void)
 //_________________________________________________________________
 void KVQuadMoment::Reset(void)
 {
-   for(int i=0;i<3;i++) for(int j=0; j<3; j++) matrix[i][j]=0.;
+   for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) matrix[i][j] = 0.;
 }
 
-void KVQuadMoment::Fill(KVNucleus * c)
+void KVQuadMoment::Fill(KVNucleus* c)
 {
    //Add the particle's contribution to the momentum tensor.
 
    TVector3 P = c->GetFrame(fFrame.Data())->GetMomentum();
    Double_t P2 = P.Mag2();
-   for(int i=0;i<3;i++){
-      for(int j=i; j<3; j++){
-         if(i==j) matrix[i][j] += 3.*P(i)*P(j) - P2;
-         else{
-            Double_t a = 3.*P(i)*P(j);
+   for (int i = 0; i < 3; i++) {
+      for (int j = i; j < 3; j++) {
+         if (i == j) matrix[i][j] += 3.*P(i) * P(j) - P2;
+         else {
+            Double_t a = 3.*P(i) * P(j);
             matrix[i][j] += a;
             matrix[j][i] += a;
          }
@@ -100,7 +100,7 @@ void KVQuadMoment::Fill(KVNucleus * c)
 //_________________________________________________________________
 Double_t KVQuadMoment::getvalue_void(void) const
 {
-	// Returns Qzz
+   // Returns Qzz
    return matrix[2][2];
 }
 
@@ -112,14 +112,14 @@ Double_t KVQuadMoment::getvalue_int(Int_t i)
    // i=2 : Qyy
 
    switch (i) {
-   case 0:
-      return matrix[2][2];
-   case 1:
-      return matrix[0][0];
-   case 2:
-      return matrix[1][1];
-   default:
-      break;
+      case 0:
+         return matrix[2][2];
+      case 1:
+         return matrix[0][0];
+      case 2:
+         return matrix[1][1];
+      default:
+         break;
    }
    return 0;
 }

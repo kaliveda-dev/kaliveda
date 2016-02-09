@@ -23,14 +23,16 @@ $Id: KVINDRADB1.h,v 1.9 2006/10/19 14:32:43 franklan Exp $
 #include "KVDBSystem.h"
 #include "KVDBTape.h"
 
-class KVINDRADB1:public KVINDRADB {
+class KVINDRADB1: public KVINDRADB {
 
- public:
+public:
 
-   KVINDRADB1() {
+   KVINDRADB1()
+   {
    };
-   KVINDRADB1(const Char_t * name);
-   virtual ~ KVINDRADB1() {
+   KVINDRADB1(const Char_t* name);
+   virtual ~ KVINDRADB1()
+   {
    };
 
    virtual void Build();

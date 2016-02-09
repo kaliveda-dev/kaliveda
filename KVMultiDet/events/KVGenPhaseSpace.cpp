@@ -73,9 +73,9 @@ void KVGenPhaseSpace::InitialiseMCSampler()
    // KVEvent object pointed to by fEvent:
    //       fEvent->GetParameters()->SetValue("PHASESPACE_GENERATOR","TGenPhaseSpace");
 
-   if(!fMCSampler) fMCSampler = new TGenPhaseSpace;
+   if (!fMCSampler) fMCSampler = new TGenPhaseSpace;
    ((TGenPhaseSpace*)fMCSampler)->SetDecay(fCompound, fEvent->GetMult(), fMasses);
-   fEvent->GetParameters()->SetValue("PHASESPACE_GENERATOR","TGenPhaseSpace");
+   fEvent->GetParameters()->SetValue("PHASESPACE_GENERATOR", "TGenPhaseSpace");
 }
 
 KVGenPhaseSpace::KVGenPhaseSpace()
@@ -96,7 +96,7 @@ KVGenPhaseSpace::~KVGenPhaseSpace()
 {
    // Destructor
    SafeDelete(fMCSampler);
-   if(fMasses) delete [] fMasses;
+   if (fMasses) delete [] fMasses;
 }
 
 //________________________________________________________________
@@ -127,9 +127,9 @@ Bool_t KVGenPhaseSpace::SetBreakUpChannel(const KVNucleus& CN, KVEvent* e)
    fMult = e->GetMult();
 
    fOK = CheckBreakUpChannel();
-   if(!fOK) return fOK;
+   if (!fOK) return fOK;
 
-   if(fMasses) delete [] fMasses;
+   if (fMasses) delete [] fMasses;
    fMasses = new Double_t[fMult];
    fEvent->GetMasses(fMasses);
 
@@ -150,14 +150,14 @@ Double_t KVGenPhaseSpace::Generate()
    //     this weight MUST be used as e.g. the filling weight for any histograms
    //     (see example in Class Description)
 
-   if(!fOK) {
+   if (!fOK) {
       Warning("Generate", "Generator is not initialised correctly.");
       return 0.;
    }
    Double_t weight = ((TGenPhaseSpace*)fMCSampler)->Generate();
    fEvent->GetParameters()->SetValue("PHASESPACE_WEIGHT", weight);
-   for(int i = 0; i<fMult; i++){
-      fEvent->GetParticle(i+1)->Set4Mom(*(((TGenPhaseSpace*)fMCSampler)->GetDecay(i)));
+   for (int i = 0; i < fMult; i++) {
+      fEvent->GetParticle(i + 1)->Set4Mom(*(((TGenPhaseSpace*)fMCSampler)->GetDecay(i)));
    }
    return weight;
 }
@@ -171,16 +171,16 @@ Bool_t KVGenPhaseSpace::CheckBreakUpChannel()
 
    Int_t ztot = (Int_t)fEvent->GetSum("GetZ");
    Int_t atot = (Int_t)fEvent->GetSum("GetA");
-   if(ztot != fCompound.GetZ() || atot != fCompound.GetA()){
+   if (ztot != fCompound.GetZ() || atot != fCompound.GetA()) {
       Warning("CheckBreakUpChannel", "Compound has (Z,A)=(%d,%d), break-up channel has (Z,A)=(%d,%d)",
-              fCompound.GetZ(),fCompound.GetA(),ztot,atot);
+              fCompound.GetZ(), fCompound.GetA(), ztot, atot);
       return kFALSE;
    }
 
    Double_t exmin = -fEvent->GetChannelQValue();
    fEtot = fCompound.GetExcitEnergy() - exmin;
-   if(fEtot < 0.){
-      Warning("CheckBreakUpChannel","Excitation energy of compound must be > %.2lf MeV", exmin);
+   if (fEtot < 0.) {
+      Warning("CheckBreakUpChannel", "Excitation energy of compound must be > %.2lf MeV", exmin);
       return kFALSE;
    }
 

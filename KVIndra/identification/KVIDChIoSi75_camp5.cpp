@@ -18,114 +18,106 @@ ClassImp(KVIDChIoSi75_camp5)
 
 KVIDChIoSi75_camp5::KVIDChIoSi75_camp5()
 {
-    // Default constructor
-    fGGgrid = 0;
-    fPGgrid = 0;
-    fChIo = 0;
-    fSi = 0;
+   // Default constructor
+   fGGgrid = 0;
+   fPGgrid = 0;
+   fChIo = 0;
+   fSi = 0;
 }
 
 KVIDChIoSi75_camp5::~KVIDChIoSi75_camp5()
 {
-    // Destructor
+   // Destructor
 }
 
 //___________________________________________________________________________________________
 
 void KVIDChIoSi75_camp5::Initialize()
 {
-    // Initialize telescope for current run.
-    // If there is at least 1 grid, we set fCanIdentify = kTRUE
-    // "Natural" line widths are calculated for KVIDZAGrids.
+   // Initialize telescope for current run.
+   // If there is at least 1 grid, we set fCanIdentify = kTRUE
+   // "Natural" line widths are calculated for KVIDZAGrids.
 
-    fChIo = GetDetector(1);
-    fSi = GetDetector(2);
-    fGGgrid=fPGgrid=0;
-    TIter next(fIDGrids);
-    KVIDGrid* grid=0;
-    while ( (grid = (KVIDGrid*)next()) )
-    {
-        if ( !strcmp(grid->GetVarY(),"CIGG") ) fGGgrid = (KVIDZAGrid*)grid;
-        else if ( !strcmp(grid->GetVarY(),"CIPG") ) fPGgrid = (KVIDZAGrid*)grid;
-    }
-    if ( fGGgrid || fPGgrid )
-    {
-        SetBit(kReadyForID);
-        if ( fGGgrid ) fGGgrid->Initialize();
-        if ( fPGgrid ) fPGgrid->Initialize();
-    }
-    else
-        ResetBit(kReadyForID);
+   fChIo = GetDetector(1);
+   fSi = GetDetector(2);
+   fGGgrid = fPGgrid = 0;
+   TIter next(fIDGrids);
+   KVIDGrid* grid = 0;
+   while ((grid = (KVIDGrid*)next())) {
+      if (!strcmp(grid->GetVarY(), "CIGG")) fGGgrid = (KVIDZAGrid*)grid;
+      else if (!strcmp(grid->GetVarY(), "CIPG")) fPGgrid = (KVIDZAGrid*)grid;
+   }
+   if (fGGgrid || fPGgrid) {
+      SetBit(kReadyForID);
+      if (fGGgrid) fGGgrid->Initialize();
+      if (fPGgrid) fPGgrid->Initialize();
+   } else
+      ResetBit(kReadyForID);
 }
 
 
-Double_t KVIDChIoSi75_camp5::GetIDMapX(Option_t * opt)
+Double_t KVIDChIoSi75_camp5::GetIDMapX(Option_t* opt)
 {
-    //Calculates current X coordinate for identification.
+   //Calculates current X coordinate for identification.
 
-    return fSi->GetACQData(opt);
+   return fSi->GetACQData(opt);
 }
 
 //__________________________________________________________________________//
 
-Double_t KVIDChIoSi75_camp5::GetIDMapY(Option_t * opt)
+Double_t KVIDChIoSi75_camp5::GetIDMapY(Option_t* opt)
 {
-    //Calculates current Y coordinate for identification.
-    //It is the ionisation chamber's current grand gain (if opt="GG") or petit gain (opt != "GG")
-    //coder data, without pedestal correction.
+   //Calculates current Y coordinate for identification.
+   //It is the ionisation chamber's current grand gain (if opt="GG") or petit gain (opt != "GG")
+   //coder data, without pedestal correction.
 
-    return fChIo->GetACQData(opt);
+   return fChIo->GetACQData(opt);
 }
 
 //________________________________________________________________________________________//
 
 Bool_t KVIDChIoSi75_camp5::Identify(KVIdentificationResult* IDR, Double_t x, Double_t y)
 {
-    //Particle identification and code setting using identification grids.
+   //Particle identification and code setting using identification grids.
 
-		IDR->SetIDType( GetType() );
-		IDR->IDattempted = kTRUE;
-    KVIDGrid* theIdentifyingGrid = 0;
+   IDR->SetIDType(GetType());
+   IDR->IDattempted = kTRUE;
+   KVIDGrid* theIdentifyingGrid = 0;
 
-    if ( fGGgrid )
-    {
-			Double_t cigg = (y<0. ? 		GetIDMapY("GG")	: y);
-			Double_t sigg = (x<0. ? 		GetIDMapX("GG")	: x);
-        fGGgrid->Identify(sigg, cigg, IDR);
-        theIdentifyingGrid =(KVIDGrid*)fGGgrid;
+   if (fGGgrid) {
+      Double_t cigg = (y < 0. ?       GetIDMapY("GG")   : y);
+      Double_t sigg = (x < 0. ?       GetIDMapX("GG")   : x);
+      fGGgrid->Identify(sigg, cigg, IDR);
+      theIdentifyingGrid = (KVIDGrid*)fGGgrid;
 
-    }
-    if ( (fGGgrid && fGGgrid->GetQualityCode() > KVIDZAGrid::kICODE6) || !fGGgrid ) //we have to try PG grid (if there is one)
-    {
+   }
+   if ((fGGgrid && fGGgrid->GetQualityCode() > KVIDZAGrid::kICODE6) || !fGGgrid) { //we have to try PG grid (if there is one)
 
-        if ( fPGgrid )
-        {
-			Double_t cipg = (y<0. ? 		GetIDMapY("PG")	: y);
-			Double_t sipg = (x<0. ? 		GetIDMapX("PG")	: x);
-            fPGgrid->Identify(sipg, cipg, IDR);
-            theIdentifyingGrid = (KVIDGrid*)fPGgrid;
-        }
-    }
-	
-    if (theIdentifyingGrid->GetQualityCode() == KVIDZAGrid::kICODE7)
-    {
-        // if the final quality code is kICODE7 (above last line in grid) then the estimated
-        // Z is only a minimum value (Zmin)
-        IDR->IDcode = kIDCode5;
-        return kTRUE;
-    }
+      if (fPGgrid) {
+         Double_t cipg = (y < 0. ?       GetIDMapY("PG")   : y);
+         Double_t sipg = (x < 0. ?       GetIDMapX("PG")   : x);
+         fPGgrid->Identify(sipg, cipg, IDR);
+         theIdentifyingGrid = (KVIDGrid*)fPGgrid;
+      }
+   }
 
-    if (theIdentifyingGrid->GetQualityCode() > KVIDZAGrid::kICODE3 &&
-            theIdentifyingGrid->GetQualityCode() < KVIDZAGrid::kICODE7)
-    {
-        // if the final quality code is kICODE4, kICODE5 or kICODE6 then this "nucleus"
-        // corresponds to a point which is inbetween the lines, i.e. noise
-        IDR->IDcode = kIDCode10;
-        return kTRUE;
-    }
+   if (theIdentifyingGrid->GetQualityCode() == KVIDZAGrid::kICODE7) {
+      // if the final quality code is kICODE7 (above last line in grid) then the estimated
+      // Z is only a minimum value (Zmin)
+      IDR->IDcode = kIDCode5;
+      return kTRUE;
+   }
 
-    // set general ID code ChIo-Si
-    IDR->IDcode = kIDCode4;
-    return kTRUE;
+   if (theIdentifyingGrid->GetQualityCode() > KVIDZAGrid::kICODE3 &&
+         theIdentifyingGrid->GetQualityCode() < KVIDZAGrid::kICODE7) {
+      // if the final quality code is kICODE4, kICODE5 or kICODE6 then this "nucleus"
+      // corresponds to a point which is inbetween the lines, i.e. noise
+      IDR->IDcode = kIDCode10;
+      return kTRUE;
+   }
+
+   // set general ID code ChIo-Si
+   IDR->IDcode = kIDCode4;
+   return kTRUE;
 }
 

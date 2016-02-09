@@ -19,23 +19,22 @@
 
 class TChain;
 
-class KVSimDirGUI : public KVBase
-{   
+class KVSimDirGUI : public KVBase {
    RQ_OBJECT("KVSimDirGUI")
-         
+
    KVList fListOfDirs;
-   
-   TGMainFrame *MainFrame;
+
+   TGMainFrame* MainFrame;
    /* picture buttons for managing directories */
-   TGPictureButton *BaddDir;
-   TGPictureButton *BremDir;
-   TGPictureButton *BrefreshDir;
+   TGPictureButton* BaddDir;
+   TGPictureButton* BremDir;
+   TGPictureButton* BrefreshDir;
    /* list tree for managing directories */
-   TGCanvas *fDirListCanvas;
-   TGViewPort *fDirListViewPort;
-   TGListTree *fDirListTree;
-   const TGPicture *popen;       //used for list tree items
-   const TGPicture *pclose;      //used for list tree items
+   TGCanvas* fDirListCanvas;
+   TGViewPort* fDirListViewPort;
+   TGListTree* fDirListTree;
+   const TGPicture* popen;       //used for list tree items
+   const TGPicture* pclose;      //used for list tree items
    /* lists of data */
    KVListView* fLVsimData;
    KVListView* fLVfiltData;
@@ -58,16 +57,16 @@ class KVSimDirGUI : public KVBase
    KVString fSystem;
    KVString fRun;
    enum {
-      kFTGeo=1,
+      kFTGeo = 1,
       kFTSeuils,
       kFTFull
    };
    enum {
-      kGTKaliVeda=1,
+      kGTKaliVeda = 1,
       kGTROOT
    };
    enum {
-      kKCM=1,
+      kKCM = 1,
       kKLab
    };
    Int_t fFilterType;
@@ -79,25 +78,25 @@ class KVSimDirGUI : public KVBase
    TEnv fGuirc;
 
    Bool_t fWithPROOF;//=kTRUE when running with PROOF-lite
-   
-   public:
+
+public:
    KVSimDirGUI();
-   KVSimDirGUI (const KVSimDirGUI&) ;
+   KVSimDirGUI(const KVSimDirGUI&) ;
    virtual ~KVSimDirGUI();
-   void Copy (TObject&) const;
+   void Copy(TObject&) const;
 
    void AddSimDir();
    void RemSimDir();
    void RefreshSimDir();
    void FillTreeList();
    void EmptyTreeList();
-   void SelectSimDir(TGListTreeItem*,Int_t);
-   
+   void SelectSimDir(TGListTreeItem*, Int_t);
+
    void EnableEventNumberEntry(Bool_t);
    void SelectAnalysisClass();
    void RunAnalysis();
    TChain* BuildChain(TList*);
-   
+
    void SelectDataSet(const char*);
    void SelectSystem(const char*);
    void SelectRun(const char*);
@@ -115,25 +114,30 @@ class KVSimDirGUI : public KVBase
    };
    //void ChangeOutputDirectory();
    void RunFilter();
-   void EnableProof(){
-       if(fWithPROOF) return;
-       fWithPROOF=kTRUE;
-       // make sure both buttons are down - note use of SetState(kButtonEngaged), not SetDown(kTRUE)
-       // because if not, if button is set 'down' on one tab, and then we go to the other tab,
-       // the other button is 'down', but the first click on it does nothing! we have to click it twice
-       // to make it come up and call DisableProof. Using SetState(kButtonEngaged) avoids this.
-       if( !proof_analysis_ana->IsDown() ) {proof_analysis_ana->SetState( kButtonEngaged ); }
-       else{  proof_analysis_filt->SetState( kButtonEngaged ); }
+   void EnableProof()
+   {
+      if (fWithPROOF) return;
+      fWithPROOF = kTRUE;
+      // make sure both buttons are down - note use of SetState(kButtonEngaged), not SetDown(kTRUE)
+      // because if not, if button is set 'down' on one tab, and then we go to the other tab,
+      // the other button is 'down', but the first click on it does nothing! we have to click it twice
+      // to make it come up and call DisableProof. Using SetState(kButtonEngaged) avoids this.
+      if (!proof_analysis_ana->IsDown()) {
+         proof_analysis_ana->SetState(kButtonEngaged);
+      } else {
+         proof_analysis_filt->SetState(kButtonEngaged);
+      }
    }
-   void DisableProof(){
-       if(!fWithPROOF) return;
-       fWithPROOF=kFALSE;
-       // make sure both buttons are up
-       if( proof_analysis_ana->IsDown() ) proof_analysis_ana->SetDown(kFALSE);
-       else proof_analysis_filt->SetDown(kFALSE);
+   void DisableProof()
+   {
+      if (!fWithPROOF) return;
+      fWithPROOF = kFALSE;
+      // make sure both buttons are up
+      if (proof_analysis_ana->IsDown()) proof_analysis_ana->SetDown(kFALSE);
+      else proof_analysis_filt->SetDown(kFALSE);
    }
 
-   ClassDef(KVSimDirGUI,0)//GUI for simulated data
+   ClassDef(KVSimDirGUI, 0) //GUI for simulated data
 };
 
 #endif

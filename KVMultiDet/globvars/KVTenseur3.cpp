@@ -2,7 +2,7 @@
 //Author: Daniel Cussol
 //
 // Developpement d'un classe KVTenseur3 permettant de calculer les axes
-// propres d'un evenement 
+// propres d'un evenement
 //
 
 #include "Riostream.h"
@@ -20,7 +20,7 @@ ClassImp(KVTenseur3)
 //////////////////////////////////////////////////////////////////////////////////
 //   This class fills, diagonalizes the velocity tensor and returns several
 //   useful values. It is used by the global variable classes KVTensP and
-//      KVTensPCM. 
+//      KVTensPCM.
 //
 Int_t KVTenseur3::nb_KVTenseur3 = 0;
 
@@ -107,7 +107,7 @@ void KVTenseur3::Diago(void)
 }
 
 //_________________________________________________________________
-KVTenseur3::KVTenseur3(void):KVBase("KVTenseur3", "KVTenseur3")
+KVTenseur3::KVTenseur3(void): KVBase("KVTenseur3", "KVTenseur3")
 {
 //
 // Createur par defaut
@@ -116,7 +116,7 @@ KVTenseur3::KVTenseur3(void):KVBase("KVTenseur3", "KVTenseur3")
 }
 
 //_________________________________________________________________
-KVTenseur3::KVTenseur3(Char_t * nom):KVBase(nom)
+KVTenseur3::KVTenseur3(Char_t* nom): KVBase(nom)
 {
 //
 // Createur avec nom
@@ -125,7 +125,7 @@ KVTenseur3::KVTenseur3(Char_t * nom):KVBase(nom)
 }
 
 //_________________________________________________________________
-KVTenseur3::KVTenseur3(const KVTenseur3 & t) : KVBase()
+KVTenseur3::KVTenseur3(const KVTenseur3& t) : KVBase()
 {
 //
 // Createur par Copy
@@ -134,7 +134,7 @@ KVTenseur3::KVTenseur3(const KVTenseur3 & t) : KVBase()
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    t.Copy(*this);
 #else
-   ((KVTenseur3 &) t).Copy(*this);
+   ((KVTenseur3&) t).Copy(*this);
 #endif
 }
 
@@ -149,28 +149,28 @@ KVTenseur3::~KVTenseur3(void)
 
 //_________________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVTenseur3::Copy(TObject & a) const
+void KVTenseur3::Copy(TObject& a) const
 #else
-void KVTenseur3::Copy(TObject & a)
+void KVTenseur3::Copy(TObject& a)
 #endif
 {
 //
 // Copy
 //
-   ((KVTenseur3 &) a).Reset();
+   ((KVTenseur3&) a).Reset();
    KVBase::Copy(a);
    for (register int i = 1; i <= 3; i++) {
       for (register int j = 1; j <= 3; j++) {
-         ((KVTenseur3 &) a).SetElem(i, j, GetElem(i, j));
-         ((KVTenseur3 &) a).SetVep(i, j,
-                                   ((KVTenseur3 *) this)->GetVep(i, j));
+         ((KVTenseur3&) a).SetElem(i, j, GetElem(i, j));
+         ((KVTenseur3&) a).SetVep(i, j,
+                                  ((KVTenseur3*) this)->GetVep(i, j));
       }
-      ((KVTenseur3 &) a).SetVap(i, ((KVTenseur3 *) this)->GetVap(i));
+      ((KVTenseur3&) a).SetVap(i, ((KVTenseur3*) this)->GetVap(i));
    }
 }
 
 //_________________________________________________________________
-KVTenseur3 & KVTenseur3::operator =(const KVTenseur3 & t)
+KVTenseur3& KVTenseur3::operator =(const KVTenseur3& t)
 {
 //
 // Operateur =
@@ -178,7 +178,7 @@ KVTenseur3 & KVTenseur3::operator =(const KVTenseur3 & t)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    t.Copy(*this);
 #else
-   ((KVTenseur3 &) t).Copy(*this);
+   ((KVTenseur3&) t).Copy(*this);
 #endif
    return *this;
 }
@@ -208,14 +208,14 @@ void KVTenseur3::Print(Option_t*) const
          cout << endl;
       }
       cout << "ThetaFlot = " << const_cast <
-          KVTenseur3 * >(this)->GetThetaFlot() << endl;
+           KVTenseur3* >(this)->GetThetaFlot() << endl;
       cout << "PhiPlan   = " << const_cast <
-          KVTenseur3 * >(this)->GetPhiPlan() << endl << endl;
+           KVTenseur3* >(this)->GetPhiPlan() << endl << endl;
    }
 }
 
 //_________________________________________________________________
-void KVTenseur3::Fill(const TVector3 & v, Double_t w)
+void KVTenseur3::Fill(const TVector3& v, Double_t w)
 {
 //
 // Ajout d'un vecteur
@@ -235,7 +235,7 @@ void KVTenseur3::Fill(const TVector3 & v, Double_t w)
 }
 
 //_________________________________________________________________
-void KVTenseur3::Fill(const KVNucleus & c, Double_t w)
+void KVTenseur3::Fill(const KVNucleus& c, Double_t w)
 {
 //
 // Ajout d'un fragment
@@ -441,7 +441,7 @@ Double_t KVTenseur3::GetDirectivite(void)
 
 //_________________________________________________________________
 
-void KVTenseur3::GetRotation(TRotation & rot)
+void KVTenseur3::GetRotation(TRotation& rot)
 {
    //Sets rotation matrix corresponding to eigenvectors of diagonalized tensor.
    //According to ROOT physics vectors convention, this is an 'active' rotation
@@ -452,7 +452,7 @@ void KVTenseur3::GetRotation(TRotation & rot)
    //By convention, the three eigenvectors (V1, V2, V3) are numbered in increasing
    //order of size of the corresponding eigenvalue (V3 <--> largest eignevalue <--> "flow" axis).
    //The new coordinate axes are defined (arbitrarily) as follows :
-   //      V1 --->  X' 
+   //      V1 --->  X'
    //      V2 --->  Y'
    //      V3 --->  Z'
 

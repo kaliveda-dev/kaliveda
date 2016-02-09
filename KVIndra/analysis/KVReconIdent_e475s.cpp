@@ -41,9 +41,9 @@ Bool_t KVReconIdent_e475s::Analysis(void)
    fEventNumber = GetEvent()->GetNumber();
    if (GetEvent()->GetMult() > 0) {
       GetEvent()->IdentifyEvent();
-		// traitement specifique a E475S...
-		//
-		//
+      // traitement specifique a E475S...
+      //
+      //
       GetEvent()->CalibrateEvent();
       fIdentTree->Fill();
    }

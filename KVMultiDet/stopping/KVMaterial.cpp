@@ -47,11 +47,11 @@ void KVMaterial::init()
    // Default range table is generated if not already done.
    // By default it is the VEDALOSS table implemented in KVedaLoss.
    // You can change this by changing the value of environment variable KVMaterial.IonRangeTable.
-   
+
    fELoss = 0;
    SetName("");
    SetTitle("");
-   fNormToMat.SetXYZ(0,0,1);
+   fNormToMat.SetXYZ(0, 0, 1);
    fAmasr = 0;
    fPressure = 1. * KVUnits::atm;
    fTemp = 19.0;
@@ -68,25 +68,25 @@ KVMaterial::KVMaterial()
 }
 
 //__________________________________________________________________________________
-KVMaterial::KVMaterial(const Char_t * type, const Double_t thick)
+KVMaterial::KVMaterial(const Char_t* type, const Double_t thick)
 {
    // Create material with given type and linear thickness in cm.
-   
+
    init();
    SetMaterial(type);
    SetThickness(thick);
 }
 
-KVMaterial::KVMaterial(Double_t area_density, const Char_t * type)
+KVMaterial::KVMaterial(Double_t area_density, const Char_t* type)
 {
    // Create material with given area density in g/cm**2 and given type
-   
+
    init();
    SetMaterial(type);
    SetAreaDensity(area_density);
 }
 
-KVMaterial::KVMaterial(const Char_t * gas, const Double_t thick, const Double_t pressure, const Double_t temperature)
+KVMaterial::KVMaterial(const Char_t* gas, const Double_t thick, const Double_t pressure, const Double_t temperature)
 {
    // Create gaseous material with given type, linear thickness in cm, pressure in Torr,
    // and temperature in degrees C (default value 19°C).
@@ -94,7 +94,7 @@ KVMaterial::KVMaterial(const Char_t * gas, const Double_t thick, const Double_t 
    // Examples
    // 15 cm of CF4 gas at 1 atm and 19°C :   KVMaterial("CF4", 15., 1.*KVUnits::atm)
    // 50 mm of C3F8 at 30 mbar and 25°C :  KVMaterial("C3F8", 50.*KVUnits::mm, 30.*KVUnits::mbar, 25.)
-      
+
    init();
    SetMaterial(gas);
    fPressure = pressure;
@@ -103,29 +103,29 @@ KVMaterial::KVMaterial(const Char_t * gas, const Double_t thick, const Double_t 
 }
 
 //
-KVMaterial::KVMaterial(const KVMaterial & obj) : KVBase()
+KVMaterial::KVMaterial(const KVMaterial& obj) : KVBase()
 {
    //Copy ctor
    init();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    obj.Copy(*this);
 #else
-   ((KVMaterial &) obj).Copy(*this);
+   ((KVMaterial&) obj).Copy(*this);
 #endif
 }
 
-KVIonRangeTable *KVMaterial::GetRangeTable()
+KVIonRangeTable* KVMaterial::GetRangeTable()
 {
-    // Static method
-    // Return pointer to current default range table
-    if(!fIonRangeTable) {
-       fIonRangeTable = KVIonRangeTable::GetRangeTable( gEnv->GetValue("KVMaterial.IonRangeTable", "VEDALOSS") );
-    }
-    return fIonRangeTable;
+   // Static method
+   // Return pointer to current default range table
+   if (!fIonRangeTable) {
+      fIonRangeTable = KVIonRangeTable::GetRangeTable(gEnv->GetValue("KVMaterial.IonRangeTable", "VEDALOSS"));
+   }
+   return fIonRangeTable;
 }
 
 //___________________________________________________________________________________
-void KVMaterial::SetMaterial(const Char_t * mat_type)
+void KVMaterial::SetMaterial(const Char_t* mat_type)
 {
    // Intialise material of a given type.
    // The material must exist in the currently used range tables (fIonRangeTable).
@@ -141,16 +141,16 @@ void KVMaterial::SetMaterial(const Char_t * mat_type)
          strcpy(type, mat_type);
       }
    }
-   if(iso_mass) SetMass( iso_mass );
+   if (iso_mass) SetMass(iso_mass);
    SetType(type);
-   if(!fIonRangeTable->IsMaterialKnown(type))
-      Warning("SetMaterial", 
-      "Called for material %s which is unknown in current range table %s. Energy loss & range calculations impossible.",
-      type, fIonRangeTable->GetName());
+   if (!fIonRangeTable->IsMaterialKnown(type))
+      Warning("SetMaterial",
+              "Called for material %s which is unknown in current range table %s. Energy loss & range calculations impossible.",
+              type, fIonRangeTable->GetName());
    else {
-      SetType( fIonRangeTable->GetMaterialName(type) );
+      SetType(fIonRangeTable->GetMaterialName(type));
       SetName(type);
-    }
+   }
 }
 
 //___________________________________________________________________________________
@@ -163,7 +163,7 @@ void KVMaterial::SetMass(Double_t a)
 {
    //Set the atomic mass of the material - use if you want to change the default naturally
    //occuring mass for some rarer isotope.
-   
+
    if (GetActiveLayer()) {
       GetActiveLayer()->SetMass(a);
       return;
@@ -175,7 +175,7 @@ void KVMaterial::SetMass(Double_t a)
 Double_t KVMaterial::GetMass() const
 {
    //Returns atomic mass of material. Will be isotopic mass if set.
-   
+
    if (GetActiveLayer())
       return GetActiveLayer()->GetMass();
    return (fAmasr ? fAmasr : fIonRangeTable->GetAtomicMass(GetType()));
@@ -190,7 +190,7 @@ Bool_t KVMaterial::IsIsotopic() const
    //e.g. for "natSn" this method returns kFALSE
    if (GetActiveLayer())
       return GetActiveLayer()->IsIsotopic();
-   return (fAmasr!=0);
+   return (fAmasr != 0);
 }
 
 //___________________________________________________________________________________
@@ -210,7 +210,7 @@ Bool_t KVMaterial::IsNat() const
 Bool_t KVMaterial::IsGas() const
 {
    // Returns kTRUE for gaseous materials/detectors.
-   
+
    if (GetActiveLayer())
       return GetActiveLayer()->IsGas();
    return fIonRangeTable->IsMaterialGas(GetType());
@@ -252,11 +252,11 @@ void KVMaterial::SetThickness(Double_t t)
       return;
    }
    // recalculate area density
-   if ( GetDensity()!=0 )
-		fThick = t * GetDensity();
-	else 
-		fThick = t;
-		
+   if (GetDensity() != 0)
+      fThick = t * GetDensity();
+   else
+      fThick = t;
+
 }
 
 //___________________________________________________________________________________
@@ -266,13 +266,13 @@ Double_t KVMaterial::GetThickness() const
    // Returns the linear thickness of the material in cm.
    // Use Units to change units:
    //      mat.GetThickness()/KVUnits::um ;   in microns
-	
+
    if (GetActiveLayer())
       return GetActiveLayer()->GetThickness();
-   if ( GetDensity()!=0 )
-		return fThick/GetDensity();
-	else 
-		return fThick;	
+   if (GetDensity() != 0)
+      return fThick / GetDensity();
+   else
+      return fThick;
 }
 
 //___________________________________________________________________________________
@@ -285,9 +285,9 @@ void KVMaterial::SetAreaDensity(Double_t dens /* g/cm**2 */)
    // (fixed density).
    // For gases, the density depends on temperature and pressure. This method
    // leaves temperature and pressure unchanged, therefore for gases also this
-   // method will effectively modify the linear dimension of the gas cell. 
-   
-   if(GetActiveLayer())
+   // method will effectively modify the linear dimension of the gas cell.
+
+   if (GetActiveLayer())
       GetActiveLayer()->SetAreaDensity(dens);
    fThick = dens;
 }
@@ -297,9 +297,9 @@ void KVMaterial::SetAreaDensity(Double_t dens /* g/cm**2 */)
 Double_t KVMaterial::GetAreaDensity() const
 {
    // Return area density of material in g/cm**2
-   
-      if(GetActiveLayer()) return GetActiveLayer()->GetAreaDensity();
-      return fThick;
+
+   if (GetActiveLayer()) return GetActiveLayer()->GetAreaDensity();
+   return fThick;
 }
 
 //___________________________________________________________________________________
@@ -310,7 +310,7 @@ void KVMaterial::SetPressure(Double_t p)
    // As this changes the density of the gas, it also changes
    // the area density of the absorber (for fixed linear dimension)
 
-   if(!IsGas()) return;
+   if (!IsGas()) return;
    if (GetActiveLayer()) {
       GetActiveLayer()->SetPressure(p);
       return;
@@ -330,7 +330,7 @@ Double_t KVMaterial::GetPressure() const
    // Returns the pressure of a gas (in torr).
    // If the material is not a gas, value is zero.
 
-   if(!IsGas()) return 0.0;
+   if (!IsGas()) return 0.0;
    if (GetActiveLayer())
       return GetActiveLayer()->GetPressure();
    return fPressure;
@@ -345,7 +345,7 @@ void KVMaterial::SetTemperature(Double_t t)
    // As this changes the density of the gas, it also changes
    // the area density of the absorber (for fixed linear dimension)
 
-   if(!IsGas()) return;
+   if (!IsGas()) return;
    if (GetActiveLayer()) {
       GetActiveLayer()->SetTemperature(t);
       return;
@@ -372,8 +372,8 @@ Double_t KVMaterial::GetTemperature() const
 
 //___________________________________________________________________________________
 
-Double_t KVMaterial::GetEffectiveThickness(TVector3 & norm,
-                                           TVector3 & direction)
+Double_t KVMaterial::GetEffectiveThickness(TVector3& norm,
+      TVector3& direction)
 {
    // Calculate effective linear thickness of absorber (in cm) as 'seen' in 'direction', taking into
    // account the arbitrary orientation of the 'norm' normal to the material's surface
@@ -387,8 +387,8 @@ Double_t KVMaterial::GetEffectiveThickness(TVector3 & norm,
 
 //___________________________________________________________________________________
 
-Double_t KVMaterial::GetEffectiveAreaDensity(TVector3 & norm,
-                                           TVector3 & direction)
+Double_t KVMaterial::GetEffectiveAreaDensity(TVector3& norm,
+      TVector3& direction)
 {
    // Calculate effective area density of absorber (in g/cm**2) as 'seen' in 'direction', taking into
    // account the arbitrary orientation of the 'norm' normal to the material's surface
@@ -417,7 +417,7 @@ void KVMaterial::Print(Option_t*) const
 
 //______________________________________________________________________________________//
 
-Double_t KVMaterial::GetELostByParticle(KVNucleus * kvn, TVector3 * norm)
+Double_t KVMaterial::GetELostByParticle(KVNucleus* kvn, TVector3* norm)
 {
    // Method to simulate passage of an ion through a given thickness of material.
    // The energy loss of the particle (in MeV) in the material is returned by the method.
@@ -431,18 +431,17 @@ Double_t KVMaterial::GetELostByParticle(KVNucleus * kvn, TVector3 * norm)
    if (norm) {
       TVector3 p = kvn->GetMomentum();
       thickness = GetEffectiveThickness((*norm), p);
-   }
-   else
+   } else
       thickness = GetThickness();
-   Double_t E_loss = 
-         fIonRangeTable->GetLinearDeltaEOfIon(GetType(),kvn->GetZ(), kvn->GetA(), kvn->GetKE(),
-            thickness, fAmasr,fTemp,fPressure);
+   Double_t E_loss =
+      fIonRangeTable->GetLinearDeltaEOfIon(GetType(), kvn->GetZ(), kvn->GetA(), kvn->GetKE(),
+                                           thickness, fAmasr, fTemp, fPressure);
    return E_loss;
 }
 
 //______________________________________________________________________________________//
 
-Double_t KVMaterial::GetParticleEIncFromERes(KVNucleus * kvn, TVector3 * norm)
+Double_t KVMaterial::GetParticleEIncFromERes(KVNucleus* kvn, TVector3* norm)
 {
    //Calculate the energy of particle 'kvn' before its passage through the absorber,
    //based on the current kinetic energy, Z & A of nucleus 'kvn'.
@@ -456,12 +455,11 @@ Double_t KVMaterial::GetParticleEIncFromERes(KVNucleus * kvn, TVector3 * norm)
    if (norm) {
       TVector3 p = kvn->GetMomentum();
       thickness = GetEffectiveThickness((*norm), p);
-   }
-   else
+   } else
       thickness = GetThickness();
    Double_t E_inc = fIonRangeTable->
-      GetLinearEIncFromEResOfIon(GetType(),kvn->GetZ(), kvn->GetA(), kvn->GetKE(),
-         thickness, fAmasr, fTemp, fPressure);
+                    GetLinearEIncFromEResOfIon(GetType(), kvn->GetZ(), kvn->GetA(), kvn->GetKE(),
+                          thickness, fAmasr, fTemp, fPressure);
    return E_inc;
 }
 
@@ -472,11 +470,11 @@ Double_t KVMaterial::GetDeltaE(Int_t Z, Int_t A, Double_t Einc)
    // Calculate energy loss in absorber for incident nucleus (Z,A)
    // with kinetic energy Einc (MeV)
 
-   if(Z<1) return 0.;
+   if (Z < 1) return 0.;
    Double_t E_loss =
       fIonRangeTable->GetLinearDeltaEOfIon(GetType(), Z, A, Einc, GetThickness(), fAmasr, fTemp, fPressure);
-   
-	return TMath::Max(E_loss,0.);
+
+   return TMath::Max(E_loss, 0.);
 }
 
 //______________________________________________________________________________________//
@@ -486,7 +484,7 @@ Double_t KVMaterial::GetRange(Int_t Z, Int_t A, Double_t Einc)
    // Calculate range in absorber (in g/cm**2) for incident nucleus (Z,A)
    // with kinetic energy Einc (MeV)
 
-   if(Z<1) return 0.;
+   if (Z < 1) return 0.;
    Double_t R =
       fIonRangeTable->GetRangeOfIon(GetType(), Z, A, Einc, fAmasr, fTemp, fPressure);
    return R;
@@ -499,7 +497,7 @@ Double_t KVMaterial::GetLinearRange(Int_t Z, Int_t A, Double_t Einc)
    // Calculate linear range in absorber (in centimetres) for incident nucleus (Z,A)
    // with kinetic energy Einc (MeV)
 
-   if(Z<1) return 0.;
+   if (Z < 1) return 0.;
    Double_t R =
       fIonRangeTable->GetLinearRangeOfIon(GetType(), Z, A, Einc, fAmasr, fTemp, fPressure);
    return R;
@@ -512,10 +510,10 @@ Double_t KVMaterial::GetDeltaEFromERes(Int_t Z, Int_t A, Double_t Eres)
    // Calculate energy loss in absorber for nucleus (Z,A)
    // having a residual kinetic energy Eres (MeV) after the absorber
 
-   if(Z<1) return 0.;
+   if (Z < 1) return 0.;
    Double_t E_loss = fIonRangeTable->
-      GetLinearDeltaEFromEResOfIon(
-         GetType(),Z,A,Eres,GetThickness(),fAmasr,fTemp,fPressure);
+                     GetLinearDeltaEFromEResOfIon(
+                        GetType(), Z, A, Eres, GetThickness(), fAmasr, fTemp, fPressure);
    return E_loss;
 }
 
@@ -539,9 +537,9 @@ Double_t KVMaterial::GetEResFromDeltaE(Int_t Z, Int_t A, Double_t dE, enum SolTy
    //If the given energy loss in the absorber is greater than the maximum theoretical dE
    //(dE > GetBraggDE) then we return the residual energy corresponding to the
    //maximum dE.
-   
-   Double_t EINC = GetIncidentEnergy(Z,A,dE,type);
-   return GetERes(Z,A,EINC);
+
+   Double_t EINC = GetIncidentEnergy(Z, A, dE, type);
+   return GetERes(Z, A, EINC);
 }
 
 //__________________________________________________________________________________________
@@ -559,12 +557,12 @@ Double_t KVMaterial::GetIncidentEnergy(Int_t Z, Int_t A, Double_t delta_e, enum 
    //(dE > GetMaxDeltaE(Z,A)) then we return the incident energy corresponding to the maximum,
    //GetEIncOfMaxDeltaE(Z,A)
 
-   if(Z<1) return 0.;
-   
+   if (Z < 1) return 0.;
+
    Double_t DE = (delta_e > 0 ? delta_e : GetEnergyLoss());
 
-   return fIonRangeTable->GetLinearEIncFromDeltaEOfIon(GetType(),Z,A,DE,GetThickness(),
-         (enum KVIonRangeTable::SolType)type,fAmasr,fTemp,fPressure);
+   return fIonRangeTable->GetLinearEIncFromDeltaEOfIon(GetType(), Z, A, DE, GetThickness(),
+          (enum KVIonRangeTable::SolType)type, fAmasr, fTemp, fPressure);
 }
 
 //______________________________________________________________________________________//
@@ -574,11 +572,11 @@ Double_t KVMaterial::GetERes(Int_t Z, Int_t A, Double_t Einc)
    // Calculate residual energy after absorber for incident nucleus (Z,A)
    // with kinetic energy Einc (MeV)
 
-   if(Z<1) return 0.;
-   if (IsGas() && GetPressure()==0)
-		return Einc;
-   
-	Double_t E_res =
+   if (Z < 1) return 0.;
+   if (IsGas() && GetPressure() == 0)
+      return Einc;
+
+   Double_t E_res =
       fIonRangeTable->GetEResOfIon(GetType(), Z, A, Einc, fThick, fAmasr, fTemp, fPressure);
 
    return E_res;
@@ -586,7 +584,7 @@ Double_t KVMaterial::GetERes(Int_t Z, Int_t A, Double_t Einc)
 
 //___________________________________________________________________________________________________
 
-void KVMaterial::DetectParticle(KVNucleus * kvp, TVector3 * norm)
+void KVMaterial::DetectParticle(KVNucleus* kvp, TVector3* norm)
 {
    //The energy loss of a charged particle traversing the absorber is calculated,
    //and the particle is slowed down.
@@ -605,7 +603,7 @@ void KVMaterial::DetectParticle(KVNucleus * kvp, TVector3 * norm)
 
 #ifdef DBG_TRGT
    cout << "detectparticle in material " << GetType() << " of thickness "
-       << GetThickness() << endl;
+        << GetThickness() << endl;
 #endif
    Double_t el = GetELostByParticle(kvp, norm);
    // set particle residual energy
@@ -624,30 +622,30 @@ void KVMaterial::Clear(Option_t*)
 }
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVMaterial::Copy(TObject & obj) const
+void KVMaterial::Copy(TObject& obj) const
 #else
-void KVMaterial::Copy(TObject & obj)
+void KVMaterial::Copy(TObject& obj)
 #endif
 {
    //Copy this to obj
    KVBase::Copy(obj);
-   ((KVMaterial &) obj).SetMaterial(GetType());
-   ((KVMaterial &) obj).SetMass(GetMass());
-   ((KVMaterial &) obj).SetPressure(GetPressure());
-   ((KVMaterial &) obj).SetTemperature(GetTemperature());
-   ((KVMaterial &) obj).SetThickness(GetThickness());
+   ((KVMaterial&) obj).SetMaterial(GetType());
+   ((KVMaterial&) obj).SetMass(GetMass());
+   ((KVMaterial&) obj).SetPressure(GetPressure());
+   ((KVMaterial&) obj).SetTemperature(GetTemperature());
+   ((KVMaterial&) obj).SetThickness(GetThickness());
 }
 
 //__________________________________________________________________________________________
 
 Double_t KVMaterial::GetIncidentEnergyFromERes(Int_t Z, Int_t A,
-                                               Double_t Eres)
+      Double_t Eres)
 {
    //Get incident energy from residual energy
-   if(Z<1) return 0.;
-   
+   if (Z < 1) return 0.;
+
    return fIonRangeTable->
-      GetLinearEIncFromEResOfIon(GetType(),Z,A,Eres,GetThickness(),fAmasr,fTemp,fPressure);
+          GetLinearEIncFromEResOfIon(GetType(), Z, A, Eres, GetThickness(), fAmasr, fTemp, fPressure);
 }
 
 //__________________________________________________________________________________________
@@ -655,10 +653,10 @@ Double_t KVMaterial::GetIncidentEnergyFromERes(Int_t Z, Int_t A,
 Double_t KVMaterial::GetEIncOfMaxDeltaE(Int_t Z, Int_t A)
 {
    //Incident energy for which the DE(E) curve has a maximum
-   if(Z<1) return 0.;
-   
+   if (Z < 1) return 0.;
+
    return fIonRangeTable->
-      GetLinearEIncOfMaxDeltaEOfIon(GetType(),Z,A,GetThickness(),fAmasr,fTemp,fPressure);
+          GetLinearEIncOfMaxDeltaEOfIon(GetType(), Z, A, GetThickness(), fAmasr, fTemp, fPressure);
 }
 
 //__________________________________________________________________________________________
@@ -667,79 +665,79 @@ Double_t KVMaterial::GetMaxDeltaE(Int_t Z, Int_t A)
 {
    // The maximum energy loss of this particle (corresponding to incident energy GetEIncOfMaxDeltaE(Z,A))
    // For detectors, this is the maximum energy loss in the active layer.
-   
-   if(GetActiveLayer()) return GetActiveLayer()->GetMaxDeltaE(Z,A);
-   
-   if(Z<1) return 0.;
-   
+
+   if (GetActiveLayer()) return GetActiveLayer()->GetMaxDeltaE(Z, A);
+
+   if (Z < 1) return 0.;
+
    return fIonRangeTable->
-      GetLinearMaxDeltaEOfIon(GetType(),Z,A,GetThickness(),fAmasr,fTemp,fPressure);
+          GetLinearMaxDeltaEOfIon(GetType(), Z, A, GetThickness(), fAmasr, fTemp, fPressure);
 }
 
 //__________________________________________________________________________________________
 
 TGeoMedium* KVMaterial::GetGeoMedium(const Char_t* med_name)
 {
-	// By default, return pointer to TGeoMedium corresponding to this KVMaterial.
-	// If argument "med_name" is given and corresponds to the name of an already existing
-	// medium, we return a pointer to this medium, or 0x0 if it does not exist.
-	// med_name = "Vacuum" is a special case: if the "Vacuum" does not exist, we create it.
-	//
-	// Instance of geometry manager class TGeoManager must be created before calling this
-	// method, otherwise 0x0 will be returned.
-	// If the required TGeoMedium is not already available in the TGeoManager, we create
-	// a new TGeoMedium corresponding to the properties of this KVMaterial.
-	// The name of the TGeoMedium (and associated TGeoMaterial) is the name of the KVMaterial.
-	
-	if( !gGeoManager ) return NULL;
-	
-	if( strcmp(med_name,"") ){
-		TGeoMedium* gmed = gGeoManager->GetMedium( med_name );
-		if( gmed ) return gmed;
-		else if( !strcmp(med_name, "Vacuum") ){
-			// create material
-			TGeoMaterial *gmat = new TGeoMaterial("Vacuum",0,0,0 );
+   // By default, return pointer to TGeoMedium corresponding to this KVMaterial.
+   // If argument "med_name" is given and corresponds to the name of an already existing
+   // medium, we return a pointer to this medium, or 0x0 if it does not exist.
+   // med_name = "Vacuum" is a special case: if the "Vacuum" does not exist, we create it.
+   //
+   // Instance of geometry manager class TGeoManager must be created before calling this
+   // method, otherwise 0x0 will be returned.
+   // If the required TGeoMedium is not already available in the TGeoManager, we create
+   // a new TGeoMedium corresponding to the properties of this KVMaterial.
+   // The name of the TGeoMedium (and associated TGeoMaterial) is the name of the KVMaterial.
+
+   if (!gGeoManager) return NULL;
+
+   if (strcmp(med_name, "")) {
+      TGeoMedium* gmed = gGeoManager->GetMedium(med_name);
+      if (gmed) return gmed;
+      else if (!strcmp(med_name, "Vacuum")) {
+         // create material
+         TGeoMaterial* gmat = new TGeoMaterial("Vacuum", 0, 0, 0);
          gmat->SetTitle("Vacuum");
-			gmed = new TGeoMedium( "Vacuum", 0, gmat );
+         gmed = new TGeoMedium("Vacuum", 0, gmat);
          gmed->SetTitle("Vacuum");
-			return gmed;
-		}
-		return NULL;
-	}
-	
-	// if object is a KVDetector, we return medium corresponding to the active layer
+         return gmed;
+      }
+      return NULL;
+   }
+
+   // if object is a KVDetector, we return medium corresponding to the active layer
    if (GetActiveLayer()) return GetActiveLayer()->GetGeoMedium();
-	
+
    // for gaseous materials, the TGeoMedium/Material name is of the form
    //      gasname_pressure
    // e.g. C3F8_37.5 for C3F8 gas at 37.5 torr
    // each gas with different pressure has to have a separate TGeoMaterial/Medium
    TString medName;
-   if(IsGas()) medName.Form("%s_%f", GetName(), GetPressure());
+   if (IsGas()) medName.Form("%s_%f", GetName(), GetPressure());
    else medName = GetName();
-   
-	TGeoMedium* gmed = gGeoManager->GetMedium( medName);
-	
-	if( gmed ) return gmed;
-		
-	TGeoMaterial *gmat = gGeoManager->GetMaterial( medName);
-	
-	if( !gmat ){
-		// create material
-		gmat = GetRangeTable()->GetTGeoMaterial(GetName());
-		gmat->SetPressure( GetPressure() );
-		gmat->SetTemperature( GetTemperature() );
-		gmat->SetTransparency(0);
+
+   TGeoMedium* gmed = gGeoManager->GetMedium(medName);
+
+   if (gmed) return gmed;
+
+   TGeoMaterial* gmat = gGeoManager->GetMaterial(medName);
+
+   if (!gmat) {
+      // create material
+      gmat = GetRangeTable()->GetTGeoMaterial(GetName());
+      gmat->SetPressure(GetPressure());
+      gmat->SetTemperature(GetTemperature());
+      gmat->SetTransparency(0);
       gmat->SetName(medName);
       gmat->SetTitle(GetName());
-	}
-	
-	// create medium
-	static Int_t numed = 1; // static counter variable used to number media
-	gmed = new TGeoMedium( medName, numed, gmat );
-	numed+=1;
-	
-	return gmed;
+   }
+
+   // create medium
+   static Int_t numed = 1; // static counter variable used to number media
+   gmed = new TGeoMedium(medName, numed, gmat);
+   numed += 1;
+
+   return gmed;
 }
 
 Double_t KVMaterial::GetEmaxValid(Int_t Z, Int_t A)
@@ -747,14 +745,14 @@ Double_t KVMaterial::GetEmaxValid(Int_t Z, Int_t A)
    // Return maximum incident energy for which range tables are valid
    // for this material and ion (Z,A).
    // For detectors, return max energy for active layer.
-   if(GetActiveLayer()) return GetActiveLayer()->GetEmaxValid(Z,A);
+   if (GetActiveLayer()) return GetActiveLayer()->GetEmaxValid(Z, A);
    return fIonRangeTable->GetEmaxValid(GetType(), Z, A);
 }
 
 Double_t KVMaterial::GetPunchThroughEnergy(Int_t Z, Int_t A)
 {
-	// Returns energy (in MeV) for which ion (Z,A) has a range equal to the
-	// thickness of this absorber
-	
-	return fIonRangeTable->GetLinearPunchThroughEnergy(GetType(), Z, A, GetThickness(),fAmasr,fTemp,fPressure);
+   // Returns energy (in MeV) for which ion (Z,A) has a range equal to the
+   // thickness of this absorber
+
+   return fIonRangeTable->GetLinearPunchThroughEnergy(GetType(), Z, A, GetThickness(), fAmasr, fTemp, fPressure);
 }

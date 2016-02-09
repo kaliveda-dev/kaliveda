@@ -1,0 +1,398 @@
+
+# Time of Flight correction parameters (Ionisation Chamber:Silicon).
+#
+# The format of this file is designed so that it can be easily read by the
+# KVIVDB_e503 parser in a generic way. By doing this we avoid having to define a
+# separate method to read each file as the format is now regulated. 
+#
+# Any field can be made a parameter by prefixing it like this: 
+#     +parameter: some_name = value. 
+#
+# Beware that the parameter will be converted to a Double_t and that 'some_name'
+# is optional and is not used in the program, it is used purely to convey to the
+# human reader what the value of that parameter is.  Parameters will be added in
+# the order they are specified. 
+#
+# Any line without a +something will be ignored by the parser. 
+#
+# WARNING: If you change the record_ids then you will also need to change the
+# hard-coded values in KVIVUpDater_e503.
+#
+
+[entry]
++record_id: = tof_chiosi_1P656
+brho0 = 1.656
++run_range: = 455-465
++parameter: t0 = 80
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P800
+brho0 = 1.800
++run_range: = 466-474
++parameter: t0 = 0
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P523
+brho0 = 1.523
++run_range: = 475-483
++parameter: t0 = 85
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P401
+brho0 = 1.401
++run_range: = 484-489
++parameter: t0 = 95
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P289
+brho0 = 1.289
++run_range: = 490-492
++parameter: t0 = 110
++parameter: esi0 = 600
+
+[entry]
++record_id: = tof_chiosi_1P186
+brho0 = 1.186
++run_range: = 493-495
++parameter: t0 = 120
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_1P091
+brho0 = 1.091
++run_range: = 496-500
++parameter: t0 = 138
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_1P004
+brho0 = 1.004
++run_range: = 501-501
++parameter: t0 = 153
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P923
+brho0 = 0.923
++run_range: = 502-504
++parameter: t0 = 200
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P849
+brho0 = 0.849
++run_range: = 505-506
++parameter: t0 = 200
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P782
+brho0 = 0.782
++run_range: = 507-508
++parameter: t0 = 200
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P719
+brho0 = 0.719
++run_range: = 509-509
++parameter: t0 = 200
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_1P962
+brho0 = 1.962
++run_range: = 379-382
++parameter: t0 = 0
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_2P120
+brho0 = 2.120
++run_range: = 383-383
++parameter: t0 = 0
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P805
+brho0 = 1.805
++run_range: = 384-389
++parameter: t0 = 80
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P661
+brho0 = 1.661
++run_range: = 390-397
++parameter: t0 = 85
++parameter: esi0 = 200
+
+[entry]
++record_id: = tof_chiosi_1P523
+brho0 = 1.523
++run_range: = 398-402
++parameter: t0 = 95
++parameter: esi0 = 200
+
+[entry]
++record_id: = tof_chiosi_1P405
+brho0 = 1.405
++run_range: = 403-406
++parameter: t0 = 105
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_1P293
+brho0 = 1.293
++run_range: = 407-409
++parameter: t0 = 116
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_1P190
+brho0 = 1.190
++run_range: = 410-416
++parameter: t0 = 128
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_1P092
+brho0 = 1.092
++run_range: = 417-418
++parameter: t0 = 150
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_1P004
+brho0 = 1.004
++run_range: = 419-419
++parameter: t0 = 140
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P849
+brho0 = 0.849
++run_range: = 420-420
++parameter: t0 = 0
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P849
+brho0 = 0.849
++run_range: = 423-423
++parameter: t0 = 0
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P923
+brho0 = 0.923
++run_range: = 421-422
++parameter: t0 = 0
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P782
+brho0 = 0.782
++run_range: = 424-424
++parameter: t0 = 0
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_1P962
+brho0 = 1.962
++run_range: = 327-331
++parameter: t0 = 0
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_2P120
+brho0 = 2.120
++run_range: = 332-332
++parameter: t0 = 0
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P8051
+brho0 = 1.8051
++run_range: = 333-338
++parameter: t0 = 0
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P660
+brho0 = 1.660
++run_range: = 339-343
++parameter: t0 = 95
++parameter: esi0 = 200
+
+[entry]
++record_id: = tof_chiosi_1P523
+brho0 = 1.523
++run_range: = 344-347
++parameter: t0 = 100
++parameter: esi0 = 200
+
+[entry]
++record_id: = tof_chiosi_1P405
+brho0 = 1.405
++run_range: = 348-350
++parameter: t0 = 100
++parameter: esi0 = 200
+
+[entry]
++record_id: = tof_chiosi_1P293
+brho0 = 1.293
++run_range: = 353-354
++parameter: t0 = 110
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_1P1894
+brho0 = 1.1894
++run_range: = 355-356
++parameter: t0 = 127
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_1P094
+brho0 = 1.094
++run_range: = 357-357
++parameter: t0 = 145
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_1P008
+brho0 = 1.008
++run_range: = 358-358
++parameter: t0 = 155
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P927
+brho0 = 0.927
++run_range: = 359-359
++parameter: t0 = 200
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P853
+brho0 = 0.853
++run_range: = 360-360
++parameter: t0 = 200
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P719
+brho0 = 0.719
++run_range: = 511-513
++parameter: t0 = 0
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P661
+brho0 = 0.661
++run_range: = 514-514
++parameter: t0 = 0
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P782
+brho0 = 0.782
++run_range: = 515-516
++parameter: t0 = 0
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P849
+brho0 = 0.849
++run_range: = 517-517
++parameter: t0 = 400
++parameter: esi0 = 800
+
+[entry]
++record_id: = tof_chiosi_0P923
+brho0 = 0.923
++run_range: = 518-519
++parameter: t0 = 270
++parameter: esi0 = 600
+
+[entry]
++record_id: = tof_chiosi_1P004
+brho0 = 1.004
++run_range: = 520-520
++parameter: t0 = 150
++parameter: esi0 = 600
+
+[entry]
++record_id: = tof_chiosi_1P091
+brho0 = 1.091
++run_range: = 521-522
++parameter: t0 = 130
++parameter: esi0 = 600
+
+[entry]
++record_id: = tof_chiosi_1P186
+brho0 = 1.186
++run_range: = 523-524
++parameter: t0 = 0
++parameter: esi0 = 600
+
+[entry]
++record_id: = tof_chiosi_1P289
+brho0 = 1.289
++run_range: = 525-527
++parameter: t0 = 95
++parameter: esi0 = 600
+
+[entry]
++record_id: = tof_chiosi_1P401
+brho0 = 1.401
++run_range: = 528-530
++parameter: t0 = 85
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P523
+brho0 = 1.523
++run_range: = 531-536
++parameter: t0 = 90
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P656
+brho0 = 1.656
++run_range: = 537-542
++parameter: t0 = 80
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P800
+brho0 = 1.800
++run_range: = 543-547
++parameter: t0 = 0
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_1P957
+brho0 = 1.957
++run_range: = 548-548
++parameter: t0 = 0
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_2P120
+brho0 = 2.120
++run_range: = 549-549
++parameter: t0 = 0
++parameter: esi0 = 0
+
+[entry]
++record_id: = tof_chiosi_2P220
+brho0 = 2.220
++run_range: = 550-550
++parameter: t0 = 0
++parameter: esi0 = 0

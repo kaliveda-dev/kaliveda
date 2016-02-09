@@ -29,7 +29,7 @@ ClassImp(KVDBChIoPressures);
 // ChIos 2_3    p1
 // ChIos 4_5    p2
 // ChIos 6_7    p3
-// ChIos 8_12   p4 
+// ChIos 8_12   p4
 // ChIos 13_17  p5
 //
 //____________________________________________________________________________
@@ -57,7 +57,7 @@ KVDBChIoPressures::KVDBChIoPressures(Float_t pressure[5])
 }
 
 //____________________________________________________________________________
-KVDBChIoPressures::KVDBChIoPressures(KVDBChIoPressures & chiopres) : KVDBRecord()
+KVDBChIoPressures::KVDBChIoPressures(KVDBChIoPressures& chiopres) : KVDBRecord()
 {
    InitCommon();
    SetPressures(chiopres.GetChIoPressures());
@@ -84,15 +84,15 @@ void KVDBChIoPressures::InitCommon()
 }
 
 //____________________________________________________________________________
-void KVDBChIoPressures::Print(Option_t *) const
+void KVDBChIoPressures::Print(Option_t*) const
 {
    cout << "_____________________________________________________________"
-       << endl << "ChIo Pressures :" << endl << GetName() << " " <<
-       GetTitle() << endl << "ChIo 2_3  : " << fPressures[CHIO_2_3] << endl
-       << "ChIo 4_5  : " << fPressures[CHIO_4_5] << endl << "ChIo 6_7  : "
-       << fPressures[CHIO_6_7] << endl << "ChIo 8_12 : " <<
-       fPressures[CHIO_8_12] << endl << "ChIo 13_17: " <<
-       fPressures[CHIO_13_17] << endl <<
-       "______________________________________________________________" <<
-       endl;
+        << endl << "ChIo Pressures :" << endl << GetName() << " " <<
+        GetTitle() << endl << "ChIo 2_3  : " << fPressures[CHIO_2_3] << endl
+        << "ChIo 4_5  : " << fPressures[CHIO_4_5] << endl << "ChIo 6_7  : "
+        << fPressures[CHIO_6_7] << endl << "ChIo 8_12 : " <<
+        fPressures[CHIO_8_12] << endl << "ChIo 13_17: " <<
+        fPressures[CHIO_13_17] << endl <<
+        "______________________________________________________________" <<
+        endl;
 }

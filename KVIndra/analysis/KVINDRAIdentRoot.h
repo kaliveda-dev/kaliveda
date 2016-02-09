@@ -13,25 +13,27 @@ $Date: 2006/10/19 14:32:43 $
 class TFile;
 class TTree;
 
-class KVINDRAIdentRoot:public KVSelector {
+class KVINDRAIdentRoot: public KVSelector {
 
-	int codes[15];
-	int status[4];
-	int Acodes[15];
-	int Astatus[4];
+   int codes[15];
+   int status[4];
+   int Acodes[15];
+   int Astatus[4];
 
-   protected:
-   TFile *fIdentFile;           //new file
-   TTree *fIdentTree;           //new tree
+protected:
+   TFile* fIdentFile;           //new file
+   TTree* fIdentTree;           //new tree
    Int_t fRunNumber;
    Int_t fEventNumber;
 
- public:
-   KVINDRAIdentRoot() {
+public:
+   KVINDRAIdentRoot()
+   {
       fIdentFile = 0;
       fIdentTree = 0;
    };
-   virtual ~ KVINDRAIdentRoot() {
+   virtual ~ KVINDRAIdentRoot()
+   {
    };
 
    virtual void InitRun();

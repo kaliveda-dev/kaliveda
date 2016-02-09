@@ -15,6 +15,7 @@
 #cmakedefine WITH_BUILTIN_GRU
 #cmakedefine CCIN2P3_XRD
 #cmakedefine WITH_MULTICORE_CPU ${WITH_MULTICORE_CPU}
+#cmakedefine WITH_BOOST
 
 
 //-----------------------------------ROOT-version dependent compiler flags

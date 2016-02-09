@@ -71,31 +71,30 @@ KVCsI::KVCsI()
 }
 
 //______________________________________________________________________________
-KVCsI::KVCsI(Float_t thick, Float_t thickAl):KVINDRADetector("CsI", thick)
+KVCsI::KVCsI(Float_t thick, Float_t thickAl): KVINDRADetector("CsI", thick)
 {
-    //Make a CsI detector "thick" cm long
-    //with a Al dead layer "thickAl" um long
-    //Set type of detector to "CSI"
-    //By default 'thick'=0
+   //Make a CsI detector "thick" cm long
+   //with a Al dead layer "thickAl" um long
+   //Set type of detector to "CSI"
+   //By default 'thick'=0
 
-    if(thickAl>0.0){
-        KVMaterial *mat = new KVMaterial("Al",thickAl*KVUnits::um);
-        fAbsorbers->AddFirst(mat);
-        SetActiveLayer(1);
-    }
-    SetType("CSI");
-    init();
+   if (thickAl > 0.0) {
+      KVMaterial* mat = new KVMaterial("Al", thickAl * KVUnits::um);
+      fAbsorbers->AddFirst(mat);
+      SetActiveLayer(1);
+   }
+   SetType("CSI");
+   init();
 }
 
 void KVCsI::SetAlThickness(Float_t thickAl /* um */)
 {
-KVMaterial* mat = 0;
-  if(!(mat = GetAbsorber("Al"))){
-      mat = new KVMaterial("Al",thickAl*KVUnits::um);
+   KVMaterial* mat = 0;
+   if (!(mat = GetAbsorber("Al"))) {
+      mat = new KVMaterial("Al", thickAl * KVUnits::um);
       fAbsorbers->AddFirst(mat);
       SetActiveLayer(1);
-  }
-  else mat->SetThickness(thickAl*KVUnits::um);
+   } else mat->SetThickness(thickAl * KVUnits::um);
 }
 
 //____________________________________________________________________________________________
@@ -119,31 +118,30 @@ Double_t KVCsI::GetLumiereTotale(Double_t rapide, Double_t lente)
    // deposited in the CsI to calculate the light; then we use the Z & A of 'nuc' (not necessarily
    // the same) to calculate the calibrated energy from the light.
 
-	if(IsSimMode()){
-   	//GetHits()->ls();
-		if (GetACQParam("T")->Fired()){
-			return Calculate(kLumiere, rapide, lente);
-		}
-		KVNucleus *nunuc = 0;
-		if (GetNHits()>0){
-			Int_t zz=0,aa=0;
-			TIter nxthit(GetHits());
-			while( (nunuc = (KVNucleus*)nxthit()) ){
-				zz = nunuc->GetZ();
-				aa = nunuc->GetA();
-			}	
-			return GetLightFromEnergy(zz,aa,GetEnergy());
-		}
-		else {
-			return -1;
-		}
-		/*
-		KVNucleus *nunuc = 0;
-		TIter nxthit(GetHits()); KVNucleus *nunuc, *simnuc=0;
-   	while( (nunuc = (KVNucleus*)nxthit()) ) {if(nunuc->InheritsFrom("KVSimNucleus")) simnuc=nunuc;}
-   	if(!simnuc) return -1.;
-   	*/
-		return GetLightFromEnergy(nunuc->GetZ(),nunuc->GetA(),GetEnergy());
+   if (IsSimMode()) {
+      //GetHits()->ls();
+      if (GetACQParam("T")->Fired()) {
+         return Calculate(kLumiere, rapide, lente);
+      }
+      KVNucleus* nunuc = 0;
+      if (GetNHits() > 0) {
+         Int_t zz = 0, aa = 0;
+         TIter nxthit(GetHits());
+         while ((nunuc = (KVNucleus*)nxthit())) {
+            zz = nunuc->GetZ();
+            aa = nunuc->GetA();
+         }
+         return GetLightFromEnergy(zz, aa, GetEnergy());
+      } else {
+         return -1;
+      }
+      /*
+      KVNucleus *nunuc = 0;
+      TIter nxthit(GetHits()); KVNucleus *nunuc, *simnuc=0;
+      while( (nunuc = (KVNucleus*)nxthit()) ) {if(nunuc->InheritsFrom("KVSimNucleus")) simnuc=nunuc;}
+      if(!simnuc) return -1.;
+      */
+      return GetLightFromEnergy(nunuc->GetZ(), nunuc->GetA(), GetEnergy());
    }
    return Calculate(kLumiere, rapide, lente);
 }
@@ -166,9 +164,9 @@ Double_t KVCsI::GetCorrectedLumiereTotale(Double_t rapide, Double_t lente)
    len_corr = (lente < 0 ? GetL() : lente);
    Double_t piedR = fACQ_R->GetPedestal();
    Double_t piedL = fACQ_L->GetPedestal();
-   rap_corr = (rap_corr - piedR)*fGainCorrection + piedR;
-   len_corr = (len_corr - piedL)*fGainCorrection + piedL;
-   return GetLumiereTotale(rap_corr,len_corr);
+   rap_corr = (rap_corr - piedR) * fGainCorrection + piedR;
+   len_corr = (len_corr - piedL) * fGainCorrection + piedL;
+   return GetLumiereTotale(rap_corr, len_corr);
 }
 
 //______________________________________________________________________________________________
@@ -219,22 +217,22 @@ Double_t KVCsI::Calculate(UShort_t mode, Double_t rapide, Double_t lente)
    Double_t p0 = 400;
    Double_t p1 = 900;
    Double_t eps = 1.e-4;
-/* Cette variable n'est pas utilisee, et ne figure pas dans e.g. le fortran de la 4eme campagne
- Float_t pre=0.4318;
-*/
+   /* Cette variable n'est pas utilisee, et ne figure pas dans e.g. le fortran de la 4eme campagne
+    Float_t pre=0.4318;
+   */
    Double_t c1 = 1.5;
    Double_t c2;
    Double_t x;
    Double_t x2;
    Double_t x3;
    Double_t bx;
-/****************************************************************************
-* Definition of PM rise-time constant tau
-* Comment based on a note from Bernard Borderie:
-*   rings 11-16 use PM bases with a different component, thus tau is 60 nsec
-*   ring 16, module 5 is an exception, it has a tau of 20 nsec !!
-*   rung 5, module 11 is also an exception, it has a tau of 60 nsec !!
-*/
+   /****************************************************************************
+   * Definition of PM rise-time constant tau
+   * Comment based on a note from Bernard Borderie:
+   *   rings 11-16 use PM bases with a different component, thus tau is 60 nsec
+   *   ring 16, module 5 is an exception, it has a tau of 20 nsec !!
+   *   rung 5, module 11 is also an exception, it has a tau of 60 nsec !!
+   */
    Double_t tau = 20.;
    if (ring >= 11 && ring <= 16)
       tau = 60.;
@@ -242,7 +240,7 @@ Double_t KVCsI::Calculate(UShort_t mode, Double_t rapide, Double_t lente)
       tau = 20.;
    if (ring == 5 && module == 11)
       tau = 60.;
-/****************************************************************************/
+   /****************************************************************************/
    Double_t tau0 = 390.;
    Double_t tau1 = 1590.;
    Double_t tau2 = 3090.;
@@ -329,7 +327,7 @@ Bool_t KVCsI::LightIsGood()
    //or without (KVCsI::GetStatusLumiere()=NO_GAIN_CORRECTION) iterative gain correction.
 
    if (GetStatusLumiere() == CALCULATED_WITH_GAIN_CORRECTION
-       || GetStatusLumiere() == NO_GAIN_CORRECTION)
+         || GetStatusLumiere() == NO_GAIN_CORRECTION)
       return kTRUE;
 
    return kFALSE;
@@ -337,7 +335,7 @@ Bool_t KVCsI::LightIsGood()
 
 //_______________________________________________________________________________________________
 
-void KVCsI::Clear(Option_t * opt)
+void KVCsI::Clear(Option_t* opt)
 {
 //Redefinition of KVDetector::Clear - set fLumiereTotale and status to zero
    KVDetector::Clear(opt);
@@ -346,24 +344,24 @@ void KVCsI::Clear(Option_t * opt)
 }
 
 
-void KVCsI::Print(Option_t * option) const
+void KVCsI::Print(Option_t* option) const
 {
    //Print info on this detector - redefinition of KVDetector::Print for option="data" to include total light
    //if option="data" the energy loss, total light and coder channel data are displayed
 
    if (!strcmp(option, "data")) {
-      cout << ((KVCsI *) this)->GetName() << " -- H=" << ((KVCsI *) this)->
-          GetLumiereTotale() << " -- E=" << ((KVCsI *) this)->
-          GetEnergy() << "  ";
+      cout << ((KVCsI*) this)->GetName() << " -- H=" << ((KVCsI*) this)->
+           GetLumiereTotale() << " -- E=" << ((KVCsI*) this)->
+           GetEnergy() << "  ";
       TIter next(fACQParams);
-      KVACQParam *acq;
-      while ((acq = (KVACQParam *) next())) {
+      KVACQParam* acq;
+      while ((acq = (KVACQParam*) next())) {
          cout << acq->GetName() << "=" << (Short_t) acq->
-             GetCoderData() << "/" << TMath::Nint(acq->GetPedestal())<< "  ";
+              GetCoderData() << "/" << TMath::Nint(acq->GetPedestal()) << "  ";
       }
       if (BelongsToUnidentifiedParticle())
          cout << "(Belongs to an unidentified particle)";
-		cout << endl;
+      cout << endl;
    } else {
       KVDetector::Print(option);
    }
@@ -396,7 +394,7 @@ void KVCsI::SetCalibrators()
 
 //______________________________________________________________________________
 
-void KVCsI::Streamer(TBuffer &R__b)
+void KVCsI::Streamer(TBuffer& R__b)
 {
    // Stream an object of class KVCsI.
    // We set the pointers to the calibrator objects
@@ -405,26 +403,27 @@ void KVCsI::Streamer(TBuffer &R__b)
       UInt_t R__s, R__c;
       Version_t R__v = R__b.ReadVersion(&R__s, &R__c);
       KVCsI::Class()->ReadBuffer(R__b, this, R__v, R__s, R__c);
-      fCalZ1 = (KVLightEnergyCsI *) GetCalibrator("Light-Energy CsI Z=1");
-      fCal = (KVLightEnergyCsI *) GetCalibrator("Light-Energy CsI Z>1");
+      fCalZ1 = (KVLightEnergyCsI*) GetCalibrator("Light-Energy CsI Z=1");
+      fCal = (KVLightEnergyCsI*) GetCalibrator("Light-Energy CsI Z>1");
       // backwards compatibility for CsI with only one calibrator
-      if( !fCal )  fCal = (KVLightEnergyCsI *) GetCalibrator("Light-Energy CsI");
-      if( R__v < 4 ){
+      if (!fCal)  fCal = (KVLightEnergyCsI*) GetCalibrator("Light-Energy CsI");
+      if (R__v < 4) {
          // backwards compatibility: persistent member pointers to acquisition
          // parameters fACQ_R & fACQ_L introduced in class version 4 (10 june 2009)
-			// As the detector name is not always available at this point
-			// (KVDetector::GetName generates dynamically the name from the
-			// module & ring numbers, no persistent name stored in TNamed::fName)
-			// we have to loop over the list of acquisition parameters (if it exists)
-			// and look for parameters which end with "R" or "L"
-			if(fACQParams){
-				TIter next(fACQParams); KVACQParam* par=0;
-				while( (par = (KVACQParam*)next()) ){
-					TString name(par->GetName());
-					if(name.EndsWith("R")) fACQ_R = par;
-					else if(name.EndsWith("L")) fACQ_L = par;
-				}
-			}
+         // As the detector name is not always available at this point
+         // (KVDetector::GetName generates dynamically the name from the
+         // module & ring numbers, no persistent name stored in TNamed::fName)
+         // we have to loop over the list of acquisition parameters (if it exists)
+         // and look for parameters which end with "R" or "L"
+         if (fACQParams) {
+            TIter next(fACQParams);
+            KVACQParam* par = 0;
+            while ((par = (KVACQParam*)next())) {
+               TString name(par->GetName());
+               if (name.EndsWith("R")) fACQ_R = par;
+               else if (name.EndsWith("L")) fACQ_L = par;
+            }
+         }
       }
    } else {
       KVCsI::Class()->WriteBuffer(R__b, this);
@@ -450,22 +449,21 @@ Double_t KVCsI::GetCorrectedEnergy(KVNucleus* nuc, Double_t lum, Bool_t)
    // deposited in the CsI to calculate the light; then we use the Z & A of 'nuc' (not necessarily
    // the same) to calculate the calibrated energy from the light.
 
-	Int_t Z = nuc->GetZ();
-	Int_t A = nuc->GetA();
-	
+   Int_t Z = nuc->GetZ();
+   Int_t A = nuc->GetA();
+
    KVLightEnergyCsI* calib = 0;
 
-   if( Z==1 && fCalZ1 ) calib = fCalZ1;
+   if (Z == 1 && fCalZ1) calib = fCalZ1;
    else calib = fCal;
 
-   if( calib && calib->GetStatus() ){
-   	if(IsSimMode()){
+   if (calib && calib->GetStatus()) {
+      if (IsSimMode()) {
          lum = GetLumiereTotale();
-         if(lum<0.) return -1.;
+         if (lum < 0.) return -1.;
          //force "OK" status for light
          fLumTotStatus = NO_GAIN_CORRECTION;
-   	}
-      else if (lum < 0.) {
+      } else if (lum < 0.) {
          //light not given - calculate from R and L components
          lum = GetCorrectedLumiereTotale(); // include gain correction
       } else {
@@ -495,10 +493,10 @@ Double_t KVCsI::GetLightFromEnergy(Int_t Z, Int_t A, Double_t E)
 
    KVLightEnergyCsI* calib = 0;
 
-   if( Z==1 && fCalZ1 ) calib = fCalZ1;
+   if (Z == 1 && fCalZ1) calib = fCalZ1;
    else calib = fCal;
 
-   if( calib && calib->GetStatus() ){
+   if (calib && calib->GetStatus()) {
       E = (E < 0. ? GetEnergy() : E);
       calib->SetZ(Z);
       calib->SetA(A);
@@ -514,189 +512,185 @@ Double_t KVCsI::GetLightFromEnergy(Int_t Z, Int_t A, Double_t E)
 Double_t KVCsI::GetEnergyFromLight(Int_t Z, Int_t A, Double_t lum)
 {
    //Calculate energy from a given Z and A and light output (lum)
-	//Returns -1 in case of problems (no calibration available)
-	//This method assumes that the particle is stopped in CsI
-	
+   //Returns -1 in case of problems (no calibration available)
+   //This method assumes that the particle is stopped in CsI
+
    KVLightEnergyCsI* calib = 0;
 
-   if( Z==1 && fCalZ1 ) calib = fCalZ1;
+   if (Z == 1 && fCalZ1) calib = fCalZ1;
    else calib = fCal;
 
-   if( calib && calib->GetStatus() ){
+   if (calib && calib->GetStatus()) {
       calib->SetZ(Z);
       calib->SetA(A);
       Double_t E = calib->Compute(lum);
-		return E;
+      return E;
    }
    return -1.;
 }
 
 //__________________________________________________________________________________________//
 
-void KVCsI::DeduceACQParameters(Int_t zz,Int_t aa)
+void KVCsI::DeduceACQParameters(Int_t zz, Int_t aa)
 {
 
-    GetACQParam("R")->SetData(-1);
-    GetACQParam("L")->SetData(-1);
-    GetACQParam("T")->SetData(-1);
-	if (zz==-1 || aa==-1){ return; }
-		
-	UShort_t Mt = 110;
-	Double_t Xlen = 0;
-	Double_t Yrap = 0;
-	Double_t lumiere = GetLightFromEnergy(zz,aa);
-    //Info("DeduceACQParameters", "z=%d a=%d e=%f h=%f",zz,aa,GetEnergy(),lumiere);
-	
-	KVIDTelescope *idcsi=(KVIDTelescope*)GetIDTelescopes()->At(0);
-	
-        KVIDZAGrid* idgcsi = (KVIDZAGrid*)idcsi->GetIDGrid();
-	if (!idgcsi){
-		//Warning("DeduceACQParameters","%s, No grid available",GetName());
-		return;
-	}
-	KVIDZALine* idline = (KVIDZALine*)idgcsi->GetIdentifier(zz,aa);
-    if(!idline && zz <= idgcsi->GetZmax()){
-        // Z within limits of grid, but we don't have the isotope
-        // Look for line with closest mass
-        Int_t closest_a=1000;Int_t closest_index=-1;
-        Int_t nids = idgcsi->GetNumberOfIdentifiers();
-        for(Int_t iid=0; iid<nids; iid++){
-            KVIDZALine* ll = (KVIDZALine*)idgcsi->GetIdentifierAt(iid);
-            if(ll->GetZ()==zz){
-                if(TMath::Abs(ll->GetA()-aa)<TMath::Abs(closest_a-aa)){
-                    closest_index=iid;
-                    closest_a=ll->GetA();
-                }
+   GetACQParam("R")->SetData(-1);
+   GetACQParam("L")->SetData(-1);
+   GetACQParam("T")->SetData(-1);
+   if (zz == -1 || aa == -1) {
+      return;
+   }
+
+   UShort_t Mt = 110;
+   Double_t Xlen = 0;
+   Double_t Yrap = 0;
+   Double_t lumiere = GetLightFromEnergy(zz, aa);
+   //Info("DeduceACQParameters", "z=%d a=%d e=%f h=%f",zz,aa,GetEnergy(),lumiere);
+
+   KVIDTelescope* idcsi = (KVIDTelescope*)GetIDTelescopes()->At(0);
+
+   KVIDZAGrid* idgcsi = (KVIDZAGrid*)idcsi->GetIDGrid();
+   if (!idgcsi) {
+      //Warning("DeduceACQParameters","%s, No grid available",GetName());
+      return;
+   }
+   KVIDZALine* idline = (KVIDZALine*)idgcsi->GetIdentifier(zz, aa);
+   if (!idline && zz <= idgcsi->GetZmax()) {
+      // Z within limits of grid, but we don't have the isotope
+      // Look for line with closest mass
+      Int_t closest_a = 1000;
+      Int_t closest_index = -1;
+      Int_t nids = idgcsi->GetNumberOfIdentifiers();
+      for (Int_t iid = 0; iid < nids; iid++) {
+         KVIDZALine* ll = (KVIDZALine*)idgcsi->GetIdentifierAt(iid);
+         if (ll->GetZ() == zz) {
+            if (TMath::Abs(ll->GetA() - aa) < TMath::Abs(closest_a - aa)) {
+               closest_index = iid;
+               closest_a = ll->GetA();
             }
-        }
-        idline = (KVIDZALine*)idgcsi->GetIdentifierAt(closest_index);
-    }
-		
-	if(idline){ 
-		Double_t  Yrap1,Yrap2,Xlen1,Xlen2;
-		idline->GetStartPoint(Xlen1,Yrap1);
-		idline->GetEndPoint(Xlen2,Yrap2);
-        Double_t  lumcalc1 = Calculate(kLumiere, Yrap1,Xlen1);
-        Double_t  lumcalc2 = Calculate(kLumiere, Yrap2,Xlen2);
-        if(lumiere<lumcalc1) {
-            Xlen2=Xlen1;
-            Yrap2=Yrap1;
-            lumcalc2=lumcalc1;
-            Xlen1=GetPedestal("L");
-            Yrap1=idline->Eval(Xlen1,0,"S");
-            lumcalc1 = Calculate(kLumiere, Yrap1,Xlen1);
-            //cout << "Extrapolating before start of ID line" << endl;
-        }
-        else if(lumiere>lumcalc2) {
-            Xlen1=Xlen2;
-            Yrap1=Yrap2;
-            lumcalc1=lumcalc2;
-            Xlen2=4095;
-            Yrap2=idline->Eval(Xlen2,0,"S");
-            lumcalc2=Calculate(kLumiere,Yrap2,Xlen2);
-            //cout << "Extrapolating after end of ID line" << endl;
-        }
-        //cout << "Xlen1=" << Xlen1 << " Yrap1="<<Yrap1<< "  Lum_min = " << lumcalc1 << endl;
-        //cout << "Xlen2=" << Xlen2 << " Yrap2=" << Yrap2<< "  Lum_max = " << lumcalc2 << endl;
+         }
+      }
+      idline = (KVIDZALine*)idgcsi->GetIdentifierAt(closest_index);
+   }
 
-		Xlen = (Xlen1+Xlen2)/2.;
-        Yrap = idline->Eval(Xlen,0,"S");
-        Double_t  lumcalc = Calculate(kLumiere, Yrap,Xlen);
-        //cout << "-1 : Rapide = " << Yrap << " Lente = " << Xlen << " lumcalc = " << lumcalc << endl;
+   if (idline) {
+      Double_t  Yrap1, Yrap2, Xlen1, Xlen2;
+      idline->GetStartPoint(Xlen1, Yrap1);
+      idline->GetEndPoint(Xlen2, Yrap2);
+      Double_t  lumcalc1 = Calculate(kLumiere, Yrap1, Xlen1);
+      Double_t  lumcalc2 = Calculate(kLumiere, Yrap2, Xlen2);
+      if (lumiere < lumcalc1) {
+         Xlen2 = Xlen1;
+         Yrap2 = Yrap1;
+         lumcalc2 = lumcalc1;
+         Xlen1 = GetPedestal("L");
+         Yrap1 = idline->Eval(Xlen1, 0, "S");
+         lumcalc1 = Calculate(kLumiere, Yrap1, Xlen1);
+         //cout << "Extrapolating before start of ID line" << endl;
+      } else if (lumiere > lumcalc2) {
+         Xlen1 = Xlen2;
+         Yrap1 = Yrap2;
+         lumcalc1 = lumcalc2;
+         Xlen2 = 4095;
+         Yrap2 = idline->Eval(Xlen2, 0, "S");
+         lumcalc2 = Calculate(kLumiere, Yrap2, Xlen2);
+         //cout << "Extrapolating after end of ID line" << endl;
+      }
+      //cout << "Xlen1=" << Xlen1 << " Yrap1="<<Yrap1<< "  Lum_min = " << lumcalc1 << endl;
+      //cout << "Xlen2=" << Xlen2 << " Yrap2=" << Yrap2<< "  Lum_max = " << lumcalc2 << endl;
 
-		Int_t niter=0;
-		while(niter<20&&TMath::Abs(lumcalc-lumiere)/lumiere > 0.01){
-			if(lumcalc>lumiere){
-				Xlen2=Xlen;
-			}
-			else {
-				Xlen1=Xlen;
-			}
-			Xlen = (Xlen1+Xlen2)/2.;
-            Yrap = idline->Eval(Xlen,0,"S");
-            lumcalc = Calculate(kLumiere,Yrap,Xlen);
-            //cout << niter << " : Rapide = " << Yrap << " Lente = " << Xlen << " lumcalc = " << lumcalc << endl;
-            niter++;
-			
-		}
+      Xlen = (Xlen1 + Xlen2) / 2.;
+      Yrap = idline->Eval(Xlen, 0, "S");
+      Double_t  lumcalc = Calculate(kLumiere, Yrap, Xlen);
+      //cout << "-1 : Rapide = " << Yrap << " Lente = " << Xlen << " lumcalc = " << lumcalc << endl;
+
+      Int_t niter = 0;
+      while (niter < 20 && TMath::Abs(lumcalc - lumiere) / lumiere > 0.01) {
+         if (lumcalc > lumiere) {
+            Xlen2 = Xlen;
+         } else {
+            Xlen1 = Xlen;
+         }
+         Xlen = (Xlen1 + Xlen2) / 2.;
+         Yrap = idline->Eval(Xlen, 0, "S");
+         lumcalc = Calculate(kLumiere, Yrap, Xlen);
+         //cout << niter << " : Rapide = " << Yrap << " Lente = " << Xlen << " lumcalc = " << lumcalc << endl;
+         niter++;
+
+      }
 //        TMarker *mrk = new TMarker(Xlen,Yrap,2);
 //        mrk->SetMarkerSize(2);
 //        mrk->SetMarkerColor(kRed);
 //        if(idgcsi->IsDrawn()) idgcsi->IsDrawn()->cd();
 //        else {new TCanvas; idgcsi->Draw();}
 //        mrk->Draw();
-	}
-	else
-	{
-		KVIDCutLine*imf_line = (KVIDCutLine*)idgcsi->GetCut("IMF_line");
-		if (!imf_line){
-            //Warning("DeduceACQParameters","%s, No IMF_line defined",GetName());
-			return;
-		}
-		else {
-			Double_t  Yrap1,Yrap2,Xlen1,Xlen2;
-			imf_line->GetStartPoint(Xlen1,Yrap1);
-			imf_line->GetEndPoint(Xlen2,Yrap2);
-            Yrap1+=10.;//au-dessus de la ligne fragment
-            Yrap2+=10.;//au-dessus de la ligne fragment
-            Double_t  lumcalc1 = Calculate(kLumiere, Yrap1,Xlen1);
-            Double_t  lumcalc2 = Calculate(kLumiere, Yrap2,Xlen2);
-            if(lumiere<lumcalc1) {
-                Xlen2=Xlen1;
-                Yrap2=Yrap1;
-                lumcalc2=lumcalc1;
-                Xlen1=GetPedestal("L");
-                Yrap1=imf_line->Eval(Xlen1,0,"S")+10.;
-                lumcalc1 = Calculate(kLumiere, Yrap1,Xlen1);
-                //cout << "Extrapolating before start of IMF line" << endl;
-            }
-            else if(lumiere>lumcalc2) {
-                Xlen1=Xlen2;
-                Yrap1=Yrap2;
-                lumcalc1=lumcalc2;
-                Xlen2=4095;
-                Yrap2=imf_line->Eval(Xlen2,0,"S")+10.;
-                lumcalc2=Calculate(kLumiere,Yrap2,Xlen2);
-                //cout << "Extrapolating after end of IMF line" << endl;
-            }
-            //cout << "Xlen1=" << Xlen1 << " Yrap1="<<Yrap1<< "  Lum_min = " << lumcalc1 << endl;
-            //cout << "Xlen2=" << Xlen2 << " Yrap2=" << Yrap2<< "  Lum_max = " << lumcalc2 << endl;
+   } else {
+      KVIDCutLine* imf_line = (KVIDCutLine*)idgcsi->GetCut("IMF_line");
+      if (!imf_line) {
+         //Warning("DeduceACQParameters","%s, No IMF_line defined",GetName());
+         return;
+      } else {
+         Double_t  Yrap1, Yrap2, Xlen1, Xlen2;
+         imf_line->GetStartPoint(Xlen1, Yrap1);
+         imf_line->GetEndPoint(Xlen2, Yrap2);
+         Yrap1 += 10.; //au-dessus de la ligne fragment
+         Yrap2 += 10.; //au-dessus de la ligne fragment
+         Double_t  lumcalc1 = Calculate(kLumiere, Yrap1, Xlen1);
+         Double_t  lumcalc2 = Calculate(kLumiere, Yrap2, Xlen2);
+         if (lumiere < lumcalc1) {
+            Xlen2 = Xlen1;
+            Yrap2 = Yrap1;
+            lumcalc2 = lumcalc1;
+            Xlen1 = GetPedestal("L");
+            Yrap1 = imf_line->Eval(Xlen1, 0, "S") + 10.;
+            lumcalc1 = Calculate(kLumiere, Yrap1, Xlen1);
+            //cout << "Extrapolating before start of IMF line" << endl;
+         } else if (lumiere > lumcalc2) {
+            Xlen1 = Xlen2;
+            Yrap1 = Yrap2;
+            lumcalc1 = lumcalc2;
+            Xlen2 = 4095;
+            Yrap2 = imf_line->Eval(Xlen2, 0, "S") + 10.;
+            lumcalc2 = Calculate(kLumiere, Yrap2, Xlen2);
+            //cout << "Extrapolating after end of IMF line" << endl;
+         }
+         //cout << "Xlen1=" << Xlen1 << " Yrap1="<<Yrap1<< "  Lum_min = " << lumcalc1 << endl;
+         //cout << "Xlen2=" << Xlen2 << " Yrap2=" << Yrap2<< "  Lum_max = " << lumcalc2 << endl;
 
-			Xlen = (Xlen1+Xlen2)/2.;
-			Yrap = imf_line->Eval(Xlen) + 10.;//au-dessus de la ligne fragment
-            Double_t  lumcalc = Calculate(kLumiere,Yrap,Xlen);
-            //cout << "-1 : Rapide = " << Yrap << " Lente = " << Xlen << " lumcalc = " << lumcalc << endl;
+         Xlen = (Xlen1 + Xlen2) / 2.;
+         Yrap = imf_line->Eval(Xlen) + 10.;//au-dessus de la ligne fragment
+         Double_t  lumcalc = Calculate(kLumiere, Yrap, Xlen);
+         //cout << "-1 : Rapide = " << Yrap << " Lente = " << Xlen << " lumcalc = " << lumcalc << endl;
 
-			Int_t niter=0;
-			while(niter<20 && TMath::Abs(lumcalc-lumiere)/lumiere > 0.01){
-				if(lumcalc>lumiere){
-					Xlen2=Xlen;
-				}
-				else {
-					Xlen1=Xlen;
-				}
-				Xlen = (Xlen1+Xlen2)/2.;
-				Yrap = imf_line->Eval(Xlen) + 10.;//au-dessus de la ligne fragment
-                lumcalc = Calculate(kLumiere,Yrap,Xlen);
-                //cout << niter << " : Rapide = " << Yrap << " Lente = " << Xlen << " lumcalc = " << lumcalc << endl;
-				niter++;
-			}
-			if (niter==20){
-                Xlen=-1;
-                Yrap=-1;
-                Mt=-1;
-			}
+         Int_t niter = 0;
+         while (niter < 20 && TMath::Abs(lumcalc - lumiere) / lumiere > 0.01) {
+            if (lumcalc > lumiere) {
+               Xlen2 = Xlen;
+            } else {
+               Xlen1 = Xlen;
+            }
+            Xlen = (Xlen1 + Xlen2) / 2.;
+            Yrap = imf_line->Eval(Xlen) + 10.;//au-dessus de la ligne fragment
+            lumcalc = Calculate(kLumiere, Yrap, Xlen);
+            //cout << niter << " : Rapide = " << Yrap << " Lente = " << Xlen << " lumcalc = " << lumcalc << endl;
+            niter++;
+         }
+         if (niter == 20) {
+            Xlen = -1;
+            Yrap = -1;
+            Mt = -1;
+         }
 //            TMarker *mrk = new TMarker(Xlen,Yrap,2);
 //            mrk->SetMarkerSize(2);
 //            mrk->SetMarkerColor(kBlue);
 //            if(idgcsi->IsDrawn()) idgcsi->IsDrawn()->cd();
 //            else {new TCanvas; idgcsi->Draw();}
 //            mrk->Draw();
-        }
-		
-	}
-	GetACQParam("R")->SetData((UShort_t)Yrap);
-	GetACQParam("L")->SetData((UShort_t)Xlen);
-	GetACQParam("T")->SetData(Mt);
+      }
+
+   }
+   GetACQParam("R")->SetData((UShort_t)Yrap);
+   GetACQParam("L")->SetData((UShort_t)Xlen);
+   GetACQParam("T")->SetData(Mt);
 
 }

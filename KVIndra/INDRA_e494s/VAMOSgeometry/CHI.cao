@@ -36,6 +36,6 @@ CHI.Z: 61.6
 
 # Position of the reference trajectory in the detector reference frame
 # CHI.REF.[X,Y] has to be equal  to SI.REF.[X,Y] since both are in HARPEE chamber
-CHI.REF.X: 0.8
-CHI.REF.Y: -1.76
-CHI.REF.Z: 0
+CHI.REF.X: 4.32 
+CHI.REF.Y: -0.37
+CHI.REF.Z: -4.33

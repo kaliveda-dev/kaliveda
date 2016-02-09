@@ -199,24 +199,25 @@ public :
 //   TBranch        *b_TSED1_INDRA;   //!
 //   TBranch        *b_TSED1_MCP;   //!
 
-   KVIVSelector(TTree * /*tree*/ =0);
+   KVIVSelector(TTree* /*tree*/ = 0);
    virtual ~KVIVSelector();
-   virtual void    Init(TTree *tree);
+   virtual void    Init(TTree* tree);
 
-   KVIVReconEvent *GetEvent() {
-       return (KVIVReconEvent *)data;
+   KVIVReconEvent* GetEvent()
+   {
+      return (KVIVReconEvent*)data;
    };
 
-   static void Make(const Char_t * kvsname = "MyOwnKVIVSelector");
+   static void Make(const Char_t* kvsname = "MyOwnKVIVSelector");
+   virtual Bool_t Notify();
 
-
-   ClassDef(KVIVSelector,0);
+   ClassDef(KVIVSelector, 0);
 };
 
 #endif
 
 #ifdef KVIVSelector_cxx
-void KVIVSelector::Init(TTree *tree)
+void KVIVSelector::Init(TTree* tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -226,14 +227,14 @@ void KVIVSelector::Init(TTree *tree)
    // Init() will be called many times when running on PROOF
    // (once per file to be processed).
 
-	if(!tree) return;
-	TBranch *br = (TBranch *)tree->GetListOfBranches()->First();
+   if (!tree) return;
+   TBranch* br = (TBranch*)tree->GetListOfBranches()->First();
 
-	if( TClass::GetClass(br->GetClassName())->InheritsFrom("KVINDRAReconEvent") )
-		SetINDRAReconEventBranchName( br->GetName() );
+   if (TClass::GetClass(br->GetClassName())->InheritsFrom("KVINDRAReconEvent"))
+      SetINDRAReconEventBranchName(br->GetName());
 
-	KVSelector::Init(tree);
-	
+   KVSelector::Init(tree);
+
 //   fChain->SetBranchAddress("EchiM", &EchiM, &b_EchiM);
 //   fChain->SetBranchAddress("Echi", Echi, &b_Echi);
 //   fChain->SetBranchAddress("EchiNr", EchiNr, &b_EchiNr);

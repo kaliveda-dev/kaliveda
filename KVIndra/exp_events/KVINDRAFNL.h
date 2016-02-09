@@ -22,23 +22,23 @@ $Id: KVINDRAFNL.h,v 1.7 2007/03/02 14:36:03 franklan Exp $
 
 #include "KVINDRA4.h"
 
-class KVINDRAFNL:public KVINDRA4 {
+class KVINDRAFNL: public KVINDRA4 {
 
    virtual void MakeListOfDetectorTypes();
    virtual void PrototypeTelescopes();
    virtual void BuildGeometry();
 
- public:
+public:
 
-    KVINDRAFNL();
-    virtual ~ KVINDRAFNL();
+   KVINDRAFNL();
+   virtual ~ KVINDRAFNL();
 
-   virtual void Build(Int_t run=-1);
+   virtual void Build(Int_t run = -1);
 
-   KVINDRADetector *GetDetectorByType(UInt_t cou, UInt_t mod,
-                                 UInt_t type) const;
+   KVINDRADetector* GetDetectorByType(UInt_t cou, UInt_t mod,
+                                      UInt_t type) const;
 
-    ClassDef(KVINDRAFNL, 1)     //INDRA multidetector array for FNL experiment
+   ClassDef(KVINDRAFNL, 1)     //INDRA multidetector array for FNL experiment
 };
 
 #endif

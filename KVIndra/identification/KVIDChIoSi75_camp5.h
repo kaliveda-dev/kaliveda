@@ -6,24 +6,23 @@
 
 #include "KVIDChIoSi75.h"
 
-class KVIDChIoSi75_camp5 : public KVIDChIoSi75
-{
-    KVIDZAGrid *fGGgrid;//!
-    KVIDZAGrid *fPGgrid;//!
-    KVDetector *fChIo;//!
-    KVDetector *fSi;//!
+class KVIDChIoSi75_camp5 : public KVIDChIoSi75 {
+   KVIDZAGrid* fGGgrid;//!
+   KVIDZAGrid* fPGgrid;//!
+   KVDetector* fChIo;//!
+   KVDetector* fSi;//!
 
-   public:
+public:
    KVIDChIoSi75_camp5();
    virtual ~KVIDChIoSi75_camp5();
 
    virtual void Initialize(void);
-   Bool_t Identify(KVIdentificationResult*, Double_t x=-1., Double_t y=-1.);
+   Bool_t Identify(KVIdentificationResult*, Double_t x = -1., Double_t y = -1.);
 
-   virtual Double_t GetIDMapX(Option_t * opt = "");
-   virtual Double_t GetIDMapY(Option_t * opt = "");
+   virtual Double_t GetIDMapX(Option_t* opt = "");
+   virtual Double_t GetIDMapY(Option_t* opt = "");
 
-   ClassDef(KVIDChIoSi75_camp5,1)//ChIo-Si(75) identification for INDRA 5th campaign data
+   ClassDef(KVIDChIoSi75_camp5, 1) //ChIo-Si(75) identification for INDRA 5th campaign data
 };
 
 #endif

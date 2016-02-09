@@ -40,14 +40,14 @@ KVDBTable::KVDBTable()
 
 //__________________________________________________________________
 
-KVDBTable::KVDBTable(const Char_t * name, const Char_t * type,
+KVDBTable::KVDBTable(const Char_t* name, const Char_t* type,
                      Bool_t unique)
-:TFolder() // do not call TFolder(name,type) ctor as it creates a default TList for fFolders
+   : TFolder() // do not call TFolder(name,type) ctor as it creates a default TList for fFolders
 {
    SetName(name);
    SetTitle(type);
    fIsUnique = unique;
-   if(unique) fFolders = new KVUniqueNameList;
+   if (unique) fFolders = new KVUniqueNameList;
    else fFolders = new KVHashList;
    SetOwner();
 }
@@ -61,14 +61,14 @@ KVDBTable::~KVDBTable()
 
 //___________________________________________________________________
 
-Bool_t KVDBTable::AddRecord(KVDBRecord * rec)
+Bool_t KVDBTable::AddRecord(KVDBRecord* rec)
 {
    // Add a KVDBRecord to the list of available records and return kTRUE
    // If a default formatting string for names of numbered records has been
    // set (see SetDefaultFormat(const TString&)) the name of the record
    // will be automatically set here according to the format and its number.
 
-   if(HasDefaultFormat()) rec->SetName(Form(fDefFormatNumRec.Data(),rec->GetNumber()));
+   if (HasDefaultFormat()) rec->SetName(Form(fDefFormatNumRec.Data(), rec->GetNumber()));
    Add(rec);
    rec->SetTable(this);
    return kTRUE;
@@ -76,7 +76,7 @@ Bool_t KVDBTable::AddRecord(KVDBRecord * rec)
 
 //___________________________________________________________________
 
-void KVDBTable::RemoveRecord(KVDBRecord * rec)
+void KVDBTable::RemoveRecord(KVDBRecord* rec)
 {
    //Remove a KVDBRecord from the list of available records
 
@@ -89,7 +89,7 @@ void KVDBTable::RemoveRecord(KVDBRecord * rec)
 void KVDBTable::ls(Option_t*) const
 {
    cout << ClassName() << " : " << GetName() << " <---> " << GetTitle() << " ["
-           << GetRecords()->GetSize() << " records]" << endl;
+        << GetRecords()->GetSize() << " records]" << endl;
 }
 
 void KVDBTable::SetDefaultFormat(const TString& fmt)
@@ -106,7 +106,7 @@ void KVDBTable::SetDefaultFormat(const TString& fmt)
 
 //___________________________________________________________________________________//
 
-KVDBRecord *KVDBTable::GetRecord(Int_t num) const
+KVDBRecord* KVDBTable::GetRecord(Int_t num) const
 {
    // Sequential search for record using its number.
    // To keep things simple, we only search in the top level of the folder structure.
@@ -116,11 +116,11 @@ KVDBRecord *KVDBTable::GetRecord(Int_t num) const
    // (see SetDefaultFormat(const TString&)) the search will be performed using
    // the resulting formatted object name, which is fast (hash list).
 
-   if(HasDefaultFormat()) return GetRecord(Form(fDefFormatNumRec.Data(),num));
+   if (HasDefaultFormat()) return GetRecord(Form(fDefFormatNumRec.Data(), num));
 
    TIter next(GetListOfFolders());
-   KVDBRecord *obj = 0;
-   while ((obj = (KVDBRecord *) next()) && (obj->GetNumber() != num));
+   KVDBRecord* obj = 0;
+   while ((obj = (KVDBRecord*) next()) && (obj->GetNumber() != num));
    return (obj ? (obj->GetNumber() == num ? obj : 0) : 0);
 }
 
@@ -132,5 +132,5 @@ void KVDBTable::Rehash(void)
    // Call this method if the names of the records change after having been
    // added to the table, otherwise GetRecord(const char*) will not work.
 
-   ((KVHashList* )fFolders)->Rehash();
+   ((KVHashList*)fFolders)->Rehash();
 }

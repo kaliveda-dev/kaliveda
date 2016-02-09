@@ -23,8 +23,8 @@ ClassImp(KVGraph)
 
 KVGraph::KVGraph()
 {
-    // Default constructor
-    init();
+   // Default constructor
+   init();
 }
 
 //________________________________________________________________
@@ -44,8 +44,8 @@ KVGraph::KVGraph()
 
 KVGraph::KVGraph(Int_t n) : TGraphErrors(n)
 {
-    // Write your code here
-    init();
+   // Write your code here
+   init();
 }
 
 //________________________________________________________________
@@ -114,134 +114,127 @@ KVGraph::KVGraph(Int_t n) : TGraphErrors(n)
 
 KVGraph::~KVGraph()
 {
-    // Destructor
+   // Destructor
 }
 
-void KVGraph::Draw(Option_t *chopt)
+void KVGraph::Draw(Option_t* chopt)
 {
-    TGraphErrors::Draw(chopt);
+   TGraphErrors::Draw(chopt);
 
-    gPad->SetFillColor(0);
-    gPad->SetBorderMode(0);
-    gPad->SetBorderSize(2);
-    gPad->SetFrameBorderMode(0);
-    gPad->SetFrameLineColor(0);
-    gPad->SetFrameBorderMode(0);
+   gPad->SetFillColor(0);
+   gPad->SetBorderMode(0);
+   gPad->SetBorderSize(2);
+   gPad->SetFrameBorderMode(0);
+   gPad->SetFrameLineColor(0);
+   gPad->SetFrameBorderMode(0);
 
-    gPad->Modified();
-    gPad->Update();
+   gPad->Modified();
+   gPad->Update();
 
-    TString opt(chopt);
-    opt.ToLower();
-    if(!opt.Contains("t")) return;
+   TString opt(chopt);
+   opt.ToLower();
+   if (!opt.Contains("t")) return;
 
-    Double_t xmin = GetXaxis()->GetXmin();
-    Double_t xmax = GetXaxis()->GetXmax();
-    Double_t ymin = GetYaxis()->GetXmin();
-    Double_t ymax = GetYaxis()->GetXmax();
+   Double_t xmin = GetXaxis()->GetXmin();
+   Double_t xmax = GetXaxis()->GetXmax();
+   Double_t ymin = GetYaxis()->GetXmin();
+   Double_t ymax = GetYaxis()->GetXmax();
 
-    if((!fNDivX)&&fUseX) fDisplayDivX = GetBinArray(fNDivX,kTRUE);
-    if((!fNDivY)&&fUseY) fDisplayDivY = GetBinArray(fNDivY,kFALSE);
+   if ((!fNDivX) && fUseX) fDisplayDivX = GetBinArray(fNDivX, kTRUE);
+   if ((!fNDivY) && fUseY) fDisplayDivY = GetBinArray(fNDivY, kFALSE);
 
-    Double_t xstr, xstp, ystr, ystp;
-    if(fUseX)
-    {
-        xstr = TMath::MinElement(fNDivX,fDisplayDivX);
-        xstp = TMath::MaxElement(fNDivX,fDisplayDivX);
-    }
-    else
-    {
-        xstr = xmin;
-        xstp = xmax;
-    }
+   Double_t xstr, xstp, ystr, ystp;
+   if (fUseX) {
+      xstr = TMath::MinElement(fNDivX, fDisplayDivX);
+      xstp = TMath::MaxElement(fNDivX, fDisplayDivX);
+   } else {
+      xstr = xmin;
+      xstp = xmax;
+   }
 
-    if(fUseY)
-    {
-        ystr = TMath::MinElement(fNDivY,fDisplayDivY);
-        ystp = TMath::MaxElement(fNDivY,fDisplayDivY);
-    }
-    else
-    {
-        ystr = ymin;
-        ystp = ymax;
-    }
+   if (fUseY) {
+      ystr = TMath::MinElement(fNDivY, fDisplayDivY);
+      ystp = TMath::MaxElement(fNDivY, fDisplayDivY);
+   } else {
+      ystr = ymin;
+      ystp = ymax;
+   }
 
-    switch(fCropMode)
-    {
-    case kNoCrop:
-        xstr = TMath::Min(xmin,xstr);
-        xstp = TMath::Max(xmax,xstp);
-        ystr = TMath::Min(ymin,ystr);
-        ystp = TMath::Max(ymax,ystp);
-        break;
-    case kCropOnDiv:
-        break;
-    case kCropOnGraph:
-        xstr = TMath::Min(TMath::MinElement(GetN(),GetX()),xstr);
-        xstp = TMath::Max(TMath::MaxElement(GetN(),GetX()),xstp);
-        ystr = TMath::Min(TMath::MinElement(GetN(),GetY()),ystr);
-        ystp = TMath::Max(TMath::MaxElement(GetN(),GetY()),ystp);
-        break;
-    case  kCropMin:
-        xstr = TMath::Min(TMath::MinElement(GetN(),GetX()),xstr);
-        xstp = TMath::Max(xmax,xstp);
-        ystr = TMath::Min(TMath::MinElement(GetN(),GetY()),ystr);
-        ystp = TMath::Max(ymax,ystp);
-        break;
-    }
+   switch (fCropMode) {
+      case kNoCrop:
+         xstr = TMath::Min(xmin, xstr);
+         xstp = TMath::Max(xmax, xstp);
+         ystr = TMath::Min(ymin, ystr);
+         ystp = TMath::Max(ymax, ystp);
+         break;
+      case kCropOnDiv:
+         break;
+      case kCropOnGraph:
+         xstr = TMath::Min(TMath::MinElement(GetN(), GetX()), xstr);
+         xstp = TMath::Max(TMath::MaxElement(GetN(), GetX()), xstp);
+         ystr = TMath::Min(TMath::MinElement(GetN(), GetY()), ystr);
+         ystp = TMath::Max(TMath::MaxElement(GetN(), GetY()), ystp);
+         break;
+      case  kCropMin:
+         xstr = TMath::Min(TMath::MinElement(GetN(), GetX()), xstr);
+         xstp = TMath::Max(xmax, xstp);
+         ystr = TMath::Min(TMath::MinElement(GetN(), GetY()), ystr);
+         ystp = TMath::Max(ymax, ystp);
+         break;
+   }
 
-    TGaxis * axis = 0;
-    // draw new x axis and hide the old one but keeping its option
-    if(fUseX) axis = new KVGaxis(xstr,ymin,xstp,ymin,fNDivX,fDisplayDivX);
-    else      axis = new TGaxis(xstr,ymin,xstp,ymin,xstr,xstp,fNDivX);
-    axis->ImportAxisAttributes(GetXaxis());
-    HideAxis(GetXaxis());
-    axis->Draw();
+   TGaxis* axis = 0;
+   // draw new x axis and hide the old one but keeping its option
+   if (fUseX) axis = new KVGaxis(xstr, ymin, xstp, ymin, fNDivX, fDisplayDivX);
+   else      axis = new TGaxis(xstr, ymin, xstp, ymin, xstr, xstp, fNDivX);
+   axis->ImportAxisAttributes(GetXaxis());
+   HideAxis(GetXaxis());
+   axis->Draw();
 
-    // draw new y axis and hide the old one but keeping its option
-    if(fUseY) axis = new KVGaxis(xmin,ystr,xmin,ystp,fNDivY,fDisplayDivY);
-    else      axis = new TGaxis(xmin,ystr,xmin,ystp,ystr,ystp,fNDivY);
-    axis->ImportAxisAttributes(GetYaxis());
-    HideAxis(GetYaxis());
-    axis->Draw();
+   // draw new y axis and hide the old one but keeping its option
+   if (fUseY) axis = new KVGaxis(xmin, ystr, xmin, ystp, fNDivY, fDisplayDivY);
+   else      axis = new TGaxis(xmin, ystr, xmin, ystp, ystr, ystp, fNDivY);
+   axis->ImportAxisAttributes(GetYaxis());
+   HideAxis(GetYaxis());
+   axis->Draw();
 
-    gPad->Modified();
-    gPad->Update();
+   gPad->Modified();
+   gPad->Update();
 }
 
-void KVGraph::HideAxis(TAxis *ax)
+void KVGraph::HideAxis(TAxis* ax)
 {
-    ax->SetTitleSize(0.0);
-    ax->SetTickLength(0);
-    ax->SetAxisColor(0);
-    ax->SetLabelColor(0);
+   ax->SetTitleSize(0.0);
+   ax->SetTickLength(0);
+   ax->SetAxisColor(0);
+   ax->SetLabelColor(0);
 }
 
-Double_t * KVGraph::GetBinArray(Int_t &nbins, Bool_t xAxis)
+Double_t* KVGraph::GetBinArray(Int_t& nbins, Bool_t xAxis)
 {
-    Double_t* x;
-    if(xAxis) x = GetX();
-    else      x = GetY();
+   Double_t* x;
+   if (xAxis) x = GetX();
+   else      x = GetY();
 
-    KVNumberList nb;
-    for(Int_t i=0; i<GetN(); i++) nb.Add((x[i])*100);
+   KVNumberList nb;
+   for (Int_t i = 0; i < GetN(); i++) nb.Add((x[i]) * 100);
 
-    nb.Begin();
+   nb.Begin();
 
-    Double_t* bins = new Double_t[nbins];
-    Int_t i=0;
-    while( !nb.End() ) bins[i++] = (nb.Next())/100.;
+   Double_t* bins = new Double_t[nbins];
+   Int_t i = 0;
+   while (!nb.End()) bins[i++] = (nb.Next()) / 100.;
 
-    return bins;
+   return bins;
 }
 
 void KVGraph::init()
 {
-    fDisplayDivX = 0;
-    fDisplayDivY = 0;
-    fNDivX = fNDivY = 0;
-    fCropMode = kCropOnGraph;
-    fUseX = fUseY = kTRUE;
+   fDisplayDivX = 0;
+   fDisplayDivY = 0;
+   fNDivX = fNDivY = 0;
+   fCropMode = kCropOnGraph;
+   fUseX = fUseY = kTRUE;
 }
 
 

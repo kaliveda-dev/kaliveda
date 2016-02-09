@@ -10,7 +10,7 @@ KVVarGlob1Template::KVVarGlob1Template(void): KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVVarGlob1Template::KVVarGlob1Template(Char_t *nom): KVVarGlob1(nom)
+KVVarGlob1Template::KVVarGlob1Template(Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom (may not be modified)
@@ -19,7 +19,7 @@ KVVarGlob1Template::KVVarGlob1Template(Char_t *nom): KVVarGlob1(nom)
 }
 
 //_________________________________________________________________
-KVVarGlob1Template::KVVarGlob1Template(const KVVarGlob1Template &a): KVVarGlob1()
+KVVarGlob1Template::KVVarGlob1Template(const KVVarGlob1Template& a): KVVarGlob1()
 {
 //
 // Copy constructor (may not be modified)
@@ -37,9 +37,9 @@ KVVarGlob1Template::~KVVarGlob1Template(void)
 }
 
 //_________________________________________________________________
-void KVVarGlob1Template::Copy(TObject&a) const
+void KVVarGlob1Template::Copy(TObject& a) const
 {
-	// Copy properties of 'this' object into the KVVarGlob object referenced by 'a'
+   // Copy properties of 'this' object into the KVVarGlob object referenced by 'a'
 
    KVVarGlob1::Copy(a);// copy attributes of KVVarGlob1 base object
 
@@ -57,7 +57,7 @@ void KVVarGlob1Template::Copy(TObject&a) const
 }
 
 //_________________________________________________________________
-KVVarGlob1Template& KVVarGlob1Template::operator = (const KVVarGlob1Template &a)
+KVVarGlob1Template& KVVarGlob1Template::operator = (const KVVarGlob1Template& a)
 {
 //
 // Operator = (may not be modified)

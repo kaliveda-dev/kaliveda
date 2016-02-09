@@ -51,46 +51,54 @@ enum KV_functions {
    kDB_RECORD_LIST
 };
 
-class KVWidget:public KVBase {
+class KVWidget: public KVBase {
 
- private:
+private:
    static Long_t fCurrentID;    // current widget ID known by all widgets - it basically counts
    //     the total number of all KVWidgets in existence
    Long_t fWidID;               // this widget's unique ID
    Long_t fFunction;            // function of widget
-   TObject *fObject;            //! base class pointer to KVMultiDetectorArray object associated with widget
-   TGFrame *fWidget;            //! base pointer to GUI widget associated with widget
+   TObject* fObject;            //! base class pointer to KVMultiDetectorArray object associated with widget
+   TGFrame* fWidget;            //! base pointer to GUI widget associated with widget
 
- public:
-    KVWidget();
-    KVWidget(TObject * obj, Long_t func);
-    virtual ~ KVWidget();
-   Long_t GetID() {
+public:
+   KVWidget();
+   KVWidget(TObject* obj, Long_t func);
+   virtual ~ KVWidget();
+   Long_t GetID()
+   {
       return fWidID;
    };
-   void SetFunction(Long_t func) {
+   void SetFunction(Long_t func)
+   {
       fFunction = func;
    };
-   void SetObject(TObject * obj) {
+   void SetObject(TObject* obj)
+   {
       fObject = obj;
    };
-   Long_t GetFunction() const {
+   Long_t GetFunction() const
+   {
       return fFunction;
    };
-   TObject *GetObject() const {
+   TObject* GetObject() const
+   {
       return fObject;
    };
-   void SetWidget(TGFrame * wid) {
+   void SetWidget(TGFrame* wid)
+   {
       fWidget = wid;
    };
-   TGFrame *GetWidget() const {
+   TGFrame* GetWidget() const
+   {
       return fWidget;
    };
-   void ResetAllWidgets() {
+   void ResetAllWidgets()
+   {
       fCurrentID = 0;
    }                            //next created widget will have ID = 1
    virtual void Action(Long_t parm = 0) const;
-   virtual void Print(Option_t * opt = "") const;
+   virtual void Print(Option_t* opt = "") const;
 
    ClassDef(KVWidget, 0)        // Class holding all information relative to widgets in KVBrowser
 };

@@ -13,25 +13,24 @@ $Date: 2009/04/06 15:23:58 $
 #include "KVIDSiLiCsI.h"
 #include "KVIDZAGrid.h"
 
-class KVIDSiLiCsI_camp5 : public KVIDSiLiCsI
-{
+class KVIDSiLiCsI_camp5 : public KVIDSiLiCsI {
 
    KVIDZAGrid* fGGgrid;//! grid used for SiLi(GG)-CsI(R) charge & mass identification
    KVIDZAGrid* fPGgrid;//! grid used for SiLi(PG)-CsI(R) charge & mass identification
-	KVDetector* fSiLi;//!
-	KVDetector* fCsI;//!
+   KVDetector* fSiLi;//!
+   KVDetector* fCsI;//!
 
-   public:
+public:
    KVIDSiLiCsI_camp5();
    virtual ~KVIDSiLiCsI_camp5();
 
    virtual void Initialize(void);
-   Bool_t Identify(KVIdentificationResult*, Double_t x=-1., Double_t y=-1.);
+   Bool_t Identify(KVIdentificationResult*, Double_t x = -1., Double_t y = -1.);
 
-   virtual Double_t GetIDMapX(Option_t * opt = "");
-   virtual Double_t GetIDMapY(Option_t * opt = "");
+   virtual Double_t GetIDMapX(Option_t* opt = "");
+   virtual Double_t GetIDMapY(Option_t* opt = "");
 
-   ClassDef(KVIDSiLiCsI_camp5,1)//SiLi-CsI identification for INDRA_camp5 dataset
+   ClassDef(KVIDSiLiCsI_camp5, 1) //SiLi-CsI identification for INDRA_camp5 dataset
 };
 
 #endif

@@ -30,71 +30,69 @@ KVChIo_e475s::KVChIo_e475s()
 {
    //Default constructor
    fSegment = 0;
-	
-	//initialise non-persistent pointers
-	fcalibPG=0;
-	fcalibGG=0;
-	
+
+   //initialise non-persistent pointers
+   fcalibPG = 0;
+   fcalibGG = 0;
+
 }
 
 //------------------------------
-KVChIo_e475s::KVChIo_e475s(Float_t pressure, Float_t thick):KVChIo(pressure,thick)
+KVChIo_e475s::KVChIo_e475s(Float_t pressure, Float_t thick): KVChIo(pressure, thick)
 //------------------------------
 {
-   fcalibPG=0;
-	fcalibGG=0;
+   fcalibPG = 0;
+   fcalibGG = 0;
 }
 
 //------------------------------
-void KVChIo_e475s::SetCalibrator(KVDBParameterSet *kvdbps)
+void KVChIo_e475s::SetCalibrator(KVDBParameterSet* kvdbps)
 //------------------------------
 {
-	KVFunctionCal *cali = new KVFunctionCal(kvdbps);
-   if(!AddCalibrator(cali)) {
-		Warning("SetCalibrator(KVDBParameterSet*)",
-                    "Addition of Calibrator %s %s failed !", kvdbps->GetName(),kvdbps->GetTitle());
-		delete cali;
-	}
-	else {
-		if (TString(cali->GetType()).Contains("(PG)")) 	fcalibPG=cali;
-		else 															fcalibGG=cali;
-	}
+   KVFunctionCal* cali = new KVFunctionCal(kvdbps);
+   if (!AddCalibrator(cali)) {
+      Warning("SetCalibrator(KVDBParameterSet*)",
+              "Addition of Calibrator %s %s failed !", kvdbps->GetName(), kvdbps->GetTitle());
+      delete cali;
+   } else {
+      if (TString(cali->GetType()).Contains("(PG)"))  fcalibPG = cali;
+      else                                            fcalibGG = cali;
+   }
 }
 //------------------------------
-void KVChIo_e475s::ChangeCalibParameters(KVDBParameterSet *kvdbps)
+void KVChIo_e475s::ChangeCalibParameters(KVDBParameterSet* kvdbps)
 //------------------------------
 {
-	if (TString(kvdbps->GetTitle()).Contains("PG")){
-		fcalibPG->ChangeCalibParameters(kvdbps);	
-	}
-	else {
-		fcalibGG->ChangeCalibParameters(kvdbps);
-	}
-	
+   if (TString(kvdbps->GetTitle()).Contains("PG")) {
+      fcalibPG->ChangeCalibParameters(kvdbps);
+   } else {
+      fcalibGG->ChangeCalibParameters(kvdbps);
+   }
+
 }
 
 //------------------------------
-Double_t KVChIo_e475s::GetOriginalValue(Float_t to,TString signal)
+Double_t KVChIo_e475s::GetOriginalValue(Float_t to, TString signal)
 //------------------------------
 {
-if (IsCalibratedBySignal(signal)) return GetCalibratorBySignal(signal)->Invert(to);
-else return 0.;
-}	
-
-//------------------------------
-Double_t KVChIo_e475s::GetCalibratedValue(Float_t from,TString signal)
-//------------------------------
-{
-if (IsCalibratedBySignal(signal)) return GetCalibratorBySignal(signal)->Compute(from);
-else return 0.;
+   if (IsCalibratedBySignal(signal)) return GetCalibratorBySignal(signal)->Invert(to);
+   else return 0.;
 }
 
 //------------------------------
-KVFunctionCal *KVChIo_e475s::GetCalibratorBySignal(TString signal) const
+Double_t KVChIo_e475s::GetCalibratedValue(Float_t from, TString signal)
 //------------------------------
 {
-if (signal=="PG")	return fcalibPG;
-else 					return fcalibGG;
+   if (IsCalibratedBySignal(signal)) return GetCalibratorBySignal(signal)->Compute(from);
+   else return 0.;
+}
+
+//------------------------------
+KVFunctionCal* KVChIo_e475s::GetCalibratorBySignal(TString signal) const
+//------------------------------
+{
+   if (signal == "PG") return fcalibPG;
+   else              return fcalibGG;
 }
 
 
@@ -102,43 +100,43 @@ else 					return fcalibGG;
 Bool_t  KVChIo_e475s::IsCalibrated() const
 //------------------------------
 {
-   if ( IsCalibratedBySignal("PG")||IsCalibratedBySignal("GG") ) return kTRUE;
-	else return kFALSE;
-	
+   if (IsCalibratedBySignal("PG") || IsCalibratedBySignal("GG")) return kTRUE;
+   else return kFALSE;
+
 }
 
 //------------------------------
 Bool_t  KVChIo_e475s::IsCalibratedBySignal(TString signal) const
 //------------------------------
 {
-   return ( GetCalibratorBySignal(signal) );
-	
+   return (GetCalibratorBySignal(signal));
+
 }
 
 //------------------------------
 Double_t  KVChIo_e475s::GetCalibratedEnergy()
 //------------------------------
 {
-   return GetCalibratedValue(TMath::Max(Float_t(0.),GetPG()-GetPedestal("PG")),"PG");
+   return GetCalibratedValue(TMath::Max(Float_t(0.), GetPG() - GetPedestal("PG")), "PG");
 }
 
 //------------------------------
 Double_t KVChIo_e475s::GetEnergy()
 //------------------------------
 {
-   
-	//Redefinition of KVDetector::GetEnergy().
+
+   //Redefinition of KVDetector::GetEnergy().
    //If energy lost in active (gas) layer is already set (e.g. by calculation of energy loss
    //of charged particles), return its value.
    //
    //Returns 0 if (i) no calibration present (ii) calibration present but no data in acquisition parameters
-	Double_t ELoss = KVDetector::GetEnergy();
-   if( ELoss > 0 ) return KVDetector::GetEnergy();
-	ELoss = GetCalibratedEnergy();
-	if( ELoss < 0 ) ELoss = 0;
-	SetEnergy(ELoss);
-	return ELoss;
-	
+   Double_t ELoss = KVDetector::GetEnergy();
+   if (ELoss > 0) return KVDetector::GetEnergy();
+   ELoss = GetCalibratedEnergy();
+   if (ELoss < 0) ELoss = 0;
+   SetEnergy(ELoss);
+   return ELoss;
+
 }
 
 //______________________________________________________________________________
@@ -148,24 +146,24 @@ Short_t KVChIo_e475s::GetCalcACQParam(KVACQParam* ACQ, Double_t ECalc) const
    // Calculates & returns value of given acquisition parameter corresponding to
    // given calculated energy loss in the detector
    // Returns -1 if detector is not calibrated
-   
-   if(!IsCalibratedBySignal(ACQ->GetType())) return -1;
+
+   if (!IsCalibratedBySignal(ACQ->GetType())) return -1;
    Double_t orig = const_cast<KVChIo_e475s*>(this)->GetOriginalValue((Float_t)ECalc, ACQ->GetType())
-         + const_cast<KVChIo_e475s*>(this)->GetPedestal(ACQ->GetType());
+                   + const_cast<KVChIo_e475s*>(this)->GetPedestal(ACQ->GetType());
    return (Short_t)orig;
 }
 
 //______________________________________________________________________________
 
-void KVChIo_e475s::Streamer(TBuffer &R__b)
+void KVChIo_e475s::Streamer(TBuffer& R__b)
 {
    // Stream an object of class KVChIo_e475s.
    // We set the pointers to the calibrator objects
 
    if (R__b.IsReading()) {
       KVChIo_e475s::Class()->ReadBuffer(R__b, this);
-      fcalibPG  =  (KVFunctionCal *)GetCalibrator("Channel->MeV(PG)");
-      fcalibGG  =  (KVFunctionCal *)GetCalibrator("Channel->MeV(GG)");
+      fcalibPG  = (KVFunctionCal*)GetCalibrator("Channel->MeV(PG)");
+      fcalibGG  = (KVFunctionCal*)GetCalibrator("Channel->MeV(GG)");
    } else {
       KVChIo_e475s::Class()->WriteBuffer(R__b, this);
    }

@@ -48,13 +48,13 @@ ClassImp(KVParticleCondition)
 KVHashList KVParticleCondition::fgOptimized;
 
 KVParticleCondition::KVParticleCondition()
-      : KVBase("KVParticleCondition", "Particle selection criteria")
+   : KVBase("KVParticleCondition", "Particle selection criteria")
 {
    //default ctor
-   fOptimal=0;
-   cf=0;
-   fOptOK=kFALSE;
-   fNUsing=0;
+   fOptimal = 0;
+   cf = 0;
+   fOptOK = kFALSE;
+   fNUsing = 0;
 }
 
 //_____________________________________________________________________________//
@@ -62,13 +62,13 @@ KVParticleCondition::KVParticleCondition()
 KVParticleCondition::~KVParticleCondition()
 {
    //default dtor
-   if(fOptimal){
+   if (fOptimal) {
       // do not delete optimized condition unless we are the last to use it
       --(fOptimal->fNUsing);
-      if(!(fOptimal->fNUsing)){
+      if (!(fOptimal->fNUsing)) {
          fgOptimized.Remove(fOptimal);
          delete fOptimal;
-         fOptimal=0;
+         fOptimal = 0;
       }
    }
    SafeDelete(cf);
@@ -77,14 +77,14 @@ KVParticleCondition::~KVParticleCondition()
 //_____________________________________________________________________________//
 
 KVParticleCondition::KVParticleCondition(const Char_t* cond)
-      : KVBase(cond,"KVParticleCondition")
+   : KVBase(cond, "KVParticleCondition")
 {
    //Create named object and set condition
-   fOptimal=0;
+   fOptimal = 0;
    Set(cond);
-   cf=0;
-   fOptOK=kFALSE;
-   fNUsing=0;
+   cf = 0;
+   fOptOK = kFALSE;
+   fNUsing = 0;
 }
 
 //_____________________________________________________________________________//
@@ -94,9 +94,9 @@ Bool_t KVParticleCondition::Test(KVNucleus* nuc)
    //Evaluates the condition for the particle in question
    //If optimisation fails (see method Optimize()), the condition will always
    //be evaluated as 'kFALSE' for all particles
-   
-   if(!fOptimal) Optimize();
-   
+
+   if (!fOptimal) Optimize();
+
    return (fOptOK ? fOptimal->Test(nuc) : kFALSE);
 }
 
@@ -119,26 +119,26 @@ void KVParticleCondition::Set(const Char_t* cond)
    //we add a ";" if there isn't already
    fCondition = cond;
    Ssiz_t ind = fCondition.Index(";");
-   if(ind<0){
-      fCondition_raw=fCondition;
-      fCondition+=";";
+   if (ind < 0) {
+      fCondition_raw = fCondition;
+      fCondition += ";";
    } else {
-      fCondition_raw=fCondition.Strip(TString::kTrailing,';');
+      fCondition_raw = fCondition.Strip(TString::kTrailing, ';');
    }
    fCondition_brackets = "(" + fCondition_raw + ")";
 }
 
 //_____________________________________________________________________________//
 
-void KVParticleCondition::Copy(TObject & obj) const
+void KVParticleCondition::Copy(TObject& obj) const
 {
    //Copy this to obj
    KVBase::Copy(obj);
-   ((KVParticleCondition &) obj).Set(fCondition.Data());
-   ((KVParticleCondition &) obj).fOptOK = fOptOK;
-   if(fClassName!="") ((KVParticleCondition &) obj).SetParticleClassName(fClassName.Data());
-   if(cf){
-      ((KVParticleCondition &) obj).SetClassFactory(cf);
+   ((KVParticleCondition&) obj).Set(fCondition.Data());
+   ((KVParticleCondition&) obj).fOptOK = fOptOK;
+   if (fClassName != "")((KVParticleCondition&) obj).SetParticleClassName(fClassName.Data());
+   if (cf) {
+      ((KVParticleCondition&) obj).SetClassFactory(cf);
    }
 }
 
@@ -154,29 +154,29 @@ void KVParticleCondition::SetClassFactory(KVClassFactory* CF)
 
 //_____________________________________________________________________________//
 
-KVParticleCondition::KVParticleCondition(const KVParticleCondition &obj)
-      : KVBase("KVParticleCondition", "Particle selection criteria")
+KVParticleCondition::KVParticleCondition(const KVParticleCondition& obj)
+   : KVBase("KVParticleCondition", "Particle selection criteria")
 {
-   fOptimal=0;
-   cf=0;
-   fOptOK=kFALSE;
-   fNUsing=0;
+   fOptimal = 0;
+   cf = 0;
+   fOptOK = kFALSE;
+   fNUsing = 0;
    //Copy ctor
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    obj.Copy(*this);
 #else
-   ((KVParticleCondition &) obj).Copy(*this);
+   ((KVParticleCondition&) obj).Copy(*this);
 #endif
 }
 
 //_____________________________________________________________________________//
 
-KVParticleCondition& KVParticleCondition::operator=(const KVParticleCondition &obj)
+KVParticleCondition& KVParticleCondition::operator=(const KVParticleCondition& obj)
 {
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    obj.Copy(*this);
 #else
-   ((KVParticleCondition &) obj).Copy(*this);
+   ((KVParticleCondition&) obj).Copy(*this);
 #endif
    return (*this);
 }
@@ -191,27 +191,27 @@ KVParticleCondition& KVParticleCondition::operator=(const Char_t* sel)
 
 //_____________________________________________________________________________//
 
-KVParticleCondition KVParticleCondition::operator&&(const KVParticleCondition &obj)
+KVParticleCondition KVParticleCondition::operator&&(const KVParticleCondition& obj)
 {
    //Perform boolean AND between the two selection conditions
    //If SetParticleClassName has been called for either of the two conditions,
    //it will be called for the resulting condition with the same value
    KVParticleCondition tmp(fCondition_brackets + " && " + obj.fCondition_brackets);
-   if(fClassName!="") tmp.SetParticleClassName(fClassName);
-   else if(obj.fClassName!="") tmp.SetParticleClassName(obj.fClassName);
+   if (fClassName != "") tmp.SetParticleClassName(fClassName);
+   else if (obj.fClassName != "") tmp.SetParticleClassName(obj.fClassName);
    return tmp;
 }
 
 //_____________________________________________________________________________//
 
-KVParticleCondition KVParticleCondition::operator||(const KVParticleCondition &obj)
+KVParticleCondition KVParticleCondition::operator||(const KVParticleCondition& obj)
 {
    //Perform boolean OR between the two selection conditions
    //If SetParticleClassName has been called for either of the two conditions,
    //it will be called for the resulting condition with the same value
    KVParticleCondition tmp(fCondition_brackets + " || " + obj.fCondition_brackets);
-   if(fClassName!="") tmp.SetParticleClassName(fClassName);
-   else if(obj.fClassName!="") tmp.SetParticleClassName(obj.fClassName);
+   if (fClassName != "") tmp.SetParticleClassName(fClassName);
+   else if (obj.fClassName != "") tmp.SetParticleClassName(obj.fClassName);
    return tmp;
 }
 
@@ -243,7 +243,7 @@ void KVParticleCondition::AddExtraInclude(const Char_t* inc_file)
    //    p.AddExtraInclude("KVDBSystem.h");
    //
    //before the first call to p.Test() (when optimization occurs).
-   
+
    CreateClassFactory();
    cf->AddImplIncludeFile(inc_file);
 }
@@ -253,9 +253,9 @@ void KVParticleCondition::AddExtraInclude(const Char_t* inc_file)
 void KVParticleCondition::CreateClassFactory()
 {
    //Initialises KVClassFactory object used for optimization if it doesn't exist
-   
-   if(cf) return;
-   
+
+   if (cf) return;
+
    // unique name for new class
    TUUID unique;
    KVString new_class = unique.AsString();
@@ -265,7 +265,7 @@ void KVParticleCondition::CreateClassFactory()
 
    //create new class
    cf = new KVClassFactory(new_class.Data(), "Particle condition to test", "KVParticleCondition");
-   
+
 }
 
 //_____________________________________________________________________________//
@@ -278,79 +278,81 @@ void KVParticleCondition::Optimize()
    //The new class is added to the list of plugins of type KVParticleCondition,
    //then an instance of the class is generated and a pointer to it stored in fOptimal.
    //This object is then used in the Test method of this object to test the condition.
-   
+
    /* check that the same condition has not already been optimized */
    fOptimal = (KVParticleCondition*)fgOptimized.FindObject(GetName());
-   if(fOptimal){
+   if (fOptimal) {
       Info("Optimize", "Using existing optimized condition %p", fOptimal);
       fOptimal->fNUsing++;
-      fOptOK=kTRUE;
+      fOptOK = kTRUE;
       return;
    }
    Info("Optimize", "Optimization of KVParticleCondition : %s", fCondition.Data());
-   
+
    CreateClassFactory();
    //add Test() method
    cf->AddMethod("Test", "Bool_t");
    cf->AddMethodArgument("Test", "KVNucleus*", "nuc");
    cf->AddHeaderIncludeFile("KVNucleus.h");
-   
+
    //write body of method
    KVString body("   //Optimized Test method for particle condition\n");
    KVString pointer = "nuc";
-   if(fClassName != "") {
+   if (fClassName != "") {
       pointer.Form("((%s*)nuc)", fClassName.Data());
       //upcasting pointer - we need to add corresponding #include to '.cpp' file
-      cf->AddImplIncludeFile( Form("%s.h", fClassName.Data()) );
+      cf->AddImplIncludeFile(Form("%s.h", fClassName.Data()));
    }
    KVString tmp;
    tmp = fCondition;
    tmp.ReplaceAll("_NUC_", pointer.Data());
    body += "   return ";
    body += tmp;
-   
+
    cf->AddMethodBody("Test", body);
-   
+
    //generate .cpp and .h for new class
    cf->GenerateCode();
    KVString H_file(cf->GetHeaderFileName());
    KVString C_file(cf->GetImpFileName());
-   
+
    //add plugin for new class
    gROOT->GetPluginManager()->AddHandler("KVParticleCondition", cf->GetClassName(), cf->GetClassName(),
-                                               Form("%s+", cf->GetImpFileName()), Form("%s()", cf->GetClassName()));
-   
+                                         Form("%s+", cf->GetImpFileName()), Form("%s()", cf->GetClassName()));
+
    //load plugin
-   TPluginHandler *ph;
+   TPluginHandler* ph;
    if (!(ph = LoadPlugin("KVParticleCondition", cf->GetClassName()))) {
-      Error("Optimize", " *** Optimization failed for KVParticleCondition : %s",fCondition.Data());
+      Error("Optimize", " *** Optimization failed for KVParticleCondition : %s", fCondition.Data());
       Error("Optimize", " *** Use method AddExtraInclude(const Char_t*) to give the names of all necessary header files for compilation of your condition.");
       Error("Optimize", " *** THIS CONDITION WILL BE EVALUATED AS kFALSE FOR ALL PARTICLES!!!");
-      delete cf; cf=0;
+      delete cf;
+      cf = 0;
       //we set fOptimal to a non-zero value to avoid calling Optimize
       //every time that Test() is called subsequently.
-      fOptimal=this;
+      fOptimal = this;
       fOptOK = kFALSE;
       return;
    }
    fOptOK = kTRUE;
-   delete cf; cf=0;
+   delete cf;
+   cf = 0;
    //execute constructor
    fOptimal = (KVParticleCondition*) ph->ExecPlugin(0);
-   
+
    Info("Optimize", "fOptimal = %p", fOptimal);
-     if( !fOptimal ){
-      Error("Optimize", " *** Optimization failed for KVParticleCondition : %s",fCondition.Data());
+   if (!fOptimal) {
+      Error("Optimize", " *** Optimization failed for KVParticleCondition : %s", fCondition.Data());
       Error("Optimize", " *** Use method AddExtraInclude(const Char_t*) to give the names of all necessary header files for compilation of your condition.");
       Error("Optimize", " *** THIS CONDITION WILL BE EVALUATED AS kFALSE FOR ALL PARTICLES!!!");
       //we set fOptimal to a non-zero value to avoid calling Optimize
       //every time that Test() is called subsequently.
-      fOptimal=this;
+      fOptimal = this;
       fOptOK = kFALSE;
-     }       
+   }
    //remove temporary files
-   gSystem->Unlink( H_file.Data() );
-   gSystem->Unlink( C_file.Data() );
+   gSystem->Unlink(H_file.Data());
+   gSystem->Unlink(C_file.Data());
    // add to list of optimized conditions
    fOptimal->SetName(GetName());
    fgOptimized.Add(fOptimal);
@@ -366,7 +368,7 @@ void KVParticleCondition::Print(Option_t*) const
    cout << " * classname = " << fClassName.Data() << endl;
    cout << " * fOptimal = " << fOptimal << endl;
    cout << " * fNUsing = " << fNUsing << endl;
-   if(cf){
+   if (cf) {
       cout << " * classfactory :" << endl;
       cf->Print();
    }

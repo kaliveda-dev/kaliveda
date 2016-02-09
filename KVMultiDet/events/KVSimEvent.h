@@ -6,14 +6,13 @@
 
 #include "KVEvent.h"
 
-class KVSimEvent : public KVEvent
-{
-	public:
-   
-	KVSimEvent(Int_t mult = 50, const char *classname = "KVSimNucleus");
-	virtual ~KVSimEvent();
-   
-   ClassDef(KVSimEvent,3)//Events from simulation
+class KVSimEvent : public KVEvent {
+public:
+
+   KVSimEvent(Int_t mult = 50, const char* classname = "KVSimNucleus");
+   virtual ~KVSimEvent();
+
+   ClassDef(KVSimEvent, 3) //Events from simulation
 };
 
 #endif

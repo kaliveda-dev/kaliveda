@@ -12,21 +12,21 @@ $Date: 2007/01/04 16:38:50 $
 
 #include <KVDataTransfer.h>
 
-class KVDataTransferBBFTP:public KVDataTransfer {
-   KVDataRepository *fServer;   //data repository with BBFTP server
+class KVDataTransferBBFTP: public KVDataTransfer {
+   KVDataRepository* fServer;   //data repository with BBFTP server
 
- public:
+public:
 
-    KVDataTransferBBFTP();
-    virtual ~ KVDataTransferBBFTP();
+   KVDataTransferBBFTP();
+   virtual ~ KVDataTransferBBFTP();
 
- protected:
+protected:
 
-    virtual void init();
+   virtual void init();
    virtual void ExecuteCommand();
    virtual void WriteTransferScript();
 
-    ClassDef(KVDataTransferBBFTP, 0)    //File transfer between repositories using bbftp
+   ClassDef(KVDataTransferBBFTP, 0)    //File transfer between repositories using bbftp
 };
 
 #endif

@@ -18,8 +18,14 @@ class KVFlowTensor: public KVVarGlob {
    } weight;
    TVectorD fEVal;//! the 3 eigenvalues
    TVector3 fEVec[3];//! the 3 eigenvectors
-   Double_t f(int i) const { return fEVal[i-1]; }
-   const TVector3& e(int i) const { return fEVec[i-1]; }
+   Double_t f(int i) const
+   {
+      return fEVal[i - 1];
+   }
+   const TVector3& e(int i) const
+   {
+      return fEVec[i - 1];
+   }
    Bool_t fCalculated;
    enum {
       kFlowAngle,
@@ -43,20 +49,20 @@ protected:
 
 public:
    KVFlowTensor(void);
-   KVFlowTensor(Char_t *nom);
-   KVFlowTensor(const KVFlowTensor &a);
+   KVFlowTensor(Char_t* nom);
+   KVFlowTensor(const KVFlowTensor& a);
 
    virtual ~KVFlowTensor(void);
 
-   virtual void Copy(TObject & obj) const;
-   
-   KVFlowTensor& operator = (const KVFlowTensor &a);
+   virtual void Copy(TObject& obj) const;
+
+   KVFlowTensor& operator = (const KVFlowTensor& a);
 
    virtual void Init(void);
    virtual void Reset(void);
 
-   virtual Double_t *GetValuePtr(void);
-   virtual TObject *GetObject(void) const;
+   virtual Double_t* GetValuePtr(void);
+   virtual TObject* GetObject(void) const;
 private:
    void init_KVFlowTensor();
 public:
@@ -64,7 +70,7 @@ public:
    const TRotation& GetAziReacPlaneRotation();
    const TRotation& GetFlowReacPlaneRotation();
 
-   ClassDef(KVFlowTensor,1)//Kinetic energy flow tensor of Gyulassy et al
+   ClassDef(KVFlowTensor, 1) //Kinetic energy flow tensor of Gyulassy et al
 };
 
 

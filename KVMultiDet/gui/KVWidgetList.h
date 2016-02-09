@@ -24,16 +24,16 @@ $Id: KVWidgetList.h,v 1.4 2006/10/19 14:32:43 franklan Exp $
 
 class KVWidget;
 
-class KVWidgetList:public KVList {
+class KVWidgetList: public KVList {
 
- public:
+public:
 
    KVWidgetList();
    virtual ~ KVWidgetList();
-   KVWidget *GetWidget(Long_t id);
+   KVWidget* GetWidget(Long_t id);
    virtual void PrintWidgets() const;
 
-    ClassDef(KVWidgetList, 0)   // list container for KVWidgets
+   ClassDef(KVWidgetList, 0)   // list container for KVWidgets
 };
 
 #endif

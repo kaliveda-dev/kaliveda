@@ -12,20 +12,20 @@ $Date: 2007/02/13 18:18:18 $
 
 #include <KVINDRADB.h>
 
-class KVINDRADB_e416a : public KVINDRADB
-{
-   KVDBTable *fBICPressures;   //-> table of BIC pressures
-   public:
+class KVINDRADB_e416a : public KVINDRADB {
+   KVDBTable* fBICPressures;   //-> table of BIC pressures
+public:
 
-   KVINDRADB_e416a(){ 
+   KVINDRADB_e416a()
+   {
       fBICPressures = AddTable("BIC Pressures", "Pressures of BIC");
    };
-   KVINDRADB_e416a(const Char_t * name);
+   KVINDRADB_e416a(const Char_t* name);
    virtual ~KVINDRADB_e416a();
    void Build();
    virtual void ReadBICPressures();
 
-   ClassDef(KVINDRADB_e416a,1)//Database for E416a experiment
+   ClassDef(KVINDRADB_e416a, 1) //Database for E416a experiment
 };
 
 #endif

@@ -24,7 +24,7 @@ ClassImp(GTOneScaler)
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Part of ROOTGanilTape 
+// Part of ROOTGanilTape
 //
 // GTOneScaler
 //
@@ -35,25 +35,25 @@ ClassImp(GTOneScaler)
 //______________________________________________________________________________
 GTOneScaler::GTOneScaler(void)
 {
-  // Default constructor. dont do anything
+   // Default constructor. dont do anything
 }
 
 
 //______________________________________________________________________________
-GTOneScaler::GTOneScaler(scale_struct *s)
+GTOneScaler::GTOneScaler(scale_struct* s)
 {
-  Set(s);
+   Set(s);
 }
 
 //______________________________________________________________________________
-void GTOneScaler::Set(scale_struct *s)
+void GTOneScaler::Set(scale_struct* s)
 {
-  fLabel  =s->Label;
-  fStatus =s->Status;
-  fCount  =s->Count;
-  fFreq   =s->Freq;
-  fTics   =s->Tics;
-  for (int i=0;i<3;i++) fReserve[i]=s->Reserve[i];
+   fLabel  = s->Label;
+   fStatus = s->Status;
+   fCount  = s->Count;
+   fFreq   = s->Freq;
+   fTics   = s->Tics;
+   for (int i = 0; i < 3; i++) fReserve[i] = s->Reserve[i];
 }
 
 //______________________________________________________________________________
@@ -61,7 +61,7 @@ void GTOneScaler::Set(scale_struct *s)
 void GTOneScaler::ls(Option_t*) const
 {
    TROOT::IndentLevel();
-   cout << "SCALER: fLabel="<<fLabel<<" fStatus="<<fStatus<<" fCount="<<fCount<<" fFreq="<<fFreq<<endl;
+   cout << "SCALER: fLabel=" << fLabel << " fStatus=" << fStatus << " fCount=" << fCount << " fFreq=" << fFreq << endl;
 }
 //______________________________________________________________________________
 

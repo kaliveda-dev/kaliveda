@@ -15,7 +15,7 @@ ClassImp(KVLinuxBatch)
 ////////////////////////////////////////////////////////////////////////////////
 
 KVLinuxBatch::KVLinuxBatch(const Char_t* name)
-   :KVRootBatch(name)
+   : KVRootBatch(name)
 {
    //Default constructor
 }

@@ -19,7 +19,7 @@ KVDBParameterList::KVDBParameterList()
 //---------------------
 {
    // Default constructor
-	fParameters = new KVNameValueList();
+   fParameters = new KVNameValueList();
 }
 
 
@@ -28,7 +28,7 @@ KVDBParameterList::KVDBParameterList(const Char_t* name, const Char_t* title) : 
 //---------------------
 {
    // Write your code here
-	fParameters = new KVNameValueList();
+   fParameters = new KVNameValueList();
 }
 
 //---------------------
@@ -36,14 +36,14 @@ KVDBParameterList::~KVDBParameterList()
 //---------------------
 {
    // Destructor
-	delete fParameters;
+   delete fParameters;
 }
 
 //---------------------
 KVNameValueList* KVDBParameterList::GetParameters() const
 //---------------------
 {
-	return fParameters;
+   return fParameters;
 
 }
 
@@ -52,20 +52,15 @@ void KVDBParameterList::Print(Option_t* option) const
 //---------------------
 {
 
-	TString opt(option);
-	opt.ToUpper();
-	if (opt=="PAR")
-	{
-		GetParameters()->Print();	
-	}
-	else if (opt=="ALL")
-	{
-		KVDBRecord::Print(option);
-		GetParameters()->Print();	
-	}
-	else
-	{
-		KVDBRecord::Print(option);
-	}
+   TString opt(option);
+   opt.ToUpper();
+   if (opt == "PAR") {
+      GetParameters()->Print();
+   } else if (opt == "ALL") {
+      KVDBRecord::Print(option);
+      GetParameters()->Print();
+   } else {
+      KVDBRecord::Print(option);
+   }
 
 }

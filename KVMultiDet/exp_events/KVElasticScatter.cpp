@@ -86,11 +86,11 @@ with the energy of the excited state of the target after scattering.
 <!-- */
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
-KVElasticScatter::KVElasticScatter():fBeamDirection(0, 0, 1)
+KVElasticScatter::KVElasticScatter(): fBeamDirection(0, 0, 1)
 {
    //Default constructor
    fDepth = fTheta = 0;
-   fBinE = 500;	
+   fBinE = 500;
    fEnergy = 0;
    fKinematics = 0;
    fTelescope = 0;
@@ -103,13 +103,12 @@ KVElasticScatter::KVElasticScatter():fBeamDirection(0, 0, 1)
    fExx = 0.;
    fHistos = 0;
    fDetInd = 0;
-	if (gMultiDetArray){
-		gMultiDetArray->SetSimMode(kTRUE);
-	}
-	else {	
-		Warning("KVElasticScatter","gMultiDetArray does not refer to a valid multidetector array");
-		printf("Define it before using this class, and put it in simulation mode : gMultiDetArray->SetSimMode(kTRUE)");
-	}
+   if (gMultiDetArray) {
+      gMultiDetArray->SetSimMode(kTRUE);
+   } else {
+      Warning("KVElasticScatter", "gMultiDetArray does not refer to a valid multidetector array");
+      printf("Define it before using this class, and put it in simulation mode : gMultiDetArray->SetSimMode(kTRUE)");
+   }
 }
 
 //__________________________________________________________________//
@@ -131,7 +130,7 @@ KVElasticScatter::~KVElasticScatter()
       delete fHistos;
    if (fDetInd)
       delete fDetInd;
-	gMultiDetArray->SetSimMode(kFALSE);
+   gMultiDetArray->SetSimMode(kFALSE);
 }
 
 //__________________________________________________________________//
@@ -169,23 +168,23 @@ void KVElasticScatter::SetEnergy(Double_t e)
 
 //__________________________________________________________________//
 
-void KVElasticScatter::SetDetector(const Char_t * det)
+void KVElasticScatter::SetDetector(const Char_t* det)
 {
    //Set name of detector which will detect particle
    fDetector = gMultiDetArray->GetDetector(det);
    fTelescope = (KVTelescope*)fDetector->GetParentStructure("TELESCOPE");
    //get list of all detectors particle must pass through to get to required detector
    fAlignedDetectors =
-       fDetector->GetAlignedDetectors(KVGroup::kForwards);
+      fDetector->GetAlignedDetectors(KVGroup::kForwards);
    //we store the association between detector type and index in list
    if (!fDetInd)
       fDetInd = new KVNameValueList;
    else
       fDetInd->Clear();
-   KVDetector *d;
+   KVDetector* d;
    TIter n(fAlignedDetectors);
    Int_t i = 0;
-   while ((d = (KVDetector *) n())) {
+   while ((d = (KVDetector*) n())) {
       //check same type is not already present
       if (fDetInd->HasParameter(d->GetType())) {
          //detetors with same type will be called "Type_1", "Type_2" etc.
@@ -206,7 +205,7 @@ void KVElasticScatter::SetDetector(const Char_t * det)
 
 //__________________________________________________________________//
 
-void KVElasticScatter::SetTargetScatteringLayer(const Char_t * name)
+void KVElasticScatter::SetTargetScatteringLayer(const Char_t* name)
 {
    //For multilayer targets, use this method to choose in which
    //layer the scattering will take place.
@@ -214,8 +213,8 @@ void KVElasticScatter::SetTargetScatteringLayer(const Char_t * name)
    //can take place in any layer
    if (!fTarget) {
       cout <<
-          "<KVElasticScatter::SetTargetScatteringLayer> : No target set. Set run first."
-          << endl;
+           "<KVElasticScatter::SetTargetScatteringLayer> : No target set. Set run first."
+           << endl;
       return;
    }
    fIntLayer = fTarget->GetLayerIndex(name);
@@ -229,7 +228,7 @@ void KVElasticScatter::SetEbinning(Int_t nbins)
 {
    //Set binning of the GetEnergy histogram
    // Default value is 500
-   fBinE=nbins;
+   fBinE = nbins;
 }
 //__________________________________________________________________//
 
@@ -240,26 +239,26 @@ void KVElasticScatter::CalculateScattering(Int_t N)
 
    if (!fProj) {
       cout <<
-          "<KVElasticScatter::CalculateScattering> : Set projectile properties first"
-          << endl;
+           "<KVElasticScatter::CalculateScattering> : Set projectile properties first"
+           << endl;
       return;
    }
    if (!fEnergy) {
       cout <<
-          "<KVElasticScatter::CalculateScattering> : Set projectile energy first"
-          << endl;
+           "<KVElasticScatter::CalculateScattering> : Set projectile energy first"
+           << endl;
       return;
    }
    if (!fDetector) {
       cout <<
-          "<KVElasticScatter::CalculateScattering> : Set detector first" <<
-          endl;
+           "<KVElasticScatter::CalculateScattering> : Set detector first" <<
+           endl;
       return;
    }
    if (!fTarget) {
       cout <<
-          "<KVElasticScatter::CalculateScattering> : No target set. Set run first."
-          << endl;
+           "<KVElasticScatter::CalculateScattering> : No target set. Set run first."
+           << endl;
       return;
    }
 
@@ -275,8 +274,8 @@ void KVElasticScatter::CalculateScattering(Int_t N)
    if (fTheta)
       delete fTheta;
    fDepth =
-       new TH1F("hDepth", "Depth (mg/cm2)", 500, 0.,
-                fTarget->GetTotalEffectiveThickness());
+      new TH1F("hDepth", "Depth (mg/cm2)", 500, 0.,
+               fTarget->GetTotalEffectiveThickness());
    fTheta = new TH1F("hTheta", "Theta (deg.)", 500, 0., 0.);
 
    /* -------------------------------------------------------------------------------------------------------------------------- */
@@ -288,12 +287,12 @@ void KVElasticScatter::CalculateScattering(Int_t N)
    } else {
       fHistos->Clear();         //delete any previous histograms
    }
-   KVDetector *d;
+   KVDetector* d;
    TIter n(fAlignedDetectors);
-   while ((d = (KVDetector *) n())) {
+   while ((d = (KVDetector*) n())) {
       fHistos->
-          Add(new
-              TH1F(Form("hEloss_%s", d->GetName()), "Eloss (MeV)", fBinE, 0.,0.));
+      Add(new
+          TH1F(Form("hEloss_%s", d->GetName()), "Eloss (MeV)", fBinE, 0., 0.));
    }
 
    /* -------------------------------------------------------------------------------------------------------------------------- */
@@ -317,7 +316,7 @@ void KVElasticScatter::CalculateScattering(Int_t N)
 
    //get target nucleus properties from scattering layer
    TVector3 IP = fTarget->GetInteractionPoint();
-   KVMaterial *targ_mat = fTarget->GetLayer(IP);
+   KVMaterial* targ_mat = fTarget->GetLayer(IP);
    if (!fTarg)
       fTarg = new KVNucleus;
    fTarg->SetZ((Int_t) targ_mat->GetZ());
@@ -352,20 +351,20 @@ void KVElasticScatter::CalculateScattering(Int_t N)
       //We only use the highest energy corresponding to the most forward CM angle.
       Double_t e1, e2;
       fKinematics->GetELab(3, fProj->GetTheta(), 3, e1, e2);
-      fProj->SetEnergy( TMath::Max(e1,e2) );
+      fProj->SetEnergy(TMath::Max(e1, e2));
       xsec = TMath::Abs(fKinematics->GetXSecRuthLab(fProj->GetTheta()));
       fTheta->Fill(fProj->GetTheta(), xsec);
       //slowing of outgoing projectile in target
       fTarget->SetOutgoing();
       fTarget->DetectParticle(fProj);
       //now detect particle in detector(s)
-      fAlignedDetectors->R__FOR_EACH(KVDetector, DetectParticle) (fProj);
+      fAlignedDetectors->R__FOR_EACH(KVDetector, DetectParticle)(fProj);
       //fill histograms
       fDepth->Fill(IP.z());
       int j = 0;
       n.Reset();
-      while ((d = (KVDetector *) n())) {
-         ((TH1F *) (*fHistos)[j++])->Fill(d->GetEnergy(), xsec);
+      while ((d = (KVDetector*) n())) {
+         ((TH1F*)(*fHistos)[j++])->Fill(d->GetEnergy(), xsec);
          //prepare for next round: set energy loss to zero
          d->Clear();
       }
@@ -393,7 +392,7 @@ void KVElasticScatter::CalculateScattering(Int_t N)
 //__________________________________________________________________//
 
 
-TH1F *KVElasticScatter::GetEnergy(const Char_t * type)
+TH1F* KVElasticScatter::GetEnergy(const Char_t* type)
 {
    //Energy loss in detector of given 'type' through which scattered particle passes.
    //Warning: if there are several detectors of the same type in the list of detectors
@@ -405,13 +404,13 @@ TH1F *KVElasticScatter::GetEnergy(const Char_t * type)
 
 //__________________________________________________________________//
 
-TH1F *KVElasticScatter::GetEnergy(Int_t index)
+TH1F* KVElasticScatter::GetEnergy(Int_t index)
 {
    //Energy loss in any detector through which scattered particle passes.
    //The index corresponds to the order in which detectors are crossed by the
    //particle, beginning with 0 for the first detector, and ending with
    //(GetNDets()-1)
-   return (TH1F *) (*fHistos)[index];
+   return (TH1F*)(*fHistos)[index];
 }
 
 //__________________________________________________________________//

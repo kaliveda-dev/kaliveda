@@ -7,20 +7,19 @@
 #include "KVNuclDataTable.h"
 #include "KVChargeRadius.h"
 
-class KVChargeRadiusTable : public KVNuclDataTable
-{
-	protected:
-	virtual void init();
-	
-   public:
+class KVChargeRadiusTable : public KVNuclDataTable {
+protected:
+   virtual void init();
+
+public:
    KVChargeRadiusTable();
    virtual ~KVChargeRadiusTable();
-   
-	virtual void Initialize();
-	
-	KVChargeRadius* GetChargeRadius(Int_t zz, Int_t aa) const;
 
-   ClassDef(KVChargeRadiusTable,1)////Store charge radius information for nuclei
+   virtual void Initialize();
+
+   KVChargeRadius* GetChargeRadius(Int_t zz, Int_t aa) const;
+
+   ClassDef(KVChargeRadiusTable, 1) ////Store charge radius information for nuclei
 };
 
 #endif

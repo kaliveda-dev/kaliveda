@@ -57,14 +57,14 @@ KVBatchSystem* default = gBatchSystemManager->GetDefaultBatchSystem();
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-KVBatchSystemManager *gBatchSystemManager = 0;
+KVBatchSystemManager* gBatchSystemManager = 0;
 
 KVBatchSystemManager::KVBatchSystemManager()
 {
    //Default constructor
-   
-   if(gBatchSystemManager) return;
-   
+
+   if (gBatchSystemManager) return;
+
    Init();
    gBatchSystemManager = this;
 }
@@ -79,37 +79,38 @@ KVBatchSystemManager::~KVBatchSystemManager()
 void KVBatchSystemManager::Init()
 {
    //Set up list of available batch systems
-   
+
    gBatchSystem = 0;
-   
+
    KVString list = gEnv->GetValue("BatchSystem", "");
 
    fBatchSystems.Clear();
 
-   TObjArray *systems = list.Tokenize(" ");
-   TIter next(systems); TObjString* batch_sys;
-   while ( (batch_sys = (TObjString*)next()) ) {
+   TObjArray* systems = list.Tokenize(" ");
+   TIter next(systems);
+   TObjString* batch_sys;
+   while ((batch_sys = (TObjString*)next())) {
 
-         KVBatchSystem *bs = KVBatchSystem::GetBatchSystem( batch_sys->GetString().Data() );
-         fBatchSystems.Add(bs);
+      KVBatchSystem* bs = KVBatchSystem::GetBatchSystem(batch_sys->GetString().Data());
+      fBatchSystems.Add(bs);
    }
 
    delete systems;
-   
+
    //set default
-   fDefault = (KVBatchSystem*)fBatchSystems.FindObjectByName( gEnv->GetValue("Default.BatchSystem","") );
+   fDefault = (KVBatchSystem*)fBatchSystems.FindObjectByName(gEnv->GetValue("Default.BatchSystem", ""));
 }
 
-KVBatchSystem* KVBatchSystemManager::GetBatchSystem(const Char_t* name) 
+KVBatchSystem* KVBatchSystemManager::GetBatchSystem(const Char_t* name)
 {
    //Get batch system by name
-   return (KVBatchSystem*)fBatchSystems.FindObjectByName( name );
+   return (KVBatchSystem*)fBatchSystems.FindObjectByName(name);
 }
 
-KVBatchSystem* KVBatchSystemManager::GetBatchSystem(Int_t index) 
+KVBatchSystem* KVBatchSystemManager::GetBatchSystem(Int_t index)
 {
    //Get batch system by number in the list printed by Print()
-   return (KVBatchSystem*)fBatchSystems.At(index-1);
+   return (KVBatchSystem*)fBatchSystems.At(index - 1);
 }
 
 void KVBatchSystemManager::Print(Option_t* opt) const
@@ -117,15 +118,13 @@ void KVBatchSystemManager::Print(Option_t* opt) const
    //Print list of available batch systems
    // Default is to show numbered list with title of each batch system
    //if opt="all", print detailed information on each batch system
-   if(!strcmp(opt,"all")){
-      for(register int i=1;i<=fBatchSystems.GetSize();i++){
-         fBatchSystems.At(i-1)->Print("all");
+   if (!strcmp(opt, "all")) {
+      for (register int i = 1; i <= fBatchSystems.GetSize(); i++) {
+         fBatchSystems.At(i - 1)->Print("all");
       }
-   }
-   else
-   {
-      for(register int i=1;i<=fBatchSystems.GetSize();i++){
-         cout << "\t" << i << ". " << ((KVBatchSystem*)fBatchSystems.At(i-1))->GetTitle() << endl;
+   } else {
+      for (register int i = 1; i <= fBatchSystems.GetSize(); i++) {
+         cout << "\t" << i << ". " << ((KVBatchSystem*)fBatchSystems.At(i - 1))->GetTitle() << endl;
       }
    }
 }

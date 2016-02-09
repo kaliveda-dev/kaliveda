@@ -19,27 +19,27 @@ class KVDropDownDialog {
 
    RQ_OBJECT("KVDropDownDialog")
 
- protected:
-   TGTransientFrame * fMain;
-   TString *fAnswer;            //the answer to the question
-   TGComboBox *fDropDown;     //drop down list
-   TGTextButton *fOKBut;        //OK button
-   TGTextButton *fCancelBut;    //Cancel button
-   Bool_t *fOK;                 //set to kTRUE if OK button is pressed
+protected:
+   TGTransientFrame* fMain;
+   TString* fAnswer;            //the answer to the question
+   TGComboBox* fDropDown;     //drop down list
+   TGTextButton* fOKBut;        //OK button
+   TGTextButton* fCancelBut;    //Cancel button
+   Bool_t* fOK;                 //set to kTRUE if OK button is pressed
 
- public:
+public:
 
-    KVDropDownDialog(const TGWindow * main, const Char_t * question,
-                  const Char_t * choice_list, const Char_t * default_choice,
-		 				TString * chosen, Bool_t * ok);
-    virtual ~ KVDropDownDialog();
+   KVDropDownDialog(const TGWindow* main, const Char_t* question,
+                    const Char_t* choice_list, const Char_t* default_choice,
+                    TString* chosen, Bool_t* ok);
+   virtual ~ KVDropDownDialog();
 
    void ReadAnswer();
 
    void DoClose();
    void CloseWindow();
 
-    ClassDef(KVDropDownDialog, 0)  //General purpose dialog asking to choose from a drop down list
+   ClassDef(KVDropDownDialog, 0)  //General purpose dialog asking to choose from a drop down list
 };
 
 #endif

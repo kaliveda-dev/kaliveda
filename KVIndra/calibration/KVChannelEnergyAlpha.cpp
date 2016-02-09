@@ -26,14 +26,14 @@ ClassImp(KVChannelEnergyAlpha);
 //"Channel-Energy alpha PG" or "Channel-Energy alpha GG".
 //___________________________________________________________________________
 
-KVChannelEnergyAlpha::KVChannelEnergyAlpha():KVCalibrator(3)
+KVChannelEnergyAlpha::KVChannelEnergyAlpha(): KVCalibrator(3)
 {
    SetType("Channel-Energy alpha");
 }
 
 //___________________________________________________________________________
-KVChannelEnergyAlpha::KVChannelEnergyAlpha(Char_t * signal, KVDetector * kvd):KVCalibrator
-    (3)
+KVChannelEnergyAlpha::KVChannelEnergyAlpha(Char_t* signal, KVDetector* kvd): KVCalibrator
+   (3)
 {
    //Create an electronic calibration object for a specific detector (*kvd)
    //specifying the signal type ("PG" - petit "low" gain - or "GG" - grand "high" gain)
@@ -46,7 +46,7 @@ KVChannelEnergyAlpha::KVChannelEnergyAlpha(Char_t * signal, KVDetector * kvd):KV
 Double_t KVChannelEnergyAlpha::Compute(Double_t chan) const
 {
    Double_t gain = 1.;
-   KVDetector *det = GetDetector();
+   KVDetector* det = GetDetector();
    if (det)
       gain = det->GetGain();
    //Calculate the calibrated signal strength in volts for a given channel number.
@@ -59,7 +59,8 @@ Double_t KVChannelEnergyAlpha::Compute(Double_t chan) const
 
 
 //___________________________________________________________________________
-Double_t KVChannelEnergyAlpha::operator() (Double_t chan) {
+Double_t KVChannelEnergyAlpha::operator()(Double_t chan)
+{
    //Overloading of "()" to allow syntax such as:
    //
    //        KVChannelEnergyAlpha calibrator;
@@ -73,7 +74,7 @@ Double_t KVChannelEnergyAlpha::operator() (Double_t chan) {
 }
 
 //___________________________________________________________________________
-void KVChannelEnergyAlpha::SetSignal(Char_t * signal)
+void KVChannelEnergyAlpha::SetSignal(Char_t* signal)
 {
    //Set the type of signal treated ("PG" - petit "low" gain - or "GG" - grand "high" gain)
    strcpy(fSignal, signal);
@@ -91,7 +92,7 @@ Double_t KVChannelEnergyAlpha::Invert(Double_t volts)
    //calibration parameters (useful for filtering simulations).
 
    Double_t gain = 1.;
-   KVDetector *det = GetDetector();
+   KVDetector* det = GetDetector();
    if (det)
       gain = det->GetGain();
    Int_t channel = 0;
@@ -105,13 +106,13 @@ Double_t KVChannelEnergyAlpha::Invert(Double_t volts)
             return -1;
          c = (-fPar[1] + TMath::Sqrt(c)) / (2.0 * fPar[2]);
          if (c < 0.0
-             && ((-fPar[1] - TMath::Sqrt(c)) / (2.0 * fPar[2])) > 0.0) {
+               && ((-fPar[1] - TMath::Sqrt(c)) / (2.0 * fPar[2])) > 0.0) {
             c = (-fPar[1] - TMath::Sqrt(c)) / (2.0 * fPar[2]);
          }
-         channel = (Int_t) (c + 0.5);
+         channel = (Int_t)(c + 0.5);
       } else {
          // linear transfer function
-         channel = (Int_t) (0.5 + (gain * volts - fPar[0]) / fPar[1]);
+         channel = (Int_t)(0.5 + (gain * volts - fPar[0]) / fPar[1]);
       }
    } else {
       Warning("Compute", "Parameters not correctly initialized");

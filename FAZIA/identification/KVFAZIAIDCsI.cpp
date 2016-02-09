@@ -20,9 +20,9 @@ ClassImp(KVFAZIAIDCsI)
 KVFAZIAIDCsI::KVFAZIAIDCsI()
 {
    // Default constructor
-	SetType("CsI");
+   SetType("CsI");
    CsIGrid = 0;
-	fCsI = 0;
+   fCsI = 0;
    /* in principle all CsI R-L telescopes can identify mass & charge */
    SetHasMassID(kTRUE);
 }
@@ -36,35 +36,35 @@ Bool_t KVFAZIAIDCsI::Identify(KVIdentificationResult* IDR, Double_t x, Double_t 
 {
    //Particle identification and code setting using identification grid KVIDGCsI* fGrid.
 
-		IDR->SetIDType( GetType() );
-		IDR->IDattempted = kTRUE;
-	
-      //perform identification
-      Double_t csir = (y<0. ? GetIDMapY() : y);
-      Double_t csil = (x<0. ? GetIDMapX() : x);
-      CsIGrid->Identify(csil, csir, IDR);
+   IDR->SetIDType(GetType());
+   IDR->IDattempted = kTRUE;
 
-      // set general ID code
-      IDR->IDcode = 2;
+   //perform identification
+   Double_t csir = (y < 0. ? GetIDMapY() : y);
+   Double_t csil = (x < 0. ? GetIDMapX() : x);
+   CsIGrid->Identify(csil, csir, IDR);
 
-      // general ID code for gammas
-      if (IDR->IDquality == KVIDGCsI::kICODE10)
-         IDR->IDcode = 0;
+   // set general ID code
+   IDR->IDcode = GetIDCode();
 
-      return kTRUE;
+   // general ID code for gammas
+   if (IDR->IDquality == KVIDGCsI::kICODE10)
+      IDR->IDcode = 0;
+
+   return kTRUE;
 
 }
 //____________________________________________________________________________________
 
-Double_t KVFAZIAIDCsI::GetIDMapX(Option_t *)
+Double_t KVFAZIAIDCsI::GetIDMapX(Option_t*)
 {
    //X-coordinate for CsI identification map is raw "L" coder value
-   return (Double_t) fCsI->GetQ3Amplitude()-0.8*fCsI->GetQ3FastAmplitude();
+   return fCsI->GetQ3Amplitude() - 0.8 * fCsI->GetQ3FastAmplitude();
 }
 
 //____________________________________________________________________________________
 
-Double_t KVFAZIAIDCsI::GetIDMapY(Option_t *)
+Double_t KVFAZIAIDCsI::GetIDMapY(Option_t*)
 {
    //Y-coordinate for CsI identification map is raw "R" coder value
    return fCsI->GetQ3FastAmplitude();
@@ -79,12 +79,12 @@ void KVFAZIAIDCsI::Initialize()
    // Initialisation of grid is performed here.
    // IsReadyForID() will return kTRUE if a grid is associated to this telescope for the current run.
 
-   CsIGrid = (KVIDGCsI *) GetIDGrid();
-	fCsI = (KVFAZIADetector* )GetDetector(1);
-   if( CsIGrid ) {
+   CsIGrid = (KVIDGCsI*) GetIDGrid();
+   fCsI = (KVFAZIADetector*)GetDetector(1);
+   if (CsIGrid) {
       CsIGrid->Initialize();
       SetBit(kReadyForID);
-   }
-   else
+   } else {
       ResetBit(kReadyForID);
+   }
 }

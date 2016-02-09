@@ -14,28 +14,39 @@ $Date: 2009/03/03 14:27:15 $
 #include "KVIDGrid.h"
 #include "TPad.h"
 
-class KVVirtualIDFitter : public KVBase
-{
-	static KVVirtualIDFitter* gDefaultFitter;
-	
-	protected:
-	KVIDGraph	*fGrid;			//the grid to fit
-	TVirtualPad	*fPad;			//the pad in which grid is drawn (=0 if not drawn)
-	
-   public:
+class KVVirtualIDFitter : public KVBase {
+   static KVVirtualIDFitter* gDefaultFitter;
+
+protected:
+   KVIDGraph*   fGrid;        //the grid to fit
+   TVirtualPad* fPad;         //the pad in which grid is drawn (=0 if not drawn)
+
+public:
    KVVirtualIDFitter();
    virtual ~KVVirtualIDFitter();
 
-	virtual void Fit(KVIDGraph*) = 0;
-	
-	void SetGrid(KVIDGraph*g) {fGrid = g;};
-	KVIDGraph* GetGrid() const { return fGrid; };
-	void SetPad(TVirtualPad *p) {fPad = p;};
-	TVirtualPad* GetPad() const { return fPad; };
-	
-	static KVVirtualIDFitter* GetDefaultFitter();
+   virtual void Fit(KVIDGraph*) = 0;
 
-   ClassDef(KVVirtualIDFitter,0)//ABC for fitting ID grids with functionals
+   void SetGrid(KVIDGraph* g)
+   {
+      fGrid = g;
+   };
+   KVIDGraph* GetGrid() const
+   {
+      return fGrid;
+   };
+   void SetPad(TVirtualPad* p)
+   {
+      fPad = p;
+   };
+   TVirtualPad* GetPad() const
+   {
+      return fPad;
+   };
+
+   static KVVirtualIDFitter* GetDefaultFitter();
+
+   ClassDef(KVVirtualIDFitter, 0) //ABC for fitting ID grids with functionals
 };
 
 #endif

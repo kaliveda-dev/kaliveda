@@ -7,22 +7,21 @@
 #include "KVNuclDataTable.h"
 #include "KVMassExcess.h"
 
-class KVMassExcessTable : public KVNuclDataTable
-{
+class KVMassExcessTable : public KVNuclDataTable {
 
-   protected:
-   
-	void init();
-	
-	public:
+protected:
+
+   void init();
+
+public:
    KVMassExcessTable();
    virtual ~KVMassExcessTable();
 
-	virtual void Initialize();
-	
-	KVMassExcess* GetMassExcess(Int_t zz, Int_t aa) const;
-	
-   ClassDef(KVMassExcessTable,1)//manage mass excess data for nuclei
+   virtual void Initialize();
+
+   KVMassExcess* GetMassExcess(Int_t zz, Int_t aa) const;
+
+   ClassDef(KVMassExcessTable, 1) //manage mass excess data for nuclei
 };
 
 #endif

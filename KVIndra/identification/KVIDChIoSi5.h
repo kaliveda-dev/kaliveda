@@ -12,17 +12,16 @@ $Date: 2007/12/10 13:02:13 $
 
 #include "KVIDChIoSi.h"
 
-class KVIDChIoSi5 : public KVIDChIoSi
-{
+class KVIDChIoSi5 : public KVIDChIoSi {
 
-   public:
+public:
    KVIDChIoSi5();
    virtual ~KVIDChIoSi5();
 
-   Double_t GetIDMapX(Option_t * opt = "");
-   Double_t GetIDMapY(Option_t * opt = "");
+   Double_t GetIDMapX(Option_t* opt = "");
+   Double_t GetIDMapY(Option_t* opt = "");
 
-   ClassDef(KVIDChIoSi5,1)//INDRA 5th campaign ChIo-Si identification
+   ClassDef(KVIDChIoSi5, 1) //INDRA 5th campaign ChIo-Si identification
 };
 
 #endif

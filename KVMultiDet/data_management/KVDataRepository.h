@@ -22,9 +22,9 @@ class TFile;
 class KVDataSet;
 class KVDataSetManager;
 
-class KVDataRepository:public KVBase {
+class KVDataRepository: public KVBase {
 
- protected:
+protected:
 
    TString fLocalrootdir;
    TString fAccessprotocol;
@@ -50,41 +50,41 @@ class KVDataRepository:public KVBase {
    KVDataSet* fCommitDataSet;   //!
    TString fCommitDataType;     //!
    TString fCommitFileName;     //!
-   KVDataSetManager *fDSM;      //handles datasets in repository
-   void SetFullPath(TString & path, const Char_t * protocol);
-   virtual const Char_t *GetReadProtocol(const Char_t * dataset, const Char_t * datatype);
-   virtual KVDataSetManager *NewDataSetManager();
+   KVDataSetManager* fDSM;      //handles datasets in repository
+   void SetFullPath(TString& path, const Char_t* protocol);
+   virtual const Char_t* GetReadProtocol(const Char_t* dataset, const Char_t* datatype);
+   virtual KVDataSetManager* NewDataSetManager();
 
-   virtual int             Chmod(const char *file, UInt_t mode);
+   virtual int             Chmod(const char* file, UInt_t mode);
    virtual void PrepareXRDTunnel();
 
-   TSeqCollection  *fHelpers;          //List of helper classes for alternative file/directory access
- public:
-   virtual int  CopyFile(const char *f, const char *t, Bool_t overwrite=kFALSE);
-   TSystem               *FindHelper(const char *path, void *dirptr = 0);
-   Bool_t            HelperIsConsistentWith(TSystem* helper, const char *path, void *dirptr = 0);
+   TSeqCollection*  fHelpers;          //List of helper classes for alternative file/directory access
+public:
+   virtual int  CopyFile(const char* f, const char* t, Bool_t overwrite = kFALSE);
+   TSystem*               FindHelper(const char* path, void* dirptr = 0);
+   Bool_t            HelperIsConsistentWith(TSystem* helper, const char* path, void* dirptr = 0);
 
-    KVDataRepository();
-    virtual ~ KVDataRepository();
+   KVDataRepository();
+   virtual ~ KVDataRepository();
 
    virtual Bool_t Init();
 
-   virtual Bool_t CheckSubdirExists(const Char_t * dir,
-                                    const Char_t * subdir = 0);
+   virtual Bool_t CheckSubdirExists(const Char_t* dir,
+                                    const Char_t* subdir = 0);
    virtual Bool_t GetFileInfo(KVDataSet* dataset,
-                              const Char_t * datatype,
-                              const Char_t * runfile, FileStat_t & fs);
+                              const Char_t* datatype,
+                              const Char_t* runfile, FileStat_t& fs);
    virtual Bool_t CheckFileStatus(KVDataSet* dataset,
-                                  const Char_t * datatype,
-                                  const Char_t * runfile);
+                                  const Char_t* datatype,
+                                  const Char_t* runfile);
 
-   virtual const Char_t *GetFullPathToOpenFile(KVDataSet * dataset,
-                                               const Char_t * datatype,
-                                               const Char_t * runfile);
+   virtual const Char_t* GetFullPathToOpenFile(KVDataSet* dataset,
+         const Char_t* datatype,
+         const Char_t* runfile);
 
-   virtual const Char_t *GetFullPathToTransferFile(KVDataSet * dataset,
-                                                   const Char_t * datatype,
-                                                   const Char_t * runfile);
+   virtual const Char_t* GetFullPathToTransferFile(KVDataSet* dataset,
+         const Char_t* datatype,
+         const Char_t* runfile);
 
    //Returns kTRUE for remote repositories, kFALSE for local repositories
    virtual Bool_t IsRemote() const
@@ -104,79 +104,86 @@ class KVDataRepository:public KVBase {
    {
       return fCanWrite;
    }
-   virtual KVUniqueNameList *GetDirectoryListing(KVDataSet* dataset,
-                                       const Char_t * datatype = "");
+   virtual KVUniqueNameList* GetDirectoryListing(KVDataSet* dataset,
+         const Char_t* datatype = "");
 
    virtual void CopyFileFromRepository(KVDataSet* dataset,
-                                       const Char_t * datatype,
-                                       const Char_t * filename,
-                                       const Char_t * destination);
-   virtual void CopyFileToRepository(const Char_t * source,
+                                       const Char_t* datatype,
+                                       const Char_t* filename,
+                                       const Char_t* destination);
+   virtual void CopyFileToRepository(const Char_t* source,
                                      KVDataSet* dataset,
-                                     const Char_t * datatype,
-                                     const Char_t * filename);
+                                     const Char_t* datatype,
+                                     const Char_t* filename);
 
-   virtual TFile *CreateNewFile(KVDataSet * dataset,
-                                const Char_t * datatype,
-                                const Char_t * filename);
-   virtual void CommitFile(TFile * file);
+   virtual TFile* CreateNewFile(KVDataSet* dataset,
+                                const Char_t* datatype,
+                                const Char_t* filename);
+   virtual void CommitFile(TFile* file);
 
    virtual void MakeSubdirectory(KVDataSet* dataset,
-                                 const Char_t * datatype = "");
+                                 const Char_t* datatype = "");
 
    virtual void DeleteFile(KVDataSet* dataset,
-                           const Char_t * datatype,
-                           const Char_t * filename, Bool_t confirm =
-                           kTRUE);
+                           const Char_t* datatype,
+                           const Char_t* filename, Bool_t confirm =
+                              kTRUE);
 
-   virtual void Print(Option_t * opt = "") const;
+   virtual void Print(Option_t* opt = "") const;
 //returns protocol used for remote file transfer
-   virtual const Char_t *GetFileTransferType() const {
+   virtual const Char_t* GetFileTransferType() const
+   {
       return fTransfertype;
    };
 //returns full path to executable used for remote file transfer
-   virtual const Char_t *GetFileTransferExec() const {
+   virtual const Char_t* GetFileTransferExec() const
+   {
       return fTransferExec;
    };
 //returns server url used for remote file transfer
-   virtual const Char_t *GetFileTransferServer() const {
+   virtual const Char_t* GetFileTransferServer() const
+   {
       return fTransferserver;
    };
 //returns user name used for remote file transfer
-   virtual const Char_t *GetFileTransferUser() const {
+   virtual const Char_t* GetFileTransferUser() const
+   {
       return fTransferuser;
    };
 //returns root directory of data repository (fLocalrootdir)
-   virtual const Char_t *GetRootDirectory() const {
+   virtual const Char_t* GetRootDirectory() const
+   {
       return fLocalrootdir;
    };
 
-   virtual KVDataSetManager *GetDataSetManager() const;
+   virtual KVDataSetManager* GetDataSetManager() const;
 
    void cd();
-   static KVDataRepository *NewRepository(const Char_t* type);
-	virtual KVAvailableRunsFile *NewAvailableRunsFile(const Char_t*, KVDataSet*);
+   static KVDataRepository* NewRepository(const Char_t* type);
+   virtual KVAvailableRunsFile* NewAvailableRunsFile(const Char_t*, KVDataSet*);
 
-   virtual void PrintAvailableDatasetsUpdateWarning() const { ; }
+   virtual void PrintAvailableDatasetsUpdateWarning() const
+   {
+      ;
+   }
 
-    ClassDef(KVDataRepository, 0)       //Base class handling files in data repository
+   ClassDef(KVDataRepository, 0)       //Base class handling files in data repository
 };
 
 //........ global variable
-R__EXTERN KVDataRepository *gDataRepository;
+R__EXTERN KVDataRepository* gDataRepository;
 
 #ifdef __CCIN2P3_RFIO
 #include "TRFIOFile.h"
-class KVRFIOSystem : public TRFIOSystem
-{
+class KVRFIOSystem : public TRFIOSystem {
 public:
-   KVRFIOSystem():TRFIOSystem(){ };
+   KVRFIOSystem(): TRFIOSystem() { };
    virtual ~KVRFIOSystem() { };
 
-   Int_t       Unlink(const char *path);
-   int             Chmod(const char *file, UInt_t mode);
+   Int_t       Unlink(const char* path);
+   int             Chmod(const char* file, UInt_t mode);
 
-   ClassDef(KVRFIOSystem,0) // TRFIOSystem with fully-functioning Unlink and Chmod methods
+   ClassDef(KVRFIOSystem, 0) // TRFIOSystem with fully-functioning Unlink and Chmod methods
 };
 #endif
 #endif

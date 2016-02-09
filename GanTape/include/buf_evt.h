@@ -1,32 +1,30 @@
- /*	BUF_EVT:H -- last update :		creation date : 30 sep 94
-	Copyright Acquisition group, GANIL Caen, France
-	author	: B. Raine
+/*   BUF_EVT:H -- last update :    creation date : 30 sep 94
+Copyright Acquisition group, GANIL Caen, France
+author  : B. Raine
 
- 	contents : description d'un buffer d'acquisition
+  contents : description d'un buffer d'acquisition
 
 */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 /* Description des buffers d'acquisition */
 
-typedef struct Acq_Hd_Buf
-   {
+typedef struct Acq_Hd_Buf {
    char AcqHdBuf[8];      /* header du buffer */
    UNSINT32 AcqNumBuf;    /* Numero du buffer */
-   } ACQHDBUF;
+} ACQHDBUF;
 
-typedef struct End_Evt_Buf
-   {
+typedef struct End_Evt_Buf {
    UNSINT16 LastEvent[2];   /* deux int16 reserves pour marquer le dernier
-                               evenement ( longuer et numero = 0 ) */ 
+                               evenement ( longuer et numero = 0 ) */
    UNSINT32 Checksum;       /* Checksum du buffer, compteur d'evt compris */
-   UNSINT16 NbEvt;          /* Nombre d'evenements contenus dans le buffer 
+   UNSINT16 NbEvt;          /* Nombre d'evenements contenus dans le buffer
                                (dans le cas d'un buffer evt) */
    char DRB32Stat[24];      /* Reserve pour le status du protocol DRB32 */
-   } ACQENDBUF;
+} ACQENDBUF;
 
 
 #define HDBUFLEN        sizeof(ACQHDBUF) /* longueur entete buffer en bytes */

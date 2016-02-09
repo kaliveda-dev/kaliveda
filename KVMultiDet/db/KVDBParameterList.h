@@ -7,19 +7,18 @@
 #include "KVDBRecord.h"
 #include "KVNameValueList.h"
 
-class KVDBParameterList : public KVDBRecord
-{
+class KVDBParameterList : public KVDBRecord {
 
    KVNameValueList* fParameters;
-	public:
-   
-	KVDBParameterList();
+public:
+
+   KVDBParameterList();
    KVDBParameterList(const Char_t* name, const Char_t* title = "");
    KVNameValueList* GetParameters() const;
-	virtual ~KVDBParameterList();
+   virtual ~KVDBParameterList();
    void Print(Option_t* option = "") const;
-	
-   ClassDef(KVDBParameterList,1)//To store in a database some parameters list
+
+   ClassDef(KVDBParameterList, 1) //To store in a database some parameters list
 };
 
 #endif

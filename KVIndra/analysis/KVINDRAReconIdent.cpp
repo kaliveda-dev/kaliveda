@@ -39,17 +39,17 @@ void KVINDRAReconIdent::InitRun(void)
    KVDataSet* OutputDataset =
       gDataRepositoryManager->GetDataSet(
          gDataSet->GetDataSetEnv("ReconIdent.DataAnalysisTask.OutputRepository", gDataRepository->GetName()),
-         gDataSet->GetName() );
+         gDataSet->GetName());
 
    //create new ROOT file for identified events
    fRunNumber = gIndra->GetCurrentRunNumber();
    fIdentFile = OutputDataset->NewRunfile("ident", fRunNumber);
 
 
-		fIdentTree = new TTree("ReconstructedEvents", Form("%s : %s : ident events created from recon data",
-			 	gIndraDB->GetRun(fRunNumber)->GetName(),
-            gIndraDB->GetRun(fRunNumber)->GetTitle())
-            );
+   fIdentTree = new TTree("ReconstructedEvents", Form("%s : %s : ident events created from recon data",
+                          gIndraDB->GetRun(fRunNumber)->GetName(),
+                          gIndraDB->GetRun(fRunNumber)->GetTitle())
+                         );
 #if ROOT_VERSION_CODE > ROOT_VERSION(5,25,4)
 #if ROOT_VERSION_CODE < ROOT_VERSION(5,26,1)
    // The TTree::OptimizeBaskets mechanism is disabled, as for ROOT versions < 5.26/00b
@@ -57,10 +57,10 @@ void KVINDRAReconIdent::InitRun(void)
    fIdentTree->SetAutoFlush(0);
 #endif
 #endif
-      //leaves for reconstructed events
-   KVEvent::MakeEventBranch(fIdentTree,"INDRAReconEvent","KVINDRAReconEvent",GetEventReference());
+   //leaves for reconstructed events
+   KVEvent::MakeEventBranch(fIdentTree, "INDRAReconEvent", "KVINDRAReconEvent", GetEventReference());
 
-      Info("InitRun", "Created identified/calibrated data tree %s : %s", fIdentTree->GetName(), fIdentTree->GetTitle());
+   Info("InitRun", "Created identified/calibrated data tree %s : %s", fIdentTree->GetName(), fIdentTree->GetTitle());
 
    // initialise identifications
    gIndra->InitializeIDTelescopes();
@@ -97,22 +97,22 @@ void KVINDRAReconIdent::EndRun(void)
 
    fIdentFile->cd();
 
-	gDataAnalyser->WriteBatchInfo(fIdentTree);
+   gDataAnalyser->WriteBatchInfo(fIdentTree);
 
-    GetRawData()->CloneTree(-1,"fast"); //copy raw data tree to file
-    GetGeneData()->CloneTree(-1,"fast"); //copy pulser & laser (gene) tree to file
+   GetRawData()->CloneTree(-1, "fast"); //copy raw data tree to file
+   GetGeneData()->CloneTree(-1, "fast"); //copy pulser & laser (gene) tree to file
 
-    fIdentFile->Write();
+   fIdentFile->Write();
 
    //add file to repository
    // get dataset to which we must associate new run
    KVDataSet* OutputDataset =
       gDataRepositoryManager->GetDataSet(
          gDataSet->GetDataSetEnv("ReconIdent.DataAnalysisTask.OutputRepository", gDataRepository->GetName()),
-         gDataSet->GetName() );
+         gDataSet->GetName());
 
    OutputDataset->CommitRunfile("ident", gIndra->GetCurrentRunNumber(),
-                           fIdentFile);
+                                fIdentFile);
    fIdentFile = 0;
    fIdentTree = 0;
 }

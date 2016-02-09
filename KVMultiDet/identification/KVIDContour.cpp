@@ -25,14 +25,14 @@ KVIDContour::KVIDContour()
    // Default constructor
 }
 
-KVIDContour::KVIDContour(const KVIDContour &g)
-		: KVIDentifier(g)
+KVIDContour::KVIDContour(const KVIDContour& g)
+   : KVIDentifier(g)
 {
    // Copy constructor
 }
 
-KVIDContour::KVIDContour(const TCutG &g)
-		: KVIDentifier(g)
+KVIDContour::KVIDContour(const TCutG& g)
+   : KVIDentifier(g)
 {
    // Copy the TCutG contour
 }

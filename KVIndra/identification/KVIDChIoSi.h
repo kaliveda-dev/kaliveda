@@ -21,40 +21,40 @@
 #include "KVINDRAIDTelescope.h"
 #include "KVIDGChIoSi.h"
 
-class KVIDChIoSi:public KVINDRAIDTelescope {
+class KVIDChIoSi: public KVINDRAIDTelescope {
 
 protected:
 
    KVIDGChIoSi* ChIoSiGrid;//!
-	KVDetector *fchio;//!
-	KVDetector *fsi;//!
-	Double_t fsipgped;//!
-	Double_t fchiopgped;//!
+   KVDetector* fchio;//!
+   KVDetector* fsi;//!
+   Double_t fsipgped;//!
+   Double_t fchiopgped;//!
 
 
- public:
+public:
 
-    KVIDChIoSi();
-    virtual ~ KVIDChIoSi();
+   KVIDChIoSi();
+   virtual ~ KVIDChIoSi();
 
-   virtual Bool_t Identify(KVIdentificationResult *, Double_t x=-1., Double_t y=-1.);
+   virtual Bool_t Identify(KVIdentificationResult*, Double_t x = -1., Double_t y = -1.);
 
-   Double_t GetIDMapX(Option_t * opt = "");
-   Double_t GetIDMapY(Option_t * opt = "");
+   Double_t GetIDMapX(Option_t* opt = "");
+   Double_t GetIDMapY(Option_t* opt = "");
 
    virtual void Initialize();
 
    virtual Bool_t CanIdentify(Int_t Z, Int_t /*A*/)
    {
-       // Used for filtering simulations
-       // Returns kTRUE if this telescope is theoretically capable of identifying a given nucleus,
-       // without considering thresholds etc.
-       // For INDRA ChIo-Si telescopes, identification is possible for Z>1
-       // (protons are difficult to distinguish from pedestal)
-       return (Z>1);
+      // Used for filtering simulations
+      // Returns kTRUE if this telescope is theoretically capable of identifying a given nucleus,
+      // without considering thresholds etc.
+      // For INDRA ChIo-Si telescopes, identification is possible for Z>1
+      // (protons are difficult to distinguish from pedestal)
+      return (Z > 1);
    }
 
-    ClassDef(KVIDChIoSi, 1)     //INDRA identification using ChIo-Si matrices
+   ClassDef(KVIDChIoSi, 1)     //INDRA identification using ChIo-Si matrices
 };
 
 #endif

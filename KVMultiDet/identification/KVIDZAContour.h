@@ -12,22 +12,21 @@ $Date: 2009/03/03 13:36:00 $
 
 #include "KVIDContour.h"
 
-class KVIDZAContour : public KVIDContour
-{
-	protected:
-			
-   virtual void WriteAsciiFile_extras(std::ofstream &, const Char_t * name_prefix ="");
-   virtual void ReadAsciiFile_extras(std::ifstream &);
-	
-   public:
-			
+class KVIDZAContour : public KVIDContour {
+protected:
+
+   virtual void WriteAsciiFile_extras(std::ofstream&, const Char_t* name_prefix = "");
+   virtual void ReadAsciiFile_extras(std::ifstream&);
+
+public:
+
    KVIDZAContour();
-	KVIDZAContour(const KVIDZAContour &);
-	KVIDZAContour(const TCutG &);
+   KVIDZAContour(const KVIDZAContour&);
+   KVIDZAContour(const TCutG&);
    virtual ~KVIDZAContour();
 
 
-   ClassDef(KVIDZAContour,1)//Graphical contour associated with a given nucleus for use in particle identification
+   ClassDef(KVIDZAContour, 1) //Graphical contour associated with a given nucleus for use in particle identification
 };
 
 #endif

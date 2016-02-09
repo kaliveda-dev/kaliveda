@@ -23,7 +23,7 @@ Hexa_t::Hexa_t(const Long64_t val)
    fVal = val;
 }
 
-Hexa_t::Hexa_t(const Char_t * val)
+Hexa_t::Hexa_t(const Char_t* val)
 {
    //Create hexa number from string containing hexa value
    Set(val);
@@ -41,7 +41,7 @@ Long64_t Hexa_t::Value() const
    return fVal;
 }
 
-void Hexa_t::Set(const Char_t * val)
+void Hexa_t::Set(const Char_t* val)
 {
    //Set value from string containing hexa number
    //Can be written in lower or upper case.
@@ -58,7 +58,7 @@ void Hexa_t::Set(const Char_t * val)
    Set((Long64_t) xval);
 }
 
-const Char_t *Hexa_t::String(UChar_t) const
+const Char_t* Hexa_t::String(UChar_t) const
 {
    //Return pointer to string containing hexadecimal representation of number
    //This string should be copied immediately before further use.
@@ -69,14 +69,14 @@ const Char_t *Hexa_t::String(UChar_t) const
    return (Form("%s%llx", fPrefix.Data(), (ULong64_t)Value()));
 }
 
-Hexa_t & Hexa_t::operator=(const Long64_t val)
+Hexa_t& Hexa_t::operator=(const Long64_t val)
 {
    //Assign a decimal value to the Hexa number
    Set(val);
    return (*this);
 }
 
-Hexa_t & Hexa_t::operator=(const Char_t * val)
+Hexa_t& Hexa_t::operator=(const Char_t* val)
 {
    //Assign a Hexa value (as a string) to the Hexa number
    Set(val);
@@ -90,15 +90,15 @@ Hexa_t & Hexa_t::operator=(const Char_t * val)
 //      return (*this);
 // }
 
-Hexa_t & Hexa_t::operator=(const Hexa_t & val)
+Hexa_t& Hexa_t::operator=(const Hexa_t& val)
 {
    //Assign a hexadecimal value to the Hexa number
    Set(val.Value());
    return (*this);
 }
 
-// 
-Hexa_t Hexa_t::operator+(const Hexa_t & b1)
+//
+Hexa_t Hexa_t::operator+(const Hexa_t& b1)
 {
    //Addition of two Hexa numbers
    return Hexa_t(b1.Value() + fVal);
@@ -116,7 +116,7 @@ Hexa_t Hexa_t::operator+(const Long64_t l1)
    return Hexa_t(l1 + fVal);
 }
 
-Hexa_t Hexa_t::operator+(const Char_t * c1)
+Hexa_t Hexa_t::operator+(const Char_t* c1)
 {
    //Addition of two Hexa numbers
    return Hexa_t(c1) + (*this);
@@ -130,21 +130,21 @@ Hexa_t Hexa_t::operator+(const Char_t * c1)
 //      Hexa_t tmp(b1.Value() | b2.Value());
 //      return tmp;
 // }
-// 
+//
 // Hexa_t operator|(const Hexa_t& b1, const Long64_t l2)
 // {
 //      //bitwise OR of two Hexa numbers
 //      Hexa_t tmp(b1.Value() | l2);
 //      return tmp;
 // }
-// 
+//
 // Hexa_t operator|(const Long64_t l1, const Hexa_t& b2)
 // {
 //      //bitwise OR of two Hexa numbers
 //      Hexa_t tmp(l1 | b2.Value());
 //      return tmp;
 // }
-// 
+//
 // Hexa_t operator|(const Hexa_t& b1, const Char_t* c2)
 // {
 //      //bitwise OR of two Hexa numbers
@@ -152,7 +152,7 @@ Hexa_t Hexa_t::operator+(const Char_t * c1)
 //      Hexa_t tmp(b1.Value() | b2.Value());
 //      return tmp;
 // }
-// 
+//
 // Hexa_t operator|(const Char_t* c1, const Hexa_t& b2)
 // {
 //      //bitwise OR of two Hexa numbers
@@ -160,30 +160,30 @@ Hexa_t Hexa_t::operator+(const Char_t * c1)
 //      Hexa_t tmp(b1.Value() | b2.Value());
 //      return tmp;
 // }
-// 
+//
 // //--------------------------------------------------bitwise AND operators
-// 
+//
 // Hexa_t operator&(const Hexa_t& b1, const Hexa_t& b2)
 // {
 //      //bitwise AND of two Hexa numbers
 //      Hexa_t tmp(b1.Value() & b2.Value());
 //      return tmp;
 // }
-// 
+//
 // Hexa_t operator&(const Hexa_t& b1, const Long64_t l2)
 // {
 //      //bitwise AND of two Hexa numbers
 //      Hexa_t tmp(b1.Value() & l2);
 //      return tmp;
 // }
-// 
+//
 // Hexa_t operator&(const Long64_t l1, const Hexa_t& b2)
 // {
 //      //bitwise AND of two Hexa numbers
 //      Hexa_t tmp(l1 & b2.Value());
 //      return tmp;
 // }
-// 
+//
 // Hexa_t operator&(const Hexa_t& b1, const Char_t* c2)
 // {
 //      //bitwise AND of two Hexa numbers
@@ -191,7 +191,7 @@ Hexa_t Hexa_t::operator+(const Char_t * c1)
 //      Hexa_t tmp(b1.Value() & b2.Value());
 //      return tmp;
 // }
-// 
+//
 // Hexa_t operator&(const Char_t* c1, const Hexa_t& b2)
 // {
 //      //bitwise AND of two Hexa numbers
@@ -231,7 +231,7 @@ Bool_t Hexa_t::TestBit(UChar_t nbit)
    return TESTBIT(fVal, nbit);
 }
 
-// Binary_t Hexa_t::Binary() const 
+// Binary_t Hexa_t::Binary() const
 // {
 //      //Return binary equivalent of number
 //      return Binary_t(Value());
@@ -254,9 +254,9 @@ Bool_t Hexa_t::TestBit(UChar_t nbit)
 //      a=16;
 //      a.Print(); b.Print(); c.Print();
 //      cout << "//--------------------------------------------//" << endl;
-//      a.WriteSubvalue(42, 7, 6);      
+//      a.WriteSubvalue(42, 7, 6);
 //      a.Print();
 //      cout << (int)c.Subvalue(3,4) <<endl;
-//      cout << "//--------------------------------------------//" << endl;             
-//                      
+//      cout << "//--------------------------------------------//" << endl;
+//
 // }

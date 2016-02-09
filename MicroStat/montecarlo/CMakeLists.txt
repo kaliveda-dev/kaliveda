@@ -1,0 +1,5 @@
+BUILD_KALIVEDA_MODULE(montecarlo
+	KVMOD_DEPENDS weights
+	PARENT ${KVSUBPROJECT}
+	EXTRA_LIBS KVMultiDetevents
+)

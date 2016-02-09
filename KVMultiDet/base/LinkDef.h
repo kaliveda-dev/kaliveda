@@ -60,4 +60,5 @@
 #pragma link C++ class KVPartitionFromLeaf+;
 #pragma link C++ class KVPartitionList+;
 #pragma link C++ class KVPartitionFunction+;
+#pragma link C++ class TF1Derivative;
 #endif

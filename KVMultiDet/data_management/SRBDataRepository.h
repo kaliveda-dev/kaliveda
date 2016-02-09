@@ -6,13 +6,12 @@
 
 #include "KVDMSDataRepository.h"
 
-class SRBDataRepository : public KVDMSDataRepository
-{   
-   public:
+class SRBDataRepository : public KVDMSDataRepository {
+public:
    SRBDataRepository();
    virtual ~SRBDataRepository();
-   
-   ClassDef(SRBDataRepository,1)//Remote data repository using SRB
+
+   ClassDef(SRBDataRepository, 1) //Remote data repository using SRB
 };
 
 #endif

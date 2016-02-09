@@ -367,10 +367,6 @@ INDRADB.CsILumCorr.FileName:    run%d.corrLum
 INDRADB.Gains:    Gains.dat
 # VAMOS calibration file
 INDRADB.VamosCalibFile:  VAMOScalib.list
-# VAMOS scalers for INDRA-VAMOS experiments
-INDRADB.VamosScaler:    scalersVamos.dat
-# VAMOS Brho & angle for INDRA-VAMOS experiments
-INDRADB.VamosBrhoAngle:    Vamos_run_brho_angle.dat
 # Default filename containing correspondance between CsI detector and PinLaser
 INDRADB.CsIPinCorr:          CsI_PILA.dat
 # Default name for file containing linear coefficients for GG->PG conversion (silicon & ChIo detectors)

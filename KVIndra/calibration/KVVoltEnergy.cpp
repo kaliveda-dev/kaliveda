@@ -32,13 +32,13 @@ ClassImp(KVVoltEnergy);
 //The type of the calibrator is "Volt-Energy"
 //__________________________________________________________________________
 
-KVVoltEnergy::KVVoltEnergy():KVCalibrator(2)
+KVVoltEnergy::KVVoltEnergy(): KVCalibrator(2)
 {
    SetType("Volt-Energy");
 }
 
 //___________________________________________________________________________
-KVVoltEnergy::KVVoltEnergy(KVDetector * kvd):KVCalibrator(2)
+KVVoltEnergy::KVVoltEnergy(KVDetector* kvd): KVCalibrator(2)
 {
    //Create a calibration object for a specific detector (*kvd)
 
@@ -53,15 +53,16 @@ Double_t KVVoltEnergy::Compute(Double_t volts) const
    if (GetStatus()) {
       return GetParameter(0) + GetParameter(1) * volts;
    } else {
-/*      cout <<
-          "Double_t KVVoltEnergy::Compute(Double_t chan) : Parameters not correctly initialized"
-          << endl;
-*/ return 0.;
+      /*      cout <<
+                "Double_t KVVoltEnergy::Compute(Double_t chan) : Parameters not correctly initialized"
+                << endl;
+      */ return 0.;
    }
 }
 
 //___________________________________________________________________________
-Double_t KVVoltEnergy::operator() (Double_t volts) {
+Double_t KVVoltEnergy::operator()(Double_t volts)
+{
    //Overloading of "()" to allow syntax such as:
    //
    //        KVVoltEnergy calibrator;
@@ -87,7 +88,7 @@ Double_t KVVoltEnergy::Invert(Double_t energy)
       Warning("Compute",
               "Parameters not correctly initialized for calibrator %s of %s",
               GetType(),
-              (GetDetector()? GetDetector()->
+              (GetDetector() ? GetDetector()->
                GetName() : "(unknown detector)"));
       return 0;
    }

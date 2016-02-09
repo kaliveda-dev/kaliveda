@@ -12,15 +12,14 @@ $Date: 2009/03/03 13:36:00 $
 
 #include "KVIDGraph.h"
 
-class KVIDMap : public KVIDGraph
-{
+class KVIDMap : public KVIDGraph {
 
-   public:
+public:
    KVIDMap();
    virtual ~KVIDMap();
 
 
-   ClassDef(KVIDMap,1)//Collection of graphical contours used for particle identification
+   ClassDef(KVIDMap, 1) //Collection of graphical contours used for particle identification
 };
 
 #endif

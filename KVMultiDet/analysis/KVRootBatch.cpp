@@ -15,7 +15,7 @@ ClassImp(KVRootBatch)
 // Run KaliVeda analysis task in an Xterm window
 ////////////////////////////////////////////////////////////////////////////////
 KVRootBatch::KVRootBatch(const Char_t* name)
-   :KVBatchSystem(name)
+   : KVBatchSystem(name)
 {
    //Default constructor
 }
@@ -25,7 +25,7 @@ KVRootBatch::~KVRootBatch()
    //Destructor
 }
 
-void KVRootBatch::PrintJobs(Option_t *)
+void KVRootBatch::PrintJobs(Option_t*)
 {
    //Print list of owner's jobs.
    //opt="" (default) : print all jobs

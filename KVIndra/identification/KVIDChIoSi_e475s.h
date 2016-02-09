@@ -12,17 +12,16 @@ $Date: 2008/02/19 15:01:11 $
 
 #include "KVIDChIoSi.h"
 
-class KVIDChIoSi_e475s : public KVIDChIoSi
-{
+class KVIDChIoSi_e475s : public KVIDChIoSi {
 
-   public:
+public:
    KVIDChIoSi_e475s();
    virtual ~KVIDChIoSi_e475s();
-   
-	Double_t GetIDMapX(Option_t * opt = "");
-   Double_t GetIDMapY(Option_t * opt = "");
 
-   ClassDef(KVIDChIoSi_e475s,1)//derivation of KVIDChIoSi class for E475s experiment
+   Double_t GetIDMapX(Option_t* opt = "");
+   Double_t GetIDMapY(Option_t* opt = "");
+
+   ClassDef(KVIDChIoSi_e475s, 1) //derivation of KVIDChIoSi class for E475s experiment
 };
 
 #endif

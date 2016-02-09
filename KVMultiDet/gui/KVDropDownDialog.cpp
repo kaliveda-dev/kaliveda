@@ -23,15 +23,15 @@ ClassImp(KVDropDownDialog)
 //  list.
 //
 /////////////////////////////////////////////////////////////
-    
-	 
-KVDropDownDialog::KVDropDownDialog(const TGWindow * main,
-	const Char_t * question, const Char_t * choice_list,
-	const Char_t * default_choice, TString * chosen,  Bool_t * ok)
+
+
+KVDropDownDialog::KVDropDownDialog(const TGWindow* main,
+                                   const Char_t* question, const Char_t* choice_list,
+                                   const Char_t* default_choice, TString* chosen,  Bool_t* ok)
 {
    // Create the dialog box asking a "question".
-	// Possible answers are in "choice list" (whitespace-separated list).
-	// Default choice (will be visible in combo box when dialog opens) is "default".
+   // Possible answers are in "choice list" (whitespace-separated list).
+   // Default choice (will be visible in combo box when dialog opens) is "default".
    // The Bool_t variable will be set to kTRUE if "OK" is pressed (kFALSE otherwise)
    // Optional argument 'tooltip' will be displayed when mouse held over text entry widget
 
@@ -45,29 +45,31 @@ KVDropDownDialog::KVDropDownDialog(const TGWindow * main,
    fAnswer = chosen;
    fOK = ok;
    *fOK = kFALSE;               //initialise flag
-   
-	// Add a label
-   TGLabel *l = new TGLabel(fMain, question);
+
+   // Add a label
+   TGLabel* l = new TGLabel(fMain, question);
    fMain->AddFrame(l,
                    new TGLayoutHints(kLHintsTop | kLHintsCenterX, 5, 5, 5,
                                      0));
-	// Add drop down list
+   // Add drop down list
    fDropDown = new TGComboBox(fMain);
-	// fill with choices
-	KVString choix(choice_list);
-	choix.Begin(" "); int entry_id = 0; int default_id = -1;
-	KVString this_choice; 
-	while( ! choix.End() ){
-		this_choice = choix.Next(kTRUE);
-		if(this_choice == default_choice) default_id = entry_id;
-		fDropDown->AddEntry( this_choice.Data(), entry_id++ );
-	}
+   // fill with choices
+   KVString choix(choice_list);
+   choix.Begin(" ");
+   int entry_id = 0;
+   int default_id = -1;
+   KVString this_choice;
+   while (! choix.End()) {
+      this_choice = choix.Next(kTRUE);
+      if (this_choice == default_choice) default_id = entry_id;
+      fDropDown->AddEntry(this_choice.Data(), entry_id++);
+   }
    fDropDown->Resize(260, 22);
    fMain->AddFrame(fDropDown,
                    new TGLayoutHints(kLHintsTop | kLHintsLeft, 5, 5, 5,
                                      5));
-	// display default choice
-	fDropDown->Select(default_id);
+   // display default choice
+   fDropDown->Select(default_id);
 
    fMain->SetWindowName("KVDropDownDialog");
    fMain->SetIconName("KVDropDownDialog");
@@ -76,10 +78,10 @@ KVDropDownDialog::KVDropDownDialog(const TGWindow * main,
 
    UInt_t nb = 0, width = 0, height = 0;
 
-   TGHorizontalFrame *hf =
-       new TGHorizontalFrame(fMain, 60, 20, kFixedWidth);
-   TGLayoutHints *l1 =
-       new TGLayoutHints(kLHintsCenterY | kLHintsExpandX, 5, 5, 0, 0);
+   TGHorizontalFrame* hf =
+      new TGHorizontalFrame(fMain, 60, 20, kFixedWidth);
+   TGLayoutHints* l1 =
+      new TGLayoutHints(kLHintsCenterY | kLHintsExpandX, 5, 5, 0, 0);
 
    fOKBut = new TGTextButton(hf, "&OK", 1);
    hf->AddFrame(fOKBut, l1);
@@ -126,7 +128,7 @@ KVDropDownDialog::KVDropDownDialog(const TGWindow * main,
                       kMWMFuncMinimize, kMWMInputModeless);
 
    fMain->CenterOnParent();
- 
+
    fMain->MapWindow();
    gClient->WaitFor(fMain);
 }

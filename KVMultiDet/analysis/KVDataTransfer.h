@@ -15,17 +15,24 @@ $Date: 2007/01/04 16:38:50 $
 
 class KVDataRepository;
 
-class KVDataTransfer:public KVDataAnalyser {
- protected:
-   KVDataRepository * fSourceRep;       // repository containing source files
-   KVDataRepository *fTargetRep;        // repository where files will be copied
+class KVDataTransfer: public KVDataAnalyser {
+protected:
+   KVDataRepository* fSourceRep;        // repository containing source files
+   KVDataRepository* fTargetRep;        // repository where files will be copied
    TString fCmdFile;            //name of command file given to transfer agent
    TString fTransferExec;      //full path to transfer client executable
-   
-   virtual void SetTransferExec(const Char_t* path){fTransferExec=path;};
-   virtual void ChooseAnalysisTask() {;
+
+   virtual void SetTransferExec(const Char_t* path)
+   {
+      fTransferExec = path;
    };
-   virtual void SubmitTask() {;
+   virtual void ChooseAnalysisTask()
+   {
+      ;
+   };
+   virtual void SubmitTask()
+   {
+      ;
    };
 
    virtual void ExecuteCommand() = 0;
@@ -36,17 +43,17 @@ class KVDataTransfer:public KVDataAnalyser {
    virtual void init();
    Bool_t fOK;                  //may be set to kFALSE by init(), in which case Run() will abort
 
- public:
+public:
 
    KVDataTransfer();
    virtual ~ KVDataTransfer();
    virtual void Run();
    virtual void TransferRuns();
-   virtual void SetDataSet(KVDataSet * ds);
-   virtual void SetDataSet(const Char_t * name);
+   virtual void SetDataSet(KVDataSet* ds);
+   virtual void SetDataSet(const Char_t* name);
 
-   static KVDataTransfer *NewTransfer(const Char_t * source_rep,
-                                      const Char_t * target_rep);
+   static KVDataTransfer* NewTransfer(const Char_t* source_rep,
+                                      const Char_t* target_rep);
 
    ClassDef(KVDataTransfer, 0)  //Transfers data between data repositories
 };

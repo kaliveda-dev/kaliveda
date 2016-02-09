@@ -17,11 +17,18 @@ include(${KALIVEDA_CMAKEPKG_DIR}/KaliVeda-targets.cmake)
 set(KALIVEDA_LIBRARIES "@KALIVEDA_LIB_LIST@")
 
 #---set installed components
-set(KALIVEDA_INDRA_FOUND @USE_INDRA@)
-set(KALIVEDA_INDRAVAMOS_FOUND @USE_INDRAVAMOS@)
-set(KALIVEDA_FAZIA_FOUND @USE_FAZIA@)
+set(KaliVeda_FOUND TRUE)
+set(KaliVeda_INDRA_FOUND @USE_INDRA@)
+set(KaliVeda_INDRAVAMOS_FOUND @USE_INDRAVAMOS@)
+set(KaliVeda_FAZIA_FOUND @USE_FAZIA@)
+set(KaliVeda_MICROSTAT_FOUND @USE_MICROSTAT@)
+set(KaliVeda_BACKTRACK_FOUND @USE_BACKTRACK@)
 
 #---set path to 'use file'
 set(KALIVEDA_USE_FILE ${KALIVEDA_CMAKEPKG_DIR}/KaliVedaUseFile.cmake)
 
 check_required_components(KaliVeda)
+
+if(KaliVeda_FOUND)
+   message(STATUS "Found KaliVeda: ${KALIVEDA_LIB_DIR} (found version ${KALIVEDA_VERSION})")
+endif()

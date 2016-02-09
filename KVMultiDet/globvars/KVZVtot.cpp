@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 20/03/2006:
 // Creation d'une classe Variable Globale.
@@ -52,7 +52,7 @@ ClassImp(KVZVtot)
 // Double_t r=zvtot_ptr->GetValue();  |
 //          r=zvtot_ptr->GetValue(0); |--> z component of ZVtot
 //          r=zvtot("Z");             |
-// Double_t zvx=zvtot("X");---------> X component of total Z*v 
+// Double_t zvx=zvtot("X");---------> X component of total Z*v
 // Double_t zvtottrans=zvtot_ptr->GetTVector3().GetPerp();--> Sum of Z*v_trans
 // Double_t *values=.GetValuePtr();
 //          zvz=values[0];   --> z component of Sum(Z*v)
@@ -80,12 +80,12 @@ void KVZVtot::init_KVZVtot(void)
 }
 
 //_________________________________________________________________
-KVZVtot::KVZVtot(void):KVPtot()
+KVZVtot::KVZVtot(void): KVPtot()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    init_KVZVtot();
    sprintf(nom, "KVZVtot_%d", nb_crea);
@@ -98,7 +98,7 @@ KVZVtot::KVZVtot(void):KVPtot()
 }
 
 //_________________________________________________________________
-KVZVtot::KVZVtot(Char_t * nom, const Char_t * frm):KVPtot(nom, frm)
+KVZVtot::KVZVtot(Char_t* nom, const Char_t* frm): KVPtot(nom, frm)
 {
 //
 // Constructeur avec un nom
@@ -110,16 +110,16 @@ KVZVtot::KVZVtot(Char_t * nom, const Char_t * frm):KVPtot(nom, frm)
 }
 
 //_________________________________________________________________
-KVZVtot::KVZVtot(const KVZVtot & a) : KVPtot()
+KVZVtot::KVZVtot(const KVZVtot& a) : KVPtot()
 {
-// 
+//
 // Contructeur par Copy
 //
    init_KVZVtot();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVZVtot &) a).Copy(*this);
+   ((KVZVtot&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVZVtot
    cout << nb << " crees...(Copy) " << endl;
@@ -129,7 +129,7 @@ KVZVtot::KVZVtot(const KVZVtot & a) : KVPtot()
 //_________________________________________________________________
 KVZVtot::~KVZVtot(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVZVtot
@@ -142,9 +142,9 @@ KVZVtot::~KVZVtot(void)
 
 //_________________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVZVtot::Copy(TObject & a) const
+void KVZVtot::Copy(TObject& a) const
 #else
-void KVZVtot::Copy(TObject & a)
+void KVZVtot::Copy(TObject& a)
 #endif
 {
 // Methode de Copy
@@ -160,7 +160,7 @@ void KVZVtot::Copy(TObject & a)
 }
 
 //_________________________________________________________________
-KVZVtot & KVZVtot::operator =(const KVZVtot & a)
+KVZVtot& KVZVtot::operator =(const KVZVtot& a)
 {
 //
 // Operateur =
@@ -171,7 +171,7 @@ KVZVtot & KVZVtot::operator =(const KVZVtot & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVZVtot &) a).Copy(*this);
+   ((KVZVtot&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVZVtot
    cout << "Nom de la Copy par egalite: " << GetName() << endl;
@@ -181,10 +181,10 @@ KVZVtot & KVZVtot::operator =(const KVZVtot & a)
 
 
 //_________________________________________________________________
-void KVZVtot::Fill(KVNucleus * c)
+void KVZVtot::Fill(KVNucleus* c)
 {
 //
 // Routine de remplissage
 //
-      ptot += (c->GetZ() * c->GetFrame(fFrame.Data())->GetVelocity());
+   ptot += (c->GetZ() * c->GetFrame(fFrame.Data())->GetVelocity());
 }

@@ -26,41 +26,43 @@ $Id: KVDBSystem.h,v 1.12 2008/03/07 15:01:34 ebonnet Exp $
 class KV2Body;
 class KVNumberList;
 
-class KVDBSystem:public KVDBRecord {
+class KVDBSystem: public KVDBRecord {
 
- private:
+private:
 
-   KV2Body * fCinema;           //! used to calculate kinematics of entrance channel
+   KV2Body* fCinema;            //! used to calculate kinematics of entrance channel
 
-   KVTarget *fTarget;           //-> physical target used for experiment run
+   KVTarget* fTarget;           //-> physical target used for experiment run
 
-   KVList *fRunlist;             //!used to store pointer to sorted list of runs
+   KVList* fRunlist;             //!used to store pointer to sorted list of runs
    Int_t fRuns;                 //!temporary variable used to stock number of associated runs
 
- protected:
-    UInt_t fZbeam;              // charge of the projectile nucleus
+protected:
+   UInt_t fZbeam;              // charge of the projectile nucleus
    UInt_t fAbeam;               // Mass of the projectile nucleus
    UInt_t fZtarget;             // charge of the target nucleus
    UInt_t fAtarget;             // Mass of the target nucleus
    Float_t fEbeam;              // Energy of the beam in MeV/nucleon
 
-   KVList *_GetRuns();
+   KVList* _GetRuns();
 
    KVDBTable* GetRunsTable();
-   
- public:
-    KVDBSystem();
-    KVDBSystem(const Char_t * name);
-    virtual ~ KVDBSystem();
 
-   KVTarget *GetTarget() const {
+public:
+   KVDBSystem();
+   KVDBSystem(const Char_t* name);
+   virtual ~ KVDBSystem();
+
+   KVTarget* GetTarget() const
+   {
       return fTarget;
    };
-   void SetTarget(KVTarget * targ) {
+   void SetTarget(KVTarget* targ)
+   {
       fTarget = targ;
    };
 
-   virtual void ls(Option_t * option = "*") const;
+   virtual void ls(Option_t* option = "*") const;
    UInt_t GetZtarget() const;
    UInt_t GetAtarget() const;
    UInt_t GetZbeam() const;
@@ -77,8 +79,8 @@ class KVDBSystem:public KVDBRecord {
    Double_t GetPtot() const;
    Double_t GetEtot() const;
    Double_t GetECM() const;
-	
-	Bool_t IsCollision() const;
+
+   Bool_t IsCollision() const;
 
    void SetZtarget(UInt_t z);
    void SetAtarget(UInt_t a);
@@ -89,28 +91,31 @@ class KVDBSystem:public KVDBRecord {
    void SetBeam(UInt_t z, UInt_t a, Float_t energy);
 
    //Returns a sorted list of all the runs associated with this system
-   KVList *GetRuns() const {
-      return const_cast <KVDBSystem * >(this)->_GetRuns();
+   KVList* GetRuns() const
+   {
+      return const_cast <KVDBSystem* >(this)->_GetRuns();
    };
 
    virtual void GetRunList(KVNumberList&) const;
    virtual void Save(std::ostream&) const;
    virtual void Load(std::istream&);
-   
-   Int_t Compare(const TObject *) const;
 
-   KV2Body *GetKinematics();
+   Int_t Compare(const TObject*) const;
 
-   virtual void Print(Option_t * option = "") const;
+   KV2Body* GetKinematics();
+
+   virtual void Print(Option_t* option = "") const;
 
    //set number of runs associated to this system
-   void SetNumberRuns(Int_t n) {
+   void SetNumberRuns(Int_t n)
+   {
       fRuns = n;
    };
    //get number of runs previously set by SetNumberRuns.
    //WARNING: for total number of runs associated to this system in database,
    //use GetRuns()->GetEntries()
-   Int_t GetNumberRuns() {
+   Int_t GetNumberRuns()
+   {
       return fRuns;
    };
 
@@ -121,7 +126,7 @@ class KVDBSystem:public KVDBRecord {
    void AddRun(Int_t);
    void RemoveAllRuns();
    virtual const Char_t* GetBatchName();
-   
+
    ClassDef(KVDBSystem, 2)      // System class
 };
 
@@ -178,7 +183,7 @@ inline Float_t KVDBSystem::GetEproj() const
 
 inline Float_t KVDBSystem::GetTargetThickness() const
 {
-   return (GetTarget()? GetTarget()->GetTotalThickness() : 0.);
+   return (GetTarget() ? GetTarget()->GetTotalThickness() : 0.);
 }
 
 inline void KVDBSystem::SetZtarget(UInt_t z)

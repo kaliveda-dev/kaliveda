@@ -12,18 +12,17 @@ $Date: 2009/01/21 08:04:20 $
 
 #include "KVSilicon.h"
 
-class KVSiliconVamos : public KVSilicon
-{
+class KVSiliconVamos : public KVSilicon {
 
-   public:
+public:
    KVSiliconVamos();
    KVSiliconVamos(Float_t thick);
    virtual ~KVSiliconVamos();
-   const Char_t *GetName() const;
+   const Char_t* GetName() const;
    void SetACQParams();
 
 
-   ClassDef(KVSiliconVamos,1)//KVSilicon for Vamos
+   ClassDef(KVSiliconVamos, 1) //KVSilicon for Vamos
 };
 
 #endif

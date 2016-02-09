@@ -21,14 +21,14 @@ class KVINDRARunSheetReader {
    TString fFilePath;           //temporary string holding full filename of current runsheet
 
    Bool_t fMakeTree;            //set to kTRUE if TTree is to be filled
-   TTree *fTree;                //TTree can be made and filled from info
+   TTree* fTree;                //TTree can be made and filled from info
 
-        /***** temp variables used to read runsheet and (if required) fill TTree ******/
+   /***** temp variables used to read runsheet and (if required) fill TTree ******/
    KVDatime start_run, endrun;
    Double_t len_run, size, data_rate, acq_rate, trait_rate, ctrl_rate,
-       rempli_dlt_pc, temps_mort;
+            rempli_dlt_pc, temps_mort;
    Int_t run_num, buf_sav, eve_sav, eve_lus, buf_ctrl, eve_ctrl,
-       rempli_dlt_blocs;
+         rempli_dlt_blocs;
    Int_t istart, iend;
    Int_t fScalers[1024];//scalers for tree
    TString stat_eve;
@@ -37,45 +37,54 @@ class KVINDRARunSheetReader {
 
    void init_vars();
 
- public:
+public:
 
-    KVINDRARunSheetReader(Bool_t make_tree = kFALSE);
-    virtual ~ KVINDRARunSheetReader() {
+   KVINDRARunSheetReader(Bool_t make_tree = kFALSE);
+   virtual ~ KVINDRARunSheetReader()
+   {
    };
 
-   const Char_t *GetRunSheetDir() {
+   const Char_t* GetRunSheetDir()
+   {
       return fRunSheetDir;
    };
-   void SetRunSheetDir(const Char_t * dir) {
+   void SetRunSheetDir(const Char_t* dir)
+   {
       fRunSheetDir = dir;
    };
-   const Char_t *GetFileFormat() {
+   const Char_t* GetFileFormat()
+   {
       return fFileFormat;
    };
-   void SetFileFormat(const Char_t * fmt) {
+   void SetFileFormat(const Char_t* fmt)
+   {
       fFileFormat = fmt;
    };
-   const Char_t *GetRunSheetFileName(Int_t run);
-   Double_t GetNumberField(TString &, const Char_t * delim =
-                           ":", int index = 1);
-   const Char_t *GetStringField(TString &, const Char_t * delim =
-                                ":", int index = 1);
-   const Char_t *GetDateField(TString &, const Char_t * delim = ":");
+   const Char_t* GetRunSheetFileName(Int_t run);
+   Double_t GetNumberField(TString&, const Char_t* delim =
+                              ":", int index = 1);
+   TString GetStringField(TString&, const Char_t* delim =
+                             ":", int index = 1);
+   TString GetDateField(TString&, const Char_t* delim = ":");
 
-   Bool_t IsMakeTree() const {
+   Bool_t IsMakeTree() const
+   {
       return fMakeTree;
    };
-   void SetMakeTree(Bool_t yes = kTRUE) {
+   void SetMakeTree(Bool_t yes = kTRUE)
+   {
       std::cout << "SetMakeTree called with yes=" << yes << std::endl;
       fMakeTree = yes;
    };
    void CreateTree();
 
-   TTree *GetTree() const {
+   TTree* GetTree() const
+   {
       return fTree;
    };
-   void StartTreeViewer() const {
-      if(fTree) fTree->StartViewer();
+   void StartTreeViewer() const
+   {
+      if (fTree) fTree->StartViewer();
    };
 
    Bool_t ReadRunSheet(Int_t run);

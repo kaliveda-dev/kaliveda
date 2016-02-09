@@ -34,29 +34,28 @@ ClassImp(KVTestIDGridDialog)
 ////////////////////////////////////////////////////////////////
 // KVTestIDGridDialog
 ////////////////////////////////////////////////////////////////
-    KVTestIDGridDialog::KVTestIDGridDialog(const TGWindow * p,
-                                           const TGWindow * main, UInt_t w,
-                                           UInt_t h, KVIDGraph * g, TH2* data_histo)
+KVTestIDGridDialog::KVTestIDGridDialog(const TGWindow* p,
+                                       const TGWindow* main, UInt_t w,
+                                       UInt_t h, KVIDGraph* g, TH2* data_histo)
 {
-	if(data_histo){
-		fNameData.Form("%s", data_histo->GetName());
-		fNameZreal.Form("PID:H=%s_G=%s", data_histo->GetName(),g->GetName());
-		fNameZvsE.Form("PIDvsEres:H=%s_G=%s", data_histo->GetName(),g->GetName());
-		hzvsexmax = data_histo->GetXaxis()->GetXmax();
-	}
-	// set PID limits from grid
-	g->GetIdentifiers()->Sort(); // make sure lines are in order of increasing PID
-	hzrealxmin = ((KVIDentifier*)g->GetIdentifiers()->First())->GetPID() - 1.0;
-	hzrealxmax = ((KVIDentifier*)g->GetIdentifiers()->Last())->GetPID() + 1.0;
-	hzvseymin = hzrealxmin;
-	hzvseymax = hzrealxmax;
-	
-        if(!g->IsOnlyZId()) 
-	  {
-	  hzrealbins = 150*(hzrealxmax-hzrealxmin);
-	  hzvseybins = hzrealbins;
-	  }
-	
+   if (data_histo) {
+      fNameData.Form("%s", data_histo->GetName());
+      fNameZreal.Form("PID:H=%s_G=%s", data_histo->GetName(), g->GetName());
+      fNameZvsE.Form("PIDvsEres:H=%s_G=%s", data_histo->GetName(), g->GetName());
+      hzvsexmax = data_histo->GetXaxis()->GetXmax();
+   }
+   // set PID limits from grid
+   g->GetIdentifiers()->Sort(); // make sure lines are in order of increasing PID
+   hzrealxmin = ((KVIDentifier*)g->GetIdentifiers()->First())->GetPID() - 1.0;
+   hzrealxmax = ((KVIDentifier*)g->GetIdentifiers()->Last())->GetPID() + 1.0;
+   hzvseymin = hzrealxmin;
+   hzvseymax = hzrealxmax;
+
+   if (!g->IsOnlyZId()) {
+      hzrealbins = 150 * (hzrealxmax - hzrealxmin);
+      hzvseybins = hzrealbins;
+   }
+
    //Dialog box for testing identification grid
    fMain = new TGTransientFrame(p, main, w, h);
    fMain->Connect("CloseWindow()", "KVTestIDGridDialog", this,
@@ -67,7 +66,7 @@ ClassImp(KVTestIDGridDialog)
    // use hierarchical cleaning
    fMain->SetCleanup(kDeepCleanup);
 
-        /******* frame for name of data histo ********/
+   /******* frame for name of data histo ********/
    fHdataFrame = new TGHorizontalFrame(fMain);
    fHdataNameLabel = new TGLabel(fHdataFrame, "Name of data histo (TH2F)");
    fHdataNameEntry = new TGTextEntry(fNameData, fHdataFrame);
@@ -77,11 +76,11 @@ ClassImp(KVTestIDGridDialog)
    fHdataFrame->AddFrame(fHdataNameLabel,
                          new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
 
-        /******* frame for Zreal histo **************/
+   /******* frame for Zreal histo **************/
    fHzrealFrame = new TGGroupFrame(fMain, "ID test histo");
    fHzrealNameFrame = new TGHorizontalFrame(fHzrealFrame);
    fHzrealNameLabel =
-       new TGLabel(fHzrealNameFrame, "Name of PID histo (TH1F)");
+      new TGLabel(fHzrealNameFrame, "Name of PID histo (TH1F)");
    fHzrealNameEntry = new TGTextEntry(fNameZreal, fHzrealNameFrame);
    fHzrealNameEntry->SetWidth(150);
    fHzrealNameFrame->AddFrame(fHzrealNameEntry,
@@ -91,19 +90,19 @@ ClassImp(KVTestIDGridDialog)
    fHzrealBinsFrame = new TGHorizontalFrame(fHzrealFrame);
    fHzrealBinsLabel = new TGLabel(fHzrealBinsFrame, "nbins");
    fHzrealBinsEntry =
-       new TGNumberEntry(fHzrealBinsFrame, hzrealbins, 4, 0,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHzrealBinsFrame, hzrealbins, 4, 0,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
    fHzrealXminLabel = new TGLabel(fHzrealBinsFrame, "xmin");
    fHzrealXminEntry =
-       new TGNumberEntry(fHzrealBinsFrame, hzrealxmin, 4, 0,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHzrealBinsFrame, hzrealxmin, 4, 0,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
    fHzrealXmaxLabel = new TGLabel(fHzrealBinsFrame, "xmax");
    fHzrealXmaxEntry =
-       new TGNumberEntry(fHzrealBinsFrame, hzrealxmax, 4, 0,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHzrealBinsFrame, hzrealxmax, 4, 0,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
    fHzrealBinsFrame->AddFrame(fHzrealXmaxEntry,
                               new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
    fHzrealBinsFrame->AddFrame(fHzrealXmaxLabel,
@@ -121,7 +120,7 @@ ClassImp(KVTestIDGridDialog)
    fHzrealFrame->AddFrame(fHzrealBinsFrame,
                           new TGLayoutHints(kLHintsNormal, 5, 5, 2, 2));
 
-        /******* frame for ZvsE histo **************/
+   /******* frame for ZvsE histo **************/
    fHzvseFrame = new TGGroupFrame(fMain, "PID vs. E histo");
    fHzvseNameFrame = new TGHorizontalFrame(fHzvseFrame);
    fHzvseNameLabel = new TGLabel(fHzvseNameFrame, "Name of histo (TH2F)");
@@ -134,17 +133,17 @@ ClassImp(KVTestIDGridDialog)
    fHzvseXBinsFrame = new TGHorizontalFrame(fHzvseFrame);
    fHzvseXBinsLabel = new TGLabel(fHzvseXBinsFrame, "nbins");
    fHzvseXBinsEntry =
-       new TGNumberEntry(fHzvseXBinsFrame, hzvsexbins, 4, 0,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHzvseXBinsFrame, hzvsexbins, 4, 0,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
    fHzvseXminLabel = new TGLabel(fHzvseXBinsFrame, "E : min");
    fHzvseXminEntry =
-       new TGNumberEntry(fHzvseXBinsFrame, hzvsexmin, 4, 0,
-                         TGNumberFormat::kNESReal);
+      new TGNumberEntry(fHzvseXBinsFrame, hzvsexmin, 4, 0,
+                        TGNumberFormat::kNESReal);
    fHzvseXmaxLabel = new TGLabel(fHzvseXBinsFrame, "max");
    fHzvseXmaxEntry =
-       new TGNumberEntry(fHzvseXBinsFrame, hzvsexmax, 4, 0,
-                         TGNumberFormat::kNESReal);
+      new TGNumberEntry(fHzvseXBinsFrame, hzvsexmax, 4, 0,
+                        TGNumberFormat::kNESReal);
    fHzvseXBinsFrame->AddFrame(fHzvseXmaxEntry,
                               new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
    fHzvseXBinsFrame->AddFrame(fHzvseXmaxLabel,
@@ -160,19 +159,19 @@ ClassImp(KVTestIDGridDialog)
    fHzvseYBinsFrame = new TGHorizontalFrame(fHzvseFrame);
    fHzvseYBinsLabel = new TGLabel(fHzvseYBinsFrame, "nbins");
    fHzvseYBinsEntry =
-       new TGNumberEntry(fHzvseYBinsFrame, hzvseybins, 4, 0,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHzvseYBinsFrame, hzvseybins, 4, 0,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
    fHzvseYminLabel = new TGLabel(fHzvseYBinsFrame, "PID : min");
    fHzvseYminEntry =
-       new TGNumberEntry(fHzvseYBinsFrame, hzvseymin, 4, 0,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHzvseYBinsFrame, hzvseymin, 4, 0,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
    fHzvseYmaxLabel = new TGLabel(fHzvseYBinsFrame, "max");
    fHzvseYmaxEntry =
-       new TGNumberEntry(fHzvseYBinsFrame, hzvseymax, 4, 0,
-                         TGNumberFormat::kNESInteger,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHzvseYBinsFrame, hzvseymax, 4, 0,
+                        TGNumberFormat::kNESInteger,
+                        TGNumberFormat::kNEAPositive);
    fHzvseYBinsFrame->AddFrame(fHzvseYmaxEntry,
                               new TGLayoutHints(kLHintsRight, 5, 5, 2, 2));
    fHzvseYBinsFrame->AddFrame(fHzvseYmaxLabel,
@@ -192,13 +191,13 @@ ClassImp(KVTestIDGridDialog)
    fHzvseFrame->AddFrame(fHzvseYBinsFrame,
                          new TGLayoutHints(kLHintsNormal, 5, 5, 2, 2));
 
-        /********** progress bar **********/
+   /********** progress bar **********/
    fProgressBar = new TGHProgressBar(fMain, TGProgressBar::kFancy, 300);
    fProgressBar->SetFillType(TGProgressBar::kBlockFill);
    fProgressBar->ShowPosition();
    fProgressBar->SetBarColor("red");
 
-        /************buttons***************/
+   /************buttons***************/
    fButtonsFrame = new TGHorizontalFrame(fMain, 100, 50);
    fTestButton = new TGTextButton(fButtonsFrame, "&Test");
    fTestButton->Connect("Clicked()", "KVTestIDGridDialog", this,
@@ -209,12 +208,12 @@ ClassImp(KVTestIDGridDialog)
 
    fButtonsFrame->AddFrame(fTestButton,
                            new TGLayoutHints(kLHintsExpandX |
-                                             kLHintsCenterX |
-                                             kLHintsCenterY, 2, 2, 5, 5));
+                                 kLHintsCenterX |
+                                 kLHintsCenterY, 2, 2, 5, 5));
    fButtonsFrame->AddFrame(fCloseButton,
                            new TGLayoutHints(kLHintsExpandX |
-                                             kLHintsCenterX |
-                                             kLHintsCenterY, 2, 2, 5, 5));
+                                 kLHintsCenterX |
+                                 kLHintsCenterY, 2, 2, 5, 5));
 
    fMain->AddFrame(fHdataFrame,
                    new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 15,
@@ -271,7 +270,7 @@ void KVTestIDGridDialog::TestGrid()
    fNameZvsE = fHzvseNameEntry->GetText();
 
    if (!CheckNameOK(fNameData) || !CheckNameOK(fNameZreal)
-       || !CheckNameOK(fNameZvsE)) {
+         || !CheckNameOK(fNameZvsE)) {
 
       new TGMsgBox(gClient->GetRoot(), fMain, "Test ID Grid",
                    "Give a valid name for each histo", kMBIconExclamation);
@@ -289,11 +288,11 @@ void KVTestIDGridDialog::TestGrid()
    hzvseybins = fHzvseYBinsEntry->GetIntNumber();
    hzvseymin = fHzvseYminEntry->GetIntNumber();
    hzvseymax = fHzvseYmaxEntry->GetIntNumber();
-   
-   Int_t hnmin = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->First())->GetA() - ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->First())->GetZ() - 1.0;
-   Int_t hnmax = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->Last())->GetA() - ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->Last())->GetZ() + 1.0;   
 
-   TH2F *hdata = (TH2F *) gROOT->FindObject(fNameData.Data());
+   Int_t hnmin = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->First())->GetA() - ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->First())->GetZ() - 1.0;
+   Int_t hnmax = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->Last())->GetA() - ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->Last())->GetZ() + 1.0;
+
+   TH2F* hdata = (TH2F*) gROOT->FindObject(fNameData.Data());
    if (!hdata) {
 
       new TGMsgBox(gClient->GetRoot(), fMain, "Test ID Grid",
@@ -301,28 +300,28 @@ void KVTestIDGridDialog::TestGrid()
       return;
    }
    //in case user changes definitions of histo (without changing name),
-   //we delete the histogram if it already exists  
-   TH1F *hzreal = (TH1F *) gROOT->FindObject(fNameZreal.Data());
+   //we delete the histogram if it already exists
+   TH1F* hzreal = (TH1F*) gROOT->FindObject(fNameZreal.Data());
    if (hzreal) {
       delete hzreal;
       hzreal = 0;
    }
    hzreal =
-       new TH1F(fNameZreal.Data(), "PID distribution", hzrealbins,
-                hzrealxmin, hzrealxmax);
+      new TH1F(fNameZreal.Data(), "PID distribution", hzrealbins,
+               hzrealxmin, hzrealxmax);
 
-   TH2F *hzvse = (TH2F *) gROOT->FindObject(fNameZvsE.Data());
+   TH2F* hzvse = (TH2F*) gROOT->FindObject(fNameZvsE.Data());
    if (hzvse) {
       delete hzvse;
       hzvse = 0;
    }
    hzvse =
-       new TH2F(fNameZvsE.Data(), "PID vs. E_{res}", hzvsexbins, hzvsexmin,
-                hzvsexmax, hzvseybins, hzvseymin, hzvseymax);
-		
-	// A vs Z map in caze of !IsOnlyZId()
-   TH2F *hazreal = 0;
-   if(!fSelectedGrid->IsOnlyZId()) hazreal = new TH2F("AZMap", "Z vs. A", 30*(hnmax-hnmin-1), hnmin, hnmax, 30*(hzrealxmax-hzrealxmin-1), hzrealxmin, hzrealxmax);
+      new TH2F(fNameZvsE.Data(), "PID vs. E_{res}", hzvsexbins, hzvsexmin,
+               hzvsexmax, hzvseybins, hzvseymin, hzvseymax);
+
+   // A vs Z map in caze of !IsOnlyZId()
+   TH2F* hazreal = 0;
+   if (!fSelectedGrid->IsOnlyZId()) hazreal = new TH2F("AZMap", "Z vs. A", 30 * (hnmax - hnmin - 1), hnmin, hnmax, 30 * (hzrealxmax - hzrealxmin - 1), hzrealxmin, hzrealxmax);
 
    //progress bar set up
    fProgressBar->SetRange(0, hdata->GetSum());
@@ -344,30 +343,32 @@ void KVTestIDGridDialog::TestGrid()
    fSelectedGrid->Disconnect("Increment(Float_t)", fProgressBar,
                              "SetPosition(Float_t)");
    fProgressBar->Reset();
-   
-   if(hazreal)
-     {
-     KVCanvas* cc = new KVCanvas;
-     cc->cd();
-     ((TPad*)gPad)->SetLogz();
-     TAxis* ax = 0;
-     ax = hazreal->GetXaxis();
-     ax->SetNdivisions(000);
-     ax->SetLabelOffset(-0.04);
-     ax->SetTickLength(0);
-     
-     ax = hazreal->GetYaxis();
-     ax->SetNdivisions(000);
-     ax->SetLabelOffset(-0.03);
-     ax->SetTickLength(0);
-     hazreal->Draw("col");
-     hazreal->SetMinimum(1);
-     DrawChart(cc, (Int_t)hzrealxmin, (Int_t)hzrealxmax, (Int_t)hnmin, (Int_t)hnmax);
-     }
+
+   if (hazreal) {
+      KVCanvas* cc = new KVCanvas;
+      cc->cd();
+      ((TPad*)gPad)->SetLogz();
+      hazreal->Draw("col");
+
+      if (!strcmp(hazreal->GetTitle(), "Z vs. A")) {
+         TAxis* ax = 0;
+         ax = hazreal->GetXaxis();
+         ax->SetNdivisions(000);
+         ax->SetLabelOffset(-0.04);
+         ax->SetTickLength(0);
+
+         ax = hazreal->GetYaxis();
+         ax->SetNdivisions(000);
+         ax->SetLabelOffset(-0.03);
+         ax->SetTickLength(0);
+         hazreal->SetMinimum(1);
+         DrawChart(cc, (Int_t)hzrealxmin, (Int_t)hzrealxmax, (Int_t)hnmin, (Int_t)hnmax);
+      }
+   }
 
 
    // show results in canvas
-   KVCanvas *C = new KVCanvas;
+   KVCanvas* C = new KVCanvas;
    C->SetTitle(Form("ID test : grid %s : histo %s (pid)", fSelectedGrid->GetName(), hdata->GetName()));
 //   C->Divide(1,2);
 //   C->cd(1);
@@ -407,18 +408,18 @@ void KVTestIDGridDialog::TestGrid()
 
 void KVTestIDGridDialog::DrawChart(KVCanvas* cc, Int_t zmin, Int_t zmax, Int_t nmin, Int_t nmax)
 {
-  TPad* pp = (TPad*) cc->cd();
-  
-  Double_t marging = 0.001;
-  pp->SetTopMargin(marging);
-  pp->SetRightMargin(marging);
-  pp->SetBottomMargin(marging);
-  pp->SetLeftMargin(marging);
+   TPad* pp = (TPad*) cc->cd();
 
-  KVNuclearChart* nucChar = new KVNuclearChart(nmin+1, nmax, zmin, zmax);
-  nucChar->Draw("same");
-    
-  return;
+   Double_t marging = 0.001;
+   pp->SetTopMargin(marging);
+   pp->SetRightMargin(marging);
+   pp->SetBottomMargin(marging);
+   pp->SetLeftMargin(marging);
+
+   KVNuclearChart* nucChar = new KVNuclearChart(nmin + 1, nmax, zmin, zmax);
+   nucChar->Draw("same");
+
+   return;
 }
 
 

@@ -25,13 +25,13 @@ ClassImp(KVDBAlphaPeak)
 //Wrapper for KVDBPeak describing alpha (thoron) peaks for calibration
 //GetEnergy gives the energy of the alpha-peak in MeV.
 ///////////////////////////////
-    KVDBAlphaPeak::KVDBAlphaPeak()
+KVDBAlphaPeak::KVDBAlphaPeak()
 {
    //default ctor
 }
 
-KVDBAlphaPeak::KVDBAlphaPeak(const Char_t * detname)
-:KVDBPeak(detname, "alpha", 7)
+KVDBAlphaPeak::KVDBAlphaPeak(const Char_t* detname)
+   : KVDBPeak(detname, "alpha", 7)
 {
    //create alpha peak parameter set for detector "detname"
 }

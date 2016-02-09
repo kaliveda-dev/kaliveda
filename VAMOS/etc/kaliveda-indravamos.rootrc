@@ -5,12 +5,15 @@
 INDRA_e503.DataSet.Title:    Symmetry energy of nuclear EOS (E503) (2007)
 INDRA_e503.DataSet.RepositoryDir:   e503
 INDRA_e503.DataSet.RunFileName.raw:    run_%04d.dat%*
-INDRA_e503.Reconstruction.DataAnalysisTask.Analyser:     IVRawDataRecon
-INDRA_e503.ReconIdent.DataAnalysisTask.UserClass.Base:     IVReconIdent/TSelector
-INDRA_e503.RawAnalysis.DataAnalysisTask.UserClass.Base:     IVRawDataAnalyser
-INDRA_e503.ReconAnalysis.DataAnalysisTask.UserClass.Base:     IVSelector/TSelector
-INDRA_e503.IdentAnalysis.DataAnalysisTask.UserClass.Base:     IVSelector/TSelector
-INDRA_e503.ReconstructedEventClassName:   KVINDRAReconEvent
+INDRA_e503.Reconstruction.DataAnalysisTask.Analyser:       IVRawDataRecon
+INDRA_e503.ReconIdent.DataAnalysisTask.Analyser:           IVReconData
+INDRA_e503.ReconIdent.DataAnalysisTask.UserClass.Base:     IVReconIdent_e503/TSelector
+INDRA_e503.RawAnalysis.DataAnalysisTask.UserClass.Base:    IVRawDataAnalyser
+INDRA_e503.ReconAnalysis.DataAnalysisTask.Analyser:        IVReconData
+INDRA_e503.ReconAnalysis.DataAnalysisTask.UserClass.Base:  IVSelector/TSelector
+INDRA_e503.IdentAnalysis.DataAnalysisTask.Analyser:        IVReconData
+INDRA_e503.IdentAnalysis.DataAnalysisTask.UserClass.Base:  IVSelector/TSelector
+INDRA_e503.ReconstructedEventClassName:   KVIVReconEvent
 
 +DataSet:    INDRA_e494s
 INDRA_e494s.DataSet.Title:   Isospin dependence of level density parameter (E494S) (2007)
@@ -24,7 +27,7 @@ INDRA_e494s.ReconAnalysis.DataAnalysisTask.Analyser:        IVReconData
 INDRA_e494s.ReconAnalysis.DataAnalysisTask.UserClass.Base:  IVSelector/TSelector
 INDRA_e494s.IdentAnalysis.DataAnalysisTask.Analyser:        IVReconData
 INDRA_e494s.IdentAnalysis.DataAnalysisTask.UserClass.Base:  IVSelector/TSelector
-INDRA_e494s.ReconstructedEventClassName:   KVINDRAReconEvent
+INDRA_e494s.ReconstructedEventClassName:   KVIVReconEvent
 
 +DataSet:    VAMOS_e503
 VAMOS_e503.DataSet.Title:    Focal plane VAMOS (e503)
@@ -58,11 +61,11 @@ INDRA_e503.Reconstruction.DataAnalysisTask.ParticleSeedCond:     any
 VAMOS_e503.KVDetector.Fired.ACQParameterList.SI: E
 VAMOS_e503.KVDetector.Fired.ACQParameterList.CSI: E
 
-# Same thing for VAMOS's detectors. The list of acquisition parameters can contain 
+# Same thing for VAMOS's detectors. The list of acquisition parameters can contain
 # Q, E, T, T_HF, X and Y. The last two types are not exactly acquisition parameter types
 # but the types of quantities (position) calculated from acquisition parameters with type 'Q'.
 # So if you set already X or Y types, setting Q in the list is useless.
-# For each detector type, give a comma-separated list to be taken into account in the 
+# For each detector type, give a comma-separated list to be taken into account in the
 # KVVAMOSDetector::Fired method.
 # These lists are read during construction of VAMOS spectrometer (KVVAMOS:Build),
 # the method KVAMOS::SetACQParams uses them to define a mask for each detector
@@ -73,18 +76,19 @@ KVVAMOSDetector.Fired.ACQParameterList.CHI: E
 KVVAMOSDetector.Fired.ACQParameterList.SED: T_HF,X,Y
 
 # Plugins for data analysis
-+Plugin.KVDataAnalyser:   IVRawDataRecon         KVIVRawDataReconstructor     VAMOSanalysis   "KVIVRawDataReconstructor()"
-+Plugin.KVDataAnalyser:   IVRawDataAnalyser      KVIVRawDataAnalyser          VAMOSanalysis   "KVIVRawDataAnalyser()"
-+Plugin.KVDataAnalyser:   IVReconData            KVIVReconDataAnalyser     VAMOSanalysis "KVIVReconDataAnalyser()"
++Plugin.KVDataAnalyser:  IVRawDataRecon     KVIVRawDataReconstructor  VAMOSanalysis  "KVIVRawDataReconstructor()"
++Plugin.KVDataAnalyser:  IVRawDataAnalyser  KVIVRawDataAnalyser       VAMOSanalysis  "KVIVRawDataAnalyser()"
++Plugin.KVDataAnalyser:  IVReconData        KVIVReconDataAnalyser     VAMOSanalysis  "KVIVReconDataAnalyser()"
 
 # TSelector plugins for analysis of ROOT TTrees
-+Plugin.TSelector:   IVReconIdent           KVIVReconIdent               VAMOSanalysis     "KVIVReconIdent()"
-+Plugin.TSelector:   IVSelector           KVIVSelector               VAMOSanalysis     "KVIVSelector()"
++Plugin.TSelector:  IVReconIdent       KVIVReconIdent       VAMOSanalysis    "KVIVReconIdent()"
++Plugin.TSelector:  IVReconIdent_e503  KVIVReconIdent_e503  VAMOSdeprecated  "KVIVReconIdent_e503()"
++Plugin.TSelector:  IVSelector         KVIVSelector         VAMOSanalysis    "KVIVSelector()"
 
 # Plugins for VAMOS calibration
-Plugin.Analysisv:   INDRA_e503     Analysisv_e503   VAMOSanalysis   "Analysisv_e503(LogFile*)"
-+Plugin.Analysisv:   INDRA_e494s     Analysisv_e494s   VAMOSanalysis   "Analysisv_e494s(LogFile*)"
-+Plugin.Analysisv:   VAMOS_e503     Analysisv_e503   VAMOSanalysis   "Analysisv_e503(LogFile*)"
+Plugin.Analysisv:   INDRA_e503   Analysisv_e503   VAMOSdeprecated "Analysisv_e503(LogFile*)"
++Plugin.Analysisv:  INDRA_e494s  Analysisv_e494s  VAMOSdeprecated "Analysisv_e494s(LogFile*)"
++Plugin.Analysisv:  VAMOS_e503   Analysisv_e503   VAMOSdeprecated "Analysisv_e503(LogFile*)"
 
 # Plugins for reading raw data
 # There must be an entry here for each dataset
@@ -95,65 +99,68 @@ Plugin.Analysisv:   INDRA_e503     Analysisv_e503   VAMOSanalysis   "Analysisv_e
 # Plugins for KVGANILDataReader/GTGanilData class
 # The actual object used to open and read the data files can change depending on dataset
 Plugin.GTGanilData:    INDRA_e503      GTGanilDataVAMOS      VAMOSdaq_cec     "GTGanilDataVAMOS()"
-+Plugin.GTGanilData:   INDRA_e494s     GTGanilDataVAMOS     VAMOSdaq_cec     "GTGanilDataVAMOS()"
+#+Plugin.GTGanilData:   INDRA_e494s     GTGanilDataVAMOS     VAMOSdaq_cec     "GTGanilDataVAMOS()"
 +Plugin.GTGanilData:   VAMOS_e503     GTGanilDataVAMOS     VAMOSdaq_cec     "GTGanilDataVAMOS()"
 
 # Dataset-specific parameter files
 # INDRA-VAMOS
-INDRA_e503.INDRADB.ChIoSiVoltMeVCalib:     CalibMeVVoltChIoSi.dat
-INDRA_e503.INDRADB.ElectronicCalibration:    ChVolt.dat
-INDRA_e503.INDRADB.ElectronicCalibration.Etalons:    ChVolt_e503_etalons.dat
-INDRA_e503.INDRADB.Pedestals:                         PedestalsE503.dat
-INDRA_e503.INDRADB.PedestalCorrections:              DeltaPiedQDC10.dat
-INDRA_e503.INDRADB.GGtoPGFactors:                     ParamFitPG_GG.dat
+INDRA_e503.INDRADB.ChIoSiVoltMeVCalib:             CalibMeVVoltChIoSi.dat
+INDRA_e503.INDRADB.ElectronicCalibration:          ChVolt.dat
+INDRA_e503.INDRADB.ElectronicCalibration.Etalons:  ChVolt_e503_etalons.dat
+INDRA_e503.INDRADB.Pedestals:                      PedestalsE503.dat
+INDRA_e503.INDRADB.PedestalCorrections:            DeltaPiedQDC10.dat
+INDRA_e503.INDRADB.GGtoPGFactors:                  ParamFitPG_GG.dat
+INDRA_e503.INDRADB.VAMOSIDCorrectionList:          VAMOSIDCorrectionList.txt
 
-INDRA_e494s.INDRADB.Pedestals:                     PedestalsE494s.dat
+INDRA_e494s.INDRADB.Pedestals:                      PedestalsE494s.dat
 INDRA_e494s.INDRADB.PedestalCorrections:            DeltaPiedQDC10.dat
-INDRA_e494s.INDRADB.GGtoPGFactors:                 ParamFitPG_GG.dat
-INDRA_e494s.INDRADB.ElectronicCalibration:         e494s_Channel_Volt.dat
-INDRA_e494s.INDRADB.ElectronicCalibration.Etalons: e494s_Channel_Volt_etalons.dat
-INDRA_e494s.INDRADB.ChIoSiVoltMeVCalib:            e494s_Volt2MeV.dat
+INDRA_e494s.INDRADB.GGtoPGFactors:                  ParamFitPG_GG.dat
+INDRA_e494s.INDRADB.ElectronicCalibration:          e494s_Channel_Volt.dat
+INDRA_e494s.INDRADB.ElectronicCalibration.Etalons:  e494s_Channel_Volt_etalons.dat
+INDRA_e494s.INDRADB.ChIoSiVoltMeVCalib:             e494s_Volt2MeV.dat
 
 # Plugins for different datasets
 # Each dataset has an associated multidetector array describing the experimental setup.
 # There must be an entry here for each dataset
 # Syntax:
 # Plugin.KVMultiDetArray:    name_of_dataset    name_of_class    name_of_plugin_library   constructor_to_call
-+Plugin.KVMultiDetArray:    INDRA_e503    KVINDRAe503     KVIndraexp_events    "KVINDRAe503()"
-+Plugin.KVMultiDetArray:    INDRA_e494s    KVINDRA_VAMOS     VAMOSexp_events    "KVINDRA_VAMOS()"
-+Plugin.KVMultiDetArray:    VAMOS_e503    KVFocalPlanVamos     VAMOSgeometry    "KVFocalPlanVamos()"
++Plugin.KVMultiDetArray:  INDRA_e503   KVINDRA_VAMOS     VAMOSexp_events  "KVINDRA_VAMOS()"
++Plugin.KVMultiDetArray:  INDRA_e494s  KVINDRA_VAMOS     VAMOSexp_events  "KVINDRA_VAMOS()"
++Plugin.KVMultiDetArray:  VAMOS_e503   KVFocalPlanVamos  VAMOSexp_events  "KVFocalPlanVamos()"
 
 # Plugins for different datasets
 # Each dataset has an associated database of informations on runs, calibration parameters, etc.
-+Plugin.KVDataBase:    INDRA_e503    KVINDRADB_e503     KVIndradb    "KVINDRADB_e503(const Char_t*)"
-+Plugin.KVDataBase:    VAMOS_e503    KVINDRADB_e503     KVIndradb    "KVINDRADB_e503(const Char_t*)"
-+Plugin.KVDataBase:    INDRA_e494s    KVIVDB            VAMOSdb    "KVIVDB(const Char_t*)"
++Plugin.KVDataBase:  INDRA_e503   KVIVDB_e503  VAMOSdb  "KVIVDB_e503(const  Char_t*)"
++Plugin.KVDataBase:  INDRA_e494s  KVIVDB  VAMOSdb  "KVIVDB(const  Char_t*)"
 
 #================================ Plugins for different datasets
 # Each multidetector array has an associated 'KVUpDater' object used to set run parameters.
 # If there is no entry here for a dataset, an object of the default KVUpDater class will be used.
 # Syntax:
 # Plugin.KVUpDater:    name_of_dataset    name_of_class    name_of_plugin_library   constructor_to_call
-+Plugin.KVUpDater:    INDRA_e494s    KVIVUpDater              VAMOSexp_events    "KVIVUpDater()"
-+Plugin.KVUpDater:    INDRA_e503     KVIVUpDater              VAMOSexp_events    "KVIVUpDater()"
++Plugin.KVUpDater:  INDRA_e494s  KVIVUpDater  VAMOSdb "KVIVUpDater()"
++Plugin.KVUpDater:  INDRA_e503   KVIVUpDater_e503  VAMOSdb "KVIVUpDater_e503()"
 
 #============================== Plugins for identification telescopes
 # The KVMultiDetArray::GetIDTelescopes(KVDetector*de, KVDetector*e) method uses these plugins to
 # create KVIDTelescope instances adapted to the specific array geometry and detector types.
-+Plugin.KVIDTelescope:    ^INDRA_e494s.CI-SI$        KVIDChIoSiCorr                KVIndraidentification      "KVIDChIoSiCorr()"
-+Plugin.KVIDTelescope:    ^INDRA_e494s.CI-CSI$       KVIDChIoCorrCsI_e494s         KVIndraidentification      "KVIDChIoCorrCsI_e494s()"
-+Plugin.KVIDTelescope:    ^INDRA_e494s.SI-CSI$       KVIDSiCorrCsI                 KVIndraidentification      "KVIDSiCorrCsI()"
-+Plugin.KVIDTelescope:    ^INDRA_e494s.CI-SI75$      KVIDChIoSi75_e494s            KVIndraidentification      "KVIDChIoSi75_e494s()"
-+Plugin.KVIDTelescope:    ^INDRA_e494s.SI75-SILI$    KVIDSi75SiLi_e494s            KVIndraidentification      "KVIDSi75SiLi_e494s()"
-+Plugin.KVIDTelescope:    ^INDRA_e494s.SILI-CSI$     KVIDSiLiCsI_e494s             KVIndraidentification     "KVIDSiLiCsI_e494s()"
-+Plugin.KVIDTelescope:    ^INDRA_e494s.VAMOS.CHI-SI$ KVVAMOSIDTelescope            VAMOSidentification        "KVVAMOSIDTelescope()"
++Plugin.KVIDTelescope:  ^INDRA_e494s.CI-SI$         KVIDChIoSiCorr         KVIndraidentification  "KVIDChIoSiCorr()"
++Plugin.KVIDTelescope:  ^INDRA_e494s.CI-CSI$        KVIDChIoCorrCsI_e494s  KVIndraidentification  "KVIDChIoCorrCsI_e494s()"
++Plugin.KVIDTelescope:  ^INDRA_e494s.SI-CSI$        KVIDSiCorrCsI          KVIndraidentification  "KVIDSiCorrCsI()"
++Plugin.KVIDTelescope:  ^INDRA_e494s.CI-SI75$       KVIDChIoSi75_e494s     KVIndraidentification  "KVIDChIoSi75_e494s()"
++Plugin.KVIDTelescope:  ^INDRA_e494s.SI75-SILI$     KVIDSi75SiLi_e494s     KVIndraidentification  "KVIDSi75SiLi_e494s()"
++Plugin.KVIDTelescope:  ^INDRA_e494s.SILI-CSI$      KVIDSiLiCsI_e494s      KVIndraidentification  "KVIDSiLiCsI_e494s()"
++Plugin.KVIDTelescope:  ^INDRA_e494s.VAMOS.CHI-SI$  KVIDHarpeeICSi         VAMOSidentification    "KVIDHarpeeICSi()"
++Plugin.KVIDTelescope:  ^INDRA_e494s.VAMOS.QA.SI$   KVIDQA                 VAMOSidentification    "KVIDQA()"
 ################################################
-+Plugin.KVIDTelescope:    ^INDRA_e503.SI-CSI$   KVIDSiCorrCsI      KVIndraidentification "KVIDSiCorrCsI()"
-+Plugin.KVIDTelescope:    ^INDRA_e503.CI-SI$    KVIDChIoSiCorr     KVIndraidentification "KVIDChIoSiCorr()"
-+Plugin.KVIDTelescope:    ^INDRA_e503.CI-CSI$   KVIDChIoCorrCsI    KVIndraidentification "KVIDChIoCorrCsI()"
-+Plugin.KVIDTelescope:    ^INDRA_e503.CI-SI75$      KVIDChIoSi75_e494s            KVIndraidentification      "KVIDChIoSi75_e494s()"
-+Plugin.KVIDTelescope:    ^INDRA_e503.SI75-SILI$    KVIDSi75SiLi_e494s            KVIndraidentification      "KVIDSi75SiLi_e494s()"
-+Plugin.KVIDTelescope:    ^INDRA_e503.SILI-CSI$     KVIDSiLiCsI_e494s             KVIndraidentification      "KVIDSiLiCsI_e494s()"
++Plugin.KVIDTelescope:  ^INDRA_e503.SI-CSI$        KVIDSiCorrCsI         KVIndraidentification  "KVIDSiCorrCsI()"
++Plugin.KVIDTelescope:  ^INDRA_e503.CI-SI$         KVIDChIoSiCorr        KVIndraidentification  "KVIDChIoSiCorr()"
++Plugin.KVIDTelescope:  ^INDRA_e503.CI-CSI$        KVIDChIoCorrCsI       KVIndraidentification  "KVIDChIoCorrCsI()"
++Plugin.KVIDTelescope:  ^INDRA_e503.CI-SI75$       KVIDChIoSi75_e494s    KVIndraidentification  "KVIDChIoSi75_e494s()"
++Plugin.KVIDTelescope:  ^INDRA_e503.SI75-SILI$     KVIDSi75SiLi_e494s    KVIndraidentification  "KVIDSi75SiLi_e494s()"
++Plugin.KVIDTelescope:  ^INDRA_e503.SILI-CSI$      KVIDSiLiCsI_e494s     KVIndraidentification  "KVIDSiLiCsI_e494s()"
++Plugin.KVIDTelescope:  ^INDRA_e503.VAMOS.SI-CSI$  KVIDHarpeeSiCsI_e503  VAMOSidentification    "KVIDHarpeeSiCsI_e503()"
++Plugin.KVIDTelescope:  ^INDRA_e503.VAMOS.CHI-SI$  KVIDHarpeeICSi_e503   VAMOSidentification    "KVIDHarpeeICSi_e503()"
 ###############################################
 # ===> Plugin pour FocalPlanVamos
 +Plugin.KVIDTelescope:    ^VAMOS_e503.SI-CSI$   KVIDSiCsIVamos        VAMOSidentification        "KVIDSiCsIVamos()"
@@ -168,37 +175,47 @@ INDRA_e494s.INDRADB.ChIoSiVoltMeVCalib:            e494s_Volt2MeV.dat
 # If an absolute pathname is not given, the file must be in $KVROOT/KVFiles/[dataset name]
 #
 ################################################
-INDRA_e503.IdentificationParameterFile.SI-CSI:      SI_CSI_C4-9_autofit.dat
-INDRA_e503.IdentificationParameterFile.CI-SI:       Grid_ChioSi_C4-9_R322-606.dat
-INDRA_e503.IdentificationParameterFile.CI-CSI:      Grid_ChioCsI_C10-17_R322-606.dat
-INDRA_e503.IdentificationParameterFile.CSI:         IDGridManager_E503_CSI_RL.dat
-INDRA_e503.IdentificationParameterFile.CI-SI75:     grilles_ChIo_Si75.dat
-INDRA_e503.IdentificationParameterFile.SI75-SILI:   grilles_fit_Si75_SiLi.dat
-INDRA_e503.IdentificationParameterFile.SILI-CSI:    grilles_fit_SiLi_CsI.dat
-
+INDRA_e503.IdentificationParameterFile.SI-CSI:        SI_CSI_C4-9_autofit.dat
+INDRA_e503.IdentificationParameterFile.CI-SI:         Grid_ChioSi_C4-9_R322-606.dat
+INDRA_e503.IdentificationParameterFile.CI-CSI:        Grid_ChioCsI_C10-17_R322-606.dat
+INDRA_e503.IdentificationParameterFile.CSI:           IDGridManager_E503_CSI_RL.dat
+INDRA_e503.IdentificationParameterFile.CI-SI75:       grilles_ChIo_Si75.dat
+INDRA_e503.IdentificationParameterFile.SI75-SILI:     grilles_fit_Si75_SiLi.dat
+INDRA_e503.IdentificationParameterFile.SILI-CSI:      grilles_fit_SiLi_CsI.dat
+INDRA_e503.IdentificationParameterFile.VAMOS.CHI-SI:  grid_chio_si_vamos.dat
+INDRA_e503.IdentificationParameterFile.VAMOS.SI-CSI:  grid_vamos.dat
 ###############################################
-INDRA_e494s.IdentificationParameterFile.CI-SI:          grilles_ChIo_Si.dat
-INDRA_e494s.IdentificationParameterFile.CI-CSI:         grilles_ChIo_CsI.dat
-INDRA_e494s.IdentificationParameterFile.SI-CSI:         grilles_fit_Si_CsI.dat
-INDRA_e494s.IdentificationParameterFile.CSI:            grilles_CsI_RL_e494s.dat
-INDRA_e494s.IdentificationParameterFile.CI-SI75:        grilles_ChIo_Si75.dat
-INDRA_e494s.IdentificationParameterFile.SI75-SILI:      grilles_fit_Si75_SiLi.dat
-INDRA_e494s.IdentificationParameterFile.SILI-CSI:       grilles_fit_SiLi_CsI.dat
-INDRA_e494s.IdentificationParameterFile.VAMOS.CHI-SI:   grilles_VAMOS_IC_Si.dat
+INDRA_e494s.IdentificationParameterFile.CI-SI:         grilles_ChIo_Si.dat
+INDRA_e494s.IdentificationParameterFile.CI-CSI:        grilles_ChIo_CsI.dat
+INDRA_e494s.IdentificationParameterFile.SI-CSI:        grilles_fit_Si_CsI.dat
+INDRA_e494s.IdentificationParameterFile.CSI:           grilles_CsI_RL_e494s.dat
+INDRA_e494s.IdentificationParameterFile.CI-SI75:       grilles_ChIo_Si75.dat
+INDRA_e494s.IdentificationParameterFile.SI75-SILI:     grilles_fit_Si75_SiLi.dat
+INDRA_e494s.IdentificationParameterFile.SILI-CSI:      grilles_fit_SiLi_CsI.dat
+INDRA_e494s.IdentificationParameterFile.VAMOS.CHI-SI:  grilles_VAMOS_IC_Si.dat
+INDRA_e494s.IdentificationParameterFile.VAMOS.QA.SI:   grilles_VAMOS_QA.dat
 ###############################################
-# pour FocalPlanVamos 
+# pour FocalPlanVamos
 VAMOS_e503.IdentificationParameterFile.SI-CSI:       Si_CsI_zline.dat
 
 VAMOS_e503.ActiveIdentifications:       SI-CSI
-INDRA_e503.ActiveIdentifications:       CSI SI-CSI CI-SI CI-CSI
-INDRA_e494s.ActiveIdentifications:      CI-SI CI-CSI SI-CSI CSI CI-SI75 SI75-SILI SILI-CSI VAMOS.CHI-SI
+INDRA_e503.ActiveIdentifications:       CSI SI-CSI CI-SI CI-CSI VAMOS.CHI-SI VAMOS.SI-CSI
+INDRA_e494s.ActiveIdentifications:      CI-SI CI-CSI SI-CSI CSI CI-SI75 SI75-SILI SILI-CSI VAMOS.CHI-SI VAMOS.QA.SI
 
 #================================ Plugins for detectors
-+Plugin.KVDetector:    VAMOS_e503.CSI             KVCsIVamos     VAMOSgeometry     "KVCsIVamos(Float_t)"
-+Plugin.KVDetector:    VAMOS_e503.SI             KVSiliconVamos     VAMOSgeometry     "KVSiliconVamos(Float_t)"
++Plugin.KVDetector:  VAMOS_e503.CSI    KVCsIVamos      VAMOSgeometry    "KVCsIVamos(Float_t)"
++Plugin.KVDetector:  VAMOS_e503.SI     KVSiliconVamos  VAMOSgeometry    "KVSiliconVamos(Float_t)"
++Plugin.KVDetector:  INDRA_e494s.SI75  KVSi75_e494s    KVIndrageometry  "KVSi75_e494s(Float_t)"
++Plugin.KVDetector:  INDRA_e494s.SILI  KVSiLi_e494s    KVIndrageometry  "KVSiLi_e494s(Float_t)"
 
 # Mass Formula used in KVVAMOSReconNuc to deduce A from Z nuclei
 KVVAMOSReconNuc.MassFormula:        2
+
+# Default identification grid classes for ID telescopes
+# Used by KVIDGridManagerGUI when creating new grids
+#
+# The following are specific grids for specific telescopes
+KVIDTelescope.DefaultGrid.VAMOS.QA.SI:          KVIDQAGrid
 
 # Default identification/cut classes for different ID graphs
 # Used by KVIDGridManagerGUI when creating new grids
@@ -207,26 +224,56 @@ KVIDGChIoSi_e494s.CutClass:  KVIDCutLine  KVIDCutContour
 KVIDGChIoSi_e494s.DefaultCutClass:  KVIDCutLine
 KVIDGChIoSi_e494s.IDClass:  KVIDZALine
 
+KVIDQAGrid.CutClass:  KVIDCutLine  KVIDCutContour
+KVIDQAGrid.DefaultCutClass:  KVIDCutLine
+KVIDQAGrid.IDClass:  KVIDQALine
+
+# Definition of data columns of the KVListView lists used
+# in KVIDGridManagerGUI from the name of the object class of the lists
+KVIDQALine.DataColumns: Name | Q | Number of A, GetNumberOfMasses | OnlyQId, OnlyQId
+KVIDQAGrid.DataColumns: Name, ,1 | VarX, ,1 | VarY, ,1 | ToF, ,1 | ID Telescopes, GetNamesOfIDTelescopes,1 | RunList, ,1 | OnlyQId, OnlyQId,4 |# Ident., GetNumberOfIdentifiers,2 |# Cuts, GetNumberOfCuts,2 | X scaling, GetXScaleFactor,2 | Y scaling, GetYScaleFactor,2
+
 # Plugins for identification graphs/grids
 # User can extend identification possibilities by adding plugins to list
-+Plugin.KVIDGraph:   KVIDGChIoSi_e494s  KVIDGChIoSi_e494s   KVIndraidentification   "KVIDGChIoSi_e494s()"
++Plugin.KVIDGraph:  KVIDGChIoSi_e494s  KVIDGChIoSi_e494s  KVIndraidentification  "KVIDGChIoSi_e494s()"
++Plugin.KVIDGraph:  KVIDQAGrid         KVIDQAGrid         VAMOSidentification    "KVIDQAGrid()"
+
+# Mime-types for GUI
+# These define the icons associated with different objects displayed in KVListView widgets.
++KaliVeda.GUI.MimeTypes: KVIDGChIoSi_e494s
+KaliVeda.GUI.MimeTypes.KVIDGChIoSi_e494s.Icon:   draw_t.xpm
++KaliVeda.GUI.MimeTypes: KVIDQAGrid
+KaliVeda.GUI.MimeTypes.KVIDQAGrid.Icon:   draw_t.xpm
 
 # Plugins for different datasets
 # Each dataset can have an associated VAMOS spectrometer.
 # There must be an entry here for each dataset
 # Syntax:
 # Plugin.KVVAMOS:    name_of_dataset    name_of_class    name_of_plugin_library   constructor_to_call
-Plugin.KVVAMOS:    INDRA_e494s    KVVAMOS     VAMOSexp_events    "KVVAMOS()"
+Plugin.KVVAMOS:    INDRA_e494s    KVVAMOS     VAMOSgeometry    "KVVAMOS()"
++Plugin.KVVAMOS:    INDRA_e503    KVVAMOS     VAMOSgeometry    "KVVAMOS()"
 
 # List of detectors in the focal plan of VAMOS
 KVVAMOS.DetectorList: KVHarpeeSi KVHarpeeIC KVDriftChamber KVSeD
 KVVAMOS.KVHarpeeSi.Number: 1-18
 KVVAMOS.KVHarpeeIC.Number: 1
-KVVAMOS.KVDriftChamber.Number: 1-2
 KVVAMOS.KVSeD.Number: 1
 
 INDRA_e494s.KVVAMOS.DetectorList: KVSeD KVHarpeeIC KVHarpeeSi
 INDRA_e494s.KVVAMOS.KVSeD.Number: 1-2
+
+INDRA_e503.KVVAMOS.DetectorList: KVDriftChamber KVHarpeeIC KVHarpeeSi KVHarpeeCsI
+INDRA_e503.KVVAMOS.KVDriftChamber.Number: 1-2
+INDRA_e503.KVVAMOS.KVHarpeeCsI.Number: 1-80
+
+#Minimum number of fired strips required to extract a valid position measurement in KVSeD
+KVSeD.NumberOfStripsOK: 3
+
+#Minimum number of fired strips required to extract a valid position measurement in KVDriftChamber
+KVDriftChamber.NumberOfStripsOK: 3
+
+# Drift velocity in KVDriftChamber (in cm/us)
+KVDriftChamber.DriftVelocity: 4.84
 
 # File with list of groups of detectors for VAMOS
 KVVAMOS.DetectorGroupFile: VAMOSDetectorGroups.dat
@@ -236,10 +283,15 @@ KVVAMOS.ACQParameterList: TSED1_HF TSED2_HF TSED1_SED2 TSED1_INDRA TSED1_MCP TSI
 
 # List of Detectors used in the reconstruction of the nucleus focal plan position (Xf,Yf) in VAMOS
 KVVAMOSCodes.FocalPlanReconDetList: SED1 SED2 SI
+INDRA_e503.KVVAMOSCodes.FocalPlanReconDetList: DC1 DC2
 
 # List of Acquisition parameters to be used for calculating the Time of Flight of nuclei reconstructed in VAMOS.
 # Set the parameters form the more appropriate to the less appropriate
-KVVAMOSCodes.ACQParamListForToF: TSED2_HF TSED1_HF TSI_HF TSI_SED1 TSED1_SED2
+KVVAMOSCodes.ACQParamListForToF: TSED2_HF TSED1_HF TSI_HF
+INDRA_e503.KVVAMOSCodes.ACQParamListForToF: TSI_HF
 
 # File with list of files containing the coefficients of the functions used for the trajectory reconstruction in VAMOS
 KVVAMOSTransferMatrix.CoefficientFile: VAMOStransMatrixCoef.list
+
+# Data of multidetectors (INDRA/VAMOS) to be used in the recon->ident analysis using the user class "KVIVReconIdent".
+KVIVReconIdent.DataToAnalyse: INDRA VAMOS

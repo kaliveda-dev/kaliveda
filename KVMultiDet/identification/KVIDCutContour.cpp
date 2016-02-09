@@ -28,14 +28,14 @@ KVIDCutContour::KVIDCutContour()
    // Default constructor
 }
 
-KVIDCutContour::KVIDCutContour(const KVIDCutContour &g)
-		: KVIDContour(g)
+KVIDCutContour::KVIDCutContour(const KVIDCutContour& g)
+   : KVIDContour(g)
 {
    // Copy constructor
 }
 
-KVIDCutContour::KVIDCutContour(const TCutG &g)
-		: KVIDContour(g)
+KVIDCutContour::KVIDCutContour(const TCutG& g)
+   : KVIDContour(g)
 {
    // Copy the TCutG contour
 }
@@ -47,29 +47,29 @@ KVIDCutContour::~KVIDCutContour()
 
 //_____________________________________________________________________________________________
 
-void KVIDCutContour::WriteAsciiFile_extras(ofstream & file,
-                                const Char_t * name_prefix)
+void KVIDCutContour::WriteAsciiFile_extras(ofstream& file,
+      const Char_t* name_prefix)
 {
-	// Write fExclusive
-	
-	KVIDContour::WriteAsciiFile_extras(file,name_prefix);
+   // Write fExclusive
+
+   KVIDContour::WriteAsciiFile_extras(file, name_prefix);
    file << fExclusive << endl;
 }
 
 //_____________________________________________________________________________________________
 
-void KVIDCutContour::ReadAsciiFile_extras(ifstream & file)
+void KVIDCutContour::ReadAsciiFile_extras(ifstream& file)
 {
-	// Read fExclusive
+   // Read fExclusive
 
-	KVIDContour::ReadAsciiFile_extras(file);
-	file >> fExclusive;	
+   KVIDContour::ReadAsciiFile_extras(file);
+   file >> fExclusive;
 }
 
-	void KVIDCutContour::SetExclusive(Bool_t e)
-	 { 
-	// Make contour exclusive i.e. only accept points outside contour
-	 fExclusive=e; 
-	 if(GetParent()) GetParent()->Modified();
-	 }
+void KVIDCutContour::SetExclusive(Bool_t e)
+{
+   // Make contour exclusive i.e. only accept points outside contour
+   fExclusive = e;
+   if (GetParent()) GetParent()->Modified();
+}
 

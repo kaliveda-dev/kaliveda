@@ -12,18 +12,17 @@ $Date: 2007/06/06 10:13:17 $
 
 #include "KVDataAnalyser.h"
 
-class KVINDRAGeneDataAnalyser : public KVDataAnalyser
-{
-	protected:
-   virtual KVNumberList PrintAvailableRuns(KVString & datatype);
-	
-   public:
+class KVINDRAGeneDataAnalyser : public KVDataAnalyser {
+protected:
+   virtual KVNumberList PrintAvailableRuns(KVString& datatype);
+
+public:
 
    KVINDRAGeneDataAnalyser();
    virtual ~KVINDRAGeneDataAnalyser();
    virtual void SubmitTask();
 
-   ClassDef(KVINDRAGeneDataAnalyser,1)//For analysing INDRA gene data
+   ClassDef(KVINDRAGeneDataAnalyser, 1) //For analysing INDRA gene data
 };
 
 #endif

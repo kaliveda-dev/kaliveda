@@ -17,14 +17,28 @@ ClassImp(KVChargeRadius)
 KVChargeRadius::KVChargeRadius()
 {
    // Default constructor
-	init();
+   init();
+   fUnits = "fm";
 }
 
 //________________________________________________________________
-KVChargeRadius::KVChargeRadius(const Char_t* name) : KVNuclData(name)
+KVChargeRadius::KVChargeRadius(const Char_t* name) : KVNuclData(name, "fm")
 {
    // Write your code here
-	init();
+   init();
+}
+
+KVChargeRadius::KVChargeRadius(const KVChargeRadius& o) : KVNuclData()
+{
+   // Copy constructor
+   o.Copy(*this);
+}
+
+void KVChargeRadius::Copy(TObject& object) const
+{
+   KVNuclData::Copy(object);
+   KVChargeRadius& cr = (KVChargeRadius&)object;
+   cr.fError = fError;
 }
 
 //________________________________________________________________
@@ -36,8 +50,8 @@ KVChargeRadius::~KVChargeRadius()
 //_________________________________
 void KVChargeRadius::init()
 {
-	
-	SetError(0);
-	
-	
+
+   SetError(0);
+
+
 }

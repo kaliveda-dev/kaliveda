@@ -29,33 +29,35 @@ class KVList;
 class KVINDRAReconNuc;
 
 
-class KVINDRAReconEvent:public KVReconstructedEvent {
+class KVINDRAReconEvent: public KVReconstructedEvent {
 
- private:
-   KVINDRACodeMask * fCodeMask; //!VEDA codes accepted for "good" particles (IsOK)
-   inline KVINDRACodeMask *GetCodeMask() {
+private:
+   KVINDRACodeMask* fCodeMask;  //!VEDA codes accepted for "good" particles (IsOK)
+   inline KVINDRACodeMask* GetCodeMask()
+   {
       if (!fCodeMask)
          fCodeMask = new KVINDRACodeMask;
       return fCodeMask;
    };
    KVUniqueNameList* fHitGroups;//! non-persistent pointer to list of hit groups used in SecondaryIdentAndCalib()
 
- public:
+public:
 
-   KVINDRAReconEvent(Int_t mult = 50, const char *classname =
-                     "KVINDRAReconNuc");
+   KVINDRAReconEvent(Int_t mult = 50, const char* classname =
+                        "KVINDRAReconNuc");
    void init();
    virtual ~ KVINDRAReconEvent();
 
 
-   KVINDRAReconNuc *AddParticle();
-   KVINDRAReconNuc *GetParticle(Int_t npart) const;
+   KVINDRAReconNuc* AddParticle();
+   KVINDRAReconNuc* GetParticle(Int_t npart) const;
 
-   KVINDRAReconNuc *GetNextParticle(Option_t * opt = "");
+   KVINDRAReconNuc* GetNextParticle(Option_t* opt = "");
 
-   virtual void Print(Option_t * option = "") const;
+   virtual void Print(Option_t* option = "") const;
 
-   inline Bool_t CheckCodes(KVINDRACodeMask & code) {
+   inline Bool_t CheckCodes(KVINDRACodeMask& code)
+   {
       //returns kTRUE if "code" is compatible with event's code mask
       //if no code mask set for event, returns kTRUE in all cases
       if (!fCodeMask)
@@ -70,11 +72,11 @@ class KVINDRAReconEvent:public KVReconstructedEvent {
 
    void IdentifyEvent();
    void ChangeFragmentMasses(UChar_t mass_formula);
-   
+
    virtual void SecondaryIdentCalib();
    void SecondaryAnalyseGroup(KVGroup* grp);
-   
-	ClassDef(KVINDRAReconEvent, 6)       //Event reconstructed from energy losses in INDRA array
+
+   ClassDef(KVINDRAReconEvent, 6)       //Event reconstructed from energy losses in INDRA array
 };
 
 #endif

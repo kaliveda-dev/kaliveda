@@ -8,24 +8,24 @@
 
 class KVRing;
 
-class KVINDRATelescope : public KVTelescope
-{
+class KVINDRATelescope : public KVTelescope {
 
-   public:
+public:
    KVINDRATelescope();
    virtual ~KVINDRATelescope();
 
-   const Char_t *GetName() const;
-   virtual const Char_t *GetArrayName();
+   const Char_t* GetName() const;
+   virtual const Char_t* GetArrayName();
    Int_t GetRingNumber() const;
    KVRing* GetRing() const;
    KVGroup* GetGroup() const;
-   Bool_t IsSortable() const {
+   Bool_t IsSortable() const
+   {
       return kTRUE;
    };
-   Int_t Compare(const TObject * obj) const;
+   Int_t Compare(const TObject* obj) const;
 
-   ClassDef(KVINDRATelescope,1)//A detector telescope in the INDRA array
+   ClassDef(KVINDRATelescope, 1) //A detector telescope in the INDRA array
 };
 
 #endif

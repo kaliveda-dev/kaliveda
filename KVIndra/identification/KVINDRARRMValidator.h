@@ -11,50 +11,59 @@ $Author: franklan $
 #include "KVNumberList.h"
 
 class KVINDRARRMValidator {
- private:
+private:
 
    KVNumberList fRuns;          //list of valid runs
    KVNumberList fRings;         //list of valid rings
    KVNumberList fModules;       //list of valid modules
 
- public:
+public:
 
-    KVINDRARRMValidator();
-    virtual ~ KVINDRARRMValidator();
+   KVINDRARRMValidator();
+   virtual ~ KVINDRARRMValidator();
 
-    KVNumberList & GetRunList() {
+   KVNumberList& GetRunList()
+   {
       return fRuns;
    };
-   KVNumberList & GetRingList() {
+   KVNumberList& GetRingList()
+   {
       return fRings;
    };
-   KVNumberList & GetModuleList() {
+   KVNumberList& GetModuleList()
+   {
       return fModules;
    };
 
-	void SetRunList(const Char_t*list) {
-   	fRuns.SetList(list);
-	};
-	
-	void SetModuleList(const Char_t*list) {
-   	fModules.SetList(list);
-	}
-	
-	void SetRingList(const Char_t*list) {
-   	fRings.SetList(list);
-	}
+   void SetRunList(const Char_t* list)
+   {
+      fRuns.SetList(list);
+   };
 
-	void SetRunList(TString list) {
-   	fRuns.SetList(list);
-	};
-	
-	void SetModuleList(TString list) {
-   	fModules.SetList(list);
-	}
-	
-	void SetRingList(TString list) {
-   	fRings.SetList(list);
-	}
+   void SetModuleList(const Char_t* list)
+   {
+      fModules.SetList(list);
+   }
+
+   void SetRingList(const Char_t* list)
+   {
+      fRings.SetList(list);
+   }
+
+   void SetRunList(TString list)
+   {
+      fRuns.SetList(list);
+   };
+
+   void SetModuleList(TString list)
+   {
+      fModules.SetList(list);
+   }
+
+   void SetRingList(TString list)
+   {
+      fRings.SetList(list);
+   }
 
 
    ClassDef(KVINDRARRMValidator, 1)     //Defines validity of e.g. an ID grid in terms of lists of runs, rings and modules (INDRA detectors)

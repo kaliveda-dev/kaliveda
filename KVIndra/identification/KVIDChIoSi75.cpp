@@ -26,7 +26,7 @@ ClassImp(KVIDChIoSi75)
 //
 //Identification subcodes are written in bits 12-15 of KVIDSubCodeManager
 //(see KVINDRACodes)
-    KVIDChIoSi75::KVIDChIoSi75()
+KVIDChIoSi75::KVIDChIoSi75()
 {
    fECode = kECode1;
    SetSubCodeManager(4, 15);

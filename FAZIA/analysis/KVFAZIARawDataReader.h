@@ -20,15 +20,15 @@ public :
 
    KVFAZIARawDataReader() : KVFAZIAReader() { }
    virtual ~KVFAZIARawDataReader() { }
-   
-   virtual void    Begin(TTree *tree);
-   virtual void    SlaveBegin(TTree *tree);
-    
+
+   virtual void    Begin(TTree* tree);
+   virtual void    SlaveBegin(TTree* tree);
+
    virtual void    SlaveTerminate();
    virtual void    Terminate();
-	
-   
-   ClassDef(KVFAZIARawDataReader,0);
+
+
+   ClassDef(KVFAZIARawDataReader, 0);
 };
 
 #endif

@@ -9,20 +9,19 @@
 #include "TGFrame.h"
 #include "TGClient.h"
 
-class KVKeyHandler : public TGFrame 
-{
+class KVKeyHandler : public TGFrame {
 
-   protected:
+protected:
    KVCanvas* fCanvas;
 
-   public:
+public:
 //   KVKeyHandler() : TGFrame(gClient->GetRoot(),0,0){};
    KVKeyHandler(KVCanvas* Canvas);
    ~KVKeyHandler();
-   
+
 //   void SetCanvas(KVCanvas* Canvas){};
-   Bool_t HandleKey(Event_t *event);
-   ClassDef(KVKeyHandler,1)  // handler of the key events
+   Bool_t HandleKey(Event_t* event);
+   ClassDef(KVKeyHandler, 1) // handler of the key events
 };
 
 #endif

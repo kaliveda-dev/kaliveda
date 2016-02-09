@@ -18,7 +18,7 @@ $Date: 2007/11/20 16:46:21 $
 #include "TObjArray.h"
 #include "KVDataSet.h"
 
-KVDataRepositoryManager *gDataRepositoryManager;
+KVDataRepositoryManager* gDataRepositoryManager;
 
 using namespace std;
 
@@ -83,7 +83,7 @@ void KVDataRepositoryManager::Init()
 
    //make sure KaliVeda environment is initialised
    KVBase::InitEnvironment();
-   
+
    //delete any previously defined repositories
    if (fRepositories.GetSize())
       fRepositories.Delete();
@@ -92,34 +92,33 @@ void KVDataRepositoryManager::Init()
    TString rep_list = gEnv->GetValue("DataRepository", "");
    if (rep_list == "") {
       cout <<
-          "<KVDataRepositoryManager::Init> : no repositories defined in .kvrootrc"
-          << endl;
+           "<KVDataRepositoryManager::Init> : no repositories defined in .kvrootrc"
+           << endl;
       return;
    }
    //split list
-   TObjArray *toks = rep_list.Tokenize(' ');
-   KVDataRepository *new_rep = 0;
+   TObjArray* toks = rep_list.Tokenize(' ');
+   KVDataRepository* new_rep = 0;
    KVDataRepository* last_defined = 0;
    for (int i_rep = 0; i_rep < toks->GetEntries(); i_rep++) {
 
       //loop over each defined repository
 
-      TString rep_name = ((TObjString *) (*toks)[i_rep])->String();     //name of repository
+      TString rep_name = ((TObjString*)(*toks)[i_rep])->String();       //name of repository
       //look for repository type
       TString rep_type =
-          gEnv->GetValue(Form("%s.DataRepository.Type", rep_name.Data()),
-                         "local");
+         gEnv->GetValue(Form("%s.DataRepository.Type", rep_name.Data()),
+                        "local");
       rep_type.ToLower();
 
       //create new repository
       new_rep = KVDataRepository::NewRepository(rep_type.Data());
       new_rep->SetName(rep_name.Data());
       //new_rep->SetType(rep_type.Data()); 'type' is set in default ctor of each repository class
-      if(new_rep->Init()) {
+      if (new_rep->Init()) {
          fRepositories.Add(new_rep);
          last_defined = new_rep;    //keep pointer to last defined repository
-      }
-      else {
+      } else {
          //problem with initialisation of data repository.
          //it is ignored.
          delete new_rep;
@@ -129,16 +128,16 @@ void KVDataRepositoryManager::Init()
    }
    delete toks;
    //look for 'default' repository
-   new_rep = (KVDataRepository *) fRepositories.FindObject(
-         gEnv->GetValue("DataRepository.Default","default"));
+   new_rep = (KVDataRepository*) fRepositories.FindObject(
+                gEnv->GetValue("DataRepository.Default", "default"));
    if (new_rep) new_rep->cd();
-   else if(last_defined) last_defined->cd();
+   else if (last_defined) last_defined->cd();
 }
 
 //______________________________________________________________________________
 
-KVDataRepository *KVDataRepositoryManager::GetRepository(const Char_t *
-                                                         name) const
+KVDataRepository* KVDataRepositoryManager::GetRepository(const Char_t*
+      name) const
 {
    //Return pointer to data repository with given name.
    //Data repository names are defined in .kvrootrc file by lines such as
@@ -146,22 +145,22 @@ KVDataRepository *KVDataRepositoryManager::GetRepository(const Char_t *
    //DataRepository: default
    //+DataRepository: ccali
 
-   return (KVDataRepository *) fRepositories.FindObject(name);
+   return (KVDataRepository*) fRepositories.FindObject(name);
 }
 
 //______________________________________________________________________________
 
-void KVDataRepositoryManager::Print(Option_t * opt) const
+void KVDataRepositoryManager::Print(Option_t* opt) const
 {
    //Print list of repositories
    //opt = "all" : print full configuration information for each repository
-   KVDataRepository *rep;
+   KVDataRepository* rep;
    TString _opt(opt);
    _opt.ToUpper();
    Bool_t _all = (_opt == "ALL");
    TIter nxt(&fRepositories);
    cout << "Available data repositories: " << endl << endl;
-   while ((rep = (KVDataRepository *) nxt())) {
+   while ((rep = (KVDataRepository*) nxt())) {
       if (_all) {
          rep->Print();
       } else {
@@ -178,13 +177,13 @@ void KVDataRepositoryManager::Print(Option_t * opt) const
 
 //______________________________________________________________________________
 
-KVDataSet *KVDataRepositoryManager::GetDataSet(const Char_t* repository, const Char_t * dataset) const
+KVDataSet* KVDataRepositoryManager::GetDataSet(const Char_t* repository, const Char_t* dataset) const
 {
    // Return pointer to named dataset in the given repository
-   if( KVDataRepository* R = GetRepository( repository ) ){
-      
-       return R->GetDataSetManager()->GetDataSet(dataset);
-       
+   if (KVDataRepository* R = GetRepository(repository)) {
+
+      return R->GetDataSetManager()->GetDataSet(dataset);
+
    }
    return 0;
 }

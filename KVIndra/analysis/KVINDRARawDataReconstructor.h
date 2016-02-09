@@ -16,10 +16,9 @@ $Date: 2008/10/17 10:58:07 $
 #include "TTree.h"
 #include "TString.h"
 
-class KVINDRARawDataReconstructor : public KVINDRARawDataAnalyser
-{
-   protected:
-         
+class KVINDRARawDataReconstructor : public KVINDRARawDataAnalyser {
+protected:
+
    TFile* file;
    TTree* tree;
    TTree* genetree;
@@ -28,8 +27,8 @@ class KVINDRARawDataReconstructor : public KVINDRARawDataAnalyser
    Int_t nb_recon;//number of reconstructed INDRA events
    TString taskname;
    TString datatype;
-   
-   public:
+
+public:
 
    KVINDRARawDataReconstructor();
    virtual ~KVINDRARawDataReconstructor();
@@ -38,11 +37,11 @@ class KVINDRARawDataReconstructor : public KVINDRARawDataAnalyser
    virtual void InitRun();
    virtual Bool_t Analysis();
    virtual void EndRun();
-   virtual void EndAnalysis(){};
-   
-   virtual void ExtraProcessing(){};
-   
-   ClassDef(KVINDRARawDataReconstructor,2)//Reconstruction of events from raw data acquisition files
+   virtual void EndAnalysis() {};
+
+   virtual void ExtraProcessing() {};
+
+   ClassDef(KVINDRARawDataReconstructor, 2) //Reconstruction of events from raw data acquisition files
 };
 
 #endif

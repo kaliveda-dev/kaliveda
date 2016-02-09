@@ -12,16 +12,15 @@ $Date: 2008/07/08 12:41:56 $
 
 #include "KVIDCsI.h"
 
-class KVIDCsI_e475s : public KVIDCsI
-{
+class KVIDCsI_e475s : public KVIDCsI {
 
-   public:
+public:
    KVIDCsI_e475s();
    virtual ~KVIDCsI_e475s();
-	
-	void CalculateParticleEnergy(KVReconstructedNucleus* nuc);
 
-   ClassDef(KVIDCsI_e475s,1)//derivation of KVIDCsI class for E475s experiment
+   void CalculateParticleEnergy(KVReconstructedNucleus* nuc);
+
+   ClassDef(KVIDCsI_e475s, 1) //derivation of KVIDCsI class for E475s experiment
 };
 
 #endif

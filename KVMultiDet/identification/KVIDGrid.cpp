@@ -92,15 +92,15 @@ ClassImp(KVIDGrid)
 
 KVIDGrid::KVIDGrid()
 {
-    //Default constructor
-    init();
+   //Default constructor
+   init();
 }
 
 //________________________________________________________________________________
 
 void KVIDGrid::init()
 {
-    //Initialisations, used by constructors
+   //Initialisations, used by constructors
 }
 
 //________________________________________________________________________________
@@ -111,132 +111,121 @@ KVIDGrid::~KVIDGrid()
 
 //_______________________________________________________________________________________________//
 
-KVIDLine *KVIDGrid::NewLine(const Char_t * idline_class)
+KVIDLine* KVIDGrid::NewLine(const Char_t* idline_class)
 {
-    // Create a new line compatible with this grid.
-    //
-    // If idline_class = "id" or "ID":
-    //       create default identification line object for this grid
-    //
-    // If idline_class = "ok" or "OK":
-    //       create default 'OK' line object for this grid
-    //
-    // If idline_class = class name:
-    //       create line object of given class
-    //
-    // If idline_class = "":
-    //       create KVIDLine object
+   // Create a new line compatible with this grid.
+   //
+   // If idline_class = "id" or "ID":
+   //       create default identification line object for this grid
+   //
+   // If idline_class = "ok" or "OK":
+   //       create default 'OK' line object for this grid
+   //
+   // If idline_class = class name:
+   //       create line object of given class
+   //
+   // If idline_class = "":
+   //       create KVIDLine object
 
-    TString _cl, _type(idline_class);
-    _type.ToUpper();
-    TClass *clas = 0;
+   TString _cl, _type(idline_class);
+   _type.ToUpper();
+   TClass* clas = 0;
 
-    if (_type=="ID") clas = DefaultIDLineClass();
-    else if (_type=="OK") clas = DefaultOKLineClass();
-    else _cl = idline_class;
+   if (_type == "ID") clas = DefaultIDLineClass();
+   else if (_type == "OK") clas = DefaultOKLineClass();
+   else _cl = idline_class;
 
-    if (_cl=="") _cl="KVIDLine";
-    if (!clas) clas = gROOT->GetClass( _cl.Data() );
+   if (_cl == "") _cl = "KVIDLine";
+   if (!clas) clas = gROOT->GetClass(_cl.Data());
 
-    KVIDLine *line = 0;
+   KVIDLine* line = 0;
 
-    if (!clas)
-    {
-        Error("AddIDLine",
-              "%s is not a valid classname. No known class.", _cl.Data() );
-    }
-    else
-    {
-        if (!clas->InheritsFrom("KVIDLine"))
-        {
-            Error("AddIDLine",
-                  "%s is not a valid class deriving from KVIDLine.",
-                  _cl.Data() );
-        }
-        else
-        {
-            line = (KVIDLine *) clas->New();
-        }
-    }
-    return line;
+   if (!clas) {
+      Error("AddIDLine",
+            "%s is not a valid classname. No known class.", _cl.Data());
+   } else {
+      if (!clas->InheritsFrom("KVIDLine")) {
+         Error("AddIDLine",
+               "%s is not a valid class deriving from KVIDLine.",
+               _cl.Data());
+      } else {
+         line = (KVIDLine*) clas->New();
+      }
+   }
+   return line;
 }
 
 //_______________________________________________________________________________________________//
 
-void KVIDGrid::ReadIdentifierFromAsciiFile(TString &name, TString &type, TString &cl, ifstream& gridfile)
+void KVIDGrid::ReadIdentifierFromAsciiFile(TString& name, TString& type, TString& cl, ifstream& gridfile)
 {
-    // Read in new identifier object from file
-    // Backwards-compatibility fixes
+   // Read in new identifier object from file
+   // Backwards-compatibility fixes
 
-    KVIDentifier* line = 0;
-    /************ BACKWARDS COMPATIBILITY FIX *************
-    	 transform all 'OK' KVIDLines into KVIDCutLines
-    */
-    Bool_t oldcutline=kFALSE;
-    if (type=="OK"&&cl=="KVIDLine")
-    {
-        oldcutline=kTRUE;
-    }
-    /************ BACKWARDS COMPATIBILITY FIX *************
-    	 transform all 'ID' KVIDZLines into KVIDZALines
-    */
-    Bool_t zline=kFALSE;
-    if (type=="ID"&&cl=="KVIDZLine")
-    {
-        cl="KVIDZALine";
-        zline=kTRUE;
-    }
-    line = New( cl.Data() );
-    //now use ReadAscii method of class to read coordinates and other informations
-    /************ BACKWARDS COMPATIBILITY FIX *************
-    	 special read method for old KVIDZLines
-    */
-    if (zline) ((KVIDZALine*)line)->ReadAsciiFile_KVIDZLine(gridfile);
-    else line->ReadAsciiFile(gridfile);
-    if (oldcutline)
-    {
-        KVIDentifier *oldcut = line;
-        line = new KVIDCutLine;
-        line->CopyGraph(oldcut);
-        delete oldcut;
-    }
-    if (type=="OK") line->SetName( name.Data() );
-    Add(type, line);
+   KVIDentifier* line = 0;
+   /************ BACKWARDS COMPATIBILITY FIX *************
+      transform all 'OK' KVIDLines into KVIDCutLines
+   */
+   Bool_t oldcutline = kFALSE;
+   if (type == "OK" && cl == "KVIDLine") {
+      oldcutline = kTRUE;
+   }
+   /************ BACKWARDS COMPATIBILITY FIX *************
+      transform all 'ID' KVIDZLines into KVIDZALines
+   */
+   Bool_t zline = kFALSE;
+   if (type == "ID" && cl == "KVIDZLine") {
+      cl = "KVIDZALine";
+      zline = kTRUE;
+   }
+   line = New(cl.Data());
+   //now use ReadAscii method of class to read coordinates and other informations
+   /************ BACKWARDS COMPATIBILITY FIX *************
+      special read method for old KVIDZLines
+   */
+   if (zline)((KVIDZALine*)line)->ReadAsciiFile_KVIDZLine(gridfile);
+   else line->ReadAsciiFile(gridfile);
+   if (oldcutline) {
+      KVIDentifier* oldcut = line;
+      line = new KVIDCutLine;
+      line->CopyGraph(oldcut);
+      delete oldcut;
+   }
+   if (type == "OK") line->SetName(name.Data());
+   Add(type, line);
 }
 
 //________________________________________________________________________________________//
 
-Int_t KVIDGrid::GetIDLinesEmbracingPoint(const Char_t * direction,
-        Double_t x, Double_t y, TList& tmp) const
+Int_t KVIDGrid::GetIDLinesEmbracingPoint(const Char_t* direction,
+      Double_t x, Double_t y, TList& tmp) const
 {
-    //Replaces contents of TList 'tmp' with subset of ID lines for which IsBetweenEndPoints(x,y,direction) == kTRUE.
-    //nlines = number of lines in list
+   //Replaces contents of TList 'tmp' with subset of ID lines for which IsBetweenEndPoints(x,y,direction) == kTRUE.
+   //nlines = number of lines in list
 
-    TIter next(GetIdentifiers());
-    Int_t nlines = 0;
-    KVIDLine *line;
-    tmp.Clear();
-    while ((line = (KVIDLine *) next()))
-    {
-        if (line->IsBetweenEndPoints(x, y, direction))
-        {
-            tmp.Add(line);
-            nlines++;
-        }
-    }
-    return nlines;
+   TIter next(GetIdentifiers());
+   Int_t nlines = 0;
+   KVIDLine* line;
+   tmp.Clear();
+   while ((line = (KVIDLine*) next())) {
+      if (line->IsBetweenEndPoints(x, y, direction)) {
+         tmp.Add(line);
+         nlines++;
+      }
+   }
+   return nlines;
 }
 
 //___________________________________________________________________________________
 
 void KVIDGrid::Initialize()
 {
-    // General initialisation method for identification grid.
-    // This method MUST be called once before using the grid for identifications.
-    // The ID lines are sorted.
-    // The natural line widths of all ID lines are calculated.
+   // General initialisation method for identification grid.
+   // This method MUST be called once before using the grid for identifications.
+   // The ID lines are sorted.
+   // The natural line widths of all ID lines are calculated.
 
-    SortIdentifiers();
-    CalculateLineWidths();
+   SortIdentifiers();
+   CalculateLineWidths();
 }
 

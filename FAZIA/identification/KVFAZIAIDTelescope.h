@@ -5,15 +5,23 @@
 #define __KVFAZIAIDTELESCOPE_H
 
 #include "KVIDTelescope.h"
+#include "KVReconstructedNucleus.h"
 
-class KVFAZIAIDTelescope : public KVIDTelescope
-{
+class KVFAZIAIDTelescope : public KVIDTelescope {
 
-   public:
+public:
+   enum {                       //determine identification code
+      kSi1Si2 = 12,
+      kSi1 = 11,
+      kSi2 = 22,
+      kCsI = 33,
+      kSi2CsI = 23
+   };
+
    KVFAZIAIDTelescope();
    virtual ~KVFAZIAIDTelescope();
-   
-   ClassDef(KVFAZIAIDTelescope,1)//Identification for FAZIA array
+
+   ClassDef(KVFAZIAIDTelescope, 1) //Identification for FAZIA array
 };
 
 #endif

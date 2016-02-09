@@ -6,17 +6,16 @@
 
 #include "KVIDChIoSi75.h"
 
-class KVIDChIoSi75_e494s : public KVIDChIoSi75
-{
+class KVIDChIoSi75_e494s : public KVIDChIoSi75 {
 
-   public:
+public:
    KVIDChIoSi75_e494s();
    virtual ~KVIDChIoSi75_e494s();
 
-   virtual Double_t GetIDMapX(Option_t *opt = "");
-   virtual Double_t GetIDMapY(Option_t *opt = "");
+   virtual Double_t GetIDMapX(Option_t* opt = "");
+   virtual Double_t GetIDMapY(Option_t* opt = "");
 
-   ClassDef(KVIDChIoSi75_e494s,1)//E503/E494S experiment INDRA identification using ChIo-Si75 matrices
+   ClassDef(KVIDChIoSi75_e494s, 1) //E503/E494S experiment INDRA identification using ChIo-Si75 matrices
 };
 
 #endif

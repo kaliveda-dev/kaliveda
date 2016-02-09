@@ -18,306 +18,307 @@ ClassImp(KVSimReader)
 //____________________________________________________
 void KVSimReader::init()
 {
-	
-	kmode=kTRUE;
-	tree = 0;
-	evt = 0;
-	nuc = 0 ;
-	nevt = 0;
 
-	tree_name = "SIMULATION_NAME";
-	tree_title = "SIMULATION";
-	root_file_name = "Output.root";
-	//ascii_file_name = "";
-	branch_name = "Simulated_evts";
+   kmode = kTRUE;
+   tree = 0;
+   evt = 0;
+   nuc = 0 ;
+   nevt = 0;
 
-	nv = new KVNameValueList();
+   tree_name = "SIMULATION_NAME";
+   tree_title = "SIMULATION";
+   root_file_name = "Output.root";
+   //ascii_file_name = "";
+   branch_name = "Simulated_evts";
 
-	CreateObjectList();
-	CreateInfoList();
-	
+   nv = new KVNameValueList();
+
+   CreateObjectList();
+   CreateInfoList();
+
 }
 
 //____________________________________________________
 KVSimReader::KVSimReader()
 {
    // Default constructor
-	init();
+   init();
 }
 
 //____________________________________________________
 KVSimReader::KVSimReader(KVString filename)
 {
-	init();
-	
-	if (!OpenFileToRead(filename)) return;
-	
-	Run(root_file_name);
-	
-	CloseFile();
+   init();
+
+   if (!OpenFileToRead(filename)) return;
+
+   Run(root_file_name);
+
+   CloseFile();
 }
 
 //____________________________________________________
 KVSimReader::~KVSimReader()
 {
    // Destructor
-	CleanAll();
-	
-	delete nv;
-	delete linked_objects;
-	delete linked_info;
-	
+   CleanAll();
+
+   delete nv;
+   delete linked_objects;
+   delete linked_info;
+
 }
 
 //____________________________________________________
 void KVSimReader::CleanAll()
 {
 
-	nv->Clear();
-	GetSimuInfo()->Clear();
-	GetLinkedObjects()->Clear();
+   nv->Clear();
+   GetSimuInfo()->Clear();
+   GetLinkedObjects()->Clear();
 
 }
 
 //____________________________________________________
-void KVSimReader::DeclareTree(KVString filename,Option_t* option)
-{	
-		
-	Info("DeclareTree","Ouverture du fichier de stockage %s",filename.Data());
-	root_file_name = filename;
-	file = new TFile(root_file_name.Data(),option);
-		
-	tree = new TTree(tree_name.Data(),tree_title.Data());
-   KVEvent::MakeEventBranch(tree,branch_name,"KVSimEvent",&evt);
+void KVSimReader::DeclareTree(KVString filename, Option_t* option)
+{
+
+   Info("DeclareTree", "Ouverture du fichier de stockage %s", filename.Data());
+   root_file_name = filename;
+   file = new TFile(root_file_name.Data(), option);
+
+   tree = new TTree(tree_name.Data(), tree_title.Data());
+   KVEvent::MakeEventBranch(tree, branch_name, "KVSimEvent", &evt);
 }
 
 //____________________________________________________
 void KVSimReader::ReadFile()
 {
 
-	Info("ReadFile","To be defined in child class");
-	
-	/*
-	while (f_in.good()){
-		if (ReadHeader()){
-			for (Int_t nn=0;nn<nv->GetIntValue("stat"));nn+=1)
-				if (!ReadEvent()) break;
-				else if (HasToFill()) FillTree();
-				else {}
-		}
-		
-	}
-	
-	*/
+   Info("ReadFile", "To be defined in child class");
+
+   /*
+   while (f_in.good()){
+      if (ReadHeader()){
+         for (Int_t nn=0;nn<nv->GetIntValue("stat"));nn+=1)
+            if (!ReadEvent()) break;
+            else if (HasToFill()) FillTree();
+            else {}
+      }
+
+   }
+
+   */
 }
 
 //____________________________________________________
 Bool_t KVSimReader::ReadHeader()
 {
-	
-	Info("ReadHeader","To be defined in child class");
-	/*
-	Int_t res = ReadLineAndCheck(2," ");
-	switch (res){
-	case 0:
-		Info("ReadHeader","case 0 line est vide"); 
-		return kFALSE; 
-	case 1:
-		nv->SetValue("J",GetDoubleReadPar(0));
-		nv->SetValue("stat",GetDoubleReadPar(1));
-		
-		Info("ReadHeader","case 1 moment angulaire %1.0lf stat %1.0lf",nv->GetIntValue("J"),nv->GetIntValue("stat"));
-		return kTRUE;
-	default:
-		Info("ReadHeader","case 2 nombre de par lus %d differents de celui attendu %d",toks->GetEntries(),2); 
-		//Info("ReadHeader","line %s",line.Data()); 
-		return kFALSE;	
-	}
-	*/
-	return kTRUE;
+
+   Info("ReadHeader", "To be defined in child class");
+   /*
+   Int_t res = ReadLineAndCheck(2," ");
+   switch (res){
+   case 0:
+      Info("ReadHeader","case 0 line est vide");
+      return kFALSE;
+   case 1:
+      nv->SetValue("J",GetDoubleReadPar(0));
+      nv->SetValue("stat",GetDoubleReadPar(1));
+
+      Info("ReadHeader","case 1 moment angulaire %1.0lf stat %1.0lf",nv->GetIntValue("J"),nv->GetIntValue("stat"));
+      return kTRUE;
+   default:
+      Info("ReadHeader","case 2 nombre de par lus %d differents de celui attendu %d",toks->GetEntries(),2);
+      //Info("ReadHeader","line %s",line.Data());
+      return kFALSE;
+   }
+   */
+   return kTRUE;
 }
 
 //____________________________________________________
 Bool_t KVSimReader::ReadEvent()
 {
 
-	Info("ReadEvent","To be defined in child class");
-	/*
-	evt->Clear();
-	Int_t mult=0;
-	Int_t res = ReadLineAndCheck(1," ");
-	switch (res){
-	case 0:
-		Info("ReadEvent","case 0 line est vide"); 
-		return kFALSE; 
-	
-	case 1:
-		evt->SetNumber(nevt);
-		mult = GetIntReadPar(0);
-		evt->GetParameters()->SetValue("ll",kSIM_var1);
-		
-		for (Int_t mm=0; mm<mult; mm+=1){	
-			nuc = (KVSimNucleus* )evt->AddParticle();
-			ReadNucleus();
-		}
-		
-		nevt+=1;
-		return kTRUE;
-	
-	default:
-		Info("ReadEvent","case 2 nombre de par lus %d differents de celui attendu %d",toks->GetEntries(),1); 
-		//Info("ReadHeader","line %s",line.Data()); 
-		return kFALSE;	
-	}
-	*/
-	return kTRUE;
-	
+   Info("ReadEvent", "To be defined in child class");
+   /*
+   evt->Clear();
+   Int_t mult=0;
+   Int_t res = ReadLineAndCheck(1," ");
+   switch (res){
+   case 0:
+      Info("ReadEvent","case 0 line est vide");
+      return kFALSE;
+
+   case 1:
+      evt->SetNumber(nevt);
+      mult = GetIntReadPar(0);
+      evt->GetParameters()->SetValue("ll",kSIM_var1);
+
+      for (Int_t mm=0; mm<mult; mm+=1){
+         nuc = (KVSimNucleus* )evt->AddParticle();
+         ReadNucleus();
+      }
+
+      nevt+=1;
+      return kTRUE;
+
+   default:
+      Info("ReadEvent","case 2 nombre de par lus %d differents de celui attendu %d",toks->GetEntries(),1);
+      //Info("ReadHeader","line %s",line.Data());
+      return kFALSE;
+   }
+   */
+   return kTRUE;
+
 }
 
 //____________________________________________________
 Bool_t KVSimReader::ReadNucleus()
 {
 
-	Info("ReadNucleus","To be defined in child class");
-	/*
-	Int_t res = ReadLineAndCheck(5," ");
-	switch (res){
-	case 0:
-		Info("ReadNucleus","case 0 line est vide"); 
-		return kFALSE; 
-	
-	case 1:
-		
-		nuc->SetZ( GetIntReadPar(0) );
-		nuc->SetA( GetIntReadPar(1) );
-		nuc->SetKE( GetDoubleReadPar(2) );
-		nuc->SetTheta( GetDoubleReadPar(3) * TMath::RadToDeg() );
-		nuc->SetPhi( GetDoubleReadPar(4) * TMath::RadToDeg() );
-		
-		return kTRUE;
-	
-	default:
-		
-		Info("ReadNucleus","case 2 nombre de par lus %d differents de celui attendu %d",toks->GetEntries(),5); 
-		//Info("ReadHeader","line %s",line.Data()); 
-		return kFALSE;	
-	}
-	*/
-	return kTRUE;
+   Info("ReadNucleus", "To be defined in child class");
+   /*
+   Int_t res = ReadLineAndCheck(5," ");
+   switch (res){
+   case 0:
+      Info("ReadNucleus","case 0 line est vide");
+      return kFALSE;
+
+   case 1:
+
+      nuc->SetZ( GetIntReadPar(0) );
+      nuc->SetA( GetIntReadPar(1) );
+      nuc->SetKE( GetDoubleReadPar(2) );
+      nuc->SetTheta( GetDoubleReadPar(3) * TMath::RadToDeg() );
+      nuc->SetPhi( GetDoubleReadPar(4) * TMath::RadToDeg() );
+
+      return kTRUE;
+
+   default:
+
+      Info("ReadNucleus","case 2 nombre de par lus %d differents de celui attendu %d",toks->GetEntries(),5);
+      //Info("ReadHeader","line %s",line.Data());
+      return kFALSE;
+   }
+   */
+   return kTRUE;
 }
-	
+
 //____________________________________________________
-void KVSimReader::Run(KVString filename,Option_t* option)
+void KVSimReader::Run(KVString filename, Option_t* option)
 {
-		
-	AddInfo("ascii file read",GetFileName().Data());
-		
-	TStopwatch chrono;
-	chrono.Start();
-		
-	evt = new KVSimEvent();
-	if (HasToFill()) DeclareTree(filename,option);
-	nuc = 0;
-	nevt=0;
-		
-	ReadFile();
-		
-	if (HasToFill())
-		GetTree()->ResetBranchAddress(GetTree()->GetBranch(branch_name.Data()));
-	
-	delete evt;
-	chrono.Stop();
-		
-	//Info("Run","%d evts lus en %lf seconds",GetNumberOfEvents(),chrono.RealTime());
-		
-	KVString snevt; snevt.Form("%d",nevt);
-	AddInfo("number of events read",snevt.Data());
-	AddInfo("date",GetDate().Data());
-	AddInfo("user",gSystem->GetUserInfo()->fUser.Data());
+
+   AddInfo("ascii file read", GetFileName().Data());
+
+   TStopwatch chrono;
+   chrono.Start();
+
+   evt = new KVSimEvent();
+   if (HasToFill()) DeclareTree(filename, option);
+   nuc = 0;
+   nevt = 0;
+
+   ReadFile();
+
+   if (HasToFill())
+      GetTree()->ResetBranchAddress(GetTree()->GetBranch(branch_name.Data()));
+
+   delete evt;
+   chrono.Stop();
+
+   //Info("Run","%d evts lus en %lf seconds",GetNumberOfEvents(),chrono.RealTime());
+
+   KVString snevt;
+   snevt.Form("%d", nevt);
+   AddInfo("number of events read", snevt.Data());
+   AddInfo("date", GetDate().Data());
+   AddInfo("user", gSystem->GetUserInfo()->fUser.Data());
 
 }
 
 //____________________________________________________
 void KVSimReader::SaveTree()
 {
-	
-	WriteObjects();
-	WriteInfo();
 
-	GetTree()->Write();
-	CleanAll();
-	file->Close();
-	
+   WriteObjects();
+   WriteInfo();
+
+   GetTree()->Write();
+   CleanAll();
+   file->Close();
+
 }
 
 //____________________________________________________
 KVList* KVSimReader::GetSimuInfo()
 {
-	//
-	return linked_info;
+   //
+   return linked_info;
 }
 
 //____________________________________________________
 void KVSimReader::AddInfo(const Char_t* name, const Char_t* val)
 {
-	GetSimuInfo()->Add(new TNamed(name,val)); 
+   GetSimuInfo()->Add(new TNamed(name, val));
 }
 
 //____________________________________________________
 void KVSimReader::AddInfo(TNamed* named)
 {
-	
-	GetSimuInfo()->Add(named);
+
+   GetSimuInfo()->Add(named);
 }
 
 //____________________________________________________
 void KVSimReader::WriteInfo()
 {
-	TList* list = GetTree()->GetUserInfo();
-	Int_t nentries = linked_info->GetEntries();
-	for (Int_t ii=0; ii<nentries; ii+=1){
-		list->Add(linked_info->RemoveAt(0));
-	}
+   TList* list = GetTree()->GetUserInfo();
+   Int_t nentries = linked_info->GetEntries();
+   for (Int_t ii = 0; ii < nentries; ii += 1) {
+      list->Add(linked_info->RemoveAt(0));
+   }
 }
-	
+
 //____________________________________________________
 void KVSimReader::CreateInfoList()
 {
-	linked_info = new KVList();	
-	linked_info->SetOwner(kFALSE); 
-	linked_info->SetName("Simulation info");
+   linked_info = new KVList();
+   linked_info->SetOwner(kFALSE);
+   linked_info->SetName("Simulation info");
 }
 
 
 //____________________________________________________
 KVList* KVSimReader::GetLinkedObjects()
 {
-	return linked_objects;
+   return linked_objects;
 }
 
 //____________________________________________________
 void KVSimReader::AddObject(TObject* obj)
 {
-	GetLinkedObjects()->Add(obj);  
+   GetLinkedObjects()->Add(obj);
 }
 
 //____________________________________________________
 void KVSimReader::WriteObjects()
 {
 
-	TList* list = GetTree()->GetUserInfo();
-	Int_t nentries = linked_objects->GetEntries();
-	for (Int_t ii=0; ii<nentries; ii+=1){
-		list->Add(linked_objects->RemoveAt(0));
-	}
-		
+   TList* list = GetTree()->GetUserInfo();
+   Int_t nentries = linked_objects->GetEntries();
+   for (Int_t ii = 0; ii < nentries; ii += 1) {
+      list->Add(linked_objects->RemoveAt(0));
+   }
+
 }
 
 //____________________________________________________
 void KVSimReader::CreateObjectList()
 {
-	linked_objects = new KVList(kFALSE);	
-	linked_objects->SetName("List of objects");
+   linked_objects = new KVList(kFALSE);
+   linked_objects->SetName("List of objects");
 }
 
 /*

@@ -10,20 +10,22 @@
 #include <TGButton.h>
 #include "KVListView.h"
 
-class KVTestListView : public KVBase
-{
-    RQ_OBJECT("KVTestListView")
-    TGMainFrame *MainFrame;
-    KVListView* fLV;
+class KVTestListView : public KVBase {
+   RQ_OBJECT("KVTestListView")
+   TGMainFrame* MainFrame;
+   KVListView* fLV;
 
-   public:
+public:
    KVTestListView(TClass* obclass, Int_t ncols, TString* columns);
    virtual ~KVTestListView();
    void DoClose();
    void CloseWindow();
-   void DisplayList(TCollection*l) { fLV->Display(l); }
-   
-   ClassDef(KVTestListView,1)//simple GUI with KVListView
+   void DisplayList(TCollection* l)
+   {
+      fLV->Display(l);
+   }
+
+   ClassDef(KVTestListView, 1) //simple GUI with KVListView
 };
 
 #endif

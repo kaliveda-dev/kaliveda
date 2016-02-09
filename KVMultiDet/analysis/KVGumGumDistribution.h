@@ -7,27 +7,26 @@
 #include "TF1.h"
 #include "KVGumbelDistribution.h"
 
-class KVGumGumDistribution : public TF1
-{
-   protected:
+class KVGumGumDistribution : public TF1 {
+protected:
    Int_t fRank;//rank of Gumbel distribution
    Double_t fkFac;
    Double_t fkGaussNor;
-   
+
    KVGumbelDistribution* fFirstGumbel;//! non-persistent (not written to disk)
    KVGumbelDistribution* fLastGumbel;//! non-persistent (not written to disk)
-   
-   public:
+
+public:
    KVGumGumDistribution();
-   KVGumGumDistribution(const Char_t* name, Int_t k=1, Double_t xmin=0., Double_t xmax=100.);
-   KVGumGumDistribution (const KVGumGumDistribution&) ;
+   KVGumGumDistribution(const Char_t* name, Int_t k = 1, Double_t xmin = 0., Double_t xmax = 100.);
+   KVGumGumDistribution(const KVGumGumDistribution&) ;
    virtual ~KVGumGumDistribution();
-   void Copy (TObject&) const;
-   
-   void	Paint(Option_t* option = "");
+   void Copy(TObject&) const;
+
+   void  Paint(Option_t* option = "");
    Double_t GDk(Double_t* x, Double_t* p);
 
-   ClassDef(KVGumGumDistribution,1)//Sum of normalised Gumbel first asymptote and Gumbel last asymptote
+   ClassDef(KVGumGumDistribution, 1) //Sum of normalised Gumbel first asymptote and Gumbel last asymptote
 };
 
 #endif

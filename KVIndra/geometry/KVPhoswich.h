@@ -21,19 +21,19 @@ $Id: KVPhoswich.h,v 1.9 2006/10/19 14:32:43 franklan Exp $
 
 #include "KVINDRADetector.h"
 
-class KVPhoswich:public KVINDRADetector {
- public:
+class KVPhoswich: public KVINDRADetector {
+public:
    KVPhoswich();
    KVPhoswich(Float_t);
    virtual ~ KVPhoswich();
 
-   const Char_t *GetArrayName();
+   const Char_t* GetArrayName();
    //void Print(Option_t * opt="") const;
    Double_t GetEnergy();
    void SetEnergy(Double_t e);
    void SetACQParams();
 
-    ClassDef(KVPhoswich, 2)     //Phoswich telescopes of the INDRA array
+   ClassDef(KVPhoswich, 2)     //Phoswich telescopes of the INDRA array
 };
 
 #endif

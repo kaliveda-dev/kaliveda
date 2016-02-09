@@ -19,7 +19,7 @@ ClassImp(KVINDRAe503)
 <!-- */
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
-    
+
 KVINDRAe503::KVINDRAe503()
 {
    //Default constructor
@@ -30,12 +30,13 @@ KVINDRAe503::~KVINDRAe503()
    //Destructor
 }
 
-void KVINDRAe503::SetGroupsAndIDTelescopes(){
-    //Find groups of telescopes in angular alignment placed on different layers.
-    //List is in fGroups.
-    //Also creates all ID telescopes in array and stores them in fIDTelescopes.
-    //Any previous groups/idtelescopes are deleted beforehand.
-   // As any ID grids stored in gIDGridManager and any ID functions stored in 
+void KVINDRAe503::SetGroupsAndIDTelescopes()
+{
+   //Find groups of telescopes in angular alignment placed on different layers.
+   //List is in fGroups.
+   //Also creates all ID telescopes in array and stores them in fIDTelescopes.
+   //Any previous groups/idtelescopes are deleted beforehand.
+   // As any ID grids stored in gIDGridManager and any ID functions stored in
    // KVRTGIDManger::fIDGlobalList will have been associated to the
    // old ID telescopes (whose addresses now become obsolete), we clear the ID grid manager
    // deleting all ID grids and the KVRTGIDManger::fIDGlobalList deleting all
@@ -44,7 +45,7 @@ void KVINDRAe503::SetGroupsAndIDTelescopes(){
 
 
 #ifdef WITH_FITLTG
-	KVRTGIDManager::Clear();
+   KVRTGIDManager::Clear();
 #endif
-	KVINDRA::SetGroupsAndIDTelescopes();
+   KVINDRA::SetGroupsAndIDTelescopes();
 }

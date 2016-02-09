@@ -14,35 +14,38 @@ $Date: 2009/01/21 08:04:20 $
 #include "KVList.h"
 #include "KVTelescope.h"
 
-class KVFocalPlanVamos : public KVMultiDetArray 
-{
+class KVFocalPlanVamos : public KVMultiDetArray {
 
-   public:
+public:
    KVFocalPlanVamos();
    virtual ~KVFocalPlanVamos();
-   
-      inline KVList *GetListOfChIo() const {
+
+   inline KVList* GetListOfChIo() const
+   {
       return fChIo;
    };
-   inline KVList *GetListOfSi() const {
+   inline KVList* GetListOfSi() const
+   {
       return fSi;
    };
-   inline KVList *GetListOfCsI() const {
+   inline KVList* GetListOfCsI() const
+   {
       return fCsI;
    };
-      inline KVList *GetListOfGap() const {
+   inline KVList* GetListOfGap() const
+   {
       return fGap;
    };
-   KVLayer *GetSiLayer();
+   KVLayer* GetSiLayer();
    void SetNamesDetectors();
- protected:
-   KVList *fSi;                 //->List of Si detectors of FocPlanVamos
-   KVList *fCsI;                //->List of CsI detectors of FocPlanVamos
-   KVList *fGap;		//->List of gap detectors of FocPlanVamos
-   KVList *fChIo;               //->List of Ionisation Chambers of FocPlanVamos
+protected:
+   KVList* fSi;                 //->List of Si detectors of FocPlanVamos
+   KVList* fCsI;                //->List of CsI detectors of FocPlanVamos
+   KVList* fGap;     //->List of gap detectors of FocPlanVamos
+   KVList* fChIo;               //->List of Ionisation Chambers of FocPlanVamos
 
-   KVLayer *fSiLayer;	//reference to Si Layerof the Vamos FP 
-      
+   KVLayer* fSiLayer;   //reference to Si Layerof the Vamos FP
+
    virtual void MakeListOfDetectorTypes();
    //virtual void MakeListOfDetectors();
    virtual void PrototypeTelescopes();
@@ -51,7 +54,7 @@ class KVFocalPlanVamos : public KVMultiDetArray
    //void FillListsOfDetectorsByType();
 
 
-   ClassDef(KVFocalPlanVamos,1)//Si and CsI of vamos at FP
+   ClassDef(KVFocalPlanVamos, 1) //Si and CsI of vamos at FP
 };
 
 #endif

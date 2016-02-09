@@ -29,7 +29,7 @@ ClassImp(KVUpDater)
 //      void SetParameters (UInt_t run)
 //must be defined. This updates the current detector array gMultiDetArray with the
 //parameter values for the run found in the current gDataBase database.
-    KVUpDater::KVUpDater()
+KVUpDater::KVUpDater()
 {
    //Default ctor for KVUpDater object.
 }
@@ -41,21 +41,19 @@ KVUpDater::~KVUpDater()
    //Destructor.
 }
 
-KVUpDater *KVUpDater::MakeUpDater(const Char_t * uri)
+KVUpDater* KVUpDater::MakeUpDater(const Char_t* uri)
 {
    //Looks for plugin (see $KVROOT/KVFiles/.kvrootrc) with name 'uri'(=name of dataset),
    //loads plugin library, creates object and returns pointer.
    //If no plugin defined for dataset, instanciates a KVUpDater (default)
-   
+
    //check and load plugin library
-   TPluginHandler *ph;
-   KVUpDater *upd = 0;
-   if (!(ph = KVBase::LoadPlugin("KVUpDater", uri))){
+   TPluginHandler* ph;
+   KVUpDater* upd = 0;
+   if (!(ph = KVBase::LoadPlugin("KVUpDater", uri))) {
       upd = new KVUpDater;
-   }
-   else
-   {
-      upd = (KVUpDater *) ph->ExecPlugin(0);
+   } else {
+      upd = (KVUpDater*) ph->ExecPlugin(0);
    }
    upd->fDataSet = uri;
    return upd;
@@ -64,118 +62,111 @@ KVUpDater *KVUpDater::MakeUpDater(const Char_t * uri)
 void KVUpDater::SetParameters(UInt_t run)
 {
    // Set parameters of multidetector for this run
-    //This will:
-    //      set the target corresponding to the run
-    //      set calibration parameters for the run
-    //      set identification parameters for the run
+   //This will:
+   //      set the target corresponding to the run
+   //      set calibration parameters for the run
+   //      set identification parameters for the run
 
-    if(!gDataBase) return;
-    cout << "Setting parameters of multidetector array for run " << run << ":" <<
-    endl;
-    KVDBRun *kvrun = dynamic_cast<KVDBRun*>(gDataBase->GetTable("Runs")->GetRecord(run));
-    if (!kvrun)
-    {
-        Error("SetParameters(UInt_t)", "Run %u not found in database!", run);
-        return;
-    }
-    SetTarget(kvrun);
-    SetCalibrationParameters(run);
-    SetIdentificationParameters(run);
+   if (!gDataBase) return;
+   cout << "Setting parameters of multidetector array for run " << run << ":" <<
+        endl;
+   KVDBRun* kvrun = dynamic_cast<KVDBRun*>(gDataBase->GetTable("Runs")->GetRecord(run));
+   if (!kvrun) {
+      Error("SetParameters(UInt_t)", "Run %u not found in database!", run);
+      return;
+   }
+   SetTarget(kvrun);
+   SetCalibrationParameters(run);
+   SetIdentificationParameters(run);
 }
 
 //_______________________________________________________________//
 
-void KVUpDater::SetTarget(KVDBRun * kvrun)
+void KVUpDater::SetTarget(KVDBRun* kvrun)
 {
-    //Set target used during this run
-    //If no target is found in the database, the existing target (if there is one)
-    //will be removed, and the multidetector array will have no target defined.
+   //Set target used during this run
+   //If no target is found in the database, the existing target (if there is one)
+   //will be removed, and the multidetector array will have no target defined.
 
-    cout << "--> Setting Target:" << endl;
+   cout << "--> Setting Target:" << endl;
 
-    //remove existing target
-    gMultiDetArray->SetTarget(0);
-    if (!kvrun->GetSystem() || !kvrun->GetSystem()->GetTarget())
-    {
-        cout << "      No target defined for run." << endl;
-        return;
-    }
+   //remove existing target
+   gMultiDetArray->SetTarget(0);
+   if (!kvrun->GetSystem() || !kvrun->GetSystem()->GetTarget()) {
+      cout << "      No target defined for run." << endl;
+      return;
+   }
 
-    gMultiDetArray->SetTarget((KVTarget *) kvrun->GetSystem()->GetTarget());
+   gMultiDetArray->SetTarget((KVTarget*) kvrun->GetSystem()->GetTarget());
 
-    cout << "      " << gMultiDetArray->GetTarget()->
-    GetName() << " Total Thickness: " << gMultiDetArray->GetTarget()->
-    GetTotalThickness()
-    << " mg/cm2" << endl;
+   cout << "      " << gMultiDetArray->GetTarget()->
+        GetName() << " Total Thickness: " << gMultiDetArray->GetTarget()->
+        GetTotalThickness()
+        << " mg/cm2" << endl;
 }
 
 
 void KVUpDater::SetIdentificationParameters(UInt_t run)
 {
-    // Set identification parameters for this run.
-    // Will call gMultiDetArray->InitializeIDTelescopes() in order to initialize
-    // identifications & set status IsReadyForID() of each ID telescope for run.
+   // Set identification parameters for this run.
+   // Will call gMultiDetArray->InitializeIDTelescopes() in order to initialize
+   // identifications & set status IsReadyForID() of each ID telescope for run.
 
-    cout << "Setting identification parameters of multidetector array for run " << run << ":" <<
-    endl;
-    SetIDGrids(run);
-    gMultiDetArray->InitializeIDTelescopes();
+   cout << "Setting identification parameters of multidetector array for run " << run << ":" <<
+        endl;
+   SetIDGrids(run);
+   gMultiDetArray->InitializeIDTelescopes();
 }
 
 //________________________________________________________________________________________________
 
 void KVUpDater::SetIDGrids(UInt_t run)
 {
-    // Use global ID grid manager gIDGridManager to set identification grids for all
-    // ID telescopes for this run. First, any previously set grids are removed.
-    // Then all grids for current run are set in the associated ID telescopes.
+   // Use global ID grid manager gIDGridManager to set identification grids for all
+   // ID telescopes for this run. First, any previously set grids are removed.
+   // Then all grids for current run are set in the associated ID telescopes.
 
-    cout << "--> Setting Identification Grids" << endl;
-    TIter next_idt(gMultiDetArray->GetListOfIDTelescopes());
-    KVIDTelescope *idt;
-    while ((idt = (KVIDTelescope *) next_idt()))
-    {
-        idt->RemoveGrids();
-    }
-    gMultiDetArray->SetGridsInTelescopes(run);
+   cout << "--> Setting Identification Grids" << endl;
+   TIter next_idt(gMultiDetArray->GetListOfIDTelescopes());
+   KVIDTelescope* idt;
+   while ((idt = (KVIDTelescope*) next_idt())) {
+      idt->RemoveGrids();
+   }
+   gMultiDetArray->SetGridsInTelescopes(run);
 }
 
 //_______________________________________________________________//
 
 void KVUpDater::SetCalibrationParameters(UInt_t run)
 {
-    //Set calibration parameters for this run.
-    //This will:
-    //      reset all the calibrators of all the detectors ready to receive the calibrators for the run (handled by child classes),
-    //      set calibration parameters for the run
+   //Set calibration parameters for this run.
+   //This will:
+   //      reset all the calibrators of all the detectors ready to receive the calibrators for the run (handled by child classes),
+   //      set calibration parameters for the run
 
-    cout << "Setting calibration parameters of multidetector array for run " << run << ":" <<
-    endl;
-    KVDBRun *kvrun = dynamic_cast<KVDBRun*>(gDataBase->GetTable("Runs")->GetRecord(run));
-    if (!kvrun)
-    {
-        Error("SetParameters(UInt_t)", "Run %u not found in database!", run);
-        return;
-    }
-    //Reset all calibrators of all detectors first
-    TIter next(gMultiDetArray->GetDetectors());
-    KVDetector *kvd;
-    KVCalibrator *kvc;
-    while ((kvd = (KVDetector *) next()))
-    {
-        if (kvd->GetListOfCalibrators())
-        {
-            TIter next_cal(kvd->GetListOfCalibrators());
-            while ((kvc = (KVCalibrator *) next_cal()))
-            {
-                kvc->Reset();
-            }
-        }
-    }
-    SetCalibParameters(kvrun);
+   cout << "Setting calibration parameters of multidetector array for run " << run << ":" <<
+        endl;
+   KVDBRun* kvrun = dynamic_cast<KVDBRun*>(gDataBase->GetTable("Runs")->GetRecord(run));
+   if (!kvrun) {
+      Error("SetParameters(UInt_t)", "Run %u not found in database!", run);
+      return;
+   }
+   //Reset all calibrators of all detectors first
+   TIter next(gMultiDetArray->GetDetectors());
+   KVDetector* kvd;
+   KVCalibrator* kvc;
+   while ((kvd = (KVDetector*) next())) {
+      if (kvd->GetListOfCalibrators()) {
+         TIter next_cal(kvd->GetListOfCalibrators());
+         while ((kvc = (KVCalibrator*) next_cal())) {
+            kvc->Reset();
+         }
+      }
+   }
+   SetCalibParameters(kvrun);
 }
 
-void KVUpDater::SetCalibParameters(KVDBRun *)
+void KVUpDater::SetCalibParameters(KVDBRun*)
 {
    // Generic (empty) method. Override in child classes to set specific calibrations.
 }

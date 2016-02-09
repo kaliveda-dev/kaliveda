@@ -23,13 +23,13 @@ ClassImp(KVINDRADB1)
 //   Cette base contiendra la liste:
 //         - des runs (unique)
 //         - des systemes (unique)
-//   
+//
 //    la mention (unique) signifie que 2 enregistrements ne peuvent avoir
 //    le meme nom
-//    Ce ne peut etre le cas des parametres de calibration puisque plusieurs 
+//    Ce ne peut etre le cas des parametres de calibration puisque plusieurs
 //    peuvent exister pour un meme detecteur et que les parametres portent le nom
 //    du detecteur correspondant
-KVINDRADB1::KVINDRADB1(const Char_t * name):KVINDRADB(name)
+KVINDRADB1::KVINDRADB1(const Char_t* name): KVINDRADB(name)
 {
    //default ctor
 }
@@ -67,27 +67,27 @@ void KVINDRADB1::GoodRunLine()
    //      set properties of run and tape objects
    //kFirstRun & kLastRun are set
 
-   KVRunListLine *csv_line = GetLineReader();
+   KVRunListLine* csv_line = GetLineReader();
 
    //run number
    Int_t run_n = csv_line->GetIntField("run");
 
    if (!run_n) {
       cout << "run_n = 0 ?????????  line number =" << GetRLLineNumber() <<
-          endl;
+           endl;
       GetLineReader()->Print();
       return;
    }
    kLastRun = TMath::Max(kLastRun, run_n);
    kFirstRun = TMath::Min(kFirstRun, run_n);
 
-        /*********************************************
-		IF LINE HAS A TAPE NUMBER WE
-		LOOK FOR THE TAPE IN THE DATA
-		BASE. IF IT DOESN'T EXIST WE
-		CREATE IT.
-	*********************************************/
-   KVDBTape *tape = 0;
+   /*********************************************
+   IF LINE HAS A TAPE NUMBER WE
+    LOOK FOR THE TAPE IN THE DATA
+    BASE. IF IT DOESN'T EXIST WE
+    CREATE IT.
+   *********************************************/
+   KVDBTape* tape = 0;
    //tape number (if tape field is filled)
    if (csv_line->HasFieldValue("tape")) {
       Int_t tape_n = csv_line->GetIntField("tape");
@@ -101,15 +101,15 @@ void KVINDRADB1::GoodRunLine()
       Error("GoodRunLine", "No tape field ? run=%d", run_n);
    }
 
-        /*********************************************
-		WE CREATE A NEW RUN AND ADD
-		IT TO THE DATABASE. WE SET ALL
-		AVAILABLE INFORMATIONS ON
-		RUN FROM THE FILE. ERROR IF
-		DBASE RUN ALREADY EXISTS =>
-		SAME RUN APPEARS TWICE
-	*********************************************/
-   KVINDRADBRun *run = GetRun(run_n);
+   /*********************************************
+   WE CREATE A NEW RUN AND ADD
+    IT TO THE DATABASE. WE SET ALL
+    AVAILABLE INFORMATIONS ON
+    RUN FROM THE FILE. ERROR IF
+    DBASE RUN ALREADY EXISTS =>
+    SAME RUN APPEARS TWICE
+   *********************************************/
+   KVINDRADBRun* run = GetRun(run_n);
    if (!run) {
 
       run = new KVINDRADBRun(run_n);
@@ -128,11 +128,11 @@ void KVINDRADB1::GoodRunLine()
       else
          Error("GoodRunLine", "No FAR field ? run=%d", run_n);
       if (csv_line->HasFieldValue("MFI"))
-         run->SetScaler("MFI",csv_line->GetIntField("MFI"));
+         run->SetScaler("MFI", csv_line->GetIntField("MFI"));
       else
          Error("GoodRunLine", "No MFI field ? run=%d", run_n);
       if (csv_line->HasFieldValue("blocs"))
-         run->SetScaler("Buffers",csv_line->GetIntField("blocs"));
+         run->SetScaler("Buffers", csv_line->GetIntField("blocs"));
       else
          Error("GoodRunLine", "No blocs field ? run=%d", run_n);
       if (csv_line->HasFieldValue("G. dir"))

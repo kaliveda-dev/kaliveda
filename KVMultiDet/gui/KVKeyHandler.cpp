@@ -24,18 +24,17 @@ Pour que les signaux passent, la touche 'Verr.Num' doit etre inactive.
 ////////////////////////////////////////////////////////////////////////////////
 
 
-KVKeyHandler::KVKeyHandler(KVCanvas* Canvas) : TGFrame(gClient->GetRoot(),0,0)
+KVKeyHandler::KVKeyHandler(KVCanvas* Canvas) : TGFrame(gClient->GetRoot(), 0, 0)
 {
-   // Key handler constructor.  
-   if(!Canvas)
-     {
-     cout << "WARNING: KVKeyHandler::KVKeyHandler(): invalid canvas!" << endl;
-     return;
-     }
-   
+   // Key handler constructor.
+   if (!Canvas) {
+      cout << "WARNING: KVKeyHandler::KVKeyHandler(): invalid canvas!" << endl;
+      return;
+   }
+
    fCanvas = Canvas;
-   
-   TRootCanvas *main_frame = (TRootCanvas*)(fCanvas->GetCanvasImp());
+
+   TRootCanvas* main_frame = (TRootCanvas*)(fCanvas->GetCanvasImp());
 
    // bind arrow keys and space-bar key
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_Up),    0);
@@ -43,7 +42,7 @@ KVKeyHandler::KVKeyHandler(KVCanvas* Canvas) : TGFrame(gClient->GetRoot(),0,0)
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_Right), 0);
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_Down),  0);
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_Space), 0);
-   
+
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_F1), 0);
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_F2), 0);
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_F3), 0);
@@ -56,7 +55,7 @@ KVKeyHandler::KVKeyHandler(KVCanvas* Canvas) : TGFrame(gClient->GetRoot(),0,0)
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_F10), 0);
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_F11), 0);
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_F12), 0);
-   
+
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_a), 0);
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_b), 0);
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_c), 0);
@@ -83,7 +82,7 @@ KVKeyHandler::KVKeyHandler(KVCanvas* Canvas) : TGFrame(gClient->GetRoot(),0,0)
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_x), 0);
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_y), 0);
    main_frame->BindKey((const TGWindow*)this, gVirtualX->KeysymToKeycode(kKey_z), 0);
-   
+
    gVirtualX->SetKeyAutoRepeat(kTRUE);
 }
 
@@ -92,7 +91,7 @@ KVKeyHandler::~KVKeyHandler()
    // Cleanup key handler.
 
    // get main frame of fCanvas
-   TRootCanvas *main_frame = (TRootCanvas*)(fCanvas->GetCanvasImp());
+   TRootCanvas* main_frame = (TRootCanvas*)(fCanvas->GetCanvasImp());
 
    // remove binding of arrow keys and space-bar key
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_Up),    0);
@@ -100,7 +99,7 @@ KVKeyHandler::~KVKeyHandler()
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_Right), 0);
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_Down),  0);
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_Space), 0);
-   
+
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_F1), 0);
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_F2), 0);
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_F3), 0);
@@ -113,7 +112,7 @@ KVKeyHandler::~KVKeyHandler()
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_F10), 0);
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_F11), 0);
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_F12), 0);
-   
+
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_a), 0);
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_b), 0);
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_c), 0);
@@ -140,14 +139,14 @@ KVKeyHandler::~KVKeyHandler()
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_x), 0);
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_y), 0);
    main_frame->RemoveBind(this, gVirtualX->KeysymToKeycode(kKey_z), 0);
-      
+
    gVirtualX->SetKeyAutoRepeat(kTRUE);
 }
 
 
-Bool_t KVKeyHandler::HandleKey(Event_t *)
+Bool_t KVKeyHandler::HandleKey(Event_t*)
 {
-   // Handle keys   
+   // Handle keys
 //   if(fCanvas) fCanvas->HandleKey(event);
    return kTRUE;
 }

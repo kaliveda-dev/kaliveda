@@ -17,18 +17,24 @@ ClassImp(KVNuclData)
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-KVNuclData::KVNuclData(const Char_t* name): fName(name)
+KVNuclData::KVNuclData(const Char_t* name, const Char_t* units): fName(name), fUnits(units)
 {
-   //Constructor with name
-	init();
+   //Constructor with name & units
+   init();
 
 }
 
+KVNuclData::KVNuclData(const KVNuclData& o) : TObject()
+{
+   // Copy constructor
+   o.Copy(*this);
+}
+
 //_________________________________
-KVNuclData::KVNuclData(): fName()
+KVNuclData::KVNuclData(): fName(), fUnits("NONE")
 {
    // Default constructor
-	init();
+   init();
 }
 
 //_________________________________
@@ -37,12 +43,23 @@ KVNuclData::~KVNuclData()
    // Destructor
 }
 
+void KVNuclData::Copy(TObject& object) const
+{
+   // Copy this to object
+   TObject::Copy(object);
+   KVNuclData& nd = (KVNuclData&)object;
+   nd.kValue = kValue;
+   nd.fName = fName;
+   nd.fUnits = fUnits;
+   nd.SetMeasured(IsMeasured());
+}
+
 //_________________________________
 void KVNuclData::init()
 {
-	
-	SetMeasured(kFALSE);
-	SetValue(0);
+
+   SetMeasured(kFALSE);
+   SetValue(0);
 }
 
 
@@ -50,7 +67,7 @@ void KVNuclData::init()
 const Char_t* KVNuclData::GetName() const
 {
 
-	return fName.Data();
+   return fName.Data();
 
 }
 
@@ -58,7 +75,7 @@ const Char_t* KVNuclData::GetName() const
 void KVNuclData::SetValue(Double_t val)
 {
 
-	kValue = val;
+   kValue = val;
 
 }
 
@@ -66,23 +83,17 @@ void KVNuclData::SetValue(Double_t val)
 Double_t KVNuclData::GetValue() const
 {
 
-	return kValue;
+   return kValue;
 
 }
 
 //_________________________________
-const Char_t* KVNuclData::GetUnit() const{
+void KVNuclData::Print(Option_t*) const
+{
 
-	TString unit="NONE";
-	return unit.Data();
-}
+   TString post = " ";
+   if (!IsMeasured()) post += "(SYST)";
 
-//_________________________________
-void KVNuclData::Print(Option_t*) const{
-	
-	TString post=" ";
-	if (!IsMeasured()) post += "(SYST)";
-		
-	cout << ClassName() << " : " << GetName() << " " << GetValue() << " " << GetUnit() << " " << post.Data() << endl;
+   cout << ClassName() << " : " << GetName() << " " << GetValue() << " " << GetUnit() << " " << post.Data() << endl;
 }
 

@@ -12,10 +12,10 @@
  *                    bandes : acq_mt_alloc                                  *
  *                                                                           *
  *****************************************************************************/
- 
+
 
 #ifndef __GAN_TAPE_ALLOC_H
-#define __GAN_TAPE_ALLOC_H   
+#define __GAN_TAPE_ALLOC_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,8 +23,8 @@ extern "C" {
 #include "gan_tape_general.h"
 
 
-int acq_mt_alloc_c       ( gan_tape_desc );
-int acq_mt_dealloc_c     ( gan_tape_desc );      
+int acq_mt_alloc_c(gan_tape_desc);
+int acq_mt_dealloc_c(gan_tape_desc);
 
 #ifdef __cplusplus
 }

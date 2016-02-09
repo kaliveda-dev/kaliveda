@@ -20,22 +20,21 @@
 #include <TGProgressBar.h>
 #include "KVCanvas.h"
 
-class KVZAFinderDialog
-{
+class KVZAFinderDialog {
    RQ_OBJECT("KVZAFinderDialog")
 
-   protected:
+protected:
    KVIDGraph* fGrid;
    TH2*       fHisto;
-   
+
    static Int_t fZmin;
    static Int_t fZmax;
    static TString fAList;
    static Int_t fBinsByZ;
    static Int_t fStepsByLine;
-   
-   TGTransientFrame *fMain;
-   
+
+   TGTransientFrame* fMain;
+
    TGGroupFrame* fInitFrame;
    TGHorizontalFrame* fZpFrame;
    TGLabel* fZminLabel;
@@ -52,21 +51,21 @@ class KVZAFinderDialog
    TGHProgressBar* fLinearBar;
    TGGroupFrame*   fProgressFrame;
    TGHProgressBar* fProgressBar;
-   
+
    TGHorizontalFrame* fButtonsFrame;
    TGTextButton* fTestButton;
    TGTextButton* fCloseButton;
-  
-   public:
-   KVZAFinderDialog(KVIDGraph * g = 0, TH2* data_histo=0);
-   KVZAFinderDialog (const KVZAFinderDialog&);
+
+public:
+   KVZAFinderDialog(KVIDGraph* g = 0, TH2* data_histo = 0);
+   KVZAFinderDialog(const KVZAFinderDialog&);
    virtual ~KVZAFinderDialog();
 
    void DoClose();
    void CloseWindow();
    void ProcessIdentification();
-   
-   ClassDef(KVZAFinderDialog,1)//dialog box for KVZALineFinder classe
+
+   ClassDef(KVZAFinderDialog, 1) //dialog box for KVZALineFinder classe
 };
 
 #endif

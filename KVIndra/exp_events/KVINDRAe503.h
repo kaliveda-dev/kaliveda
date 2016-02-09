@@ -6,20 +6,23 @@
 
 #include "KVINDRA.h"
 
-class KVINDRAe503:public KVINDRA {
+class KVINDRAe503: public KVINDRA {
 
- protected:
+protected:
 
    virtual void SetGroupsAndIDTelescopes();
 
- public:
+public:
 
-    KVINDRAe503();
-    virtual ~ KVINDRAe503();
+   KVINDRAe503();
+   virtual ~ KVINDRAe503();
 
-	void SetDataSet( const Char_t *name ){ fDataSet = name; }
+   void SetDataSet(const Char_t* name)
+   {
+      fDataSet = name;
+   }
 
-    ClassDef(KVINDRAe503, 1)   //Experimental configuration for INDRA-VAMOS experiments
+   ClassDef(KVINDRAe503, 1)   //Experimental configuration for INDRA-VAMOS experiments
 };
 
 #endif

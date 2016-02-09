@@ -39,18 +39,20 @@ class KVWidgetList;
 
 class KVBrowser {
 
- private:
+private:
 
-   TList * fCleanup;            //!for keeping track of TGLayoutHints and deleting them at the end
-   KVWidgetList *fWidgets;      //!list of widgets in mainwindow
+   TList* fCleanup;             //!for keeping track of TGLayoutHints and deleting them at the end
+   KVWidgetList* fWidgets;      //!list of widgets in mainwindow
 
- public:
+public:
 
-    KVBrowser();
-   void AddToWidgetList(KVWidget * widg);
-   KVWidgetList *GetWidgetList() {
+   KVBrowser();
+   void AddToWidgetList(KVWidget* widg);
+   KVWidgetList* GetWidgetList()
+   {
       return fWidgets;
-   } void AddToCleanupList(TObject * obj) {
+   } void AddToCleanupList(TObject* obj)
+   {
       fCleanup->Add(obj);
    }
    virtual ~ KVBrowser();

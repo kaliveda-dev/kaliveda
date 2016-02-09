@@ -18,9 +18,7 @@ protected:
 public:
    KVINDRAFAZIA();
    virtual ~KVINDRAFAZIA();
-   virtual void Build(Int_t run=-1);
-
-   void GetIDTelescopes(KVDetector *, KVDetector *, TCollection *);
+   virtual void Build(Int_t run = -1);
 
    ClassDef(KVINDRAFAZIA, 1) //INDRA-FAZIA setups
 };

@@ -23,11 +23,23 @@ calibration and identification</h4>
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-void KVIVReconIdent::InitAnalysis(void){
+void KVIVReconIdent::InitAnalysis(void)
+{
+
+   TString dt;
+   dt = gDataSet->GetDataSetEnv("KVIVReconIdent.DataToAnalyse", "INDRA VAMOS");
+   dt.ToLower();
+   Info("InitAnalysis", "Analysing data of %s", dt.Data());
+   if (dt.Contains("indra")) SetBit(kINDRAdata);
+   if (dt.Contains("vamos")) SetBit(kVAMOSdata);
+
+   if (TestBit(kINDRAdata)) cout << "INDRA" << endl;
+   if (TestBit(kVAMOSdata)) cout << "VAMOS" << endl;
 }
 //_____________________________________
 
-void KVIVReconIdent::InitRun(void){
+void KVIVReconIdent::InitRun(void)
+{
    //When each run is opened, we create a new ROOT file for the identified events we
    //are going to generate from the reconstructed events we are reading.
    // By default this file will be written in the same data repository as the recon data file we are reading.
@@ -44,17 +56,17 @@ void KVIVReconIdent::InitRun(void){
    KVDataSet* OutputDataset =
       gDataRepositoryManager->GetDataSet(
          gDataSet->GetDataSetEnv("ReconIdent.DataAnalysisTask.OutputRepository", gDataRepository->GetName()),
-         gDataSet->GetName() );
+         gDataSet->GetName());
 
    //create new ROOT file for identified events
    fRunNumber = gIndra->GetCurrentRunNumber();
    fIdentFile = OutputDataset->NewRunfile("ident", fRunNumber);
 
 
-		fIdentTree = new TTree("ReconstructedEvents", Form("%s : %s : ident events created from recon data",
-			 	gIndraDB->GetRun(fRunNumber)->GetName(),
-            gIndraDB->GetRun(fRunNumber)->GetTitle())
-            );
+   fIdentTree = new TTree("ReconstructedEvents", Form("%s : %s : ident events created from recon data",
+                          gIndraDB->GetRun(fRunNumber)->GetName(),
+                          gIndraDB->GetRun(fRunNumber)->GetTitle())
+                         );
 #if ROOT_VERSION_CODE > ROOT_VERSION(5,25,4)
 #if ROOT_VERSION_CODE < ROOT_VERSION(5,26,1)
    // The TTree::OptimizeBaskets mechanism is disabled, as for ROOT versions < 5.26/00b
@@ -62,68 +74,68 @@ void KVIVReconIdent::InitRun(void){
    fIdentTree->SetAutoFlush(0);
 #endif
 #endif
-      //leaves for reconstructed events
-      TBranch *recon_br = (TBranch *)fChain->GetListOfBranches()->First();
-      KVEvent::MakeEventBranch(fIdentTree,recon_br->GetName(),recon_br->GetClassName(),GetEventReference());
+   //leaves for reconstructed events
+   TBranch* recon_br = (TBranch*)fChain->GetListOfBranches()->First();
+   KVEvent::MakeEventBranch(fIdentTree, recon_br->GetName(), recon_br->GetClassName(), GetEventReference());
 
-	 // set flag if this branch contains a KVIVReconEvent object
-	fIsIVevent = TClass::GetClass(recon_br->GetClassName())->InheritsFrom("KVIVReconEvent");
+   // set flag if this branch contains a KVIVReconEvent object
+   fIsIVevent = TClass::GetClass(recon_br->GetClassName())->InheritsFrom("KVIVReconEvent");
 
-      Info("InitRun", "Created identified/calibrated data tree %s : %s", fIdentTree->GetName(), fIdentTree->GetTitle());
+   Info("InitRun", "Created identified/calibrated data tree %s : %s", fIdentTree->GetName(), fIdentTree->GetTitle());
 
-   // initialise identifications
-   gIndra->InitializeIDTelescopes();
-   gVamos->InitializeIDTelescopes();
- 
-   cout << endl <<setw(20)<<""<<"----------------------"<<endl;
-   cout         <<setw(20)<<""<<"|  STATUS FOR INDRA  |"<<endl;
-   cout         <<setw(20)<<""<<"----------------------"<<endl<<endl;
-   // print status of identifications
-   gIndra->PrintStatusOfIDTelescopes();
-   // print status of calibrations
-   gIndra->PrintCalibStatusOfDetectors();
+   if (TestBit(kINDRAdata)) {
+      // initialise INDRA identifications
+      gIndra->InitializeIDTelescopes();
 
-   cout << endl <<setw(20)<<""<<"----------------------"<<endl;
-   cout         <<setw(20)<<""<<"|  STATUS FOR VAMOS  |"<<endl;
-   cout         <<setw(20)<<""<<"----------------------"<<endl<<endl;
-   // print status of identifications
-   gVamos->PrintStatusOfIDTelescopes();
-   // print status of calibrations
-   gVamos->PrintCalibStatusOfDetectors();
+      cout << endl << setw(20) << "" << "----------------------" << endl;
+      cout         << setw(20) << "" << "|  STATUS FOR INDRA  |" << endl;
+      cout         << setw(20) << "" << "----------------------" << endl << endl;
+      // print status of identifications
+      gIndra->PrintStatusOfIDTelescopes();
+      // print status of calibrations
+      gIndra->PrintCalibStatusOfDetectors();
+   }
+
+
+   if (TestBit(kVAMOSdata)) {
+      // initialise VAMOS identifications
+      gVamos->InitializeIDTelescopes();
+
+      cout << endl << setw(20) << "" << "----------------------" << endl;
+      cout         << setw(20) << "" << "|  STATUS FOR VAMOS  |" << endl;
+      cout         << setw(20) << "" << "----------------------" << endl << endl;
+      // print status of identifications
+      gVamos->PrintStatusOfIDTelescopes();
+      // print status of calibrations
+      gVamos->PrintCalibStatusOfDetectors();
+   }
 }
 //_____________________________________
 
-Bool_t KVIVReconIdent::Analysis(void){
+Bool_t KVIVReconIdent::Analysis(void)
+{
    //For each event we:
    //     perform primary event identification and calibration and fill tree
 
    fEventNumber = GetEvent()->GetNumber();
 
    //Analyse INDRA event
-   if (GetEvent()->GetMult() > 0) {
-      GetEvent()->IdentifyEvent();
-      GetEvent()->CalibrateEvent();
+   if (TestBit(kINDRAdata)) {
+      if (GetEvent()->GetMult() > 0) {
+         GetEvent()->IdentifyEvent();
+         GetEvent()->CalibrateEvent();
+      }
    }
 
    //Analyse VAMOS event
-   if( fIsIVevent ){ // condition set for backwards compatibility with 
-	                 // old recon ROOT files
+   if (TestBit(kVAMOSdata)) {
+      if (fIsIVevent) { // condition set for backwards compatibility with
+         // old recon ROOT files
 
-	   KVIVReconEvent *IVevent = (KVIVReconEvent *)GetEvent();
-	   // Z-identification
-	   IVevent->IdentifyVAMOSEvent_Z();
-
-	   // first calibration with only Z known and mean A from mass formula
-	   IVevent->CalibrateVAMOSEvent();
-//
-//	   // firt A-identification
-//	   IVevent->IdentifyVAMOSevent_A();
-//
-//	   // second calibration with Z and A known
-//	   IVevent->CalibrateVAMOSevent();
-//
-//	   //second A-identification
-//	   IVevent->IdentifyVAMOSevent_A();
+         KVIVReconEvent* IVevent = (KVIVReconEvent*)GetEvent();
+         // Z-identification, calibration and Q-A identification
+         IVevent->IdentAndCalibVAMOSEvent();
+      }
    }
 
    //Fill Ident tree
@@ -133,5 +145,6 @@ Bool_t KVIVReconIdent::Analysis(void){
 }
 //_____________________________________
 
-void KVIVReconIdent::EndAnalysis(void){
+void KVIVReconIdent::EndAnalysis(void)
+{
 }

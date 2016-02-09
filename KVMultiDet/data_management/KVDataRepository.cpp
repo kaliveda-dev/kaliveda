@@ -106,7 +106,7 @@ the data repository named "default" if there is one; or the last one defined in 
 // --> END_HTML
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-KVDataRepository *gDataRepository;
+KVDataRepository* gDataRepository;
 
 //___________________________________________________________________________
 
@@ -133,70 +133,68 @@ Bool_t KVDataRepository::Init()
    //returns kFALSE if not (i.e. data set manager cannot be initialised, no available datasets)
 
    fLocalrootdir =
-       gEnv->GetValue(Form("%s.DataRepository.RootDir", GetName()), "");
-   if( fLocalrootdir == "" ){
+      gEnv->GetValue(Form("%s.DataRepository.RootDir", GetName()), "");
+   if (fLocalrootdir == "") {
       Error("Init", "Top-level directory for repository %s is not defined. Set %s.DataRepository.RootDir variable in .kvrootrc",
             GetName(), GetName());
       return kFALSE;
    }
    fAccessprotocol =
-       gEnv->GetValue(Form("%s.DataRepository.AccessProtocol", GetName()),
-                      "local");
+      gEnv->GetValue(Form("%s.DataRepository.AccessProtocol", GetName()),
+                     "local");
    fReadprotocol =
-       gEnv->GetValue(Form("%s.DataRepository.ReadProtocol", GetName()),
-                      "local");
+      gEnv->GetValue(Form("%s.DataRepository.ReadProtocol", GetName()),
+                     "local");
    //can we create and write directly new files in the repository ?
    //for local repositories, default is yes, unless 'DataRepository.CanWrite' = 'NO'
    //for remote repositories, default is no, unless 'DataRepository.CanWrite' = 'YES'
    fCanWrite = (Bool_t)gEnv->GetValue(Form("%s.DataRepository.CanWrite", GetName()), (Int_t)(!IsRemote()));
    //xrootd protocol
    fXrootdserver =
-       gEnv->GetValue(Form("%s.DataRepository.XRDServer", GetName()), "");
+      gEnv->GetValue(Form("%s.DataRepository.XRDServer", GetName()), "");
    fXrootdrootdir =
-       gEnv->GetValue(Form("%s.DataRepository.XRDRootDir", GetName()), "");
+      gEnv->GetValue(Form("%s.DataRepository.XRDRootDir", GetName()), "");
    //access to xrootd via ssh tunnel ?
-   fXRDtunnel = ( fXRDtunPort = (Int_t)gEnv->GetValue(Form("%s.DataRepository.XRDTunnel.port", GetName()), 0) );
-   if(fXRDtunnel){
+   fXRDtunnel = (fXRDtunPort = (Int_t)gEnv->GetValue(Form("%s.DataRepository.XRDTunnel.port", GetName()), 0));
+   if (fXRDtunnel) {
       PrepareXRDTunnel();
    }
    //rfio protocol
    fRfioserver =
-       gEnv->GetValue(Form("%s.DataRepository.RFIOServer", GetName()), "");
+      gEnv->GetValue(Form("%s.DataRepository.RFIOServer", GetName()), "");
    fRfiorootdir =
-       gEnv->GetValue(Form("%s.DataRepository.RFIORootDir", GetName()),
-                      "");
+      gEnv->GetValue(Form("%s.DataRepository.RFIORootDir", GetName()),
+                     "");
    //file transfer protocol
    fTransfertype =
-       gEnv->
-       GetValue(Form("%s.DataRepository.FileTransfer.type", GetName()),
-                "sftp");
-   if(fTransfertype.Contains("bbftp")){
+      gEnv->
+      GetValue(Form("%s.DataRepository.FileTransfer.type", GetName()),
+               "sftp");
+   if (fTransfertype.Contains("bbftp")) {
       fTransferExec = fTransfertype;
       fTransfertype = "bbftp";
-      if(!KVBase::FindExecutable(fTransferExec)){
-         Error("Init","Executable for bbftp client not found. Check %s.DataRepository.FileTransfer.type",
-         GetName());
+      if (!KVBase::FindExecutable(fTransferExec)) {
+         Error("Init", "Executable for bbftp client not found. Check %s.DataRepository.FileTransfer.type",
+               GetName());
       }
-   }
-   else if(fTransfertype.Contains("sftp")){
+   } else if (fTransfertype.Contains("sftp")) {
       fTransferExec = fTransfertype;
       fTransfertype = "sftp";
-      if(!KVBase::FindExecutable(fTransferExec)){
-         fTransferExec="";
+      if (!KVBase::FindExecutable(fTransferExec)) {
+         fTransferExec = "";
       }
-   }
-   else if(fTransfertype.Contains("root")){
+   } else if (fTransfertype.Contains("root")) {
       fTransferExec = "root";
       fTransfertype = "xrd";
-      if( !fXRDtunnel ) fTransferExec = ""; // must have viable SSH tunnel description
+      if (!fXRDtunnel) fTransferExec = "";  // must have viable SSH tunnel description
    }
    fTransferserver =
-       gEnv->
-       GetValue(Form("%s.DataRepository.FileTransfer.server", GetName()),
-                "");
+      gEnv->
+      GetValue(Form("%s.DataRepository.FileTransfer.server", GetName()),
+               "");
    fTransferuser = gEnv->GetValue(Form("%s.DataRepository.FileTransfer.user", GetName()), "");  //if not given, we use current username
    if (fTransferuser == "") {
-      UserGroup_t *user = gSystem->GetUserInfo();
+      UserGroup_t* user = gSystem->GetUserInfo();
       fTransferuser = user->fUser;
    }
    //set full paths to be used for checking existence of files and for opening files
@@ -227,7 +225,7 @@ void KVDataRepository::Print(Option_t*) const
    cout << "\tCanWrite = " << fCanWrite << endl;
    cout << "\tXRDServer = " << fXrootdserver.Data() << endl;
    cout << "\tXRDRootDir = " << fXrootdrootdir.Data() << endl;
-   if(fXRDtunnel){
+   if (fXRDtunnel) {
       cout << "\tXRDTunnel.host = " << fXRDtunHost.Data() << endl;
       cout << "\tXRDTunnel.port = " << fXRDtunPort << endl;
       cout << "\tXRDTunnel.user = " << fXRDtunUser.Data() << endl;
@@ -269,7 +267,7 @@ KVDataRepository::~KVDataRepository()
 
 //___________________________________________________________________________
 
-Bool_t KVDataRepository::CheckSubdirExists(const Char_t * dir,const Char_t * subdir)
+Bool_t KVDataRepository::CheckSubdirExists(const Char_t* dir, const Char_t* subdir)
 {
    //Returns kTRUE if the following path is valid
    //      /root_of_data_repository/dir/[subdir]
@@ -289,7 +287,7 @@ Bool_t KVDataRepository::CheckSubdirExists(const Char_t * dir,const Char_t * sub
 
 //___________________________________________________________________________
 
-void KVDataRepository::SetFullPath(TString & path, const Char_t * protocol)
+void KVDataRepository::SetFullPath(TString& path, const Char_t* protocol)
 {
    //Will replace contents of 'path' with the full base path needed for the given protocol.
    //
@@ -313,9 +311,9 @@ void KVDataRepository::SetFullPath(TString & path, const Char_t * protocol)
 //___________________________________________________________________________
 
 Bool_t KVDataRepository::GetFileInfo(KVDataSet* dataset,
-                                     const Char_t * datatype,
-                                     const Char_t * runfile,
-                                     FileStat_t & fs)
+                                     const Char_t* datatype,
+                                     const Char_t* runfile,
+                                     FileStat_t& fs)
 {
    //Checks if the run file of given type is physically present in dataset subdirectory,
    //i.e. (schematically), if
@@ -324,10 +322,10 @@ Bool_t KVDataRepository::GetFileInfo(KVDataSet* dataset,
    //
    //exists. If it does, the returned value is kTRUE (=1), in which case the FileStat_t object
    //contains information about the file.
-   
+
    TString path, tmp;
    AssignAndDelete(path,
-                   gSystem->ConcatFileName(fAccessroot.Data(),dataset->GetDataPathSubdir()));
+                   gSystem->ConcatFileName(fAccessroot.Data(), dataset->GetDataPathSubdir()));
    AssignAndDelete(tmp, gSystem->ConcatFileName(path.Data(), dataset->GetDataTypeSubdir(datatype)));
    AssignAndDelete(path, gSystem->ConcatFileName(tmp.Data(), runfile));
    return !gSystem->GetPathInfo(path.Data(), fs);
@@ -336,8 +334,8 @@ Bool_t KVDataRepository::GetFileInfo(KVDataSet* dataset,
 //___________________________________________________________________________
 
 Bool_t KVDataRepository::CheckFileStatus(KVDataSet* dataset,
-                                         const Char_t * datatype,
-                                         const Char_t * runfile)
+      const Char_t* datatype,
+      const Char_t* runfile)
 {
    //Checks if the run file of given type is physically present in dataset subdirectory,
    //i.e. (schematically), if
@@ -348,7 +346,7 @@ Bool_t KVDataRepository::CheckFileStatus(KVDataSet* dataset,
 
    TString path, tmp;
    AssignAndDelete(path,
-                   gSystem->ConcatFileName(fAccessroot.Data(),dataset->GetDataPathSubdir()));
+                   gSystem->ConcatFileName(fAccessroot.Data(), dataset->GetDataPathSubdir()));
    AssignAndDelete(tmp, gSystem->ConcatFileName(path.Data(), dataset->GetDataTypeSubdir(datatype)));
    AssignAndDelete(path, gSystem->ConcatFileName(tmp.Data(), runfile));
    return !gSystem->AccessPathName(path.Data());
@@ -356,11 +354,11 @@ Bool_t KVDataRepository::CheckFileStatus(KVDataSet* dataset,
 
 //___________________________________________________________________________
 
-const Char_t *KVDataRepository::GetFullPathToOpenFile(KVDataSet * dataset,
-                                                      const Char_t *
-                                                      datatype,
-                                                      const Char_t *
-                                                      runfile)
+const Char_t* KVDataRepository::GetFullPathToOpenFile(KVDataSet* dataset,
+      const Char_t*
+      datatype,
+      const Char_t*
+      runfile)
 {
    //Returns the full path (including protocol specification) needed by TFile::Open or TChain::Add
    //to open a runfile belonging to the given dataset.
@@ -380,7 +378,7 @@ const Char_t *KVDataRepository::GetFullPathToOpenFile(KVDataSet * dataset,
    static TString path;
 
    TString read_proto = GetReadProtocol(dataset->GetName(), datatype);
-   if( read_proto == "none" ) {
+   if (read_proto == "none") {
       Error("GetFullPathToOpenFile", "Datatype \"%s\" can not be read from the repository \"%s\"",
             datatype, GetName());
       path = "";
@@ -403,12 +401,12 @@ const Char_t *KVDataRepository::GetFullPathToOpenFile(KVDataSet * dataset,
 
 //___________________________________________________________________________
 
-const Char_t *KVDataRepository::GetFullPathToTransferFile(KVDataSet *
-                                                          dataset,
-                                                          const Char_t *
-                                                          datatype,
-                                                          const Char_t *
-                                                          runfile)
+const Char_t* KVDataRepository::GetFullPathToTransferFile(KVDataSet*
+      dataset,
+      const Char_t*
+      datatype,
+      const Char_t*
+      runfile)
 {
    //Used by KVDataTransfer.
    //Returns the full path needed to transfer a runfile belonging to the given dataset
@@ -428,8 +426,8 @@ const Char_t *KVDataRepository::GetFullPathToTransferFile(KVDataSet *
 
 //___________________________________________________________________________
 
-const Char_t *KVDataRepository::GetReadProtocol(const Char_t * dataset,
-                                                const Char_t * datatype)
+const Char_t* KVDataRepository::GetReadProtocol(const Char_t* dataset,
+      const Char_t* datatype)
 {
    //Returns string containing protocol for reading files of the given datatype
    //belonging to the dataset whose name is given.
@@ -444,24 +442,24 @@ const Char_t *KVDataRepository::GetReadProtocol(const Char_t * dataset,
 
    static TString prot;
    prot =
-       gEnv->
-       GetValue(Form
-                ("%s.DataRepository.ReadProtocol.%s.%s", GetName(),
-                 dataset, datatype), "");
+      gEnv->
+      GetValue(Form
+               ("%s.DataRepository.ReadProtocol.%s.%s", GetName(),
+                dataset, datatype), "");
    if (prot != "")
       return prot.Data();
    prot =
-       gEnv->
-       GetValue(Form
-                ("%s.DataRepository.ReadProtocol.%s", GetName(), dataset),
-                "");
+      gEnv->
+      GetValue(Form
+               ("%s.DataRepository.ReadProtocol.%s", GetName(), dataset),
+               "");
    if (prot != "")
       return prot.Data();
    prot =
-       gEnv->
-       GetValue(Form
-                ("%s.DataRepository.ReadProtocol.%s", GetName(), datatype),
-                "");
+      gEnv->
+      GetValue(Form
+               ("%s.DataRepository.ReadProtocol.%s", GetName(), datatype),
+               "");
    if (prot != "")
       return prot.Data();
    return fReadprotocol;
@@ -470,9 +468,9 @@ const Char_t *KVDataRepository::GetReadProtocol(const Char_t * dataset,
 //___________________________________________________________________________
 
 void KVDataRepository::CopyFileFromRepository(KVDataSet* dataset,
-                                              const Char_t * datatype,
-                                              const Char_t * filename,
-                                              const Char_t * destination)
+      const Char_t* datatype,
+      const Char_t* filename,
+      const Char_t* destination)
 {
    //Copy file [datasetdir]/[datatypedir]/[filename] from the repository to [destination]
    //We check if the file to copy exists.
@@ -480,40 +478,40 @@ void KVDataRepository::CopyFileFromRepository(KVDataSet* dataset,
    if (CheckFileStatus(dataset, datatype, filename)) {
       TString path, tmp;
       AssignAndDelete(path,
-                      gSystem->ConcatFileName(fAccessroot.Data(),dataset->GetDataPathSubdir()));
+                      gSystem->ConcatFileName(fAccessroot.Data(), dataset->GetDataPathSubdir()));
       AssignAndDelete(tmp, gSystem->ConcatFileName(path.Data(), dataset->GetDataTypeSubdir(datatype)));
       AssignAndDelete(path, gSystem->ConcatFileName(tmp.Data(), filename));
       //copy file
-      CopyFile( path.Data(), destination );
+      CopyFile(path.Data(), destination);
    }
 }
 
 //___________________________________________________________________________
 
-void KVDataRepository::CopyFileToRepository(const Char_t * source,
-                                            KVDataSet* dataset,
-                                            const Char_t * datatype,
-                                            const Char_t * filename)
+void KVDataRepository::CopyFileToRepository(const Char_t* source,
+      KVDataSet* dataset,
+      const Char_t* datatype,
+      const Char_t* filename)
 {
    //Copy file [source] to [datasetdir]/[datatypedir]/[filename] in the repository
    //The file access permissions are set to '664 (u:rw, g:rw, o:r)
 
    TString path, tmp;
    AssignAndDelete(path,
-                   gSystem->ConcatFileName(fAccessroot.Data(),dataset->GetDataPathSubdir()));
+                   gSystem->ConcatFileName(fAccessroot.Data(), dataset->GetDataPathSubdir()));
    AssignAndDelete(tmp, gSystem->ConcatFileName(path.Data(), dataset->GetDataTypeSubdir(datatype)));
    AssignAndDelete(path, gSystem->ConcatFileName(tmp.Data(), filename));
 
    //copy file
-   CopyFile( source, path.Data() );
+   CopyFile(source, path.Data());
    //change file access permissions to 664
-   Chmod( path.Data(), CHMODE(6,6,4) );
+   Chmod(path.Data(), CHMODE(6, 6, 4));
 }
 
 //___________________________________________________________________________
 
 void KVDataRepository::MakeSubdirectory(KVDataSet* dataset,
-                                        const Char_t * datatype)
+                                        const Char_t* datatype)
 {
    //Create a new subdirectory in the repository:
    //      /root_of_data_repository/[datasetdir]
@@ -525,20 +523,20 @@ void KVDataRepository::MakeSubdirectory(KVDataSet* dataset,
    AssignAndDelete(tmp,
                    gSystem->ConcatFileName(fAccessroot.Data(),
                                            dataset->GetDataPathSubdir()));
-   if (strcmp(datatype,""))
+   if (strcmp(datatype, ""))
       AssignAndDelete(path, gSystem->ConcatFileName(tmp.Data(), dataset->GetDataTypeSubdir(datatype)));
    else
       path = tmp;
    cout << "Creating new repository directory: " << path.Data() << endl;
-   gSystem->MakeDirectory( path.Data() );
+   gSystem->MakeDirectory(path.Data());
    //change file access permissions to 775
-   Chmod( path.Data(), CHMODE(7,7,5) );
+   Chmod(path.Data(), CHMODE(7, 7, 5));
 }
 
 //___________________________________________________________________________
 
-KVUniqueNameList *KVDataRepository::GetDirectoryListing(KVDataSet* dataset,
-                                              const Char_t * datatype)
+KVUniqueNameList* KVDataRepository::GetDirectoryListing(KVDataSet* dataset,
+      const Char_t* datatype)
 {
    //Use the access protocol defined by DataRepository.AccessProtocol (=local by default)
    //in order to open the directory
@@ -554,29 +552,29 @@ KVUniqueNameList *KVDataRepository::GetDirectoryListing(KVDataSet* dataset,
    AssignAndDelete(path,
                    gSystem->ConcatFileName(fAccessroot.Data(),
                                            dataset->GetDataPathSubdir()));
-   if (strcmp(datatype,"")) {
+   if (strcmp(datatype, "")) {
       AssignAndDelete(tmp, gSystem->ConcatFileName(path.Data(), dataset->GetDataTypeSubdir(datatype)));
       path = tmp;
    }
    //open directory
-   void *dirp = gSystem->OpenDirectory(path.Data());
+   void* dirp = gSystem->OpenDirectory(path.Data());
    if (!dirp) {
       Error("KVDataRepository::GetDirectoryListing", "Cannot open %s",
             path.Data());
       return 0;
    }
 
-   KVUniqueNameList *dirlist = new KVUniqueNameList(kTRUE);
-	dirlist->SetOwner(kTRUE);
+   KVUniqueNameList* dirlist = new KVUniqueNameList(kTRUE);
+   dirlist->SetOwner(kTRUE);
 
-   TObjString *direntry = new TObjString(gSystem->GetDirEntry(dirp));
+   TObjString* direntry = new TObjString(gSystem->GetDirEntry(dirp));
    while (direntry->GetString() != "") {        //loop over all entries in directory
       if (direntry->GetString() == "." || direntry->GetString() == "..") {
          //skip "." and ".."
          delete direntry;
       } else {
          dirlist->Add(new KVBase(direntry->GetString().Data()));
-			delete direntry;
+         delete direntry;
       }
       //get next entry
       direntry = new TObjString(gSystem->GetDirEntry(dirp));
@@ -590,9 +588,9 @@ KVUniqueNameList *KVDataRepository::GetDirectoryListing(KVDataSet* dataset,
 
 //___________________________________________________________________________
 
-TFile *KVDataRepository::CreateNewFile(KVDataSet * dataset,
-                                       const Char_t * datatype,
-                                       const Char_t * filename)
+TFile* KVDataRepository::CreateNewFile(KVDataSet* dataset,
+                                       const Char_t* datatype,
+                                       const Char_t* filename)
 {
    //This will create and open a new ROOT runfile for the dataset in the repository,
    //ready to be written.
@@ -624,7 +622,7 @@ TFile *KVDataRepository::CreateNewFile(KVDataSet * dataset,
 
 //___________________________________________________________________________
 
-void KVDataRepository::CommitFile(TFile * file)
+void KVDataRepository::CommitFile(TFile* file)
 {
    //Add this file (previously created by a call to CreateNewFile) to the repository.
    //Any objects should be written to the file before calling this method, either by
@@ -663,7 +661,7 @@ void KVDataRepository::CommitFile(TFile * file)
    }
 
    cout << endl << "Copying file " << fCommitFileName << " to repository"
-       << endl;
+        << endl;
    TString s;
    AssignAndDelete(s,
                    gSystem->ConcatFileName(gSystem->pwd(),
@@ -679,8 +677,8 @@ void KVDataRepository::CommitFile(TFile * file)
 //___________________________________________________________________________
 
 void KVDataRepository::DeleteFile(KVDataSet* dataset,
-                                  const Char_t * datatype,
-                                  const Char_t * filename, Bool_t confirm)
+                                  const Char_t* datatype,
+                                  const Char_t* filename, Bool_t confirm)
 {
    //Delete repository file [datasetdir]/[datatype]/[filename]
    //
@@ -696,8 +694,8 @@ void KVDataRepository::DeleteFile(KVDataSet* dataset,
    cout << "Deleting file from repository: " << filename << endl;
    if (confirm) {
       cout <<
-          "Are you sure you want to delete this file permanently ? (y/n)"
-          << endl;
+           "Are you sure you want to delete this file permanently ? (y/n)"
+           << endl;
       TString answer;
       cin >> answer;
       answer.ToUpper();
@@ -711,7 +709,7 @@ void KVDataRepository::DeleteFile(KVDataSet* dataset,
 
 //___________________________________________________________________________
 
-KVDataSetManager *KVDataRepository::GetDataSetManager() const
+KVDataSetManager* KVDataRepository::GetDataSetManager() const
 {
    //Return pointer to data set manager for this repository
    return fDSM;
@@ -719,7 +717,7 @@ KVDataSetManager *KVDataRepository::GetDataSetManager() const
 
 //___________________________________________________________________________
 
-KVDataSetManager *KVDataRepository::NewDataSetManager()
+KVDataSetManager* KVDataRepository::NewDataSetManager()
 {
    //Create and return pointer to new data set manager
    return (new KVDataSetManager);
@@ -727,7 +725,7 @@ KVDataSetManager *KVDataRepository::NewDataSetManager()
 
 //___________________________________________________________________________
 
-TSystem *KVDataRepository::FindHelper(const char *path, void *dirptr)
+TSystem* KVDataRepository::FindHelper(const char* path, void* dirptr)
 {
    // Create helper TSystem to handle file and directory operations that
    // might be special for remote file access, like via rfiod or rootd.
@@ -735,8 +733,8 @@ TSystem *KVDataRepository::FindHelper(const char *path, void *dirptr)
    if (!fHelpers)
       fHelpers = new TOrdCollection;
 
-   TPluginHandler *h;
-   TSystem *helper = 0;
+   TPluginHandler* h;
+   TSystem* helper = 0;
    TUrl url(path, kTRUE);
 
    // look for existing helpers
@@ -754,7 +752,7 @@ TSystem *KVDataRepository::FindHelper(const char *path, void *dirptr)
    if (pname.Index(re) != kNPOS) {
       // rootd daemon ...
       if ((h = gROOT->GetPluginManager()->FindHandler("TSystem", path)) &&
-          h->LoadPlugin() == 0)
+            h->LoadPlugin() == 0)
          helper = (TSystem*) h->ExecPlugin(2, path, kFALSE);
       else
 #ifdef __WITHOUT_TNETSYSTEM_CTOR_BOOL_T
@@ -766,10 +764,11 @@ TSystem *KVDataRepository::FindHelper(const char *path, void *dirptr)
               pname.BeginsWith("http")) {
       // http ...
       if ((h = gROOT->GetPluginManager()->FindHandler("TSystem", path)) &&
-          h->LoadPlugin() == 0)
+            h->LoadPlugin() == 0)
          helper = (TSystem*) h->ExecPlugin(0);
-      else
-         {;} // no default helper yet
+      else {
+         ;  // no default helper yet
+      }
    } else if ((h = gROOT->GetPluginManager()->FindHandler("TSystem", path))) {
       if (h->LoadPlugin() == -1)
          return 0;
@@ -784,7 +783,7 @@ TSystem *KVDataRepository::FindHelper(const char *path, void *dirptr)
 
 //___________________________________________________________________________
 
-int KVDataRepository::Chmod(const char *file, UInt_t mode)
+int KVDataRepository::Chmod(const char* file, UInt_t mode)
 {
    //Used to change file access permissions in the repository
 
@@ -795,7 +794,7 @@ int KVDataRepository::Chmod(const char *file, UInt_t mode)
 
 //___________________________________________________________________________
 
-int KVDataRepository::CopyFile(const char *f, const char *t, Bool_t overwrite)
+int KVDataRepository::CopyFile(const char* f, const char* t, Bool_t overwrite)
 {
    //Method to copy any file from anywhere to anywhere
    //(if the necessary TFile and TSystem plugins are available).
@@ -809,12 +808,12 @@ int KVDataRepository::CopyFile(const char *f, const char *t, Bool_t overwrite)
    //save current directory
    TDirectory* dir_sav = gDirectory;
 
-   TUrl path(f,kTRUE);
-   TUrl path2(t,kTRUE);
+   TUrl path(f, kTRUE);
+   TUrl path2(t, kTRUE);
 
    path.SetOptions("filetype=raw");
-   TFile* from = TFile::Open(path.GetUrl(),"READ");
-   if (!from || from->IsZombie()){
+   TFile* from = TFile::Open(path.GetUrl(), "READ");
+   if (!from || from->IsZombie()) {
       dir_sav->cd();
       return -1;
    }
@@ -822,9 +821,9 @@ int KVDataRepository::CopyFile(const char *f, const char *t, Bool_t overwrite)
 
    path2.SetOptions("filetype=raw");
    TString open_option("CREATE");
-   if(overwrite) open_option.Prepend("RE");
+   if (overwrite) open_option.Prepend("RE");
    TFile* to = TFile::Open(path2.GetUrl(), open_option.Data());
-   if (!to || to->IsZombie()){
+   if (!to || to->IsZombie()) {
       dir_sav->cd();
       return -2;
    }
@@ -833,9 +832,9 @@ int KVDataRepository::CopyFile(const char *f, const char *t, Bool_t overwrite)
    //set buffer size depending on size of file to copy
    //as a default use 1MB buffer (good for large files and rfio-hpss system);
    //use a 1KB buffer for files smaller than 1MB
-   int bufsize = 1024*1024;
+   int bufsize = 1024 * 1024;
    Long64_t filesize = from->GetSize();
-   if( filesize >0 && filesize<1024*1024 ) bufsize=1024;
+   if (filesize > 0 && filesize < 1024 * 1024) bufsize = 1024;
    char* buf = new char[bufsize];
 
    int ret = 0;
@@ -853,11 +852,11 @@ int KVDataRepository::CopyFile(const char *f, const char *t, Bool_t overwrite)
       ret = (int)to->WriteBuffer(buf, bytes_read);
       bytes_wrote = to->GetBytesWritten() - last_bytes_wrote;
       last_bytes_wrote = to->GetBytesWritten();
-      if(bytes_wrote != bytes_read)
+      if (bytes_wrote != bytes_read)
          ret = -3;
       //adjust buffer size
       bytes_left = filesize - last_bytes_read;
-      if(bytes_left < bufsize) bufsize = (int)bytes_left;
+      if (bytes_left < bufsize) bufsize = (int)bytes_left;
 
 //       printf("----------------------------------%d-----------------------------------\n",op++);
 //       printf("bytes_read=%lld last_bytes_read=%lld total_bytes_read=%lld\n",
@@ -888,7 +887,7 @@ int KVDataRepository::CopyFile(const char *f, const char *t, Bool_t overwrite)
 
 //___________________________________________________________________________
 
-Bool_t KVDataRepository::HelperIsConsistentWith(TSystem* helper, const char *path, void *dirptr)
+Bool_t KVDataRepository::HelperIsConsistentWith(TSystem* helper, const char* path, void* dirptr)
 {
    // Copy of (protected) method TSystem::ConsistentWith
    // Check consistency of this helper with the one required
@@ -935,7 +934,7 @@ void KVDataRepository::PrepareXRDTunnel()
    //The tunnel is not created here; it should be opened when needed by calling IsConnected()
 
    fXRDtunHost = gEnv->GetValue(Form("%s.DataRepository.XRDTunnel.host", GetName()), "");
-   if(fXRDtunHost==""){
+   if (fXRDtunHost == "") {
       Error("PrepareXRDTunnel", "Give host through which to tunnel : %s.DataRepository.XRDTunnel.host",
             GetName());
       fXRDtunnel = kFALSE;
@@ -943,7 +942,7 @@ void KVDataRepository::PrepareXRDTunnel()
    }
    fXRDtunUser = gEnv->GetValue(Form("%s.DataRepository.XRDTunnel.user", GetName()), "");
    if (fXRDtunUser == "") {//if not given, use local user name
-      UserGroup_t *user = gSystem->GetUserInfo();
+      UserGroup_t* user = gSystem->GetUserInfo();
       fXRDtunUser = user->fUser;
    }
    //spec for tunnel connection
@@ -956,37 +955,37 @@ void KVDataRepository::PrepareXRDTunnel()
 
 //______________________________________________________________________________________________//
 
-KVDataRepository *KVDataRepository::NewRepository(const Char_t* type)
+KVDataRepository* KVDataRepository::NewRepository(const Char_t* type)
 {
-	// Create new instance of class derived from KVDataRepository.
-	// Actual class of object depends on 'type' which is used to select one of the
-	// Plugin.KVDataRepository's defined in .kvrootrc.
+   // Create new instance of class derived from KVDataRepository.
+   // Actual class of object depends on 'type' which is used to select one of the
+   // Plugin.KVDataRepository's defined in .kvrootrc.
 
    //check and load plugin library
-   TPluginHandler *ph=KVBase::LoadPlugin("KVDataRepository", type);
+   TPluginHandler* ph = KVBase::LoadPlugin("KVDataRepository", type);
    if (!ph)
       return new KVDataRepository();
 
    //execute constructor/macro for plugin
-   return ((KVDataRepository *) ph->ExecPlugin(0));
+   return ((KVDataRepository*) ph->ExecPlugin(0));
 }
 
 //______________________________________________________________________________________________//
 
-KVAvailableRunsFile *KVDataRepository::NewAvailableRunsFile(const Char_t* data_type, KVDataSet* ds)
+KVAvailableRunsFile* KVDataRepository::NewAvailableRunsFile(const Char_t* data_type, KVDataSet* ds)
 {
-	// Create new instance of class derived from KVAvailableRunsFile.
-	// Actual class of object depends on the type of the repository,
-	// which is used to select one of the
-	// Plugin.KVDataAvailableRunsFile's defined in .kvrootrc.
+   // Create new instance of class derived from KVAvailableRunsFile.
+   // Actual class of object depends on the type of the repository,
+   // which is used to select one of the
+   // Plugin.KVDataAvailableRunsFile's defined in .kvrootrc.
 
    //check and load plugin library
-   TPluginHandler *ph=KVBase::LoadPlugin("KVAvailableRunsFile", GetType());
+   TPluginHandler* ph = KVBase::LoadPlugin("KVAvailableRunsFile", GetType());
    if (!ph)
-      return new KVAvailableRunsFile(data_type,ds);
+      return new KVAvailableRunsFile(data_type, ds);
 
    //execute constructor/macro for plugin
-   return ((KVAvailableRunsFile *) ph->ExecPlugin(2, data_type, ds));
+   return ((KVAvailableRunsFile*) ph->ExecPlugin(2, data_type, ds));
 }
 
 #ifdef __CCIN2P3_RFIO
@@ -1002,20 +1001,20 @@ ClassImp(KVRFIOSystem)
 //assumed to be on the local filesystem).
 
 extern "C" {
-   FILE*   rfio_fopen(const char *path, const char* mode);
+   FILE*   rfio_fopen(const char* path, const char* mode);
    int     rfio_fclose(FILE* s);
-   int     rfio_fread(void * buffer, size_t size, size_t count, FILE * stream);
-   int     rfio_fwrite( const void * buffer, size_t size, size_t count, FILE * stream );
-   int     rfio_feof(FILE * stream);
-   int     rfio_stat(const char *path, struct stat *statbuf);
-   int     rfio_rmdir (const char *path);
-   int     rfio_unlink(const char *path);
-   int     rfio_chmod(const char *path, mode_t mode);
+   int     rfio_fread(void* buffer, size_t size, size_t count, FILE* stream);
+   int     rfio_fwrite(const void* buffer, size_t size, size_t count, FILE* stream);
+   int     rfio_feof(FILE* stream);
+   int     rfio_stat(const char* path, struct stat* statbuf);
+   int     rfio_rmdir(const char* path);
+   int     rfio_unlink(const char* path);
+   int     rfio_chmod(const char* path, mode_t mode);
 };
 
 //______________________________________________________________________________________________//
 
-Int_t KVRFIOSystem::Unlink(const char *path)
+Int_t KVRFIOSystem::Unlink(const char* path)
 {
    // Unlink, i.e. remove, a file or directory. Returns 0 when succesfull,
    // -1 in case of failure.
@@ -1033,7 +1032,7 @@ Int_t KVRFIOSystem::Unlink(const char *path)
 
 //______________________________________________________________________________________________//
 
-int KVRFIOSystem::Chmod(const char *file, UInt_t mode)
+int KVRFIOSystem::Chmod(const char* file, UInt_t mode)
 {
    // Set the file permission bits. Returns -1 in case or error, 0 otherwise.
 

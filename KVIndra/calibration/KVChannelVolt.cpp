@@ -41,29 +41,29 @@ ClassImp(KVChannelVolt);
 //be "Channel-Volt PG" or "Channel-Volt GG".
 //___________________________________________________________________________
 
-KVChannelVolt::KVChannelVolt():KVCalibrator(3)
+KVChannelVolt::KVChannelVolt(): KVCalibrator(3)
 {
    SetType("Channel-Volt");
-	SetGainRef(1);
+   SetGainRef(1);
 }
 
 //___________________________________________________________________________
-KVChannelVolt::KVChannelVolt(const Char_t * signal, KVDetector * kvd):KVCalibrator
-    (3)
+KVChannelVolt::KVChannelVolt(const Char_t* signal, KVDetector* kvd): KVCalibrator
+   (3)
 {
    //Create an electronic calibration object for a specific detector (*kvd)
    //specifying the signal type ("PG" - petit "low" gain - or "GG" - grand "high" gain)
    SetType("Channel-Volt");
    SetDetector(kvd);
    SetSignal(signal);
-	SetGainRef(1);
+   SetGainRef(1);
 }
 
 //___________________________________________________________________________
 Double_t KVChannelVolt::Compute(Double_t chan) const
 {
    Double_t gain = 1.;
-   KVDetector *det = GetDetector();
+   KVDetector* det = GetDetector();
    if (det)
       gain = det->GetGain();
    //Calculate the calibrated signal strength in volts for a given channel number.
@@ -76,7 +76,8 @@ Double_t KVChannelVolt::Compute(Double_t chan) const
 
 
 //___________________________________________________________________________
-Double_t KVChannelVolt::operator() (Double_t chan) {
+Double_t KVChannelVolt::operator()(Double_t chan)
+{
    //Overloading of "()" to allow syntax such as:
    //
    //        KVChannelVolt calibrator;
@@ -90,7 +91,7 @@ Double_t KVChannelVolt::operator() (Double_t chan) {
 }
 
 //___________________________________________________________________________
-void KVChannelVolt::SetSignal(const Char_t * signal)
+void KVChannelVolt::SetSignal(const Char_t* signal)
 {
    //Set the type of signal treated ("PG" - petit "low" gain - or "GG" - grand "high" gain)
    strcpy(fSignal, signal);
@@ -108,7 +109,7 @@ Double_t KVChannelVolt::Invert(Double_t volts)
    //calibration parameters (useful for filtering simulations).
 
    Double_t gain = 1.;
-   KVDetector *det = GetDetector();
+   KVDetector* det = GetDetector();
    if (det)
       gain = det->GetGain();
    Int_t channel = 0;
@@ -117,18 +118,18 @@ Double_t KVChannelVolt::Invert(Double_t volts)
       if (fPar[2]) {
          // quadratic transfer function
          Double_t c;
-         c = fPar[1] * fPar[1] - 4. * fPar[2] * (fPar[0] - gain/gain_ref * volts);
+         c = fPar[1] * fPar[1] - 4. * fPar[2] * (fPar[0] - gain / gain_ref * volts);
          if (c < 0.0)
             return -1;
          c = (-fPar[1] + TMath::Sqrt(c)) / (2.0 * fPar[2]);
          if (c < 0.0
-             && ((-fPar[1] - TMath::Sqrt(c)) / (2.0 * fPar[2])) > 0.0) {
+               && ((-fPar[1] - TMath::Sqrt(c)) / (2.0 * fPar[2])) > 0.0) {
             c = (-fPar[1] - TMath::Sqrt(c)) / (2.0 * fPar[2]);
          }
-         channel = (Int_t) (c + 0.5);
+         channel = (Int_t)(c + 0.5);
       } else {
          // linear transfer function
-         channel = (Int_t) (0.5 + (gain/gain_ref * volts - fPar[0]) / fPar[1]);
+         channel = (Int_t)(0.5 + (gain / gain_ref * volts - fPar[0]) / fPar[1]);
       }
    } else {
       Warning("Compute", "Parameters not correctly initialized");
@@ -140,7 +141,7 @@ Double_t KVChannelVolt::Invert(Double_t volts)
 Double_t KVChannelVolt::InvertDouble(Double_t volts)
 {
    Double_t gain = 1.;
-   KVDetector *det = GetDetector();
+   KVDetector* det = GetDetector();
    if (det)
       gain = det->GetGain();
    Double_t channel = 0;
@@ -149,18 +150,18 @@ Double_t KVChannelVolt::InvertDouble(Double_t volts)
       if (fPar[2]) {
          // quadratic transfer function
          Double_t c;
-         c = fPar[1] * fPar[1] - 4. * fPar[2] * (fPar[0] - gain/gain_ref * volts);
+         c = fPar[1] * fPar[1] - 4. * fPar[2] * (fPar[0] - gain / gain_ref * volts);
          if (c < 0.0)
             return -1;
          c = (-fPar[1] + TMath::Sqrt(c)) / (2.0 * fPar[2]);
          if (c < 0.0
-             && ((-fPar[1] - TMath::Sqrt(c)) / (2.0 * fPar[2])) > 0.0) {
+               && ((-fPar[1] - TMath::Sqrt(c)) / (2.0 * fPar[2])) > 0.0) {
             c = (-fPar[1] - TMath::Sqrt(c)) / (2.0 * fPar[2]);
          }
          channel = c;
       } else {
          // linear transfer function
-         channel = (gain/gain_ref * volts - fPar[0]) / fPar[1];
+         channel = (gain / gain_ref * volts - fPar[0]) / fPar[1];
       }
    } else {
       Warning("Compute", "Parameters not correctly initialized");
@@ -171,11 +172,11 @@ Double_t KVChannelVolt::InvertDouble(Double_t volts)
 //___________________________________________________________________________
 void KVChannelVolt::SetGainRef(Double_t ref)
 {
-	gain_ref =ref;
+   gain_ref = ref;
 }
 
 //___________________________________________________________________________
 Double_t KVChannelVolt::GetGainRef(void)
 {
-	return gain_ref;
+   return gain_ref;
 }

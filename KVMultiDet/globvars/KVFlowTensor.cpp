@@ -45,14 +45,14 @@ KVFlowTensor::KVFlowTensor(void): KVVarGlob(), fTensor(3)
 }
 
 //_________________________________________________________________
-KVFlowTensor::KVFlowTensor(Char_t *nom): KVVarGlob(nom), fTensor(3)
+KVFlowTensor::KVFlowTensor(Char_t* nom): KVVarGlob(nom), fTensor(3)
 {
    // Constructor with a name for the global variable
    init_KVFlowTensor();
 }
 
 //_________________________________________________________________
-KVFlowTensor::KVFlowTensor(const KVFlowTensor &a): KVVarGlob(), fTensor(3)
+KVFlowTensor::KVFlowTensor(const KVFlowTensor& a): KVVarGlob(), fTensor(3)
 {
    // Copy constructor
    init_KVFlowTensor();
@@ -66,12 +66,12 @@ KVFlowTensor::~KVFlowTensor(void)
 }
 
 //_________________________________________________________________
-void KVFlowTensor::Copy(TObject&a) const
+void KVFlowTensor::Copy(TObject& a) const
 {
    // Copy properties of 'this' object into the KVVarGlob object referenced by 'a'
 
    KVVarGlob::Copy(a);// copy attributes of KVVarGlob base object
-   
+
    //KVFlowTensor& aglob = (KVFlowTensor&)a;
    // Now copy any additional attributes specific to this class:
    // To copy a specific field, do as follows:
@@ -85,7 +85,7 @@ void KVFlowTensor::Copy(TObject&a) const
 }
 
 //_________________________________________________________________
-KVFlowTensor& KVFlowTensor::operator = (const KVFlowTensor &a)
+KVFlowTensor& KVFlowTensor::operator = (const KVFlowTensor& a)
 {
    // Operateur =
 
@@ -105,12 +105,12 @@ void KVFlowTensor::Reset(void)
 {
    // Reset internal variables, called before treatment of each event
    fTensor.Zero();
-   fCalculated=kFALSE;
-   fNParts=0;
+   fCalculated = kFALSE;
+   fNParts = 0;
 }
 
 //_________________________________________________________________
-Double_t *KVFlowTensor::GetValuePtr(void)
+Double_t* KVFlowTensor::GetValuePtr(void)
 {
    // You can use this method to return an array of values calculated by your global variable.
    // The order of the array should correspond to the index set for each value
@@ -121,13 +121,13 @@ Double_t *KVFlowTensor::GetValuePtr(void)
 }
 
 //_________________________________________________________________
-TObject *KVFlowTensor::GetObject(void) const
+TObject* KVFlowTensor::GetObject(void) const
 {
    // You can use this method to return the address of an object associated with your global variable.
    // This may be a list of particles, an intermediate object used to compute values, etc.
 
    return NULL;
-}   
+}
 
 Double_t KVFlowTensor::getvalue_void() const
 {
@@ -176,34 +176,31 @@ Double_t KVFlowTensor::getvalue_int(Int_t index)
    //
    // This should be done in the init_KVFlowTensor() method.
 
-   if(!fCalculated) Calculate();
+   if (!fCalculated) Calculate();
 
-   switch(index){
+   switch (index) {
       case kFlowAngle:
-         return TMath::RadToDeg()*e(1).Theta();
+         return TMath::RadToDeg() * e(1).Theta();
          break;
 
-      case kKinFlowRatio13:
-      {
-         if(f(3)<=0.) return -1.;
-         if(f(1)<=0.) return -1.;
-         return TMath::Min(1e+03, pow(f(1)/f(3),0.5));
-      }
+      case kKinFlowRatio13: {
+            if (f(3) <= 0.) return -1.;
+            if (f(1) <= 0.) return -1.;
+            return TMath::Min(1e+03, pow(f(1) / f(3), 0.5));
+         }
          break;
 
-      case kKinFlowRatio23:
-      {
-         if(f(3)<=0.) return -1.;
-         if(f(2)<=0.) return -1.;
-         return TMath::Min(1e+03, pow(f(2)/f(3),0.5));
-      }
+      case kKinFlowRatio23: {
+            if (f(3) <= 0.) return -1.;
+            if (f(2) <= 0.) return -1.;
+            return TMath::Min(1e+03, pow(f(2) / f(3), 0.5));
+         }
          break;
 
-      case kPhiReacPlane:
-      {
-         Double_t phi = TMath::RadToDeg()*e(1).Phi();
-         return (phi<0 ? 360+phi : phi);
-      }
+      case kPhiReacPlane: {
+            Double_t phi = TMath::RadToDeg() * e(1).Phi();
+            return (phi < 0 ? 360 + phi : phi);
+         }
          break;
 
       case kSqueezeAngle:
@@ -231,15 +228,15 @@ void KVFlowTensor::Calculate()
 
    TMatrixT<double> evectors = fTensor.EigenVectors(fEVal);
 
-   for (int i=0;i<3;i++){
-      TVectorD col = TMatrixDColumn(evectors,i);
-      fEVec[i].SetXYZ(col[0],col[1],col[2]);
+   for (int i = 0; i < 3; i++) {
+      TVectorD col = TMatrixDColumn(evectors, i);
+      fEVec[i].SetXYZ(col[0], col[1], col[2]);
    }
 
    // check orientation of flow axis
    // by symmetry/convention, we allow FlowAngle between 0 & 90° i.e. flow vector always
    // points in the forward beam direction.
-   if(fEVec[0].Theta()>TMath::PiOver2()){
+   if (fEVec[0].Theta() > TMath::PiOver2()) {
       fEVec[0] = -fEVec[0];
    }
 
@@ -247,7 +244,7 @@ void KVFlowTensor::Calculate()
    // we choose evec[0]=>'z' evec[1]=>'y' evec[2]=>'x'
    // therefore we should have evec[2].Cross(evec[1])=evec[0]
    // if not we change the sign of evec[2]
-   if(fEVec[2].Cross(fEVec[1])!=fEVec[0]) fEVec[2] = -fEVec[2];
+   if (fEVec[2].Cross(fEVec[1]) != fEVec[0]) fEVec[2] = -fEVec[2];
 
    // set up azimuthal rotation of CM axes around beam axis in order to put new 'X'-axis in reaction plane
    // we use the phi of the major axis (largest eigenvector)
@@ -262,25 +259,25 @@ void KVFlowTensor::Calculate()
    // defined as the angle by which the middle eigenvector e2
    // needs to be rotated around the e1 flow axis
    // in order to be brought in to the reaction plane
-   TVector3 normReac = e(1).Cross(TVector3(0,0,1));//normal to reaction plane: e1 x z
-   Double_t angle = TMath::RadToDeg()*e(2).Angle(normReac);
+   TVector3 normReac = e(1).Cross(TVector3(0, 0, 1)); //normal to reaction plane: e1 x z
+   Double_t angle = TMath::RadToDeg() * e(2).Angle(normReac);
    // on the contrary to Gutbrod et al, we define this angle between 0 and 90 degrees.
    // see Fig. 3 of paper: only 0-90 angles can be defined
-   fSqueezeAngle = (angle<90 ? 90-angle : angle-90);
+   fSqueezeAngle = (angle < 90 ? 90 - angle : angle - 90);
 
    // now calculate the in-plane and out-of-plane flow according to Fig. 5 of Gutbrod et al
-   Double_t a = pow(f(2),0.5);//semi-axes of ellipsoid given by square roots of eigenvalues
-   Double_t b = pow(f(3),0.5);
-   Double_t tan_t = -a/b*TMath::Tan(fSqueezeAngle*TMath::DegToRad());
+   Double_t a = pow(f(2), 0.5); //semi-axes of ellipsoid given by square roots of eigenvalues
+   Double_t b = pow(f(3), 0.5);
+   Double_t tan_t = -a / b * TMath::Tan(fSqueezeAngle * TMath::DegToRad());
    Double_t t0 = TMath::ATan(tan_t);
-   Double_t inPlane = a*cos(t0)*cos(fSqueezeAngle*TMath::DegToRad())-b*sin(t0)*sin(fSqueezeAngle*TMath::DegToRad());
-   tan_t = a/(b*tan(fSqueezeAngle*TMath::DegToRad()));
+   Double_t inPlane = a * cos(t0) * cos(fSqueezeAngle * TMath::DegToRad()) - b * sin(t0) * sin(fSqueezeAngle * TMath::DegToRad());
+   tan_t = a / (b * tan(fSqueezeAngle * TMath::DegToRad()));
    t0 = atan(tan_t);
-   Double_t outOfPlane = a*cos(t0)*sin(fSqueezeAngle*TMath::DegToRad())+b*sin(t0)*cos(fSqueezeAngle*TMath::DegToRad());
-   if(inPlane<=0.) fSqOutRatio=-1.;
-   else fSqOutRatio = TMath::Min(1.e+03,outOfPlane/inPlane);
+   Double_t outOfPlane = a * cos(t0) * sin(fSqueezeAngle * TMath::DegToRad()) + b * sin(t0) * cos(fSqueezeAngle * TMath::DegToRad());
+   if (inPlane <= 0.) fSqOutRatio = -1.;
+   else fSqOutRatio = TMath::Min(1.e+03, outOfPlane / inPlane);
 
-   fCalculated=kTRUE;
+   fCalculated = kTRUE;
 }
 
 
@@ -298,16 +295,16 @@ void KVFlowTensor::init_KVFlowTensor()
    // The index numbers should be the same as in your getvalue_int(Int_t) method.
 
    fType = KVVarGlob::kOneBody; // this is a 1-body variable
-   
+
    // reference frame = "CM"
    // weight = NRKE [non-relativistic kinetic energy] (1/2m)
 
    SetFrame("CM");
-   SetOption("weight","NRKE");
+   SetOption("weight", "NRKE");
 
    fTensor.Zero();
 
-   SetNameIndex("FlowAngle",kFlowAngle);
+   SetNameIndex("FlowAngle", kFlowAngle);
    SetNameIndex("KinFlowRatio13", kKinFlowRatio13);
    SetNameIndex("KinFlowRatio23", kKinFlowRatio23);
    SetNameIndex("PhiReacPlane", kPhiReacPlane);
@@ -326,24 +323,24 @@ void KVFlowTensor::Fill(KVNucleus* n)
 
    Double_t W;
    KVParticle* frame = n->GetFrame(GetFrame());
-   switch(weight){
+   switch (weight) {
       case kONE:
-         W=1;
+         W = 1;
          break;
       case kRKE:
-         W=1./(n->GetMass()*(1+frame->Gamma()));
+         W = 1. / (n->GetMass() * (1 + frame->Gamma()));
          break;
       default:
       case kNRKE:
-         W=1./(2.*n->GetMass());
+         W = 1. / (2.*n->GetMass());
          break;
    }
-   if(IsOptionGiven("DOUBLE")) W*=2.;
-   for(int i=0;i<3;i++){
-      for(int j=i;j<3;j++){
-         Double_t xx = W*frame->GetMomentum()[i]*frame->GetMomentum()[j];
-         fTensor(i,j)+=xx;
-         if(i!=j) fTensor(j,i)+=xx;
+   if (IsOptionGiven("DOUBLE")) W *= 2.;
+   for (int i = 0; i < 3; i++) {
+      for (int j = i; j < 3; j++) {
+         Double_t xx = W * frame->GetMomentum()[i] * frame->GetMomentum()[j];
+         fTensor(i, j) += xx;
+         if (i != j) fTensor(j, i) += xx;
       }
    }
    ++fNParts;
@@ -357,7 +354,7 @@ const TRotation& KVFlowTensor::GetAziReacPlaneRotation()
    // The azimuthal angle of the rotation is that of the major axis
    // in the forward direction.
 
-   if(!fCalculated) Calculate();
+   if (!fCalculated) Calculate();
    return fAziReacPlane;
 }
 
@@ -369,6 +366,6 @@ const TRotation& KVFlowTensor::GetFlowReacPlaneRotation()
    // In this rotated frame, theta is polar angle with respect to flow axis
    // and phi is azimuthal angle around flow axis (phi=0,180 => in-plane)
 
-   if(!fCalculated) Calculate();
+   if (!fCalculated) Calculate();
    return fFlowReacPlane;
 }

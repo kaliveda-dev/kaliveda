@@ -1,5 +1,5 @@
 //
-// D.Cussol 
+// D.Cussol
 //
 // 17/04/2001:
 // Creation d'une classe de tri. Cette classe permet d'effectuer un tri et de
@@ -28,13 +28,13 @@ ClassImp(KVTrieurTranche)
 //                                             following this prescription:
 //
 //                                             xarray[i-1] < x < xarray[i]
-//                                              
+//
 //                                             if x<x[0] it returns -1
 //                                             if x>x[nb_cells] it returns -1
-//                                             -1 means "out of range" 
+//                                             -1 means "out of range"
 //
 //      virtual Int_t GetNumCase(void *,...)   return -1,not to use.
-//       
+//
 // BEWARE! : the index value ranges between 1 and nb_cells.
 //
 //  For each index, the Xmin and Xmax values can be adjusted with the methods
@@ -45,14 +45,14 @@ ClassImp(KVTrieurTranche)
 //  Remember that calling SetXmax(i,x) is equivalent to call  SetXmin(i+1,x), or
 //  that calling SetXmin(i,x) is equivalent to call  SetXmax(i-1,x).
 //
-//  The name of the sorting variable can be set withe the method 
+//  The name of the sorting variable can be set withe the method
 //      virtual void SetNomVar(Char_t *s)
 //
 // The number of indexes can be set with the method
 //      virtual void SetNbCases(Int_t n)
 //
 //  Setting the number of indexes, the name of the sorting variable or the Xmin
-// or Xmax values automatically generates the names for each index. 
+// or Xmax values automatically generates the names for each index.
 //
 //  In a treatment program, this can be used to set histogram titles and to
 // manage efficiently arrays of histograms. Here is an example where the sorting
@@ -76,7 +76,7 @@ ClassImp(KVTrieurTranche)
 // sortEkin.SetXmax(5,800.);      // maximum value of Ekin for cell 5
 // ...
 // // Declaration of histograms
-// TList *lekin=new TList();      // list to store histograms 
+// TList *lekin=new TList();      // list to store histograms
 // for(Int_t i=0;i<sortEkin.GetNbCases();i++)
 //  {
 //  TString sname("histo"); // TString for the histogram name
@@ -93,8 +93,8 @@ ClassImp(KVTrieurTranche)
 // Zmax.Reset();
 // KVINDRAReconNuc *part = 0;
 // while( (part = GetEvent()->GetNextParticle("ok")) ){//loop over particles with correct codes
-//  Sekin.Fill(part);   
-//  Zmax.Fill(part);    
+//  Sekin.Fill(part);
+//  Zmax.Fill(part);
 // }
 // // Filling the appropriate histogram
 // Int_t index=sortEkin(Sekin());       // Determine the index value according to Sekin()
@@ -103,7 +103,7 @@ ClassImp(KVTrieurTranche)
 //  TH1F *h1=(TH1F *)lekin->At(index-1); // retrieve the histogram in the list
 //  h1->Fill(Zmax());                    // fill it!
 //  }
-// ... 
+// ...
 //
 Int_t KVTrieurTranche::nb = 0;
 Int_t KVTrieurTranche::nb_crea = 0;
@@ -126,26 +126,26 @@ void KVTrieurTranche::initKVTrieurTranche(void)
 void KVTrieurTranche::SetNomsCases(void)
 {
 //
-// On affecte les noms des cases 
+// On affecte les noms des cases
 //
    Char_t nomt[80];
    if (noms_cases) {
       for (Int_t i = 0; i < nb_cases; i++) {
          sprintf(nomt, "%f #leq %s < %f", xtranches(i), nomVar,
                  xtranches(i + 1));
-         TNamed *nom = (TNamed *) noms_cases->At(i);
+         TNamed* nom = (TNamed*) noms_cases->At(i);
          nom->SetTitle(nomt);
       }
    }
 }
 
 //_____________________________________________________
-KVTrieurTranche::KVTrieurTranche(void):KVTrieur()
+KVTrieurTranche::KVTrieurTranche(void): KVTrieur()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    initKVTrieurTranche();
    sprintf(nom, "KVTrieurTranche_%d", nb_crea);
@@ -158,7 +158,7 @@ KVTrieurTranche::KVTrieurTranche(void):KVTrieur()
 }
 
 //_____________________________________________________
-KVTrieurTranche::KVTrieurTranche(Char_t * nom):KVTrieur(nom)
+KVTrieurTranche::KVTrieurTranche(Char_t* nom): KVTrieur(nom)
 {
 //
 // Constructeur avec un nom
@@ -172,7 +172,7 @@ KVTrieurTranche::KVTrieurTranche(Char_t * nom):KVTrieur(nom)
 }
 
 //_____________________________________________________
-KVTrieurTranche::KVTrieurTranche(Int_t nbcases, Char_t * nom):KVTrieur(nbcases,
+KVTrieurTranche::KVTrieurTranche(Int_t nbcases, Char_t* nom): KVTrieur(nbcases,
          nom)
 {
 //
@@ -186,16 +186,16 @@ KVTrieurTranche::KVTrieurTranche(Int_t nbcases, Char_t * nom):KVTrieur(nbcases,
 }
 
 //_____________________________________________________
-KVTrieurTranche::KVTrieurTranche(const KVTrieurTranche & a) : KVTrieur()
+KVTrieurTranche::KVTrieurTranche(const KVTrieurTranche& a) : KVTrieur()
 {
-// 
+//
 // Contructeur par copie
 //
    initKVTrieurTranche();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVTrieurTranche &) a).Copy(*this);
+   ((KVTrieurTranche&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVTrieurTranche
    cout << nb << " crees...(copie) " << endl;
@@ -205,7 +205,7 @@ KVTrieurTranche::KVTrieurTranche(const KVTrieurTranche & a) : KVTrieur()
 //_____________________________________________________
 KVTrieurTranche::~KVTrieurTranche(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVTrieurTranche
@@ -217,10 +217,10 @@ KVTrieurTranche::~KVTrieurTranche(void)
 
 //_____________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVTrieurTranche::Copy(TObject & a) const
+void KVTrieurTranche::Copy(TObject& a) const
 {
 #else
-void KVTrieurTranche::Copy(TObject & a)
+void KVTrieurTranche::Copy(TObject& a)
 {
 #endif
 //
@@ -230,18 +230,18 @@ void KVTrieurTranche::Copy(TObject & a)
    cout << "Copie de " << a.GetName() << "..." << endl;
 #endif
    KVTrieur::Copy(a);
-   ((KVTrieurTranche &) a).xtranches.ResizeTo(this->nb_cases + 1);
-   ((KVTrieurTranche &) a).xtranches = this->xtranches;
-   sprintf(((KVTrieurTranche &) a).nomVar, "%s", this->nomVar);
+   ((KVTrieurTranche&) a).xtranches.ResizeTo(this->nb_cases + 1);
+   ((KVTrieurTranche&) a).xtranches = this->xtranches;
+   sprintf(((KVTrieurTranche&) a).nomVar, "%s", this->nomVar);
 #ifdef DEBUG_KVTrieurTranche
    cout << "Nom de la copie (arguement): " << this->nomVar << endl;
-   cout << "Nom de la copie (resultat) : " << ((KVTrieurTranche &) a).
-       GetName() << endl;
+   cout << "Nom de la copie (resultat) : " << ((KVTrieurTranche&) a).
+        GetName() << endl;
 #endif
 }
 
 //_____________________________________________________
-KVTrieurTranche & KVTrieurTranche::operator =(const KVTrieurTranche & a)
+KVTrieurTranche& KVTrieurTranche::operator =(const KVTrieurTranche& a)
 {
 //
 // Operateur =
@@ -252,7 +252,7 @@ KVTrieurTranche & KVTrieurTranche::operator =(const KVTrieurTranche & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVTrieurTranche &) a).Copy(*this);
+   ((KVTrieurTranche&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVTrieurTranche
    cout << "Nom de la copie par egalite: " << GetName() << endl;
@@ -322,7 +322,7 @@ Double_t KVTrieurTranche::GetXmax(Int_t i)
 }
 
 //_____________________________________________________
-void KVTrieurTranche::SetNomVar(Char_t * x)
+void KVTrieurTranche::SetNomVar(Char_t* x)
 {
 //
 // On met la valeur de Xmin
@@ -332,7 +332,7 @@ void KVTrieurTranche::SetNomVar(Char_t * x)
 }
 
 //_____________________________________________________
-const Char_t *KVTrieurTranche::GetNomVar(void)
+const Char_t* KVTrieurTranche::GetNomVar(void)
 {
 //
 // On retourne la vaelur de xmin

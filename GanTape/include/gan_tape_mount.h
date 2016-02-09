@@ -15,7 +15,7 @@
 
 
 #ifndef __GAN_TAPE_MOUNT_H
-#define __GAN_TAPE_MOUNT_H                     
+#define __GAN_TAPE_MOUNT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,21 +25,21 @@ extern "C" {
 #if defined ( __VMS ) || defined ( VMS )            /***** Cas du VMS ******/
 
 typedef struct ITEM_LIST {   /* Structure de passage de parametres pour la */
-                             /* fonction sys$mount.    			   */	
-	short Buf_Len,Item_Code;
-	void  *Buf_Adr;
-	int   *Return_Adr;
+   /* fonction sys$mount.               */
+   short Buf_Len, Item_Code;
+   void*  Buf_Adr;
+   int*   Return_Adr;
 
-	} item_list; 
- 
-#endif      
+} item_list;
+
+#endif
 
 
-int acq_mt_mount_c      ( gan_tape_desc , int, int );
-int acq_mt_dismount_c    ( gan_tape_desc , int );     
+int acq_mt_mount_c(gan_tape_desc , int, int);
+int acq_mt_dismount_c(gan_tape_desc , int);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif                               
+#endif

@@ -5,7 +5,7 @@
 
 ClassImp(KVPathDef)
 
-bool KVPathDef::GetIncludeAs(TClass *cl, TString& out_include_as) const
+bool KVPathDef::GetIncludeAs(TClass* cl, TString& out_include_as) const
 {
    // strip off all directory information from header filename
    // this is for the '#include' directive shown in the floating

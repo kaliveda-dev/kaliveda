@@ -5,15 +5,15 @@
 
 #define WITHRINT
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 #ifdef WITHRINT
-      TRint *myapp=new TRint("KVDataBaseGUI",&argc,argv,NULL,0);
+   TRint* myapp = new TRint("KVDataBaseGUI", &argc, argv, NULL, 0);
 #else
-   	TApplication *myapp = new TApplication("KVDataBaseGUI", &argc, argv);
+   TApplication* myapp = new TApplication("KVDataBaseGUI", &argc, argv);
 #endif
-	   KVINDRARunSheetGUI g;
-   	myapp->Run();
-      if(gDataRepositoryManager) delete gDataRepositoryManager;
-   	return 0;
+   KVINDRARunSheetGUI g;
+   myapp->Run();
+   if (gDataRepositoryManager) delete gDataRepositoryManager;
+   return 0;
 }

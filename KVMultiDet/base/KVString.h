@@ -6,6 +6,8 @@
 #include "TString.h"
 #include "KVConfig.h"
 #include "RVersion.h"
+
+#include <TCollection.h>
 class TObjArray;
 
 /*
@@ -20,33 +22,44 @@ the integers in Int_t variables. This macro is backwards compatible.
       if(_temp_string_.IsDigit()) var = _temp_string_.Atoi(); else var = 0; \
    }
 
-   
-class KVString:public TString
-{
 
-   protected:
-	
-	TObjArray*	kObjArr;//!used by Next() to iterate over list
-	Int_t 		fIterIndex;//! used by Next() to iterate over list
-   Bool_t 		fEndList;//! used by Next() & End() to iterate over list
+class KVString: public TString {
+
+protected:
+
+   TObjArray*  kObjArr;//!used by Next() to iterate over list
+   Int_t       fIterIndex;//! used by Next() to iterate over list
+   Bool_t      fEndList;//! used by Next() & End() to iterate over list
    void init()
    {
-   	kObjArr = 0;
-   	fIterIndex = -1;
-   	fEndList = kTRUE;
+      kObjArr = 0;
+      fIterIndex = -1;
+      fEndList = kTRUE;
    };
-	public:
-         
-        KVString() : TString() { init(); }
-   KVString(const Char_t * s):TString(s) { init(); }
-   KVString(const TString & s):TString(s) { init(); }
-   KVString(const KVString & s):TString((const TString&)s) { init(); }
+public:
+
+   KVString() : TString()
+   {
+      init();
+   }
+   KVString(const Char_t* s): TString(s)
+   {
+      init();
+   }
+   KVString(const TString& s): TString(s)
+   {
+      init();
+   }
+   KVString(const KVString& s): TString((const TString&)s)
+   {
+      init();
+   }
    KVString(Double_t value, Double_t error);
 
    virtual ~ KVString();
 
 #ifdef __WITHOUT_TSTRING_TOKENIZE
-   TObjArray *Tokenize(const TString & delim) const;
+   TObjArray* Tokenize(const TString& delim) const;
 #endif
 #ifdef __WITH_KVSTRING_ISDIGIT
    Bool_t IsDigit() const;
@@ -61,25 +74,27 @@ class KVString:public TString
    Double_t Atof() const;
 #endif
 #ifdef __WITH_KVSTRING_REMOVE
-   KVString & Remove(TString::EStripType s, char c);    // Like Strip() but changing string directly
-   KVString & Remove(Ssiz_t pos) {
-      return (KVString &) (TString::Remove(pos));
+   KVString& Remove(TString::EStripType s, char c);     // Like Strip() but changing string directly
+   KVString& Remove(Ssiz_t pos)
+   {
+      return (KVString&)(TString::Remove(pos));
    };                           // Remove pos to end of string
-   KVString & Remove(Ssiz_t pos, Ssiz_t n) {
-      return (KVString &) (TString::Remove(pos, n));
+   KVString& Remove(Ssiz_t pos, Ssiz_t n)
+   {
+      return (KVString&)(TString::Remove(pos, n));
    };                           // Remove n chars starting at pos
 #endif
-   inline KVString & operator=(const char *s);
-   inline KVString & operator=(const TString & s);
+   inline KVString& operator=(const char* s);
+   inline KVString& operator=(const TString& s);
 
-   virtual KVString & Substitute(const Char_t c1, const Char_t c2);
-   virtual Int_t Sscanf(const Char_t * fmt, ...);
+   virtual KVString& Substitute(const Char_t c1, const Char_t c2);
+   virtual Int_t Sscanf(const Char_t* fmt, ...);
 
-	virtual Bool_t	Match(TString pattern);
-        virtual void Begin(TString delim) const;
-        virtual Bool_t End() const;
-        virtual KVString Next(Bool_t strip_whitespace = kFALSE) const;
-	virtual Int_t GetNValues(TString delim);
+   virtual Bool_t Match(TString pattern);
+   virtual void Begin(TString delim) const;
+   virtual Bool_t End() const;
+   virtual KVString Next(Bool_t strip_whitespace = kFALSE) const;
+   virtual Int_t GetNValues(TString delim);
 
 #ifdef __WITH_KVSTRING_ISWHITESPACE
    Bool_t IsWhitespace() const;
@@ -90,26 +105,29 @@ class KVString:public TString
    Bool_t       IsDec() const;
    Bool_t       IsInBaseN(Int_t base) const;
 #endif
-   static KVString Itoa   (    Int_t value, Int_t base);  // Converts int to string with respect to the base specified (2-36)
-   static KVString UItoa  (   UInt_t value, Int_t base);
-   static KVString LLtoa  ( Long64_t value, Int_t base);
-   static KVString ULLtoa (ULong64_t value, Int_t base);
+   static KVString Itoa(Int_t value, Int_t base);         // Converts int to string with respect to the base specified (2-36)
+   static KVString UItoa(UInt_t value, Int_t base);
+   static KVString LLtoa(Long64_t value, Int_t base);
+   static KVString ULLtoa(ULong64_t value, Int_t base);
    static KVString BaseConvert(const KVString& s_in, Int_t base_in, Int_t base_out);  // Converts string from base base_in to base base_out (supported bases 2-36)
 
    void RemoveAllExtraWhiteSpace();
    KVString StripAllExtraWhiteSpace() const;
 
+   KVString& FindCommonCharacters(const TCollection*, const char bug = '*');
+   KVString& FindCommonTitleCharacters(const TCollection*, const char bug = '*');
+
    ClassDef(KVString, 1)        //TString wrapper compatible with ROOT versions 3.10/02 onwards
 };
 
-inline KVString & KVString::operator=(const TString & s)
+inline KVString& KVString::operator=(const TString& s)
 {
    KVString a(s);
    *this = a;
    return *this;
 }
 
-inline KVString & KVString::operator=(const char *s)
+inline KVString& KVString::operator=(const char* s)
 {
    TString a;
    a = s;

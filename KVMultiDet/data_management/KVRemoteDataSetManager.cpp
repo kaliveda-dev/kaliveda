@@ -20,7 +20,7 @@ ClassImp(KVRemoteDataSetManager)
 ////////////////////////////////////////////////////////////////////////////////
 // Handles data sets in remote data repository
 ////////////////////////////////////////////////////////////////////////////////
-    KVRemoteDataSetManager::KVRemoteDataSetManager()
+KVRemoteDataSetManager::KVRemoteDataSetManager()
 {
    //Default constructor
 }
@@ -54,11 +54,11 @@ Bool_t KVRemoteDataSetManager::OpenAvailableDatasetsFile()
 // <hr>
 // <address>Apache/2.0.53 (Unix) mod_ssl/2.0.53 OpenSSL/0.9.7a DAV/2 PHP/5.1.6 mod_python/3.2.8 Python/2.4.2 mod_jk/1.2.15 mod_perl/2.0.2 Perl/v5.8.7 Server at indra.in2p3.fr Port 80</address>
 // </body></html>
-   
+
 
    TString http =
-       gEnv->GetValue(Form("%s.DataRepository.RemoteAvailableRuns.url",
-                           fRepository->GetName()), "");
+      gEnv->GetValue(Form("%s.DataRepository.RemoteAvailableRuns.url",
+                          fRepository->GetName()), "");
    if (http == "") {
       Warning("OpenAvailableDatasetsFile()",
               "%s.DataRepository.RemoteAvailableRuns.url is not defined. See $KVROOT/KVFiles/.kvrootrc",
@@ -67,13 +67,13 @@ Bool_t KVRemoteDataSetManager::OpenAvailableDatasetsFile()
    }
    TString url;
    url.Form("%s/%s", http.Data(), fCacheFileName.Data());
-   
+
    //Find executable 'curl' or programme indicated by
    //value of DataRepository.RemoteAvailableRuns.protocol
    fCurl = gEnv->GetValue(Form
                           ("%s.DataRepository.RemoteAvailableRuns.protocol",
                            fRepository->GetName()), "curl");
-   if(!KVBase::FindExecutable(fCurl)){
+   if (!KVBase::FindExecutable(fCurl)) {
       Error("OpenAvailableDatasetsFile",
             "Executable for file transfer \"%s\" not found. You cannot use remote data repository.",
             fCurl.Data());
@@ -84,25 +84,24 @@ Bool_t KVRemoteDataSetManager::OpenAvailableDatasetsFile()
    if (gSystem->Exec(cmd.Data()))
       return kFALSE;            // problem with curl
    fDatasets.open("remote.available.datasets");
-   if( fCurl.Contains("curl") ){
+   if (fCurl.Contains("curl")) {
       //check contents of file for HTML code
-      KVString line; line.ReadLine( fDatasets );
-      if( line.Contains("<") ){
+      KVString line;
+      line.ReadLine(fDatasets);
+      if (line.Contains("<")) {
          Error("OpenAvailableDatasetsFile",
                "Remote available datasets file transferred by curl contains HTML code :");
          //print contents of file
          cout << line.Data() << endl;
-         line.ReadLine( fDatasets );
-         while( fDatasets.good() ){
+         line.ReadLine(fDatasets);
+         while (fDatasets.good()) {
             cout << line.Data() << endl;
-            line.ReadLine( fDatasets );
+            line.ReadLine(fDatasets);
          }
          Error("OpenAvailableDatasetsFile",
                "You cannot use this remote data repository");
          return kFALSE;
-      }
-      else   // no HTML in file : OK
-      {
+      } else { // no HTML in file : OK
          //reset stream to beginning of file
          fDatasets.clear();         // clear any error flags (EOF etc.)
          fDatasets.seekg(0, ios::beg);      // set file buffer pointer to beginning of file
@@ -120,11 +119,11 @@ void KVRemoteDataSetManager::CheckAvailability()
    //machine.
    //Example file:
    //INDRA_camp1 : root
-   //INDRA_camp2 : 
-   //INDRA_camp4 : 
+   //INDRA_camp2 :
+   //INDRA_camp4 :
    //INDRA_camp5 : raw,recon,ident,root
    //INDRA_e416a : raw,
-   //INDRA_e475s : 
+   //INDRA_e475s :
 
    fNavailable = 0;
    ReadAvailableDatasetsFile();

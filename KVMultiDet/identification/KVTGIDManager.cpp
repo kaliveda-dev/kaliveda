@@ -31,7 +31,7 @@ ClassImp(KVTGIDManager)
 // 3 KVTGIDManager::kStatus_ZtooSmall     "IdentA called with Z<1",
 // 4 KVTGIDManager::kStatus_ZtooLarge     "IdentA called with Z larger than max Z defined for KVTGIDZA isotopic identification object"
 ////////////////////////////////////////////////////////////////////////////
-    KVTGIDManager::KVTGIDManager()
+KVTGIDManager::KVTGIDManager()
 {
    //Default constructor.
    fID_max = 0.;
@@ -46,7 +46,7 @@ KVTGIDManager::~KVTGIDManager()
 
 //______________________________________________________________________________//
 
-void KVTGIDManager::AddTGID(KVTGID * _tgid)
+void KVTGIDManager::AddTGID(KVTGID* _tgid)
 {
    //Add an identification object to the list.
    //It will be deleted when the KVTGIDManager is deleted.
@@ -56,24 +56,26 @@ void KVTGIDManager::AddTGID(KVTGID * _tgid)
 
 //______________________________________________________________________________//
 
-KVTGID *KVTGIDManager::GetTGID(const Char_t * name)
+KVTGID* KVTGIDManager::GetTGID(const Char_t* name)
 {
    //Retrieve the identification object with name
-   return (KVTGID *) fIDList.FindObject(name);
+   return (KVTGID*) fIDList.FindObject(name);
 }
 
 //______________________________________________________________________________//
 
-void KVTGIDManager::RemoveTGID(const Char_t * name)
+void KVTGIDManager::RemoveTGID(const Char_t* name)
 {
    //Delete the identification object with name
-   KVTGID* tgid=0;
-   if( (tgid = (KVTGID*)fIDList.FindObject(name)) ){
+   KVTGID* tgid = 0;
+   if ((tgid = (KVTGID*)fIDList.FindObject(name))) {
       fIDList.Remove(tgid);
       //recalculate fID_max if needed
-      if( tgid->GetIDmax() == fID_max ){
-         fID_max = 0.; TIter n(&fIDList); KVTGID* t;
-         while( (t = (KVTGID*)n()) ) fID_max = TMath::Max(fID_max, t->GetIDmax());
+      if (tgid->GetIDmax() == fID_max) {
+         fID_max = 0.;
+         TIter n(&fIDList);
+         KVTGID* t;
+         while ((t = (KVTGID*)n())) fID_max = TMath::Max(fID_max, t->GetIDmax());
       }
       delete tgid;
    }
@@ -84,14 +86,15 @@ void KVTGIDManager::RemoveTGID(const Char_t * name)
 void KVTGIDManager::RemoveAllTGID()
 {
    //Delete all identification objects
-   fIDList.Delete(); fID_max = 0.;
+   fIDList.Delete();
+   fID_max = 0.;
 }
 
 //______________________________________________________________________________//
 
-KVTGID *KVTGIDManager::GetTGID(const Char_t * idt_name,
-                               const Char_t * id_type,
-                               const Char_t * grid_type)
+KVTGID* KVTGIDManager::GetTGID(const Char_t* idt_name,
+                               const Char_t* id_type,
+                               const Char_t* grid_type)
 {
    //Retrieve the identification object using:
    //      idt_name = name of ID telescope
@@ -102,9 +105,9 @@ KVTGID *KVTGIDManager::GetTGID(const Char_t * idt_name,
 
 //______________________________________________________________________________//
 
-const Char_t *KVTGIDManager::GetTGIDName(const Char_t * idt_name,
-                                         const Char_t * id_type,
-                                         const Char_t * grid_type)
+const Char_t* KVTGIDManager::GetTGIDName(const Char_t* idt_name,
+      const Char_t* id_type,
+      const Char_t* grid_type)
 {
    //Return unique name for KVTGID object using:
    //      idt_name = name of ID telescope
@@ -115,13 +118,13 @@ const Char_t *KVTGIDManager::GetTGIDName(const Char_t * idt_name,
 
 //______________________________________________________________________________//
 
-Double_t KVTGIDManager::IdentZ(const Char_t* idtelescope_name, Double_t id_map_X, Double_t id_map_Y, Double_t & funLTG,
-                               const Char_t * grid_type)
+Double_t KVTGIDManager::IdentZ(const Char_t* idtelescope_name, Double_t id_map_X, Double_t id_map_Y, Double_t& funLTG,
+                               const Char_t* grid_type)
 {
    //Identification in Z of particle for ID telescope idt using Tassan-Got functional corresponding
    //to grid of type "grid_type". The "signal_type" argument is passed to GetIDMapX/Y(signal_type),
-	//in case "grid_type" and "signal_type" are not exactly the same.
-	//
+   //in case "grid_type" and "signal_type" are not exactly the same.
+   //
    //funLTG gives distance to identification line (absolute value of LTG function for the Z we find)
    // funLTG = 0 -> identification parfaite
    // funLTG = -1 -> no identification
@@ -133,7 +136,7 @@ Double_t KVTGIDManager::IdentZ(const Char_t* idtelescope_name, Double_t id_map_X
    fStatus = kStatus_OK;
 
    //get Z identification object from KVTGIDManager
-   KVTGID *_tgid = GetTGID(idtelescope_name, "Z", grid_type);
+   KVTGID* _tgid = GetTGID(idtelescope_name, "Z", grid_type);
 
    //if no identification object exists, return -1
    if (!_tgid) {
@@ -156,7 +159,7 @@ Double_t KVTGIDManager::IdentZ(const Char_t* idtelescope_name, Double_t id_map_X
    }
    //we need to lower and raise the limits in Z in order to pass the Eval(Zmin)*Eval(Zmax)<0
    //condition. E.G. for GG, Zmin=1, which means that any points below the Z=1 line are not
-   //identified, whereas we should allow Zreal between 0.5 and 1.5 
+   //identified, whereas we should allow Zreal between 0.5 and 1.5
    //also when several fits are used for different ranges of Z, often the ranges of validity
    //of two successive fits do not overlap, i.e. Z=1-5 in GG, then Z=6-20 in PG etc.
    //in this case somewhere in between Z=5 & Z=6 particles will be left unidentified
@@ -174,13 +177,13 @@ Double_t KVTGIDManager::IdentZ(const Char_t* idtelescope_name, Double_t id_map_X
 
 //______________________________________________________________________________
 
-Double_t KVTGIDManager::IdentA(const Char_t* idtelescope_name, Double_t id_map_X, Double_t id_map_Y, Double_t & funLTG,
-                               const Char_t * grid_type, Int_t Z)
+Double_t KVTGIDManager::IdentA(const Char_t* idtelescope_name, Double_t id_map_X, Double_t id_map_Y, Double_t& funLTG,
+                               const Char_t* grid_type, Int_t Z)
 {
    //Get A identification (we already know Z) for ID telescope idt using grid "grid_type".
-	//The "signal_type" argument is passed to GetIDMapX/Y(signal_type),
-	//in case "grid_type" and "signal_type" are not exactly the same.
-	//
+   //The "signal_type" argument is passed to GetIDMapX/Y(signal_type),
+   //in case "grid_type" and "signal_type" are not exactly the same.
+   //
    //funLTG is the ABSOLUTE value of the Tassan-Got function for the Z and the calculated
    //A i.e. in an ideal world it should equal zero. This gives an idea of the
    //quality of the identification.
@@ -195,7 +198,7 @@ Double_t KVTGIDManager::IdentA(const Char_t* idtelescope_name, Double_t id_map_X
       return -1.;
    }
    //get A identification object from KVTGIDManager
-   KVTGID *_tgid = GetTGID(idtelescope_name, "A", grid_type);
+   KVTGID* _tgid = GetTGID(idtelescope_name, "A", grid_type);
    //if no identification object exists, return -1
    if (!_tgid) {
       fStatus = kStatus_noTGID;
@@ -216,33 +219,28 @@ Double_t KVTGIDManager::IdentA(const Char_t* idtelescope_name, Double_t id_map_X
    if (Z == 1) {
       Amin = 1.;
       Amax = 3.;
-   }
-   else if(Z==2){
-   	Amin = 3;
-   	Amax = 8;
-   }
-   else if(Z==3){
-   	Amin = 6;
-   	Amax = 11;
-   }
-   else if(Z==4){
-   	Amin = 7;
-   	Amax = 14;
-   }
-   else if(Z==5){
-   	Amin = 8;
-   	Amax = 17;
-   }
-   else{
-   //formula for Amin reasonable for 6<Z<20
-   	Amin = TMath::Max((Z+1.), (1.8*(Z-2.)+1.));
-   	Amax = 2.*Z+8.;
+   } else if (Z == 2) {
+      Amin = 3;
+      Amax = 8;
+   } else if (Z == 3) {
+      Amin = 6;
+      Amax = 11;
+   } else if (Z == 4) {
+      Amin = 7;
+      Amax = 14;
+   } else if (Z == 5) {
+      Amin = 8;
+      Amax = 17;
+   } else {
+      //formula for Amin reasonable for 6<Z<20
+      Amin = TMath::Max((Z + 1.), (1.8 * (Z - 2.) + 1.));
+      Amax = 2.*Z + 8.;
    }
 
-	// same limit trick as in IdentZ
-	Amin -= 0.5;
-	Amax += 0.5;
-	
+   // same limit trick as in IdentZ
+   Amin -= 0.5;
+   Amax += 0.5;
+
    Afound = _tgid->GetIdentification(Amin, Amax, funLTG);
 
    if (_tgid->GetStatus() == KVTGID::kStatus_NotBetween_IDMin_IDMax)
@@ -253,10 +251,10 @@ Double_t KVTGIDManager::IdentA(const Char_t* idtelescope_name, Double_t id_map_X
 
 //___________________________________________________________________________________________//
 
-KVTGIDGrid *KVTGIDManager::GetTGIDGrid(KVTGID *tgid,
-                                     Double_t xmax, Double_t xmin,
-                                     Int_t ID_min, Int_t ID_max,
-                                     Int_t npoints, Bool_t logscale)
+KVTGIDGrid* KVTGIDManager::GetTGIDGrid(KVTGID* tgid,
+                                       Double_t xmax, Double_t xmin,
+                                       Int_t ID_min, Int_t ID_max,
+                                       Int_t npoints, Bool_t logscale)
 {
    //Generates and returns a pointer to a KVIDGrid object permitting to visualise the effective
    //identification lines represented by the Tassan-Got functional "tgid".
@@ -271,10 +269,10 @@ KVTGIDGrid *KVTGIDManager::GetTGIDGrid(KVTGID *tgid,
 }
 //___________________________________________________________________________________________//
 
-KVTGIDGrid *KVTGIDManager::GetTGIDGrid(const Char_t * tgid_name,
-                                     Double_t xmax, Double_t xmin,
-                                     Int_t ID_min, Int_t ID_max,
-                                     Int_t npoints, Bool_t logscale)
+KVTGIDGrid* KVTGIDManager::GetTGIDGrid(const Char_t* tgid_name,
+                                       Double_t xmax, Double_t xmin,
+                                       Int_t ID_min, Int_t ID_max,
+                                       Int_t npoints, Bool_t logscale)
 {
    //Generates and returns a pointer to a KVIDGrid object permitting to visualise the effective
    //identification lines represented by the Tassan-Got functional "tgid_name".
@@ -286,16 +284,16 @@ KVTGIDGrid *KVTGIDManager::GetTGIDGrid(const Char_t * tgid_name,
 
 //___________________________________________________________________________________________//
 
-KVTGIDGrid *KVTGIDManager::GetTGIDGrid(const Char_t * idt_name,
-                                     const Char_t * id_type,
-                                     const Char_t * grid_type,
-                                     Double_t xmax, Double_t xmin,
-                                     Int_t ID_min, Int_t ID_max,
-                                     Int_t npoints, Bool_t logscale)
+KVTGIDGrid* KVTGIDManager::GetTGIDGrid(const Char_t* idt_name,
+                                       const Char_t* id_type,
+                                       const Char_t* grid_type,
+                                       Double_t xmax, Double_t xmin,
+                                       Int_t ID_min, Int_t ID_max,
+                                       Int_t npoints, Bool_t logscale)
 {
    //Generates and returns a pointer to a KVIDGrid object permitting to visualise the effective
    //identification lines represented by the Tassan-Got functional of ID telescope "idt_name", of
-   //identification type "id_type", and identification grid type "grid_type". 
+   //identification type "id_type", and identification grid type "grid_type".
    //The KVIDGrid object must be deleted by the user.
    //See KVTGID::MakeIDGrid for meaning of other arguments.
 
@@ -305,7 +303,7 @@ KVTGIDGrid *KVTGIDManager::GetTGIDGrid(const Char_t * idt_name,
 
 //_______________________________________________________________________________________//
 
-const Char_t *KVTGIDManager::GetStatusString(ETGIDMStatus s) const
+const Char_t* KVTGIDManager::GetStatusString(ETGIDMStatus s) const
 {
    //Returns explanatory message for status code 's'
    //If no code argument is given, the status string corresponds to the current value

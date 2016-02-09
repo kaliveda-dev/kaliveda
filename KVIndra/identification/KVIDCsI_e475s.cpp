@@ -34,27 +34,29 @@ KVIDCsI_e475s::~KVIDCsI_e475s()
    // Destructor
 }
 
-void KVIDCsI_e475s::CalculateParticleEnergy(KVReconstructedNucleus * nuc)
+void KVIDCsI_e475s::CalculateParticleEnergy(KVReconstructedNucleus* nuc)
 {
-	
-	//status code
+
+   //status code
    fCalibStatus = kCalibStatus_NoCalibrations;
 
    UInt_t z = nuc->GetZ();
    //uncharged particles
-   if(z==0) { return; }
-	
-	// In e475s experiment no calibrations available for csi
+   if (z == 0) {
+      return;
+   }
+
+   // In e475s experiment no calibrations available for csi
    KVSeqCollection* ll = nuc->GetIDTelescopes();
-	// si il n y a ri1 avant le csi return pas de calibration possible
-	if (ll->GetEntries()==1) return;
-	
-	KVIDTelescope* idtel = 0;
-	//Appel au telescope precedent pour realiser la reconstruction en energie
-	if ( (idtel = (KVIDTelescope* )nuc->GetIDTelescopes()->At(1)) ){
-		idtel->CalculateParticleEnergy(nuc);
-		fCalibStatus = idtel->GetCalibStatus();
-	}
-	
-	return;
+   // si il n y a ri1 avant le csi return pas de calibration possible
+   if (ll->GetEntries() == 1) return;
+
+   KVIDTelescope* idtel = 0;
+   //Appel au telescope precedent pour realiser la reconstruction en energie
+   if ((idtel = (KVIDTelescope*)nuc->GetIDTelescopes()->At(1))) {
+      idtel->CalculateParticleEnergy(nuc);
+      fCalibStatus = idtel->GetCalibStatus();
+   }
+
+   return;
 }

@@ -8,59 +8,67 @@
 //class Binary_t;
 
 class Hexa_t {
- private:
+private:
    Long64_t fVal;
    static TString fPrefix;      //the prefix used to represent hexadecimal numbers as strings
 
- public:
-    Hexa_t();
-    Hexa_t(const Long64_t);
-    Hexa_t(const Char_t *);
-    virtual ~ Hexa_t() {
+public:
+   Hexa_t();
+   Hexa_t(const Long64_t);
+   Hexa_t(const Char_t*);
+   virtual ~ Hexa_t()
+   {
    };
    //_________________________________________//
 
-   static void SetPrefix(const Char_t * pref) {
+   static void SetPrefix(const Char_t* pref)
+   {
       fPrefix = pref;
    };
-   static const Char_t *GetPrefix() {
+   static const Char_t* GetPrefix()
+   {
       return fPrefix.Data();
    };
 
    void Set(const Long64_t);
    Long64_t Value() const;
-   void Set(const Char_t *);
-   const Char_t *String(UChar_t nbits = 0) const;
+   void Set(const Char_t*);
+   const Char_t* String(UChar_t nbits = 0) const;
 
    void SetBit(UChar_t, Long64_t = -1);
    void ResetBit(UChar_t);
    Bool_t TestBit(UChar_t);
 
-   Hexa_t & operator=(const Long64_t);
-   Hexa_t & operator=(const Char_t *);
+   Hexa_t& operator=(const Long64_t);
+   Hexa_t& operator=(const Char_t*);
 //      Hexa_t& operator=(const Binary_t&);
-   Hexa_t & operator=(const Hexa_t &);
+   Hexa_t& operator=(const Hexa_t&);
    //convertors
-   operator       Int_t() const {
+   operator       Int_t() const
+   {
       return (Int_t) Value();
    };
-   operator       Long64_t() const {
+   operator       Long64_t() const
+   {
       return Value();
    };
-   operator       Float_t() const {
+   operator       Float_t() const
+   {
       return (Float_t) Value();
    };
-   operator       Double_t() const {
+   operator       Double_t() const
+   {
       return (Double_t) Value();
    };
-   operator       const char *() const {
+   operator       const char* () const
+   {
       return String();
    };
 
-   Hexa_t operator+(const Hexa_t & b1);
+   Hexa_t operator+(const Hexa_t& b1);
 //      Hexa_t operator+(const Binary_t& b1);
    Hexa_t operator+(const Long64_t l1);
-   Hexa_t operator+(const Char_t * c1);
+   Hexa_t operator+(const Char_t* c1);
 
 //      Binary_t Binary() const;
 //      void TestBinary();

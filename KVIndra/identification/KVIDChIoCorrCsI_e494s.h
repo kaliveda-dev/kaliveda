@@ -6,16 +6,15 @@
 
 #include "KVIDChIoCorrCsI.h"
 
-class KVIDChIoCorrCsI_e494s : public KVIDChIoCorrCsI
-{
+class KVIDChIoCorrCsI_e494s : public KVIDChIoCorrCsI {
 
-   public:
+public:
    KVIDChIoCorrCsI_e494s();
    virtual ~KVIDChIoCorrCsI_e494s();
 
-   virtual Double_t GetIDMapY(Option_t *opt = "");
+   virtual Double_t GetIDMapY(Option_t* opt = "");
 
-   ClassDef(KVIDChIoCorrCsI_e494s,1)//ChIo-CsI identification with grids for E494S
+   ClassDef(KVIDChIoCorrCsI_e494s, 1) //ChIo-CsI identification with grids for E494S
 };
 
 #endif

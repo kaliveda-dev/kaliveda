@@ -20,26 +20,26 @@ class KVCalculateChIoSiGridDialog {
 
    RQ_OBJECT("KVCalculateChIoSiGridDialog")
 
-   TGTransientFrame *fMain;
-   TGHorizontalFrame *fHframe2;
-   TGLabel *fZmaxLabel;
-   TGNumberEntry *fZmax;
+   TGTransientFrame* fMain;
+   TGHorizontalFrame* fHframe2;
+   TGLabel* fZmaxLabel;
+   TGNumberEntry* fZmax;
 
-   TGHorizontalFrame *fHFa;
-   TGHorizontalFrame *fHFb;
-   TGHorizontalFrame *fHFc;
-   TGHorizontalFrame *fHFd;
+   TGHorizontalFrame* fHFa;
+   TGHorizontalFrame* fHFb;
+   TGHorizontalFrame* fHFc;
+   TGHorizontalFrame* fHFd;
 
-   TGCheckButton *fSetPHD;
-   TGNumberEntry *fPHDparam;
-   TGCheckButton *fSetPressure;
-   TGNumberEntry *fChIoPressure;
-   TGCheckButton *fSetPoints;
-   TGNumberEntry *fNumberPoints;
-   TGComboBox *fMassFormula;
-   TGTextButton *fCalculate;
-   TGTextButton *fApply;
-   TGTextButton *fCancel;
+   TGCheckButton* fSetPHD;
+   TGNumberEntry* fPHDparam;
+   TGCheckButton* fSetPressure;
+   TGNumberEntry* fChIoPressure;
+   TGCheckButton* fSetPoints;
+   TGNumberEntry* fNumberPoints;
+   TGComboBox* fMassFormula;
+   TGTextButton* fCalculate;
+   TGTextButton* fApply;
+   TGTextButton* fCancel;
 
    static Int_t zmax_grid;
    static Double_t phd_param;
@@ -62,14 +62,14 @@ class KVCalculateChIoSiGridDialog {
       NE_NPOINTS,
    };
 
-   KVIDGrid *fSelectedGrid;
+   KVIDGrid* fSelectedGrid;
 
- public:
+public:
 
-    KVCalculateChIoSiGridDialog(const TGWindow * p =
-                                0, const TGWindow * main = 0, UInt_t w =
-                                1, UInt_t h = 1, KVIDGrid * g = 0);
-    virtual ~ KVCalculateChIoSiGridDialog();
+   KVCalculateChIoSiGridDialog(const TGWindow* p =
+                                  0, const TGWindow* main = 0, UInt_t w =
+                                  1, UInt_t h = 1, KVIDGrid* g = 0);
+   virtual ~ KVCalculateChIoSiGridDialog();
 
    void DoClose();
    void CloseWindow();
@@ -83,7 +83,7 @@ class KVCalculateChIoSiGridDialog {
    void ReadNpoints();
    void ReadZmax();
    //void GetNominalChIoPressure();
-void SetMassFormula(Int_t mf);
+   void SetMassFormula(Int_t mf);
 
-    ClassDef(KVCalculateChIoSiGridDialog, 0)    //Dialog box for calculation of new chio-si grid in KVIDGridManagerGUI
+   ClassDef(KVCalculateChIoSiGridDialog, 0)    //Dialog box for calculation of new chio-si grid in KVIDGridManagerGUI
 };

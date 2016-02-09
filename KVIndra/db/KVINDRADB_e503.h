@@ -5,7 +5,7 @@ $Date: 2009/01/22 15:39:26 $
 */
 
 //Created by KVClassFactory on Wed Jan 21 13:44:30 2009
-//Author: Chbihi 
+//Author: Chbihi
 
 #ifndef __KVINDRADB_E503_H
 #define __KVINDRADB_E503_H
@@ -13,28 +13,27 @@ $Date: 2009/01/22 15:39:26 $
 #include "KVINDRADB.h"
 using namespace std;
 
-class KVINDRADB_e503 : public KVINDRADB
-{
+class KVINDRADB_e503 : public KVINDRADB {
 
-   protected:
+protected:
 
-	   KVDBTable *fDeltaPed;   //-> table of pedestal corrections
+   KVDBTable* fDeltaPed;   //-> table of pedestal corrections
 
    void init();
    virtual void ReadPedestalCorrection();
-   virtual void ReadDeltaPedestal(ifstream &ifile);
-   virtual void ReadVamosScalers () ;
-   virtual void ReadVamosBrhoAndAngle () ;
-   virtual void ReadPedestalList () ;
+   virtual void ReadDeltaPedestal(ifstream& ifile);
+   virtual void ReadVamosScalers() ;
+   virtual void ReadVamosBrhoAndAngle() ;
+   virtual void ReadPedestalList() ;
 
-   public:
+public:
    KVINDRADB_e503();
-   KVINDRADB_e503 (const Char_t *) ;
+   KVINDRADB_e503(const Char_t*) ;
    virtual ~KVINDRADB_e503();
 
-   void Build () ;
+   void Build() ;
 
-   ClassDef(KVINDRADB_e503,1)//Database for e503 & e494s experiments with VAMOS
+   ClassDef(KVINDRADB_e503, 1) //Database for e503 & e494s experiments with VAMOS
 };
 
 #endif

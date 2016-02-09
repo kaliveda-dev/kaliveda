@@ -42,7 +42,7 @@ KVINDRARunListReader::~KVINDRARunListReader()
    }
 }
 
-Bool_t KVINDRARunListReader::OpenRLFile(const Char_t * filename)
+Bool_t KVINDRARunListReader::OpenRLFile(const Char_t* filename)
 {
    //Open file 'filename' for reading.
    //Returns kTRUE if file can be opened (info message), kFALSE if not (error message)
@@ -97,15 +97,14 @@ Bool_t KVINDRARunListReader::ReadRLLine()
    if (!fRunsStream.good())
       return kFALSE;
 
-   if(fLine.BeginsWith("Version")){
+   if (fLine.BeginsWith("Version")) {
       //read version number in file
-      if(sscanf(fLine.Data(), "Version=%d", &fVersion)==1){
+      if (sscanf(fLine.Data(), "Version=%d", &fVersion) == 1) {
          //set flag to force reading runlist with new method
          fNewRunList = kTRUE;
          return kFALSE;
       }
-   }
-   else if (!fLine.BeginsWith(fComment)) {
+   } else if (!fLine.BeginsWith(fComment)) {
       fLineReader->SetLine(fLine);
       fLineReader->BreakLineIntoFields(fSeparator);
    } else {
@@ -115,7 +114,7 @@ Bool_t KVINDRARunListReader::ReadRLLine()
    return kTRUE;
 }
 
-void KVINDRARunListReader::ReadRunList(const Char_t * t)
+void KVINDRARunListReader::ReadRunList(const Char_t* t)
 {
    //This method will open the runlist file 't' and read its entire contents, calling user-overridable method "GoodRunLine(KVRunListLine*)"
    //every time a line defining a new run is read from the file.
@@ -151,7 +150,7 @@ void KVINDRARunListReader::ReadRunList(const Char_t * t)
       fLineReader->Clear();
       fCurrentLine++;
    }
-   
+
    //close run file
    CloseRLFile();
 }
@@ -165,8 +164,8 @@ void KVINDRARunListReader::GoodRunLine()
    fLineReader->Print();
 }
 
-Int_t KVINDRARunListReader::GetRunListTrigger(const Char_t * field,
-                                              const Char_t * fmt)
+Int_t KVINDRARunListReader::GetRunListTrigger(const Char_t* field,
+      const Char_t* fmt)
 {
    //Get trigger multiplicity for current line.
    //Give field name which contains trigger information and format string 'fmt' containing e.g. "M>=%d"

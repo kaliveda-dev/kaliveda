@@ -12,18 +12,17 @@ $Date: 2008/03/05 16:13:45 $
 
 #include "KVUpdateChecker.h"
 
-class KVCVSUpdateChecker : public KVUpdateChecker
-{
+class KVCVSUpdateChecker : public KVUpdateChecker {
 
-   public:
+public:
    KVCVSUpdateChecker();
    virtual ~KVCVSUpdateChecker();
 
-   virtual Bool_t NeedsUpdate(const Char_t* filename="");
-   
-   virtual void Update(const Char_t* filename="");
-   
-   ClassDef(KVCVSUpdateChecker,1)//Checks local sources against CVS version and updates if necessary
+   virtual Bool_t NeedsUpdate(const Char_t* filename = "");
+
+   virtual void Update(const Char_t* filename = "");
+
+   ClassDef(KVCVSUpdateChecker, 1) //Checks local sources against CVS version and updates if necessary
 };
 
 #endif

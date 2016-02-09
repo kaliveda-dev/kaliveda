@@ -44,7 +44,7 @@ ClassImp(KVINDRARunSheetReader)
 //
 //gIndraDB->GetRuns()->ls();// view runs stored in database
 //
-    KVINDRARunSheetReader::KVINDRARunSheetReader(Bool_t make_tree)
+KVINDRARunSheetReader::KVINDRARunSheetReader(Bool_t make_tree)
 {
    //Default ctor. If make_tree = kTRUE, a TTree will be created and filled with
    //data from runsheets.
@@ -58,21 +58,21 @@ void KVINDRARunSheetReader::init_vars()
 {
    //Set values of all runsheet/TTree variables to 0
    len_run = size = data_rate = acq_rate = trait_rate = ctrl_rate =
-       rempli_dlt_pc = temps_mort = 0.;
+         rempli_dlt_pc = temps_mort = 0.;
    run_num = buf_sav = eve_sav = eve_lus = buf_ctrl = eve_ctrl =
-       rempli_dlt_blocs = 0;
-   for(int i=0;i<100;i++) fScalers[i]=0;
+         rempli_dlt_blocs = 0;
+   for (int i = 0; i < 100; i++) fScalers[i] = 0;
 }
 
-const Char_t *KVINDRARunSheetReader::GetRunSheetFileName(Int_t run)
+const Char_t* KVINDRARunSheetReader::GetRunSheetFileName(Int_t run)
 {
    //Uses directory path and file format to create full path to runsheet
    //file for run number 'run'.
 
    TString filename;
    filename.Form(fFileFormat.Data(), run);
-   char *dirname =
-       gSystem->ConcatFileName(fRunSheetDir.Data(), filename.Data());
+   char* dirname =
+      gSystem->ConcatFileName(fRunSheetDir.Data(), filename.Data());
    fFilePath = dirname;
    delete[]dirname;
    return fFilePath.Data();
@@ -80,10 +80,10 @@ const Char_t *KVINDRARunSheetReader::GetRunSheetFileName(Int_t run)
 
 void KVINDRARunSheetReader::CreateTree()
 {
-   if(fTree) delete fTree;
+   if (fTree) delete fTree;
    fTree =
-       new TTree("RunInfoScalerTree",
-                 "Data from INDRA runsheets. Created by KVINDRARunSheetReader.");
+      new TTree("RunInfoScalerTree",
+                "Data from INDRA runsheets. Created by KVINDRARunSheetReader.");
    fTree->SetDirectory(gROOT);
    fTree->Branch("run", &run_num, "run/I");
    fTree->Branch("start", &istart, "start/I");
@@ -107,20 +107,20 @@ void KVINDRARunSheetReader::CreateTree()
 
 Bool_t KVINDRARunSheetReader::ReadRunSheet(Int_t run)
 {
-   //Read runsheet corresponding to run number 'run' 
+   //Read runsheet corresponding to run number 'run'
    //Store the informations we read in the runsheet in the run database.
    //Create TTree if required and if not already done
    //Return kTRUE if all goes well.
 
-      cout <<
-          "<KVINDRARunSheetReader::ReadRunSheet> : Reading runsheet for new run, Run "
-          << run << endl;
-   KVINDRADBRun *indra_db_run = gIndraDB->GetRun(run);
+   cout <<
+        "<KVINDRARunSheetReader::ReadRunSheet> : Reading runsheet for new run, Run "
+        << run << endl;
+   KVINDRADBRun* indra_db_run = gIndraDB->GetRun(run);
    if (!indra_db_run) {
       //create new run and add it to the database
       indra_db_run = new KVINDRADBRun(run);
       gIndraDB->AddRun(indra_db_run);
-   } 
+   }
 
    //open runsheet file
    ifstream read_file(GetRunSheetFileName(run));
@@ -134,7 +134,7 @@ Bool_t KVINDRARunSheetReader::ReadRunSheet(Int_t run)
    KVString line, dumstr;
 
    line.ReadLine(read_file);
-      
+
    //read all infos up to list of scalers (which begins with the line "*** Impression des Echelles :"
    while (read_file.good() && !line.Contains("Echelles")) {
 
@@ -196,29 +196,32 @@ Bool_t KVINDRARunSheetReader::ReadRunSheet(Int_t run)
          rempli_dlt_pc = GetNumberField(dumstr, " ", 0);
          rempli_dlt_blocs = (Int_t) GetNumberField(dumstr, " ", 3);
       }
- 
+
       //read next line
       line.ReadLine(read_file);
    }
-   if(line.Contains("Echelles")){
+   if (line.Contains("Echelles")) {
       //found beginning of scalers
       line.ReadLine(read_file);
       //find first scaler line
       while (read_file.good() && !line.Contains(":"))  line.ReadLine(read_file);
       //now read all scalers
-      while (read_file.good() && line.Contains(":")){
-         dumstr = GetStringField(line,":",0); dumstr.Remove(TString::kBoth, ' ');
+      while (read_file.good() && line.Contains(":")) {
+         dumstr = GetStringField(line, ":", 0);
+         dumstr.Remove(TString::kBoth, ' ');
          Int_t scaler = (Int_t)GetNumberField(line);
          //cout << "SCALER: \"" << dumstr.Data() << "\" = " << scaler << endl;
-         indra_db_run->SetScaler( dumstr.Data(), scaler );
+         indra_db_run->SetScaler(dumstr.Data(), scaler);
          line.ReadLine(read_file);
-         if(fMakeTree){
-            dumstr.ReplaceAll(" ","_"); dumstr.ReplaceAll("-","_");
-            TBranch* br_sca = fTree->FindBranch( dumstr.Data() ); Int_t index;
+         if (fMakeTree) {
+            dumstr.ReplaceAll(" ", "_");
+            dumstr.ReplaceAll("-", "_");
+            TBranch* br_sca = fTree->FindBranch(dumstr.Data());
+            Int_t index;
             //do we need to add a branch for this scaler ?
-            if(!br_sca){
+            if (!br_sca) {
                index = fTree->GetListOfBranches()->GetEntries();
-               br_sca = fTree->Branch( dumstr.Data(), &fScalers[index], Form("%s/I", dumstr.Data()));
+               br_sca = fTree->Branch(dumstr.Data(), &fScalers[index], Form("%s/I", dumstr.Data()));
                //cout << "br_sca = fTree->Branch( \"" <<dumstr.Data()<<"\", &fScalers["<<index<<"], "<<Form("%s/I", dumstr.Data())<<");"<<endl;
             } else {
                index = fTree->GetListOfBranches()->IndexOf(br_sca);
@@ -228,7 +231,7 @@ Bool_t KVINDRARunSheetReader::ReadRunSheet(Int_t run)
             //cout << "fScalers["<<index<<"] = "<<scaler<<";"<<endl;
          }
       }
-   }   
+   }
    //in case events sauves = buffers sauves = 0, we use events lus & buffers ctrl
    if (eve_sav == 0)
       indra_db_run->SetEvents(eve_lus);
@@ -251,48 +254,48 @@ Bool_t KVINDRARunSheetReader::ReadRunSheet(Int_t run)
 
 //_______________________________________________________________________________________________//
 
-Double_t KVINDRARunSheetReader::GetNumberField(TString & line,
-                                               const Char_t * delim,
-                                               int index)
+Double_t KVINDRARunSheetReader::GetNumberField(TString& line,
+      const Char_t* delim,
+      int index)
 {
    //Split line according to delimiter.
-   //Return the index-th element (index = 0, 1, 2, ...) as a Double_t 
-   TObjArray *toks = line.Tokenize(delim);
-   KVString val = ((TObjString *) toks->At(index))->GetString();
+   //Return the index-th element (index = 0, 1, 2, ...) as a Double_t
+   TObjArray* toks = line.Tokenize(delim);
+   KVString val = ((TObjString*) toks->At(index))->GetString();
    delete toks;
    return val.Atof();
 }
 
 //_______________________________________________________________________________________________//
 
-const Char_t *KVINDRARunSheetReader::GetStringField(TString & line,
-                                                    const Char_t * delim,
-                                                    int index)
+TString KVINDRARunSheetReader::GetStringField(TString& line,
+      const Char_t* delim,
+      int index)
 {
    //Split line according to delimiter.
    //Return the index-th element (index = 0, 1, 2, ...) as a string
-   TObjArray *toks = line.Tokenize(delim);
-   TString val = ((TObjString *) toks->At(index))->GetString();
+   TObjArray* toks = line.Tokenize(delim);
+   TString val = ((TObjString*) toks->At(index))->GetString();
    delete toks;
    return val;
 }
 
 //_______________________________________________________________________________________________//
 
-const Char_t *KVINDRARunSheetReader::GetDateField(TString & line,
-                                                  const Char_t * delim)
+TString KVINDRARunSheetReader::GetDateField(TString& line,
+      const Char_t* delim)
 {
    //Special case of GetStringField for date-strings with ':' used in between hours, minutes, seconds.
    //If ':' is also the delimiter of the string, we need to stick the time back together.
-   TObjArray *toks = line.Tokenize(delim);
+   TObjArray* toks = line.Tokenize(delim);
 
    TString date =
-       ((TObjString *) toks->At(1))->GetString().Strip(TString::kLeading,
-                                                       ' ');
-   if (!strcmp(delim,":")) {
+      ((TObjString*) toks->At(1))->GetString().Strip(TString::kLeading,
+            ' ');
+   if (!strcmp(delim, ":")) {
       for (int i = 2; i < toks->GetEntries(); i++) {
          date += ":";
-         date += ((TObjString *) toks->At(i))->GetString();
+         date += ((TObjString*) toks->At(i))->GetString();
       }
    }
    delete toks;
@@ -310,8 +313,8 @@ Int_t KVINDRARunSheetReader::ReadAllRunSheets(Int_t first, Int_t last)
 
    Int_t n_lus = 0;             //number of run sheets read
 
-   if(fMakeTree) CreateTree();
-   
+   if (fMakeTree) CreateTree();
+
    for (int run = first; run <= last; run++) {
 
       //Check run sheet file exists - if not, skip run
@@ -321,6 +324,6 @@ Int_t KVINDRARunSheetReader::ReadAllRunSheets(Int_t first, Int_t last)
       n_lus += (Int_t) ReadRunSheet(run);
    }
 
-   if(fMakeTree) fTree->Print();
+   if (fMakeTree) fTree->Print();
    return n_lus;
 }

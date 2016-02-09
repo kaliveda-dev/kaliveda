@@ -13,16 +13,16 @@ ClassImp(KVNewGridRRMDialog)
 //////////////////////////////////////////
 // KVNewGridRRMDialog
 //////////////////////////////////////////
-KVNewGridRRMDialog::KVNewGridRRMDialog():KVNewGridDialog()
+KVNewGridRRMDialog::KVNewGridRRMDialog(): KVNewGridDialog()
 {
    //Default ctor. Do nothing.
 }
 
-KVNewGridRRMDialog::KVNewGridRRMDialog(const TGWindow * p,
-                                       const TGWindow * main, UInt_t w,
-                                       UInt_t h, Option_t * dialog_type,
-                                       KVIDGraph * g)
-:KVNewGridDialog()
+KVNewGridRRMDialog::KVNewGridRRMDialog(const TGWindow* p,
+                                       const TGWindow* main, UInt_t w,
+                                       UInt_t h, Option_t* dialog_type,
+                                       KVIDGraph* g)
+   : KVNewGridDialog()
 {
    //Dialog box for grid derived from KVINDRARRMValidator (with lists of runs, rings and modules).
    //We use text entry widgets to handle these lists, instead of the "min" and "max" number entry
@@ -57,20 +57,20 @@ KVNewGridRRMDialog::KVNewGridRRMDialog(const TGWindow * p,
    map_interface(dialog_type);
 }
 
-void KVNewGridRRMDialog::set_selected_grid(KVIDGraph * g)
+void KVNewGridRRMDialog::set_selected_grid(KVIDGraph* g)
 {
    //Make sure selected grid is of right type i.e. inherits from KVINDRARRMValidator, otherwise return with error message
    fSelectedGrid = g;
    if (!g->InheritsFrom("KVINDRARRMValidator")) {
       cout << "Error in KVNewGridRRMDialog ctor:" << endl;
       cout <<
-          "This dialogue box can only be used with grids derived from KVINDRARRMValidator"
-          << endl;
+           "This dialogue box can only be used with grids derived from KVINDRARRMValidator"
+           << endl;
       fSelectedGrid = 0;        // will force exit from base class ctor, dialogue box will not be built
       return;
    }
    //get pointer to RRMValidator part of grid (for access to GetRunList(), GetRingList(), GetModuleList() methods)
-   fRRMGrid = dynamic_cast < KVINDRARRMValidator * >(g);
+   fRRMGrid = dynamic_cast < KVINDRARRMValidator* >(g);
 }
 
 void KVNewGridRRMDialog::layout_parameter_control_widgets()
@@ -82,7 +82,7 @@ void KVNewGridRRMDialog::layout_parameter_control_widgets()
    _set_choose_mods(!fRRMGrid->GetModuleList().IsEmpty());
    _set_choose_runs(!fRRMGrid->GetRunList().IsEmpty());
    if (fSelectedGrid->GetXScaleFactor() != 1.0
-       || fSelectedGrid->GetYScaleFactor() != 1.0) {
+         || fSelectedGrid->GetYScaleFactor() != 1.0) {
       _set_choose_scales(kTRUE);
       _set_scale_x(fSelectedGrid->GetXScaleFactor());
       _set_scale_y(fSelectedGrid->GetYScaleFactor());
@@ -99,9 +99,9 @@ void KVNewGridRRMDialog::layout_parameter_control_widgets()
                      "SelectRuns(Bool_t)");
    fRunList = new TGTextEntry(fHFRuns, fRRMGrid->GetRunList().AsString());
    fRunList->
-       SetToolTipText
-       ("Enter a list of runs for which grid is valid, i.e. \"1000-1009, 1011, 984-999\"",
-        200);
+   SetToolTipText
+   ("Enter a list of runs for which grid is valid, i.e. \"1000-1009, 1011, 984-999\"",
+    200);
    fRunList->SetWidth(300);
    fHFRuns->AddFrame(fSetRuns,
                      new TGLayoutHints(kLHintsCenterX, 2, 2, 2, 2));
@@ -109,7 +109,7 @@ void KVNewGridRRMDialog::layout_parameter_control_widgets()
                      new TGLayoutHints(kLHintsCenterX, 2, 2, 2, 2));
    fMatrixFrame->AddFrame(fHFRuns,
                           new TGLayoutHints(kLHintsTop | kLHintsLeft, 5, 5,
-                                            5, 2));
+                                5, 2));
    //**************Select ring numbers************
    fHFRings = new TGHorizontalFrame(fMatrixFrame);
    fSetRings = new TGCheckButton(fHFRings, "Set rings :", CHK_BUT_RINGS);
@@ -118,11 +118,11 @@ void KVNewGridRRMDialog::layout_parameter_control_widgets()
    fSetRings->Connect("Toggled(Bool_t)", "KVNewGridRRMDialog", this,
                       "SelectRings(Bool_t)");
    fRingList =
-       new TGTextEntry(fHFRings, fRRMGrid->GetRingList().AsString());
+      new TGTextEntry(fHFRings, fRRMGrid->GetRingList().AsString());
    fRingList->
-       SetToolTipText
-       ("Enter a list of rings for which grid is valid, i.e. \"2-3, 5, 8-9\"",
-        200);
+   SetToolTipText
+   ("Enter a list of rings for which grid is valid, i.e. \"2-3, 5, 8-9\"",
+    200);
    fRingList->SetWidth(300);
    fHFRings->AddFrame(fSetRings,
                       new TGLayoutHints(kLHintsCenterX, 2, 2, 2, 2));
@@ -130,7 +130,7 @@ void KVNewGridRRMDialog::layout_parameter_control_widgets()
                       new TGLayoutHints(kLHintsCenterX, 2, 2, 2, 2));
    fMatrixFrame->AddFrame(fHFRings,
                           new TGLayoutHints(kLHintsTop | kLHintsLeft, 5, 5,
-                                            5, 2));
+                                5, 2));
 
    //**************Select module numbers************
    fHFModules = new TGHorizontalFrame(fMatrixFrame);
@@ -140,11 +140,11 @@ void KVNewGridRRMDialog::layout_parameter_control_widgets()
    fSetMods->Connect("Toggled(Bool_t)", "KVNewGridRRMDialog", this,
                      "SelectMods(Bool_t)");
    fModList =
-       new TGTextEntry(fHFModules, fRRMGrid->GetModuleList().AsString());
+      new TGTextEntry(fHFModules, fRRMGrid->GetModuleList().AsString());
    fModList->
-       SetToolTipText
-       ("Enter a list of modules for which grid is valid, i.e. \"1-5, 11, 21-23\"",
-        200);
+   SetToolTipText
+   ("Enter a list of modules for which grid is valid, i.e. \"1-5, 11, 21-23\"",
+    200);
    fModList->SetWidth(300);
    fHFModules->AddFrame(fSetMods,
                         new TGLayoutHints(kLHintsCenterX, 2, 2, 2, 2));
@@ -152,7 +152,7 @@ void KVNewGridRRMDialog::layout_parameter_control_widgets()
                         new TGLayoutHints(kLHintsCenterX, 2, 2, 2, 2));
    fMatrixFrame->AddFrame(fHFModules,
                           new TGLayoutHints(kLHintsTop | kLHintsLeft, 5, 5,
-                                            5, 2));
+                                5, 2));
 
    //**************Scaling factors************
    fHFScales = new TGHorizontalFrame(fMatrixFrame);
@@ -164,13 +164,13 @@ void KVNewGridRRMDialog::layout_parameter_control_widgets()
    fScaleMinLabel = new TGLabel(fHFScales, "X factor");
    fScaleMaxLabel = new TGLabel(fHFScales, "Y factor");
    fScaleMin =
-       new TGNumberEntry(fHFScales, _scale_x(), 5, NE_SCALE_X,
-                         TGNumberFormat::kNESReal,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHFScales, _scale_x(), 5, NE_SCALE_X,
+                        TGNumberFormat::kNESReal,
+                        TGNumberFormat::kNEAPositive);
    fScaleMax =
-       new TGNumberEntry(fHFScales, _scale_y(), 5, NE_SCALE_Y,
-                         TGNumberFormat::kNESReal,
-                         TGNumberFormat::kNEAPositive);
+      new TGNumberEntry(fHFScales, _scale_y(), 5, NE_SCALE_Y,
+                        TGNumberFormat::kNESReal,
+                        TGNumberFormat::kNEAPositive);
 
    fHFScales->AddFrame(fSetScales,
                        new TGLayoutHints(kLHintsLeft, 2, 2, 2, 2));
@@ -184,7 +184,7 @@ void KVNewGridRRMDialog::layout_parameter_control_widgets()
                        new TGLayoutHints(kLHintsLeft, 2, 2, 2, 2));
    fMatrixFrame->AddFrame(fHFScales,
                           new TGLayoutHints(kLHintsTop | kLHintsCenterX, 1,
-                                            1, 1, 1));
+                                1, 1, 1));
 
    fMain->AddFrame(fMatrixFrame,
                    new TGLayoutHints(kLHintsCenterX | kLHintsTop, 10, 5,
@@ -237,10 +237,10 @@ void KVNewGridRRMDialog::ReadMods()
    fModListString = fModList->GetText();
 }
 
-void KVNewGridRRMDialog::ReadAndSetSelectedGridProperties(KVIDGraph * grid)
+void KVNewGridRRMDialog::ReadAndSetSelectedGridProperties(KVIDGraph* grid)
 {
-   KVINDRARRMValidator *RRMGrid =
-       dynamic_cast < KVINDRARRMValidator * >(grid);
+   KVINDRARRMValidator* RRMGrid =
+      dynamic_cast < KVINDRARRMValidator* >(grid);
    if (_choose_rings()) {
       RRMGrid->GetRingList().SetList(fRingListString);
    } else {

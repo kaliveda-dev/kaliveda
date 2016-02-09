@@ -40,7 +40,7 @@ ClassImp(KVDataSetManager)
 //One can then access the corresponding dataset manager through gDataSetManager.
 //
 
-KVDataSetManager *gDataSetManager;
+KVDataSetManager* gDataSetManager;
 
 KVDataSetManager::KVDataSetManager()
 {
@@ -60,7 +60,7 @@ KVDataSetManager::~KVDataSetManager()
       delete[]fIndex;
 }
 
-Bool_t KVDataSetManager::Init(KVDataRepository * dr)
+Bool_t KVDataSetManager::Init(KVDataRepository* dr)
 {
    //Initialisation of dataset manager for the repository 'dr'.
    //If dr=0x0 (default) then all known datasets are 'available', otherwise
@@ -80,18 +80,18 @@ Bool_t KVDataSetManager::Init(KVDataRepository * dr)
       return kFALSE;
 
    //use caching for dataset availability ?
-   if(dr){
-      fCacheAvailable = gEnv->GetValue( Form("%s.DataRepository.CacheAvailable", dr->GetName()),
-         kFALSE );
-      fMaxCacheTime = (UInt_t)gEnv->GetValue( Form("%s.DataRepository.MaxCacheTime", dr->GetName()),
-         0 );
+   if (dr) {
+      fCacheAvailable = gEnv->GetValue(Form("%s.DataRepository.CacheAvailable", dr->GetName()),
+                                       kFALSE);
+      fMaxCacheTime = (UInt_t)gEnv->GetValue(Form("%s.DataRepository.MaxCacheTime", dr->GetName()),
+                                             0);
    }
    //name of cache file
-   if(dr) fCacheFileName.Form("%s.available.datasets", dr->GetName());
-   
+   if (dr) fCacheFileName.Form("%s.available.datasets", dr->GetName());
+
    //check which datasets are available
    CheckAvailability();
-   if(!GetNavailable() && dr && dr->IsRemote()) return kFALSE;
+   if (!GetNavailable() && dr && dr->IsRemote()) return kFALSE;
 
    if (!ReadTaskList())
       return kFALSE;
@@ -103,8 +103,8 @@ Bool_t KVDataSetManager::Init(KVDataRepository * dr)
    }
 
    // stand-alone dataset manager: make it the default
-   if(!dr) gDataSetManager  = this;
-   
+   if (!dr) gDataSetManager  = this;
+
    return kTRUE;
 }
 
@@ -115,21 +115,21 @@ void KVDataSetManager::ReadUserGroups()
 
    //UserGroups env var contains whitespace-separated list of group names
    TString groups = gEnv->GetValue("UserGroup", "");
-   if (groups == ""){
+   if (groups == "") {
       cout << "No value for UserGroup" << endl;
       return;
    }
    //split into array of group names
-   TObjArray *toks = groups.Tokenize(' ');
-   TObjString *group_name;
+   TObjArray* toks = groups.Tokenize(' ');
+   TObjString* group_name;
    TIter next_name(toks);
    fUserGroups.Clear();
-   while ((group_name = (TObjString *) next_name())) {
+   while ((group_name = (TObjString*) next_name())) {
       //for each group_name, the env var 'group_name.Users' contains a whitespace-separated list of user names
       //we store this string in the fUserGroups parameter list with parameter name 'group_name'
       TString users =
-          gEnv->
-          GetValue(Form("%s.Users", group_name->String().Data()), "");
+         gEnv->
+         GetValue(Form("%s.Users", group_name->String().Data()), "");
       fUserGroups.SetValue(group_name->String().Data(), users);
    }
    delete toks;
@@ -144,22 +144,23 @@ Bool_t KVDataSetManager::ReadDataSetList()
 
    fDataSets.Clear();
 
-   TObjArray *manips = manip_list.Tokenize(" ");
-   TIter next(manips); TObjString* manip;
-   while ( (manip = (TObjString*)next()) ) {
+   TObjArray* manips = manip_list.Tokenize(" ");
+   TIter next(manips);
+   TObjString* manip;
+   while ((manip = (TObjString*)next())) {
 
-         KVDataSet *ds = NewDataSet();
-         ds->SetName(manip->GetString().Data());
-         ds->SetTitle( gEnv->GetValue( Form("%s.DataSet.Title", manip->GetString().Data()), "Experimental dataset" ) );
-         ds->SetDataPathSubdir( gEnv->GetValue( Form("%s.DataSet.RepositoryDir", manip->GetString().Data()), manip->GetString().Data() ) );
-         ds->SetUserGroups( gEnv->GetValue( Form("%s.DataSet.UserGroup", manip->GetString().Data()), "") );
-         ds->SetRepository(fRepository);
-         fDataSets.Add(ds);
+      KVDataSet* ds = NewDataSet();
+      ds->SetName(manip->GetString().Data());
+      ds->SetTitle(gEnv->GetValue(Form("%s.DataSet.Title", manip->GetString().Data()), "Experimental dataset"));
+      ds->SetDataPathSubdir(gEnv->GetValue(Form("%s.DataSet.RepositoryDir", manip->GetString().Data()), manip->GetString().Data()));
+      ds->SetUserGroups(gEnv->GetValue(Form("%s.DataSet.UserGroup", manip->GetString().Data()), ""));
+      ds->SetRepository(fRepository);
+      fDataSets.Add(ds);
 
    }
 
    delete manips;
-   
+
    return kTRUE;
 }
 
@@ -169,32 +170,33 @@ Bool_t KVDataSetManager::ReadTaskList()
    //(and user's .kvrootrc)
 
    KVString task_list = gEnv->GetValue("DataAnalysisTask", "");
-   
+
    fTasks.Clear();
 
-   TObjArray *tasks = task_list.Tokenize(" ");
-   TIter next(tasks); TObjString* task;
-   while ( (task = (TObjString*)next()) ) {
+   TObjArray* tasks = task_list.Tokenize(" ");
+   TIter next(tasks);
+   TObjString* task;
+   while ((task = (TObjString*)next())) {
 
-         KVDataAnalysisTask *dat = new KVDataAnalysisTask;
-         TString name = task->GetString();
-         dat->SetName( name.Data() );
-         dat->SetTitle( gEnv->GetValue( Form("%s.DataAnalysisTask.Title", name.Data()), "") );
-         dat->SetPrereq( gEnv->GetValue( Form("%s.DataAnalysisTask.Prereq", name.Data()), "") );
-         dat->SetDataAnalyser( gEnv->GetValue( Form("%s.DataAnalysisTask.Analyser", name.Data()), "KVDataAnalyser") );
-         dat->SetWithUserClass( gEnv->GetValue( Form("%s.DataAnalysisTask.UserClass", name.Data()), kFALSE) );
-         dat->SetUserBaseClass( gEnv->GetValue( Form("%s.DataAnalysisTask.UserClass.Base", name.Data()), "") );
-         dat->SetStatusUpdateInterval( gEnv->GetValue( Form("%s.DataAnalysisTask.StatusUpdateInterval", name.Data()), 1000) );
-         fTasks.Add(dat);
+      KVDataAnalysisTask* dat = new KVDataAnalysisTask;
+      TString name = task->GetString();
+      dat->SetName(name.Data());
+      dat->SetTitle(gEnv->GetValue(Form("%s.DataAnalysisTask.Title", name.Data()), ""));
+      dat->SetPrereq(gEnv->GetValue(Form("%s.DataAnalysisTask.Prereq", name.Data()), ""));
+      dat->SetDataAnalyser(gEnv->GetValue(Form("%s.DataAnalysisTask.Analyser", name.Data()), "KVDataAnalyser"));
+      dat->SetWithUserClass(gEnv->GetValue(Form("%s.DataAnalysisTask.UserClass", name.Data()), kFALSE));
+      dat->SetUserBaseClass(gEnv->GetValue(Form("%s.DataAnalysisTask.UserClass.Base", name.Data()), ""));
+      dat->SetStatusUpdateInterval(gEnv->GetValue(Form("%s.DataAnalysisTask.StatusUpdateInterval", name.Data()), 1000));
+      fTasks.Add(dat);
 
    }
-   
+
    delete tasks;
-   
+
    return kTRUE;
 }
 
-void KVDataSetManager::Print(Option_t * opt) const
+void KVDataSetManager::Print(Option_t* opt) const
 {
    //Print list of datasets
    //If opt="" (default) all datasets are shown with full information
@@ -206,11 +208,11 @@ void KVDataSetManager::Print(Option_t * opt) const
    if (Sopt.BeginsWith("AVAIL")) {
       if (!fNavailable) {
          cout << "                    *** No available datasets ***" <<
-             endl;
+              endl;
          return;
       } else {
          for (int i = 1; i <= fNavailable; i++) {
-            KVDataSet *ds = GetAvailableDataSet(i);
+            KVDataSet* ds = GetAvailableDataSet(i);
             cout << "\t" << i << ". " << ds->GetTitle() << endl;
          }
       }
@@ -218,8 +220,8 @@ void KVDataSetManager::Print(Option_t * opt) const
    }
    if (fDataSets.GetSize()) {
       TIter next(&fDataSets);
-      KVDataSet *ds;
-      while ((ds = (KVDataSet *) next()))
+      KVDataSet* ds;
+      while ((ds = (KVDataSet*) next()))
          ds->ls();
    }
 }
@@ -246,18 +248,18 @@ void KVDataSetManager::CheckAvailability()
    //If the repository appears to be empty (perhaps because we are using a remote access
    //protocol to check it, and the protocol has some problems...), then as a last resort we
    //we will use the cache if it exists, whatever its age.
-   
-   if( fCacheAvailable ) {
+
+   if (fCacheAvailable) {
       //caching of dataset availability is activated
-      if( CheckCacheStatus() ) {
+      if (CheckCacheStatus()) {
          //cache file exists and is not out of date
-         if( ReadAvailableDatasetsFile() ) return;  
+         if (ReadAvailableDatasetsFile()) return;
       }
    }
-   
+
    // print (repository-dependent) warning/informational message
-   if(fRepository) fRepository->PrintAvailableDatasetsUpdateWarning();
-   
+   if (fRepository) fRepository->PrintAvailableDatasetsUpdateWarning();
+
    //open temporary file
    ofstream tmp_file;
    TString tmp_file_path = fCacheFileName;
@@ -266,8 +268,8 @@ void KVDataSetManager::CheckAvailability()
    fNavailable = 0;
    if (fDataSets.GetSize()) {
       TIter next(&fDataSets);
-      KVDataSet *ds;
-      while ((ds = (KVDataSet *) next())) {
+      KVDataSet* ds;
+      while ((ds = (KVDataSet*) next())) {
          //The results of this check are written in $KVROOT/KVFiles/[repository name].available.datasets
          //This file may be read by KVRemoteDataSetManager::CheckAvailability when this
          //data repository is accessed as a remote data repository from a remote machine.
@@ -287,23 +289,21 @@ void KVDataSetManager::CheckAvailability()
       //if datasets are found, then we copy the temporary file to KVFiles directory,
       //overwriting any previous version. if no datasets were found, we try the cache
       //file (if it exists)
-      if(fNavailable && fRepository){//if no repository is associated, no need to keep file
-         TString runlist=KVBase::GetWORKDIRFilePath(fCacheFileName.Data());
+      if (fNavailable && fRepository) { //if no repository is associated, no need to keep file
+         TString runlist = KVBase::GetWORKDIRFilePath(fCacheFileName.Data());
          gSystem->CopyFile(tmp_file_path, runlist, kTRUE);
          //set access permissions to 664
-         gSystem->Chmod(runlist.Data(), CHMODE(6,6,4));
+         gSystem->Chmod(runlist.Data(), CHMODE(6, 6, 4));
       }
-      
+
       //delete temp file
       gSystem->Unlink(tmp_file_path);
-      
-      if(!fNavailable){
+
+      if (!fNavailable) {
          //no datasets found when checking file system ?
          //can we rely on the cache file ?
          ReadAvailableDatasetsFile();
-      }
-      else
-      {
+      } else {
          //now set up array of available datasets' indices
          if (fIndex)
             delete[]fIndex;
@@ -311,7 +311,7 @@ void KVDataSetManager::CheckAvailability()
          next.Reset();
          Int_t i, j;
          i = j = 0;
-         while ((ds = (KVDataSet *) next())) {
+         while ((ds = (KVDataSet*) next())) {
             if (ds->IsAvailable()) {
                fIndex[i] = j;
                i++;
@@ -324,21 +324,21 @@ void KVDataSetManager::CheckAvailability()
 
 //_____________________________________________________________________________//
 
-KVDataSet *KVDataSetManager::GetDataSet(Int_t index) const
+KVDataSet* KVDataSetManager::GetDataSet(Int_t index) const
 {
    //Return pointer to DataSet using index in list of all datasets, index>=0
    if (fDataSets.GetSize() && index < fDataSets.GetSize())
-      return (KVDataSet *) fDataSets.At(index);
+      return (KVDataSet*) fDataSets.At(index);
    return 0;
 }
 
-KVDataSet *KVDataSetManager::GetDataSet(const Char_t * name)
+KVDataSet* KVDataSetManager::GetDataSet(const Char_t* name)
 {
    //Return pointer to DataSet using name
-   return (KVDataSet *) fDataSets.FindObjectByName(name);
+   return (KVDataSet*) fDataSets.FindObjectByName(name);
 }
 
-KVDataSet *KVDataSetManager::GetAvailableDataSet(Int_t index) const
+KVDataSet* KVDataSetManager::GetAvailableDataSet(Int_t index) const
 {
    //Return pointer to available DataSet using index of available datasets
    //Note this index begins at 1, and corresponds to the number printed next to the dataset
@@ -348,21 +348,21 @@ KVDataSet *KVDataSetManager::GetAvailableDataSet(Int_t index) const
    return 0;
 }
 
-KVDataAnalysisTask *KVDataSetManager::GetTask(const Char_t * name)
+KVDataAnalysisTask* KVDataSetManager::GetTask(const Char_t* name)
 {
    //Return pointer to named data analysis task
-   return (KVDataAnalysisTask *) fTasks.FindObjectByName(name);
+   return (KVDataAnalysisTask*) fTasks.FindObjectByName(name);
 }
 
-Bool_t KVDataSetManager::CheckUser(const Char_t * groupname,
-                                   const Char_t * username)
+Bool_t KVDataSetManager::CheckUser(const Char_t* groupname,
+                                   const Char_t* username)
 {
    //Check in list of groups fUserGroups if the user name 'username' is part of the group 'groupname'.
    //If 'username' is not given (default) we use current user info (gSystem->GetUserInof()->fUser).
 
    TString Username = strcmp(username,
                              "") ? username : gSystem->GetUserInfo()->
-       fUser.Data();
+                      fUser.Data();
 
    if (fUserGroups.HasParameter(groupname)) {
       if (fUserGroups.GetTStringValue(groupname).Contains(Username.Data()))
@@ -371,7 +371,7 @@ Bool_t KVDataSetManager::CheckUser(const Char_t * groupname,
    return kFALSE;
 }
 
-KVDataSet *KVDataSetManager::NewDataSet()
+KVDataSet* KVDataSetManager::NewDataSet()
 {
    //Creates and returns pointer to new data set object
    return (new KVDataSet);
@@ -399,9 +399,9 @@ Bool_t KVDataSetManager::OpenAvailableDatasetsFile()
    //containing cached info on available datasets and
    //associated subdirectories in data repository.
    //Opens file for reading, & if all goes well returns kTRUE.
-   //Returns kFALSE in case of problems.   
+   //Returns kFALSE in case of problems.
 
-   return KVBase::SearchAndOpenKVFile( KVBase::GetWORKDIRFilePath(fCacheFileName), fDatasets);
+   return KVBase::SearchAndOpenKVFile(KVBase::GetWORKDIRFilePath(fCacheFileName), fDatasets);
 }
 
 Bool_t KVDataSetManager::ReadAvailableDatasetsFile()
@@ -410,30 +410,30 @@ Bool_t KVDataSetManager::ReadAvailableDatasetsFile()
    //the availability of the concerned datasets.
    //Returns kTRUE if all goes well.
    //Returns kFALSE if no cache exists or if file cannot be opened.
-   if(OpenAvailableDatasetsFile()){
+   if (OpenAvailableDatasetsFile()) {
       Info("ReadAvailableDataSetsFile",
-            "Reading cached information in file %s", fCacheFileName.Data());
+           "Reading cached information in file %s", fCacheFileName.Data());
       //read file
       TString line;
       line.ReadLine(fDatasets);
       while (fDatasets.good()) {
 
-         TObjArray *toks = line.Tokenize(": ,");
+         TObjArray* toks = line.Tokenize(": ,");
 
          //first entry is dataset name
-         TString datasetname = ((TObjString *) toks->At(0))->String();
-         KVDataSet *dataset = GetDataSet(datasetname.Data());
+         TString datasetname = ((TObjString*) toks->At(0))->String();
+         KVDataSet* dataset = GetDataSet(datasetname.Data());
 
-         if(dataset) { //check dataset is known to local version of KaliVeda
-                              //in case of remote repository, there may be datasets in the remote repository which are not defined here
+         if (dataset) { //check dataset is known to local version of KaliVeda
+            //in case of remote repository, there may be datasets in the remote repository which are not defined here
             if (toks->GetEntries() > 1 && dataset->CheckUserCanAccess()) {
                //AVAILABLE DATASET
                dataset->SetAvailable();
                fNavailable++;
                for (register int i = 1; i < toks->GetEntries(); i++) {
                   //each following entry is a subdirectory name
-                  dataset->AddAvailableDataType(((TObjString *) toks->At(i))->String().
-                               Data());
+                  dataset->AddAvailableDataType(((TObjString*) toks->At(i))->String().
+                                                Data());
                }
             } else {
                //UNAVAILABLE DATASET (no subdirs)
@@ -457,8 +457,8 @@ Bool_t KVDataSetManager::ReadAvailableDatasetsFile()
          fIndex = new Int_t[fNavailable];
          Int_t i, j;
          i = j = 0;
-         KVDataSet *ds;
-         while ((ds = (KVDataSet *) next())) {
+         KVDataSet* ds;
+         while ((ds = (KVDataSet*) next())) {
             if (ds->IsAvailable()) {
                fIndex[i] = j;
                i++;
@@ -480,26 +480,24 @@ Bool_t KVDataSetManager::CheckCacheStatus()
    //We check the status of the available datasets cache file.
    //We return kTRUE if the file exists & was last modified
    //less than fMaxCacheTime seconds ago.
-   
+
    TString fullpath;
    Info("KVDataSetManager::CheckCacheStatus", "Checking for available datasets cache file...");
-   if( KVBase::SearchKVFile( KVBase::GetWORKDIRFilePath(fCacheFileName), fullpath ) ){
-      
+   if (KVBase::SearchKVFile(KVBase::GetWORKDIRFilePath(fCacheFileName), fullpath)) {
+
       // file exists - how old is it ?
       FileStat_t file_info;
-      gSystem->GetPathInfo( fullpath.Data(), file_info );
-      TDatime file_date( file_info.fMtime );
+      gSystem->GetPathInfo(fullpath.Data(), file_info);
+      TDatime file_date(file_info.fMtime);
       TDatime now;
       UInt_t file_age = now.Convert() - file_date.Convert();
       Info("KVDataSetManager::CheckCacheStatus", "...file found. It is %u seconds old", file_age);
-      if( file_age < fMaxCacheTime ) {
+      if (file_age < fMaxCacheTime) {
          Info("KVDataSetManager::CheckCacheStatus", "Using cached file");
          return kTRUE;
-      }
-      else
-         Info("KVDataSetManager::CheckCacheStatus", "File is too old (max time=%u). Update will be performed.", fMaxCacheTime);         
-   }
-   else
+      } else
+         Info("KVDataSetManager::CheckCacheStatus", "File is too old (max time=%u). Update will be performed.", fMaxCacheTime);
+   } else
       Info("KVDataSetManager::CheckCacheStatus", "...no file found");
    return kFALSE;
 }

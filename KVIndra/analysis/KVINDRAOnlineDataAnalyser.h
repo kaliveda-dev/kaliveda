@@ -13,39 +13,38 @@ class TThread;
 class TSocket;
 
 
-class KVINDRAOnlineDataAnalyser : public KVINDRARawDataAnalyser
-{
+class KVINDRAOnlineDataAnalyser : public KVINDRARawDataAnalyser {
    Int_t events;
    int last_events;
-	TDatime fStart;
-   
+   TDatime fStart;
+
    Int_t fEventsRefresh;
 
-  GSpectra* fSpectraDB;
-  GNetServerRoot* fSpectraServer;
-  virtual void ProcessRun();
-  Bool_t fGoEventLoop;
-  Bool_t fDumpEvents;
-  Int_t port;
+   GSpectra* fSpectraDB;
+   GNetServerRoot* fSpectraServer;
+   virtual void ProcessRun();
+   Bool_t fGoEventLoop;
+   Bool_t fDumpEvents;
+   Int_t port;
    Int_t TestPorts(Int_t);
-  
-  static void ecouteSockets(void*);
-  TThread* fMessageThread;
-  void HandleCommands(TString&, TSocket*);
-  
-  void addallhistostoserver(TCollection*list, const TString& family_pref);
-	
-   public:
+
+   static void ecouteSockets(void*);
+   TThread* fMessageThread;
+   void HandleCommands(TString&, TSocket*);
+
+   void addallhistostoserver(TCollection* list, const TString& family_pref);
+
+public:
    KVINDRAOnlineDataAnalyser();
    virtual ~KVINDRAOnlineDataAnalyser();
 
    void preInitAnalysis();
    void preInitRun();
    void postAnalysis();
-	
-	virtual void PrintControlRate();
 
-   ClassDef(KVINDRAOnlineDataAnalyser,1)//For on-line analysis of INDRA data
+   virtual void PrintControlRate();
+
+   ClassDef(KVINDRAOnlineDataAnalyser, 1) //For on-line analysis of INDRA data
 };
 
 #endif

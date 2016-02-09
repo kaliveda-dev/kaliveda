@@ -12,16 +12,15 @@ $Date: 2007/02/14 14:12:00 $
 
 #include <KVINDRAUpDater.h>
 
-class KVINDRAUpDater_e416a : public KVINDRAUpDater
-{
-   public:
+class KVINDRAUpDater_e416a : public KVINDRAUpDater {
+public:
 
    KVINDRAUpDater_e416a();
    virtual ~KVINDRAUpDater_e416a();
-   
-   virtual void SetChIoPressures(KVDBRun *);
 
-   ClassDef(KVINDRAUpDater_e416a,1)//Sets run parameters for INDRA_e416a dataset
+   virtual void SetChIoPressures(KVDBRun*);
+
+   ClassDef(KVINDRAUpDater_e416a, 1) //Sets run parameters for INDRA_e416a dataset
 };
 
 #endif

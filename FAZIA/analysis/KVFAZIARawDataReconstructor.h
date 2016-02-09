@@ -10,32 +10,31 @@
 #include "TTree.h"
 #include "TString.h"
 
-class KVFAZIARawDataReconstructor : public KVFAZIAReader
-{
-   protected:
-         
+class KVFAZIARawDataReconstructor : public KVFAZIAReader {
+protected:
+
    TFile* file;
    TTree* tree;
-   
+
    KVReconstructedEvent* recev;
-   
+
    Int_t nb_recon;//number of reconstructed events
    TString taskname;
    TString datatype;
-   
-   public:
+
+public:
    KVFAZIARawDataReconstructor();
    virtual ~KVFAZIARawDataReconstructor();
-   
-   virtual void InitAnalysis(){}
+
+   virtual void InitAnalysis() {}
    virtual void InitRun();
    virtual Bool_t Analysis();
    virtual void EndRun();
-   virtual void EndAnalysis(){};
-   
+   virtual void EndAnalysis() {};
+
    virtual void ExtraProcessing();
 
-   ClassDef(KVFAZIARawDataReconstructor,1)//Handle reconstruction of FAZIA events
+   ClassDef(KVFAZIARawDataReconstructor, 1) //Handle reconstruction of FAZIA events
 };
 
 #endif

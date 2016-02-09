@@ -36,22 +36,22 @@ KVIDCutLine::~KVIDCutLine()
 
 //__________________________________________________________
 
-void KVIDCutLine::WriteAsciiFile_extras(ofstream & file, const Char_t * )
+void KVIDCutLine::WriteAsciiFile_extras(ofstream& file, const Char_t*)
 {
    // Write accepted direction for cut
-	
-   if(fAcceptedDirection=="") file << "[undefined accepted direction]" << endl;
-	else file << fAcceptedDirection.Data() << endl;
+
+   if (fAcceptedDirection == "") file << "[undefined accepted direction]" << endl;
+   else file << fAcceptedDirection.Data() << endl;
 }
 
 //__________________________________________________________
 
-void KVIDCutLine::ReadAsciiFile_extras(ifstream & file)
+void KVIDCutLine::ReadAsciiFile_extras(ifstream& file)
 {
    // Read accepted direction for cut
-	
+
    fAcceptedDirection.ReadLine(file);
-	if(fAcceptedDirection=="[undefined accepted direction]") fAcceptedDirection="";
+   if (fAcceptedDirection == "[undefined accepted direction]") fAcceptedDirection = "";
 }
 
 void KVIDCutLine::SetAcceptedDirection(const Char_t* dir)
@@ -61,7 +61,7 @@ void KVIDCutLine::SetAcceptedDirection(const Char_t* dir)
    //    cut->SetAcceptedDirection("above")
    // Possible values are: "above", "below", "left" or "right"
    // (see KVIDLine::WhereAmI).
-   fAcceptedDirection=dir;
-   if(GetParent()) GetParent()->Modified();
+   fAcceptedDirection = dir;
+   if (GetParent()) GetParent()->Modified();
 }
 

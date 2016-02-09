@@ -20,82 +20,84 @@
 class KVINDRADBRun;
 class KVDataSet;
 
-   //_________________________________________________//
+//_________________________________________________//
 
 class KVIRSGChooseDataSetDialog {
 
    RQ_OBJECT("KVIRSGChooseDataSetDialog")
 
-   TGTransientFrame *fMain;
-   TGLabel *fLabel;
+   TGTransientFrame* fMain;
+   TGLabel* fLabel;
    ULong_t ucolor;
-   TGComboBox *fComboBox;
-   TGTextButton *fTextButton;
+   TGComboBox* fComboBox;
+   TGTextButton* fTextButton;
    Int_t fDataSetIndex;
 
- public:
+public:
 
-    KVIRSGChooseDataSetDialog() {
+   KVIRSGChooseDataSetDialog()
+   {
       fMain = 0;
    };
-   KVIRSGChooseDataSetDialog(const TGWindow * p, const TGWindow * main,
+   KVIRSGChooseDataSetDialog(const TGWindow* p, const TGWindow* main,
                              UInt_t w = 1, UInt_t h = 1);
    virtual ~ KVIRSGChooseDataSetDialog();
 
    void DoClose();
    void CloseWindow();
    void YouPressedOK();
-   void SetDataSet(Int_t i) {
+   void SetDataSet(Int_t i)
+   {
       fDataSetIndex = i;
    };
 
    ClassDef(KVIRSGChooseDataSetDialog, 0)       //Run-sheet reader dialog box for choosing dataset
 };
 
-   //_________________________________________________//
+//_________________________________________________//
 
-class KVINDRARunSheetGUI:public TGMainFrame {
+class KVINDRARunSheetGUI: public TGMainFrame {
 
-   TEnv  *GUIenv;
-   
+   TEnv*  GUIenv;
+
    KVINDRARunSheetReader fReader;       //used to read runsheets
 
-   TGLabel *fDirLabel;
+   TGLabel* fDirLabel;
    TString fDirLabelMess;
-   TGLabel *fFormLabel;
-   TGHorizontalFrame *fHframe;
-   TGVButtonGroup *fButtonsFrame;
+   TGLabel* fFormLabel;
+   TGHorizontalFrame* fHframe;
+   TGVButtonGroup* fButtonsFrame;
 //    TGListBox *fRunList;
-   KVListView *fRunList;
-   TGTextButton *fUpdate;
+   KVListView* fRunList;
+   TGTextButton* fUpdate;
 #ifdef __WITHOUT_TGBUTTON_SETENABLED
-   TGTextButton *fViewTreeButton;
+   TGTextButton* fViewTreeButton;
 #endif
-   TGTextButton *fSetSystem;
-   TGTextButton *fUnSetSystem;
-   TGTextButton *fChangeDataSet;
-   TGTextButton *fSaveDB;
-   TGTextButton *fQuit;
-   TGTextButton *fAddComment;
-   TGTextButton *fPrintRun;
-   TGTextButton *fAddCahier;
-   TGTextButton *fSetTrigger;
-   TList *fButList;
+   TGTextButton* fSetSystem;
+   TGTextButton* fUnSetSystem;
+   TGTextButton* fChangeDataSet;
+   TGTextButton* fSaveDB;
+   TGTextButton* fQuit;
+   TGTextButton* fAddComment;
+   TGTextButton* fPrintRun;
+   TGTextButton* fAddCahier;
+   TGTextButton* fSetTrigger;
+   TList* fButList;
    Int_t fFirstRun;
    Int_t fLastRun;
-   KVINDRADBRun *fSelectedRun;
-   TList *fSelectedEntries;
+   KVINDRADBRun* fSelectedRun;
+   TList* fSelectedEntries;
    KVString fInputString;
 
- public:
+public:
 
-    KVINDRARunSheetGUI();
-    virtual ~ KVINDRARunSheetGUI();
+   KVINDRARunSheetGUI();
+   virtual ~ KVINDRARunSheetGUI();
 
    void CloseWindow();
 
    void ChangeDataSet();
-   
+
    void DisableButtons();
    void EnableButtons();
 
@@ -119,13 +121,13 @@ class KVINDRARunSheetGUI:public TGMainFrame {
    void StartTreeViewer();
 
    void PrintRun();
-   
+
 #ifdef __WITHOUT_TGBUTTON_SETENABLED
    void SetViewTreeEnabled(Bool_t on)
    {
-      fViewTreeButton->SetState(on ? kButtonUp : kButtonDisabled );
+      fViewTreeButton->SetState(on ? kButtonUp : kButtonDisabled);
    };
 #endif
-   
-    ClassDef(KVINDRARunSheetGUI, 0)     //A GUI for managing run sheet information during experiment
+
+   ClassDef(KVINDRARunSheetGUI, 0)     //A GUI for managing run sheet information during experiment
 };

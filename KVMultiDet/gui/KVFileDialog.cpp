@@ -54,25 +54,26 @@ enum EFileFialog {
    kIDF_CANCEL
 };
 
-static const char *gDefTypes[] = { "All files",     "*",
+static const char* gDefTypes[] = { "All files",     "*",
                                    "ROOT files",    "*.root",
                                    "ROOT macros",   "*.C",
-                                    0,               0 };
+                                   0,               0
+                                 };
 
 static TGFileInfo gInfo;
 
 
 ClassImp(KVFileDialog)
 
-      
-KVFileDialog::KVFileDialog(const TGWindow *p, const TGWindow *main,
-                           EKVFileDialogMode dlg_type, TGFileInfo *file_info) :
+
+KVFileDialog::KVFileDialog(const TGWindow* p, const TGWindow* main,
+                           EKVFileDialogMode dlg_type, TGFileInfo* file_info) :
    TGTransientFrame(p, main, 10, 10, kVerticalFrame)
 {
    // Create a file selection dialog. Depending on the dlg_type it can be
    // used for opening or saving a file or selecting a directory.
 
-   fDlgMode=dlg_type;
+   fDlgMode = dlg_type;
    SetCleanup(kDeepCleanup);
    Connect("CloseWindow()", "KVFileDialog", this, "CloseWindow()");
    DontCallClose();
@@ -104,11 +105,11 @@ KVFileDialog::KVFileDialog(const TGWindow *p, const TGWindow *main,
    if (!fFileInfo->fIniDir)
       fFileInfo->fIniDir = StrDup(".");
 
-   TGHorizontalFrame *fHtop = new TGHorizontalFrame(this, 10, 10);
-   
+   TGHorizontalFrame* fHtop = new TGHorizontalFrame(this, 10, 10);
+
    //--- top toolbar elements
-   TGLabel *fLookin = new TGLabel(fHtop, new TGHotString((dlg_type == kKVFDSave)
-                                                  ? "S&ave in:" : "&Look in:"));
+   TGLabel* fLookin = new TGLabel(fHtop, new TGHotString((dlg_type == kKVFDSave)
+                                  ? "S&ave in:" : "&Look in:"));
    fTreeLB = new TGFSComboBox(fHtop, kIDF_FSLB);
    fTreeLB->Associate(this);
 
@@ -158,7 +159,7 @@ KVFileDialog::KVFileDialog(const TGWindow *p, const TGWindow *main,
    } else {
       fCheckB = new TGCheckButton(fHtop, "&Multiple files", kIDF_CHECKB);
       fCheckB->SetToolTipText("Allows multiple file selection when SHIFT is pressed");
-      fCheckB->Connect("Toggled(Bool_t)","TGFileInfo",fFileInfo,"SetMultipleSelection(Bool_t)");
+      fCheckB->Connect("Toggled(Bool_t)", "TGFileInfo", fFileInfo, "SetMultipleSelection(Bool_t)");
    }
    fHtop->AddFrame(fCheckB, new TGLayoutHints(kLHintsLeft | kLHintsCenterY));
    fCheckB->SetOn(fFileInfo->fMultipleSelection);
@@ -187,7 +188,7 @@ KVFileDialog::KVFileDialog(const TGWindow *p, const TGWindow *main,
       buttons[5]->Connect("Clicked()", "TGFileContainer", fFc, "Sort(=kSortByDate)");
    }
 
-   fFc->SetFilter(fFileInfo->fFileTypes[fFileInfo->fFileTypeIdx+1]);
+   fFc->SetFilter(fFileInfo->fFileTypes[fFileInfo->fFileTypeIdx + 1]);
    fFc->Sort(kSortByName);
    fFc->ChangeDirectory(fFileInfo->fIniDir);
    fFc->SetMultipleSelection(fFileInfo->fMultipleSelection);
@@ -198,19 +199,19 @@ KVFileDialog::KVFileDialog(const TGWindow *p, const TGWindow *main,
    AddFrame(fFv, new TGLayoutHints(kLHintsTop | kLHintsExpandX | kLHintsExpandY, 4, 4, 3, 1));
 
    if (dlg_type == kKVFDOpen) {
-      fCheckB->Connect("Toggled(Bool_t)","TGFileContainer",fFc,"SetMultipleSelection(Bool_t)");
-      fCheckB->Connect("Toggled(Bool_t)","TGFileContainer",fFc,"UnSelectAll()");
+      fCheckB->Connect("Toggled(Bool_t)", "TGFileContainer", fFc, "SetMultipleSelection(Bool_t)");
+      fCheckB->Connect("Toggled(Bool_t)", "TGFileContainer", fFc, "UnSelectAll()");
    }
-   
+
    //--- file name and types
 
-   TGHorizontalFrame *fHf = new TGHorizontalFrame(this, 10, 10);
+   TGHorizontalFrame* fHf = new TGHorizontalFrame(this, 10, 10);
 
-   TGVerticalFrame *fVf = new TGVerticalFrame(fHf, 10, 10);
+   TGVerticalFrame* fVf = new TGVerticalFrame(fHf, 10, 10);
 
-   TGHorizontalFrame *fHfname = new TGHorizontalFrame(fVf, 10, 10);
+   TGHorizontalFrame* fHfname = new TGHorizontalFrame(fVf, 10, 10);
 
-   TGLabel *fLfname = new TGLabel(fHfname, new TGHotString("File &name:"));
+   TGLabel* fLfname = new TGLabel(fHfname, new TGHotString("File &name:"));
    fTbfname = new TGTextBuffer(1034);
    fName = new TGTextEntry(fHfname, fTbfname);
    fName->Resize(230, fName->GetDefaultHeight());
@@ -221,16 +222,16 @@ KVFileDialog::KVFileDialog(const TGWindow *p, const TGWindow *main,
 
    fVf->AddFrame(fHfname, new TGLayoutHints(kLHintsLeft | kLHintsCenterY | kLHintsExpandX));
 
-   TGHorizontalFrame *fHftype = new TGHorizontalFrame(fVf, 10, 10);
+   TGHorizontalFrame* fHftype = new TGHorizontalFrame(fVf, 10, 10);
 
-   TGLabel *fLftypes = new TGLabel(fHftype, new TGHotString("Files of &type:"));
+   TGLabel* fLftypes = new TGLabel(fHftype, new TGHotString("Files of &type:"));
    fTypes = new TGComboBox(fHftype, kIDF_FTYPESLB);
    fTypes->Associate(this);
    fTypes->Resize(230, fName->GetDefaultHeight());
 
    TString s;
    for (i = 0; fFileInfo->fFileTypes[i] != 0; i += 2) {
-      s.Form("%s (%s)", fFileInfo->fFileTypes[i], fFileInfo->fFileTypes[i+1]);
+      s.Form("%s (%s)", fFileInfo->fFileTypes[i], fFileInfo->fFileTypes[i + 1]);
       fTypes->AddEntry(s.Data(), i);
    }
    fTypes->Select(fFileInfo->fFileTypeIdx);
@@ -254,10 +255,10 @@ KVFileDialog::KVFileDialog(const TGWindow *p, const TGWindow *main,
 
    //--- Open/Save and Cancel buttons
 
-   TGVerticalFrame *fVbf = new TGVerticalFrame(fHf, 10, 10, kFixedWidth);
+   TGVerticalFrame* fVbf = new TGVerticalFrame(fHf, 10, 10, kFixedWidth);
 
    fOk = new TGTextButton(fVbf, new TGHotString((dlg_type == kKVFDSave)
-                                                 ? "&Save" : "&Open"), kIDF_OK);
+                          ? "&Save" : "&Open"), kIDF_OK);
    fCancel = new TGTextButton(fVbf, new TGHotString("Cancel"), kIDF_CANCEL);
 
    fOk->Associate(this);
@@ -289,15 +290,15 @@ KVFileDialog::KVFileDialog(const TGWindow *p, const TGWindow *main,
    SetWMSize(size.fWidth, size.fHeight);
    SetWMSizeHints(size.fWidth, size.fHeight, 10000, 10000, 1, 1);
 
-   const char *wname = ((dlg_type == kKVFDSave) ? "Save As..." : (dlg_type==kKVFDOpen) ? "Open" : "Choose directory...");
+   const char* wname = ((dlg_type == kKVFDSave) ? "Save As..." : (dlg_type == kKVFDOpen) ? "Open" : "Choose directory...");
    SetWindowName(wname);
    SetIconName(wname);
    SetClassHints("FileDialog", "FileDialog");
 
    SetMWMHints(kMWMDecorAll | kMWMDecorResizeH  | kMWMDecorMaximize |
-                              kMWMDecorMinimize | kMWMDecorMenu,
+               kMWMDecorMinimize | kMWMDecorMenu,
                kMWMFuncAll |  kMWMFuncResize    | kMWMFuncMaximize |
-                              kMWMFuncMinimize,
+               kMWMFuncMinimize,
                kMWMInputModeless);
 
    MapWindow();
@@ -312,13 +313,13 @@ KVFileDialog::~KVFileDialog()
 
    if (IsZombie()) return;
    TString str = fCheckB->GetString();
-   if (str.Contains("Multiple")) 
+   if (str.Contains("Multiple"))
       fCheckB->Disconnect("Toggled(Bool_t)");
    fClient->FreePicture(fPcdup);
    fClient->FreePicture(fPnewf);
    fClient->FreePicture(fPlist);
    fClient->FreePicture(fPdetails);
-   delete fFc; 
+   delete fFc;
 }
 
 //______________________________________________________________________________
@@ -342,11 +343,11 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
    // Process messages generated by the user input in the file dialog.
 
    if (!fFc->GetDisplayStat()) return kTRUE;  // Cancel button was pressed
-   
-   TGTreeLBEntry *e;
-   TGTextLBEntry *te;
-   TGFileItem *f;
-   void *p = 0;
+
+   TGTreeLBEntry* e;
+   TGTextLBEntry* te;
+   TGFileItem* f;
+   void* p = 0;
    TString txt;
    TString sdir = gSystem->WorkingDirectory();
 
@@ -357,7 +358,7 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                switch (parm1) {
                   case kIDF_OK:
                      // same code as under kTE_ENTER
-                     if ((fDlgMode!=kKVFDDirectory) && (fTbfname->GetTextLength() == 0)) {
+                     if ((fDlgMode != kKVFDDirectory) && (fTbfname->GetTextLength() == 0)) {
                         txt = "Please provide file name or use \"Cancel\"";
                         new TGMsgBox(fClient->GetRoot(), GetMainFrame(),
                                      "Missing File Name", txt, kMBIconExclamation,
@@ -379,15 +380,14 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                         if (fFileInfo->fFilename)
                            delete [] fFileInfo->fFilename;
                         fFileInfo->fFilename = 0;
-                     }
-                     else {
+                     } else {
                         if (fFileInfo->fFilename)
                            delete [] fFileInfo->fFilename;
                         if (gSystem->IsAbsoluteFileName(fTbfname->GetString()))
                            fFileInfo->fFilename = StrDup(fTbfname->GetString());
                         else
                            fFileInfo->fFilename = gSystem->ConcatFileName(fFc->GetDirectory(),
-                                                                          fTbfname->GetString());
+                                                  fTbfname->GetString());
                         fFileInfo->fFilename = StrDup(gSystem->UnixPathName(gSystem->ExpandPathName(fFileInfo->fFilename)));
                      }
                      if (fCheckB && (fCheckB->GetState() == kButtonDown))
@@ -401,7 +401,7 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                      if (fFileInfo->fFilename)
                         delete [] fFileInfo->fFilename;
                      fFileInfo->fFilename = 0;
-                     if (fFc->GetDisplayStat()) 
+                     if (fFc->GetDisplayStat())
                         fFc->SetDisplayStat(kFALSE);
                      if (fFileInfo->fFileNamesList != 0) {
                         fFileInfo->fFileNamesList->Delete();
@@ -416,42 +416,42 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                      fTreeLB->Update(fFc->GetDirectory());
                      if (fFileInfo->fIniDir) delete [] fFileInfo->fIniDir;
                      fFileInfo->fIniDir = StrDup(fFc->GetDirectory());
-                     if (strcmp(gSystem->WorkingDirectory(),fFc->GetDirectory())) {
+                     if (strcmp(gSystem->WorkingDirectory(), fFc->GetDirectory())) {
                         gSystem->cd(fFc->GetDirectory());
                      }
                      break;
 
                   case kIDF_NEW_FOLDER: {
-                     char answer[128];
-                     strlcpy(answer, "(empty)", sizeof(answer));
-                     new TGInputDialog(gClient->GetRoot(), GetMainFrame(),
-                                       "Enter directory name:",
-                                       answer/*"(empty)"*/, answer);
-
-                     while ( strcmp(answer, "(empty)") == 0 ) {
-                        new TGMsgBox(gClient->GetRoot(), GetMainFrame(), "Error",
-                                     "Please enter a valid directory name.",
-                                     kMBIconStop, kMBOk);
+                        char answer[128];
+                        strlcpy(answer, "(empty)", sizeof(answer));
                         new TGInputDialog(gClient->GetRoot(), GetMainFrame(),
                                           "Enter directory name:",
-                                          answer, answer);
-                     }
-                     if ( strcmp(answer, "") == 0 )  // Cancel button was pressed
+                                          answer/*"(empty)"*/, answer);
+
+                        while (strcmp(answer, "(empty)") == 0) {
+                           new TGMsgBox(gClient->GetRoot(), GetMainFrame(), "Error",
+                                        "Please enter a valid directory name.",
+                                        kMBIconStop, kMBOk);
+                           new TGInputDialog(gClient->GetRoot(), GetMainFrame(),
+                                             "Enter directory name:",
+                                             answer, answer);
+                        }
+                        if (strcmp(answer, "") == 0)    // Cancel button was pressed
+                           break;
+
+                        if (strcmp(gSystem->WorkingDirectory(), fFc->GetDirectory())) {
+                           gSystem->cd(fFc->GetDirectory());
+                        }
+                        if (gSystem->MakeDirectory(answer) != 0)
+                           new TGMsgBox(gClient->GetRoot(), GetMainFrame(), "Error",
+                                        TString::Format("Directory name \'%s\' already exists!", answer),
+                                        kMBIconStop, kMBOk);
+                        else {
+                           fFc->DisplayDirectory();
+                        }
+                        gSystem->ChangeDirectory(sdir.Data());
                         break;
-                     
-                     if (strcmp(gSystem->WorkingDirectory(),fFc->GetDirectory())) {
-                        gSystem->cd(fFc->GetDirectory());
                      }
-                     if ( gSystem->MakeDirectory(answer) != 0 )
-                        new TGMsgBox(gClient->GetRoot(), GetMainFrame(), "Error", 
-                                     TString::Format("Directory name \'%s\' already exists!", answer),
-                                     kMBIconStop, kMBOk);
-                     else {
-                        fFc->DisplayDirectory();
-                     }
-                     gSystem->ChangeDirectory(sdir.Data());
-                     break;
-                  }
 
                   case kIDF_LIST:
                      fFv->SetViewMode(kLVList);
@@ -468,25 +468,25 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
             case kCM_COMBOBOX:
                switch (parm1) {
                   case kIDF_FSLB:
-                     e = (TGTreeLBEntry *) fTreeLB->GetSelectedEntry();
+                     e = (TGTreeLBEntry*) fTreeLB->GetSelectedEntry();
                      if (e) {
                         fFc->ChangeDirectory(e->GetPath()->GetString());
                         fTreeLB->Update(fFc->GetDirectory());
                         if (fFileInfo->fIniDir) delete [] fFileInfo->fIniDir;
                         fFileInfo->fIniDir = StrDup(fFc->GetDirectory());
-                        if (strcmp(gSystem->WorkingDirectory(),fFc->GetDirectory())) {
+                        if (strcmp(gSystem->WorkingDirectory(), fFc->GetDirectory())) {
                            gSystem->cd(fFc->GetDirectory());
                         }
                      }
                      break;
 
                   case kIDF_FTYPESLB:
-                     te = (TGTextLBEntry *) fTypes->GetSelectedEntry();
+                     te = (TGTextLBEntry*) fTypes->GetSelectedEntry();
                      if (te) {
                         //fTbfname->Clear();
                         //fTbfname->AddText(0, fFileInfo->fFileTypes[te->EntryId()+1]);
                         fFileInfo->fFileTypeIdx = te->EntryId();
-                        fFc->SetFilter(fFileInfo->fFileTypes[fFileInfo->fFileTypeIdx+1]);
+                        fFc->SetFilter(fFileInfo->fFileTypes[fFileInfo->fFileTypeIdx + 1]);
                         fFc->DisplayDirectory();
                         fClient->NeedRedraw(fName);
                      }
@@ -504,28 +504,26 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
             case kCT_ITEMCLICK:
                if (parm1 == kButton1) {
                   if (fFc->NumSelected() > 0) {
-                     if ( fFileInfo->fMultipleSelection == kFALSE ) {
-                        TGLVEntry *e2 = (TGLVEntry *) fFc->GetNextSelected(&p);
-                        if ((e2) && !R_ISDIR(((TGFileItem *)e2)->GetType())) {
+                     if (fFileInfo->fMultipleSelection == kFALSE) {
+                        TGLVEntry* e2 = (TGLVEntry*) fFc->GetNextSelected(&p);
+                        if ((e2) && !R_ISDIR(((TGFileItem*)e2)->GetType())) {
                            fTbfname->Clear();
                            if (e2->GetItemName())
                               fTbfname->AddText(0, e2->GetItemName()->GetString());
                            fClient->NeedRedraw(fName);
                         }
-                     }
-                     else {
+                     } else {
                         TString tmpString;
-                        TList *tmp = fFc->GetSelectedItems();
-                        TObjString *el;
+                        TList* tmp = fFc->GetSelectedItems();
+                        TObjString* el;
                         TIter next(tmp);
-                        if ( fFileInfo->fFileNamesList != 0 ) {
+                        if (fFileInfo->fFileNamesList != 0) {
                            fFileInfo->fFileNamesList->Delete();
-                        }
-                        else {
+                        } else {
                            fFileInfo->fFileNamesList = new TList();
                         }
-                        while ((el = (TObjString *) next())) {
-                           char *s = gSystem->ConcatFileName(fFc->GetDirectory(),
+                        while ((el = (TObjString*) next())) {
+                           char* s = gSystem->ConcatFileName(fFc->GetDirectory(),
                                                              el->GetString());
                            tmpString += "\"" + el->GetString() + "\" ";
                            fFileInfo->fFileNamesList->Add(new TObjString(s));
@@ -543,18 +541,18 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
 
                if (parm1 == kButton1) {
                   if (fFc->NumSelected() == 1) {
-                     f = (TGFileItem *) fFc->GetNextSelected(&p);
+                     f = (TGFileItem*) fFc->GetNextSelected(&p);
                      if (f && R_ISDIR(f->GetType())) {
                         fFc->ChangeDirectory(f->GetItemName()->GetString());
                         fTreeLB->Update(fFc->GetDirectory());
                         if (fFileInfo->fIniDir) delete [] fFileInfo->fIniDir;
                         fFileInfo->fIniDir = StrDup(fFc->GetDirectory());
-                        if (strcmp(gSystem->WorkingDirectory(),fFc->GetDirectory())) {
+                        if (strcmp(gSystem->WorkingDirectory(), fFc->GetDirectory())) {
                            gSystem->cd(fFc->GetDirectory());
                         }
                      } else {
                         if (!strcmp(fOk->GetTitle(), "Save") &&
-                            (!(fCheckB->GetState() == kButtonDown))) {
+                              (!(fCheckB->GetState() == kButtonDown))) {
 
                            Int_t ret;
                            txt = TString::Format("File name %s already exists, OK to overwrite it?",
@@ -571,7 +569,7 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                            fFileInfo->fFilename = StrDup(fTbfname->GetString());
                         else
                            fFileInfo->fFilename = gSystem->ConcatFileName(fFc->GetDirectory(),
-                                                                          fTbfname->GetString());
+                                                  fTbfname->GetString());
                         fFileInfo->fFilename = StrDup(gSystem->UnixPathName(gSystem->ExpandPathName(fFileInfo->fFilename)));
                         if (fCheckB && (fCheckB->GetState() == kButtonDown))
                            fFileInfo->fOverwrite = kTRUE;
@@ -595,8 +593,8 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
          switch (GET_SUBMSG(msg)) {
             case kTE_ENTER:
                // same code as under kIDF_OK
-               if ((fDlgMode!=kKVFDDirectory) && (fTbfname->GetTextLength() == 0)) {
-                  const char *txt2 = "Please provide file name or use \"Cancel\"";
+               if ((fDlgMode != kKVFDDirectory) && (fTbfname->GetTextLength() == 0)) {
+                  const char* txt2 = "Please provide file name or use \"Cancel\"";
                   new TGMsgBox(fClient->GetRoot(), GetMainFrame(),
                                "Missing File Name", txt2, kMBIconExclamation,
                                kMBOk);
@@ -604,7 +602,7 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                } else if (!gSystem->AccessPathName(fTbfname->GetString(), kFileExists)) {
                   FileStat_t buf;
                   if (!gSystem->GetPathInfo(fTbfname->GetString(), buf) &&
-                      R_ISDIR(buf.fMode)) {
+                        R_ISDIR(buf.fMode)) {
                      fFc->ChangeDirectory(fTbfname->GetString());
                      fTreeLB->Update(fFc->GetDirectory());
                      if (strcmp(gSystem->WorkingDirectory(), fFc->GetDirectory())) {
@@ -612,9 +610,8 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                      }
                      fName->SetText("", kFALSE);
                      return kTRUE;
-                  }
-                  else if (!strcmp(fOk->GetTitle(), "Save") && 
-                          (!(fCheckB->GetState() == kButtonDown))) {
+                  } else if (!strcmp(fOk->GetTitle(), "Save") &&
+                             (!(fCheckB->GetState() == kButtonDown))) {
                      Int_t ret;
                      txt = TString::Format("File name %s already exists, OK to overwrite it?",
                                            fTbfname->GetString());
@@ -628,7 +625,7 @@ Bool_t KVFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                if (fFileInfo->fFilename)
                   delete [] fFileInfo->fFilename;
                fFileInfo->fFilename = gSystem->ConcatFileName(fFc->GetDirectory(),
-                                                              fTbfname->GetString());
+                                      fTbfname->GetString());
                fFileInfo->fFilename = StrDup(gSystem->UnixPathName(gSystem->ExpandPathName(fFileInfo->fFilename)));
                if (fCheckB && (fCheckB->GetState() == kButtonDown))
                   fFileInfo->fOverwrite = kTRUE;

@@ -21,8 +21,8 @@ KVGroup::KVGroup()
 
 void KVGroup::init()
 {
-    // Default initialisation
-    // KVGroup does not own the structures which it groups together
+   // Default initialisation
+   // KVGroup does not own the structures which it groups together
 
    fReconstructedNuclei = 0;
    SetType("GROUP");
@@ -43,33 +43,33 @@ KVGroup::~KVGroup()
 
 UInt_t KVGroup::GetNumberOfDetectorLayers()
 {
-    // The number of detector layers is the maximum number of detectors in the
-    // group which are placed one in front of the other, i.e. we interrogate
-    // each detector as to how many detectors there are in front of it
+   // The number of detector layers is the maximum number of detectors in the
+   // group which are placed one in front of the other, i.e. we interrogate
+   // each detector as to how many detectors there are in front of it
 
-    UInt_t max = 0;
-    TIter next(GetDetectors());
-    KVDetector* d;
-    while( (d = (KVDetector*)next()) ){
-        UInt_t e = d->GetAlignedDetectors()->GetEntries();
-        if(e>max) max=e;
-    }
-    return max;
+   UInt_t max = 0;
+   TIter next(GetDetectors());
+   KVDetector* d;
+   while ((d = (KVDetector*)next())) {
+      UInt_t e = d->GetAlignedDetectors()->GetEntries();
+      if (e > max) max = e;
+   }
+   return max;
 }
 
-TList *KVGroup::GetDetectorsInLayer(UInt_t lay)
+TList* KVGroup::GetDetectorsInLayer(UInt_t lay)
 {
-    // lay=1 : create and fill list with detectors closest to target
-    // lay=GetNumberOfDetectorLayers() : detectors furthest from target
+   // lay=1 : create and fill list with detectors closest to target
+   // lay=GetNumberOfDetectorLayers() : detectors furthest from target
 
-    TList* dets = new TList;
-    TIter next(GetDetectors());
-    KVDetector* d;
+   TList* dets = new TList;
+   TIter next(GetDetectors());
+   KVDetector* d;
 
-    while( (d = (KVDetector*)next()) ){
-        if(lay == (UInt_t)d->GetAlignedDetectors()->GetEntries()) dets->Add(d);
-    }
-    return dets;
+   while ((d = (KVDetector*)next())) {
+      if (lay == (UInt_t)d->GetAlignedDetectors()->GetEntries()) dets->Add(d);
+   }
+   return dets;
 }
 
 //______________________________________________________________________________
@@ -78,7 +78,7 @@ void KVGroup::Reset()
 {
    //Reset the group, i.e. wipe the list of reconstructed nuclei and call "Clear" method of
    //each and every detector in the group.
-	//Info("Reset","Call %s",GetName());
+   //Info("Reset","Call %s",GetName());
    if (fReconstructedNuclei && fReconstructedNuclei->GetSize()) {
       fReconstructedNuclei->Clear();
    }
@@ -89,7 +89,7 @@ void KVGroup::Reset()
 
 //_________________________________________________________________________________
 
-void KVGroup::AddHit(KVNucleus * kvd)
+void KVGroup::AddHit(KVNucleus* kvd)
 {
    if (!fReconstructedNuclei) {
       fReconstructedNuclei = new KVList(kFALSE);
@@ -100,7 +100,7 @@ void KVGroup::AddHit(KVNucleus * kvd)
 
 //_________________________________________________________________________________
 
-void KVGroup::RemoveHit(KVNucleus * kvd)
+void KVGroup::RemoveHit(KVNucleus* kvd)
 {
    //Remove reconstructed nucleus from group's list of reconstructed
    //particles.
@@ -115,7 +115,7 @@ void KVGroup::RemoveHit(KVNucleus * kvd)
    }
 }
 
-TList *KVGroup::GetAlignedDetectors(KVDetector * det, UChar_t dir)
+TList* KVGroup::GetAlignedDetectors(KVDetector* det, UChar_t dir)
 {
    //Fill TList with all detectors aligned with "det" which are closer to the target.
    //These are the detectors through which any particle stopping in "det" will have
@@ -125,29 +125,29 @@ TList *KVGroup::GetAlignedDetectors(KVDetector * det, UChar_t dir)
    //
    //Delete TList after use.
 
-   TList *tmp = new TList;
+   TList* tmp = new TList;
 
-   while(det){
-       tmp->Add(det);
-       KVGeoDetectorNode* node = det->GetNode();
-       KVSeqCollection* infront = node->GetDetectorsInFront();
-       if(!infront) break;
-       if(infront->GetEntries()>1){
-           Warning("GetAlignedDetectors",
-                   "No unique solution. There are %d detectors in front of %s.",
-                   infront->GetEntries(), det->GetName());
-           infront->ls();
-       }
-       det = (KVDetector*)infront->First();
+   while (det) {
+      tmp->Add(det);
+      KVGeoDetectorNode* node = det->GetNode();
+      KVSeqCollection* infront = node->GetDetectorsInFront();
+      if (!infront) break;
+      if (infront->GetEntries() > 1) {
+         Warning("GetAlignedDetectors",
+                 "No unique solution. There are %d detectors in front of %s.",
+                 infront->GetEntries(), det->GetName());
+         infront->ls();
+      }
+      det = (KVDetector*)infront->First();
    }
 
    if (dir == kForwards) {
-       TIter next(tmp, kIterBackward );
-       TList* tmp2 = new TList;
-       while( (det = (KVDetector*)next()) ) tmp2->Add(det);
-       delete tmp;
-       tmp=tmp2;
-    }
+      TIter next(tmp, kIterBackward);
+      TList* tmp2 = new TList;
+      while ((det = (KVDetector*)next())) tmp2->Add(det);
+      delete tmp;
+      tmp = tmp2;
+   }
    return tmp;
 }
 
@@ -157,9 +157,9 @@ TList *KVGroup::GetAlignedDetectors(KVDetector * det, UChar_t dir)
 
 void KVGroup::ClearHitDetectors()
 {
-	// Loop over all detectors in group and clear their list of 'hits'
-	// i.e. the lists of particles which hit each detector
-    const_cast<KVSeqCollection*>(GetDetectors())->R__FOR_EACH(KVDetector, ClearHits)();
+   // Loop over all detectors in group and clear their list of 'hits'
+   // i.e. the lists of particles which hit each detector
+   const_cast<KVSeqCollection*>(GetDetectors())->R__FOR_EACH(KVDetector, ClearHits)();
 }
 
 

@@ -21,41 +21,40 @@ $Date: 2009/04/28 09:07:47 $
 class TVirtualPad;
 class KVIdentificationResult;
 
-class KVIDGraph : public TCutG
-{
+class KVIDGraph : public TCutG {
    friend class KVIDGridManager;
 
    RQ_OBJECT("KVIDGraph")
 
-   protected:
+protected:
 
-      Bool_t 			fOnlyZId;			//set to kTRUE when only to be used to give Z identification of nuclei, no mass info
-   KVList 			*fIdentifiers;		//-> list of identification objects
-   KVList 			*fCuts;       		//-> cuts used to define area in which identification is possible
-   Axis_t 			fXmin, fXmax; 		//!min/max X coordinates of graph
-   Axis_t 			fYmin, fYmax; 		//!min/max Y coordinates of graph
-   KVNameValueList 	*fPar;				//-> parameters associated to grid
-   Double_t 		fLastScaleX;		//last applied scaling factor on X
-   Double_t 		fLastScaleY;		//last applied scaling factor on Y
-   TVirtualPad 	*fPad; 				//!pad in which graph is drawn
-   KVNumberList	fRunList;			//runs for which grid is valid
-   TList 			fTelescopes;		//ID telescopes for which grid is valid
-   TString			fDyName; 			//!dynamically generated name
-   TString  		fPattern;			//pattern of filenames used to write or read grid
+   Bool_t         fOnlyZId;         //set to kTRUE when only to be used to give Z identification of nuclei, no mass info
+   KVList*         fIdentifiers;    //-> list of identification objects
+   KVList*         fCuts;           //-> cuts used to define area in which identification is possible
+   Axis_t         fXmin, fXmax;     //!min/max X coordinates of graph
+   Axis_t         fYmin, fYmax;     //!min/max Y coordinates of graph
+   KVNameValueList*   fPar;            //-> parameters associated to grid
+   Double_t       fLastScaleX;      //last applied scaling factor on X
+   Double_t       fLastScaleY;      //last applied scaling factor on Y
+   TVirtualPad*    fPad;            //!pad in which graph is drawn
+   KVNumberList   fRunList;         //runs for which grid is valid
+   TList          fTelescopes;      //ID telescopes for which grid is valid
+   TString        fDyName;          //!dynamically generated name
+   TString        fPattern;         //pattern of filenames used to write or read grid
    Int_t          fMassFormula;     // *OPTION={GetMethod="GetMassFormula";SetMethod="SetMassFormula";Items=(0="Beta-stability", 1="VEDA mass", 2="EAL mass", 3="EAL residues", 99="2Z+1")}*
    KVIDGraph*     fLastSavedVersion;//!copy of last save version of grid, used for 'undo'
    static Bool_t  fAutoAddGridManager;//if =kTRUE, grids are automatically added to ID grid manager on creation (default)
-   
+
    void Scale(Double_t sx = -1, Double_t sy = -1);
-   virtual void ReadFromAsciiFile(std::ifstream & gridfile);
-   virtual void WriteToAsciiFile(std::ofstream & gridfile);
+   virtual void ReadFromAsciiFile(std::ifstream& gridfile);
+   virtual void WriteToAsciiFile(std::ofstream& gridfile);
    void init();
    virtual KVIDentifier* New(const Char_t*);
-   virtual void ReadIdentifierFromAsciiFile(TString &name, TString &type, TString &cl, std::ifstream& gridfile);
+   virtual void ReadIdentifierFromAsciiFile(TString& name, TString& type, TString& cl, std::ifstream& gridfile);
    void WriteParameterListOfIDTelescopes();
    virtual void BackwardsCompatibilityFix();
 
-   public:
+public:
    virtual Bool_t AcceptIDForTest()
    {
       // Used by TestIdentification.
@@ -66,103 +65,141 @@ class KVIDGraph : public TCutG
    };
 
    KVIDGraph();
-   KVIDGraph(const KVIDGraph &);
+   KVIDGraph(const KVIDGraph&);
    virtual ~KVIDGraph();
-   
+
    //virtual void Browse(TBrowser* b);
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   virtual void Copy(TObject &) const;
+   virtual void Copy(TObject&) const;
 #else
-   virtual void Copy(TObject &);
+   virtual void Copy(TObject&);
 #endif
    virtual void Identify(Double_t /*x*/, Double_t /*y*/, KVIdentificationResult*) const = 0;
-   virtual void Initialize()=0;
+   virtual void Initialize() = 0;
    virtual Bool_t IsIdentifiable(Double_t /*x*/, Double_t /*y*/) const;
-   
-   static void SetAutoAdd(Bool_t yes=kTRUE){
+
+   static void SetAutoAdd(Bool_t yes = kTRUE)
+   {
       // after calling KVIDGraph::SetAutoAdd(), all grids are automatically added to ID Grid Manager
       // after calling KVIDGraph::SetAutoAdd(kFALSE), this mechanism is disabled
       fAutoAddGridManager = yes;
    }
-   void ClearListOfTelescopes() { fTelescopes.Clear(); }
-   KVIDGraph* GetLastSavedVersion() const { return fLastSavedVersion; }
+   void ClearListOfTelescopes()
+   {
+      fTelescopes.Clear();
+   }
+   KVIDGraph* GetLastSavedVersion() const
+   {
+      return fLastSavedVersion;
+   }
    void RevertToLastSavedVersion();
    void UpdateLastSavedVersion();
 
-   static KVIDGraph* MakeIDGraph(const Char_t *);
+   static KVIDGraph* MakeIDGraph(const Char_t*);
 
    void FindAxisLimits();
-   void Scale(TF1 *sx,TF1 *sy);
+   void Scale(TF1* sx, TF1* sy);
 
-   KVIDentifier *GetIdentifier(Int_t Z, Int_t A) const;
+   KVIDentifier* GetIdentifier(Int_t Z, Int_t A) const;
    void RemoveIdentifier(KVIDentifier*);
    void RemoveCut(KVIDentifier*);
-   
-   TVirtualPad* GetPad() const { return fPad; }
 
-   void ReadAsciiFile(const Char_t * filename);
+   TVirtualPad* GetPad() const
+   {
+      return fPad;
+   }
+
+   void ReadAsciiFile(const Char_t* filename);
    void AddIDTelescopes(const TList*);
-   virtual void     SetName(const char *name){TNamed::SetName(name); /*Modified()*/;}; // *MENU*
-   virtual void Clear(Option_t* opt=""); //  *MENU*
+   virtual void     SetName(const char* name)
+   {
+      TNamed::SetName(name); /*Modified()*/;
+   }; // *MENU*
+   virtual void Clear(Option_t* opt = ""); //  *MENU*
    //void SetIDTelescopes();// *MENU={Hierarchy="Set.../ID Telescopes"}*
-   void SetXVariable(const char* v){ SetVarX(v);  Modified();}; //  *MENU={Hierarchy="Set.../X Variable"}* *ARGS={v=>fVarX}
-   void SetYVariable(const char* v){ SetVarY(v);  Modified();};//  *MENU={Hierarchy="Set.../Y Variable"}* *ARGS={v=>fVarY}
-   void SetRunList(const char* runlist){ SetRuns( KVNumberList(runlist) ); };  // *MENU={Hierarchy="Set.../List of Runs"}*
-   void SetOnlyZId(Bool_t yes=kTRUE);//  *TOGGLE={Hierarchy="Z identification only"}*
+   void SetXVariable(const char* v)
+   {
+      SetVarX(v);
+      Modified();
+   }; //  *MENU={Hierarchy="Set.../X Variable"}* *ARGS={v=>fVarX}
+   void SetYVariable(const char* v)
+   {
+      SetVarY(v);
+      Modified();
+   };//  *MENU={Hierarchy="Set.../Y Variable"}* *ARGS={v=>fVarY}
+   void SetRunList(const char* runlist)
+   {
+      SetRuns(KVNumberList(runlist));
+   };  // *MENU={Hierarchy="Set.../List of Runs"}*
+   void SetOnlyZId(Bool_t yes = kTRUE); //  *TOGGLE={Hierarchy="Z identification only"}*
    void SetMassFormula(Int_t);// *SUBMENU={Hierarchy="Set.../Mass Formula"}*
-   void WriteAsciiFile(const Char_t * filename);// *MENU*
+   void WriteAsciiFile(const Char_t* filename); // *MENU*
    void SetXScaleFactor(Double_t = 0); //  *MENU={Hierarchy="Scale.../X Scale Factor"}*
    void SetYScaleFactor(Double_t = 0);//  *MENU={Hierarchy="Scale.../Y Scale Factor"}*
    //virtual void NewCut();// *MENU={Hierarchy="AddLine.../NewCut"}*
    //virtual void NewIdentifier();// *MENU={Hierarchy="AddLine.../NewIdentifier"}*
-   virtual void          SetEditable(Bool_t editable=kTRUE); // *TOGGLE* *GETTER=GetEditable
+   virtual void          SetEditable(Bool_t editable = kTRUE); // *TOGGLE* *GETTER=GetEditable
 
-   void Draw(Option_t * opt = ""); //  *MENU={Hierarchy="View.../Draw"}*
+   void Draw(Option_t* opt = "");  //  *MENU={Hierarchy="View.../Draw"}*
    void UnDraw(); //  *MENU={Hierarchy="View.../UnDraw"}*
    void ResetDraw();// *MENU={Hierarchy="View.../ResetDraw"}*
    void SetLineColor(Color_t lcolor)
    {
       //Set line colour of all objects in grid
       fIdentifiers->Execute("SetLineColor", Form("%d", (Int_t) lcolor));
-      fCuts->Execute("SetLineColor", Form("%d", (Int_t) lcolor));Modified();
+      fCuts->Execute("SetLineColor", Form("%d", (Int_t) lcolor));
+      Modified();
    };// *MENU={Hierarchy="View.../SetLinecolor"}*
    void SetLineStyle(Style_t lstyle)
    {
       //Set line style of all objects in grid
       fIdentifiers->Execute("SetLineStyle", Form("%d", (Int_t) lstyle));
-      fCuts->Execute("SetLineStyle", Form("%d", (Int_t) lstyle));Modified();
+      fCuts->Execute("SetLineStyle", Form("%d", (Int_t) lstyle));
+      Modified();
    };// *MENU={Hierarchy="View.../SetLineStyle"}*
    void SetLineWidth(Width_t lwidth)
    {
       //Set line width of all objects in grid
       fIdentifiers->Execute("SetLineWidth", Form("%d", (Int_t) lwidth));
-      fCuts->Execute("SetLineWidth", Form("%d", (Int_t) lwidth));Modified();
+      fCuts->Execute("SetLineWidth", Form("%d", (Int_t) lwidth));
+      Modified();
    };// *MENU={Hierarchy="View.../SetLineWidth"}*
 
 
    Double_t GetXScaleFactor();
    Double_t GetYScaleFactor();
-   void Add(TString, KVIDentifier *);
+   void Add(TString, KVIDentifier*);
    KVIDentifier* Add(TString, TString);
-   virtual void DrawAndAdd(const Char_t* type="ID", const Char_t* classname="KVIDentifier");
-   void Print(Option_t * opt = "") const;
+   virtual void DrawAndAdd(const Char_t* type = "ID", const Char_t* classname = "KVIDentifier");
+   void Print(Option_t* opt = "") const;
 
-   static KVIDGraph *AddGraphs(KVIDGraph * g1, Int_t id1_min, Int_t id1_max,
-                               KVIDGraph * g2, Int_t id2_min, Int_t id2_max);
+   static KVIDGraph* AddGraphs(KVIDGraph* g1, Int_t id1_min, Int_t id1_max,
+                               KVIDGraph* g2, Int_t id2_min, Int_t id2_max);
    void SetRuns(const KVNumberList& nl);
 
    const Char_t* GetName() const;
-   virtual void WriteAsciiFile_WP(Int_t version=-1);//WP means with pattern
-   virtual void ReadAsciiFile_WP(Int_t version=-1); //WP means with pattern
+   virtual void WriteAsciiFile_WP(Int_t version = -1); //WP means with pattern
+   virtual void ReadAsciiFile_WP(Int_t version = -1); //WP means with pattern
    virtual Int_t CheckVersion(Int_t version);
-   virtual Bool_t ExistVersion(Int_t version){
-      if (version!=-1) return (version==CheckVersion(version));
-      else return (version!=-1);
+   virtual Bool_t ExistVersion(Int_t version)
+   {
+      if (version != -1) return (version == CheckVersion(version));
+      else return (version != -1);
    };
-   void SetPattern(TString pattern) { pattern.ReplaceAll(".","_"); fPattern = pattern;}
-   TString GetPattern(void) {return fPattern;}
+   void SetPattern(TString pattern)
+   {
+      pattern.ReplaceAll(".", "_");
+      fPattern = pattern;
+   }
+   TString GetPattern(void)
+   {
+      return fPattern;
+   }
 
-   const TList* GetIDTelescopes() const { return &fTelescopes; };
+   const TList* GetIDTelescopes() const
+   {
+      return &fTelescopes;
+   };
    void Increment(Float_t x)  // *SIGNAL*
    {
       // Used by TestIdentification and KVTestIDGridDialog to send
@@ -178,12 +215,18 @@ class KVIDGraph : public TCutG
    // Returns kTRUE if the graph is only to be used for Z identification
    // (no isotopic information). Default is to identify both Z & A
    // (fOnlyZid = kFALSE)
-   Bool_t OnlyZId() const { return fOnlyZId; };
+   Bool_t OnlyZId() const
+   {
+      return fOnlyZId;
+   };
    // Returns kTRUE if the graph is only to be used for Z identification
    // (no isotopic information). Default is to identify both Z & A
    // (fOnlyZid = kFALSE)
-   Bool_t IsOnlyZId() const { return fOnlyZId; };
-   
+   Bool_t IsOnlyZId() const
+   {
+      return fOnlyZId;
+   };
+
    const KVNumberList& GetRuns() const
    {
       // Get list of runs for which grid is valid
@@ -194,38 +237,44 @@ class KVIDGraph : public TCutG
       // Get list of runs for which grid is valid
       return (const char*)fRunList;
    };
-   KVIDentifier *GetIdentifierAt(Int_t index) const
+   KVIDentifier* GetIdentifierAt(Int_t index) const
    {
       // Return identifier at position 'index' (=0,1,...) in list of identifiers
       return (KVIDentifier*)fIdentifiers->At(index);
    };
-   KVIDentifier *GetIdentifier(const Char_t * name) const
+   KVIDentifier* GetIdentifier(const Char_t* name) const
    {
       return (KVIDentifier*)fIdentifiers->FindObject(name);
    };
-   KVIDentifier *GetCut(const Char_t * name) const
+   KVIDentifier* GetCut(const Char_t* name) const
    {
       return (KVIDentifier*)fCuts->FindObject(name);
    };
    // Return pointer to list of parameters associated to grid
-   KVNameValueList *GetParameters() const {
+   KVNameValueList* GetParameters() const
+   {
       return fPar;
    };
-   KVList *GetIdentifiers() const {
+   KVList* GetIdentifiers() const
+   {
       // Returns list of identifier objects (derived from KVIDentifier)
       return fIdentifiers;
    };
-   KVList *GetCuts() const {
+   KVList* GetCuts() const
+   {
       // Returns list of cuts (derived from KVIDentifier)
       return fCuts;
    };
-   Int_t GetNumberOfIdentifiers() const {
+   Int_t GetNumberOfIdentifiers() const
+   {
       return fIdentifiers->GetSize();
    };
-   Int_t GetNumberOfCuts() const {
+   Int_t GetNumberOfCuts() const
+   {
       return fCuts->GetSize();
    };
-   virtual void AddIdentifier(KVIDentifier *id) {
+   virtual void AddIdentifier(KVIDentifier* id)
+   {
       // Add identifier to the graph. It will be deleted by the graph.
       fIdentifiers->Add(id);
       id->SetParent(this);
@@ -234,10 +283,11 @@ class KVIDGraph : public TCutG
       id->SetOnlyZId(OnlyZId());
       //if grid is Z-identification only, set mass formula for line
       //according to mass formula of grid
-      if(OnlyZId()) id->SetMassFormula(GetMassFormula());
+      if (OnlyZId()) id->SetMassFormula(GetMassFormula());
       //Modified();
    };
-   virtual void AddCut(KVIDentifier *cut) {
+   virtual void AddCut(KVIDentifier* cut)
+   {
       // Add cut to the graph. It will be deleted by the graph.
       cut->SetLineColor(kRed);
       cut->SetParent(this);
@@ -247,7 +297,8 @@ class KVIDGraph : public TCutG
       cut->SetBit(kMustCleanup);
       //Modified();
    };
-   void SortIdentifiers() {
+   void SortIdentifiers()
+   {
       fIdentifiers->Sort();
       //Modified();
    };
@@ -256,16 +307,20 @@ class KVIDGraph : public TCutG
       // Return kTRUE if list of identifiers has been sorted
       return fIdentifiers->IsSorted();
    };
-   Axis_t GetXmin() const {
+   Axis_t GetXmin() const
+   {
       return fXmin;
    };
-   Axis_t GetYmin() const {
+   Axis_t GetYmin() const
+   {
       return fYmin;
    };
-   Axis_t GetXmax() const {
+   Axis_t GetXmax() const
+   {
       return fXmax;
    };
-   Axis_t GetYmax() const {
+   Axis_t GetYmax() const
+   {
       return fYmax;
    };
    // Return quality code related to previously-attempted identification using grid.
@@ -274,22 +329,24 @@ class KVIDGraph : public TCutG
    {
       return 0;
    };
-   void AddIDTelescope(KVBase*t)
+   void AddIDTelescope(KVBase* t)
    {
       // Associate this graph with an identification telescope, i.e. add the
       // telescope to the list of telescopes which can use this
       // graph for identification purposes.
 
-      fTelescopes.Add(t);Modified();
+      fTelescopes.Add(t);
+      Modified();
    };
-   void RemoveIDTelescope(KVBase*t)
+   void RemoveIDTelescope(KVBase* t)
    {
       // Remove telescope from the list of telescopes
       // which can use this graph for identification purposes.
 
-      fTelescopes.Remove(t);Modified();
+      fTelescopes.Remove(t);
+      Modified();
    };
-   Bool_t HandlesIDTelescope(KVBase*t) const
+   Bool_t HandlesIDTelescope(KVBase* t) const
    {
       // Returns kTRUE if telescope can use this graph for identification purposes.
 
@@ -321,41 +378,106 @@ class KVIDGraph : public TCutG
 
    //---- The following redeclarations are here just to remove the *MENU* tag which
    //---- is present in TGraph.h, to stop these methods appearing in the ID line context menus
-   virtual void      SetMaximum(Double_t maximum=-1111){TGraph::SetMaximum(maximum);};
-   virtual void      SetMinimum(Double_t minimum=-1111){TGraph::SetMinimum(minimum);};
+   virtual void      SetMaximum(Double_t maximum = -1111)
+   {
+      TGraph::SetMaximum(maximum);
+   };
+   virtual void      SetMinimum(Double_t minimum = -1111)
+   {
+      TGraph::SetMinimum(minimum);
+   };
    //virtual void      SetTitle(const char *title="") {TGraph::SetTitle(title);};
-   virtual void      FitPanel() { TGraph::FitPanel(); };
-   virtual void      DrawPanel() { TGraph::DrawPanel(); };
+   virtual void      FitPanel()
+   {
+      TGraph::FitPanel();
+   };
+   virtual void      DrawPanel()
+   {
+      TGraph::DrawPanel();
+   };
 #if ROOT_VERSION_CODE > ROOT_VERSION(5,25,4)
-   virtual TFitResultPtr Fit(const char *formula ,Option_t *option="" ,Option_t *goption="", Axis_t xmin=0, Axis_t xmax=0)
-   { return TGraph::Fit(formula,option,goption,xmin,xmax);};
-   virtual TFitResultPtr Fit(TF1 *f1 ,Option_t *option="" ,Option_t *goption="", Axis_t xmin=0, Axis_t xmax=0)
-   { return TGraph::Fit(f1,option,goption,xmin,xmax);};
+   virtual TFitResultPtr Fit(const char* formula , Option_t* option = "" , Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
+   {
+      return TGraph::Fit(formula, option, goption, xmin, xmax);
+   };
+   virtual TFitResultPtr Fit(TF1* f1 , Option_t* option = "" , Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
+   {
+      return TGraph::Fit(f1, option, goption, xmin, xmax);
+   };
 #else
-   virtual Int_t     Fit(const char *formula ,Option_t *option="" ,Option_t *goption="", Axis_t xmin=0, Axis_t xmax=0)
-   { return TGraph::Fit(formula,option,goption,xmin,xmax);};
-   virtual Int_t     Fit(TF1 *f1 ,Option_t *option="" ,Option_t *goption="", Axis_t xmin=0, Axis_t xmax=0)
-   { return TGraph::Fit(f1,option,goption,xmin,xmax);};
+   virtual Int_t     Fit(const char* formula , Option_t* option = "" , Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
+   {
+      return TGraph::Fit(formula, option, goption, xmin, xmax);
+   };
+   virtual Int_t     Fit(TF1* f1 , Option_t* option = "" , Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
+   {
+      return TGraph::Fit(f1, option, goption, xmin, xmax);
+   };
 #endif
    //---- The following redeclarations are here just to remove the *MENU* tag which
    //---- is present in TObject.h, to stop these methods appearing in the ID line context menus
-   virtual void        Delete(Option_t *option=""){TGraph::Delete(option);};
-   virtual void        DrawClass() const {TGraph::DrawClass();};
-   virtual TObject    *DrawClone(Option_t *option="") const {return TGraph::DrawClone(option);};
-   virtual void        Dump() const {TGraph::Dump();};
-   virtual void        Inspect() const {TGraph::Inspect();};
-   virtual void        SaveAs(const char *filename="",Option_t *option="") const {TGraph::SaveAs(filename,option);};
-   virtual void        SetDrawOption(Option_t *option="") {TGraph::SetDrawOption(option);};
-   virtual void        SetLineAttributes() {TGraph::SetLineAttributes();};
-   virtual void        SetFillAttributes() {TGraph::SetFillAttributes();};
-   virtual void        SetMarkerAttributes(){TGraph::SetMarkerAttributes();};
-   virtual void 			SetVarX(const char* v){TCutG::SetVarX(v); };
-   virtual void 			SetVarY(const char* v){TCutG::SetVarY(v); };
-   virtual Int_t         InsertPoint(){return TCutG::InsertPoint();};
-   virtual Int_t         RemovePoint(){return TCutG::RemovePoint();};
-   virtual Int_t         RemovePoint(Int_t i){return TCutG::RemovePoint(i);};
+   virtual void        Delete(Option_t* option = "")
+   {
+      TGraph::Delete(option);
+   };
+   virtual void        DrawClass() const
+   {
+      TGraph::DrawClass();
+   };
+   virtual TObject*    DrawClone(Option_t* option = "") const
+   {
+      return TGraph::DrawClone(option);
+   };
+   virtual void        Dump() const
+   {
+      TGraph::Dump();
+   };
+   virtual void        Inspect() const
+   {
+      TGraph::Inspect();
+   };
+   virtual void        SaveAs(const char* filename = "", Option_t* option = "") const
+   {
+      TGraph::SaveAs(filename, option);
+   };
+   virtual void        SetDrawOption(Option_t* option = "")
+   {
+      TGraph::SetDrawOption(option);
+   };
+   virtual void        SetLineAttributes()
+   {
+      TGraph::SetLineAttributes();
+   };
+   virtual void        SetFillAttributes()
+   {
+      TGraph::SetFillAttributes();
+   };
+   virtual void        SetMarkerAttributes()
+   {
+      TGraph::SetMarkerAttributes();
+   };
+   virtual void         SetVarX(const char* v)
+   {
+      TCutG::SetVarX(v);
+   };
+   virtual void         SetVarY(const char* v)
+   {
+      TCutG::SetVarY(v);
+   };
+   virtual Int_t         InsertPoint()
+   {
+      return TCutG::InsertPoint();
+   };
+   virtual Int_t         RemovePoint()
+   {
+      return TCutG::RemovePoint();
+   };
+   virtual Int_t         RemovePoint(Int_t i)
+   {
+      return TCutG::RemovePoint(i);
+   };
 
-   ClassDef(KVIDGraph,2)//Base class for particle identification in a 2D map
+   ClassDef(KVIDGraph, 2) //Base class for particle identification in a 2D map
 };
 
 #endif

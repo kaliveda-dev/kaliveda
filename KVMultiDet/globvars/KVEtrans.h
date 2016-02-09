@@ -1,5 +1,5 @@
 //
-// D.Cussol 
+// D.Cussol
 //
 // 17/02/2004:
 // Creation d'une classe Variable Globale
@@ -11,27 +11,27 @@
 
 //#define DEBUG_KVEtrans
 
-class KVEtrans:public KVVarGlob1 {
- public:
+class KVEtrans: public KVVarGlob1 {
+public:
 // Champs Statiques:
    static Int_t nb;
    static Int_t nb_crea;
    static Int_t nb_dest;
 // Methodes
- protected:
+protected:
    void init_KVEtrans(void);
 
- public:
-    KVEtrans(void);             // constructeur par defaut
-    KVEtrans(Char_t * nom);
-    KVEtrans(const KVEtrans & a);       // constructeur par Copy
+public:
+   KVEtrans(void);             // constructeur par defaut
+   KVEtrans(Char_t* nom);
+   KVEtrans(const KVEtrans& a);        // constructeur par Copy
 
-    virtual ~ KVEtrans(void);   // destructeur
+   virtual ~ KVEtrans(void);   // destructeur
 
-    KVEtrans & operator =(const KVEtrans & a);  // operateur =
+   KVEtrans& operator =(const KVEtrans& a);    // operateur =
 
-   virtual void Fill(KVNucleus * c);    // Remplissage de la variable.
+   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
 
-    ClassDef(KVEtrans, 1)       // Global variable Sum(Etrans)
+   ClassDef(KVEtrans, 1)       // Global variable Sum(Etrans)
 };
 #endif

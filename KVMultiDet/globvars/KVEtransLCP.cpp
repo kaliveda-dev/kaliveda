@@ -9,13 +9,13 @@ ClassImp(KVEtransLCP)
 //   Default frame is laboratory.
 
 //_________________________________________________________________
-    KVEtransLCP::KVEtransLCP()
+KVEtransLCP::KVEtransLCP()
 {
    //Default ctor
 }
 
 //_________________________________________________________________
-KVEtransLCP::KVEtransLCP(Char_t * name):KVEtrans(name)
+KVEtransLCP::KVEtransLCP(Char_t* name): KVEtrans(name)
 {
    //ctor with name
 }
@@ -25,13 +25,13 @@ KVEtransLCP::KVEtransLCP(Char_t * name):KVEtrans(name)
 //_________________________________________________________________
 KVEtransLCP::~KVEtransLCP(void)
 {
-// 
+//
 // Destructeur
 //
 }
 
 //_________________________________________________________________
-void KVEtransLCP::Fill(KVNucleus * c)
+void KVEtransLCP::Fill(KVNucleus* c)
 {
    //Add particle's transverse kinetic energy in frame chosen with SetFrame()
    //to the sum of transverse energies if Z<3

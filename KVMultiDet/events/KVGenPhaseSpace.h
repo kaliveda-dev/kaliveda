@@ -8,12 +8,11 @@
 #include "KVNucleus.h"
 #include "KVEvent.h"
 
-class KVGenPhaseSpace : public KVBase
-{
-   private:
+class KVGenPhaseSpace : public KVBase {
+private:
    void init();
 
-   protected:
+protected:
    TObject* fMCSampler;//! Monte-Carlo phase space sampler
    KVNucleus fCompound;//initial nucleus which undergoes break-up
    KVEvent* fEvent;//! break-up channel
@@ -25,7 +24,7 @@ class KVGenPhaseSpace : public KVBase
    Bool_t CheckBreakUpChannel();
    virtual void InitialiseMCSampler();
 
-   public:
+public:
    KVGenPhaseSpace();
    KVGenPhaseSpace(const Char_t* name, const Char_t* title = "");
    virtual ~KVGenPhaseSpace();
@@ -41,7 +40,7 @@ class KVGenPhaseSpace : public KVBase
       return fEtot;
    }
 
-   ClassDef(KVGenPhaseSpace,1)//Generate momenta for an event using microcanonical phase space sampling
+   ClassDef(KVGenPhaseSpace, 1) //Generate momenta for an event using microcanonical phase space sampling
 };
 
 #endif

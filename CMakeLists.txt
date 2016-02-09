@@ -7,10 +7,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}  ${PROJECT_SOURCE_DIR}/cmake)
 
 #--look for ROOT & all essential libraries
 find_package(ROOT
-	REQUIRED Rint Graf Geom Spectrum Proof ProofPlayer Physics Hist Minuit
+	REQUIRED Rint Graf Geom Spectrum Proof ProofPlayer Physics Hist
 	RIO Tree MathCore Matrix Gpad Gui Net
-   OPTIONAL_COMPONENTS RGL RooFit RooFitCore Html)
-	
+   OPTIONAL_COMPONENTS RGL RooFit RooFitCore Html Minuit)
+
 #--optional support for OpenGL
 if(ROOT_opengl_FOUND)
 	set(WITH_OPENGL yes)
@@ -32,6 +32,15 @@ if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 link_directories(${ROOT_LIBRARY_DIRS})
+
+#--check for BOOST - minimum version corresponds progress_display
+set(WITH_BOOST)
+find_package(Boost 1.9)
+if(Boost_FOUND)
+   include_directories(${Boost_INCLUDE_DIRS})
+   set(WITH_BOOST yes)
+endif(Boost_FOUND)
+
 include(KaliVedaInstallDirs)
 
 include_directories(${CMAKE_BINARY_DIR})
@@ -50,6 +59,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/.git OR EXISTS ${PROJECT_SOURCE_DIR}/KVGitInfo.h
    if(NOT EXISTS ${PROJECT_SOURCE_DIR}/.git/hooks/pre-commit)
       execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/tools/git-hook-pre-commit.sh ${PROJECT_SOURCE_DIR}/.git/hooks/pre-commit)
    endif()
+   #-if we have git, enforce 'git pull --rebase' policy
+   find_package(Git QUIET)
+   if(GIT_FOUND)
+     execute_process(COMMAND ${GIT_EXECUTABLE} config pull.rebase true WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+   endif(GIT_FOUND)
 elseif(EXISTS ${PROJECT_SOURCE_DIR}/.bzr OR EXISTS ${PROJECT_SOURCE_DIR}/KVBzrInfo.h)
    set(WITH_BZR_INFOS yes)
 endif()
@@ -71,7 +85,7 @@ endif(gnuinstall)
 #---Built-in package for reading GANIL acquisition data
 option(USE_BUILTIN_GRU
 		"Use built-in package for reading GANIL acquisition data (not MFM format)"
-		ON)		
+		ON)
 add_feature_info(builtin_gru USE_BUILTIN_GRU "Use built-in package for reading GANIL acquisition data (not MFM format)")
 if(USE_BUILTIN_GRU)
 	set(WITH_BUILTIN_GRU yes)
@@ -152,7 +166,7 @@ if(USE_FITLTG)
 endif()
 
 #--- BackTrack package for model parameter optimisation
-option(USE_BACKTRACK "Build BackTrack package" OFF)
+option(USE_BACKTRACK "Build BackTrack backtracing statistical analysis package" OFF)
 if(USE_BACKTRACK)
 	#---check if roofit is available
 	if(NOT ROOT_roofit_FOUND)
@@ -160,7 +174,11 @@ if(USE_BACKTRACK)
       set(USE_BACKTRACK OFF CACHE BOOL "" FORCE)
    endif()
 endif()
-add_feature_info(backtrack USE_BACKTRACK "Build BackTrack package")
+add_feature_info(backtrack USE_BACKTRACK "Build BackTrack backtracing statistical analysis package")
+
+#--- MicroStat package for calculating event statistical weights
+option(USE_MICROSTAT "Build MicroStat package for event generation using statistical weights" OFF)
+add_feature_info(microstat USE_MICROSTAT "Build MicroStat package for event generation using statistical weights")
 
 #--- Libraries for INDRA data
 option(USE_INDRA "Build libraries for analysis of INDRA data" OFF)
@@ -169,6 +187,12 @@ option(USE_INDRA "Build libraries for analysis of INDRA data" OFF)
 option(USE_INDRAVAMOS "Build libraries for analysis of INDRA-VAMOS data" OFF)
 if(USE_INDRAVAMOS)
 	set(USE_INDRA ON)
+endif()
+
+option(USE_DEPRECATED_VAMOS "Enable deprecated VAMOS code" OFF)
+if (USE_DEPRECATED_VAMOS)
+	set(USE_INDRAVAMOS ON)
+	add_definitions(-D__ENABLE_DEPRECATED_VAMOS__)
 endif()
 
 #--- Libraries for FAZIA data
@@ -185,6 +209,7 @@ if(USE_ALL)
 endif()
 add_feature_info(indra USE_INDRA "Build libraries for analysis of INDRA data")
 add_feature_info(indravamos USE_INDRAVAMOS "Build libraries for analysis of INDRA-VAMOS data")
+add_feature_info(indravamosdep USE_DEPRECATED_VAMOS "Build libraries for deprecated INDRA-VAMOS analysis")
 add_feature_info(fazia USE_FAZIA "Build libraries for analysis of FAZIA data")
 
 #----------------------------------------------------------
@@ -197,18 +222,18 @@ Feature_Summary(WHAT DISABLED_FEATURES DESCRIPTION "------DISABLED FEATURES:")
 
 
 #---Set the library version in the main CMakeLists.txt------------------------------------------
-file(READ ${CMAKE_SOURCE_DIR}/VERSION versionstr)	
+file(READ ${CMAKE_SOURCE_DIR}/VERSION versionstr)
 string(STRIP ${versionstr} versionstr)
 string(REGEX REPLACE "([0-9]+)[.][0-9]+[/][0-9]+" "\\1" KV_MAJOR_VERSION ${versionstr})
 string(REGEX REPLACE "[0-9]+[.]([0-9]+)[/][0-9]+" "\\1" KV_MINOR_VERSION ${versionstr})
 string(REGEX REPLACE "[0-9]+[.][0-9]+[/]([0-9]+)" "\\1" KV_PATCH_VERSION ${versionstr})
-set(KV_VERSION "${KV_MAJOR_VERSION}.${KV_MINOR_VERSION}.${KV_PATCH_VERSION}")	
-set(KV_VERSION_STRING "${versionstr}")	
+set(KV_VERSION "${KV_MAJOR_VERSION}.${KV_MINOR_VERSION}.${KV_PATCH_VERSION}")
+set(KV_VERSION_STRING "${versionstr}")
 set(ROOT_LIBRARY_PROPERTIES ${ROOT_LIBRARY_PROPERTIES}
       VERSION ${KV_VERSION}
       SOVERSION ${KV_MAJOR_VERSION}
 		)
-		
+
 
 #---configure the KVVersion.h file
 include(CreateKaliVedaVersionHeader)
@@ -223,6 +248,9 @@ get_property(KVMultiDet_MOD_LIST GLOBAL PROPERTY KVMultiDet_MOD_LIST)
 get_property(KVMultiDet_LIB_LIST GLOBAL PROPERTY KVMultiDet_LIB_LIST)
 if(USE_BACKTRACK)
 	add_subdirectory(BackTrack)
+endif()
+if(USE_MICROSTAT)
+	add_subdirectory(MicroStat)
 endif()
 if(USE_INDRA)
 	add_subdirectory(KVIndra)
@@ -263,6 +291,8 @@ configure_file(etc/config.files.in etc/config.files)
 install(FILES ${CMAKE_BINARY_DIR}/etc/config.files DESTINATION ${CMAKE_INSTALL_SYSCONFDIR})
 
 #---configure and install kaliveda-config script
+get_property(KALIVEDA_SUBPROJ_LIST GLOBAL PROPERTY KALIVEDA_SUBPROJ_LIST)
+CHANGE_LIST_TO_STRING(subprojlist ${KALIVEDA_SUBPROJ_LIST})
 configure_file(kaliveda-config.in kaliveda-config @ONLY)
 install(PROGRAMS ${CMAKE_BINARY_DIR}/kaliveda-config DESTINATION ${CMAKE_INSTALL_BINDIR})
 
@@ -280,6 +310,7 @@ install(EXPORT ${CMAKE_PROJECT_NAME}Exports DESTINATION ${CMAKE_INSTALL_CMAKEPKG
 
 #---generate config & version files for other projects using find_package()
 include(CMakePackageConfigHelpers)
+get_property(KALIVEDA_LIB_LIST GLOBAL PROPERTY KALIVEDA_LIB_LIST)
 configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/KaliVedaConfig.cmake.in
                                  ${CMAKE_CURRENT_BINARY_DIR}/KaliVedaConfig.cmake
                                  INSTALL_DESTINATION ${CMAKE_INSTALL_CMAKEPKGDIR}
@@ -318,13 +349,12 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/man/ DESTINATION ${CMAKE_INSTALL_MANDIR})
 if(CAN_DO_HTMLDOC)
 
    CONVERT_ALL_EXAMPLE_FUNCTIONS()
-   
+
    get_property(KALIVEDA_EXFUNCS GLOBAL PROPERTY KALIVEDA_EXFUNCS)
    get_property(KALIVEDA_EXCLASS GLOBAL PROPERTY KALIVEDA_EXCLASS)
-   
+
    #---add a 'html' target to generate ROOT class reference
    file(WRITE ${CMAKE_BINARY_DIR}/makehtml.C "{\nmakedoc(\"${CMAKE_BINARY_DIR}/htmldoc\");\n}")
-   get_property(KALIVEDA_LIB_LIST GLOBAL PROPERTY KALIVEDA_LIB_LIST)
    add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/htmldoc/index.html
       COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tools/html ${CMAKE_BINARY_DIR}
       COMMAND ${ROOT_EXECUTABLE} -q -l makehtml.C
@@ -343,8 +373,8 @@ if(CAN_DO_HTMLDOC)
    endforeach()
    add_custom_target(examples)
    add_dependencies(examples ${EXAMPLE_SUBPROJ_TARGETS})
-   add_custom_target(html)      
+   add_custom_target(html)
    add_dependencies(classref examples)
    add_dependencies(html ${CLEAN_EXAMPLE_SUBPROJ_TARGETS} classref examples)
-   
+
 endif(CAN_DO_HTMLDOC)

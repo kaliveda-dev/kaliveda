@@ -8,14 +8,13 @@
 class KVSeqCollection;
 class KVDetector;
 
-class KVGeoDetectorNode : public KVBase
-{
-    KVSeqCollection* fInFront;//list of detectors in front
-    KVSeqCollection* fBehind;//list of detectors behind
+class KVGeoDetectorNode : public KVBase {
+   KVSeqCollection* fInFront;//list of detectors in front
+   KVSeqCollection* fBehind;//list of detectors behind
 
-    void init();
+   void init();
 
-   public:
+public:
    KVGeoDetectorNode();
    KVGeoDetectorNode(const Char_t* name);
    virtual ~KVGeoDetectorNode();
@@ -24,16 +23,22 @@ class KVGeoDetectorNode : public KVBase
    void AddBehind(KVDetector*);
    Bool_t IsInFrontOf(KVDetector*);
    Bool_t IsBehind(KVDetector*);
-   KVSeqCollection* GetDetectorsInFront() const { return fInFront; }
-   KVSeqCollection* GetDetectorsBehind() const { return fBehind; }
+   KVSeqCollection* GetDetectorsInFront() const
+   {
+      return fInFront;
+   }
+   KVSeqCollection* GetDetectorsBehind() const
+   {
+      return fBehind;
+   }
    Int_t GetNDetsInFront() const;
    Int_t GetNDetsBehind() const;
 
    void RehashLists();
 
-   void ls(Option_t *option="") const;
+   void ls(Option_t* option = "") const;
 
-   ClassDef(KVGeoDetectorNode,1)//Stores lists of detectors in front and behind this node
+   ClassDef(KVGeoDetectorNode, 1) //Stores lists of detectors in front and behind this node
 };
 
 #endif

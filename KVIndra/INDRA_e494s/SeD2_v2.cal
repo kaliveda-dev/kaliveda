@@ -1,16 +1,4 @@
-#Energy Wire calib (Sept 2004)
-RUNS: 2-615
-TYPE: channel->MeV
-FUNCTION: pol1
-
-QSED2_1: 0 1
-QSED2_2: 0 1
-QSED2_3: 0 1
-
-
-
 # Time TSED2_HF in (ns)
-# PRELIMINARY t0= 267.458 ns!!!!
 # TAC: 200 ns/channel
 RUNS: 41-85
 TYPE: channel->ns
@@ -21,12 +9,132 @@ TSED2_HF: 0. -0.0091292 -2.24852e-07 2.62964e-11 -1.65456e-15 5.3064e-20 -6.8216
 RUNS: 86-615
 TSED2_HF: 0. -0.022823 -5.6213e-07 6.5741e-11 -4.1364e-15 1.3266e-19 -1.7054e-24
 
+
 # Time T0 (in ns) for TSED2_HF
-RUNS: 2-615
+# 40Ar+60Ni, calculated by GA 21/04/15 by adjusting A/Q=3 line
 TYPE: T0_HF
 FUNCTION:
+ 
+RUNS: 41-46
+SED2: 268.07
+RUNS: 80-85
+SED2: 459.3
+RUNS: 95-115
+SED2: 469.40
+RUNS: 116-126
+SED2: 471.90
+RUNS: 127-145
+SED2: 469.40
+RUNS: 150-159
+SED2: 470.40
+RUNS: 200-206
+SED2: 465.80
+RUNS: 217-218
+SED2: 468.40
+RUNS: 219-221 222
+SED2: 468.90
 
-SED2: 267.458
+# 40Ar+64Ni, calculated by GA 17/04/15 by adjusting A/Q=3 line
+RUNS: 160-175
+SED2: 467.76
+RUNS: 176-178
+SED2: 467.36
+RUNS: 179-195
+SED2: 466.56
+RUNS: 196-199
+SED2: 467.36
+RUNS: 207-210 223-231
+SED2: 467.16
+
+# 34Ar+58Ni, calculated by GA 20/05/14
+RUNS: 282-334
+SED2: 403.3
+
+# 36Ar+58Ni, calculated by GA 30/01/15 by adjusting A/Q=3 line
+# target 0.3 mg/cm2, theta_vamos= 0 deg
+RUNS: 337-382
+SED2: 403.5
+RUNS: 383-391
+SED2: 404
+RUNS: 392-411
+SED2: 401
+# target 2.5 mg/cm2, theta_vamos= 0 deg
+RUNS: 436-442
+SED2: 394.7
+# target 0.3 mg/cm2, theta_vamos= 4 deg
+RUNS: 479-481
+SED2: 403.
+RUNS: 482-485
+SED2: 402
+RUNS: 486-490
+SED2: 402.6
+# target 0.3 mg/cm2, theta_vamos= 8 deg
+RUNS: 491-492
+SED2: 399
+RUNS: 493-494
+SED2: 400.5
+RUNS: 495
+SED2: 400.3
+RUNS: 496
+SED2: 399
+# target 0.3 mg/cm2, theta_vamos= 4 deg
+RUNS: 516-518
+SED2: 399.5
+# target 0.3 mg/cm2, theta_vamos= 0 deg
+RUNS: 527-532
+SED2: 398.5
+
+# 36Ar+60Ni, calculated by GA 05/06/14
+# target 0.33 mg/cm2, theta_vamos= 0 deg
+RUNS: 412-435
+SED2: 400.32
+RUNS: 443-450
+SED2: 398.32
+RUNS: 451-468
+SED2: 403.32
+# target 0.33 mg/cm2, theta_vamos= 4 deg
+RUNS: 469-471
+SED2: 403.70
+RUNS: 472-474
+SED2: 403.10
+RUNS: 475-478
+SED2: 403.60
+# target 0.33 mg/cm2, theta_vamos= 8 deg
+RUNS: 497
+SED2: 400.77
+RUNS: 498-499
+SED2: 400.37
+RUNS: 500-501
+SED2: 400.57
+RUNS: 503-505
+SED2: 397.57
+# target 0.33 mg/cm2, theta_vamos= 4 deg
+RUNS: 506-509
+SED2: 397.64
+
+# Xf-correction of T0 (in ns) for TSED2_HF
+TYPE: Xf-correction of T0
+FUNCTION: pol2*(x<43)+pol2(3)*(43<=x<86)+pol2(6)*(86<=x)
+
+# 40Ar+60Ni, calculated by GA
+RUNS: 41-46 80-145 150-159 200-206 217-222
+TSED2_HF: 4.99133e+00 -7.98438e-02 -2.14583e-04 \
+         -4.04534e+00  1.20424e-01 -9.15395e-04 \
+         -1.11803e+01  1.60229e-01 -4.19719e-04                       
+
+# 36Ar+58,60Ni, calculated by GA 05/06/14
+RUNS: 337-532
+TSED2_HF: 5.04151e+00 -1.00429e-01  2.77220e-04 \
+         -7.53052e+00  1.05689e-01 -8.66154e-04 \
+         -1.39270e+01  2.15064e-01 -6.63116e-04
+
+
+#Time Pedestals (in canal) 31/01/14
+RUNS: 2-632
+TYPE: Pedestal
+FUNCTION:
+
+VAMOS: "TSED2_HF" 200
 
 
 

@@ -56,39 +56,39 @@ class TGFSComboBox;
 class KVFileDialog : public TGTransientFrame {
 
 protected:
-   TGTextBuffer      *fTbfname;  // text buffer of file name
-   TGTextEntry       *fName;     // file name text entry
-   TGComboBox        *fTypes;    // file type combo box
-   TGFSComboBox      *fTreeLB;   // file system path combo box
-   TGPictureButton   *fCdup;     // top toolbar button
-   TGPictureButton   *fNewf;     // top toolbar button
-   TGPictureButton   *fList;     // top toolbar button
-   TGPictureButton   *fDetails;  // top toolbar button
-   TGCheckButton     *fCheckB;   // set on/off file overwriting for Open dialog
-                                 // OR set on/off multiple file selection for SaveAs dialog
-   const TGPicture   *fPcdup;    // picture for fCdup
-   const TGPicture   *fPnewf;    // picture for fNewf
-   const TGPicture   *fPlist;    // picture for fList
-   const TGPicture   *fPdetails; // picture for fDetails
-   TGTextButton      *fOk;       // ok button
-   TGTextButton      *fCancel;   // cancel button
-   TGListView        *fFv;       // file list view
-   TGFileContainer   *fFc;       // file list view container (containing the files)
-   TGFileInfo        *fFileInfo; // file info passed to this dialog
+   TGTextBuffer*      fTbfname;  // text buffer of file name
+   TGTextEntry*       fName;     // file name text entry
+   TGComboBox*        fTypes;    // file type combo box
+   TGFSComboBox*      fTreeLB;   // file system path combo box
+   TGPictureButton*   fCdup;     // top toolbar button
+   TGPictureButton*   fNewf;     // top toolbar button
+   TGPictureButton*   fList;     // top toolbar button
+   TGPictureButton*   fDetails;  // top toolbar button
+   TGCheckButton*     fCheckB;   // set on/off file overwriting for Open dialog
+   // OR set on/off multiple file selection for SaveAs dialog
+   const TGPicture*   fPcdup;    // picture for fCdup
+   const TGPicture*   fPnewf;    // picture for fNewf
+   const TGPicture*   fPlist;    // picture for fList
+   const TGPicture*   fPdetails; // picture for fDetails
+   TGTextButton*      fOk;       // ok button
+   TGTextButton*      fCancel;   // cancel button
+   TGListView*        fFv;       // file list view
+   TGFileContainer*   fFc;       // file list view container (containing the files)
+   TGFileInfo*        fFileInfo; // file info passed to this dialog
    EKVFileDialogMode fDlgMode;
 private:
    KVFileDialog(const KVFileDialog&);              // not implemented
    KVFileDialog& operator=(const KVFileDialog&);   // not implemented
 
 public:
-   KVFileDialog(const TGWindow *p = 0, const TGWindow *main = 0,
-                EKVFileDialogMode dlg_type = kKVFDOpen, TGFileInfo *file_info = 0);
+   KVFileDialog(const TGWindow* p = 0, const TGWindow* main = 0,
+                EKVFileDialogMode dlg_type = kKVFDOpen, TGFileInfo* file_info = 0);
    virtual ~KVFileDialog();
 
    virtual Bool_t ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2);
    virtual void CloseWindow();
 
-   ClassDef(KVFileDialog,0)  //File or directory selection dialog
+   ClassDef(KVFileDialog, 0) //File or directory selection dialog
 };
 
 #endif

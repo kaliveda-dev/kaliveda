@@ -25,26 +25,45 @@
 
 #include "KVIVSelector.h"
 #include "KVClassFactory.h"
-   
-KVIVSelector::KVIVSelector(TTree *tree)
-	: KVSelector(tree)
+
+KVIVSelector::KVIVSelector(TTree* tree)
+   : KVSelector(tree)
 {
-	// Default ctor. Does nothing.
+   // Default ctor. Does nothing.
 }
 
 KVIVSelector::~KVIVSelector()
 {
-	// Destructor
+   // Destructor
 }
 
-void KVIVSelector::Make(const Char_t * kvsname)
+void KVIVSelector::Make(const Char_t* kvsname)
 {
    // Automatic generation of KVIVSelector-derived class for KaliVeda analysis
-   KVClassFactory cf(kvsname,"User analysis class","KVIVSelector",kTRUE);
+   KVClassFactory cf(kvsname, "User analysis class", "KVIVSelector", kTRUE);
    cf.AddImplIncludeFile("KVINDRAReconNuc.h");
    cf.AddImplIncludeFile("KVVAMOSReconNuc.h");
    cf.AddImplIncludeFile("KVBatchSystem.h");
    cf.AddImplIncludeFile("KVINDRA.h");
    cf.GenerateCode();
+}
+
+Bool_t KVIVSelector::Notify()
+{
+   // Wrapper for KVSelector::Notify to catch exceptions thrown in
+   // KVIVDB_e503::SetParameters() method.
+
+   Bool_t status(kFALSE);
+
+   try {
+      status = KVSelector::Notify();
+   } catch (const std::exception& e) {
+      // We've caught an exception from the SetParameters method! We handle
+      // this event by terminating the current run.
+      Error("Notify", "%s", e.what());
+      EndRun();
+   }
+
+   return status;
 }
 

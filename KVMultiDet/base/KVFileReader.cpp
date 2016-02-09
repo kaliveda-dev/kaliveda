@@ -17,12 +17,13 @@ ClassImp(KVFileReader)
 KVFileReader::KVFileReader()
 {
    // Default constructor
-	init();
+   init();
 }
 
 KVFileReader::~KVFileReader()
 {
    // Destructor
-	if (toks) delete toks; toks=0;
+   if (toks) delete toks;
+   toks = 0;
 }
 

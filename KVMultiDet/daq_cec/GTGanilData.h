@@ -6,12 +6,12 @@
 //    email                : patois@ganil.fr
 //////////////////////////////////////////////////////////////////////////
 //
-// Part of ROOTGanilTape 
+// Part of ROOTGanilTape
 //
 // GTGanilData
 //
 // Main header for the user interface class
-// 
+//
 //
 //////////////////////////////////////////////////////////////////////////
  ***************************************************************************
@@ -50,90 +50,110 @@
 #ifndef __GAN_TAPE_GENERAL_H
 //extern "C"
 //{
-  typedef struct {int bidon;} gan_tape_desc;
+typedef struct {
+   int bidon;
+} gan_tape_desc;
 //}
 #endif
 
 
 //______________________________________________________________________________
-class GTGanilData 
-{
+class GTGanilData {
 public:
-  // What to do with scaler buffer
-  typedef enum
-  {
-    kSkipScaler,     // Skip it.
-    kDumpScaler,     // Print all values of scalers in buffer
-    kReportScaler,   // Report the existance of a scaler buffer. WARNING! user
-                     // have to take care of it.
-    kAutoWriteScaler // Automatic scaler management: wrote on disk    
-  } ScalerWhat_t;
+   // What to do with scaler buffer
+   typedef enum {
+      kSkipScaler,     // Skip it.
+      kDumpScaler,     // Print all values of scalers in buffer
+      kReportScaler,   // Report the existance of a scaler buffer. WARNING! user
+      // have to take care of it.
+      kAutoWriteScaler // Automatic scaler management: wrote on disk
+   } ScalerWhat_t;
 
 
 public:
-  GTGanilData              (const TString filename);
-  GTGanilData              ();
-  virtual ~GTGanilData             (void);
+   GTGanilData(const TString filename);
+   GTGanilData();
+   virtual ~GTGanilData(void);
 
-  void            SetFileName               (const TString filename);
-  void            Open               (void            );
-  void            PrintRunParameters (void            ) const;
-  void            PrintDataParameters(void            ) const;
-  void            DumpEvent          (void            ) const;
-  void            DumpParameterName  (void            ) const;
-  void            Connect            (const Int_t index    ,UShort_t **p) const;
-  Bool_t          Connect            (const TString parName,UShort_t **p) const;
-  bool            Next               (void            );
-  void            MakeTree           (const TString filename="", UInt_t nEvents=kMaxUInt);
-  inline bool     IsScalerBuffer     (void            ) const{return(fIsScalerBuffer);};
-  GTScalers* GetScalers(void ) { fIsScalerBuffer=kFALSE; return fScaler; };
-  Int_t           GetStatus          (void            ) const {return(fStatus);}
-  void            SetScalerBuffersManagement(const ScalerWhat_t sc );
-  Int_t				GetRunNumber		 (void				) const;
+   void            SetFileName(const TString filename);
+   void            Open(void);
+   void            PrintRunParameters(void) const;
+   void            PrintDataParameters(void) const;
+   void            DumpEvent(void) const;
+   void            DumpParameterName(void) const;
+   void            Connect(const Int_t index    , UShort_t** p) const;
+   Bool_t          Connect(const TString parName, UShort_t** p) const;
+   bool            Next(void);
+   void            MakeTree(const TString filename = "", UInt_t nEvents = kMaxUInt);
+   inline bool     IsScalerBuffer(void) const
+   {
+      return (fIsScalerBuffer);
+   };
+   GTScalers* GetScalers(void)
+   {
+      fIsScalerBuffer = kFALSE;
+      return fScaler;
+   };
+   Int_t           GetStatus(void) const
+   {
+      return (fStatus);
+   }
+   void            SetScalerBuffersManagement(const ScalerWhat_t sc);
+   Int_t           GetRunNumber(void) const;
 
-  Bool_t          IsOpen             (void            ) const;
+   Bool_t          IsOpen(void) const;
 
-  GTDataParameters* GetDataParameters() const { return fDataParameters; };
-  const TList* GetListOfDataParameters() const { return fDataParameters->GetList(); };
-  
-  virtual void SetUserTree(TTree*);
-  
+   GTDataParameters* GetDataParameters() const
+   {
+      return fDataParameters;
+   };
+   const TList* GetListOfDataParameters() const
+   {
+      return fDataParameters->GetList();
+   };
+   Int_t GetEventCount() const
+   {
+      return fEventCount;
+   }
+
+   virtual void SetUserTree(TTree*);
+
 protected:
-  void InitDefault              (const Int_t argc = 0, char** argv = NULL);
-  virtual void ReadParameters           (void);
-  void ReadBuffer               (void);
-  bool ReadNextEvent            (void);
-  bool ReadNextEvent_EBYEDAT            (void);
-  virtual bool EventUnravelling         (CTRL_EVENT*);
+   void InitDefault(const Int_t argc = 0, char** argv = NULL);
+   virtual void ReadParameters(void);
+   void ReadBuffer(void);
+   bool ReadNextEvent(void);
+   bool ReadNextEvent_EBYEDAT(void);
+   virtual bool EventUnravelling(CTRL_EVENT*);
 
-  TString        fFileName;      // Filename, can be a tape drive
-  Int_t          fStatus;        // Status, 0 is OK, any other value suspect
-  Int_t          fLun;           // Logical number of the device
-  gan_tape_desc *fDevice;        //! Device structure (ganil_tape interface)
-  Int_t          fDensity;       // Tape density
-  in2p3_buffer_struct *fBuffer;  //! Brut data buffer (ganil_tape interface)
-  char          *fStructEvent;   //! ??? (ganil_tape interface)
-  Int_t          fBufSize;       // Buffer size
-  Int_t          fCtrlForm;      // Fix/variable length events
-  Int_t          fEvbsize;       // Size of the brut data buffer
-  Int_t          fEvcsize;       // Size of the ctrl data buffer
-  UShort_t      *fEventBrut;     //! Brut data buffer
-  UShort_t      *fEventCtrl;     //! Control data buffer  
-  bool           fAllocated;     // True if the Tape is allocated (useless?)
-  Int_t          fRunNumber;     // current file run number
-  char           fHeader[9];     // Buffer header
-  UShort_t      *fDataArray;     //! Physical data array
-  Int_t          fDataArraySize; // Data array size
-  Int_t          fEventNumber;   // Local event number in current buffer (should be renamed)
-  Int_t          fEventCount;    // Our event counter
-  bool           fIsCtrl;        // We are currently in a CTRL buffer
-  bool           fIsScalerBuffer;// The current buffer is a scaler buffer
-  ScalerWhat_t   fWhatScaler;    // What do we do with scalers buffers
-  GTDataParameters *fDataParameters; //! Data parameters names class
-  GTScalers     *fScaler;        //! Scaler array
-  TTree         *fScalerTree;    // Scaler tree for automatic filling
+   TString        fFileName;      // Filename, can be a tape drive
+   Int_t          fStatus;        // Status, 0 is OK, any other value suspect
+   Int_t          fLun;           // Logical number of the device
+   gan_tape_desc* fDevice;        //! Device structure (ganil_tape interface)
+   Int_t          fDensity;       // Tape density
+   in2p3_buffer_struct* fBuffer;  //! Brut data buffer (ganil_tape interface)
+   char*          fStructEvent;   //! ??? (ganil_tape interface)
+   Int_t          fBufSize;       // Buffer size
+   Int_t          fCtrlForm;      // Fix/variable length events
+   Int_t          fEvbsize;       // Size of the brut data buffer
+   Int_t          fEvcsize;       // Size of the ctrl data buffer
+   UShort_t*      fEventBrut;     //! Brut data buffer
+   UShort_t*      fEventCtrl;     //! Control data buffer
+   bool           fAllocated;     // True if the Tape is allocated (useless?)
+   Int_t          fRunNumber;     // current file run number
+   char           fHeader[9];     // Buffer header
+   UShort_t*      fDataArray;     //! Physical data array
+   Int_t          fDataArraySize; // Data array size
+   Int_t          fEventNumber;   // Local event number in current buffer (should be renamed)
+   Int_t          fEventCount;    // Our event counter
+   bool           fIsCtrl;        // We are currently in a CTRL buffer
+   bool           fIsScalerBuffer;// The current buffer is a scaler buffer
+   ScalerWhat_t   fWhatScaler;    // What do we do with scalers buffers
+   GTDataParameters* fDataParameters; //! Data parameters names class
+   GTScalers*     fScaler;        //! Scaler array
+   TTree*         fScalerTree;    // Scaler tree for automatic filling
 public:
-  ClassDef(GTGanilData,0)        // Interface to a GANIL formated Tape or File
+   ClassDef(GTGanilData, 0)       // Interface to a GANIL formated Tape or File
 };
 
 #endif

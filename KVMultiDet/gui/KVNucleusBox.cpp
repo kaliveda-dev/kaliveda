@@ -21,139 +21,126 @@ ClassImp(KVNucleusBox)
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-KVNucleusBox::KVNucleusBox(Int_t Z, Int_t N, Double_t size, Int_t colStable, Int_t colRadio): TBox(N-size,Z-size,N+size,Z+size)
+KVNucleusBox::KVNucleusBox(Int_t Z, Int_t N, Double_t size, Int_t colStable, Int_t colRadio): TBox(N - size, Z - size, N + size, Z + size)
 {
-    // Constructor with Z,N of a Nucleus
+   // Constructor with Z,N of a Nucleus
 
-    fZ = Z;
-    fN = N;
-    fA = fN + fZ;
+   fZ = Z;
+   fN = N;
+   fA = fN + fZ;
 
-    fNucleus = new KVNucleus;
-    fNucleus->SetZandA(fZ,fA);
-    fOwnNucleus = kTRUE;
+   fNucleus = new KVNucleus;
+   fNucleus->SetZandA(fZ, fA);
+   fOwnNucleus = kTRUE;
 
-    if(fNucleus->IsStable())
-    {
-        SetLineColor(kBlack);
-        SetLineWidth(2);
-        SetFillColor(colStable);
-    }
-    else if(fNucleus->GetLifeTime()>1.e-06)
-    {
-        SetLineColor(kBlack);
-        SetFillColor(colRadio);
-    }
-    else
-    {
-        SetLineColor(kBlack);
-        SetFillColor(colRadio);
-    }
-    //  SetToolTipText(Form("%s (Z=%d,N=%d)",fNucleus->GetSymbol(),fZ,fN),250);
+   if (fNucleus->IsStable()) {
+      SetLineColor(kBlack);
+      SetLineWidth(2);
+      SetFillColor(colStable);
+   } else if (fNucleus->GetLifeTime() > 1.e-06) {
+      SetLineColor(kBlack);
+      SetFillColor(colRadio);
+   } else {
+      SetLineColor(kBlack);
+      SetFillColor(colRadio);
+   }
+   //  SetToolTipText(Form("%s (Z=%d,N=%d)",fNucleus->GetSymbol(),fZ,fN),250);
 
-    fShowSymbol = kFALSE;
+   fShowSymbol = kFALSE;
 
 }
 
 void KVNucleusBox::EnableToolTip()
 {
-    SetToolTipText(Form("%s (Z=%d,N=%d)",fNucleus->GetSymbol(),fZ,fN),250);
-    return;
+   SetToolTipText(Form("%s (Z=%d,N=%d)", fNucleus->GetSymbol(), fZ, fN), 250);
+   return;
 }
 
 
-KVNucleusBox::KVNucleusBox(KVNucleus* nuc, Double_t size, Bool_t owner): TBox(nuc->GetN()-size,nuc->GetZ()-size,nuc->GetN()+size,nuc->GetZ()+size)
+KVNucleusBox::KVNucleusBox(KVNucleus* nuc, Double_t size, Bool_t owner): TBox(nuc->GetN() - size, nuc->GetZ() - size, nuc->GetN() + size, nuc->GetZ() + size)
 {
-    // Constructor with Z,N of a Nucleus
+   // Constructor with Z,N of a Nucleus
 
-    fNucleus = nuc;
-    fOwnNucleus = owner;
-    fDrawSame = kFALSE;
+   fNucleus = nuc;
+   fOwnNucleus = owner;
+   fDrawSame = kFALSE;
 
-    fZ = fNucleus->GetZ();
-    fN = fNucleus->GetN();
-    fA = fN + fZ;
+   fZ = fNucleus->GetZ();
+   fN = fNucleus->GetN();
+   fA = fN + fZ;
 
-    if(fNucleus->IsStable())
-    {
-        SetLineColor(kBlack);
-        SetLineWidth(2);
-        SetFillColor(kBlack);
-    }
-    else if(fNucleus->GetLifeTime()>1.e-06)
-    {
-        SetLineColor(kBlack);
-        SetFillColor(kGray+1);
-    }
-    else
-    {
-        SetLineColor(kGray);
-        SetFillColor(kGray);
-    }
-    SetToolTipText(Form("%s (Z=%d,N=%d)",fNucleus->GetSymbol(),fZ,fN),250);
-    fShowSymbol = kFALSE;
+   if (fNucleus->IsStable()) {
+      SetLineColor(kBlack);
+      SetLineWidth(2);
+      SetFillColor(kBlack);
+   } else if (fNucleus->GetLifeTime() > 1.e-06) {
+      SetLineColor(kBlack);
+      SetFillColor(kGray + 1);
+   } else {
+      SetLineColor(kGray);
+      SetFillColor(kGray);
+   }
+   SetToolTipText(Form("%s (Z=%d,N=%d)", fNucleus->GetSymbol(), fZ, fN), 250);
+   fShowSymbol = kFALSE;
 
 }
 
 //________________________________________________________________
 void KVNucleusBox::SetDrawMode(Bool_t DrawSame)
 {
-    fDrawSame = DrawSame;
-    if(fDrawSame) SetFillStyle(0);
-    else SetFillStyle(1);
+   fDrawSame = DrawSame;
+   if (fDrawSame) SetFillStyle(0);
+   else SetFillStyle(1);
 }
 
 
 //________________________________________________________________
 
-KVNucleusBox::KVNucleusBox (const KVNucleusBox& obj)  : TBox()
+KVNucleusBox::KVNucleusBox(const KVNucleusBox& obj)  : TBox()
 {
-    // Copy constructor
-    // This ctor is used to make a copy of an existing object (for example
-    // when a method returns an object), and it is always a good idea to
-    // implement it.
-    // If your class allocates memory in its constructor(s) then it is ESSENTIAL :-)
+   // Copy constructor
+   // This ctor is used to make a copy of an existing object (for example
+   // when a method returns an object), and it is always a good idea to
+   // implement it.
+   // If your class allocates memory in its constructor(s) then it is ESSENTIAL :-)
 
-    obj.Copy(*this);
+   obj.Copy(*this);
 }
 
 KVNucleusBox::~KVNucleusBox()
 {
-    // Destructor
-    if(fOwnNucleus) delete fNucleus;
+   // Destructor
+   if (fOwnNucleus) delete fNucleus;
 }
 
 //________________________________________________________________
 
-void KVNucleusBox::Copy (TObject& obj) const
+void KVNucleusBox::Copy(TObject& obj) const
 {
-    // This method copies the current state of 'this' object into 'obj'
-    // You should add here any member variables, for example:
-    //    (supposing a member variable KVNucleusBox::fToto)
-    //    CastedObj.fToto = fToto;
-    // or
-    //    CastedObj.SetToto( GetToto() );
+   // This method copies the current state of 'this' object into 'obj'
+   // You should add here any member variables, for example:
+   //    (supposing a member variable KVNucleusBox::fToto)
+   //    CastedObj.fToto = fToto;
+   // or
+   //    CastedObj.SetToto( GetToto() );
 
-    TBox::Copy(obj);
-    //KVNucleusBox& CastedObj = (KVNucleusBox&)obj;
+   TBox::Copy(obj);
+   //KVNucleusBox& CastedObj = (KVNucleusBox&)obj;
 }
 
 void KVNucleusBox::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 {
-    if(event==kButton1Double)
-    {
-        fNuclearChart->ShowNucleusInfo(fNucleus);
-    }
-    else if(event==kButton3Down)
-    {
-        KVCanvas* cc = fNuclearChart->GetCanvas();
-        cc->GetContextMenu()->Popup(px, py, fNuclearChart, cc, cc->cd());
-        return;
-    }
-    TBox::ExecuteEvent(event,px,py);
+   if (event == kButton1Double) {
+      fNuclearChart->ShowNucleusInfo(fNucleus);
+   } else if (event == kButton3Down) {
+      KVCanvas* cc = fNuclearChart->GetCanvas();
+      cc->GetContextMenu()->Popup(px, py, fNuclearChart, cc, cc->cd());
+      return;
+   }
+   TBox::ExecuteEvent(event, px, py);
 }
 
-void KVNucleusBox::SetShowSymbol(Int_t )
+void KVNucleusBox::SetShowSymbol(Int_t)
 {
 //    fNuclearChart->ShowSymbol(value);
 
@@ -162,8 +149,8 @@ void KVNucleusBox::SetShowSymbol(Int_t )
 
 void KVNucleusBox::ShowSymbol(Int_t value)
 {
-    fShowSymbol = value;
-    Info("ShowSymbol","(%d,%d) called %d",fZ,fA,value);
+   fShowSymbol = value;
+   Info("ShowSymbol", "(%d,%d) called %d", fZ, fA, value);
 }
 
 

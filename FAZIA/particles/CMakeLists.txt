@@ -1,0 +1,5 @@
+BUILD_KALIVEDA_MODULE(particles
+	PARENT ${KVSUBPROJECT}
+   KVMOD_DEPENDS geometry
+	EXTRA_LIBS KVMultiDetexp_events
+)

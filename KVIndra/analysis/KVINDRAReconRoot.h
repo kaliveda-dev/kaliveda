@@ -6,24 +6,26 @@
 class TFile;
 class TTree;
 
-class KVINDRAReconRoot:public KVSelector {
-	int codes[15];
-	int status[4];
-	int Acodes[15];
-	int Astatus[4];
+class KVINDRAReconRoot: public KVSelector {
+   int codes[15];
+   int status[4];
+   int Acodes[15];
+   int Astatus[4];
 
-   protected:
-   TFile *fIdentFile;           //new file
-   TTree *fIdentTree;           //new tree
+protected:
+   TFile* fIdentFile;           //new file
+   TTree* fIdentTree;           //new tree
    Int_t fRunNumber;
    Int_t fEventNumber;
 
- public:
-    KVINDRAReconRoot() {
+public:
+   KVINDRAReconRoot()
+   {
       fIdentFile = 0;
       fIdentTree = 0;
    };
-   virtual ~ KVINDRAReconRoot() {
+   virtual ~ KVINDRAReconRoot()
+   {
    };
 
    virtual void InitRun();
@@ -31,7 +33,7 @@ class KVINDRAReconRoot:public KVSelector {
    virtual void InitAnalysis();
    virtual Bool_t Analysis();
    virtual void EndAnalysis();
-   
+
    void CountStatus();
    void CountCodes();
 

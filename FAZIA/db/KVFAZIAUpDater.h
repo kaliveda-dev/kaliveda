@@ -6,16 +6,16 @@
 
 #include "KVUpDater.h"
 
-class KVFAZIAUpDater : public KVUpDater
-{
+class KVFAZIAUpDater : public KVUpDater {
 
-   public:
+public:
    KVFAZIAUpDater();
    virtual ~KVFAZIAUpDater();
-   virtual void SetCalibParameters(KVDBRun *);
-	void SetPSAParameters(KVDBRun *);
-	
-   ClassDef(KVFAZIAUpDater,1)//handle FAZIA detectors configuration for a given run
+   virtual void SetCalibParameters(KVDBRun*);
+   void SetPSAParameters(KVDBRun*);
+   void SetCalibrations(KVDBRun*);
+
+   ClassDef(KVFAZIAUpDater, 1) //handle FAZIA detectors configuration for a given run
 };
 
 #endif

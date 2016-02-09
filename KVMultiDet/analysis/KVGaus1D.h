@@ -6,20 +6,19 @@
 
 #include "KVAutoFit.h"
 
-class KVGaus1D : public KVAutoFit
-{
+class KVGaus1D : public KVAutoFit {
 
-	protected:
-	Bool_t NewFunction_1D();
-   
-	public:
+protected:
+   Bool_t NewFunction_1D();
+
+public:
    KVGaus1D();
-   KVGaus1D (const KVGaus1D&) ;
+   KVGaus1D(const KVGaus1D&) ;
    virtual ~KVGaus1D();
 
-	void Gather();
+   void Gather();
 
-   ClassDef(KVGaus1D,1)//Fit gaussien a une dimension
+   ClassDef(KVGaus1D, 1) //Fit gaussien a une dimension
 };
 
 #endif

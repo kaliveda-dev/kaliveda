@@ -11,7 +11,7 @@ ClassImp(KVINDRAIDTelescope)
 //KVINDRAIDTelescope
 //
 /////////////////////////////////////////////////////////////////////////////////////////
-    KVINDRAIDTelescope::KVINDRAIDTelescope()
+KVINDRAIDTelescope::KVINDRAIDTelescope()
 {
    init();
 }
@@ -24,39 +24,42 @@ void KVINDRAIDTelescope::init()
    fZminCode = kIDCode_Zmin;                 //default
 }
 
-UShort_t KVINDRAIDTelescope::GetBadIDCode() {
+UShort_t KVINDRAIDTelescope::GetBadIDCode()
+{
    // return a general identification code (can be a bitmask) for particles badly identified
    // this corresponds to VEDA ID code 14
    return kIDCode14;
 }
 
-UShort_t KVINDRAIDTelescope::GetCoherencyIDCode() {
+UShort_t KVINDRAIDTelescope::GetCoherencyIDCode()
+{
    // return a general identification code (can be a bitmask) for particles identified
-    // with this type of ID telescope after coherency analysis
-    // this corresponds to VEDA ID code 6
+   // with this type of ID telescope after coherency analysis
+   // this corresponds to VEDA ID code 6
    return kIDCode6;
 }
 
-UShort_t KVINDRAIDTelescope::GetMultiHitFirstStageIDCode() {
+UShort_t KVINDRAIDTelescope::GetMultiHitFirstStageIDCode()
+{
    // return a general identification code (can be a bitmask) for particles which cannot
-    // be identified correctly due to pile-up in a delta-E detector
-    // this corresponds to VEDA ID code 8
-    return kIDCode8;
+   // be identified correctly due to pile-up in a delta-E detector
+   // this corresponds to VEDA ID code 8
+   return kIDCode8;
 }
 
-void KVINDRAIDTelescope::SetIDCode(KVReconstructedNucleus *n, UShort_t c)
+void KVINDRAIDTelescope::SetIDCode(KVReconstructedNucleus* n, UShort_t c)
 {
-    // Overrides KVIDTelescope method
-    // If 'n' is not a KVINDRAReconNuc, we use the 'simple' VEDA id codes
-    // i.e. '2' for kIDCode2, '5' for kIDCode5, etc. instead of the bitmasks
-    // used with KVINDRACodes
+   // Overrides KVIDTelescope method
+   // If 'n' is not a KVINDRAReconNuc, we use the 'simple' VEDA id codes
+   // i.e. '2' for kIDCode2, '5' for kIDCode5, etc. instead of the bitmasks
+   // used with KVINDRACodes
 
-    if(n->InheritsFrom("KVINDRAReconNuc")) n->SetIDCode(c);
-    else {
-        KVINDRACodes indracode;
-        indracode.SetIDCode(c);
-        n->SetIDCode(indracode.GetVedaIDCode());
-    }
+   if (n->InheritsFrom("KVINDRAReconNuc")) n->SetIDCode(c);
+   else {
+      KVINDRACodes indracode;
+      indracode.SetIDCode(c);
+      n->SetIDCode(indracode.GetVedaIDCode());
+   }
 }
 
 KVINDRAIDTelescope::~KVINDRAIDTelescope()
@@ -65,15 +68,15 @@ KVINDRAIDTelescope::~KVINDRAIDTelescope()
 
 
 //____________________________________________________________________________________
-const Char_t *KVINDRAIDTelescope::GetName() const
+const Char_t* KVINDRAIDTelescope::GetName() const
 {
    // Name of telescope given in the form Det1_Det2_Ring-numberTelescope-number
    // The detectors are signified by their TYPE names i.e. KVDetector::GetType
    //
    //Just a wrapper for GetArrayName to allow polymorphism
-   return ((KVINDRAIDTelescope *) this)->GetArrayName();
+   return ((KVINDRAIDTelescope*) this)->GetArrayName();
 }
-const Char_t *KVINDRAIDTelescope::GetArrayName()
+const Char_t* KVINDRAIDTelescope::GetArrayName()
 {
    // Name of telescope given in the form Det1_Det2_Ring-numberTelescope-number
    //where ring and telescope numbers are those of the smallest (in angular terms)
@@ -81,8 +84,8 @@ const Char_t *KVINDRAIDTelescope::GetArrayName()
    // The detectors are signified by their TYPE names i.e. KVDetector::GetType
 
    //in order to access angular dimensions of detectors, we need their KVTelescopes
-   KVINDRATelescope *de_det = dynamic_cast<KVINDRADetector*>(GetDetector(1))->GetTelescope();
-   KVINDRATelescope *e_det = 0;
+   KVINDRATelescope* de_det = dynamic_cast<KVINDRADetector*>(GetDetector(1))->GetTelescope();
+   KVINDRATelescope* e_det = 0;
    if (GetSize() > 1)
       e_det = dynamic_cast<KVINDRADetector*>(GetDetector(2))->GetTelescope();
    UInt_t ring, mod;

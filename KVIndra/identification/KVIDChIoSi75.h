@@ -21,9 +21,9 @@
 #include "KVIDChIoSi.h"
 
 
-class KVIDChIoSi75:public KVIDChIoSi {
+class KVIDChIoSi75: public KVIDChIoSi {
 
- public:
+public:
 
    KVIDChIoSi75();
    virtual ~ KVIDChIoSi75();

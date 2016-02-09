@@ -27,7 +27,7 @@ ClassImp(KVDBParameterSet);
 //___________________________________________________________________________
 //      Jeu de parametres pour la calibration
 //      Cette classe est juste un "wraper" pour un tableau de paramètre
-//       
+//
 //
 
 //___________________________________________________________________________
@@ -39,9 +39,9 @@ KVDBParameterSet::KVDBParameterSet()
 }
 
 //___________________________________________________________________________
-KVDBParameterSet::KVDBParameterSet(const Char_t * name,
-                                   const Char_t * title,
-                                   UShort_t pnum):KVDBRecord(name, title)
+KVDBParameterSet::KVDBParameterSet(const Char_t* name,
+                                   const Char_t* title,
+                                   UShort_t pnum): KVDBRecord(name, title)
 {
 //Initialise a KVDBRecord for a set of "pnum" parameters.
 //The names of the parameters are "par_1", "par_2", etc.
@@ -49,7 +49,7 @@ KVDBParameterSet::KVDBParameterSet(const Char_t * name,
 //this set of parameters is valid.
    fParamNumber = pnum;
    fParameters = new Double_t[pnum];
-   fParamNames = new Char_t *[pnum];
+   fParamNames = new Char_t* [pnum];
    for (UInt_t i = 0; i < pnum; i++) {
       fParameters[i] = 0;
       fParamNames[i] = new Char_t[32];
@@ -75,7 +75,7 @@ KVDBParameterSet::~KVDBParameterSet()
    }
 }
 
-void KVDBParameterSet::Streamer(TBuffer & R__b)
+void KVDBParameterSet::Streamer(TBuffer& R__b)
 {
    // Stream an object of class KVDBParameterSet.
 
@@ -101,7 +101,7 @@ void KVDBParameterSet::Streamer(TBuffer & R__b)
          fParamNames = 0;
       }
       if (fParamNumber) {
-         fParamNames = new Char_t *[fParamNumber];
+         fParamNames = new Char_t* [fParamNumber];
          for (Int_t i = 0; i < fParamNumber; i++) {
             fParamNames[i] = new Char_t[32];
             R__b.ReadFastArray(fParamNames[i], 32);
@@ -143,7 +143,20 @@ void KVDBParameterSet::SetParameters(Double_t val, ...)
 }
 
 //____________________________________________________________________________
-void KVDBParameterSet::SetParamName(UShort_t i, const Char_t * name)
+void KVDBParameterSet::SetParameters(const std::vector<Double_t>* const pars)
+{
+   assert(pars->size() <= static_cast<UInt_t>(fParamNumber));
+
+   UInt_t arg_n(0);
+   std::vector<Double_t>::const_iterator it;
+   for (it = pars->begin(); it != pars->end(); ++it) {
+      fParameters[arg_n] = *it;
+      ++arg_n;
+   }
+}
+
+//____________________________________________________________________________
+void KVDBParameterSet::SetParamName(UShort_t i, const Char_t* name)
 {
    strcpy(fParamNames[i], name);
 }
@@ -155,22 +168,22 @@ Double_t KVDBParameterSet::GetParameter(TString name)  const
 }
 
 //____________________________________________________________________________
-void KVDBParameterSet::SetParameter(TString name,Double_t val)
+void KVDBParameterSet::SetParameter(TString name, Double_t val)
 {
-   SetParameter(GetParamIndex(name),val);
+   SetParameter(GetParamIndex(name), val);
 }
 
 //____________________________________________________________________________
 Int_t KVDBParameterSet::GetParamIndex(TString name)  const
 {
-   Int_t index=0,ii=0;
-   while ( TString(fParamNames[ii++])!=name && ii<GetParamNumber() ) index=ii;
-   if ( TString(fParamNames[index])!=name ) cout << "parameter " << name << " does not exist last defined parameter position is set" << endl;
+   Int_t index = 0, ii = 0;
+   while (TString(fParamNames[ii++]) != name && ii < GetParamNumber()) index = ii;
+   if (TString(fParamNames[index]) != name) cout << "parameter " << name << " does not exist last defined parameter position is set" << endl;
    return index;
 }
 
 //____________________________________________________________________________
-void KVDBParameterSet::SetParamNames(const Char_t * name, ...)
+void KVDBParameterSet::SetParamNames(const Char_t* name, ...)
 {
    // Be cautious when using this method, if the number of arguments is lower than
    // the expected number of parameters a segmantation fault will occur !!!!!
@@ -185,7 +198,7 @@ void KVDBParameterSet::SetParamNames(const Char_t * name, ...)
    int arg_n = 0;
    strcpy(fParamNames[arg_n++], name);
    while (arg_n < fParamNumber) {
-      strcpy(fParamNames[arg_n], va_arg(ap, Char_t *));
+      strcpy(fParamNames[arg_n], va_arg(ap, Char_t*));
       arg_n++;
    }
 
@@ -200,8 +213,8 @@ void KVDBParameterSet::Print(Option_t*) const
    KVDBRecord::Print();
    const int max_disp_param = 10;
    cout << ">>>> KVParameterSet :" << endl
-       << GetName() << "  " << GetTitle() << endl
-       << " Parameters :\t" << GetParamNumber() << endl;
+        << GetName() << "  " << GetTitle() << endl
+        << " Parameters :\t" << GetParamNumber() << endl;
    for (int i = 0; (i < GetParamNumber()) && (i < max_disp_param); i++) {
       cout << GetParamName(i) << " : " << GetParameter(i) << endl;
    }

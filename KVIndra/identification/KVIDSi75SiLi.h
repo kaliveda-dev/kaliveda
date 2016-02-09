@@ -21,9 +21,9 @@
 #include "KVINDRAIDTelescope.h"
 
 
-class KVIDSi75SiLi:public KVINDRAIDTelescope {
+class KVIDSi75SiLi: public KVINDRAIDTelescope {
 
- public:
+public:
 
    KVIDSi75SiLi();
    virtual ~ KVIDSi75SiLi();

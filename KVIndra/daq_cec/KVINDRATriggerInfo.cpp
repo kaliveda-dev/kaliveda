@@ -37,7 +37,7 @@ ClassImp(KVINDRATriggerInfo)
 //IsPhysics() : kTRUE if PHY_EVT bit = 1 and MRQ bit is not set*
 //(*because if MRQ=1 physical events cannot trigger the acquisition).
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    KVINDRATriggerInfo::KVINDRATriggerInfo()
+KVINDRATriggerInfo::KVINDRATriggerInfo()
 {
    //Initialises number of bits (representation) for each register read from Selecteur
    fSTAT_EVE.SetNBits(6);
@@ -46,21 +46,21 @@ ClassImp(KVINDRATriggerInfo)
    fSTAT_EVE_PAR = fR_DEC_PAR = fVXCONFIG_PAR = 0;
 };
 
-void KVINDRATriggerInfo::Print(Option_t *)
+void KVINDRATriggerInfo::Print(Option_t*)
 {
    //Print contents of trigger registers, in binary, hexadecimal and decoded forms
 
    cout << "/************ KVINDRATriggerInfo ************/" << endl;
-   cout << "    STAT_EVE = " << (const Char_t *) GetSTAT_EVE().Hexa() <<
-       " / " << (const Char_t *) GetSTAT_EVE() << endl;
-   cout << "    R_DEC    = " << (const Char_t *) GetR_DEC().Hexa() <<
-       " / " << (const Char_t *) GetR_DEC() << endl;
-   cout << "    CONFIG   = " << (const Char_t *) GetCONFIG().Hexa() <<
-       " / " << (const Char_t *) GetCONFIG() << endl;
+   cout << "    STAT_EVE = " << (const Char_t*) GetSTAT_EVE().Hexa() <<
+        " / " << (const Char_t*) GetSTAT_EVE() << endl;
+   cout << "    R_DEC    = " << (const Char_t*) GetR_DEC().Hexa() <<
+        " / " << (const Char_t*) GetR_DEC() << endl;
+   cout << "    CONFIG   = " << (const Char_t*) GetCONFIG().Hexa() <<
+        " / " << (const Char_t*) GetCONFIG() << endl;
    cout << "/********************************************/" << endl;
    cout << "  IsPhysics()=" << IsPhysics() << ", IsGene()=" << IsGene() <<
-       ", MRQ=" << MRQ() << endl;
+        ", MRQ=" << MRQ() << endl;
    cout << "  PHY_EVT=" << PHY_EVT() << "  GEN_ELEC=" << GEN_ELEC() <<
-       ", GEN_TST=" << GEN_TST() << ", GEN_LAS=" << GEN_LAS() << endl;
+        ", GEN_TST=" << GEN_TST() << ", GEN_LAS=" << GEN_LAS() << endl;
    cout << "/********************************************/" << endl;
 }

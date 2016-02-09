@@ -14,20 +14,20 @@ $Id: KVDBTape.h,v 1.13 2006/10/19 14:32:43 franklan Exp $
 
 class KVDBRun;
 
-class KVDBTape:public KVDBRecord {
+class KVDBTape: public KVDBRecord {
 
- public:
+public:
    KVDBTape();
    KVDBTape(Int_t tape_number);
    virtual ~ KVDBTape();
 
-   virtual KVRList *GetRuns();
-   void AddRun(KVDBRun * run);
+   virtual KVRList* GetRuns();
+   void AddRun(KVDBRun* run);
 
-    ClassDef(KVDBTape, 3)       // Class describing a DLT tape
+   ClassDef(KVDBTape, 3)       // Class describing a DLT tape
 };
 
-inline KVRList *KVDBTape::GetRuns()
+inline KVRList* KVDBTape::GetRuns()
 {
    if (GetKey("Runs")) {
       return GetKey("Runs")->GetLinks();

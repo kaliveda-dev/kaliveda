@@ -127,3 +127,27 @@ Description: KaliVeda data analysis framework for FAZIA/INDRAFAZIA (development 
  This package contains the header files required for development
  using the libraries contained in package libkaliveda-fazia.
 
+Package: libkaliveda-microstat
+Section: libs
+Architecture: any
+Depends: libkaliveda (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}, root-system (>= 5.34.0)
+Description: KaliVeda data analysis framework MicroStat package (shared libs)
+ KaliVeda is an OO framework for simulation and analysis of
+ heavy-ion collisions in the Fermi energy domain, based on ROOT.
+ .
+ This package contains the runtime shared libraries from the
+ MicroStat package which allows to generate events using Monte-Carlo
+ sampling of various statistical weights.
+
+Package: libkaliveda-microstat-dev
+Section: libdevel
+Architecture: any
+Depends: libkaliveda-microstat (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}, root-system (>= 5.34.0)
+Description: KaliVeda data analysis framework MicroStat package (development files)
+ KaliVeda is an OO framework for simulation and analysis of
+ heavy-ion collisions in the Fermi energy domain, based on ROOT.
+ .
+ This package contains examples and the header files required for development
+ using the libraries contained in package libkaliveda-microstat,
+ the MicroStat package which allows to generate events using Monte-Carlo
+ sampling of various statistical weights.

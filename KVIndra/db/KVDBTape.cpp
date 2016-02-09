@@ -31,7 +31,7 @@ KVDBTape::KVDBTape(Int_t tape_number)
    sprintf(name, "Tape %d", tape_number);
    SetName(name);
    SetTitle("Data storage tape");
-   KVDBKey *key = AddKey("Runs", "List Of Runs");
+   KVDBKey* key = AddKey("Runs", "List Of Runs");
    key->SetUniqueStatus(kTRUE);
 }
 
@@ -40,7 +40,7 @@ KVDBTape::~KVDBTape()
 {
 }
 
-void KVDBTape::AddRun(KVDBRun * run)
+void KVDBTape::AddRun(KVDBRun* run)
 {
    //add run to list of runs stored on this tape
    AddLink("Runs", run);

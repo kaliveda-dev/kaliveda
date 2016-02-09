@@ -24,8 +24,10 @@ Runs: 1010-1035
 
 +80Kr + 48Ca 35.0 MeV/A
 80 36 48 20 35.0039
-Target: 1 0
+Target: 3 0
+Carbon 0.010
 Calcium 0.300
+Carbon 0.010
 Runs: 1036-3760 3837-4733 5000-7245
 
 +80Kr + 12C 35.0 MeV/A
@@ -36,8 +38,10 @@ Runs: 3761-3836
 
 +80Kr + 40Ca 35.0 MeV/A
 80 36 40 20 35.0039
-Target: 1 0
+Target: 3 0
+Carbon 0.010
 Calcium 0.300
+Carbon 0.010
 Runs: 7255-10369 11500-13035 20299-20860 20899-24423
 
 +Beam tuning

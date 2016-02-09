@@ -21,7 +21,7 @@ ClassImp(KVedaLossMaterial)
 Bool_t KVedaLossMaterial::fNoLimits = kFALSE;
 
 KVedaLossMaterial::KVedaLossMaterial()
-      : KVIonRangeTableMaterial()
+   : KVIonRangeTableMaterial()
 {
    // Default constructor
    for (int i = 0; i < 100; i++) {
@@ -30,9 +30,9 @@ KVedaLossMaterial::KVedaLossMaterial()
    }
 }
 
-KVedaLossMaterial::KVedaLossMaterial(const KVIonRangeTable*t,const Char_t* name, const Char_t* type, const Char_t* state,
+KVedaLossMaterial::KVedaLossMaterial(const KVIonRangeTable* t, const Char_t* name, const Char_t* type, const Char_t* state,
                                      Double_t density, Double_t Z, Double_t A, Double_t)
-   : KVIonRangeTableMaterial(t,name,type,state,density,Z,A)
+   : KVIonRangeTableMaterial(t, name, type, state, density, Z, A)
 {
    // create new material
    for (int i = 0; i < 100; i++) {
@@ -62,7 +62,7 @@ Bool_t KVedaLossMaterial::ReadRangeTable(FILE* fp)
    //   KVedaLoss.EnergyLoss.Npx:         50
    //   KVedaLoss.ResidualEnergy.Npx:         20
    //
-   
+
    char line[132];
 
    //look for energy limits to calculation validity
@@ -71,27 +71,27 @@ Bool_t KVedaLossMaterial::ReadRangeTable(FILE* fp)
               GetName(), GetType());
       return kFALSE;
    } else {
-      if(!strncmp(line,"COMPOUND",8)){
-      	// material is compound. read composition for TGeoMixture.
-      	if(fgets(line, 132, fp)){}
-      	int nel = atoi(line);  // read number of elements
-      	for(int el=0; el<nel; el++){
-      		if(fgets(line, 132, fp)){}
-      		int z,a,w;
-      		sscanf(line, "%d %d %d", &z, &a, &w);
-      		AddCompoundElement(z,a,w);
-      	}
-      }
-      else if(!strncmp(line,"MIXTURE",7)){
-      	// material is mixture. read composition for TGeoMixture.
-      	if(fgets(line, 132, fp)){}
-      	int nel = atoi(line);  // read number of elements
-      	for(int el=0; el<nel; el++){
-      		if(fgets(line, 132, fp)){}
-      		int z,a,nat; float w;
-      		sscanf(line, "%d %d %d %f", &z, &a, &nat, &w);
-      		AddMixtureElement(z,a,nat,w);
-      	}
+      if (!strncmp(line, "COMPOUND", 8)) {
+         // material is compound. read composition for TGeoMixture.
+         if (fgets(line, 132, fp)) {}
+         int nel = atoi(line);  // read number of elements
+         for (int el = 0; el < nel; el++) {
+            if (fgets(line, 132, fp)) {}
+            int z, a, w;
+            sscanf(line, "%d %d %d", &z, &a, &w);
+            AddCompoundElement(z, a, w);
+         }
+      } else if (!strncmp(line, "MIXTURE", 7)) {
+         // material is mixture. read composition for TGeoMixture.
+         if (fgets(line, 132, fp)) {}
+         int nel = atoi(line);  // read number of elements
+         for (int el = 0; el < nel; el++) {
+            if (fgets(line, 132, fp)) {}
+            int z, a, nat;
+            float w;
+            sscanf(line, "%d %d %d %f", &z, &a, &nat, &w);
+            AddMixtureElement(z, a, nat, w);
+         }
       }
    }
    if (!fgets(line, 132, fp)) {
@@ -104,7 +104,7 @@ Bool_t KVedaLossMaterial::ReadRangeTable(FILE* fp)
          Float_t e1, e2;
          sscanf(line, "Z = %d,%d     %f < E/A  <  %f MeV", &z1,
                 &z2, &e1, &e2);
-         if(fgets(line, 132, fp)){}
+         if (fgets(line, 132, fp)) {}
          for (int i = z1; i <= z2; i++) {
             fEmin[i - 1] = e1;
             fEmax[i - 1] = e2;
@@ -113,26 +113,26 @@ Bool_t KVedaLossMaterial::ReadRangeTable(FILE* fp)
    }
 
    // get require Npx value from (user-defined) environment variables
-   Int_t my_npx = gEnv->GetValue("KVedaLoss.Range.Npx", 100);   
-   
+   Int_t my_npx = gEnv->GetValue("KVedaLoss.Range.Npx", 100);
+
    fRange = new TF1(Form("KVedaLossMaterial:%s:Range", GetType()), this, &KVedaLossMaterial::RangeFunc,
                     0., 1.e+03, 0, "KVedaLossMaterial", "RangeFunc");
    fRange->SetNpx(my_npx);
 
    fStopping = new TF1(Form("KVedaLossMaterial:%s:StoppingPower", GetType()), this, &KVedaLossMaterial::StoppingFunc,
-                    0., 1.e+03, 0, "KVedaLossMaterial", "StoppingFunc");
+                       0., 1.e+03, 0, "KVedaLossMaterial", "StoppingFunc");
    fStopping->SetNpx(my_npx);
 
-   my_npx = gEnv->GetValue("KVedaLoss.EnergyLoss.Npx", 100);   
+   my_npx = gEnv->GetValue("KVedaLoss.EnergyLoss.Npx", 100);
    fDeltaE = new TF1(Form("KVedaLossMaterial:%s:EnergyLoss", GetType()), this, &KVedaLossMaterial::DeltaEFunc,
                      0., 1.e+03, 0, "KVedaLossMaterial", "DeltaEFunc");
    fDeltaE->SetNpx(my_npx);
 
-   my_npx = gEnv->GetValue("KVedaLoss.ResidualEnergy.Npx", 100);   
+   my_npx = gEnv->GetValue("KVedaLoss.ResidualEnergy.Npx", 100);
    fEres = new TF1(Form("KVedaLossMaterial:%s:ResidualEnergy", GetType()), this, &KVedaLossMaterial::EResFunc,
                    0., 1.e+03, 0, "KVedaLossMaterial", "EResFunc");
    fEres->SetNpx(my_npx);
-   
+
    for (register int count = 0; count < ZMAX_VEDALOSS; count++) {
 
       if (sscanf(line, "%lf %lf %lf %lf %lf %lf %lf %lf",
@@ -140,7 +140,7 @@ Bool_t KVedaLossMaterial::ReadRangeTable(FILE* fp)
                  &fCoeff[count][2], &fCoeff[count][3],
                  &fCoeff[count][4], &fCoeff[count][5],
                  &fCoeff[count][6], &fCoeff[count][7])
-          != 8) {
+            != 8) {
          Error("ReadRangeTable", "problem reading coeffs 0-7 in range table for %s (%s)", GetName(), GetType());
          return kFALSE;
       }
@@ -152,32 +152,32 @@ Bool_t KVedaLossMaterial::ReadRangeTable(FILE* fp)
                     &fCoeff[count][8], &fCoeff[count][9],
                     &fCoeff[count][10], &fCoeff[count][11],
                     &fCoeff[count][12], &fCoeff[count][13])
-             != 6) {
+               != 6) {
             Error("ReadRangeTable", "problem reading coeffs 8-13 in range table for %s (%s)", GetName(), GetType());
             return kFALSE;
          }
       }
-      if(fNoLimits){
+      if (fNoLimits) {
          // if we ignore nominal validity limits on incident energy, we must still use energy limits
          // such that all range functions increase monotonically in the energy interval
          GetRangeFunction(fCoeff[count][0], fCoeff[count][1])->SetRange(GetEminValid(fCoeff[count][0], fCoeff[count][1]), VERY_BIG_ENERGY);
-         Double_t emax = fRange->GetMaximumX()-1;
-         emax/=fCoeff[count][1];
+         Double_t emax = fRange->GetMaximumX() - 1;
+         emax /= fCoeff[count][1];
          Double_t original_emax = fEmax[count];
          // the new emax is only accepted if it is > than the nominal emax (400 or 250 AMeV),
          // and at most 1 GeV/nucleon
-         fEmax[count]=TMath::Min(TMath::Max(original_emax,emax),1000.);
+         fEmax[count] = TMath::Min(TMath::Max(original_emax, emax), 1000.);
          // we may further reduce the upper limit to correspond to the minimum of stopping,
          // if one exists
          GetStoppingFunction(fCoeff[count][0], fCoeff[count][1])->SetRange(GetEminValid(fCoeff[count][0], fCoeff[count][1]), GetEmaxValid(fCoeff[count][0], fCoeff[count][1]));
          emax = fStopping->GetMinimumX();
-         emax/=fCoeff[count][1];
+         emax /= fCoeff[count][1];
          // again, the new emax is only accepted if it is > than the nominal emax (400 or 250 AMeV),
          // and at most 1 GeV/nucleon
-         fEmax[count]=TMath::Min(TMath::Max(original_emax,emax),1000.);
+         fEmax[count] = TMath::Min(TMath::Max(original_emax, emax), 1000.);
          //if(fEmax[count]!=original_emax) Info("ReadRangeTable", "Max. incident E for Z=%d  ===>  E/A = %f", count+1, fEmax[count]);
       }
-      if(fgets(line, 132, fp)){}
+      if (fgets(line, 132, fp)) {}
    }
 
    return kTRUE;
@@ -300,8 +300,8 @@ TF1* KVedaLossMaterial::GetRangeFunction(Int_t Z, Int_t A, Double_t isoAmat)
    adn = (y1 - adm * x1);
    riso = RF_A / par[1];
    if (isoAmat > 0.0) riso *= (isoAmat / fAmat);
-   
-   fRange->SetRange(0., GetEmaxValid(Z,A));
+
+   fRange->SetRange(0., GetEmaxValid(Z, A));
    return fRange;
 }
 
@@ -331,8 +331,8 @@ TF1* KVedaLossMaterial::GetStoppingFunction(Int_t Z, Int_t A, Double_t isoAmat)
    adm = (y2 - y1) / (x2 - x1);
    adn = (y1 - adm * x1);
    riso = RF_A / par[1];
-   if (isoAmat > 0.0) riso *= (isoAmat / fAmat);   
-   fStopping->SetRange(0., GetEmaxValid(Z,A));
+   if (isoAmat > 0.0) riso *= (isoAmat / fAmat);
+   fStopping->SetRange(0., GetEmaxValid(Z, A));
    return fStopping;
 }
 
@@ -347,7 +347,7 @@ Double_t KVedaLossMaterial::RangeFunc(Double_t* E, Double_t*)
    if (eps < 0.1)
       ran = adm * dleps + adn;
    else {
-   	DLEP = dleps;
+      DLEP = dleps;
       ran = par[2] + par[3] * DLEP;
       ran += par[4] * (DLEP *= dleps);
       ran += par[5] * (DLEP *= dleps);
@@ -367,20 +367,20 @@ Double_t KVedaLossMaterial::StoppingFunc(Double_t* E, Double_t*)
 
    eps = E[0] / RF_A;
    dleps = TMath::Log(eps);
-   if (eps < 0.1){
+   if (eps < 0.1) {
       ran = adm * dleps + adn;
-      drande = E[0]/(riso * TMath::Exp(ran) * KVUnits::mg)/adm;
+      drande = E[0] / (riso * TMath::Exp(ran) * KVUnits::mg) / adm;
       return drande;
    }
    DLEP = dleps;
    ran = par[2] + par[3] * DLEP;
    drande = par[3];
-   for(register int i=4; i<8; i++){
-      drande += (i-2)*par[i]*DLEP;
+   for (register int i = 4; i < 8; i++) {
+      drande += (i - 2) * par[i] * DLEP;
       ran += par[i] * (DLEP *= dleps);
    }
    // range in g/cm**2
-   return E[0]/(riso*TMath::Exp(ran) * KVUnits::mg)/drande;
+   return E[0] / (riso * TMath::Exp(ran) * KVUnits::mg) / drande;
 }
 
 TF1* KVedaLossMaterial::GetDeltaEFunction(Double_t e, Int_t Z, Int_t A, Double_t isoAmat)
@@ -391,7 +391,7 @@ TF1* KVedaLossMaterial::GetDeltaEFunction(Double_t e, Int_t Z, Int_t A, Double_t
 
    GetRangeFunction(Z, A, isoAmat);
    thickness = e;
-   fDeltaE->SetRange(0., GetEmaxValid(Z,A));
+   fDeltaE->SetRange(0., GetEmaxValid(Z, A));
    return fDeltaE;
 }
 
@@ -403,7 +403,7 @@ TF1* KVedaLossMaterial::GetEResFunction(Double_t e, Int_t Z, Int_t A, Double_t i
 
    GetRangeFunction(Z, A, isoAmat);
    thickness = e;
-   fEres->SetRange(0., GetEmaxValid(Z,A));
+   fEres->SetRange(0., GetEmaxValid(Z, A));
    return fEres;
 }
 
@@ -411,7 +411,7 @@ Double_t KVedaLossMaterial::GetRangeOfIon(Int_t Z, Int_t A, Double_t E, Double_t
 {
    // Returns range (in g/cm**2) of ion (Z,A) with energy E (MeV) in material.
    // Give Amat to change default (isotopic) mass of material,
-   
+
    /*if(E>GetEmaxValid(Z,A))
       Warning("GetRangeOfIon", "Incident energy of (%d,%d) > limit of validity of KVedaLoss (Emax=%f)",
             Z,A,GetEmaxValid(Z,A));*/
@@ -432,11 +432,11 @@ Double_t KVedaLossMaterial::GetDeltaEOfIon(Int_t Z, Int_t A, Double_t E, Double_
 }
 
 Double_t KVedaLossMaterial::GetEResOfIon(Int_t Z, Int_t A, Double_t E, Double_t e,
-                                         Double_t isoAmat)
+      Double_t isoAmat)
 {
    // Returns residual energy (in MeV) of ion (Z,A) with energy E (MeV) after thickness e (in g/cm**2).
    // Give Amat to change default (isotopic) mass of material
-   
+
    /* if(E>(GetEmaxValid(Z,A)+0.1))
       Warning("GetEResOfIon", "Incident energy of (%d,%d) %f MeV/A > limit of validity of KVedaLoss (Emax=%f MeV/A)",
             Z,A,E/A,GetEmaxValid(Z,A)/A); */
@@ -444,12 +444,12 @@ Double_t KVedaLossMaterial::GetEResOfIon(Int_t Z, Int_t A, Double_t E, Double_t 
    return f->Eval(E);
 }
 
-void KVedaLossMaterial::GetParameters(Int_t Zion, Int_t &Aion, Double_t *&rangepar)
+void KVedaLossMaterial::GetParameters(Int_t Zion, Int_t& Aion, Double_t*& rangepar)
 {
-    // For the given ion atomic number, give the reference mass used and the six
-    // parameters for the range function fit
+   // For the given ion atomic number, give the reference mass used and the six
+   // parameters for the range function fit
 
    rangepar = &fCoeff[Zion - 1][2];
-   Aion = fCoeff[Zion-1][1];
+   Aion = fCoeff[Zion - 1][1];
 }
 

@@ -28,13 +28,13 @@ KVFAZIABlock::KVFAZIABlock() : TGeoVolumeAssembly("STRUCT_BLOCK")
    SetMedium(gGeoManager->GetMedium("Vacuum"));//to avoid warnings about STRUCT_BLOCK has dummy medium
 
    KVMaterial mat_si("Si");
-   TGeoMedium *Silicon = mat_si.GetGeoMedium();
+   TGeoMedium* Silicon = mat_si.GetGeoMedium();
 
    KVMaterial mat_csi("CsI");
-   TGeoMedium *CesiumIodide = mat_csi.GetGeoMedium();
+   TGeoMedium* CesiumIodide = mat_csi.GetGeoMedium();
 
    KVMaterial mat_plomb("Lead");
-   TGeoMedium *Plomb = mat_plomb.GetGeoMedium();
+   TGeoMedium* Plomb = mat_plomb.GetGeoMedium();
 
    TGeoVolumeAssembly* quartet = gGeoManager->MakeVolumeAssembly("STRUCT_QUARTET");
    quartet->SetMedium(gGeoManager->GetMedium("Vacuum"));//to avoid warnings about STRUCT_QUARTET has dummy medium

@@ -9,30 +9,29 @@
 #include "KVReconstructedEvent.h"
 
 class KVDBSystem;
-class KVEventFiltering : public KVEventSelector
-{
+class KVEventFiltering : public KVEventSelector {
    //KVClassMonitor memory_check;
    Long64_t fEVN;//event number counter
-   public:
+public:
    KVEventFiltering();
-   KVEventFiltering (const KVEventFiltering&) ;
+   KVEventFiltering(const KVEventFiltering&) ;
    virtual ~KVEventFiltering();
-   void Copy (TObject&) const;
+   void Copy(TObject&) const;
 
    Bool_t Analysis();
    void EndAnalysis();
    void EndRun();
    void InitAnalysis();
    void InitRun();
-   void OpenOutputFile(KVDBSystem*,Int_t);
-   
+   void OpenOutputFile(KVDBSystem*, Int_t);
+
    TFile* fFile;
    TTree* fTree;
    KVReconstructedEvent* fReconEvent;
    TVector3 fCMVelocity;
    Bool_t fTransformKinematics;//=kTRUE if simulation not in lab frame
-   
-   ClassDef(KVEventFiltering,1)//Filter simulated events with multidetector response
+
+   ClassDef(KVEventFiltering, 1) //Filter simulated events with multidetector response
 };
 
 #endif

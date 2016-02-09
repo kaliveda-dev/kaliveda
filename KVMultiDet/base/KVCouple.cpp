@@ -20,95 +20,93 @@ KVCouple::KVCouple()
 }
 
 //----------------------------------------------
-KVCouple::KVCouple(Int_t zf,Int_t zsup){
+KVCouple::KVCouple(Int_t zf, Int_t zsup)
+{
 
-	//printf("zf=%d zmax=%d\n",zf,zsup);
-	zfra = zf;
-	zmax = zsup;
+   //printf("zf=%d zmax=%d\n",zf,zsup);
+   zfra = zf;
+   zmax = zsup;
 
-	Int_t div=2;
+   Int_t div = 2;
 
-	zlim = zfra/div;
-	Double_t zmoy = zfra/Double_t(div);
-	Double_t diff = zmoy-zlim;
-	Int_t sup = TMath::Nint(diff*div);
-	if (sup>=1){
-		zlim+=1;
-	}
-	Int_t zref = 0;
-	( (zfra>=zmax) ? zref=zmax : zref=zfra );
+   zlim = zfra / div;
+   Double_t zmoy = zfra / Double_t(div);
+   Double_t diff = zmoy - zlim;
+   Int_t sup = TMath::Nint(diff * div);
+   if (sup >= 1) {
+      zlim += 1;
+   }
+   Int_t zref = 0;
+   ((zfra >= zmax) ? zref = zmax : zref = zfra);
 
-	nbre = zref-zlim+1;
-	if (nbre>0){
-		tz1 = new Int_t[nbre];
-		tz2 = new Int_t[nbre];
-		Int_t z1=0;
-		for (Int_t ii=0;ii<nbre;ii+=1){
-			z1 = zref-ii;
-			tz1[ii]	=	z1;
-			tz2[ii]	=	zfra-z1;
-			//printf("      %d    %d %d\n",ii,z1,zfra-z1);
-		}
-		init=kTRUE;		
-	}
-	else {
-		//return;
-		ResetVars();
-	}
-		
+   nbre = zref - zlim + 1;
+   if (nbre > 0) {
+      tz1 = new Int_t[nbre];
+      tz2 = new Int_t[nbre];
+      Int_t z1 = 0;
+      for (Int_t ii = 0; ii < nbre; ii += 1) {
+         z1 = zref - ii;
+         tz1[ii]  =  z1;
+         tz2[ii]  =  zfra - z1;
+         //printf("      %d    %d %d\n",ii,z1,zfra-z1);
+      }
+      init = kTRUE;
+   } else {
+      //return;
+      ResetVars();
+   }
+
 }
-	
+
 //----------------------------------------------
-KVCouple::KVCouple(Int_t zf,Int_t zsup,Int_t div){
+KVCouple::KVCouple(Int_t zf, Int_t zsup, Int_t div)
+{
 
-	zfra = zf;
-	zmax = zsup;
-		
-	zlim = zfra/div;
-	Double_t zmoy = zfra/Double_t(div);
-	Double_t diff = zmoy-zlim;
-	Int_t sup = TMath::Nint(diff*div);
-	if (sup>=1){
-		zlim+=1;
-	}
+   zfra = zf;
+   zmax = zsup;
 
-	if (zfra>=zmax) {	
-		//cas 1
-		nbre = zmax-zlim+1;
-		if (nbre>0){
+   zlim = zfra / div;
+   Double_t zmoy = zfra / Double_t(div);
+   Double_t diff = zmoy - zlim;
+   Int_t sup = TMath::Nint(diff * div);
+   if (sup >= 1) {
+      zlim += 1;
+   }
 
-			tz1 = new Int_t[nbre];
-			tz2 = new Int_t[nbre];
-			Int_t z1=0;
-			for (Int_t ii=0;ii<nbre;ii+=1){
-				z1 = zmax-ii;
-				tz1[ii]	=	z1;
-				tz2[ii]	=	zfra-z1;
-			}
-			init=kTRUE;		
-		}
-		else {
-			//return;
-			ResetVars();
-		}
-	}
-	else {
-		nbre = zfra-zlim+1;
-		if (nbre>0){
+   if (zfra >= zmax) {
+      //cas 1
+      nbre = zmax - zlim + 1;
+      if (nbre > 0) {
 
-			tz1 = new Int_t[nbre];
-			tz2 = new Int_t[nbre];
-			Int_t z1=0;
-			for (Int_t ii=0;ii<nbre;ii+=1){
-				z1 = zfra-ii;
-				tz1[ii]	=	z1;
-				tz2[ii]	=	zfra-z1;
-			}
-			init=kTRUE;		
-		}
-		else {
-			//return;
-			ResetVars();
-		}
-	}
+         tz1 = new Int_t[nbre];
+         tz2 = new Int_t[nbre];
+         Int_t z1 = 0;
+         for (Int_t ii = 0; ii < nbre; ii += 1) {
+            z1 = zmax - ii;
+            tz1[ii]  =  z1;
+            tz2[ii]  =  zfra - z1;
+         }
+         init = kTRUE;
+      } else {
+         //return;
+         ResetVars();
+      }
+   } else {
+      nbre = zfra - zlim + 1;
+      if (nbre > 0) {
+
+         tz1 = new Int_t[nbre];
+         tz2 = new Int_t[nbre];
+         Int_t z1 = 0;
+         for (Int_t ii = 0; ii < nbre; ii += 1) {
+            z1 = zfra - ii;
+            tz1[ii]  =  z1;
+            tz2[ii]  =  zfra - z1;
+         }
+         init = kTRUE;
+      } else {
+         //return;
+         ResetVars();
+      }
+   }
 }

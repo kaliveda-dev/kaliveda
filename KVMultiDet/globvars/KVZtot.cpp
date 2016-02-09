@@ -1,5 +1,5 @@
 //
-//Author: Daniel Cussol 
+//Author: Daniel Cussol
 //
 // 17/02/2004
 // Creation d'une classe Variable Globale.
@@ -14,7 +14,7 @@
 ClassImp(KVZtot)
 //////////////////////////////////////////////////////////////////////////////////
 //  Global variable returning the sum of the fragments charges
-//  Ztot              
+//  Ztot
 //
 // Look at KVVarGlob class to have an example of use.
 //
@@ -31,16 +31,16 @@ void KVZtot::init_KVZtot(void)
 //
    nb++;
    nb_crea++;
-   fValueType='I';//integer values
+   fValueType = 'I'; //integer values
 }
 
 //_________________________________________________________________
-KVZtot::KVZtot(void):KVVarGlob1()
+KVZtot::KVZtot(void): KVVarGlob1()
 {
 //
 // Createur par default
 //
-   char *nom = new char[80];
+   char* nom = new char[80];
 
    init_KVZtot();
    sprintf(nom, "KVZtot_%d", nb_crea);
@@ -53,7 +53,7 @@ KVZtot::KVZtot(void):KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVZtot::KVZtot(char *nom):KVVarGlob1(nom)
+KVZtot::KVZtot(char* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom
@@ -65,16 +65,16 @@ KVZtot::KVZtot(char *nom):KVVarGlob1(nom)
 }
 
 //_________________________________________________________________
-KVZtot::KVZtot(const KVZtot & a) : KVVarGlob1()
+KVZtot::KVZtot(const KVZtot& a) : KVVarGlob1()
 {
-// 
+//
 // Contructeur par Copy
 //
    init_KVZtot();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVZtot &) a).Copy(*this);
+   ((KVZtot&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVZtot
    cout << nb << " crees...(Copy) " << endl;
@@ -84,7 +84,7 @@ KVZtot::KVZtot(const KVZtot & a) : KVVarGlob1()
 //_________________________________________________________________
 KVZtot::~KVZtot(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVZtot
@@ -97,7 +97,7 @@ KVZtot::~KVZtot(void)
 
 
 //_________________________________________________________________
-KVZtot & KVZtot::operator =(const KVZtot & a)
+KVZtot& KVZtot::operator =(const KVZtot& a)
 {
 //
 // Operateur =
@@ -108,7 +108,7 @@ KVZtot & KVZtot::operator =(const KVZtot & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVZtot &) a).Copy(*this);
+   ((KVZtot&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVZtot
    cout << "Nom de la Copy par egalite: " << GetName() << endl;
@@ -118,7 +118,7 @@ KVZtot & KVZtot::operator =(const KVZtot & a)
 
 
 //_________________________________________________________________
-void KVZtot::Fill(KVNucleus * c)
+void KVZtot::Fill(KVNucleus* c)
 {
 //
 // Routine de remplissage

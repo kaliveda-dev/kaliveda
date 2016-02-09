@@ -9,36 +9,35 @@
 #include "KVDataSet.h"
 #include "KVGANILDataReader.h"
 
-class KVINDRARawDataAnalyser : public KVRawDataAnalyser
-{
+class KVINDRARawDataAnalyser : public KVRawDataAnalyser {
    friend class KVDataSet;
-   
-   protected:
+
+protected:
    Int_t INDRA_events;
    Int_t gene_events;
    Int_t other_events;
-   
-   virtual KVNumberList PrintAvailableRuns(KVString & datatype);
-      
- public:
+
+   virtual KVNumberList PrintAvailableRuns(KVString& datatype);
+
+public:
 
    KVINDRARawDataAnalyser();
    virtual ~KVINDRARawDataAnalyser();
-   
+
    void postInitRun();
    void preAnalysis();
    void preEndRun();
-   
+
    KVGANILDataReader* GetRawDataReader() const
    {
-   	return (KVGANILDataReader*)fRunFile;
+      return (KVGANILDataReader*)fRunFile;
    };
-   
-   static void Make(const Char_t * kvsname = "MyOwnINDRARawDataAnalyser");   
-   
+
+   static void Make(const Char_t* kvsname = "MyOwnINDRARawDataAnalyser");
+
    virtual void CalculateTotalEventsToRead();
-   
-   ClassDef(KVINDRARawDataAnalyser,2)//Analysis of raw INDRA data
+
+   ClassDef(KVINDRARawDataAnalyser, 2) //Analysis of raw INDRA data
 };
 
 #endif

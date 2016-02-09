@@ -16,7 +16,7 @@ ClassImp(KVSimEvent)
 ////////////////////////////////////////////////////////////////////////////////
 
 //___________________________
-KVSimEvent::KVSimEvent(Int_t mult, const char*classname):KVEvent(mult,classname)
+KVSimEvent::KVSimEvent(Int_t mult, const char* classname): KVEvent(mult, classname)
 {
    // Default constructor
 }
@@ -24,5 +24,5 @@ KVSimEvent::KVSimEvent(Int_t mult, const char*classname):KVEvent(mult,classname)
 //___________________________
 KVSimEvent::~KVSimEvent()
 {
-	//destructeur
+   //destructeur
 }

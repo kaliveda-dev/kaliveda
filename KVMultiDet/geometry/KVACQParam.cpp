@@ -70,7 +70,7 @@ KVACQParam::KVACQParam()
 }
 
 //_________________________________________________________________________
-KVACQParam::KVACQParam(const Char_t * parname)
+KVACQParam::KVACQParam(const Char_t* parname)
 {
    //constructor with name
    //'parname' = parameter name associated with this object
@@ -79,32 +79,32 @@ KVACQParam::KVACQParam(const Char_t * parname)
 }
 
 //
-KVACQParam::KVACQParam(const KVACQParam & obj) : KVBase()
+KVACQParam::KVACQParam(const KVACQParam& obj) : KVBase()
 {
    //Copy ctor
    init();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    obj.Copy(*this);
 #else
-   ((KVACQParam &) obj).Copy(*this);
+   ((KVACQParam&) obj).Copy(*this);
 #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVACQParam::Copy(TObject & obj) const
+void KVACQParam::Copy(TObject& obj) const
 #else
-void KVACQParam::Copy(TObject & obj)
+void KVACQParam::Copy(TObject& obj)
 #endif
 {
    //
    //Copy this to obj
    //
    KVBase::Copy(obj);
-   ((KVACQParam &) obj).SetData(GetCoderData());
+   ((KVACQParam&) obj).SetData(GetCoderData());
    if (GetDetector())
-      ((KVACQParam &) obj).SetDetector(GetDetector());
-   ((KVACQParam &) obj).SetNbBits(GetNbBits());
+      ((KVACQParam&) obj).SetDetector(GetDetector());
+   ((KVACQParam&) obj).SetNbBits(GetNbBits());
 }
 
 void KVACQParam::Print(Option_t*) const
@@ -121,5 +121,5 @@ void KVACQParam::ls(Option_t*) const
 {
    //Dump name of parameter, raw coder value, and "randomised" value
    cout << ClassName() << " : " << GetName() << " raw=" << GetCoderData()
-       << " randomised=" << GetData() << endl;
+        << " randomised=" << GetData() << endl;
 }

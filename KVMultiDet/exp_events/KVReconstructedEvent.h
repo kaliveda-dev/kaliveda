@@ -26,28 +26,30 @@ $Id: KVReconstructedEvent.h,v 1.11 2007/11/12 15:08:32 franklan Exp $
 class KVDetectorEvent;
 class TList;
 
-class KVReconstructedEvent:public KVEvent {
+class KVReconstructedEvent: public KVEvent {
 
    Bool_t fMeanAngles;          //!kTRUE if particle momenta calculated using mean angles of detectors (default: randomised angles)
    TString fPartSeedCond;   //!condition used in AnalyseTelescopes for seeding new reconstructed particle
 
- public:
- 
+public:
+
    void init();
-    KVReconstructedEvent(Int_t mult = 50, const char *classname =
-                         "KVReconstructedNucleus");
-    virtual ~ KVReconstructedEvent() {
+   KVReconstructedEvent(Int_t mult = 50, const char* classname =
+                           "KVReconstructedNucleus");
+   virtual ~ KVReconstructedEvent()
+   {
    };
 
-   inline KVReconstructedNucleus *AddParticle();
-   inline KVReconstructedNucleus *GetParticle(Int_t npart) const;
-   inline KVReconstructedNucleus *GetParticleWithName(const Char_t * name) const;
-   inline KVReconstructedNucleus *GetParticle(const Char_t * group_name) const;
-   inline KVReconstructedNucleus *GetNextParticle(Option_t * opt = "");
+   inline KVReconstructedNucleus* AddParticle();
+   inline KVReconstructedNucleus* GetParticle(Int_t npart) const;
+   inline KVReconstructedNucleus* GetParticleWithName(const Char_t* name) const;
+   inline KVReconstructedNucleus* GetParticle(const Char_t* group_name) const;
+   inline KVReconstructedNucleus* GetNextParticle(Option_t* opt = "");
 
-   virtual Bool_t AnalyseDetectors(TList * kvtl);
-   virtual const Char_t *GetPartSeedCond() const{
- 	   return fPartSeedCond; 
+   virtual Bool_t AnalyseDetectors(TList* kvtl);
+   virtual const Char_t* GetPartSeedCond() const
+   {
+      return fPartSeedCond;
    }
    virtual void SetPartSeedCond(const Char_t* cond)
    {
@@ -56,80 +58,84 @@ class KVReconstructedEvent:public KVEvent {
    virtual void IdentifyEvent();
    virtual void CalibrateEvent();
 
-   virtual void Print(Option_t * t = "") const;
+   virtual void Print(Option_t* t = "") const;
 
-   inline void UseMeanAngles() {
+   inline void UseMeanAngles()
+   {
       fMeanAngles = kTRUE;
    }
-   inline void UseRandomAngles() {
+   inline void UseRandomAngles()
+   {
       fMeanAngles = kFALSE;
    }
-   inline Bool_t HasMeanAngles() {
+   inline Bool_t HasMeanAngles()
+   {
       return fMeanAngles;
    }
-   inline Bool_t HasRandomAngles() {
+   inline Bool_t HasRandomAngles()
+   {
       return !fMeanAngles;
    }
-   
+
    virtual void SecondaryIdentCalib()
    {
-   	// Perform identifications and calibrations of particles not included
-   	// in first round (methods IdentifyEvent() and CalibrateEvent()).
+      // Perform identifications and calibrations of particles not included
+      // in first round (methods IdentifyEvent() and CalibrateEvent()).
    }
 
    ClassDef(KVReconstructedEvent, 2)    //Base class for reconstructed experimental multiparticle events
 };
 
-inline KVReconstructedNucleus *KVReconstructedEvent::
+inline KVReconstructedNucleus* KVReconstructedEvent::
 GetParticle(Int_t npart) const
 {
    //Access to event member with index npart (1<=npart<=fMult)
 
-   return (KVReconstructedNucleus *) (KVEvent::GetParticle(npart));
+   return (KVReconstructedNucleus*)(KVEvent::GetParticle(npart));
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-inline KVReconstructedNucleus *KVReconstructedEvent::
-GetParticle(const Char_t * group_name) const
+inline KVReconstructedNucleus* KVReconstructedEvent::
+GetParticle(const Char_t* group_name) const
 {
    //Access to event particle by name
 
-   return (KVReconstructedNucleus *) (KVEvent::GetParticle(group_name));
+   return (KVReconstructedNucleus*)(KVEvent::GetParticle(group_name));
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-inline KVReconstructedNucleus *KVReconstructedEvent::
-GetParticleWithName(const Char_t * name) const
+inline KVReconstructedNucleus* KVReconstructedEvent::
+GetParticleWithName(const Char_t* name) const
 {
    //Access to event particle by name
 
-   return (KVReconstructedNucleus *) (KVEvent::GetParticleWithName(name));
+   return (KVReconstructedNucleus*)(KVEvent::GetParticleWithName(name));
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-inline KVReconstructedNucleus *KVReconstructedEvent::AddParticle()
+inline KVReconstructedNucleus* KVReconstructedEvent::AddParticle()
 {
    //Wrapper for KVEvent::GetNextParticle casting result to KVReconstructedNucleus*
 
-   KVReconstructedNucleus *tmp =
-       (KVReconstructedNucleus *) (KVEvent::AddParticle());
+   KVReconstructedNucleus* tmp =
+      (KVReconstructedNucleus*)(KVEvent::AddParticle());
    return tmp;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-inline KVReconstructedNucleus *KVReconstructedEvent::
-GetNextParticle(Option_t * opt)
+inline KVReconstructedNucleus* KVReconstructedEvent::
+GetNextParticle(Option_t* opt)
 {
    //Use this method to iterate over the list of particles in the event
    //If opt="ok" only those for whom KVReconstructedNucleus::IsOK() returns kTRUE are included.
    //After the last particle GetNextParticle() returns a null pointer and
    //resets itself ready for a new iteration over the particle list.
 
-   return (KVReconstructedNucleus *) KVEvent::GetNextParticle(opt);
+   return (KVReconstructedNucleus*) KVEvent::GetNextParticle(opt);
 }
 
 #endif

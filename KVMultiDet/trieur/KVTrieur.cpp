@@ -1,5 +1,5 @@
 //
-// D.Cussol 
+// D.Cussol
 //
 // 17/04/2001:
 // Creation d'une classe de tri. Cette classe permet d'effectuer un tri et de
@@ -24,8 +24,8 @@ ClassImp(KVTrieur)
 //                                             the value of x.
 //      virtual Int_t GetNumCase(void *,...)   Gives an index corresponding to
 //                                             the list of arguments.
-//       
-//  Child classes KVTrieurLin, KVTrieurTranche and KVTrieurBloc provide 
+//
+//  Child classes KVTrieurLin, KVTrieurTranche and KVTrieurBloc provide
 // these methods. A name can be associated to each index value with the method
 //      virtual void SetNomCase(Int_t i,Char_t *s)
 // and can be retrieved withe the method
@@ -54,12 +54,12 @@ void KVTrieur::initKVTrieur(void)
 }
 
 //________________________________________________________
-KVTrieur::KVTrieur(void):KVBase()
+KVTrieur::KVTrieur(void): KVBase()
 {
 //
 // Createur par default
 //
-   Char_t *nom = new Char_t[80];
+   Char_t* nom = new Char_t[80];
 
    initKVTrieur();
    sprintf(nom, "KVTrieur_%d", nb_crea);
@@ -72,7 +72,7 @@ KVTrieur::KVTrieur(void):KVBase()
 }
 
 //________________________________________________________
-KVTrieur::KVTrieur(Char_t * nom)
+KVTrieur::KVTrieur(Char_t* nom)
 {
 //
 // Constructeur avec un nom
@@ -86,7 +86,7 @@ KVTrieur::KVTrieur(Char_t * nom)
 }
 
 //________________________________________________________
-KVTrieur::KVTrieur(Int_t nbcases, Char_t * nom)
+KVTrieur::KVTrieur(Int_t nbcases, Char_t* nom)
 {
 //
 // Constructeur avec un nombre de cases et un nom
@@ -111,16 +111,16 @@ KVTrieur::KVTrieur(Int_t nbcases, Char_t * nom)
 }
 
 //________________________________________________________
-KVTrieur::KVTrieur(const KVTrieur & a) : KVBase()
+KVTrieur::KVTrieur(const KVTrieur& a) : KVBase()
 {
-// 
+//
 // Contructeur par Copie
 //
    initKVTrieur();
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVTrieur &) a).Copy(*this);
+   ((KVTrieur&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVTrieur
    cout << nb << " crees...(Copy) " << endl;
@@ -130,7 +130,7 @@ KVTrieur::KVTrieur(const KVTrieur & a) : KVBase()
 //________________________________________________________
 KVTrieur::~KVTrieur(void)
 {
-// 
+//
 // Destructeur
 //
 #ifdef DEBUG_KVTrieur
@@ -138,8 +138,7 @@ KVTrieur::~KVTrieur(void)
 #endif
    nb--;
 
-   if (noms_cases)              // Destuction du TClonesArray contenant les noms de cases
-   {
+   if (noms_cases) {            // Destuction du TClonesArray contenant les noms de cases
       noms_cases->Clear();
       delete noms_cases;
    }
@@ -150,10 +149,10 @@ KVTrieur::~KVTrieur(void)
 
 //________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVTrieur::Copy(TObject & a) const
+void KVTrieur::Copy(TObject& a) const
 {
 #else
-void KVTrieur::Copy(TObject & a)
+void KVTrieur::Copy(TObject& a)
 {
 #endif
 //
@@ -169,22 +168,22 @@ void KVTrieur::Copy(TObject & a)
 #else
    sprintf(nom, "Copy_%s", a.GetName());
 #endif
-   ((KVTrieur &) a).SetName(nom);
-   ((KVTrieur &) a).SetTitle(nom);
+   ((KVTrieur&) a).SetName(nom);
+   ((KVTrieur&) a).SetTitle(nom);
 
-   ((KVTrieur &) a).nb_cases = this->nb_cases;
+   ((KVTrieur&) a).nb_cases = this->nb_cases;
    if (this->noms_cases) {
-      ((KVTrieur &) a).noms_cases =
-          new TClonesArray("TNamed", this->nb_cases);
-      TClonesArray *tca = ((KVTrieur &) a).noms_cases;
+      ((KVTrieur&) a).noms_cases =
+         new TClonesArray("TNamed", this->nb_cases);
+      TClonesArray* tca = ((KVTrieur&) a).noms_cases;
       Char_t nomc[80];
       for (Int_t i = 0; i < this->nb_cases; i++) {
-         TNamed *c = (TNamed *) this->noms_cases->At(i);
+         TNamed* c = (TNamed*) this->noms_cases->At(i);
          sprintf(nomc, "%s_C%d", this->GetName(), i + 1);
          new((*tca)[i]) TNamed(nomc, c->GetTitle());
       }
    } else {
-      ((KVTrieur &) a).noms_cases = 0;
+      ((KVTrieur&) a).noms_cases = 0;
    }
 #ifdef DEBUG_KVTrieur
    cout << "Nom de la Copy (arguement): " << nom << endl;
@@ -193,7 +192,7 @@ void KVTrieur::Copy(TObject & a)
 }
 
 //________________________________________________________
-KVTrieur & KVTrieur::operator =(const KVTrieur & a)
+KVTrieur& KVTrieur::operator =(const KVTrieur& a)
 {
 //
 // Operateur =
@@ -204,7 +203,7 @@ KVTrieur & KVTrieur::operator =(const KVTrieur & a)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    a.Copy(*this);
 #else
-   ((KVTrieur &) a).Copy(*this);
+   ((KVTrieur&) a).Copy(*this);
 #endif
 #ifdef DEBUG_KVTrieur
    cout << "Nom de la Copie par egalite: " << GetName() << endl;
@@ -213,14 +212,14 @@ KVTrieur & KVTrieur::operator =(const KVTrieur & a)
 }
 
 //________________________________________________________
-const Char_t *KVTrieur::GetNomCase(Int_t i)
+const Char_t* KVTrieur::GetNomCase(Int_t i)
 {
 //
 // On retourne le nom d'une case
 //
    if (noms_cases) {
       if (i > 0 && i <= nb_cases) {
-         return ((TNamed *) noms_cases->At(i - 1))->GetTitle();
+         return ((TNamed*) noms_cases->At(i - 1))->GetTitle();
       } else {
          cout << "Le numero de case est incorrect..." << endl;
          return 0;
@@ -232,14 +231,14 @@ const Char_t *KVTrieur::GetNomCase(Int_t i)
 }
 
 //________________________________________________________
-void KVTrieur::SetNomCase(Int_t i, Char_t * s)
+void KVTrieur::SetNomCase(Int_t i, Char_t* s)
 {
 //
 // On impose le nom d'une case
 //
    if (noms_cases) {
       if (i > 0 && i <= nb_cases) {
-         ((TNamed *) noms_cases->At(i - 1))->SetTitle(s);
+         ((TNamed*) noms_cases->At(i - 1))->SetTitle(s);
       } else {
          cout << "Le numero de case est incorrect..." << endl;
       }

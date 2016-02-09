@@ -19,17 +19,17 @@ ClassImp(KVRemoteAvailableRunsFile)
 ////////////////////////////////////////////////////////////////////////////////
 // Access to lists of available runfiles in remote data repository via HTTP
 ////////////////////////////////////////////////////////////////////////////////
-    KVRemoteAvailableRunsFile::KVRemoteAvailableRunsFile()
+KVRemoteAvailableRunsFile::KVRemoteAvailableRunsFile()
 {
    //default Constructor
    init();
 }
 
-KVRemoteAvailableRunsFile::KVRemoteAvailableRunsFile(const Char_t *
-                                                     type,
-                                                     KVDataSet *
-                                                     ds):KVAvailableRunsFile
-    (type, ds)
+KVRemoteAvailableRunsFile::KVRemoteAvailableRunsFile(const Char_t*
+      type,
+      KVDataSet*
+      ds): KVAvailableRunsFile
+   (type, ds)
 {
    //Constructor with name of datatype
    //and pointer to parent dataset
@@ -40,8 +40,8 @@ KVRemoteAvailableRunsFile::~KVRemoteAvailableRunsFile()
 {
    //Destructor
    //Delete the runlist file from the temp directory if it has been opened
-   if (IsFileOpen()){
-      if(runlist_lock.Lock(fFilePath.Data())){
+   if (IsFileOpen()) {
+      if (runlist_lock.Lock(fFilePath.Data())) {
          gSystem->Unlink(fFilePath);
          runlist_lock.Release();
       }
@@ -83,11 +83,11 @@ Bool_t KVRemoteAvailableRunsFile::OpenAvailableRunsFile()
       fRunlist.seekg(0, ios::beg);      // set file buffer pointer to beginning of file
       //if we can get a lock on the file, all is well. if not, we need to fetch a new
       //copy
-      if(runlist_lock.Lock()) return kTRUE;
+      if (runlist_lock.Lock()) return kTRUE;
    }
    TString http =
-       gEnv->GetValue(Form("%s.DataRepository.RemoteAvailableRuns.url",
-                           GetDataSet()->GetRepository()->GetName()), "");
+      gEnv->GetValue(Form("%s.DataRepository.RemoteAvailableRuns.url",
+                          GetDataSet()->GetRepository()->GetName()), "");
    if (http == "") {
       Warning("OpenAvailableRunsFile(ifstream& runlist)",
               "%s.DataRepository.RemoteAvailableRuns.url is not defined. See $KVROOT/KVFiles/.kvrootrc",
@@ -104,7 +104,7 @@ Bool_t KVRemoteAvailableRunsFile::OpenAvailableRunsFile()
    cmd.Form("%s -o%s %s", fCurl.Data(), fFilePath.Data(), url.Data());
    //lock temp file - just in case
    runlist_lock.Lock(fFilePath.Data());
-   if (gSystem->Exec(cmd.Data())){
+   if (gSystem->Exec(cmd.Data())) {
       runlist_lock.Release();
       return kFALSE;            // problem with curl
    }

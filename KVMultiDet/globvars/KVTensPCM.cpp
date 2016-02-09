@@ -11,7 +11,7 @@ ClassImp(KVTensPCM)
 //Calculates tensor in reaction CM frame
 //This is the same as KVTensP after using SetFrame("CM")
 //_________________________________________________________________
-    KVTensPCM::KVTensPCM(void)
+KVTensPCM::KVTensPCM(void)
 {
 //
 // Createur par default
@@ -20,7 +20,7 @@ ClassImp(KVTensPCM)
 }
 
 //_________________________________________________________________
-KVTensPCM::KVTensPCM(Char_t * nom):KVTensP(nom, "CM")
+KVTensPCM::KVTensPCM(Char_t* nom): KVTensP(nom, "CM")
 {
 //
 // Constructeur avec un nom
@@ -30,7 +30,7 @@ KVTensPCM::KVTensPCM(Char_t * nom):KVTensP(nom, "CM")
 //_________________________________________________________________
 KVTensPCM::~KVTensPCM(void)
 {
-// 
+//
 // Destructeur
 //
 }

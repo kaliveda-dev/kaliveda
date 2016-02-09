@@ -23,11 +23,14 @@ ClassImp(KVIDSiCsIVamos)
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-KVIDSiCsIVamos::KVIDSiCsIVamos()
+KVIDSiCsIVamos::KVIDSiCsIVamos() :
+#if __cplusplus < 201103L
+   fgrid(NULL), fSi(NULL), fCsI(NULL)
+#else
+   // C++11 supported, use nullptr
+   fgrid(nullptr), fSi(nullptr), fCsI(nullptr)
+#endif
 {
-   // Default constructor
-   fSi = 0;
-   fCsI = 0;
 }
 
 KVIDSiCsIVamos::~KVIDSiCsIVamos()
@@ -41,34 +44,33 @@ void KVIDSiCsIVamos::Initialize()
    // Pointers to grids for run are set, and if there is at least 1 (GG) grid,
    // we set IsReadyForID = kTRUE
 
-	fSi = (KVSiliconVamos*)GetDetector(1);
-	fCsI = (KVCsIVamos*)GetDetector(2);
-	fgrid=0;
-	TIter next(fIDGrids); 
-	KVIDGrid*grid=0;
-	
-	while( (grid=(KVIDGrid*)next()) ){
-        if( !strcmp(grid->GetVarY(),"SI") ) fgrid = (KVIDZAGrid*)grid;
-	}
-   if( fgrid ){
+   fSi = (KVSiliconVamos*)GetDetector(1);
+   fCsI = (KVCsIVamos*)GetDetector(2);
+   fgrid = 0;
+   TIter next(fIDGrids);
+   KVIDGrid* grid = 0;
+
+   while ((grid = (KVIDGrid*)next())) {
+      if (!strcmp(grid->GetVarY(), "SI")) fgrid = (KVIDZAGrid*)grid;
+   }
+   if (fgrid) {
       SetBit(kReadyForID);
       fgrid->Initialize();
       fgrid->Print();
-   }
-   else
-		ResetBit(kReadyForID);
-      		//fgrid->Print();		
+   } else
+      ResetBit(kReadyForID);
+   //fgrid->Print();
 }
 
-const Char_t *KVIDSiCsIVamos::GetName() const
+const Char_t* KVIDSiCsIVamos::GetName() const
 {
-	// don t give any name, adapted for detectors of Vamos FP
-	TString nom;
-	nom = GetDetector(1)->GetName();
-	nom+="_";
-	nom+= GetDetector(2)->GetName();
-	const_cast<KVIDSiCsIVamos*>(this)->SetName(nom.Data());
-	return TNamed::GetName();
+   // don t give any name, adapted for detectors of Vamos FP
+   TString nom;
+   nom = GetDetector(1)->GetName();
+   nom += "_";
+   nom += GetDetector(2)->GetName();
+   const_cast<KVIDSiCsIVamos*>(this)->SetName(nom.Data());
+   return TNamed::GetName();
 }
 
 
@@ -77,35 +79,35 @@ Bool_t KVIDSiCsIVamos::Identify(KVIdentificationResult* idr, Double_t csi, Doubl
    //Particle identification and code setting using identification grids.
 
 
-      //perform identification in Si - CsI map, in Vamos FP
+   //perform identification in Si - CsI map, in Vamos FP
 
-		idr->SetIDType( GetType() );
-		idr->IDattempted = kTRUE;
-	
-      KVIDGrid* theIdentifyingGrid = 0;
+   idr->SetIDType(GetType());
+   idr->IDattempted = kTRUE;
 
-      fgrid->Identify(csi, si, idr);
-      theIdentifyingGrid =(KVIDGrid*)fgrid;
+   KVIDGrid* theIdentifyingGrid = 0;
 
-		if(theIdentifyingGrid->GetQualityCode() == KVIDZAGrid::kICODE8){
-			// only if the final quality code is kICODE8 do we consider that it is
-			// worthwhile looking elsewhere. In all other cases, the particle has been
-			// "identified", even if we still don't know its Z and/or A (in this case
-			// we consider that we have established that they are unknowable).
-			return kFALSE;
-		}
+   fgrid->Identify(csi, si, idr);
+   theIdentifyingGrid = (KVIDGrid*)fgrid;
 
-		if(theIdentifyingGrid->GetQualityCode() == KVIDZAGrid::kICODE7){
-			// if the final quality code is kICODE7 (above last line in grid) then the estimated
-			// Z is only a minimum value (Zmin)
-			idr->IDcode = 5;
-			return kTRUE;
-		}
+   if (theIdentifyingGrid->GetQualityCode() == KVIDZAGrid::kICODE8) {
+      // only if the final quality code is kICODE8 do we consider that it is
+      // worthwhile looking elsewhere. In all other cases, the particle has been
+      // "identified", even if we still don't know its Z and/or A (in this case
+      // we consider that we have established that they are unknowable).
+      return kFALSE;
+   }
 
-
-		// set general ID code SiLi-CsI
-      idr->IDcode = 3;
+   if (theIdentifyingGrid->GetQualityCode() == KVIDZAGrid::kICODE7) {
+      // if the final quality code is kICODE7 (above last line in grid) then the estimated
+      // Z is only a minimum value (Zmin)
+      idr->IDcode = 5;
       return kTRUE;
+   }
+
+
+   // set general ID code SiLi-CsI
+   idr->IDcode = 3;
+   return kTRUE;
 }
 
 

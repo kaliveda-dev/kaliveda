@@ -8,28 +8,33 @@
 #include "KVRTGIDManager.h"
 #include "KVINDRADetector.h"
 #include "KVCsI.h"
+#include "KVMacros.h" // 'UNUSED' macro
 
-class KVIDSiLiCsI_e494s : public KVIDSiLiCsI, public KVRTGIDManager
-{
+class KVIDSiLiCsI_e494s : public KVIDSiLiCsI, public KVRTGIDManager {
+protected:
 
-	KVINDRADetector *fSiLi; //!
-	KVCsI           *fCsI;  //!
+   KVINDRADetector* fSiLi; //!
+   KVCsI*           fCsI;  //!
+   Double_t fThresholdX; //!
+   Double_t fThresholdY; //!
 
-   	public:
-   	KVIDSiLiCsI_e494s();
-   	virtual ~KVIDSiLiCsI_e494s();
+   Double_t GetThesholdFromVar(const Char_t* var);
 
-   	virtual void Initialize();
+public:
+   KVIDSiLiCsI_e494s();
+   virtual ~KVIDSiLiCsI_e494s();
 
-    virtual Double_t GetIDMapX(Option_t *opt = ""); 
-    virtual Double_t GetIDMapY(Option_t *opt = "");
+   virtual void Initialize();
 
-    virtual Bool_t Identify(KVIdentificationResult *IDR, Double_t x=-1., Double_t y=-1.);
+   virtual Double_t GetIDMapX(Option_t* opt = "");
+   virtual Double_t GetIDMapY(Option_t* opt = "");
 
-    virtual Bool_t SetIdentificationParameters(const KVMultiDetArray*);
-    virtual void RemoveIdentificationParameters();
+   virtual Bool_t Identify(KVIdentificationResult* IDR, Double_t x = -1., Double_t y = -1.);
 
-   	ClassDef(KVIDSiLiCsI_e494s,1)//E503/E494S experiment INDRA identification using SiLi-CsI matrices
+   virtual Bool_t SetIdentificationParameters(const KVMultiDetArray*);
+   virtual void RemoveIdentificationParameters();
+
+   ClassDef(KVIDSiLiCsI_e494s, 1) //E503/E494S experiment INDRA identification using SiLi-CsI matrices
 };
 
 #endif

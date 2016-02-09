@@ -23,9 +23,9 @@ $Id: KVDBPeak.h,v 1.4 2007/04/02 17:43:38 ebonnet Exp $
 #include "TString.h"
 
 
-class KVDBPeak:public KVDBParameterSet, public KVINDRARRMValidator {
+class KVDBPeak: public KVDBParameterSet, public KVINDRARRMValidator {
 
- private:
+private:
 
    Bool_t fAvecGaz;             //=kTRUE if gaz present in chio
    TString fDetector;           //name of detector
@@ -35,71 +35,89 @@ class KVDBPeak:public KVDBParameterSet, public KVINDRARRMValidator {
    UChar_t fRing;               //ring number of Si or CsI (in coinc with ChIo if peak is in ChIo)
    UChar_t fModule;             //module number of Si or CsI (in coinc with ChIo if peak is in ChIo)
 
- public:
+public:
 
-    KVDBPeak();
-    KVDBPeak(const Char_t * detname, const Char_t * type, UShort_t pnum);
-    virtual ~ KVDBPeak() {
+   KVDBPeak();
+   KVDBPeak(const Char_t* detname, const Char_t* type, UShort_t pnum);
+   virtual ~ KVDBPeak()
+   {
    };
 
    void init();
 
-   void SetGas(Bool_t avec = kTRUE) {
+   void SetGas(Bool_t avec = kTRUE)
+   {
       fAvecGaz = avec;
    };
-   Bool_t WithGas() const {
+   Bool_t WithGas() const
+   {
       return fAvecGaz;
    };
 
-   void SetDetector(const Char_t * name) {
+   void SetDetector(const Char_t* name)
+   {
       fDetector = name;
    };
-   const Char_t *GetDetector() const {
+   const Char_t* GetDetector() const
+   {
       return fDetector.Data();
    };
 
-   void SetSigType(const Char_t * sig) {
+   void SetSigType(const Char_t* sig)
+   {
       fSignal = sig;
    };
-   const Char_t *GetSigType() const {
+   const Char_t* GetSigType() const
+   {
       return fSignal.Data();
    };
 
-   void SetGain(Float_t gain) {
+   void SetGain(Float_t gain)
+   {
       fGain = gain;
    };
-   Float_t GetGain() const {
+   Float_t GetGain() const
+   {
       return fGain;
    };
 
-   void SetEnergy(Float_t e) {
+   void SetEnergy(Float_t e)
+   {
       fEnergy = e;
    };
-   Float_t GetEnergy() const {
+   Float_t GetEnergy() const
+   {
       return fEnergy;
    };
 
-   void SetRing(UChar_t ring) {
+   void SetRing(UChar_t ring)
+   {
       fRing = ring;
    };
-   UChar_t GetRing() const {
+   UChar_t GetRing() const
+   {
       return fRing;
    };
 
-   void SetModule(UChar_t mod) {
+   void SetModule(UChar_t mod)
+   {
       fModule = mod;
    };
-   UChar_t GetModule() const {
+   UChar_t GetModule() const
+   {
       return fModule;
    };
 
-   Double_t GetCentroid() {
+   Double_t GetCentroid()
+   {
       return GetParameter(0);
    };
-   Double_t GetError() {
+   Double_t GetError()
+   {
       return GetParameter(1);
    };
-   Double_t GetPeakWidth() {
+   Double_t GetPeakWidth()
+   {
       return GetParameter(2);
    }
 

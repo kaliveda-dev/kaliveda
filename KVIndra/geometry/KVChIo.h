@@ -18,9 +18,9 @@
 
 class KVDBParameterSet;
 
-class KVChIo:public KVINDRADetector {
+class KVChIo: public KVINDRADetector {
 
- protected:
+protected:
 
    KVChannelVolt* fChVoltGG;//!channel-volt conversion (GG)
    KVChannelVolt* fChVoltPG;//!channel-volt conversion (PG)
@@ -28,11 +28,11 @@ class KVChIo:public KVINDRADetector {
 
    void init();
 
- public:
+public:
 
-    KVChIo();
-    KVChIo(Float_t pressure, Float_t thick = 5.0*KVUnits::cm);
-    virtual ~ KVChIo();
+   KVChIo();
+   KVChIo(Float_t pressure, Float_t thick = 5.0 * KVUnits::cm);
+   virtual ~ KVChIo();
 
    Double_t GetVoltsFromCanalPG(Double_t chan = 0.0);
    Double_t GetVoltsFromCanalGG(Double_t chan = 0.0);
@@ -52,27 +52,27 @@ class KVChIo:public KVINDRADetector {
    void SetACQParams();
    void SetCalibrators();
 
-   Double_t GetELossMylar(UInt_t z, UInt_t a, Double_t egas = -1.0, Bool_t stopped=kFALSE);
+   Double_t GetELossMylar(UInt_t z, UInt_t a, Double_t egas = -1.0, Bool_t stopped = kFALSE);
 
    inline Bool_t IsCalibrated() const;
-   virtual Short_t GetCalcACQParam(KVACQParam*,Double_t) const;
+   virtual Short_t GetCalcACQParam(KVACQParam*, Double_t) const;
 
    virtual void SetPressure(Double_t P /* mbar */)
    {
       // Set pressure of gas in mbar
-      GetActiveLayer()->SetPressure(P*KVUnits::mbar);
+      GetActiveLayer()->SetPressure(P * KVUnits::mbar);
    }
    virtual Double_t GetPressure() const /* mbar */
    {
       // Give pressure of gas in mbar
-      return GetActiveLayer()->GetPressure()/KVUnits::mbar;
+      return GetActiveLayer()->GetPressure() / KVUnits::mbar;
    }
 
    virtual void SetMylarThicknesses(Float_t thickF, Float_t thickB);
-   
-	void DeduceACQParameters(Int_t zz=-1,Int_t a=-1);
-   
-	ClassDef(KVChIo, 5)          //The ionisation chamber detectors (ChIo) of the INDRA array
+
+   void DeduceACQParameters(Int_t zz = -1, Int_t a = -1);
+
+   ClassDef(KVChIo, 5)          //The ionisation chamber detectors (ChIo) of the INDRA array
 };
 
 //____________________________________________________________________________________________
@@ -83,11 +83,11 @@ inline Bool_t KVChIo::IsCalibrated() const
    //Only one of the channel-volts calibrators needs to be ready,
    //plus the volts-energy calibrator
 
-      if (fVoltE && fVoltE->GetStatus()) {
-         Bool_t ok_gg = (fChVoltGG!=0) ? fChVoltGG->GetStatus() : 0;
-         Bool_t ok_pg = (fChVoltPG!=0) ? fChVoltPG->GetStatus() : 0;
-         return (ok_gg || ok_pg);
-      }
+   if (fVoltE && fVoltE->GetStatus()) {
+      Bool_t ok_gg = (fChVoltGG != 0) ? fChVoltGG->GetStatus() : 0;
+      Bool_t ok_pg = (fChVoltPG != 0) ? fChVoltPG->GetStatus() : 0;
+      return (ok_gg || ok_pg);
+   }
 
    return kFALSE;
 }

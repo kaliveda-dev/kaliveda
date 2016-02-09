@@ -24,13 +24,13 @@
 
 ClassImp(KVSiB)
 
-KVSiB::KVSiB():fLinCal(0)
+KVSiB::KVSiB(): fLinCal(0)
 {
    //Default ctor. Make a silicon detector with type="SIB"
    SetType("SIB");
 }
 
-KVSiB::KVSiB(Float_t thickness):KVSilicon(thickness),fLinCal(0)
+KVSiB::KVSiB(Float_t thickness): KVSilicon(thickness), fLinCal(0)
 {
    // Make a 'thickness' um thick silicon detector with type="SIB"
    SetType("SIB");
@@ -44,7 +44,7 @@ KVSiB::~KVSiB()
 
 //___________________________________________________________________________
 
-const Char_t *KVSiB::GetArrayName()
+const Char_t* KVSiB::GetArrayName()
 {
    //Give name of detector as SIB_x with x=number of blocking telescope
 
@@ -71,7 +71,7 @@ void KVSiB::SetACQParams()
 
 //____________________________________________________________________________
 
-Bool_t KVSiB::Fired(Option_t * opt)
+Bool_t KVSiB::Fired(Option_t* opt)
 {
    //opt="any" (default):
    //Returns true if ANY of the acquisition parameters associated with the detector were fired in an event & the associated BIC fired (any)
@@ -97,16 +97,16 @@ void KVSiB::SetCalibrators()
    KVLinCal* cal = new KVLinCal(this);
    cal->SetChannelParameter("E");
    cal->WithPedestalCorrection(kFALSE);
-   if(!AddCalibrator( cal )) delete cal;
+   if (!AddCalibrator(cal)) delete cal;
    fLinCal = (KVLinCal*)GetCalibrator("Linear calibration E");
-   KVCalibrator*c = new KVPulseHeightDefect(this);
-   if(!AddCalibrator(c)) delete c;
-   fPHD  =  (KVPulseHeightDefect *) GetCalibrator("Pulse Height Defect");
+   KVCalibrator* c = new KVPulseHeightDefect(this);
+   if (!AddCalibrator(c)) delete c;
+   fPHD  = (KVPulseHeightDefect*) GetCalibrator("Pulse Height Defect");
 }
 
 //______________________________________________________________________________
 
-void KVSiB::Streamer(TBuffer &R__b)
+void KVSiB::Streamer(TBuffer& R__b)
 {
    // Stream an object of class KVSiB.
    // We set the pointers to the calibrator objects
@@ -115,7 +115,7 @@ void KVSiB::Streamer(TBuffer &R__b)
    if (R__b.IsReading()) {
       KVSiB::Class()->ReadBuffer(R__b, this);
       fLinCal = (KVLinCal*)GetCalibrator("Linear calibration E");
-      fPHD  =  (KVPulseHeightDefect *) GetCalibrator("Pulse Height Defect");
+      fPHD  = (KVPulseHeightDefect*) GetCalibrator("Pulse Height Defect");
    } else {
       KVSiB::Class()->WriteBuffer(R__b, this);
    }
@@ -134,7 +134,7 @@ Double_t KVSiB::GetEnergy()
    //Returns -99 if (i) no calibration present (ii) calibration present but no data in acquisition parameters
 
    //fELoss already set, return its value
-   if (KVDetector::GetEnergy()){
+   if (KVDetector::GetEnergy()) {
       return KVDetector::GetEnergy();
    }
    Double_t ELoss = -99;

@@ -20,14 +20,14 @@
 
 #include "KVTelescope.h"
 
-class KVTelBlocking:public KVTelescope {
+class KVTelBlocking: public KVTelescope {
 
- public:
+public:
 
    KVTelBlocking(UInt_t n = 0);
    virtual ~ KVTelBlocking();
 
-    ClassDef(KVTelBlocking, 1)  //Blocking telescope for E416 experiment
+   ClassDef(KVTelBlocking, 1)  //Blocking telescope for E416 experiment
 };
 
 #endif

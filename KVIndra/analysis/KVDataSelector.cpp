@@ -23,11 +23,11 @@ ClassImp(KVDataSelector)
 <!-- */
 // --> END_HTML
 //
-// A KVDataSelector class allows to build TEventList's 
+// A KVDataSelector class allows to build TEventList's
 //
 ////////////////////////////////////////////////////////////////////////////////
 //_____________________________________
-    KVDataSelector::KVDataSelector()
+KVDataSelector::KVDataSelector()
 {
    //Default constructor
    evtl = new TEventList();
@@ -49,9 +49,9 @@ void KVDataSelector::Reset(Int_t nrun)
    evtl->Reset();
    evtl->SetName(Form("%s_run%d", this->IsA()->GetName(), nrun));
    evtl->
-       SetTitle(Form
-                ("TEventList for the \"%s\" KVDataSelector and run %d.",
-                 this->IsA()->GetName(), nrun));
+   SetTitle(Form
+            ("TEventList for the \"%s\" KVDataSelector and run %d.",
+             this->IsA()->GetName(), nrun));
    cout << evtl->GetName() << " initialised." << endl;
 }
 
@@ -60,7 +60,7 @@ Bool_t KVDataSelector::ProcessCurrentEntry(void)
 {
 //
 // Process the current entry
-// if the SelectCurrentEntry method return kTRUE, the current entry number 
+// if the SelectCurrentEntry method return kTRUE, the current entry number
 // is added to the event list
 // This method is called just before the Analysis method
 //
@@ -78,7 +78,7 @@ Bool_t KVDataSelector::ProcessCurrentEntry(void)
 //_____________________________________
 void KVDataSelector::Init(void)
 {
-// 
+//
 // Initialisations of the KVDataSelector
 // This method is called before the InitAnalysis method of the KVSelector
 //
@@ -97,8 +97,8 @@ Bool_t KVDataSelector::SelectCurrentEntry(void)
 }
 
 //_________________________________________________________________
-void KVDataSelector::MakeClass(const Char_t * classname,
-                               const Char_t * classdesc)
+void KVDataSelector::MakeClass(const Char_t* classname,
+                               const Char_t* classdesc)
 {
    //Creates skeleton '.h' and '.cpp' files for a new data selector class which
    //inherits from this class. Give a name for the new class and a short description

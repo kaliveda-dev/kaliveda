@@ -23,15 +23,15 @@
 #include "KVSilicon.h"
 #include "KVCsI.h"
 
-class KVIDSiCsI5:public KVIDSiCsI, public KVTGIDManager {
+class KVIDSiCsI5: public KVIDSiCsI, public KVTGIDManager {
 
-	KVSilicon* fSi;//!the silicon
-	KVCsI* fCsI;//!the csi
-	Double_t fCsIRPedestal;//!CsI Rapide pedestal for current run
-	Double_t fCsILPedestal;//!CsI Lente pedestal for current run
-	Double_t fSiPGPedestal;//!Silicon PG pedestal for current run
-	Double_t fSiGGPedestal;//!Silicon GG pedestal for current run
-	Double_t fSiGain;//!Silicon ampli gain for current run
+   KVSilicon* fSi;//!the silicon
+   KVCsI* fCsI;//!the csi
+   Double_t fCsIRPedestal;//!CsI Rapide pedestal for current run
+   Double_t fCsILPedestal;//!CsI Lente pedestal for current run
+   Double_t fSiPGPedestal;//!Silicon PG pedestal for current run
+   Double_t fSiGGPedestal;//!Silicon GG pedestal for current run
+   Double_t fSiGain;//!Silicon ampli gain for current run
    enum {
       kHasPG2 = BIT(17)
    };
@@ -41,7 +41,7 @@ class KVIDSiCsI5:public KVIDSiCsI, public KVTGIDManager {
       k_GG, k_PG1, k_PG2
    };
 
- public:
+public:
 
    enum {                       //identification status subcodes
       k_OK_GG = KVTGIDManager::kStatus_OK,      //identification OK GG(either Z & A or just Z)
@@ -59,37 +59,41 @@ class KVIDSiCsI5:public KVIDSiCsI, public KVTGIDManager {
       kZOK_A_ZtooLarge,         //Z id ok, mass ID attempted but Z passed to IdentA larger than max Z defined by KVTGIDZA
    };
 
-    KVIDSiCsI5() {
+   KVIDSiCsI5()
+   {
       fWhichGrid = -1;
-		fSi = 0;
-		fCsI = 0;
+      fSi = 0;
+      fCsI = 0;
    };
-   virtual ~ KVIDSiCsI5() {
+   virtual ~ KVIDSiCsI5()
+   {
    };
 
-   virtual Double_t IdentifyZ(Double_t & funLTG);
+   virtual Double_t IdentifyZ(Double_t& funLTG);
 
-   virtual Bool_t Identify(KVIdentificationResult*, Double_t x=-1., Double_t y=-1.);
+   virtual Bool_t Identify(KVIdentificationResult*, Double_t x = -1., Double_t y = -1.);
 
-   void SetHasPG2(Bool_t yes=kTRUE) {
+   void SetHasPG2(Bool_t yes = kTRUE)
+   {
       SetBit(kHasPG2, yes);
    };
-   Bool_t HasPG2() const {
+   Bool_t HasPG2() const
+   {
       return TestBit(kHasPG2);
    };
 
-   void Print(Option_t * opt = "") const;
+   void Print(Option_t* opt = "") const;
 
-   virtual Double_t GetIDMapX(Option_t * opt = "");
-   virtual Double_t GetIDMapY(Option_t * opt = "");
-   virtual Double_t GetPedestalX(Option_t * opt = "");
-   virtual Double_t GetPedestalY(Option_t * opt = "");
+   virtual Double_t GetIDMapX(Option_t* opt = "");
+   virtual Double_t GetIDMapY(Option_t* opt = "");
+   virtual Double_t GetPedestalX(Option_t* opt = "");
+   virtual Double_t GetPedestalY(Option_t* opt = "");
 
    virtual Bool_t SetIdentificationParameters(const KVMultiDetArray*);
    virtual void RemoveIdentificationParameters();
 
    virtual void Initialize();
-   virtual Double_t GetMeanDEFromID(Int_t &status, Int_t Z, Int_t A=-1, Double_t Eres = -1.);
+   virtual Double_t GetMeanDEFromID(Int_t& status, Int_t Z, Int_t A = -1, Double_t Eres = -1.);
 
    ClassDef(KVIDSiCsI5, 2)      //5th campaign INDRA identification using Si-CsI matrices
 };

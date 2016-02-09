@@ -4,7 +4,7 @@
 //    EndRun():        called everytime a run ends
 //    InitAnalysis():  called at the beginning of the analysis
 //                     a convenient place to create your histograms.
-//    Analysis():      called for each event. In this function you 
+//    Analysis():      called for each event. In this function you
 //                     fill your histograms.
 //    EndAnalysis():   called at the end of a loop on the tree,
 //                     a convenient place to draw/fit your histograms.
@@ -29,7 +29,7 @@ void KVFAZIAReaderTemplate::InitAnalysis(void)
    //
    // To access some information about FAZIA, use the global pointer gFazia
    // e.g. to access the list of silicon detetors
-   //		KVList *list = gFazia->GetListOfDetectors();
+   //    KVList *list = gFazia->GetListOfDetectors();
    //
    // When running in batch mode, the global pointer gBatchSystem gives access
    // to the batch system running the analysis. You can use this to name files

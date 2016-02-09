@@ -15,9 +15,9 @@
  *            The routine estimates good initial values, reasonnable limits,
  *            automatically from the data and manages the whole fit procedure
  *  fitede_c: more specific but flexible routine in which initial values
- *            have to be supplied and also limits of the parameters and 
- *            scaling factors. This routine performs a fit in the given 
- *            conditions, it is called several times by globede. It can be 
+ *            have to be supplied and also limits of the parameters and
+ *            scaling factors. This routine performs a fit in the given
+ *            conditions, it is called several times by globede. It can be
  *            invoked directly by the user in case of specific difficult cases,
  *            otherwise globede is much simpler and easier to handle.
  *   fede_c : function which returns the value of the functional (energy loss)
@@ -29,10 +29,10 @@
 
 #include "FC.h"
 
-void FC_GLOBAL(globede,GLOBEDE)(const int *,const float *,const float *,
-   const float *,const float *,const int *,const int*,float *,int *,int *) ;
+void FC_GLOBAL(globede, GLOBEDE)(const int*, const float*, const float*,
+                                 const float*, const float*, const int*, const int*, float*, int*, int*) ;
 
-/*  
+/*
  *---------------------------------------------------------------------
  *
  *                   ******************
@@ -51,7 +51,7 @@ void FC_GLOBAL(globede,GLOBEDE)(const int *,const float *,const float *,
  *  ixt  :  =0->basic functional       <>0->extended functional
  *      * For the basic nformula :
  *        yy = ((g*E)**(mu+1)+lambda**(mu+1)*Z**2*A**mu)**(1/(mu+1))-g*E + pdy
- *      * For the extended formula :      
+ *      * For the extended formula :
  *        yy = ((g*E)**(mu+nu+1)+(lambda*Z**alpha*A**beta)**(mu+nu+1)+
  *                 xi*A**mu*(g*E)**nu)**(1/(mu+mu+1))-g*E + pdy
  *
@@ -66,9 +66,9 @@ void FC_GLOBAL(globede,GLOBEDE)(const int *,const float *,const float *,
  *             the numbers and orders of parameters are :
  *             ixt=0  ih=0   5 parameters: lambda, mu, g, pdx, pdy
  *             ixt=0  ih<>0  6 parameters: lambda, mu, g, pdx, pdy, eta
- *             ixt<>0 ih=0   9 parameters: lambda, alpha, beta, mu, nu, 
+ *             ixt<>0 ih=0   9 parameters: lambda, alpha, beta, mu, nu,
  *                                        xi, g, pdx, pdy
- *             ixt<>0 ih<>0 10 parameters: lambda, alpha, beta, mu, nu, 
+ *             ixt<>0 ih<>0 10 parameters: lambda, alpha, beta, mu, nu,
  *                                        xi, g, pdx, pdy, eta
  * istate : address where the status of parameters again constraints will be
  *          written. The number of returned values is the same as for par
@@ -77,20 +77,20 @@ void FC_GLOBAL(globede,GLOBEDE)(const int *,const float *,const float *,
  *                =2 -> parameter constrained by the upper limit
  *                =3 -> constant parameter (bl(i)=bu(i)=par(i))
  * FUNCTION VALUE : return code
- *             0 -> convergence reached 
+ *             0 -> convergence reached
  *             1 -> convergence reached, but not well marked minimum
  *             2 -> too many iterations, convergence not reached
  *            -1 -> no identification line with at least 2 points
  *            -2 -> too few data points
  *            -3 -> addressing problem between Fortran and C
  */
-int globede_c(int npts,const float *zd,const float *ad,const float *xd,
-              const float *yd,int ixt,int ih,float *par,int *istate)
+int globede_c(int npts, const float* zd, const float* ad, const float* xd,
+              const float* yd, int ixt, int ih, float* par, int* istate)
 {
-  int lnpts, lixt, lih, irc ;
-  lnpts = npts ;
-  lixt = ixt ;
-  lih = ih ;
-  FC_GLOBAL(globede,GLOBEDE)(&lnpts,zd,ad,xd,yd,&lixt,&lih,par,istate,&irc) ;
-  return irc ;
+   int lnpts, lixt, lih, irc ;
+   lnpts = npts ;
+   lixt = ixt ;
+   lih = ih ;
+   FC_GLOBAL(globede, GLOBEDE)(&lnpts, zd, ad, xd, yd, &lixt, &lih, par, istate, &irc) ;
+   return irc ;
 }

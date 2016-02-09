@@ -17,14 +17,14 @@ ClassImp(KVIVReconEvent)
 <h4>Event reconstructed from energy losses in INDRA array and VAMOS spectrometer</h4>
 <!-- */
 // --> END_HTML
-// 
+//
 //
 //
 //    1) METHODS FOR INDRA
 //
 //      GetParticle(Int_t i)       -  returns ith reconstructed particle of event (i=1,...,GetINDRAMult())
 //      GetParticleWithName(const Char_t*)    -  returns the first particle with given name
-//      GetParticle(const Char_t*)				 -  returns the first particle belonging to a given group
+//      GetParticle(const Char_t*)            -  returns the first particle belonging to a given group
 //      UseMeanAngles()      - particle's theta & phi are taken from mean theta & phi of detectors
 //      UseRandomAngles()      - particle's theta & phi are randomized within theta & phi limits of detectors
 //      HasMeanAngles()/HasRandomAngles()   -  indicate in which of the two previous cases we find ourselves
@@ -49,7 +49,7 @@ ClassImp(KVIVReconEvent)
 //    2) METHODS FOR VAMOS
 //
 //      GetNucleus(Int_t i)       -  returns ith reconstructed nucleuis of VAMOS event (i=1,...,GetVAMOSMult())
-//      GetNucleus(const Char_t*)				 -  returns the first nucleus belonging to a given group
+//      GetNucleus(const Char_t*)             -  returns the first nucleus belonging to a given group
 //
 //      GetNextNucleus(Option_t* opt)  -
 //              Use this method to iterate over the list of nuclei in the VAMOS event
@@ -71,39 +71,43 @@ ClassImp(KVIVReconEvent)
 //
 //
 //   The "OK" status of particles/nuclei is defined by setting acceptable identification and calibration (reconstruction)
-//   codes using AcceptIDCodes_INDRA, AcceptECodes_INDRA/ AcceptIDCodes_VAMOS, AcceptECodes_VAMOS ... 
-//   The comparison of each particle/nucleus codes with the "acceptable" codes then determines whether 
+//   codes using AcceptIDCodes_INDRA, AcceptECodes_INDRA/ AcceptIDCodes_VAMOS, AcceptECodes_VAMOS ...
+//   The comparison of each particle/nucleus codes with the "acceptable" codes then determines whether
 //   KVParticle::IsOK() is set or not.
 ////////////////////////////////////////////////////////////////////////////////
-void KVIVReconEvent::init(){
-	//Default initialisations
-	fVAMOSev = NULL;
+void KVIVReconEvent::init()
+{
+   //Default initialisations
+   fVAMOSev = NULL;
 }
 //________________________________________________________________
 
-KVIVReconEvent::KVIVReconEvent(Int_t mult_indra, const char *cl_name_indra, Int_t mult_vamos, const char *cl_name_vamos)
-:KVINDRAReconEvent( mult_indra, cl_name_indra){
-   	// Default constructor
-   	init();
-	fVAMOSev = new KVVAMOSReconEvent( mult_vamos, cl_name_vamos );
+KVIVReconEvent::KVIVReconEvent(Int_t mult_indra, const char* cl_name_indra, Int_t mult_vamos, const char* cl_name_vamos)
+   : KVINDRAReconEvent(mult_indra, cl_name_indra)
+{
+   // Default constructor
+   init();
+   fVAMOSev = new KVVAMOSReconEvent(mult_vamos, cl_name_vamos);
 }
 //________________________________________________________________
 
-KVIVReconEvent::~KVIVReconEvent(){
-   	// Destructor
-   	SafeDelete( fVAMOSev );
+KVIVReconEvent::~KVIVReconEvent()
+{
+   // Destructor
+   SafeDelete(fVAMOSev);
 }
 //________________________________________________________________
 
-void KVIVReconEvent::Clear(Option_t * opt){
-	//Reset the event to zero ready for new event.
+void KVIVReconEvent::Clear(Option_t* opt)
+{
+   //Reset the event to zero ready for new event.
 
-	KVINDRAReconEvent::Clear( opt );
-	fVAMOSev->Clear( opt );
+   KVINDRAReconEvent::Clear(opt);
+   fVAMOSev->Clear(opt);
 }
 //________________________________________________________________
 
-Int_t KVIVReconEvent::GetTotalMult(Option_t * opt)
+Int_t KVIVReconEvent::GetTotalMult(Option_t* opt)
 {
    //Returns total multiplicity (number of particles in INDRA + nucleus in VAMOS) of event.
    //If opt = "" (default), returns number of particles in TClonesArray* fParticles (INDRA) + fVAMOSev->fParticles (VAMOS).
@@ -116,18 +120,19 @@ Int_t KVIVReconEvent::GetTotalMult(Option_t * opt)
    //BE CAREFUL: the method GetMult(Option_t *) does not return the total
    //multiplicity but only the multiplicity in INDRA.
 
-   return GetINDRAMult( opt ) + GetVAMOSMult( opt );
+   return GetINDRAMult(opt) + GetVAMOSMult(opt);
 }
 //________________________________________________________________
 
-void KVIVReconEvent::Print(Option_t * option) const{
+void KVIVReconEvent::Print(Option_t* option) const
+{
    //Print out list of particles in the INDRA's event and list of nuclei reconstructed
    //in VAMOS.
    //If option="ok" only particles and nuclei with IsOK=kTRUE are included.
 
-	cout<<"------------- In INDRA --------------------"<<endl;
-	KVINDRAReconEvent::Print( option );
+   cout << "------------- In INDRA --------------------" << endl;
+   KVINDRAReconEvent::Print(option);
 
-	cout<<"------------- In VAMOS --------------------"<<endl;
-	fVAMOSev->Print( option );
+   cout << "------------- In VAMOS --------------------" << endl;
+   fVAMOSev->Print(option);
 }

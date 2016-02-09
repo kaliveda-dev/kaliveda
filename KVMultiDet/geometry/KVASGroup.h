@@ -7,22 +7,22 @@
 #include "KVGroup.h"
 #include "KVTelescope.h"
 
-class KVASGroup : public KVGroup, public KVPosition
-{
+class KVASGroup : public KVGroup, public KVPosition {
 
 protected:
-    UInt_t fNumberOfLayers;      //number of different layers in group
-    UInt_t fLayNumMin;           //minimum layer number (nearest to target)
-    UInt_t fLayNumMax;           //maximum layer number (furthest from target)
-   public:
+   UInt_t fNumberOfLayers;      //number of different layers in group
+   UInt_t fLayNumMin;           //minimum layer number (nearest to target)
+   UInt_t fLayNumMax;           //maximum layer number (furthest from target)
+public:
    KVASGroup();
    void init();
    virtual ~KVASGroup();
-   TList *GetTelescopesWithAngles(Float_t theta, Float_t phi) const;
-   KVNameValueList *DetectParticle(KVNucleus *part);
-   void SetDimensions(KVPosition *, KVPosition *);
+   TList* GetTelescopesWithAngles(Float_t theta, Float_t phi) const;
+   KVNameValueList* DetectParticle(KVNucleus* part);
+   void SetDimensions(KVPosition*, KVPosition*);
    void SetDimensions();
-   UInt_t GetNumberOfLayers() {
+   UInt_t GetNumberOfLayers()
+   {
       if (!fNumberOfLayers)
          CountLayers();
       return fNumberOfLayers;
@@ -31,17 +31,20 @@ protected:
    void CountLayers();
    UInt_t GetLayerNearestTarget() const;
    UInt_t GetLayerFurthestTarget() const;
-   TList *GetTelescopesInLayer(UInt_t nlayer);
+   TList* GetTelescopesInLayer(UInt_t nlayer);
    UInt_t GetNumberOfDetectorLayers();
-   TList *GetDetectorsInLayer(UInt_t lay);
-   UInt_t GetDetectorLayer(KVDetector * det);
-   TList *GetAlignedDetectors(KVDetector *, UChar_t dir = kBackwards);
+   TList* GetDetectorsInLayer(UInt_t lay);
+   UInt_t GetDetectorLayer(KVDetector* det);
+   TList* GetAlignedDetectors(KVDetector*, UChar_t dir = kBackwards);
 
    void Add(KVBase*);
-   Bool_t Contains(KVBase *name) const;
-   const KVSeqCollection* GetTelescopes() const { return GetStructures(); }
+   Bool_t Contains(KVBase* name) const;
+   const KVSeqCollection* GetTelescopes() const
+   {
+      return GetStructures();
+   }
 
-   ClassDef(KVASGroup,1)//Group in axially-symmetric multidetector
+   ClassDef(KVASGroup, 1) //Group in axially-symmetric multidetector
 };
 
 #endif

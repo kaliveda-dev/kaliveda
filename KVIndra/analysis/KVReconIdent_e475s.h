@@ -12,15 +12,14 @@ $Date: 2007/11/16 15:41:55 $
 
 #include "KVINDRAReconIdent.h"
 
-class KVReconIdent_e475s : public KVINDRAReconIdent
-{
-   public:
+class KVReconIdent_e475s : public KVINDRAReconIdent {
+public:
 
    KVReconIdent_e475s();
    virtual ~KVReconIdent_e475s();
    virtual Bool_t Analysis();
 
-   ClassDef(KVReconIdent_e475s,1)//Identification of E475S events
+   ClassDef(KVReconIdent_e475s, 1) //Identification of E475S events
 };
 
 #endif

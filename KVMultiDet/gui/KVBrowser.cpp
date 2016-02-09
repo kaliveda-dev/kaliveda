@@ -27,7 +27,7 @@ ClassImp(KVBrowser)
 //All KaliVeda Browsers derive from this class, which takes care of house-keeping
 //for TGLayoutHints and other widgets...
 //______________________________________________________________________________
-    KVBrowser::KVBrowser()
+KVBrowser::KVBrowser()
 {
    // for deleting stray GUI objects
    fCleanup = new TList;
@@ -56,7 +56,7 @@ KVBrowser::~KVBrowser()
 
 //_______________________________________________________________________________
 
-void KVBrowser::AddToWidgetList(KVWidget * widg)
+void KVBrowser::AddToWidgetList(KVWidget* widg)
 {
    //Add a new widget to the list
 
