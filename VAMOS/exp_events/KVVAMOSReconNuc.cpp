@@ -9,6 +9,8 @@
 #include "TGraphErrors.h"
 #include "TROOT.h"
 #include "KVIDQA.h"
+#include "KVIDHarpeeICSi_e503.h"
+#include "KVIDHarpeeSiCsI_e503.h"
 
 ClassImp(KVVAMOSReconNuc)
 
@@ -500,39 +502,51 @@ void KVVAMOSReconNuc::IdentifyQandA()
          // is telescope able to identify for this run ?
          if (!idt->IsReadyForID()) continue;
 
-         // if it is not a ID-telescope for Q and A identification
-         // then go to the next one
-         if (!idt->InheritsFrom(KVIDQA::Class())) continue;
+         if (idt->InheritsFrom(KVIDQA::Class())) { // if ID-telescope for Q and A identification (e494s)
+            KVIDQA* qa_idt = (KVIDQA*)idt;
 
-         KVIDQA* qa_idt = (KVIDQA*)idt;
+            static KVIdentificationResult IDR;
 
-         static KVIdentificationResult IDR;
+            // loop over the time acquisition parameters
+            const Char_t* tof_name = NULL;
+            for (Short_t i = 0; !ok && (tof_name = GetCodes().GetToFName(i)); i++) {
+               IDR.Clear();
+               IDR.IDattempted = kTRUE;
 
-         // loop over the time acquisition parameters
-         const Char_t* tof_name = NULL;
-         for (Short_t i = 0; !ok && (tof_name = GetCodes().GetToFName(i)); i++) {
+               Double_t beta    = GetBeta(tof_name);
+               Double_t realA   = CalculateRealA(GetZ(), GetEnergyBeforeVAMOS(), beta);
+               Double_t realAoQ = CalculateMassOverQ(GetBrho(), beta) / u();
 
-
-            IDR.Clear();
-            IDR.IDattempted = kTRUE;
-
-            Double_t beta    = GetBeta(tof_name);
-            Double_t realA   = CalculateRealA(GetZ(), GetEnergyBeforeVAMOS(), beta);
-            Double_t realAoQ = CalculateMassOverQ(GetBrho(), beta) / u();
-
-
-            qa_idt->Identify(&IDR, tof_name, realAoQ, realA);
-            // for all nuclei we take the first identification which gives IDOK==kTRUE
-            if (IDR.IDOK) {
-               SetQandAidentification(&IDR);
-               SetRealAoverQ(realAoQ);
-               SetRealQ(qa_idt->GetRealQ());
-               return;
+               qa_idt->Identify(&IDR, tof_name, realAoQ, realA);
+               // for all nuclei we take the first identification which gives IDOK==kTRUE
+               if (IDR.IDOK) {
+                  SetQandAidentification(&IDR);
+                  SetRealAoverQ(realAoQ);
+                  SetRealQ(qa_idt->GetRealQ());
+                  return;
+               }
             }
+         } else { // if ID-Telescope for e503 experiment
+            if (idt->InheritsFrom(KVIDHarpeeICSi_e503::Class()) || idt->InheritsFrom(KVIDHarpeeSiCsI_e503::Class())) {
+               // loop over the time acquisition parameters
+               const KVString str = "TSI_HF";
+               const KVString tof_name;
+
+               for (Short_t i = 0; !ok && (tof_name = GetCodes().GetToFName(i)); i++) {
+                  if (str != tof_name) continue;
+
+                  Double_t beta    = GetBeta(tof_name);
+                  Double_t RealA   = CalculateRealA(GetZ(), GetEnergyBeforeVAMOS(), beta);
+                  Double_t RealAoQ = CalculateMassOverQ(GetBrho(), beta) / u();
+
+                  SetRealAoverQ(RealAoQ);
+                  SetRealQ(RealA / RealAoQ);
+                  return;
+               }
+            } else continue; //Not ID-Telescope for e494s either e503
          }
       }
    }
-
    /******* UNIDENTIFIED PARTICLES *******/
 
    /*** general ID code for non-identified particles ***/
