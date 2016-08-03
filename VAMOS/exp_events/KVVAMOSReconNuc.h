@@ -59,10 +59,13 @@ public:
    virtual void Copy(TObject&) const;
    void init();
 
-   vector<Double_t> GetDetEVector() const
-   {
+   vector<Double_t> GetDetEVector() const {
       return fDetE;
    }
+
+   Bool_t StoppedInChIo();
+   Bool_t StoppedInSi();
+   Bool_t StoppedInCsI();
 
    Bool_t   GetCorrFlightDistanceAndTime(Double_t& dist, Double_t& tof, const Char_t* tof_name) const;
    virtual Double_t  GetCorrectedT_HF(Double_t tof, Double_t dist)   const;
@@ -96,6 +99,10 @@ public:
    virtual void     Print(Option_t* option = "") const;
    virtual void     SetQandAidentification(KVIdentificationResult* idr);
 
+   virtual Int_t GetIDCode() const {
+      // Returns value of VEDA ID code
+      return const_cast<KVVAMOSReconNuc*>(this)->GetCodes().GetVedaIDCode();
+   }
 
    //-------------- inline methods -----------------//
    static  Double_t         CalculateEnergy(Int_t Z, Int_t A, Int_t Q, Double_t Brho);

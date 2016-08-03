@@ -55,7 +55,7 @@ void KVDriftChamber::init()
    // of the range 2 and between strips 32 and 33 of the range 1 (offsets 0,0).
    SetXOffsets();
 
-   // Method for X reconstruction is SECHS by default
+   // The Hyperbolic Secant Squared (SECHS) method is by default used for X position measurements
    SetSECHSReconstructionX();
 
    //a KVDriftChamber can not be used in a ID telescope
@@ -469,7 +469,8 @@ Double_t KVDriftChamber::GetRawPosition(Char_t dir, Int_t num)
    //
    //
    // Two methods can be used for X raw position: the Hyperblic Secant Squared (SECHS) method (used by default)
-   // or the strip Mean and RMS estimation method.
+   // or the Mean and RMS estimation method. The method used for the X position measurement can be changed
+   // by calling SetSECHSReconstructionX(Bool_t kSECHS)
    //
    // SECHS method ( see T.Roger et al. NIMA 638 (2001) and Lau et al. NIMA 366 (1995) ):
    // We compute here the charge profile's centroid, seen on a strip of width w=StripWidth()/2.
@@ -481,8 +482,10 @@ Double_t KVDriftChamber::GetRawPosition(Char_t dir, Int_t num)
    // Mean and RMS method:
    // We evaluate here the Mean and RMS values of the histogram representing the calibrated charge versus strip number.
    // The two cathode plans are offset by half a strip to reduce the non linearity of the position measurement
-   // in between the strips. The center of the detector  is by default at the middle of the strip 32 of the
+   // in between the strips. The center of the detector is by default at the middle of the strip 32 of the
    // range 2 and between strips 32 and 33 of the range 1.
+   //
+   //
    // You can apply an X offset to change the strip position with respect to
    // the center of the detector by calling SetXOffsets.
    //
@@ -539,11 +542,11 @@ Double_t KVDriftChamber::GetRawPosition(Char_t dir, Int_t num)
 
                if ((max - min + 1) < fNstripsOK) continue;
 
-               if (IsSECHSReconstructionX()) {//Hyperbolic secant squared (SECHS) method
+               if (IsSECHSReconstructionX()) {
                   // Hyperbolic secant squared (SECHS) method:
                   // by convention Q0 is the charge of the most significant strip
-                  // and Q+ and Q- are the charges of the left and right neighboring pads
-                  //, and ww is the strip(pad) witdh.
+                  // and Q+ and Q- are the charges of the left and right neighboring pads,
+                  // and ww is the strip(pad) witdh.
                   fPadMax[c - 1] = hh->GetBinCenter(binMax); //the bin center is the number of the pad
                   Float_t* QQ  = new Float_t[fNstripsOK];
                   QQ[0] = hh->GetBinContent(binMax - 1); //Q-

@@ -254,6 +254,7 @@ void KVVAMOSReconEvent::IdentAndCalibEvent()
                // "Identifying" telescope is taken from list of ID telescopes
                // to which stopping detector belongs
                d->SetIdentifyingTelescope((KVIDTelescope*)d->GetStoppingDetector()->GetIDTelescopes()->At(0));
+               d->SetIDCode(kIDCode5); // Zmin
             }
          }
       }

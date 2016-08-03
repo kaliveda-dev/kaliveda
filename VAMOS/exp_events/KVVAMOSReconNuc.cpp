@@ -336,6 +336,39 @@ void KVVAMOSReconNuc::Clear(Option_t* t)
    fRT.Reset();
 }
 //________________________________________________________________
+Bool_t KVVAMOSReconNuc::StoppedInChIo()
+{
+   //Returns kTRUE if particle stopped in ChIo
+
+   if (!strcmp(GetStoppingDetector()->GetType(), "CHI")) {
+      return kTRUE;
+   } else {
+      return kFALSE;
+   }
+}
+
+Bool_t KVVAMOSReconNuc::StoppedInSi()
+{
+   //Returns kTRUE if particle stopped in Si wall
+
+   if (!strcmp(GetStoppingDetector()->GetType(), "SI")) {
+      return kTRUE;
+   } else {
+      return kFALSE;
+   }
+}
+
+Bool_t KVVAMOSReconNuc::StoppedInCsI()
+{
+   //Returns kTRUE if particle stopped in CsI wall
+
+   if (!strcmp(GetStoppingDetector()->GetType(), "CSI")) {
+      return kTRUE;
+   } else {
+      return kFALSE;
+   }
+}
+//________________________________________________________________
 
 void KVVAMOSReconNuc::GetAnglesFromStoppingDetector(Option_t*)
 {
