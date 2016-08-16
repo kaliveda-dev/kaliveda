@@ -495,12 +495,42 @@ void KVVAMOSReconNuc::IdentifyZ()
                      idt_list->ls();
                      IDR->Print();
                   }
+
+                  //Setting the identification
+                  //
+                  //Here we have 2 possibilities:
+                  //
+                  //First case: e503 Si-CsI identification: only Z identification, then the mass is estimated using
+                  //the minimiser (see KVIDHarpeeSiCsI_e503). In this case, when the nucleus is identified in mass (idr->Aident==kTRUE)
+                  //and in charge (idr->Zident==kTRUE), the usual KVReconstructedNucleus::SetIdentification() shouldn't be used and
+                  //a custom one is used.
+                  //
+                  //Second case: usual case: we can just apply KVReconstructedNucleus::SetIdentification().
+
                   SetIdentifyingTelescope(idt);
-                  SetIdentification(IDR);
+
+                  if (idt->InheritsFrom(KVIDHarpeeSiCsI_e503::Class())) { //e503 case for Si-CsI telescope
+                     SetIDCode(IDR->IDcode);
+                     SetZMeasured(IDR->Zident);
+                     SetAMeasured(IDR->Aident);
+                     SetZ(IDR->Z);
+                     if (IDR->Aident) {
+                        //debug
+                        //std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A identified !" << std::endl;
+                        SetA(IDR->A);
+                        SetRealZ(IDR->PID);
+                     } else {
+                        //debug
+                        //std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A not identified !" << std::endl;
+                        SetRealZ(IDR->PID);
+                     }
+                  }
+
+                  else SetIdentification(IDR); //usual case
                }
             } else
                IDR->IDattempted = kFALSE;
-         }
+         };
       }
    }
 
@@ -572,6 +602,7 @@ void KVVAMOSReconNuc::IdentifyQandA()
                   Double_t RealA   = CalculateRealA(GetZ(), GetEnergyBeforeVAMOS(), beta);
                   Double_t RealAoQ = CalculateMassOverQ(GetBrho(), beta) / u();
 
+                  SetRealA(RealA);
                   SetRealAoverQ(RealAoQ);
                   SetRealQ(RealA / RealAoQ);
                   return;

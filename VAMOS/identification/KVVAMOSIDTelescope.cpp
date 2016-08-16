@@ -1,5 +1,5 @@
 //Created by KVClassFactory on Mon May 27 10:38:29 2013
-//Author: Guilain ADEMARD
+//Author: Guilain ADEMARD & Quentin FABLE
 
 #include "KVVAMOSIDTelescope.h"
 #include "KVIdentificationResult.h"
@@ -32,8 +32,10 @@ KVVAMOSIDTelescope::KVVAMOSIDTelescope() : fDEdet(NULL), fEdet(NULL), fGrid(NULL
 
    // For now, the codes corresponding to correct identification/calibration
    // are code 1, they do not depend on the detectors in the IDTelescope.
-   fIDCode = kIDCode1;
-   fECode  = kECode1;
+   fIDCode  = kIDCode1;
+   fECode   = kECode1;
+   // Switch between Z only or both (Z,A) identification (when possible)
+   fonlyZId = kFALSE;
 }
 //________________________________________________________________
 
@@ -77,6 +79,7 @@ Bool_t KVVAMOSIDTelescope::Identify(KVIdentificationResult* IDR, Double_t x, Dou
    Double_t e  = (x < 0. ? GetIDMapX() : x);
 
    if (fGrid && fGrid->IsIdentifiable(e, de)) {
+      fGrid->SetOnlyZId(fonlyZId);
       fGrid->Identify(e, de, IDR);
       IDR->IDquality = fGrid->GetQualityCode();
    }
@@ -89,6 +92,15 @@ Bool_t KVVAMOSIDTelescope::Identify(KVIdentificationResult* IDR, Double_t x, Dou
       IDR->IDcode = GetZminCode();
    }
 
+   //debug
+//   std::cout << "========KVVAMOSIDTelescope=" << GetName()  << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() IDquality=" << IDR->IDquality << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() IDcode="    << IDR->IDcode << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() Zident?="   << IDR->Zident << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() PID="       << IDR->PID << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() Z="         << IDR->Z << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() Aident?="   << IDR->Aident << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() A="         << IDR->A << std::endl;
 
    //    //Identified particles with subcode kID_LeftOfBragg are given
    //    //general ID code kIDCode5 (Zmin).

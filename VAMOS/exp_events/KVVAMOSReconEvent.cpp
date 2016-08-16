@@ -234,8 +234,15 @@ void KVVAMOSReconEvent::IdentAndCalibEvent()
    }
 
 
+   //debug
+   //std::cout << "#############KVVAMOSReconEvent -> Identifying new event !##############" << std::endl;
+
    KVVAMOSReconNuc* d;
    while ((d = GetNextNucleus())) {
+
+      //debug
+      //std::cout << "###KVVAMOSReconEvent::IdentAndCalibEvent -> new particle in the event! GetStatus()=" << d->GetStatus() << "###" << std::endl;
+
 
       //-----------------------
       // Z-identification
@@ -270,6 +277,16 @@ void KVVAMOSReconEvent::IdentAndCalibEvent()
       if (d->IsZidentified() && d->IsCalibrated() && !d->IsQandAidentified()) {
          d->IdentifyQandA();
       }
+
+      //debug
+//      std::cout << "#KVVAMOSReconEvent::IdentAndCalib() -> End of identification for the particle... results follow:" << std::endl;
+//      std::cout << "IDcode=" << d->GetIDCode() << std::endl;
+//      std::cout << "Z="      << d->GetZ()      << std::endl;
+//      std::cout << "RealZ="  << d->GetRealZ()  << std::endl;
+//      std::cout << "A="      << d->GetA()      << std::endl;
+//      std::cout << "RealA="  << d->GetRealA()  << std::endl;
+//      std::cout << "RealQ="  << d->GetRealQ()  << std::endl;
+//      std::cout << "RealAoQ="<< d->GetRealAoverQ() << std::endl;
    }
 }
 //________________________________________________________________
