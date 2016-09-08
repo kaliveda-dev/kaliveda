@@ -129,13 +129,15 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
       idr->IDquality = kIdentified;
 
       //debug
-      //std::cout << "KVIDHarpeeSiCsI_e503::VIDSubCode=" << idr->IDquality << std::endl;
+      std::cout << "KVIDHarpeeSiCsI_e503::Identify(): A found= "   << idr->A << std::endl;
+      std::cout << "KVIDHarpeeSiCsI_e503::Identify(): VIDSubCode=" << idr->IDquality << std::endl;
 
       return kTRUE;
    }
 
    //debug
-   //std::cout << "KVIDHarpeeSiCsI_e503::VIDSubCode=" << idr->IDquality << std::endl;
+   std::cout << "KVIDHarpeeSiCsI_e503::Identify(): A not found=" << idr->A << std::endl;
+   std::cout << "KVIDHarpeeSiCsI_e503::Identify(): VIDSubCode="  << idr->IDquality << std::endl;
 
    return kFALSE;
 

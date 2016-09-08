@@ -229,11 +229,11 @@ public:
    Float_t GetRealZ() const {
       if (fRealZ > 0) {
          //debug
-         std::cout << "KVReconstructedNucleus::GetRealZ() returning fRealZ" << std::endl;
+         //std::cout << "KVReconstructedNucleus::GetRealZ() returning fRealZ" << std::endl;
          return fRealZ;
       } else {
          //debug
-         std::cout << "KVReconstructedNucleus::GetRealZ() returning GetZ() because fRealZ=" << fRealZ << std::endl;
+         //std::cout << "KVReconstructedNucleus::GetRealZ() returning GetZ() because fRealZ=" << fRealZ << std::endl;
          return (Float_t) GetZ();
       }
    }

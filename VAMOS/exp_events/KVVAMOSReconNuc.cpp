@@ -516,12 +516,12 @@ void KVVAMOSReconNuc::IdentifyZ()
                      SetZ(IDR->Z);
                      if (IDR->Aident) {
                         //debug
-                        //std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A identified !" << std::endl;
+                        std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A identified !" << std::endl;
                         SetA(IDR->A);
                         SetRealZ(IDR->PID);
                      } else {
                         //debug
-                        //std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A not identified !" << std::endl;
+                        std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A not identified !" << std::endl;
                         SetRealZ(IDR->PID);
                      }
                   }
@@ -601,6 +601,12 @@ void KVVAMOSReconNuc::IdentifyQandA()
                   Double_t beta    = GetBeta(tof_name);
                   Double_t RealA   = CalculateRealA(GetZ(), GetEnergyBeforeVAMOS(), beta);
                   Double_t RealAoQ = CalculateMassOverQ(GetBrho(), beta) / u();
+
+                  //debug
+                  std::cout << "KVVAMOSReconNuc::IdentifyQandA(): beta=" << beta << std::endl;
+                  std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realA=" << RealA << std::endl;
+                  std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realAoQ=" << RealAoQ << std::endl;
+
 
                   SetRealA(RealA);
                   SetRealAoverQ(RealAoQ);
@@ -890,7 +896,7 @@ Bool_t KVVAMOSReconNuc::ReconstructLabTraj()
 void KVVAMOSReconNuc::Propagate(ECalib cal)
 {
    // Propagate the nucleus along the reconstructed trajectory tocalculate
-   // some quantities from each volume (detectors)  punched through at the
+   // some quantities from each volume (detectors) punched through at the
    // focal plane.
 
    // The propagation will be incoherent if the trajectory reconstruction
@@ -973,11 +979,11 @@ Bool_t KVVAMOSReconNuc::CheckTrackingCoherence()
 
 Bool_t KVVAMOSReconNuc::GetCorrFlightDistanceAndTime(Double_t& dist, Double_t& tof, const Char_t* tof_name) const
 {
-   // Returns true if the corrected fligh distance (dist) and the corrected time of flight (tof)
+   // Returns true if the corrected flight distance (dist) and the corrected time of flight (tof)
    // is correctly calculated.
    // The first calibrated and fired acq. parameter belonging both to
    // the start detector and to the stop detector (only to the start detector
-   // for an HF-time)  of the list fDetList will be chosen, and the total flight distance
+   // for an HF-time) of the list fDetList will be chosen, and the total flight distance
    // will be equal to:
    //  - the path (from target point to focal plan) corrected on the distance
    //    covered between the focal plan and the start detector for HF-time.
@@ -1026,15 +1032,16 @@ Bool_t KVVAMOSReconNuc::GetCorrFlightDistanceAndTime(Double_t& dist, Double_t& t
    }
 
    if (!ok) {
-      /*
-      Error("GetCorrFlightDistanceAndTime","detectors used to measure %s are not found in the detector list (fDetlist)\n isT_HF %d, t_type %s, calibT %f",tof_name,isT_HF, t_type, calibT);
+      //debug
+      Error("GetCorrFlightDistanceAndTime", "detectors used to measure %s are not found in the detector list (fDetlist)\n isT_HF %d, t_type %s, calibT %f", tof_name, isT_HF, t_type, calibT);
       GetDetectorList()->ls();
-      cout<<endl;
-      */
+      cout << endl;
+
       return kFALSE;
    }
 
    dist = GetPath(start, stop);
+
    if (dist <= 0.) return kFALSE;
    tof  = (isT_HF ? GetCorrectedT_HF(calibT, dist) : calibT);
 
@@ -1073,7 +1080,13 @@ Double_t KVVAMOSReconNuc::GetCorrectedT_HF(Double_t tof, Double_t dist) const
       return tof;
    }
    Double_t alpha = 1. / (GetEnergy() / GetMass() + 1.);
-   Int_t n = TMath::Nint((dist / (C() * TMath::Sqrt(1. - alpha * alpha)) - tof) / gVamos->GetBeamPeriod());
+   Double_t delta_t = (dist / (C() * TMath::Sqrt(1. - alpha * alpha))) - tof;
+   Int_t n = TMath::Nint(delta_t / gVamos->GetBeamPeriod());
+
+   //debug
+   std::cout << "KVVAMOSReconNuc::GetCorrectedT_HF(): delta_t=" << delta_t << " beam_period="
+             << gVamos->GetBeamPeriod() << " N=" << n << std::endl;
+
    return tof + n * gVamos->GetBeamPeriod();
 }
 //________________________________________________________________
@@ -1095,14 +1108,37 @@ Double_t KVVAMOSReconNuc::GetPath(KVVAMOSDetector* start, KVVAMOSDetector* stop)
 
    Double_t dp_start = GetDeltaPath(start);
    if (dp_start) {
-      // case where stop signal is given by HF i.e. 'stop' is null
+      // case where stop signal is given by detector i.e. 'stop' not null
       if (stop) {
          Double_t dp_stop = GetDeltaPath(stop);
-         if (dp_stop) return TMath::Abs(dp_stop - dp_start);
-         else return 0.;
+
+         //debug
+         std::cout << "KVVAMOSReconNuc::GetPath(): (stop found) dp_start="  << dp_start
+                   <<  " dp_stop=" <<  dp_stop << std::endl;
+
+         if (dp_stop) {
+            //debug
+            std::cout << "path_tot=Abs(dp_start-dp_stop)=" << TMath::Abs(dp_stop - dp_start) <<  std::endl;
+            return TMath::Abs(dp_stop - dp_start);
+         }
+
+         else {
+            //debug
+            std::cout << "path_tot=0" << std::endl;
+            return 0.;
+         }
+
       }
-      // case where stop signal is given by detector i.e. 'stop' not null
-      else if (GetPath() > 0) return GetPath() + dp_start;
+      // case where stop signal is given by HF i.e. 'stop' is null
+      else if (GetPath() > 0) {
+         //debug
+         std::cout << "KVVAMOSReconNuc::GetPath(): (no stop) path=" << GetPath()
+                   << " dp_start=" << dp_start << " path_tot=path+dp_start="
+                   <<  GetPath() + dp_start << std::endl;
+
+         return GetPath() + dp_start;
+      }
+
    }
    return 0.;
 }
@@ -1154,7 +1190,8 @@ Double_t KVVAMOSReconNuc::GetDeltaPath(KVVAMOSDetector* det) const
    while ((par = (KVNamedParameter*)next())) {
       tmp = par->GetName();
       if (tmp.BeginsWith(Form("DPATH:%s", det->GetTBaseName()))) {
-//       Info("GetDeltaPath","DeltaPath for the detector %s is given by %s",det->GetName(), par->GetName() );
+         //debug
+         Info("GetDeltaPath", "DeltaPath for the detector %s is given by %s", det->GetName(), par->GetName());
          return par->GetDouble();
       }
    }

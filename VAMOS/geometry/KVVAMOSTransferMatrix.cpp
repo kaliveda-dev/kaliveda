@@ -363,7 +363,7 @@ Bool_t KVVAMOSTransferMatrix::ReconstructFPtoLab(KVVAMOSReconTrajectory* traj)
    // Then in the object 'traj' the focal plane parameters have to be given
    // i.e. traj->FPparamsAreReady() has to return true.
    //
-   // the result is store in the 'traj' object and the method returns true
+   // The result is stored in the 'traj' object and the method returns true
    // if the attempt is a success.
 
    Bool_t ok = kFALSE;

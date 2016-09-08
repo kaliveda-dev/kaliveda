@@ -58,6 +58,15 @@ void KVDriftChamber::init()
    // The Hyperbolic Secant Squared (SECHS) method is by default used for X position measurements
    SetSECHSReconstructionX();
 
+   // To be modified ???
+   // By default the raw positions in drift chambers are calculated from the Q histograms
+   // (see GetRawPosition() method) i.e fkRawPosSetByHand=kFALSE.
+   // This can be modified and set by hand (can be useful for tracking for example)
+   // using the SetRawPosition() method and then fkRawPosSetByHand=kTRUE.
+   // As long as fkRawPosSetByHand=kTRUE, GetRawPosition() will return the values set by hand, the only
+   // way to go back to the raw position calculations from Q histograms is to use ResetRawPositions() method.
+   fkRawPosSetByHand = kFALSE;
+
    //a KVDriftChamber can not be used in a ID telescope
    ResetBit(kOKforID);
 }
@@ -457,6 +466,41 @@ void KVDriftChamber::ShowQHisto(Int_t c_num, Option_t* opt)
 }
 //________________________________________________________________
 
+
+void KVDriftChamber::SetRawPosition(Double_t* X1_X2_Y_Pad1_Pad2)
+{
+   // This method allows to set by hand the raw positions of the drift chamber.
+   // X1X2Yf is an array of 3 elements: X1 is the raw X position for the first row
+   //                                   X2 is the raw X position for the second row
+   //                                   Y is the raw Y position for the drift chamber
+   //                                   Pad1 is the pad with the maximum Q for row 1 (used for SECHS method)
+   //                                   Pad2 is the pad with the maximum Q for row 2 (used for SECHS method)
+   //
+   // If the raw position is set successfully then fkRawPosSet==kTRUE and the GetRawPosition()
+   // method will now return the values set by the user (in stead of calculating them
+   // using the Q histograms), and this as long as fkRawPosSet==kTRUE.
+   // To reset the raw position, the user should use the method ResetRawPosition().
+   //
+   // Once you have set the raw positions, the getter method to access to these positions
+   // will return these new values i.e. the acquisition parameters will
+   // not be read anymore for calculating the raw positions until the next
+   // call to Initialize().
+   //
+   // It is the user responsability to verify what method is used for the raw position
+   // measurement (either SECHS method or Mean/RMS method) (see SetSECHSReconstruction()).
+
+   if (X1_X2_Y_Pad1_Pad2) {
+      fRawPosX[0] = 0.5 * (X1_X2_Y_Pad1_Pad2[0] + X1_X2_Y_Pad1_Pad2[1]); //to be modified if we want to include statistcs...
+      fRawPosX[1] = X1_X2_Y_Pad1_Pad2[0];
+      fRawPosX[2] = X1_X2_Y_Pad1_Pad2[1];
+      fRawPosY   = X1_X2_Y_Pad1_Pad2[2];
+      fPadMax[0] = X1_X2_Y_Pad1_Pad2[3];
+      fPadMax[1] = X1_X2_Y_Pad1_Pad2[4];
+      fkRawPosSetByHand = kTRUE;
+   }
+}
+//________________________________________________________________
+
 Double_t KVDriftChamber::GetRawPosition(Char_t dir, Int_t num)
 {
    // Returns the raw position in X/Y with respect to the center of the detector. The value is deduced from
@@ -501,106 +545,120 @@ Double_t KVDriftChamber::GetRawPosition(Char_t dir, Int_t num)
 
       case 0: { // for X direction
 
-            if (num < 0 || num > 2) num = 0;
-            if (fERawPosX[ num ] > -500) return fRawPosX[ num ];
+            //If X raw position was not set by hand
+            if (!IsRawPosSetByHand()) {
+               if (num < 0 || num > 2) num = 0;
+               if (fERawPosX[ num ] > -500) return fRawPosX[ num ];
 
-            fRawPosX [ 0 ] = 0;
-            fERawPosX[ 0 ] = 0.;
-            Double_t sum   = 0.;
+               fRawPosX [ 0 ] = 0;
+               fERawPosX[ 0 ] = 0.;
+               Double_t sum   = 0.;
 
-            for (Int_t c = 1; c < 3; c++) { //loop over both chambers
-               fRawPosX [ c ]   = -666;
-               fERawPosX[ c ]   = -1;
-               fPadMax[ c - 1 ] = -666;
+               for (Int_t c = 1; c < 3; c++) { //loop over both rows of the chamber
+                  fRawPosX [ c ]   = -666;
+                  fERawPosX[ c ]   = -1;
+                  fPadMax[ c - 1 ] = -666;
 
-               TH1F* hh = GetCleanQHisto(c);
-               if (!hh) continue;
+                  TH1F* hh = GetCleanQHisto(c);
+                  if (!hh) continue;
 
-               if (!hh->GetEntries()) continue;
+                  if (!hh->GetEntries()) continue;
 
-               ///////////////////////////////////////////////////
+                  ///////////////////////////////////////////////////
 
-               Int_t binMax = hh->GetMaximumBin();
-               Int_t min;
-               for (min = binMax; min > 1; min--) {
-                  if (hh->GetBinContent(min) <= 0.) {
-                     min++;
-                     break;
+                  Int_t binMax = hh->GetMaximumBin();
+                  Int_t min;
+                  for (min = binMax; min > 1; min--) {
+                     if (hh->GetBinContent(min) <= 0.) {
+                        min++;
+                        break;
+                     }
+                     Double_t deltaQ = hh->GetBinContent(min) - hh->GetBinContent(min - 1);
+                     if (deltaQ < 0) break;
                   }
-                  Double_t deltaQ = hh->GetBinContent(min) - hh->GetBinContent(min - 1);
-                  if (deltaQ < 0) break;
-               }
-               Int_t max;
-               for (max = binMax; max < hh->GetNbinsX(); max++) {
-                  if (hh->GetBinContent(max) <= 0.) {
-                     max--;
-                     break;
+                  Int_t max;
+                  for (max = binMax; max < hh->GetNbinsX(); max++) {
+                     if (hh->GetBinContent(max) <= 0.) {
+                        max--;
+                        break;
+                     }
+                     Double_t deltaQ = hh->GetBinContent(max) - hh->GetBinContent(max + 1);
+                     if (deltaQ < 0) break;
                   }
-                  Double_t deltaQ = hh->GetBinContent(max) - hh->GetBinContent(max + 1);
-                  if (deltaQ < 0) break;
-               }
 
-               if ((max - min + 1) < fNstripsOK) continue;
+                  if ((max - min + 1) < fNstripsOK) continue;
 
-               if (IsSECHSReconstructionX()) {
-                  // Hyperbolic secant squared (SECHS) method:
-                  // by convention Q0 is the charge of the most significant strip
-                  // and Q+ and Q- are the charges of the left and right neighboring pads,
-                  // and ww is the strip(pad) witdh.
-                  fPadMax[c - 1] = hh->GetBinCenter(binMax); //the bin center is the number of the pad
-                  Float_t* QQ  = new Float_t[fNstripsOK];
-                  QQ[0] = hh->GetBinContent(binMax - 1); //Q-
-                  QQ[1] = hh->GetBinContent(binMax);     //Q0
-                  QQ[2] = hh->GetBinContent(binMax + 1); //Q+
-                  Double_t ww = GetStripWidth();         //width of a pad in cm
+                  if (IsSECHSReconstructionX()) {
+                     // Hyperbolic secant squared (SECHS) method:
+                     // by convention Q0 is the charge of the most significant strip
+                     // and Q+ and Q- are the charges of the left and right neighboring pads,
+                     // and ww is the strip(pad) witdh.
+                     fPadMax[c - 1] = hh->GetBinCenter(binMax); //the bin center is the number of the pad
+                     Float_t* QQ  = new Float_t[fNstripsOK];
+                     QQ[0] = hh->GetBinContent(binMax - 1); //Q-
+                     QQ[1] = hh->GetBinContent(binMax);     //Q0
+                     QQ[2] = hh->GetBinContent(binMax + 1); //Q+
+                     Double_t ww = GetStripWidth();         //width of a pad in cm
 
-                  Double_t a2 = 0.5 * (TMath::Sqrt(QQ[1] / QQ[2]) + TMath::Sqrt(QQ[1] / QQ[0]));
-                  Double_t a1 = (TMath::Sqrt(QQ[1] / QQ[2]) - TMath::Sqrt(QQ[1] / QQ[0])) / (2.*TMath::SinH(a2));
-                  Double_t delta = ww / 2. * TMath::Log((1 + a1) / (1 - a1)) / (TMath::Log(a2 + TMath::Sqrt(a2 * a2 - 1)));
+                     Double_t a2 = 0.5 * (TMath::Sqrt(QQ[1] / QQ[2]) + TMath::Sqrt(QQ[1] / QQ[0]));
+                     Double_t a1 = (TMath::Sqrt(QQ[1] / QQ[2]) - TMath::Sqrt(QQ[1] / QQ[0])) / (2.*TMath::SinH(a2));
+                     Double_t delta = ww / 2. * TMath::Log((1 + a1) / (1 - a1)) / (TMath::Log(a2 + TMath::Sqrt(a2 * a2 - 1)));
 
-                  fRawPosX [ c ]  = delta;
-                  fERawPosX[ c ]  = 0.; //to be modified
+                     fRawPosX [ c ]  = delta;
+                     fERawPosX[ c ]  = 0.; //to be modified
 
-                  delete[] QQ;
-               } else { //Meand and RMS method
-                  // The two cathode plans are offset by half a strip to
-                  // reduce the non linearity of the position measurement
-                  // in between the strips. The center of the detector
-                  // is at the middle of the strip 32 of the range 2
-                  // and between strips 32 and 33 of the range 1.
-                  hh->GetXaxis()->SetRange(min, max);
+                     delete[] QQ;
+                  } else { //Meand and RMS method
+                     // The two cathode plans are offset by half a strip to
+                     // reduce the non linearity of the position measurement
+                     // in between the strips. The center of the detector
+                     // is at the middle of the strip 32 of the range 2
+                     // and between strips 32 and 33 of the range 1.
+                     hh->GetXaxis()->SetRange(min, max);
 
-                  Double_t intgl  = hh->Integral();
-                  sum            += intgl;
+                     Double_t intgl  = hh->Integral();
+                     sum            += intgl;
 
-                  fPadMax[ c - 1 ]  = hh->GetBinCenter(binMax);
-                  fRawPosX [ c ]  = hh->GetMean() - (c % 2 ? 32.5 + fOffsetX[0] : 32 + fOffsetX[1]);
-                  fERawPosX[ c ]  = hh->GetMeanError();
-                  fRawPosX [ 0 ] += intgl * fRawPosX [ c ];
-                  fERawPosX[ 0 ] += intgl * fERawPosX[ c ];
+                     fPadMax[ c - 1 ]  = hh->GetBinCenter(binMax);
+                     fRawPosX [ c ]  = hh->GetMean() - (c % 2 ? 32.5 + fOffsetX[0] : 32 + fOffsetX[1]);
+                     fERawPosX[ c ]  = hh->GetMeanError();
+                     fRawPosX [ 0 ] += intgl * fRawPosX [ c ];
+                     fERawPosX[ 0 ] += intgl * fERawPosX[ c ];
 
-                  hh->GetXaxis()->SetRange();
+                     hh->GetXaxis()->SetRange();
 
-                  if (sum) {
-                     fRawPosX [ 0 ] /= sum;
-                     fERawPosX[ 0 ] /= sum;
-                  } else {
-                     fRawPosX [ 0 ] = -666;
-                     fERawPosX[ 0 ] = -1;
+                     if (sum) {
+                        fRawPosX [ 0 ] /= sum;
+                        fERawPosX[ 0 ] /= sum;
+                     } else {
+                        fRawPosX [ 0 ] = -666;
+                        fERawPosX[ 0 ] = -1;
+                     }
                   }
                }
+               return fRawPosX[ num ];
             }
-            return fRawPosX[ num ];
-         }
+
+            //If X raw position set by hand
+            else return fRawPosX[ num ];
+
+         }//end case 0
+
 
       case 1: { // for Y direction returns the acq parameter of TFIL
 
-            fRawPosY  = (fTfilPar && fTfilPar->Fired("P") ? fTfilPar->GetData() : -666);
-            fERawPosY = 0.;
+            //If raw Y position was not set by hand
+            if (!IsRawPosSetByHand()) {
+               fRawPosY  = (fTfilPar && fTfilPar->Fired("P") ? fTfilPar->GetData() : -666);
+               fERawPosY = 0.;
 
-            return fRawPosY;
-         }
+               return fRawPosY;
+            }
 
+            //If raw Y position was set by hand
+            else return fRawPosY;
+
+         }//end case 1
    }
 
    return -1;
