@@ -125,6 +125,7 @@ protected:
    TGLabel*    selectedRuns;
    Int_t     entryMax;
    Bool_t       selAll;
+   unique_ptr<TList> list_of_runs;
 
    KVDataAnalyser* ia;
    TGCompositeFrame* cfAnalysis;
@@ -175,7 +176,7 @@ protected:
 
 
 public:
-   KVDataAnalysisLauncher(const Char_t* ExpType, const TGWindow* p = 0, UInt_t w = 200, UInt_t h = 400);
+   KVDataAnalysisLauncher(const TGWindow* p = 0, UInt_t w = 200, UInt_t h = 400);
    ~KVDataAnalysisLauncher();
    virtual Bool_t ProcessMessage(Long_t msg, Long_t par1, Long_t par2);
 

@@ -234,6 +234,7 @@
 /usr/include/kaliveda/KVPartitionFromLeaf.h
 /usr/include/kaliveda/KVMemoryPool.h
 /usr/include/kaliveda/KVClassFactory.h
+/usr/include/kaliveda/KVExpDB.h
 /usr/include/kaliveda/KVDBRun.h
 /usr/include/kaliveda/KVDataBase.h
 /usr/include/kaliveda/KVDBParameterList.h
@@ -296,6 +297,7 @@
 /usr/include/kaliveda/KVRemoteDataSetManager.h
 /usr/include/kaliveda/KVSimDir.h
 /usr/include/kaliveda/KVSimFile.h
+/usr/include/kaliveda/KVRunFile.h
 /usr/include/kaliveda/KVAvailableRunsFile.h
 /usr/include/kaliveda/KVIDZAFromZGrid.h
 /usr/include/kaliveda/KVTGIDFunctions.h

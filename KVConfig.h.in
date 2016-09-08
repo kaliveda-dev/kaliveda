@@ -10,6 +10,7 @@
 #cmakedefine WITH_MODIFIED_RANGE_YANEZ
 #cmakedefine WITH_GEMINI
 #cmakedefine WITH_OPENGL
+#cmakedefine WITH_RSQLITE
 #cmakedefine WITH_GRULIB
 #cmakedefine WITH_FITLTG
 #cmakedefine WITH_BUILTIN_GRU

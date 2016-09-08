@@ -111,7 +111,7 @@ public:
       else return Form("xxx");
    };
 
-   TDatime& GetDatime()
+   const TDatime& GetDatime() const
    {
       return fDatime;
    };

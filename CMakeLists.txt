@@ -9,7 +9,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}  ${PROJECT_SOURCE_DIR}/cmake)
 find_package(ROOT
    REQUIRED Rint Graf Geom Spectrum Proof ProofPlayer Physics Hist
    RIO Tree MathCore Matrix Gpad Gui Net Graf3d
-   OPTIONAL_COMPONENTS RGL RooFit RooFitCore Html Minuit)
+   OPTIONAL_COMPONENTS RGL RooFit RooFitCore Html Minuit RSQLite SQLite)
 
 #--optional support for OpenGL
 if(ROOT_opengl_FOUND)
@@ -115,6 +115,22 @@ if(USE_PARALLEL_MODE)
    endif()
 endif()
 add_feature_info(parallel USE_PARALLEL_MODE "Enable parallelisation of code using OpenMP")
+
+#--optional support for SQLite
+option(USE_SQLITE "Enable sqlite database interface KVSQLite" ON)
+if(USE_SQLITE)
+   if(ROOT_sqlite_FOUND)
+      set(WITH_RSQLITE yes)
+		#--library changed from libSQLite.so to libRSQLite.so at some point
+		if(ROOT_SQLite_LIBRARY)
+			set(ROOT_RSQLite_LIBRARY ${ROOT_SQLite_LIBRARY})
+		endif(ROOT_SQLite_LIBRARY)
+   else()
+      message(STATUS "ROOT with no SQLite support: KVSQLite disabled")
+      set(USE_SQLITE OFF CACHE BOOL "" FORCE)
+   endif()
+endif(USE_SQLITE)
+add_feature_info(sqlite USE_SQLITE "Enable sqlite database interface KVSQLite")
 
 #---Built-in package for reading GANIL acquisition data
 option(USE_BUILTIN_GRU

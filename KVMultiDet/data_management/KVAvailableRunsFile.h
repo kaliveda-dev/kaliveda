@@ -92,6 +92,11 @@ public:
       // Set dataset to which this file belongs
       fDataSet = d;
    }
+   const Char_t* GetBaseRunFileName(Int_t run)
+   {
+      // Return base file name defined by dataset for run of this datatype
+      return fDataSet->GetBaseFileName(GetDataType(), run);
+   }
 
    KVNumberList CheckMultiRunfiles();
    void RemoveDuplicateLines(KVNumberList lines_to_be_removed);

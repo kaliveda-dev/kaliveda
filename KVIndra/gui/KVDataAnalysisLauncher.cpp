@@ -31,6 +31,8 @@
 #include "KVInputDialog.h"
 #include "KVBatchSystemGUI.h"
 
+#include <KVRunFile.h>
+
 #define TTDELAY 750
 
 //maximum length of runlist shown next to "Selected Runs :"
@@ -364,7 +366,7 @@ Bool_t KVGDirectoryList::CanAdd(const Char_t* fn)
 ClassImp(KVDataAnalysisLauncher)
 
 //__________________________________________
-KVDataAnalysisLauncher::KVDataAnalysisLauncher(const Char_t* ExpType, const TGWindow* p, UInt_t w, UInt_t h): TGMainFrame(p, w, h)
+KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt_t h): TGMainFrame(p, w, h)
 {
    // Main window width and height can be set using .kvrootrc variables:
    //     KaliVedaGUI.MainGUIWidth:       800
@@ -539,24 +541,19 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const Char_t* ExpType, const TGWi
 
    // Frame pour la liste des runs
 
-   TClass* cl = new TClass(Form("KV%sDBRun", ExpType));
    TGCompositeFrame* cfRuns = new TGCompositeFrame(this, fMainGuiWidth, 350, kVerticalFrame);
-   lvRuns = new KVListView(cl, cfRuns, fMainGuiWidth, 250);
-
-   lvRuns->SetDataColumns(7);
+   lvRuns = new KVListView(KVRunFile::Class(), cfRuns, fMainGuiWidth, 250);
+   lvRuns->SetDataColumns(8);
    lvRuns->SetMaxColumnSize(gEnv->GetValue("KaliVedaGUI.MaxColWidth", 200));
    int iicc = 0;
-   lvRuns->SetDataColumn(iicc++, "Run", "GetNumber");
-   //lvRuns->SetDataColumn(iicc++, "System", "GetSystemName");
+   lvRuns->SetDataColumn(iicc++, "Run", "GetRunNumber");
    lvRuns->SetDataColumn(iicc++, "Trigger", "");
    lvRuns->SetDataColumn(iicc++, "Events", "", kTextRight);
-   lvRuns->SetDataColumn(iicc++, "File written", "GetDatimeString");
-   //printf("pouet\n");
-   //lvRuns->GetDataColumn(iicc)->SetIsDateTime();
-   //printf("pouet\n");
+   lvRuns->SetDataColumn(iicc++, "File", "GetName");
+   lvRuns->SetDataColumn(iicc++, "Date", "GetFileWritten");
    lvRuns->SetDataColumn(iicc++, "Comments", "", kTextLeft);
-   lvRuns->SetDataColumn(iicc++, "Version", "GetKVVersion");
-   lvRuns->SetDataColumn(iicc++, "User", "GetUserName");
+   lvRuns->SetDataColumn(iicc++, "Version");
+   lvRuns->SetDataColumn(iicc++, "User");
    lvRuns->ActivateSortButtons();
    // disable context menu & Browse functions
    lvRuns->AllowBrowse(kFALSE);
@@ -1142,11 +1139,11 @@ void KVDataAnalysisLauncher::SetRunsList()
    }
 
    KVNumberList run_list = gDataSet->GetRunList(task->GetPrereq(), system);
-   TList* list_of_runs = gDataSet->GetListOfAvailableSystems(task, system);
+   lvRuns->RemoveAll();
+   list_of_runs.reset(gDataSet->GetListOfAvailableSystems(task, system));
    entryMax = list_of_runs->GetEntries();
    listOfSystemRuns = run_list;
-   lvRuns->Display(list_of_runs);
-   delete list_of_runs;
+   lvRuns->Display(list_of_runs.get());
 
    TString ds = GetSavedResource("RunsList", "");
    //Info("SetRunsList", "SetRuns");
@@ -2053,8 +2050,8 @@ void KVDataAnalysisLauncher::UpdateListOfSelectedRuns()
    TList* novolist = lvRuns->GetSelectedObjects();
    if (novolist->GetEntries() > 0) {
       TIter nxt(novolist);
-      KVDBRun* s = 0;
-      while ((s = (KVDBRun*)nxt())) listOfRuns.Add(s->GetNumber());
+      KVRunFile* s = 0;
+      while ((s = (KVRunFile*)nxt())) listOfRuns.Add(s->GetRunNumber());
    }
    delete novolist;
    SetResource("RunsList", listOfRuns.AsString());

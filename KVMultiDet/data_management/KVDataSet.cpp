@@ -22,6 +22,7 @@ $Author: franklan $
 #include "KVNumberList.h"
 #include "TPluginManager.h"
 #include "TClass.h"
+#include "KVRunFile.h"
 
 using namespace std;
 
@@ -942,36 +943,34 @@ KVNumberList KVDataSet::GetRunList_DateSelection(const Char_t* type, TDatime* mi
 
    KVNumberList numb;
 
-   TList* ll = GetListOfAvailableSystems(type);
+   unique_ptr<TList> ll(GetListOfAvailableSystems(type));
    KVDBSystem* sys = 0;
-   KVDBRun* run = 0;
-   TList* lrun = 0;
+   KVRunFile* run = 0;
+   unique_ptr<TList> lrun;
    for (Int_t nl = 0; nl < ll->GetEntries(); nl += 1) {
       sys = (KVDBSystem*)ll->At(nl);
-      lrun = GetListOfAvailableSystems(type, sys);
+      lrun.reset(GetListOfAvailableSystems(type, sys));
       KVNumberList oldList = numb;
       for (Int_t nr = 0; nr < lrun->GetEntries(); nr += 1) {
-         run = (KVDBRun*)lrun->At(nr);
+         run = (KVRunFile*)lrun->At(nr);
 
          if (min && max) {
-            if (*min < run->GetDatime() && run->GetDatime() < *max) {
-               numb.Add(run->GetNumber());
+            if (*min < run->GetRun()->GetDatime() && run->GetRun()->GetDatime() < *max) {
+               numb.Add(run->GetRunNumber());
             }
          } else if (min) {
-            if (*min < run->GetDatime()) {
-               numb.Add(run->GetNumber());
+            if (*min < run->GetRun()->GetDatime()) {
+               numb.Add(run->GetRunNumber());
             }
          } else if (max) {
-            if (run->GetDatime() < *max) {
-               numb.Add(run->GetNumber());
+            if (run->GetRun()->GetDatime() < *max) {
+               numb.Add(run->GetRunNumber());
             }
          }
       }
       // print runs for system if any
       if (numb.GetEntries() > oldList.GetEntries()) printf("%s : %s\n", sys->GetName(), (numb - oldList).AsString());
    }
-   if (lrun) delete lrun;
-   delete ll;
    return numb;
 
 }
@@ -1037,34 +1036,30 @@ KVNumberList KVDataSet::GetRunList_VersionSelection(const Char_t* type, const Ch
 
    KVNumberList runs;
    if (sys) {
-      TList* lrun = GetListOfAvailableSystems(type, sys);
-      TIter next(lrun);
-      KVDBRun* run;
-      while ((run = (KVDBRun*)next())) {
-         if (!strcmp(run->GetKVVersion(), version)) runs.Add(run->GetNumber());
+      unique_ptr<TList> lrun(GetListOfAvailableSystems(type, sys));
+      TIter next(lrun.get());
+      KVRunFile* run;
+      while ((run = (KVRunFile*)next())) {
+         if (!strcmp(run->GetVersion(), version)) runs.Add(run->GetRunNumber());
       }
-      delete lrun;
       return runs;
    }
-   TList* ll = GetListOfAvailableSystems(type);
-   if (!ll || !ll->GetEntries()) {
+   unique_ptr<TList> ll(GetListOfAvailableSystems(type));
+   if (!ll.get() || !ll->GetEntries()) {
       //numb.Clear();
       Info("GetRunList_VersionSelection", "No data available of type \"%s\"", type);
-      if (ll) delete ll;
       return runs;
    }
    Int_t nsys = ll->GetEntries();
    for (Int_t nl = 0; nl < nsys; nl += 1) {
       sys = (KVDBSystem*)ll->At(nl);
-      TList* lrun = GetListOfAvailableSystems(type, sys);
-      TIter next(lrun);
-      KVDBRun* run;
-      while ((run = (KVDBRun*)next())) {
-         if (!strcmp(run->GetKVVersion(), version)) runs.Add(run->GetNumber());
+      unique_ptr<TList> lrun(GetListOfAvailableSystems(type, sys));
+      TIter next(lrun.get());
+      KVRunFile* run;
+      while ((run = (KVRunFile*)next())) {
+         if (!strcmp(run->GetVersion(), version)) runs.Add(run->GetRunNumber());
       }
-      delete lrun;
    }
-   delete ll;
    return runs;
 }
 

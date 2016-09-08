@@ -185,7 +185,7 @@ if [ "x$reply" = "xy" ]; then
    mkdir -p $2
 fi
 cd $2
-cmake $1 -DCMAKE_INSTALL_PREFIX=/usr -Dgnuinstall=yes -DUSE_MICROSTAT=yes -DUSE_ALL=yes -DUSE_GEMINI=no
+cmake $1 -DCMAKE_INSTALL_PREFIX=/usr -Dgnuinstall=yes -DUSE_MICROSTAT=yes -DUSE_ALL=yes -DUSE_GEMINI=no -DUSE_SQLITE=no
 if [ $? -ne 0 ]; then
    exit 1
 fi

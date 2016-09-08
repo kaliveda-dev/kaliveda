@@ -1,9 +1,16 @@
-kaliveda (1.10.10-0ubuntu2) UNRELEASED; urgency=medium
+kaliveda (1.10.11-0ubuntu2) UNRELEASED; urgency=medium
+
+  * New release v1.10/11
+  * Fix problem in debian/rules (missing <TAB>)
+
+ -- John Frankland <frankland@ganil.fr>  Fri, 05 Aug 2016 14:49:05 +0200
+
+kaliveda (1.10.10-0ubuntu2) xenial; urgency=medium
 
   * New release v1.10/10
   * New simulations directory in KVMultiDet; reorganisation of classes
 
- -- John Frankland <frankland@ganil.fr>  Fri, 03 Jun 2016 11:15:30 +0200
+ -- John Frankland <frankland@ganil.fr>  Fri, 05 Aug 2016 14:34:43 +0200
 
 kaliveda (1.10.9-0ubuntu6) xenial; urgency=medium
 

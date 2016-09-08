@@ -1,0 +1,26 @@
++40Ar + 197Au 35.0 MeV/A
+40 18 197 79 35.00
+Target: 1 0
+Gold 0.289
+Runs: 973-983
+
++40Ar + 12C 35.0 MeV/A
+40 18 12 6 35.00
+Target: 1 0
+Carbon 0.308
+Runs: 1046-1077 1080-1220
+
++40Ar + 124Sn 35.0 MeV/A
+40 18 124 50 35.00
+Target: 1 0
+Tin 0.479
+Runs: 984-1045
+
++40Ar + 58Ni 35.0 MeV/A
+40 18 58 28 35.00
+Target: 1 0
+Nickel 0.275
+Runs:
+
++Pulser
+Runs: 1078-1079 1221

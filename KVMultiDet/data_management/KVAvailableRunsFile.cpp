@@ -15,6 +15,7 @@ $Date: 2009/03/12 14:01:02 $
 #include "KVString.h"
 #include "KVList.h"
 #include "KVDataRepository.h"
+#include "KVRunFile.h"
 
 //macro converting octal filemode to decimal value
 //to convert e.g. 664 (=u+rw, g+rw, o+r) use CHMODE(6,6,4)
@@ -314,7 +315,6 @@ void KVAvailableRunsFile::Update(Bool_t no_existing_file)
 
       Int_t run_num;
       //is this the correct name of a run in the repository ?
-      Info("Update", "%s %d", objs->GetName(), IsRunFileName(objs->GetName()));
       if ((run_num = IsRunFileName(objs->GetName()))) {
 
          KVDBRun* run = (KVDBRun*) run_table->GetRecord(run_num);
@@ -576,8 +576,10 @@ TList* KVAvailableRunsFile::GetListOfAvailableSystems(const KVDBSystem*
       systol)
 {
    //Create and fill a sorted list of available systems based on the runs in the available runs file.
-   //If systol!=0 then create and fill a list of available runs for the given system
+   //If systol!=0 then create and fill a list of available runs (KVRunFile objects) for the given system.
    //USER MUST DELETE THE LIST AFTER USE.
+   //  N.B. in case of list of KVRunFile, the list is the owner of the objects and will
+   //       destroy them when it is destroyed
    //
    //For each system in the list we set the number of available runs : this number
    //can be retrieved with KVDBSystem::GetNumberRuns()
@@ -600,7 +602,7 @@ TList* KVAvailableRunsFile::GetListOfAvailableSystems(const KVDBSystem*
 
    Int_t fRunNumber;
    TDatime fDatime;
-   TString kvversion, username;
+   TString kvversion, username, filename;
    KVDBTable* runs_table = 0;
    if (!fDataSet->GetDataBase()) {
       runs_table = new KVDBTable("Runs");
@@ -623,6 +625,11 @@ TList* KVAvailableRunsFile::GetListOfAvailableSystems(const KVDBSystem*
             kvversion = username = "";
             TString tmp = ((TObjString*) toks->At(1))->GetString();
             fDatime = TDatime(tmp.Data());
+            if (toks->GetEntries() > 2) {
+               filename = ((TObjString*) toks->At(2))->String();
+            } else {
+               filename = GetBaseRunFileName(fRunNumber);
+            }
             if (toks->GetEntries() > 3) {
                kvversion = ((TObjString*) toks->At(3))->GetString();
                username = ((TObjString*) toks->At(4))->GetString();
@@ -656,13 +663,12 @@ TList* KVAvailableRunsFile::GetListOfAvailableSystems(const KVDBSystem*
             } else {
                //making a runlist
                if (systol == sys) {   //run belongs to same system
-                  if (!sys_list)
+                  if (!sys_list) {
                      sys_list = new TList;
-                  a_run->SetDatime(fDatime);
-                  a_run->SetKVVersion(kvversion);
-                  a_run->SetUserName(username);
-
-                  sys_list->Add(a_run);
+                     sys_list->SetOwner(kTRUE);//will delete objects
+                  }
+                  KVRunFile* rf = new KVRunFile(a_run, filename, fDatime, kvversion, username);
+                  sys_list->Add(rf);
                }
             }
          }
