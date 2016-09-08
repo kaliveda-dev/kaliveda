@@ -84,7 +84,16 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
 
    // Base class performs the preliminary identification routine. We do this
    // after the initialisation check as we require base_id_result_.
+   //
+   // Only Z identification is required for Si-CsI identification.
+   // This is important for the e503 experiment, in order to avoid the
+   // loss of the PID for Z when a (Z,A) identification is called.
+   // Furthermore for e503 the minimizer is used to estimate A,
+   // thus IDR->Aident will often be kTRUE, and the further call
+   // to KVReconstructedNucleus::SetIdentification() will not set the RealZ value
+   // but only the RealA value.
    assert(base_id_result_);
+   SetOnlyZId(kTRUE);
 #if __cplusplus < 201103L
    KVIDHarpeeSiCsI::Identify(base_id_result_, x, y);
 #else
@@ -119,8 +128,16 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
       idr->IDOK = kTRUE;
       idr->IDquality = kIdentified;
 
+      //debug
+      std::cout << "KVIDHarpeeSiCsI_e503::Identify(): A found= "   << idr->A << std::endl;
+      std::cout << "KVIDHarpeeSiCsI_e503::Identify(): VIDSubCode=" << idr->IDquality << std::endl;
+
       return kTRUE;
    }
+
+   //debug
+   std::cout << "KVIDHarpeeSiCsI_e503::Identify(): A not found=" << idr->A << std::endl;
+   std::cout << "KVIDHarpeeSiCsI_e503::Identify(): VIDSubCode="  << idr->IDquality << std::endl;
 
    return kFALSE;
 

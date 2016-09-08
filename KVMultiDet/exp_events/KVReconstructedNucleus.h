@@ -64,8 +64,7 @@ public:
 
    virtual void SetIdentification(KVIdentificationResult*);
 
-   const KVSeqCollection* GetDetectorList() const
-   {
+   const KVSeqCollection* GetDetectorList() const {
       // Return pointer to list of detectors through which particle passed,
       // in reverse order (i.e. first detector in list is the one in which particle stopped).
 
@@ -74,8 +73,7 @@ public:
       }
       return &fDetList;
    };
-   KVDetector* GetDetector(int i) const
-   {
+   KVDetector* GetDetector(int i) const {
       //Returns the detector referenced by fDetectors.At(i)
       //If i=0, this is the detector in which the particle stopped.
       //For i>0 one obtains the names of the detectors through which the particle
@@ -85,39 +83,32 @@ public:
       return (KVDetector*) GetDetectorList()->At(i);
    };
 
-   const Char_t* GetDetectorNames() const
-   {
+   const Char_t* GetDetectorNames() const {
       return fDetNames.Data();
    }
-   const Char_t* GetIDtelNames() const
-   {
+   const Char_t* GetIDtelNames() const {
       return fIDTelName.Data();
    }
 
    //void SetDetector(int i, KVDetector *);
-   KVDetector* GetStoppingDetector() const
-   {
+   KVDetector* GetStoppingDetector() const {
       // Return pointer to the detector in which this particle stopped
       return GetDetector(0);
    };
-   Int_t GetNumDet() const
-   {
+   Int_t GetNumDet() const {
       return GetDetectorList()->GetEntries();
    };
-   Int_t GetNSegDet() const
-   {
+   Int_t GetNSegDet() const {
       // return segmentation index of particle used by Identify() and
       // KVGroup::AnalyseParticles
       return fNSegDet;
    };
-   void SetNSegDet(Int_t seg)
-   {
+   void SetNSegDet(Int_t seg) {
       // set segmentation index of particle used by Identify() and
       // KVGroup::AnalyseParticles
       fNSegDet = seg;
    };
-   void ResetNSegDet()
-   {
+   void ResetNSegDet() {
       // recalculate segmentation index of particle used by Identify() and
       // KVGroup::AnalyseParticles
       fNSegDet = 0;
@@ -125,8 +116,7 @@ public:
       TIter nxt(&fDetList);
       while ((det = (KVDetector*)nxt())) fNSegDet += det->GetSegment();
    };
-   inline Int_t GetStatus() const
-   {
+   inline Int_t GetStatus() const {
       // Returns status of reconstructed particle as decided by analysis of the group (KVGroup) in
       // which the particle is reconstructed (see KVGroup::AnalyseParticles).
       // This status is used to decide whether identification of the particle can be attempted
@@ -146,14 +136,12 @@ public:
       return fAnalStatus;
    };
 
-   inline void SetStatus(Int_t a)
-   {
+   inline void SetStatus(Int_t a) {
       fAnalStatus = a;
    }
 
    virtual void GetAnglesFromStoppingDetector(Option_t* opt = "random");
-   KVGroup* GetGroup() const
-   {
+   KVGroup* GetGroup() const {
       //Return pointer to group in which the particle is detected
       return (GetStoppingDetector() ?  GetStoppingDetector()->GetGroup() : 0);
    };
@@ -167,8 +155,7 @@ public:
    virtual void Copy(TObject&);
 #endif
 
-   KVSeqCollection* GetIDTelescopes() const
-   {
+   KVSeqCollection* GetIDTelescopes() const {
       //Gets from detector in which particle stopped the list of all ID telescopes
       //made from the stopping detector and all those aligned in front of it.
       //The first ID telescope in the list is that in which the particle stopped.
@@ -178,97 +165,85 @@ public:
    virtual void Identify();
    virtual void Calibrate();
 
-   KVIDTelescope* GetIdentifyingTelescope() const
-   {
+   KVIDTelescope* GetIdentifyingTelescope() const {
       return fIDTelescope;
    };
-   void SetIdentifyingTelescope(KVIDTelescope* i)
-   {
+   void SetIdentifyingTelescope(KVIDTelescope* i) {
       fIDTelescope = i;
       if (i) fIDTelName = i->GetName();
       else fIDTelName = "";
    };
 
-   virtual void SetIDCode(UShort_t s)
-   {
+   virtual void SetIDCode(UShort_t s) {
       // Set value of parameter "IDCODE"
       GetParameters()->SetValue("IDCODE", (Int_t)s);
    }
-   virtual Int_t GetIDCode() const
-   {
+   virtual Int_t GetIDCode() const {
       // Return value of parameter "IDCODE"
       // If no value set, returns -1
       return GetParameters()->GetIntValue("IDCODE");
    }
-   virtual void SetECode(UChar_t s)
-   {
+   virtual void SetECode(UChar_t s) {
       // Set value of parameter "ECODE"
       GetParameters()->SetValue("ECODE", (Int_t)s);
    }
-   virtual Int_t GetECode() const
-   {
+   virtual Int_t GetECode() const {
       // Return value of parameter "ECODE"
       // If no value set, returns -1
       return GetParameters()->GetIntValue("ECODE");
    }
 
-   void SetIsIdentified()
-   {
+   void SetIsIdentified() {
       //When the "identification" state of the particle is set, we add 1 identified particle and
       //subtract 1 unidentified particle from each detector in its list
       SetBit(kIsIdentified);
       const_cast<KVSeqCollection*>(GetDetectorList())->R__FOR_EACH(KVDetector, IncrementIdentifiedParticles)(1);
       const_cast<KVSeqCollection*>(GetDetectorList())->R__FOR_EACH(KVDetector, IncrementUnidentifiedParticles)(-1);
    };
-   void SetIsCalibrated()
-   {
+   void SetIsCalibrated() {
       SetBit(kIsCalibrated);
    };
-   void SetIsUnidentified()
-   {
+   void SetIsUnidentified() {
       //When the "identification" state of the particle is reset, i.e. it becomes an "unidentified particle",
       //we add 1 unidentified particle and subtract 1 identified particle from each detector in its list
       ResetBit(kIsIdentified);
       const_cast<KVSeqCollection*>(GetDetectorList())->R__FOR_EACH(KVDetector, IncrementIdentifiedParticles)(-1);
       const_cast<KVSeqCollection*>(GetDetectorList())->R__FOR_EACH(KVDetector, IncrementUnidentifiedParticles)(1);
    };
-   void SetIsUncalibrated()
-   {
+   void SetIsUncalibrated() {
       ResetBit(kIsCalibrated);
    };
-   Bool_t IsIdentified() const
-   {
+   Bool_t IsIdentified() const {
       return TestBit(kIsIdentified);
    };
-   Bool_t IsCalibrated() const
-   {
+   Bool_t IsCalibrated() const {
       return TestBit(kIsCalibrated);
    };
 
-   void SetRealZ(Float_t zz)
-   {
+   void SetRealZ(Float_t zz) {
       fRealZ = zz;
    }
-   void SetRealA(Float_t A)
-   {
+   void SetRealA(Float_t A) {
       fRealA = A;
    }
-   Float_t GetRealZ() const
-   {
-      if (fRealZ > 0)
+   Float_t GetRealZ() const {
+      if (fRealZ > 0) {
+         //debug
+         //std::cout << "KVReconstructedNucleus::GetRealZ() returning fRealZ" << std::endl;
          return fRealZ;
-      else
+      } else {
+         //debug
+         //std::cout << "KVReconstructedNucleus::GetRealZ() returning GetZ() because fRealZ=" << fRealZ << std::endl;
          return (Float_t) GetZ();
+      }
    }
-   Float_t GetRealA() const
-   {
+   Float_t GetRealA() const {
       if (fRealA > 0)
          return fRealA;
       else
          return (Float_t) GetA();
    }
-   virtual Float_t GetPID() const
-   {
+   virtual Float_t GetPID() const {
       //Return particle identification PID for this particle.
       //If particle Z & A have been identified, this is "real Z" + 0.1*("real A"-2*"real Z")
       //If only Z identification has been performed, it is the "real Z"
@@ -276,43 +251,36 @@ public:
          return (GetRealZ() + 0.1 * (GetRealA() - 2. * GetRealZ()));
       return GetRealZ();
    };
-   virtual void SetTargetEnergyLoss(Double_t e)
-   {
+   virtual void SetTargetEnergyLoss(Double_t e) {
       // Set energy loss in target (in MeV) of reconstructed nucleus
       fTargetEnergyLoss = e;
    };
-   virtual Double_t GetTargetEnergyLoss() const
-   {
+   virtual Double_t GetTargetEnergyLoss() const {
       // Return calculated energy loss in target of reconstructed nucleus (in MeV)
       return fTargetEnergyLoss;
    };
 
-   virtual void SetZMeasured(Bool_t yes = kTRUE)
-   {
+   virtual void SetZMeasured(Bool_t yes = kTRUE) {
       // Call with yes=kTRUE for reconstructed nuclei whose
       // atomic number, Z, was measured, not calculated
       SetBit(kZMeasured, yes);
    };
-   virtual void SetAMeasured(Bool_t yes = kTRUE)
-   {
+   virtual void SetAMeasured(Bool_t yes = kTRUE) {
       // Call with yes=kTRUE for reconstructed nuclei whose
       // mass number, A, was measured, not calculated
       SetBit(kAMeasured, yes);
    };
-   virtual Bool_t IsZMeasured() const
-   {
+   virtual Bool_t IsZMeasured() const {
       // Returns kTRUE for reconstructed nuclei whose
       // atomic number, Z, was measured, not calculated
       return TestBit(kZMeasured);
    };
-   virtual Bool_t IsAMeasured() const
-   {
+   virtual Bool_t IsAMeasured() const {
       // Returns kTRUE for reconstructed nuclei whose
       // mass number, A, was measured, not calculated
       return TestBit(kAMeasured);
    };
-   KVIdentificationResult* GetIdentificationResult(Int_t i)
-   {
+   KVIdentificationResult* GetIdentificationResult(Int_t i) {
       // Returns the result of the i-th (i>0) identification attempted for this nucleus.
       // i=1 : identification telescope in which particle stopped
       // i=2 : identification telescope immediately in front of the first
@@ -329,16 +297,14 @@ public:
       id->SetNumber(i);
       return id;
    }
-   Int_t GetNumberOfIdentificationResults() const
-   {
+   Int_t GetNumberOfIdentificationResults() const {
       // Returns the number of KVIdentificationResult objects in the TClonesArray fIDresults.
       // Do not assume that all of these correspond to attemted identifications
       // (see comments in GetIdentificationResult(Int_t))
       return fIDResults.GetEntries();
    }
 
-   KVIdentificationResult* GetIdentificationResult(const Char_t* idtype)
-   {
+   KVIdentificationResult* GetIdentificationResult(const Char_t* idtype) {
       // Return pointer to result of attempted identification of given type.
       // This type is the type of the KVIdentificationTelescope which was used
       // (i.e. the string returned by KVIdentificationTelescope::GetType()).
@@ -354,8 +320,7 @@ public:
       return nullptr;
    }
 
-   KVIdentificationResult* GetIdentificationResult(KVIDTelescope* idt)
-   {
+   KVIdentificationResult* GetIdentificationResult(KVIDTelescope* idt) {
       // Return pointer to result of identification attempted with a
       // KVIdentificationTelescope of the given type.
       // Returns nullptr if no identification of given type found.
@@ -363,16 +328,13 @@ public:
       if (!idt) return nullptr;
       return GetIdentificationResult(idt->GetType());
    }
-   KVIdentificationResult* GetIdentificationResult(Int_t i) const
-   {
+   KVIdentificationResult* GetIdentificationResult(Int_t i) const {
       return const_cast<KVReconstructedNucleus*>(this)->GetIdentificationResult(i);
    }
-   KVIdentificationResult* GetIdentificationResult(const Char_t* idtype) const
-   {
+   KVIdentificationResult* GetIdentificationResult(const Char_t* idtype) const {
       return const_cast<KVReconstructedNucleus*>(this)->GetIdentificationResult(idtype);
    }
-   KVIdentificationResult* GetIdentificationResult(KVIDTelescope* idt) const
-   {
+   KVIdentificationResult* GetIdentificationResult(KVIDTelescope* idt) const {
       return const_cast<KVReconstructedNucleus*>(this)->GetIdentificationResult(idt);
    }
 
@@ -381,12 +343,10 @@ public:
    inline static UInt_t GetNUnidentifiedInGroup(KVGroup* grp);
    static void AnalyseParticlesInGroup(KVGroup* grp);
 
-   const KVReconNucTrajectory* GetReconstructionTrajectory() const
-   {
+   const KVReconNucTrajectory* GetReconstructionTrajectory() const {
       return fReconTraj;
    }
-   void SetReconstructionTrajectory(const KVReconNucTrajectory* t)
-   {
+   void SetReconstructionTrajectory(const KVReconNucTrajectory* t) {
       fReconTraj = t;
    }
 
