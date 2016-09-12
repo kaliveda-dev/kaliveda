@@ -93,14 +93,14 @@ Bool_t KVVAMOSIDTelescope::Identify(KVIdentificationResult* IDR, Double_t x, Dou
    }
 
    //debug
-   std::cout << "KVVAMOSIDTelescope::Identify() tel=" << GetName()  << std::endl;
-   std::cout << "KVVAMOSIDTelescope::Identify() IDquality=" << IDR->IDquality << std::endl;
-   std::cout << "KVVAMOSIDTelescope::Identify() IDcode="    << IDR->IDcode << std::endl;
-   std::cout << "KVVAMOSIDTelescope::Identify() Zident?="   << IDR->Zident << std::endl;
-   std::cout << "KVVAMOSIDTelescope::Identify() PID="       << IDR->PID << std::endl;
-   std::cout << "KVVAMOSIDTelescope::Identify() Z="         << IDR->Z << std::endl;
-   std::cout << "KVVAMOSIDTelescope::Identify() Aident?="   << IDR->Aident << std::endl;
-   std::cout << "KVVAMOSIDTelescope::Identify() A="         << IDR->A << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() tel=" << GetName()  << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() IDquality=" << IDR->IDquality << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() IDcode="    << IDR->IDcode << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() Zident?="   << IDR->Zident << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() PID="       << IDR->PID << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() Z="         << IDR->Z << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() Aident?="   << IDR->Aident << std::endl;
+//   std::cout << "KVVAMOSIDTelescope::Identify() A="         << IDR->A << std::endl;
 
    //    //Identified particles with subcode kID_LeftOfBragg are given
    //    //general ID code kIDCode5 (Zmin).

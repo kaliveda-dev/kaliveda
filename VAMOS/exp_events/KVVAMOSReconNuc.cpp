@@ -516,12 +516,12 @@ void KVVAMOSReconNuc::IdentifyZ()
                      SetZ(IDR->Z);
                      if (IDR->Aident) {
                         //debug
-                        std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A identified !" << std::endl;
+                        //std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A identified !" << std::endl;
                         SetA(IDR->A);
                         SetRealZ(IDR->PID);
                      } else {
                         //debug
-                        std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A not identified !" << std::endl;
+                        //std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A not identified !" << std::endl;
                         SetRealZ(IDR->PID);
                      }
                   }
@@ -603,9 +603,9 @@ void KVVAMOSReconNuc::IdentifyQandA()
                   Double_t RealAoQ = CalculateMassOverQ(GetBrho(), beta) / u();
 
                   //debug
-                  std::cout << "KVVAMOSReconNuc::IdentifyQandA(): beta=" << beta << std::endl;
-                  std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realA=" << RealA << std::endl;
-                  std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realAoQ=" << RealAoQ << std::endl;
+                  //std::cout << "KVVAMOSReconNuc::IdentifyQandA(): beta=" << beta << std::endl;
+                  //std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realA=" << RealA << std::endl;
+                  //std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realAoQ=" << RealAoQ << std::endl;
 
 
                   SetRealA(RealA);
@@ -1079,15 +1079,25 @@ Double_t KVVAMOSReconNuc::GetCorrectedT_HF(Double_t tof, Double_t dist) const
       Warning("GetCorrectedT_HF", "No correction because the beam pulse period is unknown");
       return tof;
    }
+
+   return tof + GetNBeamPeriod(tof, dist) * gVamos->GetBeamPeriod();
+}
+//________________________________________________________________
+
+Int_t  KVVAMOSReconNuc::GetNBeamPeriod(Double_t tof, Double_t dist) const
+{
+   //Returns the number of time we add/remove the beam pulse period to
+   //the time of flight obtained from beam pulse HF
+
    Double_t alpha = 1. / (GetEnergy() / GetMass() + 1.);
    Double_t delta_t = (dist / (C() * TMath::Sqrt(1. - alpha * alpha))) - tof;
    Int_t n = TMath::Nint(delta_t / gVamos->GetBeamPeriod());
 
    //debug
-   std::cout << "KVVAMOSReconNuc::GetCorrectedT_HF(): delta_t=" << delta_t << " beam_period="
-             << gVamos->GetBeamPeriod() << " N=" << n << std::endl;
+   //std::cout << "KVVAMOSReconNuc::GetCorrectedT_HF(): delta_t=" << delta_t << " beam_period="
+   //          << gVamos->GetBeamPeriod() << " N=" << n << std::endl;
 
-   return tof + n * gVamos->GetBeamPeriod();
+   return n;
 }
 //________________________________________________________________
 
@@ -1095,7 +1105,7 @@ Double_t KVVAMOSReconNuc::GetPath(KVVAMOSDetector* start, KVVAMOSDetector* stop)
 {
    // Returns the flight distance travelled by the nucleus from the start detector to the stop detector.
    // If stop=NULL, returns the distance from the target point to the start detector,
-   // i.e. distance corresponding to a time of flight  measured from the beam HF then the distance will be
+   // i.e. distance corresponding to a time of flight measured from the beam HF then the distance will be
    // equal to the reconstructed path (GetPath) plus (or minus) the distance between
    // the trajectory position at the focal plane (FP) and the trajectory position
    // at the start detector if this detector is localised behinds the FP (or
@@ -1113,18 +1123,18 @@ Double_t KVVAMOSReconNuc::GetPath(KVVAMOSDetector* start, KVVAMOSDetector* stop)
          Double_t dp_stop = GetDeltaPath(stop);
 
          //debug
-         std::cout << "KVVAMOSReconNuc::GetPath(): (stop found) dp_start="  << dp_start
-                   <<  " dp_stop=" <<  dp_stop << std::endl;
+         //std::cout << "KVVAMOSReconNuc::GetPath(): (stop found) dp_start="  << dp_start
+         //         <<  " dp_stop=" <<  dp_stop << std::endl;
 
          if (dp_stop) {
             //debug
-            std::cout << "path_tot=Abs(dp_start-dp_stop)=" << TMath::Abs(dp_stop - dp_start) <<  std::endl;
+            //std::cout << "path_tot=Abs(dp_start-dp_stop)=" << TMath::Abs(dp_stop - dp_start) <<  std::endl;
             return TMath::Abs(dp_stop - dp_start);
          }
 
          else {
             //debug
-            std::cout << "path_tot=0" << std::endl;
+            //std::cout << "path_tot=0" << std::endl;
             return 0.;
          }
 
@@ -1132,9 +1142,9 @@ Double_t KVVAMOSReconNuc::GetPath(KVVAMOSDetector* start, KVVAMOSDetector* stop)
       // case where stop signal is given by HF i.e. 'stop' is null
       else if (GetPath() > 0) {
          //debug
-         std::cout << "KVVAMOSReconNuc::GetPath(): (no stop) path=" << GetPath()
-                   << " dp_start=" << dp_start << " path_tot=path+dp_start="
-                   <<  GetPath() + dp_start << std::endl;
+         //std::cout << "KVVAMOSReconNuc::GetPath(): (no stop) path=" << GetPath()
+         //          << " dp_start=" << dp_start << " path_tot=path+dp_start="
+         //          <<  GetPath() + dp_start << std::endl;
 
          return GetPath() + dp_start;
       }
@@ -1191,7 +1201,7 @@ Double_t KVVAMOSReconNuc::GetDeltaPath(KVVAMOSDetector* det) const
       tmp = par->GetName();
       if (tmp.BeginsWith(Form("DPATH:%s", det->GetTBaseName()))) {
          //debug
-         Info("GetDeltaPath", "DeltaPath for the detector %s is given by %s", det->GetName(), par->GetName());
+         //Info("GetDeltaPath", "DeltaPath for the detector %s is given by %s", det->GetName(), par->GetName());
          return par->GetDouble();
       }
    }

@@ -235,13 +235,13 @@ void KVVAMOSReconEvent::IdentAndCalibEvent()
 
 
    //debug
-   std::cout << "#############KVVAMOSReconEvent -> Identifying new event !##############" << std::endl;
+   //std::cout << "#############KVVAMOSReconEvent -> Identifying new event !##############" << std::endl;
 
    KVVAMOSReconNuc* d;
    while ((d = GetNextNucleus())) {
 
       //debug
-      std::cout << "==>KVVAMOSReconEvent::IdentAndCalibEvent -> new particle in the event! GetStatus()=" << d->GetStatus() << "<==" << std::endl;
+      //std::cout << "==>KVVAMOSReconEvent::IdentAndCalibEvent -> new particle in the event! GetStatus()=" << d->GetStatus() << "<==" << std::endl;
 
 
       //-----------------------
@@ -267,15 +267,15 @@ void KVVAMOSReconEvent::IdentAndCalibEvent()
       }
 
       //debug
-      std::cout << "#KVVAMOSReconEvent::IdentAndCalib() -> End of Z identification for the particle... results follow:" << std::endl;
-      std::cout << "IDcode=" << d->GetIDCode() << std::endl;
+      //std::cout << "#KVVAMOSReconEvent::IdentAndCalib() -> End of Z identification for the particle... results follow:" << std::endl;
+      //std::cout << "IDcode=" << d->GetIDCode() << std::endl;
       //std::cout << "Zident=" <<
-      std::cout << "Z="      << d->GetZ()      << std::endl;
-      std::cout << "RealZ="  << d->GetRealZ()  << std::endl;
-      std::cout << "A="      << d->GetA()      << std::endl;
-      std::cout << "RealA="  << d->GetRealA()  << std::endl;
-      std::cout << "RealQ="  << d->GetRealQ()  << std::endl;
-      std::cout << "RealAoQ=" << d->GetRealAoverQ() << std::endl;
+      //std::cout << "Z="      << d->GetZ()      << std::endl;
+      //std::cout << "RealZ="  << d->GetRealZ()  << std::endl;
+      //std::cout << "A="      << d->GetA()      << std::endl;
+      //std::cout << "RealA="  << d->GetRealA()  << std::endl;
+      //std::cout << "RealQ="  << d->GetRealQ()  << std::endl;
+      //std::cout << "RealAoQ=" << d->GetRealAoverQ() << std::endl;
 
       //-----------------------
       // Calibration
@@ -290,17 +290,17 @@ void KVVAMOSReconEvent::IdentAndCalibEvent()
          d->IdentifyQandA();
 
          //debug
-         std::cout << "#KVVAMOSReconEvent::IdentAndCalib() -> End of A identification for the particle... results follow:" << std::endl;
-         std::cout << "IDcode=" << d->GetIDCode() << std::endl;
-         std::cout << "Z="      << d->GetZ()      << std::endl;
-         std::cout << "RealZ="  << d->GetRealZ()  << std::endl;
-         std::cout << "A="      << d->GetA()      << std::endl;
-         std::cout << "RealA="  << d->GetRealA()  << std::endl;
-         std::cout << "RealQ="  << d->GetRealQ()  << std::endl;
-         std::cout << "RealAoQ=" << d->GetRealAoverQ() << std::endl;
-         std::cout << "Energy_ChIo=" << d->GetEnergy("CHI") << std::endl;
-         std::cout << "Energy_Si="  << d->GetEnergy("SI")  << std::endl;
-         std::cout << "Energy_CsI=" << d->GetEnergy("CSI") << std::endl;
+//         std::cout << "#KVVAMOSReconEvent::IdentAndCalib() -> End of A identification for the particle... results follow:" << std::endl;
+//         std::cout << "IDcode=" << d->GetIDCode() << std::endl;
+//         std::cout << "Z="      << d->GetZ()      << std::endl;
+//         std::cout << "RealZ="  << d->GetRealZ()  << std::endl;
+//         std::cout << "A="      << d->GetA()      << std::endl;
+//         std::cout << "RealA="  << d->GetRealA()  << std::endl;
+//         std::cout << "RealQ="  << d->GetRealQ()  << std::endl;
+//         std::cout << "RealAoQ=" << d->GetRealAoverQ() << std::endl;
+//         std::cout << "Energy_ChIo=" << d->GetEnergy("CHI") << std::endl;
+//         std::cout << "Energy_Si="  << d->GetEnergy("SI")  << std::endl;
+//         std::cout << "Energy_CsI=" << d->GetEnergy("CSI") << std::endl;
       }
    }
 }

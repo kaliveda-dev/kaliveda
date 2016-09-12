@@ -39,13 +39,13 @@ protected:
    };
 
    KVVAMOSReconTrajectory fRT;             //handles trajectory reconstruction data
-   Double_t               fStripFoilEloss; // calculated energy lost in the stripping foil
+   Double_t               fStripFoilEloss; //calculated energy lost in the stripping foil
 
    std::vector<Double_t>  fDetE;           //array with the corrected energy lost in each detector of fDetList
    Float_t                fRealQ;          //Q returned by identification routine
    Float_t                fRealAoQ;        //A/Q returned by identification routine
-   UChar_t fQ;                             // charge state
-   Bool_t  fQMeasured;                     // true/false if charge state is measured/calculated
+   UChar_t fQ;                             //charge state
+   Bool_t  fQMeasured;                     //true/false if charge state is measured/calculated
 
    virtual void CalibrateFromDetList();
    virtual void MakeDetectorList();
@@ -79,9 +79,10 @@ public:
    Double_t  GetEnergy(const Char_t* det_label)        const;
    Double_t  GetEnergyAfter(const Char_t* det_label)   const;
    Double_t  GetEnergyBefore(const Char_t* det_label)  const;
-   Double_t GetMassOverQ(const Char_t* tof_name)      const;
+   Double_t  GetMassOverQ(const Char_t* tof_name)      const;
    Double_t  GetPath(KVVAMOSDetector* start, KVVAMOSDetector* stop = NULL)      const;
    Double_t  GetPath(const Char_t* start_label, const Char_t* stop_label = "") const;
+   Int_t GetNBeamPeriod(Double_t tof, Double_t dist) const;
 
    using KVReconstructedNucleus::GetRealA;
    Float_t GetRealA(const Char_t* tof_name)          const;
@@ -121,7 +122,7 @@ public:
    const   TVector3&        GetFocalPlaneDirection()            const;
    Double_t         GetGamma(const Char_t* tof_name)  const;
    const   TVector3&        GetLabDirection()                   const;
-   Float_t          GetPath()                           const;
+   Float_t           GetPath()                           const;
    Double_t          GetPhiF()                           const;
    Double_t          GetPhiL()                           const;
    Double_t          GetPhiV()                           const;
