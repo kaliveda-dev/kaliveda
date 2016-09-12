@@ -607,7 +607,6 @@ void KVVAMOSReconNuc::IdentifyQandA()
                   //std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realA=" << RealA << std::endl;
                   //std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realAoQ=" << RealAoQ << std::endl;
 
-
                   SetRealA(RealA);
                   SetRealAoverQ(RealAoQ);
                   SetRealQ(RealA / RealAoQ);
@@ -1097,7 +1096,7 @@ Int_t  KVVAMOSReconNuc::GetNBeamPeriod(Double_t tof, Double_t dist) const
    //std::cout << "KVVAMOSReconNuc::GetCorrectedT_HF(): delta_t=" << delta_t << " beam_period="
    //          << gVamos->GetBeamPeriod() << " N=" << n << std::endl;
 
-   return n;
+   return tof + n * gVamos->GetBeamPeriod();
 }
 //________________________________________________________________
 
@@ -1145,7 +1144,6 @@ Double_t KVVAMOSReconNuc::GetPath(KVVAMOSDetector* start, KVVAMOSDetector* stop)
          //std::cout << "KVVAMOSReconNuc::GetPath(): (no stop) path=" << GetPath()
          //          << " dp_start=" << dp_start << " path_tot=path+dp_start="
          //          <<  GetPath() + dp_start << std::endl;
-
          return GetPath() + dp_start;
       }
 

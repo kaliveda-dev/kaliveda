@@ -243,7 +243,6 @@ void KVVAMOSReconEvent::IdentAndCalibEvent()
       //debug
       //std::cout << "==>KVVAMOSReconEvent::IdentAndCalibEvent -> new particle in the event! GetStatus()=" << d->GetStatus() << "<==" << std::endl;
 
-
       //-----------------------
       // Z-identification
       //-----------------------

@@ -294,14 +294,14 @@ void KVBase::ReadConfigFiles()
       tmp = GetETCDIRFilePath(file.Next().Data());
       //skip over any missing files - this is needed when installing from
       //e.g. ubuntu packages if not all packages are installed
-      if (!gSystem->AccessPathName(tmp.Data())) gEnv->ReadFile(tmp.Data(), kEnvGlobal);
+      if (!gSystem->AccessPathName(tmp.Data())) gEnv->ReadFile(tmp.Data(), kEnvChange);
    }
 
    AssignAndDelete(tmp, gSystem->ConcatFileName(gSystem->Getenv("HOME"), ".kvrootrc"));
-   gEnv->ReadFile(tmp.Data(), kEnvUser);
+   gEnv->ReadFile(tmp.Data(), kEnvChange);
 
    tmp = "./.kvrootrc";
-   gEnv->ReadFile(tmp.Data(), kEnvLocal);
+   gEnv->ReadFile(tmp.Data(), kEnvChange);
 
    // load plugin handlers
    gROOT->GetPluginManager()->LoadHandlersFromEnv(gEnv);
