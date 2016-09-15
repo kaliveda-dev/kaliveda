@@ -1044,9 +1044,6 @@ Bool_t KVVAMOSReconNuc::GetCorrFlightDistanceAndTime(Double_t& dist, Double_t& t
    if (dist <= 0.) return kFALSE;
    tof  = (isT_HF ? GetCorrectedT_HF(calibT, dist) : calibT);
 
-   //debug
-   Info("GetCorrFlightDistanceAndTime", "dist=%e, tof=%e", dist, tof);
-
    return kTRUE;
 }
 //________________________________________________________________
