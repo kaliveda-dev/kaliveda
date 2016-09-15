@@ -1044,6 +1044,9 @@ Bool_t KVVAMOSReconNuc::GetCorrFlightDistanceAndTime(Double_t& dist, Double_t& t
    if (dist <= 0.) return kFALSE;
    tof  = (isT_HF ? GetCorrectedT_HF(calibT, dist) : calibT);
 
+   //debug
+   Info("GetCorrFlightDistanceAndTime", "dist=%e, tof=%e", dist, tof);
+
    return kTRUE;
 }
 //________________________________________________________________
@@ -1096,7 +1099,7 @@ Int_t  KVVAMOSReconNuc::GetNBeamPeriod(Double_t tof, Double_t dist) const
    //std::cout << "KVVAMOSReconNuc::GetCorrectedT_HF(): delta_t=" << delta_t << " beam_period="
    //          << gVamos->GetBeamPeriod() << " N=" << n << std::endl;
 
-   return tof + n * gVamos->GetBeamPeriod();
+   return n;
 }
 //________________________________________________________________
 
