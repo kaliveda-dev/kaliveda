@@ -166,7 +166,14 @@ Bool_t KVIDHarpeeICSi_e503::Identify(
    // identification with some additional logic checks.
 
    assert(idr);
-   if (!kInitialised_) Init();
+
+   //IMPORTANT !!! For the moment we need to reset the kInitialised flag
+   //each time the Identify method is called.
+   //Else each time the same KVIDHarpeeICSi_e503 is called (for ex: VID_CHI_SI_05) more
+   //than once (typically in a KVIVSelector), it will be considered as already initialised and
+   //the base_id_result_ will keep the information of the former identification !!!
+   kInitialised_ = kFALSE;
+   Init();
 
    idr->IDOK = kFALSE;
    idr->IDattempted = kTRUE;
@@ -189,7 +196,7 @@ Bool_t KVIDHarpeeICSi_e503::Identify(
    // class.  This way we will store the data from the base class
    // identification even if the derived class initialisation fails.
 
-   SetOnlyZId(kTRUE);
+   SetOnlyZId(kFALSE);
 
    Bool_t status = KVIDHarpeeICSi::Identify(idr, x, y);
 

@@ -1196,6 +1196,7 @@ void KVIDZAGrid::Identify(Double_t x, Double_t y, KVIdentificationResult* idr) c
    // between 7.5 and 8.5, but their integer A will be =7 or =9, never 8.
    //
    idr->IDOK = kFALSE;
+
    if (!const_cast<KVIDZAGrid*>(this)->FindFourEmbracingLines(x, y, "above")) {
       //no lines corresponding to point were found
       const_cast < KVIDZAGrid* >(this)->fICode = kICODE8;         // Z indetermine ou (x,y) hors limites
@@ -1245,12 +1246,14 @@ void KVIDZAGrid::Identify(Double_t x, Double_t y, KVIdentificationResult* idr) c
             idr->SetComment("no identification: (x,y) out of range covered by grid");
       }
    } else {
+
       Int_t Z;
       Double_t A;
       const_cast < KVIDZAGrid* >(this)->IdentZA(x, y, Z, A);
       idr->IDquality = fICode;
       idr->Z = Z;
       idr->PID = A;
+
       if (fICode < kICODE4 || fICode == kICODE7) {
          idr->Zident = kTRUE;
       }

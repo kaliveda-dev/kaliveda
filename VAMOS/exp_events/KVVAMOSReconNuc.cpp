@@ -485,6 +485,7 @@ void KVVAMOSReconNuc::IdentifyZ()
             if (idt->IsReadyForID()) { // is telescope able to identify for this run ?
                IDR->IDattempted = kTRUE;
                idt->Identify(IDR);
+               IDR->Print();
                // for all nuclei we take the first identification which gives IDOK==kTRUE
                if (!ok && IDR->IDOK) {
                   ok = kTRUE;

@@ -39,6 +39,16 @@ public:
    virtual Bool_t  SetIDCorrectionParameters(const KVRList* const records);
    virtual const KVList* GetIDCorrectionParameters() const;
 
+   Int_t GetAMinimiser() {
+      return Amin_;   // Mass from minimisation
+   }
+   Int_t GetBaseQualityCode() {
+      return ICode_;   //Quality code from KVIDZAGrid
+   }
+   Int_t GetQualityCode() {
+      return MCode_;   //Global returned quality code
+   }
+
 private:
 
 #if __cplusplus < 201103L
@@ -54,11 +64,17 @@ private:
    Bool_t kInitialised_;
 
    enum VIDSubCode {
-      kIdentified,
-      kBaseIdentZFailed,
-      kEstimateAFailed,
+      kMCode0, //(Z,A) identification from KVIDZAGrid + A from minimiser are OK and equal
+      kMCode1, //(Z,A) identification from KVIDZAGrid + A from minimiser are OK but different
+      kMCode2, //Z from KVIDZAGrid is OK but A not; A from minimiser is OK
+      kMCode3, //(Z,A) from KVIDZAGrid are OK; A from minimiser is not OK
+      kMCode4,  //mass not found either from KVIDZAGrid or minimiser
+      kMCode5, //Z from KVIDZAGrid not OK (base_id_result_::Zident=kFALSE)
    };
 
+   Int_t Amin_; //Mass obtained from CsI energy minimiser
+   Int_t ICode_; //IDquality code from basic KVIDZAGrid identification
+   Int_t MCode_; //KVIDHarpeeSiCsI_e503 specific IDquality code
 
    ClassDef(KVIDHarpeeSiCsI_e503, 1) // KVIDHarpeeSiCsI_e503
 };
