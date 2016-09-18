@@ -621,13 +621,9 @@ void KVReconstructedNucleus::SetIdentification(KVIdentificationResult* idr)
    SetAMeasured(idr->Aident);
    SetZ(idr->Z);
    if (idr->Aident) {
-      //debug
-      //std::cout <<  "#KVReconstructedNucleus::SetIdentification() A identified !" << std::endl;
       SetA(idr->A);
       SetRealA(idr->PID);
    } else {
-      //debug
-      //std::cout <<  "#KVReconstructedNucleus::SetIdentification() A not identified !" << std::endl;
       SetRealZ(idr->PID);
    }
    //debug

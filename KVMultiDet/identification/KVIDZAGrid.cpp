@@ -1217,6 +1217,10 @@ void KVIDZAGrid::Identify(Double_t x, Double_t y, KVIdentificationResult* idr) c
       idr->Z = Zint;
       idr->PID = Z;
       idr->A = Aint;
+
+      //debug
+      Info("Identify", "IdentZ used, PID=%e", Z);
+
       switch (fICode) {
          case kICODE0:
             idr->SetComment("ok");
@@ -1253,6 +1257,9 @@ void KVIDZAGrid::Identify(Double_t x, Double_t y, KVIdentificationResult* idr) c
       idr->IDquality = fICode;
       idr->Z = Z;
       idr->PID = A;
+
+      //debug
+      Info("Identify", "IdentZA used, PID=%e", A);
 
       if (fICode < kICODE4 || fICode == kICODE7) {
          idr->Zident = kTRUE;

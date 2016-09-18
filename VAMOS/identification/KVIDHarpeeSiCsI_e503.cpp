@@ -114,13 +114,18 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
    ICode_ = base_id_result_->IDquality;
 
    // Set the idcode and type for this telescope
-   idr = base_id_result_; //copy infos from base identification
+   idr->SetIDType(base_id_result_->GetIDType());
    idr->IDcode = fIDCode;
-   idr->SetIDType(GetType());
+   idr->Zident = base_id_result_->Zident;
+   idr->Z      = base_id_result_->Z;
+   idr->Aident = base_id_result_->Aident;
+   idr->A      = base_id_result_->A;
+   idr->PID    = base_id_result_->PID;
 
    if (!base_id_result_->Zident) {
       MCode_ = kMCode5;
       idr->IDquality = kMCode5;
+      idr->SetComment("Z from KVIDZAGrid not found");
       return kFALSE;
    }
 
@@ -135,7 +140,7 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
    //As long as a mass value is OK (either from KVIDZAGrid or Minimiser),
    //we consider the identification went well
    if ((Amin_ > 0) && (base_id_result_->Aident)) { //Minimisation is OK and (Z,A) found with KVIDZAGrid
-      if (((Amin_ > 0) == (idr->A))) { //A from minimisation = A from KVIDZAGrid
+      if ((Amin_ == idr->A)) { //A from minimisation = A from KVIDZAGrid
          MCode_ = kMCode0;
          idr->IDquality = kMCode0;
          idr->IDOK = kTRUE;
@@ -149,8 +154,14 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
    else {
       if ((Amin_ > 0)) { //Minimisation is OK, Z found but not A from KVIDZAGrid
          MCode_ = kMCode2;
-         idr->IDquality = kMCode2;
+         //We set the idr->A to Amin_ and idr->Aident to kTRUE.
+         //This allows to set idr->PID to Amin_ (in accordance to
+         //the way it is done is KVIDZAGrid::IdentifyZA()),
+         //the KVVAMOSReconNuc::GetPID() will then return the expected value.
          idr->IDOK = kTRUE;
+         idr->IDquality = kMCode2;
+         idr->Aident = kTRUE;
+         idr->PID = Amin_;
       }
 
       else {
@@ -164,13 +175,39 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
             MCode_ = kMCode4;
             idr->IDquality = kMCode4;
             idr->IDOK = kFALSE;
-
-            return kFALSE;
          }
       }
    }
 
-   std::cout
+   switch (MCode_) {
+      case kMCode0:
+         idr->SetComment("(Z,A) identification from KVIDZAGrid is OK, A from minimiser was found and is equal to A from grid");
+         break;
+      case kMCode1:
+         idr->SetComment(Form("(Z,A) identification from KVIDZAGrid is OK, A from minimiser was found(=%d) and is different from A from grid", Amin_));
+         break;
+      case kMCode2:
+         idr->SetComment(Form("Only Z from KVIDZAGrid found, A from minimiser was found(=%d)", Amin_));
+         break;
+      case kMCode3:
+         idr->SetComment("(Z,A) from KVIDZAGrid is OK, A from minimiser was not found");
+         break;
+      case kMCode4:
+         idr->SetComment("A not found from both KVIDZAGrid and minimiser");
+         break;
+   }
+
+//   //debug
+//   Info("Identify","ident successful, idr info follow...");
+//   idr->Print();
+//   std::cout << "idr::IDOK=" << idr->IDOK << std::endl;
+//   std::cout << "idr::IDquality=" << idr->IDquality << std::endl;
+//   std::cout << "idr::IDcode=" << idr->IDcode << std::endl;
+//   std::cout << "idr::Zident=" << idr->Zident << std::endl;
+//   std::cout << "idr::Z=" << idr->Z << std::endl;
+//   std::cout << "idr::Aident=" << idr->Aident << std::endl;
+//   std::cout << "idr::A=" << idr->A << std::endl;
+//   std::cout << "idr::PID=" << idr->PID << std::endl;
 
    return kTRUE;
 }

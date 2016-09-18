@@ -66,7 +66,7 @@ private:
    enum VIDSubCode {
       kMCode0, //(Z,A) identification from KVIDZAGrid + A from minimiser are OK and equal
       kMCode1, //(Z,A) identification from KVIDZAGrid + A from minimiser are OK but different
-      kMCode2, //Z from KVIDZAGrid is OK but A not; A from minimiser is OK
+      kMCode2, //Z from KVIDZAGrid is OK but not A; A from minimiser is OK
       kMCode3, //(Z,A) from KVIDZAGrid are OK; A from minimiser is not OK
       kMCode4,  //mass not found either from KVIDZAGrid or minimiser
       kMCode5, //Z from KVIDZAGrid not OK (base_id_result_::Zident=kFALSE)

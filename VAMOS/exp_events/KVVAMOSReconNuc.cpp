@@ -474,7 +474,6 @@ void KVVAMOSReconNuc::IdentifyZ()
       TIter next(idt_list);
       Int_t idnumber = 1;
       while ((idt = (KVIDTelescope*) next())) {
-
          // if it is not a ID-telescope for Z-identification
          // then go to the next one
          if (idt->InheritsFrom(KVIDQA::Class())) continue;
@@ -485,7 +484,19 @@ void KVVAMOSReconNuc::IdentifyZ()
             if (idt->IsReadyForID()) { // is telescope able to identify for this run ?
                IDR->IDattempted = kTRUE;
                idt->Identify(IDR);
+
+               //debug
+               Info("IdentifyZ", "after ident, IDR infos follow...");
                IDR->Print();
+               std::cout << "IDR::IDOK=" << IDR->IDOK << std::endl;
+               std::cout << "IDR::IDquality=" << IDR->IDquality << std::endl;
+               std::cout << "IDR::IDcode=" << IDR->IDcode << std::endl;
+               std::cout << "IDR::Zident=" << IDR->Zident << std::endl;
+               std::cout << "IDR::Z=" << IDR->Z << std::endl;
+               std::cout << "IDR::Aident=" << IDR->Aident << std::endl;
+               std::cout << "IDR::A=" << IDR->A << std::endl;
+               std::cout << "IDR::PID=" << IDR->PID << std::endl;
+
                // for all nuclei we take the first identification which gives IDOK==kTRUE
                if (!ok && IDR->IDOK) {
                   ok = kTRUE;
@@ -501,31 +512,45 @@ void KVVAMOSReconNuc::IdentifyZ()
                   //
                   //Here we have 2 possibilities:
                   //
-                  //First case: e503 Si-CsI identification: only Z identification, then the mass is estimated using
-                  //the minimiser (see KVIDHarpeeSiCsI_e503). In this case, when the nucleus is identified in mass (idr->Aident==kTRUE)
-                  //and in charge (idr->Zident==kTRUE), the usual KVReconstructedNucleus::SetIdentification() shouldn't be used and
-                  //a custom one is used.
+                  //First case: e503 Si-CsI identification: the mass was estimated in order to calibrate the CsI energy:
+                  //by using ID grids (see KVIDZAGrid::Identify) method and/or by minimising the difference between
+                  //simulated and real silicon energies (trying different A values, see SiliconEnergyMinimiser class).
+                  //As the condition IDOK=kTRUE is verified, we are sure that (Z,A) is known either by KVIDZAGrid, either
+                  //with KVIDZAGrid+SiliconEnergyMinimiser.
+                  //We save the A value from KVIDZAGrid when possible, when it is not we save the A value from
+                  //SiliconEnergyMinimiser.
                   //
                   //Second case: usual case: we can just apply KVReconstructedNucleus::SetIdentification().
 
                   SetIdentifyingTelescope(idt);
 
-                  if (idt->InheritsFrom(KVIDHarpeeSiCsI_e503::Class())) { //e503 case for Si-CsI telescope
-                     SetIDCode(IDR->IDcode);
-                     SetZMeasured(IDR->Zident);
-                     SetAMeasured(IDR->Aident);
-                     SetZ(IDR->Z);
+                  //First case: e503 case for SiCsI telescope
+                  //We save the results from the identification grids.
+                  //Infos from minimiser can be accessed by a cast
+                  //of idt to KVIDHarpeeSiCsI_e503.
+                  if (idt->InheritsFrom(KVIDHarpeeSiCsI_e503::Class())) {
+                     SetIDCode(IDR->IDcode);    //=kIDCode3
+                     SetZMeasured(IDR->Zident); //=kTRUE if Z identified with KVIDZAGrid
+                     SetAMeasured(IDR->Aident); //=kTRUE if A also identified with KVIDZAGrid
+                     SetZ(IDR->Z);              //Z from KVIDZAGrid
+
+                     //If (A,Z) obtained from KVIDZAGrid
                      if (IDR->Aident) {
-                        //debug
-                        //std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A identified !" << std::endl;
                         SetA(IDR->A);
-                        SetRealZ(IDR->PID);
-                     } else {
-                        //debug
-                        //std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A not identified !" << std::endl;
+                        SetRealA(IDR->PID);
+                     }
+
+                     //If only Z obtained from KVIDZAGrid and A from minimiser
+                     //For the moment IDR->PID is the mass obtained from KVIDZAGrid,
+                     //which is uncorrect as IDR->Aident=kFALSE.
+                     //Maybe apply OnlyZId as a second step have a PID ?
+                     else {
+                        KVIDHarpeeSiCsI_e503* sicsi = static_cast<KVIDHarpeeSiCsI_e503*>(idt);
+                        assert(sicsi);
+                        SetA(sicsi->GetAMinimiser());
                         SetRealZ(IDR->PID);
                      }
-                  }
+                  }//end of SiCsI e503 case
 
                   else SetIdentification(IDR); //usual case
                }

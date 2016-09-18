@@ -282,19 +282,22 @@ void KVVAMOSReconEvent::IdentAndCalibEvent()
       if (d->IsZidentified() && !d->IsCalibrated()) d->Calibrate();
 
       //--------------------------------------------------------------------------
-      //All particles which have previously Z-identified (IsZidentified=kTRUE) and
-      // calibrated (IsCalibrated=kTRUE) will be Q and A identified.
+      //All particles which have been previously Z-identified (IsZidentified=kTRUE)
+      //and calibrated (IsCalibrated=kTRUE) will be Q and A identified.
       //--------------------------------------------------------------------------
       if (d->IsZidentified() && d->IsCalibrated() && !d->IsQandAidentified()) {
          d->IdentifyQandA();
 
          //debug
          std::cout << "#KVVAMOSReconEvent::IdentAndCalib() -> End of A identification for the particle... results follow:" << std::endl;
-         std::cout << "IDcode=" << d->GetIDCode() << std::endl;
+         std::cout << "IDcode="      << d->GetIDCode() << std::endl;
+         std::cout << "IsZMeasured=" << d->IsZMeasured() << std::endl;
          std::cout << "Z="      << d->GetZ()      << std::endl;
          std::cout << "RealZ="  << d->GetRealZ()  << std::endl;
          std::cout << "A="      << d->GetA()      << std::endl;
          std::cout << "RealA="  << d->GetRealA()  << std::endl;
+         std::cout << "IsAMeasured=" << d->IsAMeasured() << std::endl;
+         std::cout << "PID="    << d->GetPID()    << std::endl;
          std::cout << "RealQ="  << d->GetRealQ()  << std::endl;
          std::cout << "RealAoQ=" << d->GetRealAoverQ() << std::endl;
          std::cout << "Energy_ChIo=" << d->GetEnergy("CHI") << std::endl;
