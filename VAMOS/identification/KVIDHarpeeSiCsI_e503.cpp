@@ -79,7 +79,7 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
    //each time the Identify method is called.
    //Else each time the same KVIDHarpeeSiCsI_e503 is called (for ex: VID_SI_06_CSI36) more
    //than once (typically in a KVIVSelector), it will be considered as already initialised and
-   //the base_id_result_ will keep the information of the former identification !!!
+   //the base_id_result_ will keep the information of the first identification !!!
    kInitialised_ = kFALSE;
    Init();
 
@@ -92,18 +92,19 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
    idr->IDOK = kFALSE;
    idr->IDattempted = kTRUE;
 
-   // Base class performs the preliminary identification routine. We do this
-   // after the initialisation check as we require base_id_result_.
+   //Base class performs the preliminary identification routine. We do this
+   //after the initialisation check as we require base_id_result_.
    //
-   // Only Z identification is required for Si-CsI identification.
-   // This is important for the e503 experiment, in order to avoid the
-   // loss of the PID for Z when a (Z,A) identification is called.
-   // Furthermore for e503 the minimizer is used to estimate A,
-   // thus IDR->Aident will often be kTRUE, and the further call
-   // to KVReconstructedNucleus::SetIdentification() will not set the RealZ value
-   // but only the RealA value.
+   //For e503 Si-CsI identification, the charge Z is estimated using KVIDZAGrid. As the mass A is mandatory
+   //in order to calibrate the CsI energy, it is estimated using the minimiser (by minimising the difference
+   //between simulated and real silicon energies, see iliconEnergyMinimiser class).
+   //
+   //Update: should maybe try to use directly the computed CsI energy in MeV instead of setting the mass
+   //found by minimisation process to the KVVAMOSReconNuc and compute again energy.
+
    assert(base_id_result_);
-   SetOnlyZId(kFALSE);
+   //Only Z identification will be performed as A will be obtained from VAMOS
+   SetOnlyZId(kTRUE);
 
 #if __cplusplus < 201103L
    KVIDHarpeeSiCsI::Identify(base_id_result_, x, y);
@@ -120,12 +121,14 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
    idr->Z      = base_id_result_->Z;
    idr->Aident = base_id_result_->Aident;
    idr->A      = base_id_result_->A;
-   idr->PID    = base_id_result_->PID;
+   idr->PID    = base_id_result_->PID; //from Z ident
 
+   //Z not found
    if (!base_id_result_->Zident) {
-      MCode_ = kMCode5;
-      idr->IDquality = kMCode5;
-      idr->SetComment("Z from KVIDZAGrid not found");
+      MCode_ = kMCode1;
+      idr->IDquality = kMCode1;
+      idr->IDOK = kFALSE;
+      idr->SetComment("Z not found from grid (base_id_result_::Zident=kFALSE)");
       return kFALSE;
    }
 
@@ -136,65 +139,28 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
    minimiser_->SetIDTelescope(GetName());
    Amin_ = minimiser_->Minimise(idr->Z, y, x);
 
-   //Consider all cases for identification
-   //As long as a mass value is OK (either from KVIDZAGrid or Minimiser),
-   //we consider the identification went well
-   if ((Amin_ > 0) && (base_id_result_->Aident)) { //Minimisation is OK and (Z,A) found with KVIDZAGrid
-      if ((Amin_ == idr->A)) { //A from minimisation = A from KVIDZAGrid
-         MCode_ = kMCode0;
-         idr->IDquality = kMCode0;
-         idr->IDOK = kTRUE;
-      } else { //A from minimisation != A from KVIDZAGrid
-         MCode_ = kMCode1;
-         idr->IDquality = kMCode1;
-         idr->IDOK = kTRUE;
-      }
+   if ((idr->A > 0)) {  //Z from grid OK, A from minimiser OK
+      //We take the A from minimiser as the identified mass.
+      //Save id results in standard way (like the A was identified from grid),
+      //so the usual KVReconstructedNucleus::SetIdentification() method
+      //can be used to save the results in KVVAMOSReconNuc::IdentifyZ().
+      //This means that idr::Aident=kTRUE and idr::PID=Amin_
+      MCode_ = kMCode0;
+      idr->IDquality = kMCode0;
+      idr->IDOK   = kTRUE;
+      idr->Aident = kTRUE;
+      idr->A      = Amin_;
+      idr->PID    = Amin_;
+      idr->SetComment("Z found with grid, A from minimiser found");
+
    }
 
-   else {
-      if ((Amin_ > 0)) { //Minimisation is OK, Z found but not A from KVIDZAGrid
-         MCode_ = kMCode2;
-         //We set the idr->A to Amin_ and idr->Aident to kTRUE.
-         //This allows to set idr->PID to Amin_ (in accordance to
-         //the way it is done is KVIDZAGrid::IdentifyZA()),
-         //the KVVAMOSReconNuc::GetPID() will then return the expected value.
-         idr->IDOK = kTRUE;
-         idr->IDquality = kMCode2;
-         idr->Aident = kTRUE;
-         idr->PID = Amin_;
-      }
-
-      else {
-         if ((base_id_result_->Aident)) {//Minimisation not OK, (Z,A) found with KVIDZAGrid
-            MCode_ = kMCode3;
-            idr->IDquality = kMCode3;
-            idr->IDOK = kTRUE;
-         }
-
-         else { //Minimisation not OK, Z but not A found from KVIDZAGrid
-            MCode_ = kMCode4;
-            idr->IDquality = kMCode4;
-            idr->IDOK = kFALSE;
-         }
-      }
-   }
-
-   switch (MCode_) {
-      case kMCode0:
-         idr->SetComment("(Z,A) identification from KVIDZAGrid is OK, A from minimiser was found and is equal to A from grid");
-         break;
-      case kMCode1:
-         idr->SetComment(Form("(Z,A) identification from KVIDZAGrid is OK, A from minimiser was found(=%d) and is different from A from grid", Amin_));
-         break;
-      case kMCode2:
-         idr->SetComment(Form("Only Z from KVIDZAGrid found, A from minimiser was found(=%d)", Amin_));
-         break;
-      case kMCode3:
-         idr->SetComment("(Z,A) from KVIDZAGrid is OK, A from minimiser was not found");
-         break;
-      case kMCode4:
-         idr->SetComment("A not found from both KVIDZAGrid and minimiser");
-         break;
+   else { //Z from grid OK, A not found from minimiser
+      MCode_ = kMCode2;
+      idr->IDquality = kMCode2;
+      idr->IDOK = kFALSE;
+      idr->SetComment("Z found from grid, A from minimiser not found");
+      return kFALSE;
    }
 
 //   //debug

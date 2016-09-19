@@ -46,6 +46,8 @@ protected:
    Float_t                fRealAoQ;        //A/Q returned by identification routine
    UChar_t fQ;                             //charge state
    Bool_t  fQMeasured;                     //true/false if charge state is measured/calculated
+   Bool_t  fVAMeasured;                    //true/false if A from IdentifyQandA() method was measured/calculated
+
 
    virtual void CalibrateFromDetList();
    virtual void MakeDetectorList();
@@ -111,17 +113,17 @@ public:
    static  Double_t         CalculateEnergy(Int_t Q, Double_t Brho, Double_t beta);
    static  Double_t         CalculateMassOverQ(Double_t Brho, Double_t beta);
    static  Double_t         CalculateRealA(Int_t Z, Double_t E, Double_t beta);
-   Double_t         GetAoverQ()                         const;
-   Double_t         GetBeta(const Char_t* tof_name)   const;
-   Float_t          GetBrho()                           const;
-   KVVAMOSCodes&    GetCodes();
-   using            KVReconstructedNucleus::GetDetector;
-   KVDetector*      GetDetector(const Char_t* det_label);
-   Double_t          GetEnergy(Int_t idx_det)          const;
-   Double_t         GetEnergyBeforeVAMOS()              const;
-   const   TVector3&        GetFocalPlaneDirection()            const;
-   Double_t         GetGamma(const Char_t* tof_name)  const;
-   const   TVector3&        GetLabDirection()                   const;
+   Double_t          GetAoverQ()                         const;
+   Double_t          GetBeta(const Char_t* tof_name)     const;
+   Float_t           GetBrho()                           const;
+   KVVAMOSCodes&     GetCodes();
+   using             KVReconstructedNucleus::GetDetector;
+   KVDetector*       GetDetector(const Char_t* det_label);
+   Double_t          GetEnergy(Int_t idx_det)            const;
+   Double_t          GetEnergyBeforeVAMOS()              const;
+   const   TVector3&        GetFocalPlaneDirection()     const;
+   Double_t          GetGamma(const Char_t* tof_name)    const;
+   const   TVector3& GetLabDirection()                   const;
    Float_t           GetPath()                           const;
    Double_t          GetPhiF()                           const;
    Double_t          GetPhiL()                           const;
@@ -131,7 +133,7 @@ public:
    Float_t           GetRealQ()                          const;
 
 
-   virtual Double_t         GetStripFoilEnergyLoss()            const;
+   virtual Double_t  GetStripFoilEnergyLoss()            const;
    Double_t          GetThetaF()                         const;
    Double_t          GetThetaL()                         const;
    Double_t          GetThetaV()                         const;
@@ -141,16 +143,16 @@ public:
    Double_t         GetVelocity(const Char_t* tof_name) const;
 
    void             SetBrho(Double_t brho);
-   virtual  void             SetECode(UChar_t code_mask);
-   virtual void             SetFPCode(UInt_t code_mask);
-   virtual void             SetIDCode(UShort_t code_mask);
+   virtual void     SetECode(UChar_t code_mask);
+   virtual void     SetFPCode(UInt_t code_mask);
+   virtual void     SetIDCode(UShort_t code_mask);
    void             SetQ(Int_t q);
-   virtual void             SetQMeasured(Bool_t yes = kTRUE);
+   virtual void     SetQMeasured(Bool_t yes = kTRUE);
    void             SetRealAoverQ(Float_t AoQ);
    void             SetRealQ(Float_t Q);
-   virtual void             SetStripFoilEnergyLoss(Double_t e);
-   virtual void             SetTCode(UShort_t code_mask);
-   virtual void             SetTCode(const Char_t* parname);
+   virtual void     SetStripFoilEnergyLoss(Double_t e);
+   virtual void     SetTCode(UShort_t code_mask);
+   virtual void     SetTCode(const Char_t* parname);
 
    void             SetThetaVandPhiV(Double_t th_v, Double_t ph_v);
    void             SetXYf(Float_t x, Float_t y);
@@ -422,7 +424,7 @@ inline Int_t KVVAMOSReconNuc::GetQ() const
 
 inline Float_t KVVAMOSReconNuc::GetRealAoverQ() const
 {
-   // returns the real value of A/Q deduced from identification
+   // returns the real value of A/Q deduced in IdentifyQandA()
    return (fRealAoQ > 0 ? fRealAoQ : (GetQ() > 0 ? ((Float_t)GetA()) / GetQ() : 0.));
 }
 //____________________________________________________________________________________________//
@@ -522,7 +524,7 @@ inline void KVVAMOSReconNuc::SetQ(Int_t q)
 inline void KVVAMOSReconNuc::SetQMeasured(Bool_t yes)
 {
    // Call with yes=kTRUE for reconstructed nuclei whose
-   // charge state, Q, was measured, not calculated
+   // charge state, Q, was measured during IdentifyQandA(), not calculated
    fQMeasured = yes;
 }
 //____________________________________________________________________________________________//

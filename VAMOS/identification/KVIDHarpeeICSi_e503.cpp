@@ -196,7 +196,8 @@ Bool_t KVIDHarpeeICSi_e503::Identify(
    // class.  This way we will store the data from the base class
    // identification even if the derived class initialisation fails.
 
-   SetOnlyZId(kFALSE);
+   //Only Z identification will be performed as A will be obtained from VAMOS
+   SetOnlyZId(kTRUE);
 
    Bool_t status = KVIDHarpeeICSi::Identify(idr, x, y);
 

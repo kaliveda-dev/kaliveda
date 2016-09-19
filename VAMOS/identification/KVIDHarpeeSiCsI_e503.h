@@ -40,11 +40,17 @@ public:
    virtual const KVList* GetIDCorrectionParameters() const;
 
    Int_t GetAMinimiser() {
-      return Amin_;   // Mass from minimisation
+      return Amin_;   //A from minimiser
    }
+
    Int_t GetBaseQualityCode() {
       return ICode_;   //Quality code from KVIDZAGrid
    }
+
+   Double_t GetBasePID() {
+      return base_id_result_->PID;
+   }
+
    Int_t GetQualityCode() {
       return MCode_;   //Global returned quality code
    }
@@ -64,15 +70,14 @@ private:
    Bool_t kInitialised_;
 
    enum VIDSubCode {
-      kMCode0, //(Z,A) identification from KVIDZAGrid + A from minimiser are OK and equal
-      kMCode1, //(Z,A) identification from KVIDZAGrid + A from minimiser are OK but different
-      kMCode2, //Z from KVIDZAGrid is OK but not A; A from minimiser is OK
-      kMCode3, //(Z,A) from KVIDZAGrid are OK; A from minimiser is not OK
-      kMCode4,  //mass not found either from KVIDZAGrid or minimiser
-      kMCode5, //Z from KVIDZAGrid not OK (base_id_result_::Zident=kFALSE)
+      //ID was OK
+      kMCode0, //Z found with grid, A from minimiser found
+      //ID wasn't OK
+      kMCode1, //Z not found from grid (base_id_result_::Zident=kFALSE)
+      kMCode2, //Z found from grid, A from minimiser not found
    };
 
-   Int_t Amin_; //Mass obtained from CsI energy minimiser
+   Int_t Amin_;  //Mass from minimiser
    Int_t ICode_; //IDquality code from basic KVIDZAGrid identification
    Int_t MCode_; //KVIDHarpeeSiCsI_e503 specific IDquality code
 
