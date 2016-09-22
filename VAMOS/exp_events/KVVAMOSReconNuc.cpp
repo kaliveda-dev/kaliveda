@@ -606,9 +606,10 @@ void KVVAMOSReconNuc::IdentifyQandA()
                   //std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realAoQ=" << RealAoQ << std::endl;
 
                   //Save the results
+                  SetTCode(KVVAMOSCodes::GetTCode(tof_name));
                   SetQMeasured(kFALSE); //Q was calculated not measured (specific to KVVAMOSReconNuc)
                   if ((RealA > 0.)) { //Real A is OK
-                     SetAMeasured(kTRUE); //A found
+                     SetAMeasured(kFALSE); //A found by calculation not measurements
                      SetRealA(RealA);
                      SetA(TMath::Nint(GetRealA()));
 
@@ -1205,6 +1206,7 @@ Double_t KVVAMOSReconNuc::GetDeltaPath(KVVAMOSDetector* det) const
 
    if (!det) return 0.;
    // Find the parameter with the name DPATH:<detector_name>
+
    KVNamedParameter* par = GetParameters()->FindParameter(Form("DPATH:%s", det->GetName()));
    if (par) return par->GetDouble();
 
