@@ -189,7 +189,7 @@ void KVVAMOSReconNuc::CalibrateFromDetList()
    // the code will be kECode0.
    // Whenever possible, the energy loss for fired detectors which are uncalibrated
    // or not functioning is calculated.
-   // If the detectors used to measured energy are not calibrated or not fired, or multihit, the
+   // If the detectors used to measure energy are not calibrated or not fired, or multihit, the
    // energy code will be kECode2.
    // Otherwise, the code will be kECode1.
    // The flag returned by IsCalibrated will be true is the energy code is different from kECode0.
@@ -474,7 +474,6 @@ void KVVAMOSReconNuc::IdentifyZ()
       TIter next(idt_list);
       Int_t idnumber = 1;
       while ((idt = (KVIDTelescope*) next())) {
-
          // if it is not a ID-telescope for Z-identification
          // then go to the next one
          if (idt->InheritsFrom(KVIDQA::Class())) continue;
@@ -485,10 +484,23 @@ void KVVAMOSReconNuc::IdentifyZ()
             if (idt->IsReadyForID()) { // is telescope able to identify for this run ?
                IDR->IDattempted = kTRUE;
                idt->Identify(IDR);
+
+               //debug
+//               Info("IdentifyZ", "after ident, IDR infos follow...");
+//               IDR->Print();
+//               std::cout << "IDR::IDOK=" << IDR->IDOK << std::endl;
+//               std::cout << "IDR::IDquality=" << IDR->IDquality << std::endl;
+//               std::cout << "IDR::IDcode=" << IDR->IDcode << std::endl;
+//               std::cout << "IDR::Zident=" << IDR->Zident << std::endl;
+//               std::cout << "IDR::Z=" << IDR->Z << std::endl;
+//               std::cout << "IDR::Aident=" << IDR->Aident << std::endl;
+//               std::cout << "IDR::A=" << IDR->A << std::endl;
+//               std::cout << "IDR::PID=" << IDR->PID << std::endl;
+
                // for all nuclei we take the first identification which gives IDOK==kTRUE
                if (!ok && IDR->IDOK) {
                   ok = kTRUE;
-                  SetIsZidentified();
+                  SetIsZidentified(); //Set bit to kIdentified and add 1 identified particle and subtract 1 unidentified particle from each detector in its list
                   KVIDTelescope* idt = (KVIDTelescope*)idt_list->FindObjectByType(IDR->GetType());
                   if (!idt) {
                      Warning("IdentifyZ", "cannot find ID telescope with type %s", IDR->GetType());
@@ -497,36 +509,19 @@ void KVVAMOSReconNuc::IdentifyZ()
                   }
 
                   //Setting the identification
-                  //
-                  //Here we have 2 possibilities:
-                  //
-                  //First case: e503 Si-CsI identification: only Z identification, then the mass is estimated using
-                  //the minimiser (see KVIDHarpeeSiCsI_e503). In this case, when the nucleus is identified in mass (idr->Aident==kTRUE)
-                  //and in charge (idr->Zident==kTRUE), the usual KVReconstructedNucleus::SetIdentification() shouldn't be used and
-                  //a custom one is used.
-                  //
-                  //Second case: usual case: we can just apply KVReconstructedNucleus::SetIdentification().
-
                   SetIdentifyingTelescope(idt);
+                  SetIdentification(IDR);
 
-                  if (idt->InheritsFrom(KVIDHarpeeSiCsI_e503::Class())) { //e503 case for Si-CsI telescope
-                     SetIDCode(IDR->IDcode);
-                     SetZMeasured(IDR->Zident);
-                     SetAMeasured(IDR->Aident);
-                     SetZ(IDR->Z);
-                     if (IDR->Aident) {
-                        //debug
-                        //std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A identified !" << std::endl;
-                        SetA(IDR->A);
-                        SetRealZ(IDR->PID);
-                     } else {
-                        //debug
-                        //std::cout <<  "#KVVAMOSReconNuc::IdentifyZ() Si-CsI e503 A not identified !" << std::endl;
-                        SetRealZ(IDR->PID);
-                     }
+                  //When identification is done by a KVIDHarpeeSiCsI_e503,
+                  //the mass is changed "by hand" to the one found by the minimiser,
+                  //IDR->Aident is also changed and the call to SetIdentification(IDR)
+                  //will not keep the information about the PID of the grid,
+                  //Here we save it by hand...
+                  if ((idt->InheritsFrom(KVIDHarpeeSiCsI_e503::Class()))) {
+                     KVIDHarpeeSiCsI_e503* sicsi = static_cast<KVIDHarpeeSiCsI_e503*>(idt);
+                     assert(sicsi);
+                     SetRealZ(sicsi->GetBasePID());
                   }
-
-                  else SetIdentification(IDR); //usual case
                }
             } else
                IDR->IDattempted = kFALSE;
@@ -546,13 +541,16 @@ void KVVAMOSReconNuc::IdentifyZ()
 void KVVAMOSReconNuc::IdentifyQandA()
 {
    // VAMOS-specific Q and A identification.
-   // First we loop over each Q-A ID telescope placed at the front
+   //
+   // +e494s: First we loop over each Q-A ID telescope placed at the front
    // of the stopping detector. For each ID telescope we loop
    // over each time of flight listed in the environment variable
    // KVVAMOSCodes.ACQParamListForToF to look for the corresponding
    // ID grid before to perform identification. This process is stopped
    // once an identification is OK. Then the corresponding TCode and
    // the identification result are set to this nucleus
+   //
+   // +e503:
 
    Bool_t ok = kFALSE;
    KVSeqCollection* idt_list = GetIDTelescopes();
@@ -607,9 +605,28 @@ void KVVAMOSReconNuc::IdentifyQandA()
                   //std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realA=" << RealA << std::endl;
                   //std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realAoQ=" << RealAoQ << std::endl;
 
-                  SetRealA(RealA);
-                  SetRealAoverQ(RealAoQ);
-                  SetRealQ(RealA / RealAoQ);
+                  //Save the results
+                  SetTCode(KVVAMOSCodes::GetTCode(tof_name));
+                  SetQMeasured(kFALSE); //Q was calculated not measured (specific to KVVAMOSReconNuc)
+                  if ((RealA > 0.)) { //Real A is OK
+                     SetAMeasured(kFALSE); //A found by calculation not measurements
+                     SetRealA(RealA);
+                     SetA(TMath::Nint(GetRealA()));
+
+                     if ((RealAoQ > 0.)) { //RealAoQ is OK
+                        SetIsQandAidentified();
+                        SetRealAoverQ(RealAoQ);
+                        SetRealQ(RealA / RealAoQ);
+                        SetQ(TMath::Nint(GetRealQ()));
+
+                        // since changing mass is done by leaving momentum unchanged, the kinetic
+                        // energy is changed too.
+                        // Keep its value and set it again at the end.
+                        Double_t E = GetEnergy();
+                        SetEnergy(E);
+                     }
+                  }
+
                   return;
                }
             } else continue; //Not ID-Telescope for e494s either e503
@@ -1096,7 +1113,7 @@ Int_t  KVVAMOSReconNuc::GetNBeamPeriod(Double_t tof, Double_t dist) const
    //std::cout << "KVVAMOSReconNuc::GetCorrectedT_HF(): delta_t=" << delta_t << " beam_period="
    //          << gVamos->GetBeamPeriod() << " N=" << n << std::endl;
 
-   return tof + n * gVamos->GetBeamPeriod();
+   return n;
 }
 //________________________________________________________________
 
@@ -1189,6 +1206,7 @@ Double_t KVVAMOSReconNuc::GetDeltaPath(KVVAMOSDetector* det) const
 
    if (!det) return 0.;
    // Find the parameter with the name DPATH:<detector_name>
+
    KVNamedParameter* par = GetParameters()->FindParameter(Form("DPATH:%s", det->GetName()));
    if (par) return par->GetDouble();
 

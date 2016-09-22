@@ -1,3 +1,22 @@
+#####################################################
+# measures according to the surveyor (geometre)     #
+# Target-Drift Chamber 1 -> 8100mm                  #
+# Target-Drift Chamber 2 -> 8963mm                  #
+# Target-ChIo            -> 9249mm                  #
+# Target-HarpeeSiWall    -> 9387mm                  #
+# Target-HarpeeCsIWall   -> 9524mm                  #
+#                                                   #
+# measures from Mark's thesis                       #
+# Target-Drift Chamber 1 -> 8136mm		    #
+# Target-Drift Chamber 2 -> 8999mm		    #
+# Target-Focal Plan      -> 8702.5mm		    #
+# Target-ChIo            -> 9285mm		    #
+# Target-HarpeeSiWall    -> 9423mm  		    #
+# Target-HarpeeCsIWall   -> 9560mm		    #
+#						    #
+#####################################################
+
+
 CSI.WIDTH: 2.50
 CSI.HEIGHT: 2.50
 
@@ -6,7 +25,7 @@ CSI.NABS: 1
 
 # thickness in cm
 
-# silicon
+# caesium iodide
 CSI.ABS.1.MATERIAL: CsI
 CSI.ABS.1.THICK: 1.0
 
@@ -14,250 +33,254 @@ CSI.ABS.1.THICK: 1.0
 CSI.ACTIVEABS: 1
 
 # position from focal plan reference frame
-# Z= focal-plan position minus CSI position from target
+# Z= CSI position - focal-plan position (from target)
+#  = CSI + CSI.THICK/2 - FP                        
+
 CSI.Z: 85.75
 
 # X and Y reference positions
 # En posant une dimension de 2.5cm X 2.5cm
 
-CSI01.X: -21.250 
+CSI01.X: 21.250 
 CSI01.Y: 6.250
 
-CSI02.X: -18.750 
+CSI02.X: 18.750 
 CSI02.Y: 6.250
 
-CSI03.X: -16.250
+CSI03.X: 16.250
 CSI03.Y: 6.250
 
-CSI04.X: -13.750
+CSI04.X: 13.750
 CSI04.Y: 6.250
 
-CSI05.X: -11.250
+CSI05.X: 11.250
 CSI05.Y: 6.250
 
-CSI06.X: -8.750
+CSI06.X: 8.750
 CSI06.Y: 6.250
 
-CSI07.X: -6.250
+CSI07.X: 6.250
 CSI07.Y: 6.250
 
-CSI08.X: -3.750
+CSI08.X: 3.750
 CSI08.Y: 6.250
 
-CSI09.X: -1.250 
+CSI09.X: 1.250 
 CSI09.Y: 6.250
 
-CSI10.X: 1.250 
+CSI10.X: -1.250 
 CSI10.Y: 6.250
 
-CSI11.X: 3.750 
+CSI11.X: -3.750 
 CSI11.Y: 6.250
 
-CSI12.X: 6.250 
+CSI12.X: -6.250 
 CSI12.Y: 6.250
 
-CSI13.X: -21.250 
+CSI13.X: 21.250 
 CSI13.Y: 3.750
 
-CSI14.X: -18.750 
+CSI14.X: 18.750 
 CSI14.Y: 3.750
 
-CSI15.X: -16.250
+CSI15.X: 16.250
 CSI15.Y: 3.750
 
-CSI16.X: -13.750
+CSI16.X: 13.750
 CSI16.Y: 3.750
 
-CSI17.X: -11.250
+CSI17.X: 11.250
 CSI17.Y: 3.750
 
-CSI18.X: -8.750
+CSI18.X: 8.750
 CSI18.Y: 3.750
 
-CSI19.X: -6.250
+CSI19.X: 6.250
 CSI19.Y: 3.750
 
-CSI20.X: -3.750
+CSI20.X: 3.750
 CSI20.Y: 3.750
 
-CSI21.X: -1.250 
+CSI21.X: 1.250 
 CSI21.Y: 3.750
 
-CSI22.X: 1.250 
+CSI22.X: -1.250 
 CSI22.Y: 3.750
 
-CSI23.X: 3.750 
+CSI23.X: -3.750 
 CSI23.Y: 3.750
 
-CSI24.X: 6.250 
+CSI24.X: -6.250 
 CSI24.Y: 3.750
 
-CSI25.X: -21.250 
+CSI25.X: 21.250 
 CSI25.Y: 1.250
 
-CSI26.X: -18.750 
+CSI26.X: 18.750 
 CSI26.Y: 1.250
 
-CSI27.X: -16.250 
+CSI27.X: 16.250 
 CSI27.Y: 1.250
 
-CSI28.X: -13.750
+CSI28.X: 13.750
 CSI28.Y: 1.250
 
-CSI29.X: -11.250
+CSI29.X: 11.250
 CSI29.Y: 1.250
 
-CSI30.X: -8.750
+CSI30.X: 8.750
 CSI30.Y: 1.250
 
-CSI31.X: -6.250
+CSI31.X: 6.250
 CSI31.Y: 1.250
 
-CSI32.X: -3.750
+CSI32.X: 3.750
 CSI32.Y: 1.250
 
-CSI33.X: -1.250 
+CSI33.X: 1.250 
 CSI33.Y: 1.250
 
-CSI34.X: 1.250 
+CSI34.X: -1.250 
 CSI34.Y: 1.250
 
-CSI35.X: 3.750 
+CSI35.X: -3.750 
 CSI35.Y: 1.250
 
-CSI36.X: 6.250 
+CSI36.X: -6.250 
 CSI36.Y: 1.250
 
-CSI37.X: 8.750 
+CSI37.X: -8.750 
 CSI37.Y: 1.250
 
-CSI38.X: 11.250 
+CSI38.X: -11.250 
 CSI38.Y: 1.250
 
-CSI39.X: 13.750 
+CSI39.X: -13.750 
 CSI39.Y: 1.250
 
-CSI40.X: 16.250 
+CSI40.X: -16.250 
 CSI40.Y: 1.250
 
-CSI41.X: -21.250 
+CSI41.X: 21.250 
 CSI41.Y: -1.250
 
-CSI42.X: -18.750 
+CSI42.X: 18.750 
 CSI42.Y: -1.250
 
-CSI43.X: -16.250 
+CSI43.X: 16.250 
 CSI43.Y: -1.250
 
-CSI44.X: -13.750 
+CSI44.X: 13.750 
 CSI44.Y: -1.250
 
-CSI45.X: -11.250 
+CSI45.X: 11.250 
 CSI45.Y: -1.250
 
-CSI46.X: -8.750 
+CSI46.X: 8.750 
 CSI46.Y: -1.250
 
-CSI47.X: -6.250 
+CSI47.X: 6.250 
 CSI47.Y: -1.250
 
-CSI48.X: -3.750 
+CSI48.X: 3.750 
 CSI48.Y: -1.250
 
-CSI49.X: -1.250 
+CSI49.X: 1.250 
 CSI49.Y: -1.250
 
-CSI50.X: 1.250 
+CSI50.X: -1.250 
 CSI50.Y: -1.250
 
-CSI51.X: 3.750 
+CSI51.X: -3.750 
 CSI51.Y: -1.250
 
-CSI52.X: 6.250 
+CSI52.X: -6.250 
 CSI52.Y: -1.250
 
-CSI53.X: 8.750 
+CSI53.X: -8.750 
 CSI53.Y: -1.250
 
-CSI54.X: 11.250 
+CSI54.X: -11.250 
 CSI54.Y: -1.250
 
-CSI55.X: 13.750 
+CSI55.X: -13.750 
 CSI55.Y: -1.250
 
-CSI56.X: 16.250 
+CSI56.X: -16.250 
 CSI56.Y: -1.250
 
-CSI57.X: -21.250 
+CSI57.X: 21.250 
 CSI57.Y: -3.750
 
-CSI58.X: -18.750 
+CSI58.X: 18.750 
 CSI58.Y: -3.750
 
-CSI59.X: -16.250 
+CSI59.X: 16.250 
 CSI59.Y: -3.750
 
-CSI60.X: -13.750 
+CSI60.X: 13.750 
 CSI60.Y: -3.750
 
-CSI61.X: -11.250 
+CSI61.X: 11.250 
 CSI61.Y: -3.750
 
-CSI62.X: -8.750 
+CSI62.X: 8.750 
 CSI62.Y: -3.750
 
-CSI63.X: -6.250 
+CSI63.X: 6.250 
 CSI63.Y: -3.750
 
-CSI64.X: -3.750 
+CSI64.X: 3.750 
 CSI64.Y: -3.750
 
-CSI65.X: -1.250 
+CSI65.X: 1.250 
 CSI65.Y: -3.750
 
-CSI66.X: 1.250 
+CSI66.X: -1.250 
 CSI66.Y: -3.750
 
-CSI67.X: 3.750 
+CSI67.X: -3.750 
 CSI67.Y: -3.750
 
-CSI68.X: 6.250 
+CSI68.X: -6.250 
 CSI68.Y: -3.750
 
-CSI69.X: -21.250 
+CSI69.X: 21.250 
 CSI69.Y: -6.250
 
-CSI70.X: -18.750 
+CSI70.X: 18.750 
 CSI70.Y: -6.250
 
-CSI71.X: -16.250 
+CSI71.X: 16.250 
 CSI71.Y: -6.250
 
-CSI72.X: -13.750 
+CSI72.X: 13.750 
 CSI72.Y: -6.250
 
-CSI73.X: -11.250 
+CSI73.X: 11.250 
 CSI73.Y: -6.250
 
-CSI74.X: -8.750 
+CSI74.X: 8.750 
 CSI74.Y: -6.250
 
-CSI75.X: -6.250 
+CSI75.X: 6.250 
 CSI75.Y: -6.250
 
-CSI76.X: -3.750 
+CSI76.X: 3.750 
 CSI76.Y: -6.250
 
-CSI77.X: -1.250 
+CSI77.X: 1.250 
 CSI77.Y: -6.250
 
-CSI78.X: 1.250 
+CSI78.X: -1.250 
 CSI78.Y: -6.250
 
-CSI79.X: 3.750 
+CSI79.X: -3.750 
 CSI79.Y: -6.250
 
-CSI80.X: 6.250 
+CSI80.X: -6.250 
 CSI80.Y: -6.250
 
-
+CSI.REF.X: 0
+CSI.REF.Y: -1.25
+CSI.REF.Z: 0

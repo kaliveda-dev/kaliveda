@@ -55,8 +55,7 @@ protected:
 public:
 
    Bool_t HasFrame(const Char_t* frame);
-   Int_t GetNumberOfDefinedFrames(void)
-   {
+   Int_t GetNumberOfDefinedFrames(void) {
       return fBoosted.GetEntries();
    };
    Int_t GetNumberOfDefinedGroups(void);
@@ -83,20 +82,16 @@ public:
 #endif
    virtual void Clear(Option_t* opt = "");
 
-   virtual void SetMass(Double_t m)
-   {
+   virtual void SetMass(Double_t m) {
       SetXYZM(Px(), Py(), Pz(), m);
    };
-   Double_t GetMass() const
-   {
+   Double_t GetMass() const {
       return M();
    };
-   void SetMomentum(const TVector3& v)
-   {
+   void SetMomentum(const TVector3& v) {
       SetXYZM(v(0), v(1), v(2), M());
    };
-   void SetMomentum(const TVector3* v)
-   {
+   void SetMomentum(const TVector3* v) {
       SetXYZM((*v)(0), (*v)(1), (*v)(2), M());
    };
    void SetMomentum(Double_t px, Double_t py, Double_t pz, Option_t* opt =
@@ -106,116 +101,94 @@ public:
                           Double_t phmin, Double_t phmax,
                           Option_t* opt = "isotropic");
    virtual void Print(Option_t* t = "") const;
-   void Set4Mom(const TLorentzVector& p)
-   {
+   void Set4Mom(const TLorentzVector& p) {
       SetVect(p.Vect());
       SetT(p.E());
    }
-   void SetE(Double_t a)
-   {
+   void SetE(Double_t a) {
       SetKE(a);
    };
    void SetKE(Double_t ecin);
-   void SetEnergy(Double_t e)
-   {
+   void SetEnergy(Double_t e) {
       SetKE(e);
    };
    void SetVelocity(const TVector3&);
-   TVector3 GetMomentum() const
-   {
+   TVector3 GetMomentum() const {
       return Vect();
    };
-   Double_t GetKE() const
-   {
-      Double_t e =  E();
+   Double_t GetKE() const {
+      Double_t e = E();
       Double_t m = M();
       //return (E() - M());
       return e - m;
    };
-   Double_t GetEnergy() const
-   {
+   Double_t GetEnergy() const {
       return GetKE();
    };
-   Double_t GetTransverseEnergy() const
-   {
+   Double_t GetTransverseEnergy() const {
       Double_t etran = TMath::Sin(Theta());
       etran = TMath::Power(etran, 2.0);
       etran *= GetKE();
       return etran;
    };
-   Double_t GetEtran() const
-   {
+   Double_t GetEtran() const {
       return GetTransverseEnergy();
    };
-   Double_t GetRTransverseEnergy() const
-   {
+   Double_t GetRTransverseEnergy() const {
       Double_t etran = Mt() - GetMass();
       return etran;
    };
-   Double_t GetREtran() const
-   {
+   Double_t GetREtran() const {
       return GetRTransverseEnergy();
    };
-   Double_t GetE() const
-   {
+   Double_t GetE() const {
       return GetKE();
    };
-   Double_t GetWaveLength() const
-   {
+   Double_t GetWaveLength() const {
       //should be in fm
       if (GetMomentum().Mag() == 0)
          return 0;
       Double_t h = TMath::H() * TMath::C() / TMath::Qe() * 1e9; //in MeV.fm
       return h / GetMomentum().Mag();
    };
-   Double_t GetThermalWaveLength(Double_t temp) const
-   {
+   Double_t GetThermalWaveLength(Double_t temp) const {
       //should be in fm
       Double_t h = TMath::H() * TMath::C() / TMath::Qe() * 1e9; //in MeV.fm
       return h / TMath::Sqrt(TMath::TwoPi() * temp * GetMass());
    };
    TVector3 GetVelocity() const;
-   TVector3 GetV() const
-   {
+   TVector3 GetV() const {
       return GetVelocity();
    };
-   Double_t GetVpar() const
-   {
+   Double_t GetVpar() const {
       return GetV().z();
    };
    Double_t GetVperp() const;
-   Double_t GetTheta() const
-   {
+   Double_t GetTheta() const {
       return TMath::RadToDeg() * Theta();
    };
-   Double_t GetPhi() const
-   {
+   Double_t GetPhi() const {
       Double_t phi = TMath::RadToDeg() * Phi();
       return (phi < 0 ? 360. + phi : phi);
    };
-   void SetTheta(Double_t theta)
-   {
+   void SetTheta(Double_t theta) {
       TLorentzVector::SetTheta(TMath::DegToRad() * theta);
    }
-   void SetPhi(Double_t phi)
-   {
+   void SetPhi(Double_t phi) {
       TLorentzVector::SetPhi(TMath::DegToRad() * phi);
    };
 
    virtual Bool_t IsOK();
    void SetIsOK(Bool_t flag = kTRUE);
-   void ResetIsOK()
-   {
+   void ResetIsOK() {
       ResetBit(kIsOKSet);
    };
 
-   KVList* GetListOfFrames(void)
-   {
+   KVList* GetListOfFrames(void) {
       return (KVList*)&fBoosted;
    }
 
-   void SetE0(TVector3* e = 0)
-   {
+   void SetE0(TVector3* e = 0) {
       if (!fE0)
          fE0 = new TVector3;
       if (!e) {
@@ -224,16 +197,13 @@ public:
          *fE0 = *e;
       }
    };
-   TVector3* GetPInitial() const
-   {
+   TVector3* GetPInitial() const {
       return fE0;
    };
-   void SetIsDetected()
-   {
+   void SetIsDetected() {
       SetBit(kIsDetected);
    };
-   Bool_t IsDetected()
-   {
+   Bool_t IsDetected() {
       return TestBit(kIsDetected);
    }
    KVParticle& operator=(const KVParticle& rhs);
@@ -269,21 +239,17 @@ public:
 
    KVParticle* GetFrame(const Char_t* frame);
 
-   const Char_t* GetFrameName(void) const
-   {
+   const Char_t* GetFrameName(void) const {
       return fFrameName;
    }
-   void SetFrameName(const Char_t* framename)
-   {
+   void SetFrameName(const Char_t* framename) {
       fFrameName = framename;
    }
 
-   KVNameValueList* GetParameters() const
-   {
+   KVNameValueList* GetParameters() const {
       return (KVNameValueList*)&fParameters;
    }
-   template<typename ValType> void SetParameter(const Char_t* name, ValType value) const
-   {
+   template<typename ValType> void SetParameter(const Char_t* name, ValType value) const {
       GetParameters()->SetValue(name, value);
    }
 
