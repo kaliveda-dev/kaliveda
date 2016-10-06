@@ -34,4 +34,5 @@
 #pragma link C++ class KVDataTransferBBFTP+;
 #pragma link C++ class KVDataTransferXRD+;
 #pragma link C++ class KVImpactParameter;
+#pragma link C++ class KVClust3D;
 #endif

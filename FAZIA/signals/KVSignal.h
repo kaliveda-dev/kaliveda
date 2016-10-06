@@ -85,6 +85,10 @@ public:
    {
       return fDetName.Data();
    }
+   void SetDetectorName(const Char_t* name)
+   {
+      fDetName = name;
+   }
 
    void SetType(const Char_t* type)
    {

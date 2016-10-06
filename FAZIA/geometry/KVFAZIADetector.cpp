@@ -300,7 +300,7 @@ Bool_t KVFAZIADetector::SetProperties()
       sig->SetType(ssig.Data());
 
       sig->LoadPSAParameters();
-      //sig->SetDetectorName(GetName());
+      sig->SetDetectorName(GetName());
 
       fSignals->Add(sig);
    }

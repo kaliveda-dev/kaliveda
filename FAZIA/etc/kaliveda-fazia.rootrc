@@ -93,6 +93,16 @@ LNS_2016.DataAnalysisTask:     RawAnalysis Reconstruction ReconAnalysis
 LNS_2016.KVDataSet.DataType.Subdir.recon:  recon
 LNS_2016.KVDataSet.DataType.Subdir.root:  root
 
++DataSet:   FAZIACOR
+FAZIACOR.DataSet.Title:   Test done at LNS during July 2016
+FAZIACOR.DataSet.RepositoryDir:   FAZIACOR
+FAZIACOR.DataSet.RunFileName.raw:    run%06d.root
+FAZIACOR.ReconstructedEventClassName:	KVReconstructedEvent
+FAZIACOR.DataSet.RunFileClass.raw:    TFile
+FAZIACOR.DataAnalysisTask:     RawAnalysis Reconstruction ReconAnalysis
+FAZIACOR.KVDataSet.DataType.Subdir.recon:  recon
+FAZIACOR.KVDataSet.DataType.Subdir.root:  root
+
 #DataBase
 
 +Plugin.KVDataBase:    LNS_2014    KVFAZIADB     FAZIAdb    "KVFAZIADB(const Char_t*)"
@@ -100,6 +110,7 @@ LNS_2016.KVDataSet.DataType.Subdir.root:  root
 +Plugin.KVDataBase:    ISOFAZIA    KVFAZIADB     FAZIAdb    "KVFAZIADB(const Char_t*)"
 +Plugin.KVDataBase:    FAZIANFS    KVFAZIADB     FAZIAdb    "KVFAZIADB(const Char_t*)"
 +Plugin.KVDataBase:    LNS_2016    KVFAZIADB     FAZIAdb    "KVFAZIADB(const Char_t*)"
++Plugin.KVDataBase:    FAZIACOR    KVFAZIADB     FAZIAdb    "KVFAZIADB(const Char_t*)"
 
 # Default name for file containing runlist for each dataset.
 FAZIADB.Runlist:     runlist.dat
@@ -115,6 +126,7 @@ FAZIADB.Systems:     Systems.dat
 +Plugin.KVMultiDetArray:    ISOFAZIA    KVISOFAZIA    FAZIAgeometry    "KVISOFAZIA()"
 +Plugin.KVMultiDetArray:    FAZIANFS    KVFAZIANFS    FAZIAgeometry    "KVFAZIANFS()"
 +Plugin.KVMultiDetArray:    LNS_2016    KVFAZIALNS2016    FAZIAgeometry    "KVFAZIALNS2016()"
++Plugin.KVMultiDetArray:    FAZIACOR    KVFAZIASYM    FAZIAgeometry    "KVFAZIASYM()"
 
 #================================ Plugins for different datasets
 # Each multidetector array has an associated 'KVUpDater' object used to set run parameters.
@@ -126,6 +138,7 @@ FAZIADB.Systems:     Systems.dat
 +Plugin.KVUpDater:    LNS_2014    KVFAZIAUpDater     FAZIAdb    "KVFAZIAUpDater()"
 +Plugin.KVUpDater:    FAZIANFS    KVFAZIAUpDater     FAZIAdb    "KVFAZIAUpDater()"
 +Plugin.KVUpDater:    LNS_2016    KVFAZIAUpDater     FAZIAdb    "KVFAZIAUpDater()"
++Plugin.KVUpDater:    FAZIACOR    KVFAZIAUpDater     FAZIAdb    "KVFAZIAUpDater()"
 
 ############
 +Plugin.KVDetector:      KVFAZIA_2B      KVFAZIADetector      FAZIAgeometry      "KVFAZIADetector()"
@@ -156,6 +169,10 @@ FAZIADB.Systems:     Systems.dat
 +Plugin.KVIDTelescope:    ^LNS_2016 .Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
 +Plugin.KVIDTelescope:    ^LNS_2016 .Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
 +Plugin.KVIDTelescope:    ^LNS_2016 .CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
++Plugin.KVIDTelescope:    ^FAZIACOR .Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
++Plugin.KVIDTelescope:    ^FAZIACOR .Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
++Plugin.KVIDTelescope:    ^FAZIACOR .Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
++Plugin.KVIDTelescope:    ^FAZIACOR .CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
 ############
 LNS_2014.RawAnalysis.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
 LNS_2014.RawAnalysis.DataAnalysisTask.UserClass.Base:     FAZIAReader/TSelector
@@ -165,6 +182,8 @@ FAZIASYM.RawAnalysis.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
 FAZIASYM.RawAnalysis.DataAnalysisTask.UserClass.Base:     FAZIAReader/TSelector
 LNS_2016.RawAnalysis.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
 LNS_2016.RawAnalysis.DataAnalysisTask.UserClass.Base:     FAZIAReader/TSelector
+FAZIACOR.RawAnalysis.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
+FAZIACOR.RawAnalysis.DataAnalysisTask.UserClass.Base:     FAZIAReader/TSelector
 
 +Plugin.KVDataAnalyser:   FAZIARawDataAnalyser   KVFAZIARawDataAnalyser       FAZIAanalysis "KVFAZIARawDataAnalyser()"
 +Plugin.TSelector:  FAZIAReader    KVFAZIAReader      FAZIAanalysis    "KVFAZIAReader()"
@@ -177,6 +196,8 @@ FAZIASYM.Reconstruction.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
 FAZIASYM.Reconstruction.DataAnalysisTask.UserClass.Base:     FAZIARawDataRecon/TSelector
 LNS_2016.Reconstruction.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
 LNS_2016.Reconstruction.DataAnalysisTask.UserClass.Base:     FAZIARawDataRecon/TSelector
+FAZIACOR.Reconstruction.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
+FAZIACOR.Reconstruction.DataAnalysisTask.UserClass.Base:     FAZIARawDataRecon/TSelector
 
 +Plugin.TSelector:   FAZIARawDataRecon      KVFAZIARawDataReconstructor  FAZIAanalysis "KVFAZIARawDataReconstructor()"
 ############
@@ -188,6 +209,8 @@ FAZIASYM.ReconAnalysis.DataAnalysisTask.Analyser:     FAZIAReconData
 FAZIASYM.ReconAnalysis.DataAnalysisTask.UserClass.Base:     FAZIASelector/KVEventSelector
 LNS_2016.ReconAnalysis.DataAnalysisTask.Analyser:     FAZIAReconData
 LNS_2016.ReconAnalysis.DataAnalysisTask.UserClass.Base:     FAZIASelector/KVEventSelector
+FAZIACOR.ReconAnalysis.DataAnalysisTask.Analyser:     FAZIAReconData
+FAZIACOR.ReconAnalysis.DataAnalysisTask.UserClass.Base:     FAZIASelector/KVEventSelector
 +Plugin.KVDataAnalyser:   FAZIAReconData         KVFAZIAReconDataAnalyser     FAZIAanalysis "KVFAZIAReconDataAnalyser()"
 +Plugin.KVEventSelector:  FAZIASelector    KVFAZIASelector      FAZIAanalysis    "KVFAZIASelector()"
 
@@ -209,6 +232,11 @@ LNS_2016.IdentificationParameterFile.Si-Si:       SI-SI-Grids.dat
 #LNS_2016.IdentificationParameterFile.CsI:      .dat
 LNS_2016.IdentificationParameterFile.Si-CsI:       SI-CSI-Grids.dat
 LNS_2016.ActiveIdentifications:         Si-CsI Si-Si
+
+#FAZIACOR.IdentificationParameterFile.Si-Si:       SI-SI-Grids.dat
+#FAZIACOR.IdentificationParameterFile.CsI:      .dat
+#FAZIACOR.IdentificationParameterFile.Si-CsI:       SI-CSI-Grids.dat
+#FAZIACOR.ActiveIdentifications:         Si-CsI Si-Si
 
 # file which gather all calibration files
 FAZIADB.CalibrationFiles:     CalibrationFiles.dat
