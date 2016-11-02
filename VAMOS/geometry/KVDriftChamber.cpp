@@ -56,7 +56,7 @@ void KVDriftChamber::init()
    SetXOffsets();
 
    // The Hyperbolic Secant Squared (SECHS) method is by default used for X position measurements
-   SetSECHSReconstructionX();
+   SetSECHSReconstructionX(kFALSE);
 
    // To be modified ???
    // By default the raw positions in drift chambers are calculated from the Q histograms
