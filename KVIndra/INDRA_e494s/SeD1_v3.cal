@@ -134,7 +134,7 @@ SED1: 406.24
 
 # Xf-correction of T0 (in ns) for TSED1_HF
 TYPE: Xf-correction of T0
-FUNCTION: pol4*(x<50)+pol2(5)*(50<=x<86)+pol2(8)*(86<=x)
+FUNCTION: pol4(0)*(x<50)+pol2(5)*(50<=x && x<86)+pol2(8)*(86<=x)
 
 # 40Ar+60Ni, calculated by GA
 RUNS: 41-46 80-145 150-159 200-206 217-222
@@ -239,7 +239,7 @@ SED1: "SED1_SED2" -60.611
 
 # Xf-correction of T0 (in ns) for TSED1_SED2
 TYPE: Xf-correction of T0
-FUNCTION: pol4*(x<43)+pol4(5)*(43<=x<88)+pol4(10)*(88<=x)
+FUNCTION: pol4(0)*(x<43)+pol4(5)*(43<=x && x<88)+pol4(10)*(88<=x)
 
 # 40Ar+60Ni, calculated by GA
 RUNS: 41-46 80-145 150-159 200-206 217-222

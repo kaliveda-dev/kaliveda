@@ -36,6 +36,11 @@ INDRA_e494s.IdentAnalysis.DataAnalysisTask.Analyser:        IVReconData
 INDRA_e494s.IdentAnalysis.DataAnalysisTask.UserClass.Base:  IVSelector/TSelector
 INDRA_e494s.ReconstructedEventClassName:   KVIVReconEvent
 
+# New data reduction November 2016
+INDRA_e494s.KVDataSet.DataType.Subdir.ident:  ident4
+INDRA_e494s.KVDataSet.DataType.Subdir.recon:  recon4
+INDRA_e494s.KVDataSet.DataType.Subdir.root:   root4
+
 # The following variable controls the way that particles are reconstructed from raw data
 # In the detector in which the particle stops, we require KVDetector::Fired( "option" )
 # with "option" = "all" or "any".

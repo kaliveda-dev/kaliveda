@@ -40,7 +40,7 @@ Double_t KVIDHarpeeSiCsI::GetIDMapX(Option_t* opt)
    // Override the VAMOS default X component of the IDMAP. We require CsI total
    // light output.
 
-   UNUSED(opt);
+   IGNORE_UNUSED(opt);
 
    KVHarpeeCsI* csi(static_cast<KVHarpeeCsI*>(fEdet));
    assert(csi);
@@ -55,7 +55,7 @@ Double_t KVIDHarpeeSiCsI::GetIDMapX(Option_t* opt)
 
 Double_t KVIDHarpeeSiCsI::GetIDMapY(Option_t* opt)
 {
-   UNUSED(opt);
+   IGNORE_UNUSED(opt);
 
    KVHarpeeSi* si(static_cast<KVHarpeeSi*>(fDEdet));
    assert(si);

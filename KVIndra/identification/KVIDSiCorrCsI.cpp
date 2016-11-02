@@ -73,7 +73,7 @@ Double_t KVIDSiCorrCsI::GetIDMapX(Option_t* opt)
    // associated with the Si-CsI identification telescope.
    // The X-coordinate is the total light of the CsI.
 
-   UNUSED(opt);
+   IGNORE_UNUSED(opt);
    return fCsI->GetLumiereTotale();
 }
 
@@ -87,7 +87,7 @@ Double_t KVIDSiCorrCsI::GetIDMapY(Option_t* opt)
    // data is less than 3900 then the petit gain value is calculated
    // from the current grand gain coder data (see KVINDRADetector::GetPGFromGG())
 
-   UNUSED(opt);
+   IGNORE_UNUSED(opt);
 
    if (fSi->GetGG() < 3900.) return fSi->GetPGfromGG() - fSi->GetPedestal("PG");
    return fSi->GetPG() - fSi->GetPedestal("PG");

@@ -19,6 +19,7 @@ $Id: KVDBParameterSet.cpp,v 1.11 2007/04/18 14:30:20 ebonnet Exp $
 #include <cstdarg>
 #include <iostream>
 #include "TString.h"
+#include "TBuffer.h"
 using std::cout;
 using std::endl;
 

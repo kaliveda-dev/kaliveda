@@ -142,7 +142,7 @@ SED2: 392.64
 
 # Xf-correction of T0 (in ns) for TSED2_HF
 TYPE: Xf-correction of T0
-FUNCTION: pol2*(x<43)+pol2(3)*(43<=x<86)+pol2(6)*(86<=x)
+FUNCTION: pol2(0)*(x<43)+pol2(3)*(43<=x && x<86)+pol2(6)*(86<=x)
 
 # 40Ar+60Ni, calculated by GA
 RUNS: 41-46 80-145 150-159 200-206 217-222

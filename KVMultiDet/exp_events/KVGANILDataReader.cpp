@@ -59,6 +59,12 @@ You need to add "SCALERS" to the option given to method <a href="#KVGANILDataRea
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
+// GTGanilData no longer in dictionary, we provide an interface to scaler options
+Int_t KVGANILDataReader::kSkipScaler = GTGanilData::kSkipScaler;
+Int_t KVGANILDataReader::kDumpScaler = GTGanilData::kDumpScaler;
+Int_t KVGANILDataReader::kReportScaler = GTGanilData::kReportScaler;
+Int_t KVGANILDataReader::kAutoWriteScaler = GTGanilData::kAutoWriteScaler;
+
 KVGANILDataReader::KVGANILDataReader(const Char_t* file)
 {
    //Open and initialise a GANIL data file for reading.
@@ -278,7 +284,7 @@ void KVGANILDataReader::OpenFile(const Char_t* file)
 
    // handling scaler buffers
    TString what_scale = gEnv->GetValue("KVGANILDataReader.ScalerBuffersManagement", "kSkipScaler");
-   what_scale.Prepend("GTGanilData::");
+   what_scale.Prepend("KVGANILDataReader::");
    Long_t ws = gInterpreter->ProcessLine(what_scale);
    fGanilData->SetScalerBuffersManagement((GTGanilData::ScalerWhat_t)ws);
 

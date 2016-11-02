@@ -93,6 +93,14 @@ else
    MANPATH=`dirname $KVROOT/${new_mandir}/man1`:$MANPATH; export MANPATH
 fi
 
+# for ROOT6: need to set ROOT_INCLUDE_PATH environment variable
+# otherwise class dictionaries will not load correctly
+if [ -z "${ROOT_INCLUDE_PATH}" ]; then
+   ROOT_INCLUDE_PATH=`$KVROOT/bin/kaliveda-config --incdir`; export ROOT_INCLUDE_PATH
+else
+   ROOT_INCLUDE_PATH=`$KVROOT/bin/kaliveda-config --incdir`:$ROOT_INCLUDE_PATH; export ROOT_INCLUDE_PATH
+fi
+
 unset old_KVROOT
 unset thiskaliveda
 

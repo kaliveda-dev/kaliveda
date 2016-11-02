@@ -246,7 +246,7 @@ Double_t KVIDQAMarker::DistanceToMarker(Double_t px, Double_t py) const
    // Q then Y is change by GetA()/Y. Keep in mind that the X coordinate is supposed
    // to give the ratio A/Q (mass number over the charge state).
 
-   UNUSED(py);
+   IGNORE_UNUSED(py);
 
    if (!fParent) return -1.;
    Double_t X = px - fX;

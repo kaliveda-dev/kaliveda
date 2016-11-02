@@ -260,8 +260,8 @@ void KVINDRA_VAMOS::GetDetectorEvent(KVDetectorEvent* detev, TSeqCollection* fir
    //   gIndra->GetDetectorEvent( detev, fired_params )
    //   gVamos->GetDetectorEvent( detev, fired_params )
    // separately.
-   UNUSED(detev);
-   UNUSED(fired_params);
+   IGNORE_UNUSED(detev);
+   IGNORE_UNUSED(fired_params);
 }
 //________________________________________________________________
 

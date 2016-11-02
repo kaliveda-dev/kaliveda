@@ -76,8 +76,8 @@ private:
    TList* fList; //! Parameters List, maybe a better structure could be made
    // but OK for now.
    Int_t fMaxIndex;//largest parameter number in parameter list
-public:
-   ClassDef(GTDataParameters, 1) // Data Parameter names and index class
+// public:
+//    ClassDef(GTDataParameters, 1) // Data Parameter names and index class
 };
 
 #endif

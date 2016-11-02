@@ -11,7 +11,6 @@ $Date: 2009/01/14 15:59:11 $
 #define __KVIVRAWDATARECONSTRUCTOR_H
 
 #include "KVINDRARawDataReconstructor.h"
-#include "GTGanilData.h"
 #include "KVGANILDataReader.h"
 #include "KVIVReconEvent.h"
 
@@ -29,11 +28,7 @@ public:
    KVIVRawDataReconstructor();
    virtual ~KVIVRawDataReconstructor();
 
-   virtual void postInitRun()
-   {
-      KVINDRARawDataReconstructor::postInitRun(); // initialise event counters
-      ((KVGANILDataReader*)fRunFile)->GetGanTapeInterface()->SetUserTree(tree);
-   };
+   virtual void postInitRun();
    virtual void   InitRun();
    virtual void   preAnalysis();
    virtual Bool_t Analysis();

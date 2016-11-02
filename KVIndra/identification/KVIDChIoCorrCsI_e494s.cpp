@@ -37,7 +37,7 @@ Double_t KVIDChIoCorrCsI_e494s::GetIDMapY(Option_t* opt)
    // as the pedestal GG seems to be too high.
    // PG-GG conversion has been calculated without ChIo GG pedestal.
 
-   UNUSED(opt);
+   IGNORE_UNUSED(opt);
 
    fChIo->SetPedestal("GG", 0.);
    if (fChIo->GetGG() < 3900.) return fChIo->GetPGfromGG() - fChIo->GetPedestal("PG");

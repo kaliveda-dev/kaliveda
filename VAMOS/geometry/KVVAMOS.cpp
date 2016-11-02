@@ -673,7 +673,7 @@ void KVVAMOS::Build(Int_t run)
    // list fDetectors from the Z coordinate of their first active volume,
    // in the focal Plan reference frame: from the lowest Z to the highest Z.
 
-   UNUSED(run);
+   IGNORE_UNUSED(run);
 
    if (IsBuilt()) return;
 
@@ -698,7 +698,7 @@ void KVVAMOS::Clear(Option_t* opt)
    // to reset energy loss and KVDetector::IsAnalysed() state
    // plus ACQ parameters set to zero
 
-   UNUSED(opt);
+   IGNORE_UNUSED(opt);
 
    fDetectors.R__FOR_EACH(KVDetector, Clear)();
 

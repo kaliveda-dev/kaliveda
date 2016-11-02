@@ -35,6 +35,7 @@ void KVSimNucleus::Copy(TObject& obj) const
    KVNucleus::Copy(obj);
    ((KVSimNucleus&)obj).position = position;
    ((KVSimNucleus&)obj).angmom = angmom;
+
 }
 
 //___________________________
@@ -48,6 +49,19 @@ void KVSimNucleus::SetPosition(const TVector3& r)
 {
    //set the position of the nucleus in position space
    position = r;
+}
+
+//___________________________
+void KVSimNucleus::SetDensity(Double_t density)
+{
+   //set density of the nucleus in nuc/fm3
+   fDensity = density;
+}
+
+Double_t KVSimNucleus::GetDensity() const
+{
+   //get density of the nucleus in nuc/fm3
+   return fDensity;
 }
 
 

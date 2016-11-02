@@ -108,17 +108,17 @@ set(soversion FALSE)
 
 #---set ROOT module include path depending on major version
 if(${ROOT_VERSION} VERSION_LESS 6)
-	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/root5)
+	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/root5)
 #	set(ROOT_USE_FILE ${PROJECT_SOURCE_DIR}/cmake/root5/ROOTUseFile.cmake)
 else()
-	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/root6)
+	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/root6)
 #	set(ROOT_USE_FILE ${PROJECT_SOURCE_DIR}/cmake/root6/ROOTUseFile.cmake)
    #---for ROOT6 option 'cxx11' should always be set, but sometimes it is not
    #   in the root-config --features list (???)
    set(ROOT_cxx11_FOUND TRUE)
    set(cxx11 TRUE)
 endif()
-set(ROOT_USE_FILE ${PROJECT_SOURCE_DIR}/cmake/ROOTUseFile.cmake)
+set(ROOT_USE_FILE ${CMAKE_CURRENT_LIST_DIR}/ROOTUseFile.cmake)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(
@@ -130,3 +130,21 @@ find_package_handle_standard_args(
 )
 
 mark_as_advanced(ROOT_CONFIG_EXECUTABLE)
+
+#--check we are using same compiler as ROOT for v6 (requires clang)
+if(${ROOT_VERSION} VERSION_GREATER 6)
+get_filename_component(_compiler_name ${CMAKE_CXX_COMPILER} NAME)
+if(NOT ${_compiler_name} STREQUAL ${ROOT_CXX_COMPILER})
+   message(WARNING
+"
+        === WARNING: POTENTIAL COMPILER INCOMPATIBILITY ===
+It looks like your default C++ compiler (=${_compiler_name}) is not
+the same as that used to compile ROOT (=${ROOT_CXX_COMPILER}).
+If so, re-run cmake TWICE with the following additional definitions:
+cmake -DCMAKE_C_COMPILER=${ROOT_C_COMPILER} -DCMAKE_CXX_COMPILER=${ROOT_CXX_COMPILER} ...
+(the first time cmake will fail; the second should be OK: if not, delete build directory and start again)
+"
+)
+endif()
+endif(${ROOT_VERSION} VERSION_GREATER 6)
+

@@ -494,7 +494,7 @@ void  CsICalib::CompleteSimulation()
 
 void CsICalib::Bisection(Int_t A, Double_t chan)   //UShort_t chan
 {
-   UNUSED(chan);
+   IGNORE_UNUSED(chan);
 
    Int_t middle, it = 0;
    good_bisection = kTRUE;

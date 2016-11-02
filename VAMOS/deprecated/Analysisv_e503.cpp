@@ -306,19 +306,19 @@ void Analysisv_e503::SetTel3(KVDetector* csi)
 
 void Analysisv_e503::SetFileCut(TList* list)
 {
-   UNUSED(list);
+   IGNORE_UNUSED(list);
    // Id->SetFileCut(list);
 }
 
 void Analysisv_e503::SetFileCutChioSi(TList* list2)
 {
-   UNUSED(list2);
+   IGNORE_UNUSED(list2);
    // Id->SetFileCutChioSi(list2);
 }
 
 void Analysisv_e503::SetFileCutSiTof(TList* list3)
 {
-   UNUSED(list3);
+   IGNORE_UNUSED(list3);
    // Id->SetFileCutSiTof(list3);
 }
 

@@ -3,6 +3,7 @@
 
 #include "KVClust3D.h"
 #include "KVNumberList.h"
+#include "TMath.h"
 
 ClassImp(KVClust3D)
 
@@ -21,14 +22,16 @@ void KVClust3D::init()
 {
    //initialization method
    fNclusters = 0;
-   fVoisins = new TH2D("hvoisins", "FromKVClust3D", 100, 0.5, 100.5, 100, 0.5, 100.5);
-
-   fCluster = 0;
+   fVoisins = new TH2D("hvoisins", "FromKVClust3D", 1000, 0.5, 1000.5, 1000, 0.5, 1000.5);
 
    fNcells = new TArrayI(10);
    fPop = new TArrayD(10);
 
    fThreshold = 0.0;
+   fNvoisins = 1;
+   fKeepLonelyCells = kTRUE;
+
+   fCluster = ProduceTH3D("cluster_index");
 }
 
 //____________________________________________________________________________//
@@ -71,11 +74,54 @@ KVClust3D::KVClust3D(const char* name, const char* title, Int_t nbinsx, const Do
 KVClust3D::~KVClust3D()
 {
    // Destructor
-   if (fCluster)
-      delete fCluster;
+   delete fCluster;
    delete fVoisins;
    delete fNcells;
    delete fPop;
+}
+
+//____________________________________________________________________________//
+
+void KVClust3D::SetLonelyCells(Bool_t val)
+{
+   fKeepLonelyCells = val;
+}
+
+//____________________________________________________________________________//
+
+Bool_t KVClust3D::IsLonelyCellsAreKept() const
+{
+   return fKeepLonelyCells;
+}
+
+//____________________________________________________________________________//
+
+void KVClust3D::SetNvoisins(Int_t val)
+{
+   fNvoisins = val;
+}
+
+//____________________________________________________________________________//
+
+Int_t KVClust3D::GetNvoisins() const
+{
+   return fNvoisins;
+}
+
+//____________________________________________________________________________//
+
+Double_t KVClust3D::GetVolumeCell() const
+{
+   return GetXaxis()->GetBinWidth(1) * GetYaxis()->GetBinWidth(1) * GetZaxis()->GetBinWidth(1);
+}
+
+//____________________________________________________________________________//
+
+Double_t KVClust3D::GetVolumeVoisin() const
+{
+   Double_t vol =  GetVolumeCell();
+   Int_t ncell = TMath::Power(2 * fNvoisins + 1, 3.);
+   return ncell * vol;
 }
 
 //____________________________________________________________________________//
@@ -87,6 +133,7 @@ void KVClust3D::ResetObjects()
    fNcells->Reset();
    fPop->Reset();
 
+   fCluster->Reset();
    fVoisins->Reset();
    fNclusters = 0;
 }
@@ -100,6 +147,14 @@ void KVClust3D::SetThreshold(Double_t value)
 
 }
 
+//____________________________________________________________________________//
+
+void KVClust3D::SetDensityThreshold(Double_t value)
+{
+   //Set density threshold on the content of a cell to be considered has filled
+   fThreshold = value * GetVolumeCell();
+
+}
 
 //____________________________________________________________________________//
 
@@ -107,6 +162,22 @@ Double_t KVClust3D::GetThreshold() const
 {
    //return the value of the threshold for the content of a cell to be considered has filled
    return fThreshold;
+
+}
+
+//____________________________________________________________________________//
+
+void KVClust3D::PrintInputs() const
+{
+
+   printf("-----------------------------------------\n");
+   printf("volume cellule : %lf\n", GetVolumeCell());
+   printf("nombre de cellules voisines : %lf\n", TMath::Power(2.*fNvoisins + 1, 3.));
+   printf("volume voisin: %lf\n", GetVolumeVoisin());
+   printf("-----\nseuil :\n\t- contenu : %lf\n", GetThreshold());
+   printf("\t- densite : %lf\n", GetThreshold() / GetVolumeCell());
+
+
 
 }
 
@@ -151,8 +222,8 @@ void KVClust3D::Clusterize()
 
    ResetObjects();
 
-   if (!fCluster)
-      fCluster = ProduceTH3D("cluster_index");
+//    if (!fCluster)
+//       fCluster = ProduceTH3D("cluster_index");
 
    //Remplissage de l histo 3D fCluster :
    // Contenu de l objet KVClust3D au dessus du seuil -> contenu 1
@@ -178,9 +249,9 @@ void KVClust3D::Clusterize()
             if (idx >= 1) { //Cellule avec la bonne densite
                if (idx > 1) { //cellule deja affectee
                   Int_t ncv = -1;
-                  for (Int_t nxv = nx - 1; nxv <= nx + 1; nxv += 1) { //on boucle sur les cellules voisines
-                     for (Int_t nyv = ny - 1; nyv <= ny + 1; nyv += 1) {
-                        for (Int_t nzv = nz - 1; nzv <= nz + 1; nzv += 1) {
+                  for (Int_t nxv = nx - fNvoisins; nxv <= nx + fNvoisins; nxv += 1) { //on boucle sur les cellules voisines
+                     for (Int_t nyv = ny - fNvoisins; nyv <= ny + fNvoisins; nyv += 1) {
+                        for (Int_t nzv = nz - fNvoisins; nzv <= nz + fNvoisins; nzv += 1) {
                            Int_t idxv = fCluster->GetBinContent(nxv, nyv, nzv);
                            //cellule a affilier
                            if (idxv >= 1) {
@@ -206,9 +277,9 @@ void KVClust3D::Clusterize()
                } else if (idx == 1) { //cellule pas encore affectee
                   Int_t ncv = -1;
                   KVNumberList nl;
-                  for (Int_t nxv = nx - 1; nxv <= nx + 1; nxv += 1) { //on boucle sur les cellules voisines
-                     for (Int_t nyv = ny - 1; nyv <= ny + 1; nyv += 1) {
-                        for (Int_t nzv = nz - 1; nzv <= nz + 1; nzv += 1) {
+                  for (Int_t nxv = nx - fNvoisins; nxv <= nx + fNvoisins; nxv += 1) { //on boucle sur les cellules voisines
+                     for (Int_t nyv = ny - fNvoisins; nyv <= ny + fNvoisins; nyv += 1) {
+                        for (Int_t nzv = nz - fNvoisins; nzv <= nz + fNvoisins; nzv += 1) {
                            Int_t idxv = fCluster->GetBinContent(nxv, nyv, nzv);
                            if (idxv >= 1) { //cellule voisine a affilier
                               if (idxv > 1) { // la cellule appartient a un cluster
@@ -229,9 +300,9 @@ void KVClust3D::Clusterize()
                      if (nl.GetNValues() >= 1) {
                         //on prend le premier cluster qui vient
                         Int_t newid = nl.First();
-                        for (Int_t nxv = nx - 1; nxv <= nx + 1; nxv += 1) { //on boucle sur les cellules voisines
-                           for (Int_t nyv = ny - 1; nyv <= ny + 1; nyv += 1) {
-                              for (Int_t nzv = nz - 1; nzv <= nz + 1; nzv += 1) {
+                        for (Int_t nxv = nx - fNvoisins; nxv <= nx + fNvoisins; nxv += 1) { //on boucle sur les cellules voisines
+                           for (Int_t nyv = ny - fNvoisins; nyv <= ny + fNvoisins; nyv += 1) {
+                              for (Int_t nzv = nz - fNvoisins; nzv <= nz + fNvoisins; nzv += 1) {
                                  Int_t idxv = fCluster->GetBinContent(nxv, nyv, nzv);
                                  //on rajoute les cellules au cluster choisi
                                  if (idxv == 1) {
@@ -255,16 +326,19 @@ void KVClust3D::Clusterize()
                      }
                      //creation d un nouveau cluster
                      else {
+
                         Ntemp += 1;
+                        if (Ntemp > 999)
+                           Warning("Clusterize", "Ntemp>999 ... should be some problems in the treatment of neigbouring clusters...");
                         //Info("Clusterize","New cluster %d",Ntemp);
 
                         if (Ntemp >= fNcells->GetSize()) {
                            fNcells->Set(Ntemp + 1);
                            fPop->Set(Ntemp + 1);
                         }
-                        for (Int_t nxv = nx - 1; nxv <= nx + 1; nxv += 1) { //on boucle sur les cellules voisines
-                           for (Int_t nyv = ny - 1; nyv <= ny + 1; nyv += 1) {
-                              for (Int_t nzv = nz - 1; nzv <= nz + 1; nzv += 1) {
+                        for (Int_t nxv = nx - fNvoisins; nxv <= nx + fNvoisins; nxv += 1) { //on boucle sur les cellules voisines
+                           for (Int_t nyv = ny - fNvoisins; nyv <= ny + fNvoisins; nyv += 1) {
+                              for (Int_t nzv = nz - fNvoisins; nzv <= nz + fNvoisins; nzv += 1) {
                                  Int_t idxv = fCluster->GetBinContent(nxv, nyv, nzv);
                                  if (idxv == 1) {
                                     fNcells->AddAt(1 + fNcells->At(Ntemp), Ntemp);
@@ -276,15 +350,21 @@ void KVClust3D::Clusterize()
                         }
                      }
                   } else {
-                     Ntemp += 1;
-                     //Info("Clusterize","Lonely cell %d",Ntemp);
-                     if (Ntemp >= fNcells->GetSize()) {
-                        fNcells->Set(Ntemp + 1);
-                        fPop->Set(Ntemp + 1);
+                     if (IsLonelyCellsAreKept()) {
+                        Ntemp += 1;
+                        if (Ntemp > 999)
+                           Warning("Clusterize", "Ntemp>999 ... should be some problems in the treatment of neigbouring clusters...");
+                        //Info("Clusterize","Lonely cell %d",Ntemp);
+                        if (Ntemp >= fNcells->GetSize()) {
+                           fNcells->Set(Ntemp + 1);
+                           fPop->Set(Ntemp + 1);
+                        }
+                        fNcells->AddAt(1 + fNcells->At(Ntemp), Ntemp);
+                        fPop->AddAt(GetBinContent(nx, ny, nz) + fPop->At(Ntemp), Ntemp);
+                        fCluster->SetBinContent(nx, ny, nz, Ntemp);
+                     } else {
+                        fCluster->SetBinContent(nx, ny, nz, 0);
                      }
-                     fNcells->AddAt(1 + fNcells->At(Ntemp), Ntemp);
-                     fPop->AddAt(GetBinContent(nx, ny, nz) + fPop->At(Ntemp), Ntemp);
-                     fCluster->SetBinContent(nx, ny, nz, Ntemp);
                   }
                }
             } else {

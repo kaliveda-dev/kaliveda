@@ -10,6 +10,7 @@ $Date: 2009/01/14 15:59:11 $
 #include "KVIVRawDataReconstructor.h"
 #include "KVINDRA.h"
 #include "KVVAMOS.h"
+#include "GTGanilData.h"
 using namespace std;
 
 ClassImp(KVIVRawDataReconstructor)
@@ -22,6 +23,12 @@ ClassImp(KVIVRawDataReconstructor)
 <!-- */
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
+
+void KVIVRawDataReconstructor::postInitRun()
+{
+   KVINDRARawDataReconstructor::postInitRun(); // initialise event counters
+   ((KVGANILDataReader*)fRunFile)->GetGanTapeInterface()->SetUserTree(tree);
+}
 
 KVIVRawDataReconstructor::KVIVRawDataReconstructor()
 {

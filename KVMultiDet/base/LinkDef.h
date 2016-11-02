@@ -59,4 +59,6 @@
 #pragma link C++ class KVPartitionList+;
 #pragma link C++ class KVPartitionFunction+;
 #pragma link C++ class TF1Derivative;
+#pragma link C++ class KVValueRange<Int_t>+;
+#pragma link C++ class KVValueRange<Double_t>+;
 #endif

@@ -242,7 +242,7 @@ Bool_t KVHarpeeCsI::IsECalibrated() const
 Double_t KVHarpeeCsI::GetCorrectedEnergy(KVNucleus* nuc, Double_t light,
       Bool_t transmission)
 {
-   UNUSED(transmission);
+   IGNORE_UNUSED(transmission);
 
    // Ensure the nucleus is not modified
    const KVNucleus* const n(nuc);

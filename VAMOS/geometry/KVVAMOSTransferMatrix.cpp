@@ -487,7 +487,7 @@ Bool_t KVVAMOSTransferMatrix::ReconstructLabToFP(KVVAMOSReconTrajectory* traj)
    //
    // METHOD TO BE IMPLEMENTED
 
-   UNUSED(traj);
+   IGNORE_UNUSED(traj);
    Warning("ReconstructLabToFP", "To be implemented");
    return kFALSE;
 }

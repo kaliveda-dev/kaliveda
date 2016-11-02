@@ -83,7 +83,7 @@ public:
    {
       // z:fZ a:fA
 
-      UNUSED(p);
+      IGNORE_UNUSED(p);
 
       Double_t e = *x;
       Double_t result = 1. / (e * dedx->Eval(e));
@@ -2942,7 +2942,7 @@ void Identificationv::Treat(void)
 
 void Identificationv::inAttach(TTree* inT)
 {
-   UNUSED(inT);
+   IGNORE_UNUSED(inT);
 
 #ifdef DEBUG
    std::cout << "Identificationv::inAttach " << std::endl;

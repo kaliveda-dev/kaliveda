@@ -152,8 +152,8 @@ protected:
    GTDataParameters* fDataParameters; //! Data parameters names class
    GTScalers*     fScaler;        //! Scaler array
    TTree*         fScalerTree;    // Scaler tree for automatic filling
-public:
-   ClassDef(GTGanilData, 0)       // Interface to a GANIL formated Tape or File
+// public:
+//    ClassDef(GTGanilData, 0)       // Interface to a GANIL formated Tape or File
 };
 
 #endif

@@ -50,7 +50,7 @@ public:
 protected:
    Int_t fNbChannel;          // Number of individual scales
    TObjArray fScalerArray; // Array of scalers
-   ClassDef(GTScalers, 2)     // Scaler events class
+//   ClassDef(GTScalers, 2)     // Scaler events class
 };
 
 

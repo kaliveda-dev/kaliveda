@@ -66,7 +66,7 @@ KVSeDPositionCal::~KVSeDPositionCal()
 Double_t KVSeDPositionCal::Compute(Double_t chan) const
 {
    // Obsolete method, use Compute(Double_t X, Double_t Y, Double_t &Xcal, Double_t &Ycal).
-   UNUSED(chan);
+   IGNORE_UNUSED(chan);
    Warning("Compute(Double_t chan)", "Obsolete method, use Compute(Double_t X, Double_t Y, Double_t &Xcal, Double_t &Ycal)");
    return -1;
 }
@@ -75,7 +75,7 @@ Double_t KVSeDPositionCal::Compute(Double_t chan) const
 Double_t KVSeDPositionCal::operator()(Double_t chan)
 {
    // Obsolete method, use operator()(Double_t X, Double_t Y, Double_t &Xcal, Double_t &Ycal).
-   UNUSED(chan);
+   IGNORE_UNUSED(chan);
    Warning("operator()(Double_t chan)", "Obsolete method, use operator()(Double_t X, Double_t Y, Double_t &Xcal, Double_t &Ycal)");
    return -1;
 }
@@ -84,7 +84,7 @@ Double_t KVSeDPositionCal::operator()(Double_t chan)
 Double_t KVSeDPositionCal::Invert(Double_t volts)
 {
    //Obsolete method, too much difficult to invert this calibrator!
-   UNUSED(volts);
+   IGNORE_UNUSED(volts);
    Warning("Invert(Double_t volts)", "Obsolete method, too much difficult to invert this calibrator!");
    return -1;
 }

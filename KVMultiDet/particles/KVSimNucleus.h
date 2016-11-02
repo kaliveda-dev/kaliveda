@@ -14,7 +14,7 @@ class KVSimNucleus : public KVNucleus {
 protected:
    TVector3 position;   // vector position of the particle in fm
    TVector3 angmom;  // angular momentum of the particle in units
-
+   Double_t fDensity;   //density of the nucleus in nuc.fm-3
 public:
 
    KVSimNucleus() : KVNucleus() {}
@@ -31,6 +31,8 @@ public:
 
    void SetPosition(Double_t rx, Double_t ry, Double_t rz);
    void SetPosition(const TVector3&);
+   void SetDensity(Double_t);
+   Double_t GetDensity() const;
    const TVector3* GetPosition() const
    {
       return &position;
@@ -83,7 +85,7 @@ public:
    KVSimNucleus operator+(const KVSimNucleus& rhs);
    KVSimNucleus& operator+=(const KVSimNucleus& rhs);
 
-   ClassDef(KVSimNucleus, 3) //Nuclear particle in a simulated event
+   ClassDef(KVSimNucleus, 4) //Nuclear particle in a simulated event
 
 };
 

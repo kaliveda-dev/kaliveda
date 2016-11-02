@@ -934,7 +934,7 @@ void KVVAMOSReconNuc::Propagate(ECalib cal)
 
 void KVVAMOSReconNuc::Print(Option_t* option) const
 {
-   UNUSED(option);
+   IGNORE_UNUSED(option);
 
    KVReconstructedNucleus::Print();
    cout << " =======> ";

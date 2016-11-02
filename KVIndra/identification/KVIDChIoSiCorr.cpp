@@ -53,7 +53,7 @@ Double_t KVIDChIoSiCorr::GetIDMapY(Option_t* opt)
 
 Double_t KVIDChIoSiCorr::GetIDMapXY(KVINDRADetector* det, Option_t* opt)
 {
-   UNUSED(opt);
+   IGNORE_UNUSED(opt);
 
    if (det) {
       if (det->GetGG() < 3900.) return det->GetPGfromGG() - det->GetPedestal("PG");

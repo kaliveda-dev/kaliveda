@@ -6,6 +6,6 @@
 //
 // Added by Peter Wigg (4/12/2015)
 
-#define UNUSED(x) (void)(x)
+#define IGNORE_UNUSED(x) (void)(x)
 
 #endif

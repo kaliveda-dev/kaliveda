@@ -35,7 +35,7 @@ extern "C"
 
 #include "GTGanilDataVAMOS.h"
 
-ClassImp(GTGanilDataVAMOS)
+//ClassImp(GTGanilDataVAMOS)
 
 ////////////////////////////////////////////////////////////////////////////////
 // BEGIN_HTML <!--

@@ -43,7 +43,7 @@
 
 using namespace std;
 
-ClassImp(GTDataParameters);
+//ClassImp(GTDataParameters);
 
 //______________________________________________________________________________
 GTDataParameters::GTDataParameters(void)

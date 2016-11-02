@@ -31,8 +31,8 @@ public:
       Double_t lente = -1.0
    )
    {
-      UNUSED(rapide);
-      UNUSED(lente);
+      IGNORE_UNUSED(rapide);
+      IGNORE_UNUSED(lente);
       return fPar->GetData();
    };
 
@@ -41,8 +41,8 @@ public:
       Double_t lente = -1.0
    )
    {
-      UNUSED(rapide);
-      UNUSED(lente);
+      IGNORE_UNUSED(rapide);
+      IGNORE_UNUSED(lente);
       return fPar->GetData();
    };
 

@@ -212,6 +212,18 @@ namespace KVSQLite {
       {
          open(dbfile);
       }
+      database(const database& db) : fDBserv(nullptr), fTables(), fSQLstmt(nullptr), fBulkTable(nullptr), fInserting(false), fSelecting(false), fIsValid(false)
+      {
+         // because of the use of std::unique_ptr, we cannot copy the address of the TSQLiteServer from db - it would delete the database connection in db
+         // therefore if we "copy" a database, we create a new, independent interface to the same database
+         // this is basically a workaround/kludge for C++11/14/g++6
+         if (db.good()) open(db.fDBserv->GetDB());
+      }
+      database& operator= (const database& db)
+      {
+         if (&db != this && db.good()) open(db.fDBserv->GetDB());
+         return *this;
+      }
       void show_tables() const;
       virtual ~database() {}
 

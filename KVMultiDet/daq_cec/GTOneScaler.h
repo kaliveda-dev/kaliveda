@@ -58,8 +58,8 @@ protected:
    UInt_t fFreq;       // Comment here
    UInt_t fTics;       // Comment here
    UInt_t fReserve[3]; // Comment here
-public:
-   ClassDef(GTOneScaler, 1) // Scaler structure
+//public:
+//   ClassDef(GTOneScaler, 1) // Scaler structure
 };
 
 

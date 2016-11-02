@@ -24,30 +24,7 @@ if(ROOT_Html_LIBRARY)
    set(CAN_DO_HTMLDOC true)
 endif(ROOT_Html_LIBRARY)
 
-#--check we are using same compiler as ROOT for v6 (requires clang)
-if(${ROOT_VERSION} VERSION_GREATER 6)
-get_filename_component(_compiler_name ${CMAKE_CXX_COMPILER} NAME)
-if(NOT ${_compiler_name} STREQUAL ${ROOT_CXX_COMPILER})
-   message(WARNING
-"
-        === WARNING: POTENTIAL COMPILER INCOMPATIBILITY ===
-It looks like your default C++ compiler (=${_compiler_name}) is not
-the same as that used to compile ROOT (=${ROOT_CXX_COMPILER}).
-If so, re-run cmake TWICE with the following additional definitions:
-cmake -DCMAKE_C_COMPILER=${ROOT_C_COMPILER} -DCMAKE_CXX_COMPILER=${ROOT_CXX_COMPILER} ...
-(the first time cmake will fail; the second should be OK: if not, delete build directory and start again)
-"
-)
-endif()
-endif(${ROOT_VERSION} VERSION_GREATER 6)
-
 include(${ROOT_USE_FILE})
-if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-endif()
-link_directories(${ROOT_LIBRARY_DIRS})
 
 #--check for g++ -fopenmp flag - for parallel builds
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -394,6 +371,21 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KaliVedaConfig.cmake ${CMAKE_CURRENT_B
           ${CMAKE_SOURCE_DIR}/cmake/KaliVedaUseFile.cmake DESTINATION ${CMAKE_INSTALL_CMAKEPKGDIR}
            )
 
+#---in order to be able to reuse cmake macros for building ROOT libraries with either ROOT5 or ROOT6
+install(FILES 
+   ${CMAKE_SOURCE_DIR}/cmake/FindROOT.cmake ${CMAKE_SOURCE_DIR}/cmake/ROOTUseFile.cmake 
+   ${CMAKE_SOURCE_DIR}/cmake/GenerateRootLibrary.cmake
+    DESTINATION ${CMAKE_INSTALL_CMAKEPKGDIR}
+   )
+install(DIRECTORY 
+   ${CMAKE_SOURCE_DIR}/cmake/root5
+   DESTINATION ${CMAKE_INSTALL_CMAKEPKGDIR}
+   )
+install(DIRECTORY 
+   ${CMAKE_SOURCE_DIR}/cmake/root6
+   DESTINATION ${CMAKE_INSTALL_CMAKEPKGDIR}
+   )
+   
 #---add a 'make dist' target
 set(tarprefix "kaliveda-${KV_VERSION}")
 set(tarball "${tarprefix}.tar.gz")

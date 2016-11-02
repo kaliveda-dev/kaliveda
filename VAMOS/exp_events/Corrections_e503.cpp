@@ -620,7 +620,7 @@ namespace idc {
          CorrectAoverQ(a_over_q_straight, uncorrected_a_over_q, data->pid)
       );
 
-      UNUSED(corrected_a_over_q);
+      IGNORE_UNUSED(corrected_a_over_q);
 
       // More Parameters
       //Correct();
@@ -687,7 +687,7 @@ namespace idc {
          CorrectAoverQ(a_over_q_straight, uncorrected_a_over_q, data->pid)
       );
 
-      UNUSED(corrected_a_over_q);
+      IGNORE_UNUSED(corrected_a_over_q);
 
       // More Parameters
       //Correct();

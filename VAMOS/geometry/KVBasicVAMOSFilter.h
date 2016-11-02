@@ -77,7 +77,7 @@ public:
    using KVBase::Print;
    void Print(Option_t* opt = "")
    {
-      UNUSED(opt);
+      IGNORE_UNUSED(opt);
       fMainList.ls();
    }
 

@@ -1,10 +1,11 @@
-kaliveda (1.10.11-0ubuntu3) UNRELEASED; urgency=medium
+kaliveda (1.10.11-0ubuntu4) UNRELEASED; urgency=medium
 
   * New release v1.10/11
   * Fix problem in debian/rules (missing <TAB>)
   * New KVClust3D class + new FAZIACOR dataset
+  * New KVValueRange class
 
- -- John Frankland <frankland@ganil.fr>  Wed, 05 Oct 2016 09:26:25 +0200
+ -- John Frankland <frankland@ganil.fr>  Fri, 21 Oct 2016 17:26:41 +0200
 
 kaliveda (1.10.10-0ubuntu2) xenial; urgency=medium
 

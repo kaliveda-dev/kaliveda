@@ -93,7 +93,7 @@ Double_t KVIDHarpeeICSi_e503::GetIDMapY(Option_t* opt)
    // grid then zero is returned. The found ID grid is loaded in the pointer
    // fGrid to be used in the method Identify.
 
-   UNUSED(opt);
+   IGNORE_UNUSED(opt);
 
    fGrid = NULL;
    Double_t E   = 0;

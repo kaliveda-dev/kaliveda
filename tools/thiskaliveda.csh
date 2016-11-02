@@ -102,6 +102,14 @@ else
    setenv MANPATH `dirname $KVROOT/${new_mandir}/man1`:$default_manpath
 endif
 
+# for ROOT6: need to set ROOT_INCLUDE_PATH environment variable
+# otherwise class dictionaries will not load correctly
+if ($?ROOT_INCLUDE_PATH) then
+   setenv ROOT_INCLUDE_PATH `$KVROOT/bin/kaliveda-config --incdir`:$ROOT_INCLUDE_PATH
+else
+   setenv ROOT_INCLUDE_PATH `$KVROOT/bin/kaliveda-config --incdir`
+endif
+
 endif # if ("$thiskaliveda" != "")
 
 set thiskaliveda=
