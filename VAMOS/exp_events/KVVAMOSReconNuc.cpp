@@ -1049,9 +1049,9 @@ Bool_t KVVAMOSReconNuc::GetCorrFlightDistanceAndTime(Double_t& dist, Double_t& t
 
    if (!ok) {
       //debug
-      Error("GetCorrFlightDistanceAndTime", "detectors used to measure %s are not found in the detector list (fDetlist)\n isT_HF %d, t_type %s, calibT %f", tof_name, isT_HF, t_type, calibT);
-      GetDetectorList()->ls();
-      cout << endl;
+      //Error("GetCorrFlightDistanceAndTime", "detectors used to measure %s are not found in the detector list (fDetlist)\n isT_HF %d, t_type %s, calibT %f", tof_name, isT_HF, t_type, calibT);
+      //GetDetectorList()->ls();
+      //cout << endl;
 
       return kFALSE;
    }
