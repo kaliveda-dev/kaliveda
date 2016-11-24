@@ -139,7 +139,7 @@ done
 if [ "x$3" = "xKVMultiDet" ]; then
   extras="/usr/share/doc/kaliveda/README.md /usr/share/doc/kaliveda/COPYING /usr/share/doc/kaliveda/INSTALL /usr/share/kaliveda/etc/config.files /usr/share/kaliveda/etc/KaliVeda.par /usr/lib/libfitltg.so /usr/lib/libgan_tape.so"
   tools="/usr/bin/kaliveda /usr/bin/kaliveda-sim /usr/bin/update_runlist /usr/bin/kvtreeanalyzer /usr/bin/kvdatanalyser /usr/bin/KaliVedaAnalysis"
-  dev_extras="/usr/share/kaliveda/etc/kaliveda.m4 /usr/share/kaliveda/etc/nedit.cf /usr/bin/kaliveda-config"
+  dev_extras="/usr/share/kaliveda/etc/nedit.cf /usr/bin/kaliveda-config"
   for e in $extras; do
      echo "$e" >> $install_file
   done

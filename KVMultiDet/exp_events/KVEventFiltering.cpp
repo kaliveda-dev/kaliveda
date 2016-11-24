@@ -162,8 +162,18 @@ void KVEventFiltering::InitAnalysis()
 
    TString system = GetOpt("System").Data();
    KVDBSystem* sys = (gDataBase ? (KVDBSystem*)gDataBase->GetTable("Systems")->GetRecord(system) : 0);
-   fCMVelocity = (sys ? sys->GetKinematics()->GetCMVelocity() : TVector3(0, 0, 0));
+   KV2Body* tb = 0;
+
+   if (sys) tb =  sys->GetKinematics();
+   else if (system) {
+      tb = new KV2Body(system);
+      tb->CalculateKinematics();
+   }
+
+   fCMVelocity = (tb ? tb->GetCMVelocity() : TVector3(0, 0, 0));
    fCMVelocity *= -1.0;
+
+   delete tb;
 
    Int_t run = 0;
    if (IsOptGiven("Run")) run = GetOpt("Run").Atoi();
@@ -246,11 +256,23 @@ void KVEventFiltering::OpenOutputFile(KVDBSystem* S, Int_t run)
    outfile += GetOpt("Filter");
    outfile += "_";
    outfile += gDataSet->GetName();
+
    if (S) {
       outfile += "_";
       outfile += S->GetBatchName();
       outfile += "_run=";
       outfile += Form("%d", run);
+   } else if (GetOpt("System")) {
+      TString tmp = GetOpt("System");
+      tmp.ReplaceAll(" ", "");
+      tmp.ReplaceAll("/", "");
+      tmp.ReplaceAll("@", "");
+      tmp.ReplaceAll("MeV", "");
+      tmp.ReplaceAll("A", "");
+      tmp.ReplaceAll("+", "");
+      outfile += "_";
+      outfile += tmp.Data();
+      outfile += "_run=0";
    }
    outfile += ".root";
 
@@ -265,7 +287,8 @@ void KVEventFiltering::OpenOutputFile(KVDBSystem* S, Int_t run)
    if (S) {
       TNamed* system = new TNamed("System", S->GetName());
       system->Write();
-   }
+   } else if (GetOpt("System"))(new TNamed("System", GetOpt("System").Data()))->Write();
+
    (new TNamed("Dataset", gDataSet->GetName()))->Write();
    if (S)(new TNamed("Run", Form("%d", run)))->Write();
    if (gMultiDetArray->IsROOTGeometry()) {

@@ -81,7 +81,6 @@ void KVFAZIAUpDater::SetPSAParameters(KVDBRun* dbrun)
 }
 void KVFAZIAUpDater::SetCalibrations(KVDBRun* dbrun)
 {
-
    //Loop on calibrations stores in the database
    //and update parameters for each concerned calibrators
    KVFAZIADetector* det = 0;
@@ -91,9 +90,13 @@ void KVFAZIAUpDater::SetCalibrations(KVDBRun* dbrun)
    TIter next(list);
    while ((par = (KVDBParameterSet*)next())) {
       TString sdet(par->GetName());
+      Info("SetCalibrations", "%s", sdet.Data());
+      par->Print();
       det = (KVFAZIADetector*)gFazia->GetDetector(sdet.Data());
       if (det && (cal = det->GetCalibrator(par->GetTitle()))) {
-         ((KVFAZIACalibrator*)cal)->ChangeParameters(par->GetParameters());
+         if (det->GetIdentifier() == KVFAZIADetector::kCSI) {
+            for (int nn = 0; nn < cal->GetNumberParams(); nn++) cal->SetParameter(nn, par->GetParameter(nn));
+         } else ((KVFAZIACalibrator*)cal)->ChangeParameters(par->GetParameters());
          cal->SetStatus(1);
       }
    }

@@ -36,10 +36,9 @@ function(GENERATE_ROOT_DICTIONARY libname)
 endfunction()
 
 #---------------------------------------------------------------------------------------------------
-#---GENERATE_ROOT_LIBRARY(libname [DIRECTORY tata] [DICT_EXCLUDE toto.h titi.h ...] [LIB_EXCLUDE Class1 Class2...] DEPENDENCIES lib1 lib2)
+#---GENERATE_ROOT_LIBRARY(libname [DICT_EXCLUDE toto.h titi.h ...] [LIB_EXCLUDE Class1 Class2...] DEPENDENCIES lib1 lib2)
 #
 #---Generate ROOT dictionary & shared library from all .h & .cpp in current directory
-#   or in subdirectory 'tata' if DIRECTORY argument given
 #   Directory must also contain LinkDef.h file
 #   This works with ROOT5 or ROOT6.
 #   For ROOT5 we generate the rootmap. For ROOT6 we generate the .pcm
@@ -53,16 +52,12 @@ endfunction()
 #   All used headers will be installed in ${CMAKE_INSTALL_INCLUDEDIR}
 #---------------------------------------------------------------------------------------------------
 function(GENERATE_ROOT_LIBRARY libname)
-  CMAKE_PARSE_ARGUMENTS(ARG "" "DIRECTORY" "DICT_EXCLUDE;LIB_EXCLUDE;DEPENDENCIES" ${ARGN})
+  CMAKE_PARSE_ARGUMENTS(ARG "" "" "DICT_EXCLUDE;LIB_EXCLUDE;DEPENDENCIES" ${ARGN})
   
   #---get list of all headers in directory, except LinkDef.h
   set(rheaderfiles)
-  if(ARG_DIRECTORY)
-   include_directories(${ARG_DIRECTORY})
-   file(GLOB files ${ARG_DIRECTORY}/*.h)
-  else(ARG_DIRECTORY)
-   file(GLOB files *.h)
-  endif(ARG_DIRECTORY)
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+  file(GLOB files *.h)
   set(LINKDEF_FILE LinkDef.h)
   if(files)
     foreach(f ${files})
@@ -97,11 +92,7 @@ function(GENERATE_ROOT_LIBRARY libname)
   #---for each class in LIB_EXCLUDE we remove the corresponding .cpp and .h
   #---from source & header file lists
   set(rsourcefiles)
-  if(ARG_DIRECTORY)
-    file(GLOB rsourcefiles ${ARG_DIRECTORY}/*.cpp ${ARG_DIRECTORY}/*.cxx)
-  else(ARG_DIRECTORY)
-    file(GLOB rsourcefiles *.cpp *.cxx)
-  endif(ARG_DIRECTORY)
+  file(GLOB rsourcefiles *.cpp *.cxx)
   set(sourcefiles ${rsourcefiles})
   if(ARG_LIB_EXCLUDE)
     foreach(source ${rsourcefiles})

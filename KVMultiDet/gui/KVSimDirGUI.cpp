@@ -11,6 +11,7 @@
 #include "KVSimFile.h"
 #include "KVFileDialog.h"
 #include "KVInputDialog.h"
+#include "KV2Body.h"
 #include "TGLabel.h"
 #include "TGButtonGroup.h"
 #include "TGMsgBox.h"
@@ -51,9 +52,9 @@ KVSimDirGUI::KVSimDirGUI()
 
    TGHorizontalFrame* hftop = new TGHorizontalFrame(MainFrame, 10, 10, kHorizontalFrame);
 
-   TGVerticalFrame* vf = new TGVerticalFrame(hftop, 200, 500, kVerticalFrame);
+   TGCompositeFrame* vf = new TGVerticalFrame(hftop, 200, 500, kVerticalFrame);
    // sim dir buttons
-   TGHorizontalFrame* hf = new TGHorizontalFrame(vf, 10, 10, kHorizontalFrame);
+   TGCompositeFrame* hf = new TGHorizontalFrame(vf, 10, 10, kHorizontalFrame);
    BaddDir = new TGPictureButton(hf, gClient->GetPicture("package_add.xpm"));
    hf->AddFrame(BaddDir, new TGLayoutHints(kLHintsLeft | kLHintsTop, 3, 2, 2, 2));
    BaddDir->Resize(40, 40);
@@ -135,42 +136,48 @@ KVSimDirGUI::KVSimDirGUI()
    change_class->Resize(fTEAnalysisClassFileName->GetDefaultHeight(), fTEAnalysisClassFileName->GetDefaultHeight());
    change_class->SetToolTipText("Change class");
    change_class->Connect("Clicked()", "KVSimDirGUI", this, "SelectAnalysisClass()");
-   hf->AddFrame(change_class, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
+   hf->AddFrame(change_class, new TGLayoutHints(kLHintsCenterY | kLHintsRight, 2, 2, 2, 2));
    vf->AddFrame(hf, new TGLayoutHints(kLHintsTop | kLHintsExpandY, 2, 2, 2, 2));
    hf = new TGHorizontalFrame(vf, 10, 10, kHorizontalFrame);
-   lab = new TGLabel(hf, "Events : ");
-   hf->AddFrame(lab, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
-   fCBAllEvents = new TGCheckButton(hf, "all");
-   hf->AddFrame(fCBAllEvents, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
-   fNENumberEvents = new TGNumberEntry(hf, 1, 10, 0, TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin, 1);
-   hf->AddFrame(fNENumberEvents, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
-   proof_analysis_ana = new TGPictureButton(hf, gClient->GetPicture("proof_base.xpm"));
-   proof_analysis_ana->Connect("Pressed()", "KVSimDirGUI", this, "EnableProof()");
-   proof_analysis_ana->Connect("Released()", "KVSimDirGUI", this, "DisableProof()");
-   proof_analysis_ana->SetToolTipText("Enable PROOF");
-   proof_analysis_ana->Resize(40, 40);
-   proof_analysis_ana->AllowStayDown(kTRUE);
-   hf->AddFrame(proof_analysis_ana, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 400, 2, 2, 2));
-   TGPictureButton* launch_analysis = new TGPictureButton(hf, gClient->GetPicture("query_submit.xpm"));
-   launch_analysis->Connect("Clicked()", "KVSimDirGUI", this, "RunAnalysis()");
-   launch_analysis->SetToolTipText("Run analysis");
-   launch_analysis->Resize(40, 40);
-   hf->AddFrame(launch_analysis, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 5, 2, 2, 2));
+//   lab = new TGLabel(hf, "Events : ");
+//   hf->AddFrame(lab, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
+//   fCBAllEvents = new TGCheckButton(hf, "all");
+//   hf->AddFrame(fCBAllEvents, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
+//   fNENumberEvents = new TGNumberEntry(hf, 1, 10, 0, TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin, 1);
+//   hf->AddFrame(fNENumberEvents, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
+//   proof_analysis_ana = new TGPictureButton(hf, gClient->GetPicture("proof_base.xpm"));
+//   proof_analysis_ana->Connect("Pressed()", "KVSimDirGUI", this, "EnableProof()");
+//   proof_analysis_ana->Connect("Released()", "KVSimDirGUI", this, "DisableProof()");
+//   proof_analysis_ana->SetToolTipText("Enable PROOF");
+//   proof_analysis_ana->Resize(40, 40);
+//   proof_analysis_ana->AllowStayDown(kTRUE);
+//   hf->AddFrame(proof_analysis_ana, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 400, 2, 2, 2));
+//   TGPictureButton* launch_analysis = new TGPictureButton(hf, gClient->GetPicture("query_submit.xpm"));
+////   launch_analysis->Connect("Clicked()", "KVSimDirGUI", this, "RunAnalysis()");
+//   launch_analysis->Connect("Clicked()", "KVSimDirGUI", this, "Run()");
+//   launch_analysis->SetToolTipText("Run analysis");
+//   launch_analysis->Resize(40, 40);
+//   hf->AddFrame(launch_analysis, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 5, 2, 2, 2));
    vf->AddFrame(hf, new TGLayoutHints(kLHintsTop | kLHintsExpandY, 2, 2, 2, 2));
-   fCBAllEvents->Connect("Toggled(Bool_t)", "KVSimDirGUI", this, "EnableEventNumberEntry(Bool_t)");
-   fCBAllEvents->SetState(kButtonDown, kTRUE);
+//   fCBAllEvents->Connect("Toggled(Bool_t)", "KVSimDirGUI", this, "EnableEventNumberEntry(Bool_t)");
+//   fCBAllEvents->SetState(kButtonDown, kTRUE);
 
    fAnalTab->AddFrame(vf, new TGLayoutHints(kLHintsExpandX | kLHintsExpandY, 2, 2, 2, 2));
 
    /* Filter Tab */
    fFiltTab = fAnalysisTabs->AddTab("Filtering");
    fFiltTab->ChangeOptions(kVerticalFrame);
-   vf = new TGVerticalFrame(fFiltTab, 600, 200, kVerticalFrame);
+   vf = new TGHorizontalFrame(fFiltTab, 600, 200, kHorizontalFrame);
 
-   hf = new TGHorizontalFrame(vf, 10, 10, kHorizontalFrame);
-   lab = new TGLabel(hf, "Experimental conditions : ");
-   hf->AddFrame(lab, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 2, 2, 2, 2));
-   fCBdataset = new TGComboBox(hf);
+
+   /*system and dataset*/
+   hf = new TGGroupFrame(vf, "Experimental condition", kVerticalFrame);
+//   new TGGroupFrame()
+//   lab = new TGLabel(hf, "Experimental conditions : ");
+//   hf->AddFrame(lab, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 2, 2, 2, 2));
+
+   TGCompositeFrame* tmpf = new TGHorizontalFrame(hf, 600, 200, kHorizontalFrame);
+   fCBdataset = new TGComboBox(tmpf);
    if (!gDataSetManager) {
       KVDataSetManager* dsm = new KVDataSetManager;
       dsm->Init();
@@ -182,25 +189,44 @@ KVSimDirGUI::KVSimDirGUI()
       fCBdataset->AddEntry(gDataSetManager->GetDataSet(i - 1)->GetName(), i);
    }
    fCBdataset->Layout();
-   fCBdataset->Resize(150, 20);
+   fCBdataset->Resize(200, 20);
    fCBdataset->Select(0, kFALSE);
-   hf->AddFrame(fCBdataset, new TGLayoutHints(kLHintsLeft | kLHintsTop, 10, 2, 2, 2));
+   tmpf->AddFrame(fCBdataset, new TGLayoutHints(kLHintsLeft | kLHintsTop, 10, 2, 2, 2));
    fCBdataset->Connect("Selected(const char*)", "KVSimDirGUI", this, "SelectDataSet(const char*)");
-   fCBsystem = new TGComboBox(hf);
+   hf->AddFrame(tmpf, new TGLayoutHints(kLHintsTop | kLHintsLeft, 0, 0, 0, 0));
+
+   tmpf = new TGHorizontalFrame(hf, 600, 200, kHorizontalFrame);
+   fCBsystem = new TGComboBox(tmpf);
    fCBsystem->AddEntry("Choose system...", 0);
    fCBsystem->Layout();
-   fCBsystem->Resize(250, 20);
+   fCBsystem->Resize(200, 20);
    fCBsystem->Select(0, kFALSE);
-   hf->AddFrame(fCBsystem, new TGLayoutHints(kLHintsLeft | kLHintsTop, 10, 2, 2, 2));
+   tmpf->AddFrame(fCBsystem, new TGLayoutHints(kLHintsLeft | kLHintsTop, 10, 2, 2, 2));
    fCBsystem->Connect("Selected(const char*)", "KVSimDirGUI", this, "SelectSystem(const char*)");
-   fCBrun = new TGComboBox(hf);
+
+   fTESystem = new TGTextEntry(tmpf, new TGTextBuffer(200));
+   fTESystem->Resize(200, fTESystem->GetDefaultHeight());
+   fTESystem->SetToolTipText("[Projectile_Symbol]+[Target_Symbol]@[Incident_Energy]MeV/A (ex: 129Xe+119Sn@50.0MeV/A)");
+   tmpf->AddFrame(fTESystem, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
+
+   hf->AddFrame(tmpf, new TGLayoutHints(kLHintsTop | kLHintsLeft, 0, 0, 0, 0));
+
+   tmpf = new TGHorizontalFrame(hf, 600, 200, kHorizontalFrame);
+   fCBrun = new TGComboBox(tmpf);
    fCBrun->AddEntry("Choose run...", 0);
    fCBrun->Layout();
-   fCBrun->Resize(100, 20);
+   fCBrun->Resize(200, 20);
    fCBrun->Select(0, kFALSE);
-   hf->AddFrame(fCBrun, new TGLayoutHints(kLHintsLeft | kLHintsTop, 10, 2, 2, 2));
+   tmpf->AddFrame(fCBrun, new TGLayoutHints(kLHintsLeft | kLHintsTop, 10, 2, 2, 2));
    fCBrun->Connect("Selected(const char*)", "KVSimDirGUI", this, "SelectRun(const char*)");
+
+//   fTERunNumber = new TGTextEntry(tmpf, new TGTextBuffer(200));
+//   fTERunNumber->Resize(200, fTERunNumber->GetDefaultHeight());
+//   tmpf->AddFrame(fTERunNumber, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
+   hf->AddFrame(tmpf, new TGLayoutHints(kLHintsTop | kLHintsLeft, 0, 0, 0, 0));
+
    vf->AddFrame(hf, new TGLayoutHints(kLHintsTop | kLHintsLeft, 2, 2, 10, 2));
+
 
    hf = new TGHorizontalFrame(vf, 10, 10, kHorizontalFrame);
 
@@ -211,7 +237,7 @@ KVSimDirGUI::KVSimDirGUI()
    bgroup->Connect("Clicked(Int_t)", "KVSimDirGUI", this, "FilterType(Int_t)");
    radiob->SetState(kButtonDown);
    fFilterType = kFTFull;
-   hf->AddFrame(bgroup, new TGLayoutHints(kLHintsTop | kLHintsLeft, 2, 2, 2, 2));
+   hf->AddFrame(bgroup, new TGLayoutHints(kLHintsTop | kLHintsLeft | kLHintsExpandY, 2, 2, 2, 2));
    bgroup = new TGButtonGroup(hf, "Geometry");
    radiob = new TGRadioButton(bgroup, "KaliVeda");
    radiob = new TGRadioButton(bgroup, "ROOT");
@@ -226,18 +252,19 @@ KVSimDirGUI::KVSimDirGUI()
    bgroup->Connect("Clicked(Int_t)", "KVSimDirGUI", this, "Kinematics(Int_t)");
    fKine = kKCM;
    hf->AddFrame(bgroup, new TGLayoutHints(kLHintsTop | kLHintsLeft, 20, 2, 2, 2));
-   proof_analysis_filt = new TGPictureButton(hf, gClient->GetPicture("proof_base.xpm"));
-   proof_analysis_filt->Connect("Pressed()", "KVSimDirGUI", this, "EnableProof()");
-   proof_analysis_filt->Connect("Released()", "KVSimDirGUI", this, "DisableProof()");
-   proof_analysis_filt->SetToolTipText("Enable PROOF");
-   proof_analysis_filt->Resize(40, 40);
-   proof_analysis_filt->AllowStayDown(kTRUE);
-   hf->AddFrame(proof_analysis_filt, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 250, 2, 2, 2));
-   launch_analysis = new TGPictureButton(hf, gClient->GetPicture("query_submit.xpm"));
-   launch_analysis->Connect("Clicked()", "KVSimDirGUI", this, "RunFilter()");
-   launch_analysis->SetToolTipText("Run filter");
-   launch_analysis->Resize(40, 40);
-   hf->AddFrame(launch_analysis, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 5, 2, 2, 2));
+//   proof_analysis_filt = new TGPictureButton(hf, gClient->GetPicture("proof_base.xpm"));
+//   proof_analysis_filt->Connect("Pressed()", "KVSimDirGUI", this, "EnableProof()");
+//   proof_analysis_filt->Connect("Released()", "KVSimDirGUI", this, "DisableProof()");
+//   proof_analysis_filt->SetToolTipText("Enable PROOF");
+//   proof_analysis_filt->Resize(40, 40);
+//   proof_analysis_filt->AllowStayDown(kTRUE);
+//   hf->AddFrame(proof_analysis_filt, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 250, 2, 2, 2));
+//   launch_analysis = new TGPictureButton(hf, gClient->GetPicture("query_submit.xpm"));
+////   launch_analysis->Connect("Clicked()", "KVSimDirGUI", this, "RunFilter()");
+//   launch_analysis->Connect("Clicked()", "KVSimDirGUI", this, "Run()");
+//   launch_analysis->SetToolTipText("Run filter");
+//   launch_analysis->Resize(40, 40);
+//   hf->AddFrame(launch_analysis, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 5, 2, 2, 2));
    vf->AddFrame(hf, new TGLayoutHints(kLHintsTop | kLHintsLeft, 2, 2, 10, 2));
 
 //    hf = new TGHorizontalFrame(vf, 10, 10, kHorizontalFrame);
@@ -261,6 +288,40 @@ KVSimDirGUI::KVSimDirGUI()
    fAnalysisTabs->GetLayoutManager()->Layout();
 
    MainFrame->AddFrame(fAnalysisTabs, new TGLayoutHints(kLHintsExpandX | kLHintsTop, 10, 10, 15, 10));
+
+
+
+   vf = new TGVerticalFrame(MainFrame, 600, 200, kVerticalFrame);
+   hf = new TGHorizontalFrame(vf, 600, 200, kHorizontalFrame);
+
+   lab = new TGLabel(hf, "Events : ");
+   hf->AddFrame(lab, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
+   fCBAllEvents = new TGCheckButton(hf, "all");
+   hf->AddFrame(fCBAllEvents, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
+   fNENumberEvents = new TGNumberEntry(hf, 1, 10, 0, TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin, 1);
+   hf->AddFrame(fNENumberEvents, new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 2, 2, 2, 2));
+   fCBAllEvents->Connect("Toggled(Bool_t)", "KVSimDirGUI", this, "EnableEventNumberEntry(Bool_t)");
+   fCBAllEvents->SetState(kButtonDown, kTRUE);
+
+
+   proof_analysis = new TGPictureButton(hf, gClient->GetPicture("proof_base.xpm"));
+   proof_analysis->Connect("Pressed()", "KVSimDirGUI", this, "EnableProof()");
+   proof_analysis->Connect("Released()", "KVSimDirGUI", this, "DisableProof()");
+   proof_analysis->SetToolTipText("Enable PROOF");
+   proof_analysis->Resize(40, 40);
+   proof_analysis->AllowStayDown(kTRUE);
+
+   TGPictureButton* launch_analysis = new TGPictureButton(hf, gClient->GetPicture("query_submit.xpm"));
+   launch_analysis->Connect("Clicked()", "KVSimDirGUI", this, "Run()");
+   launch_analysis->SetToolTipText("Run filter");
+   launch_analysis->Resize(40, 40);
+
+   hf->AddFrame(launch_analysis, new TGLayoutHints(kLHintsCenterY | kLHintsRight, 5, 2, 2, 2));
+   hf->AddFrame(proof_analysis, new TGLayoutHints(kLHintsCenterY | kLHintsRight, 5, 2, 2, 2));
+
+   vf->AddFrame(hf, new TGLayoutHints(kLHintsExpandX | kLHintsTop, 0, 0, 0, 0));
+   MainFrame->AddFrame(vf, new TGLayoutHints(kLHintsExpandX | kLHintsTop, 10, 10, 15, 10));
+
 
    MainFrame->SetMWMHints(kMWMDecorAll,
                           kMWMFuncAll,
@@ -556,7 +617,7 @@ void KVSimDirGUI::SelectDataSet(const char* name)
       fRun = "";
       ds->cd();
       KVSeqCollection* systems = 0;
-      if (gDataBase) systems = gDataBase->GetTable("Systems")->GetRecords();
+      if (gDataBase && gDataBase->GetTable("Systems")) systems = gDataBase->GetTable("Systems")->GetRecords();
       fCBsystem->RemoveAll();
       fCBsystem->AddEntry("Choose system...", 0);
       if (systems) {
@@ -593,6 +654,7 @@ void KVSimDirGUI::SelectSystem(const char* sysname)
       }
       fCBrun->Layout();
       fCBrun->Select(0, kFALSE);
+      fTESystem->SetText(sysname);
    }
 }
 
@@ -601,6 +663,13 @@ void KVSimDirGUI::SelectRun(const char* run)
    fRun = run;
    fRun.Remove(TString::kBoth, ' ');
    if (!fRun.IsDigit()) fRun = "";
+}
+
+void KVSimDirGUI::Run()
+{
+//    Info("Run","current tab : '%d'",fAnalysisTabs->GetCurrent());
+   if (fAnalysisTabs->GetCurrent() == 0)      RunAnalysis();
+   else if (fAnalysisTabs->GetCurrent() == 1) RunFilter();
 }
 
 // void KVSimDirGUI::ChangeOutputDirectory()
@@ -661,8 +730,21 @@ void KVSimDirGUI::RunFilter()
          filter = "Full";
    }
 
+   // check system
+   if (fSystem == "") {
+      fSystem = fTESystem->GetText();
+      KV2Body cd(fSystem.Data());
+      cd.CalculateKinematics();
+      cd.Print();
+   }
+
    TString options;
    Long64_t nevents = analysis_chain->GetEntries();
+   Bool_t all_events = fCBAllEvents->IsDown();
+   if (!all_events) {
+      nevents = (Long64_t)fNENumberEvents->GetNumber();
+   }
+
    options.Form("EventsReadInterval=%lld,SimFileName=%s,SimTitle=%s,BranchName=%s,Dataset=%s,System=%s,Geometry=%s,Filter=%s,OutputDir=%s,Kinematics=%s",
                 (nevents > 10 ? nevents / 10 : 1),
                 ((KVSimFile*)runs_to_analyse->First())->GetName(),
@@ -692,6 +774,7 @@ void KVSimDirGUI::RunFilter()
    }
    Info("RunFilter", "%s", options.Data());
 
+
    if (fWithPROOF) {
       TProof* p = TProof::Open("");
       analysis_chain->SetProof();
@@ -704,7 +787,7 @@ void KVSimDirGUI::RunFilter()
          p->EnablePackage("KaliVeda");
       }
    }
-   analysis_chain->Process("KVEventFiltering", options);
+   analysis_chain->Process("KVEventFiltering", options, nevents);
    RefreshSimDir();
 
    delete analysis_chain;

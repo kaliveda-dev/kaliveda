@@ -53,6 +53,7 @@ KVIDGridManager::~KVIDGridManager()
    //Destructor
    //Reset global pointer gIDGridManager
    //Delete list of ID grids (this deletes all the grids)
+   Info("~KVIDGridManager", "DELETING ID GRID MANAGER");
    if (gIDGridManager == this)
       gIDGridManager = 0;
    fGrids->Disconnect("Modified()", this, "Modified()");
@@ -82,7 +83,7 @@ void KVIDGridManager::DeleteGrid(KVIDGraph* grid, Bool_t update)
 void KVIDGridManager::Clear(Option_t*)
 {
    //Delete all grids and empty list, ready to start anew
-
+   Info("Clear", "DELETING ALL GRIDS IN IDGRIDMANAGER");
    fGrids->Disconnect("Modified()", this, "Modified()");
    fGrids->Delete();
    Modified();                  // emit signal to say something changed
@@ -94,6 +95,12 @@ Bool_t KVIDGridManager::ReadAsciiFile(const Char_t* filename)
    //read file, create grids corresponding to information in file.
    //note: any existing grids are not destroyed, use Clear() beforehand if you want to
    //start afresh and anew (ais athat aOK?)
+   //
+   //the list of grids created by reading the file can be accessed with method
+   //GetLastReadGrids() after calling this method
+
+   // clear list of read grids
+   fLastReadGrids.Clear();
 
    Bool_t is_it_ok = kFALSE;
    ifstream gridfile(filename);
@@ -129,6 +136,7 @@ Bool_t KVIDGridManager::ReadAsciiFile(const Char_t* filename)
                   "Cannot load TClass information for %s", s.Data());
          }
          grid = (KVIDGraph*) clas->New();
+         fLastReadGrids.Add(grid);
          //read grid
          grid->ReadFromAsciiFile(gridfile);
          if (onlyz) grid->SetOnlyZId(kTRUE);

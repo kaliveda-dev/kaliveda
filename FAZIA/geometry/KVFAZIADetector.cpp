@@ -8,6 +8,7 @@
 #include "KVSignal.h"
 #include "KVPSAResult.h"
 #include "TClass.h"
+#include "KVLightEnergyCsIFull.h"
 
 ClassImp(KVFAZIADetector)
 
@@ -125,13 +126,17 @@ void KVFAZIADetector::SetCalibrators()
 
    TString sf = "";
 
-   fChannelToEnergy = new KVFAZIACalibrator(GetName(), "Channel-Energy");
-   fChannelToEnergy->SetDetector(this);
-   sf = gEnv->GetValue("FAZIADetector.Calib.Channel-Energy", "");
-   if (sf == "") {
-      Warning("SetCalibrators", "No formula defined for Calibration Channel-Energy");
+   if (fIdentifier == kCSI) {
+      fChannelToEnergy = new KVLightEnergyCsIFull(GetName(), "Channel-Energy", this, KVLightEnergyCsIFull::kExact);
    } else {
-      fChannelToEnergy->SetFunction(sf.Data());
+      fChannelToEnergy = new KVFAZIACalibrator(GetName(), "Channel-Energy");
+      fChannelToEnergy->SetDetector(this);
+      sf = gEnv->GetValue("FAZIADetector.Calib.Channel-Energy", "");
+      if (sf == "") {
+         Warning("SetCalibrators", "No formula defined for Calibration Channel-Energy");
+      } else {
+         ((KVFAZIACalibrator*)fChannelToEnergy)->SetFunction(sf.Data());
+      }
    }
 
    fChannelToVolt = new KVFAZIACalibrator(GetName(), "Channel-Volt");
@@ -140,7 +145,7 @@ void KVFAZIADetector::SetCalibrators()
    if (sf == "") {
       Warning("SetCalibrators", "No formula defined for Calibration Channel-Volt");
    } else {
-      fChannelToVolt->SetFunction(sf.Data());
+      ((KVFAZIACalibrator*)fChannelToVolt)->SetFunction(sf.Data());
    }
 
    fVoltToEnergy = new KVFAZIACalibrator(GetName(), "Volt-Energy");
@@ -149,7 +154,7 @@ void KVFAZIADetector::SetCalibrators()
    if (sf == "") {
       Warning("SetCalibrators", "No formula defined for Calibration Volt-Energy");
    } else {
-      fVoltToEnergy->SetFunction(sf.Data());
+      ((KVFAZIACalibrator*)fVoltToEnergy)->SetFunction(sf.Data());
    }
 
    AddCalibrator(fChannelToEnergy);

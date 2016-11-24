@@ -184,7 +184,10 @@ void KVIDGrid::ReadIdentifierFromAsciiFile(TString& name, TString& type, TString
       special read method for old KVIDZLines
    */
    if (zline)((KVIDZALine*)line)->ReadAsciiFile_KVIDZLine(gridfile);
-   else line->ReadAsciiFile(gridfile);
+   else {
+      line->ReadAsciiFile(gridfile);
+      line->SetName(name.Data());
+   }
    if (oldcutline) {
       KVIDentifier* oldcut = line;
       line = new KVIDCutLine;

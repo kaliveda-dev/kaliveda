@@ -43,14 +43,18 @@ fi
 
 # is it an old-style or a GNU-style install ?
 new_mandir="share/man"
+new_incdir="include/kaliveda"
 if [ -d "${KVROOT}/KVFiles" ]; then
    new_mandir="man"
+   new_incdir="include"
 fi
 if [ -n "${old_KVROOT}" ] ; then
    # was it an old-style or a GNU-style install ?
    old_mandir="share/man"
+   old_incdir="include/kaliveda"
    if [ -d "${old_KVROOT}/KVFiles" ]; then
       old_mandir="man"
+      old_incdir="include"
    fi
    if [ -n "${PATH}" ]; then
       drop_from_path "$PATH" ${old_KVROOT}/bin
@@ -63,6 +67,10 @@ if [ -n "${old_KVROOT}" ] ; then
    if [ -n "${MANPATH}" ]; then
       drop_from_path $MANPATH ${old_KVROOT}/${old_mandir}
       MANPATH=$newpath
+   fi
+   if [ -n "${ROOT_INCLUDE_PATH}" ]; then
+      drop_from_path $ROOT_INCLUDE_PATH ${old_KVROOT}/${old_incdir}
+      ROOT_INCLUDE_PATH=$newpath
    fi
 fi
 

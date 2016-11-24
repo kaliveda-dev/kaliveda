@@ -341,13 +341,10 @@ configure_file(kaliveda-config.in kaliveda-config @ONLY)
 install(PROGRAMS ${CMAKE_BINARY_DIR}/kaliveda-config DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 #---install scripts from tools/ directory in ${CMAKE_INSTALL_BINDIR}
-install(PROGRAMS tools/SetUpKaliVeda.sh tools/SetUpROOT.sh tools/WhichROOT
-   tools/SetUpKaliVeda.csh tools/SetUpROOT.csh tools/SetUpKaliVedaDirectories.sh
-   tools/SetUpROOTDirectories.sh tools/WhichKaliVeda tools/thiskaliveda.sh tools/thiskaliveda.csh
+install(PROGRAMS tools/thiskaliveda.sh tools/thiskaliveda.csh
    DESTINATION ${CMAKE_INSTALL_BINDIR})
 #---install other stuff from tools/ directory in ${CMAKE_INSTALL_SYSCONFDIR}
-install(FILES tools/.nedit DESTINATION ${CMAKE_INSTALL_SYSCONFDIR} RENAME nedit.cf)
-install(FILES tools/kaliveda.m4 DESTINATION ${CMAKE_INSTALL_SYSCONFDIR})
+install(FILES tools/nedit.cf DESTINATION ${CMAKE_INSTALL_SYSCONFDIR})
 
 #---install README, COPYING, etc. in ${CMAKE_INSTALL_DOCDIR}
 install(FILES COPYING INSTALL README.md DESTINATION ${CMAKE_INSTALL_DOCDIR})

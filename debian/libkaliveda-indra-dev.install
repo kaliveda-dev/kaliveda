@@ -33,7 +33,6 @@
 /usr/include/kaliveda/KVChannelEnergyAlpha.h
 /usr/include/kaliveda/KVChannelVolt.h
 /usr/include/kaliveda/KVVoltEnergy.h
-/usr/include/kaliveda/KVLightEnergyCsIFull.h
 /usr/include/kaliveda/KVFunctionCal.h
 /usr/include/kaliveda/KVINDRATriggerInfo.h
 /usr/include/kaliveda/KVINDRAReconEvent.h

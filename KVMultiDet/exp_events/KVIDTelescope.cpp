@@ -494,8 +494,8 @@ Bool_t KVIDTelescope::SetIdentificationParameters(const KVMultiDetArray* multide
    //read grids from file
    Info("SetIdentificationParameters", "Using file %s", path.Data());
    gIDGridManager->ReadAsciiFile(path.Data());
-   // reset pointers to idtelescopes in grids
-   TIter next(gIDGridManager->GetGrids());
+   // reset pointers to idtelescopes in grids that we read from file
+   TIter next(gIDGridManager->GetLastReadGrids());
    KVIDGraph* gr;
    while ((gr = (KVIDGraph*)next())) multidet->FillListOfIDTelescopes(gr);
    return kTRUE;

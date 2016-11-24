@@ -105,15 +105,35 @@ void KVIDZAFromZGrid::Copy(TObject& obj) const
 
 void KVIDZAFromZGrid::ReadFromAsciiFile(std::ifstream& gridfile)
 {
+//   fPIDRange = kFALSE;
+//   KVIDGraph::ReadFromAsciiFile(gridfile);
+//   if (GetParameters()->HasParameter("PIDRANGE")) {
+//      fPIDRange = kTRUE;
+//      fZmaxInt = GetParameters()->GetIntValue("PIDRANGE");
+//      LoadPIDRanges();
+//   }
+
    fPIDRange = kFALSE;
+   fHasMassCut = kFALSE;
    KVIDGraph::ReadFromAsciiFile(gridfile);
-//    Info("ReadAsciiFile","called for %s", GetName());
+
+   if (GetIdentifier("MassID")) fHasMassCut = kTRUE;
+
    if (GetParameters()->HasParameter("PIDRANGE")) {
       fPIDRange = kTRUE;
-      fZmaxInt = GetParameters()->GetIntValue("PIDRANGE");
-//       Info("ReadAsciiFile","ZAMXINT = %d", fZmaxInt);
+      TString pidrange = GetParameters()->GetStringValue("PIDRANGE");
+      if (pidrange.Contains("-")) {
+         TString min = (pidrange(0, pidrange.Index("-")));
+         fZminInt = min.Atoi();
+         min = (pidrange(pidrange.Index("-") + 1, pidrange.Length()));
+         fZmaxInt = min.Atoi();
+      } else {
+         fZminInt = 1;
+         fZmaxInt = pidrange.Atoi();
+      }
       LoadPIDRanges();
    }
+
 }
 
 void KVIDZAFromZGrid::LoadPIDRanges()
@@ -216,7 +236,8 @@ void KVIDZAFromZGrid::Identify(Double_t x, Double_t y, KVIdentificationResult* i
       idr->A = Aint;
       idr->Aident = kFALSE;
 
-      if (fPIDRange && (idr->IDOK) && (idr->Z <= fZmaxInt) && (idr->Z > 0) && (const_cast < KVIDZAFromZGrid* >(this)->is_inside(Z))) {
+      if ((fPIDRange && (idr->IDOK) && (idr->Z <= fZmaxInt) && (idr->Z > 0) && (const_cast < KVIDZAFromZGrid* >(this)->is_inside(Z))) ||
+            (fPIDRange && (idr->IDOK) && (idr->Z <= fZmaxInt) && (idr->Z >= fZminInt - 1) && fHasMassCut && GetIdentifier("MassID")->IsInside(x, y))) {
 //          Info("Identify","try to deduce the mass... (%d)",Zint);
 //         double pid = const_cast < KVIDZAFromZGrid* >(this)->DeduceAfromPID(idr);
          const_cast < KVIDZAFromZGrid* >(this)->DeduceAfromPID(idr);

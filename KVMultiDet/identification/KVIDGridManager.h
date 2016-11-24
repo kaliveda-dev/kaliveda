@@ -24,6 +24,7 @@ class KVIDGridManager: public KVBase {
 private:
 
    KVList* fGrids;              //collection of all ID graphs handled by manager
+   TList fLastReadGrids;        //! list of grids created by last call to ReadAsciiFile
 
 protected:
 
@@ -44,6 +45,11 @@ public:
 
    void Clear(Option_t* opt = "");
    Bool_t ReadAsciiFile(const Char_t* filename);
+   const TList* GetLastReadGrids() const
+   {
+      // List containing grids created by most recent call to ReadAsciiFile
+      return &fLastReadGrids;
+   }
    Int_t WriteAsciiFile(const Char_t* filename, const TCollection* selection = 0);
 
    void Print(Option_t* /*opt*/ = "") const

@@ -44,7 +44,7 @@ public:
 
 public:
    KVLightEnergyCsIFull();
-   KVLightEnergyCsIFull(KVDetector* kvd, Int_t lightFormula = kExact);
+   KVLightEnergyCsIFull(const Char_t* name, const Char_t* type, KVDetector* kvd, Int_t lightFormula = kExact);//(KVDetector* kvd, Int_t lightFormula = kExact);
    virtual ~KVLightEnergyCsIFull();
    void Copy(TObject& obj) const;
    void init();
@@ -88,6 +88,11 @@ public:
 public:
    Double_t sp_e(double z, double a, double e);
    Double_t sp_n(double z, double a, double e);
+
+protected:
+   Double_t gamma(double z, double a, double e);
+   Double_t gamma_ziegler(double z, double a, double e);
+   Double_t gamma_hbg(double z, double a, double e);
 
    ClassDef(KVLightEnergyCsIFull, 1) //Light-energy calibration for CsI detectors using the full expression of Marian Parlog
 };
