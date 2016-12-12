@@ -12,15 +12,13 @@
 // *   (at your option) any later version.                                   *
 // *                                                                         *
 // ***************************************************************************
-#include <GEN_TYPE.H>
-#include <gan_acq_buf.h>
 #include "GTOneScaler.h"
 #include <TROOT.h>
 #include <Riostream.h>
 
 using namespace std;
 
-//ClassImp(GTOneScaler)
+ClassImp(GTOneScaler)
 
 //////////////////////////////////////////////////////////////////////////
 //

@@ -27,7 +27,7 @@ public:
    virtual ~GTGanilDataVAMOS();
    virtual void SetUserTree(TTree*);
 
-//   ClassDef(GTGanilDataVAMOS, 1) //Reads and formats raw data from INDRA-VAMOS experiments
+   ClassDef(GTGanilDataVAMOS, 1) //Reads and formats raw data from INDRA-VAMOS experiments
 };
 
 #endif

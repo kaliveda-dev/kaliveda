@@ -531,7 +531,7 @@ void KVDataRepository::MakeSubdirectory(KVDataSet* dataset,
    else
       path = tmp;
    cout << "Creating new repository directory: " << path.Data() << endl;
-   gSystem->MakeDirectory(path.Data());
+   gSystem->mkdir(path.Data(), kTRUE); // create all parent directories as needed
    //change file access permissions to 775
    Chmod(path.Data(), CHMODE(7, 7, 5));
 }

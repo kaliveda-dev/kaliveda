@@ -36,14 +36,14 @@
 #include "TNamed.h"
 
 // ganil_tape lib headers
-#include <GEN_TYPE.H>
-#include "gan_acq_buf.h"
+#include "GanTape/GEN_TYPE.H"
+#include "GanTape/gan_acq_buf.h"
 #include "GTDataParameters.h"
 #include "TList.h"
 
 using namespace std;
 
-//ClassImp(GTDataParameters);
+ClassImp(GTDataParameters);
 
 //______________________________________________________________________________
 GTDataParameters::GTDataParameters(void)

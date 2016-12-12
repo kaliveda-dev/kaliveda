@@ -7,15 +7,17 @@
 #include "TBox.h"
 #include "KVNucleus.h"
 #include "KVNuclearChart.h"
+#include "TLatex.h"
 
 class KVNucleusBox : public TBox {
 protected:
    Int_t fZ, fN, fA;
    Bool_t fDrawSame;
    Bool_t fOwnNucleus;
-   Int_t fShowSymbol;
+   Bool_t fShowSymbol;
    KVNucleus* fNucleus;
    KVNuclearChart* fNuclearChart;
+   TLatex fSymbol;
 
 public:
    KVNucleusBox(Int_t Z, Int_t N, Double_t size = 0.4, Int_t colStable = kBlack, Int_t colRadio = kGray + 1);
@@ -37,8 +39,11 @@ public:
    {
       return fShowSymbol;
    }
-   void SetShowSymbol(Int_t value = 1); // *TOGGLE*
-   void ShowSymbol(Int_t value);
+   void SetShowSymbol(Bool_t value = kTRUE); // *TOGGLE*
+   void SetSymbolSize(Float_t size = 0.02)
+   {
+      fSymbol.SetTextSize(size);
+   }
 
    virtual void        Delete(Option_t* option = "")
    {
@@ -78,6 +83,7 @@ public:
    {
       TBox::SetFillAttributes();
    }
+   void Paint(Option_t* option = "");
 
 
    ClassDef(KVNucleusBox, 1) //A TBox representing a nucleus in a KVNuclearChart

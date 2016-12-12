@@ -49,14 +49,14 @@ example :
 #ifdef PDOS
 #include "GEN_MAC.H"
 #endif
-#include "GEN_TYPE.H"   /* general typedef definitions */
+#include "GanTape/GEN_TYPE.H"   /* general typedef definitions */
 #if defined ( __unix ) || ( __unix__)
 #include "ERR_GAN.H" /* GANIL errors definitions */
 #else
 /*#include "ERR$GAN.H" GANIL errors definitions */
 #error "should not have come here"
 #endif
-#include "STR_EVT.H" /* structure of events definitions */
+#include "GanTape/STR_EVT.H" /* structure of events definitions */
 #endif
 
 #define LENLINE 132

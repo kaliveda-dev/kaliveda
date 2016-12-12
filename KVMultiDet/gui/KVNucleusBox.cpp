@@ -32,6 +32,9 @@ KVNucleusBox::KVNucleusBox(Int_t Z, Int_t N, Double_t size, Int_t colStable, Int
    fNucleus = new KVNucleus;
    fNucleus->SetZandA(fZ, fA);
    fOwnNucleus = kTRUE;
+   fSymbol.SetText(fN, fZ, fNucleus->GetLatexSymbol());
+   fSymbol.SetTextAlign(22);
+   fSymbol.SetTextSize(.02);
 
    if (fNucleus->IsStable()) {
       SetLineColor(kBlack);
@@ -68,6 +71,9 @@ KVNucleusBox::KVNucleusBox(KVNucleus* nuc, Double_t size, Bool_t owner): TBox(nu
    fZ = fNucleus->GetZ();
    fN = fNucleus->GetN();
    fA = fN + fZ;
+   fSymbol.SetText(fN, fZ, fNucleus->GetLatexSymbol());
+   fSymbol.SetTextAlign(22);
+   fSymbol.SetTextSize(.02);
 
    if (fNucleus->IsStable()) {
       SetLineColor(kBlack);
@@ -140,17 +146,15 @@ void KVNucleusBox::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    TBox::ExecuteEvent(event, px, py);
 }
 
-void KVNucleusBox::SetShowSymbol(Int_t)
+void KVNucleusBox::SetShowSymbol(Bool_t i)
 {
-//    fNuclearChart->ShowSymbol(value);
-
-//    ShowSymbol(value);
+   fShowSymbol = i;
 }
 
-void KVNucleusBox::ShowSymbol(Int_t value)
+void KVNucleusBox::Paint(Option_t* option)
 {
-   fShowSymbol = value;
-   Info("ShowSymbol", "(%d,%d) called %d", fZ, fA, value);
+   TBox::Paint(option);
+   if (fShowSymbol) fSymbol.Paint(option);
 }
 
 

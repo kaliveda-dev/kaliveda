@@ -31,8 +31,8 @@
 #include <stdio.h>
 #include "gan_tape_param.h"   /* Fichier de parametres modifiables.    */
 #include "gan_tape_general.h"
-#include "GEN_TYPE.H"
-#include "gan_acq_buf.h"
+#include "GanTape/GEN_TYPE.H"
+#include "GanTape/gan_acq_buf.h"
 #include "gan_acq_swap_buf.h"
 
 #include "gan_tape_erreur.h"

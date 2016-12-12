@@ -1834,13 +1834,15 @@ void KVDataAnalysisLauncher::FillListOfUserClasses()
    // We look for any file ending in '.h'. If we can find a corresponding '.cpp' or '.C' or '.cxx',
    // we consider that it is a user analysis class. This list is used to fill the "User Class"
    // drop-down list.
+   // We add "[NEW]" at the end of the list: if selected, this will generate a new user analysis
+   // class for the currently selected data & analysis task
 
    TSystemDirectory dir("LocDir", ".");
-   TList* lf = dir.GetListOfFiles();
-   if (!lf) return;
+   unique_ptr<TList> lf(dir.GetListOfFiles());
+   if (!lf.get()) return;
    UserClassNames->Clear();
    //loop over file names
-   TIter next(lf);
+   TIter next(lf.get());
    while (TObject* file = next()) {
 
       // fill list with all '.h' files
@@ -1852,7 +1854,7 @@ void KVDataAnalysisLauncher::FillListOfUserClasses()
       }
 
    }
-   delete lf;
+
    // now check that implementation files exist for all '.h' we found
    TIter next_cl(UserClassNames);
    KVString imp, dec;
@@ -1864,6 +1866,8 @@ void KVDataAnalysisLauncher::FillListOfUserClasses()
       UserClassNames->Remove(obj);
       delete obj;
    }
+   // add [NEW] to list
+   UserClassNames->Add(new TNamed("[NEW]", "[NEW]"));
    // Info("FillListOfUserClasses", "User classes found in working directory:");
    // UserClassNames->ls();
 }
@@ -1902,6 +1906,10 @@ void KVDataAnalysisLauncher::UserClassSelected(char* class_name)
 
    //Info("UserClassSelected", "User class selected : %s", class_name);
 
+   if (!strcmp(class_name, "[NEW]")) {
+      GenerateNewUserClass();
+      return;
+   }
    if (IsBatchNameAuto()) SetAutoBatchName();
 
    // save resource
@@ -1912,6 +1920,28 @@ void KVDataAnalysisLauncher::UserClassSelected(char* class_name)
    if (strcmp("", class_name)) btEditClass->SetEnabled(kTRUE);
    else btEditClass->SetEnabled(kFALSE);
    checkCompilation = kTRUE;
+}
+
+void KVDataAnalysisLauncher::GenerateNewUserClass()
+{
+   // called when user selects [NEW] in user class list
+   // we generate a new analysis class for currently selected data & task
+   // the source files are opened in the $EDITOR
+   // the new class is selected for the analysis
+
+   // Get name of new class
+   TString classname;
+   Bool_t ok;
+   new KVInputDialog(this, "Enter name of new analysis class", &classname, &ok, "Enter name of new analysis class");
+   if (ok) {
+      gDataSet->MakeAnalysisClass(GetTask(), classname);
+      FillListOfUserClasses();
+   }
+   SetUserClassList();
+   if (ok) {
+      SetUserClass(classname);
+      EditUserClassFiles();
+   }
 }
 
 //__________________________________________

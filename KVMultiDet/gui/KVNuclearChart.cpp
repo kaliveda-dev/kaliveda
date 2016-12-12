@@ -41,13 +41,14 @@ KVNuclearChart::KVNuclearChart(Int_t nMin, Int_t nMax, Int_t zMin, Int_t zMax, D
 
    if ((fNmax < 0) || (fZmax < 0)) {
       fNmax = 177;
-      fZmax = 116;
+      fZmax = 115;
    }
 
    fOwnHisto = 0;
    fHisto = 0;
    fShownNucleus = 0;
-   fCanvas = 0;
+   fCanvas = nullptr;
+   fPad = nullptr;
    fShowMagicNumbers = kTRUE;
    fShowSymbol = kFALSE;
 
@@ -61,14 +62,14 @@ KVNuclearChart::KVNuclearChart(Int_t nMin, Int_t nMax, Int_t zMin, Int_t zMax, D
    fInfo->SetBorderSize(1);
 
    KVNucleus nuc;
-   for (int zz = fZmin; zz < fZmax; zz++) {
+   for (int zz = fZmin; zz <= fZmax; zz++) {
       KVNumberList ll = nuc.GetKnownARange(zz);
       ll.Begin();
       while (!ll.End()) {
          Int_t aa = ll.Next();
          nuc.SetZandA(zz, aa);
          Int_t nn = aa - zz;
-         if ((nn >= fNmin) && (nn < fNmax)) {
+         if ((nn >= fNmin) && (nn <= fNmax)) {
             if (nuc.IsStable() || nuc.GetLifeTime() > life) {
                KVNucleusBox* nb = new KVNucleusBox(zz, nn);
                nb->SetNuclearChart(this);
@@ -168,6 +169,7 @@ void KVNuclearChart::Draw(Option_t* option)
    Bool_t DrawSame = opt.Contains("same");
 
    if (DrawSame && gPad) {
+      fPad = gPad;
       TObject* obj = 0;
       TIter next(gPad->GetListOfPrimitives());
       while ((obj = next())) {
@@ -179,6 +181,7 @@ void KVNuclearChart::Draw(Option_t* option)
    } else {
       KVCanvas* cc = new KVCanvas;
       TPad* pp = (TPad*) cc->cd();
+      fPad = pp;
 
       Double_t marging = 0.001;
       pp->SetTopMargin(marging);
@@ -221,10 +224,9 @@ void KVNuclearChart::ShowNucleusInfo(KVNucleus* nuc)
    if ((fShownNucleus) && (fShownNucleus == nuc)) {
       fSymbol->Clear();
       fInfo->Clear();
-      gPad->GetListOfPrimitives()->Remove(fSymbol);
-      gPad->GetListOfPrimitives()->Remove(fInfo);
-      gPad->Modified();
-      gPad->Update();
+      fPad->GetListOfPrimitives()->Remove(fSymbol);
+      fPad->GetListOfPrimitives()->Remove(fInfo);
+      update_pad();
       fShownNucleus = 0;
       return;
    }
@@ -244,7 +246,7 @@ void KVNuclearChart::ShowNucleusInfo(KVNucleus* nuc)
       Int_t M = fHisto->Integral(xmin, xmax, ymin, ymax);
       fInfo->AddText(Form("M = %d", M));
    }
-   gPad->GetListOfPrimitives()->Remove(fInfo);
+   fPad->GetListOfPrimitives()->Remove(fInfo);
    fInfo->Draw("same");
 
    TString symbText = nuc->GetSymbol();
@@ -255,13 +257,12 @@ void KVNuclearChart::ShowNucleusInfo(KVNucleus* nuc)
 
    fSymbol->Clear();
    fSymbol->AddText(symbText.Data());
-   gPad->GetListOfPrimitives()->Remove(fSymbol);
+   fPad->GetListOfPrimitives()->Remove(fSymbol);
    fSymbol->SetFillColor(kBlack);
    fSymbol->SetLineColor(kBlack);
    fSymbol->SetTextColor(kWhite);
    fSymbol->Draw("same");
-   gPad->Modified();
-   gPad->Update();
+   update_pad();
 
 }
 
@@ -274,14 +275,13 @@ void KVNuclearChart::SetShowSymbol(Int_t value)
 void KVNuclearChart::ShowSymbol()
 {
    if (!fShowSymbol) {
-      fSymbolList .Clear();
-      fCanvas->Modified();
-      fCanvas->Update();
+      fSymbolList.Clear();
+      update_pad();
       return;
    }
 
    KVNucleus nuc;
-   for (int zz = fZmin; zz < fZmax; zz++) {
+   for (int zz = fZmin; zz <= fZmax; zz++) {
       nuc.SetZ(zz);
       KVNumberList ll = nuc.GetKnownARange(zz, 1.e-6);
       if (ll.IsEmpty()) continue;
@@ -303,8 +303,25 @@ void KVNuclearChart::ShowSymbol()
    TIter it(&fSymbolList);
    while ((obj = it())) obj->Draw();
 
-   fCanvas->Modified();
-   fCanvas->Update();
+   update_pad();
+}
+
+void KVNuclearChart::ShowBoxSymbols(Bool_t on)
+{
+   // draw name of isotope in each box
+
+   TIter it(&fNucleusBoxList);
+   KVNucleusBox* box;
+   while ((box = (KVNucleusBox*)it())) box->SetShowSymbol(on);
+   update_pad();
+}
+
+void KVNuclearChart::SetBoxSymbolSize(Float_t size)
+{
+   TIter it(&fNucleusBoxList);
+   KVNucleusBox* box;
+   while ((box = (KVNucleusBox*)it())) box->SetSymbolSize(size);
+   update_pad();
 }
 
 void KVNuclearChart::SetShowMagicNumbers(Int_t value)
@@ -315,10 +332,9 @@ void KVNuclearChart::SetShowMagicNumbers(Int_t value)
 
 void KVNuclearChart::ShowMagicNumbers()
 {
-   if ((!fShowMagicNumbers) && (fCanvas)) {
+   if (!fShowMagicNumbers) {
       fMagicList.Clear();
-      fCanvas->Modified();
-      fCanvas->Update();
+      update_pad();
       return;
    }
 

@@ -71,12 +71,6 @@ public:
    Int_t GetScalerStatus(Int_t index) const;
    Int_t GetEventCount() const;
 
-   // ROOT-dictionary visible translations of GTGanilData::ScalerWhat_t enum
-   static Int_t kSkipScaler;
-   static Int_t kDumpScaler;
-   static Int_t kReportScaler;
-   static Int_t kAutoWriteScaler;
-
    ClassDef(KVGANILDataReader, 0) //Reads GANIL acquisition files
 };
 

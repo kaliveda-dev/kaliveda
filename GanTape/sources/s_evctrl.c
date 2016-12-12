@@ -15,7 +15,7 @@ synopsis : s_evctrl(evtbuf, evtctrl, evtstr, pCtrlForm)
      INT16 *evtctrl;  control event buffer address
      INT16 *evtstr;   event structure address
                   INT32 *pCtrlForm; control event format address
-                                   (see STR_EVT.H for valid formats):
+                                   (see GanTape/STR_EVT.H for valid formats):
                                     EVCT_FIX -> format fixe (0)
                                     EVCT_VAR -> format variable (1)
                                                 (un label par parametre)
@@ -100,14 +100,14 @@ example : Call from a C program :
 #include "MDACQDES:H"
 #else
 #include <stdio.h>
-#include "GEN_TYPE.H"   /* general typedef definitions */
+#include "GanTape/GEN_TYPE.H"   /* general typedef definitions */
 #if defined ( __unix ) || ( __unix__)
 #include "ERR_GAN.H" /* GANIL errors definitions */
 #else
 /*#include "ERR$GAN.H" GANIL errors definitions */
 #error "should not have come here"
 #endif
-#include "STR_EVT.H" /* structure of event description */
+#include "GanTape/STR_EVT.H" /* structure of event description */
 #include "EQUIPDES.H"   /* equipment descriptors */
 #endif
 

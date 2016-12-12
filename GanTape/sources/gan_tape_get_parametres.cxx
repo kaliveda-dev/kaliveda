@@ -21,8 +21,8 @@
 #include "gan_tape_get_parametres.h"
 #include "gan_tape_param.h"
 #include "gan_tape_general.h"
-#include "GEN_TYPE.H"
-#include "gan_acq_buf.h"
+#include "GanTape/GEN_TYPE.H"
+#include "GanTape/gan_acq_buf.h"
 
 #include "gan_tape_erreur.h"
 

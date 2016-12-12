@@ -4,7 +4,7 @@
 # fill kaliveda.includes with output of root-config --incdir and all
 #   directories under git control
 
-git ls-files --exclude-standard | \egrep '\.h$|\.rootrc$|\.cpp$|\.c$|\.cxx$|\.C$|\.sh$|\.csh$|\.m4$|\.cmake$|\.in$|CMakeLists.txt' > kaliveda.files
+git ls-files --exclude-standard | \egrep '\.h$|\.hh$|\.H$|\.for$|\.f$|\.rootrc$|\.cpp$|\.c$|\.cxx$|\.C$|\.sh$|\.csh$|\.m4$|\.cmake$|\.in$|CMakeLists.txt' > kaliveda.files
 git ls-files --exclude-standard debian >> kaliveda.files
 rm -rf .root-headers
 echo '.' > kaliveda.includes

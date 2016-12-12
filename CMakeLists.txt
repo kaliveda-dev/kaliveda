@@ -96,12 +96,18 @@ add_feature_info(parallel USE_PARALLEL_MODE "Enable parallelisation of code usin
 #--optional support for SQLite
 option(USE_SQLITE "Enable sqlite database interface KVSQLite" ON)
 if(USE_SQLITE)
-   if(ROOT_sqlite_FOUND)
-      set(WITH_RSQLITE yes)
-		#--library changed from libSQLite.so to libRSQLite.so at some point
-		if(ROOT_SQLite_LIBRARY)
-			set(ROOT_RSQLite_LIBRARY ${ROOT_SQLite_LIBRARY})
-		endif(ROOT_SQLite_LIBRARY)
+   if(ROOT_sqlite_FOUND) # sqlite is in output of root-config --features
+      if(ROOT_SQLite_LIBRARY OR ROOT_RSQLite_LIBRARY)
+         set(WITH_RSQLITE yes)
+		   #--up to 6/10/2015 if ROOT was built using autoconf not cmake
+         #  the library was called libSQLite not libRSQLite
+		   if(ROOT_SQLite_LIBRARY)
+			   set(ROOT_RSQLite_LIBRARY ${ROOT_SQLite_LIBRARY})
+		   endif(ROOT_SQLite_LIBRARY)
+      else(ROOT_SQLite_LIBRARY OR ROOT_RSQLite_LIBRARY)
+         message(STATUS "ROOT with no SQLite support: KVSQLite disabled")
+         set(USE_SQLITE OFF CACHE BOOL "" FORCE)
+      endif(ROOT_SQLite_LIBRARY OR ROOT_RSQLite_LIBRARY)
    else()
       message(STATUS "ROOT with no SQLite support: KVSQLite disabled")
       set(USE_SQLITE OFF CACHE BOOL "" FORCE)

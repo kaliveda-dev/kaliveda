@@ -30,8 +30,8 @@
 #define GT_GTOneScaler_H
 
 #include <TObject.h>
-#include "GEN_TYPE.H"
-#include "gan_acq_buf.h"
+#include "GanTape/GEN_TYPE.H"
+#include "GanTape/gan_acq_buf.h"
 
 // ---------------------------------------------------------------------------
 class GTOneScaler : public TObject {
@@ -58,8 +58,8 @@ protected:
    UInt_t fFreq;       // Comment here
    UInt_t fTics;       // Comment here
    UInt_t fReserve[3]; // Comment here
-//public:
-//   ClassDef(GTOneScaler, 1) // Scaler structure
+public:
+   ClassDef(GTOneScaler, 1) // Scaler structure
 };
 
 

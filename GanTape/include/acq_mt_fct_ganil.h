@@ -16,8 +16,8 @@
 #ifndef __ACQ_FCT_GANIL_H
 #define __ACQ_FCT_GANIL_H
 
-#include "GEN_TYPE.H"
-#include "gan_acq_buf.h"
+#include "GanTape/GEN_TYPE.H"
+#include "GanTape/gan_acq_buf.h"
 
 
 #ifdef __cplusplus

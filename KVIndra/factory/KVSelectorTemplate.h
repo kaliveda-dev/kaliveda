@@ -1,5 +1,8 @@
 class KVSelectorTemplate : public KVSelector {
 
+   TFile* my_file;
+   TH1F* mult, *zdist;
+
 public:
    KVSelectorTemplate() {};
    virtual ~KVSelectorTemplate() {};

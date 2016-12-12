@@ -34,26 +34,13 @@
 
 #include "GTDataParameters.h"
 #include "GTScalers.h"
-
-//extern "C"
-//{
-#include "GEN_TYPE.H"
-#include "STR_EVT.H"
-//}
-#ifndef __GanAcqBuf_H
-//extern "C"
-//{
-//  typedef union {int bidon;} in2p3_buffer_struct;
-//}
-#endif
-#include "gan_acq_buf.h"
+#include "GanTape/GEN_TYPE.H"
+#include "GanTape/STR_EVT.H"
+#include "GanTape/gan_acq_buf.h"
 #ifndef __GAN_TAPE_GENERAL_H
-//extern "C"
-//{
 typedef struct {
    int bidon;
 } gan_tape_desc;
-//}
 #endif
 
 
@@ -152,8 +139,8 @@ protected:
    GTDataParameters* fDataParameters; //! Data parameters names class
    GTScalers*     fScaler;        //! Scaler array
    TTree*         fScalerTree;    // Scaler tree for automatic filling
-// public:
-//    ClassDef(GTGanilData, 0)       // Interface to a GANIL formated Tape or File
+public:
+   ClassDef(GTGanilData, 0)       // Interface to a GANIL formated Tape or File
 };
 
 #endif

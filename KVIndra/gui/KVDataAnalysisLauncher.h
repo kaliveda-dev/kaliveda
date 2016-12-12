@@ -170,6 +170,7 @@ protected:
    const Char_t* GetUserClass();
    void DisableUserClassList();
    void EnableUserClassList();
+   void GenerateNewUserClass();
 
    UInt_t fMainGuiWidth;//width of main window in pixels
    UInt_t fMainGuiHeight;//heigth of main window in pixels

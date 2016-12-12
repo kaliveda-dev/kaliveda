@@ -12,6 +12,8 @@
 #include "KVCanvas.h"
 #include "KVNumberList.h"
 
+#include <TVirtualPad.h>
+
 class KVNuclearChart : public KVBase {
 
 protected:
@@ -36,10 +38,19 @@ protected:
    TPaveText* fSymbol;
    TPaveText* fInfo;
    KVCanvas* fCanvas;
+   TVirtualPad* fPad;
+
+   void update_pad()
+   {
+      if (fPad) {
+         fPad->Modified();
+         fPad->Update();
+      }
+   }
 
 public:
 //    KVNuclearChart();
-   KVNuclearChart(Int_t nMin = -1, Int_t nMax = -1, Int_t zMin = -1, Int_t zMax = -1, Double_t life = 1.e-06);
+   KVNuclearChart(Int_t nMin = 0, Int_t nMax = -1, Int_t zMin = 0, Int_t zMax = -1, Double_t life = 1.e-06);
    KVNuclearChart(const KVNuclearChart&) ;
    virtual ~KVNuclearChart();
    void Copy(TObject&) const;
@@ -53,6 +64,8 @@ public:
    }
    void SetShowSymbol(Int_t value = 1); // *TOGGLE*
    void ShowSymbol();
+   void ShowBoxSymbols(Bool_t on = kTRUE);
+   void SetBoxSymbolSize(Float_t size = 0.02);
 
    Int_t GetShowMagicNumbers()
    {

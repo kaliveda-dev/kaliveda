@@ -412,6 +412,7 @@ void KVSimDirGUI::AddSimDir()
       TString quest;
       quest.Form("Enter name for dataset %s", fi.fIniDir);
       new KVInputDialog(MainFrame, quest, &simdirname, &ok);
+      simdirname.ReplaceAll(" ", "_"); //no spaces in name
       if (ok) {
          KVSimDir* sd = new KVSimDir(simdirname, fi.fIniDir);
          sd->AnalyseDirectory();

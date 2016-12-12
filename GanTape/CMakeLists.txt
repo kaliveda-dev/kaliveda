@@ -20,4 +20,5 @@ if(CCIN2P3_XRD)
 	target_link_libraries(gan_tape ${XROOTD_LIBRARIES})
 endif()
 
-install(TARGETS gan_tape EXPORT KaliVedaExports LIBRARY DESTINATION lib)
+install(TARGETS gan_tape EXPORT KaliVedaExports LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/GanTape DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

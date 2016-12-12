@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "GEN_TYPE.H"
+#include "GanTape/GEN_TYPE.H"
 #include "gan_tape_erreur.h"
 
 #if defined ( __VMS ) || defined ( VMS )

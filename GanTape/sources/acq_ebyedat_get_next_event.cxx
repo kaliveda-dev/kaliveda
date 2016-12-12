@@ -69,9 +69,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "GEN_TYPE.H"   /* GANIL general typedef */
-#include "STR_EVT.H"
-#include "gan_acq_buf.h"
+#include "GanTape/GEN_TYPE.H"   /* GANIL general typedef */
+#include "GanTape/STR_EVT.H"
+#include "GanTape/gan_acq_buf.h"
 #include "acq_ebyedat_get_next_event.h"
 #include "gan_tape_erreur.h"
 

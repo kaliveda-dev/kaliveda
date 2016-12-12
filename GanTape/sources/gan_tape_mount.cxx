@@ -24,12 +24,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "GEN_TYPE.H"
+#include "GanTape/GEN_TYPE.H"
 #include "gan_tape_mount.h"
 #include "gan_tape_test.h"
 #include "gan_tape_general.h"
 #include "gan_tape_param.h"
-#include "gan_acq_buf.h"
+#include "GanTape/gan_acq_buf.h"
 
 #include "gan_tape_erreur.h"
 

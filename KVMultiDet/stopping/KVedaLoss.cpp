@@ -77,10 +77,10 @@ Bool_t KVedaLoss::init_materials() const
    // properties, read from file given by TEnv variable KVedaLoss.RangeTables
 
    Info("init_materials", "Initialising KVedaLoss...");
-   printf("\n");
-   printf("\t*************************************************************************\n");
-   printf("\t*                VEDALOSS STOPPING POWER & RANGE TABLES                 *\n");
-   printf("\t*                                                                       *\n");
+//    printf("\n");
+//    printf("\t*************************************************************************\n");
+//    printf("\t*                VEDALOSS STOPPING POWER & RANGE TABLES                 *\n");
+//    printf("\t*                                                                       *\n");
    int mat_count = 0;
    fMaterials = new KVHashList;
    fMaterials->SetName("VEDALOSS materials list");
@@ -129,26 +129,26 @@ Bool_t KVedaLoss::init_materials() const
                if (!tmp_mat->ReadRangeTable(fp)) return kFALSE;
                tmp_mat->Initialize();
                ++mat_count;
-               Double_t rho = 0.;
+//               Double_t rho = 0.;
                if (tmp_mat->IsGas()) tmp_mat->SetTemperatureAndPressure(19., 1.*KVUnits::atm);
-               rho = tmp_mat->GetDensity();
-               printf("\t*  %2d.  %-7s %-18s  Z=%2d A=%5.1f  rho=%6.3f g/cm**3    *\n",
-                      mat_count, tmp_mat->GetType(), tmp_mat->GetName(),
-                      (int)tmp_mat->GetZ(), tmp_mat->GetMass(),
-                      rho);
+//               rho = tmp_mat->GetDensity();
+//                printf("\t*  %2d.  %-7s %-18s  Z=%2d A=%5.1f  rho=%6.3f g/cm**3    *\n",
+//                       mat_count, tmp_mat->GetType(), tmp_mat->GetName(),
+//                       (int)tmp_mat->GetZ(), tmp_mat->GetMass(),
+//                       rho);
                break;
          }
       }
       fclose(fp);
    }
-   printf("\t*                                                                       *\n");
-   printf("\t*     TF1::Range::Npx = %4d            TF1::EnergyLoss::Npx = %4d     *\n",
-          gEnv->GetValue("KVedaLoss.Range.Npx", 100), gEnv->GetValue("KVedaLoss.EnergyLoss.Npx", 100));
-   printf("\t*                      TF1::ResidualEnergy::Npx = %4d                  *\n",
-          gEnv->GetValue("KVedaLoss.ResidualEnergy.Npx", 100));
-   printf("\t*                                                                       *\n");
-   printf("\t*                       INITIALISATION COMPLETE                         *\n");
-   printf("\t*************************************************************************\n");
+//    printf("\t*                                                                       *\n");
+//    printf("\t*     TF1::Range::Npx = %4d            TF1::EnergyLoss::Npx = %4d     *\n",
+//           gEnv->GetValue("KVedaLoss.Range.Npx", 100), gEnv->GetValue("KVedaLoss.EnergyLoss.Npx", 100));
+//    printf("\t*                      TF1::ResidualEnergy::Npx = %4d                  *\n",
+//           gEnv->GetValue("KVedaLoss.ResidualEnergy.Npx", 100));
+//    printf("\t*                                                                       *\n");
+//    printf("\t*                       INITIALISATION COMPLETE                         *\n");
+//    printf("\t*************************************************************************\n");
    return kTRUE;
 }
 
