@@ -196,9 +196,6 @@ Bool_t KVIDHarpeeICSi_e503::Identify(
    // class.  This way we will store the data from the base class
    // identification even if the derived class initialisation fails.
 
-   //Only Z identification will be performed as A will be obtained from VAMOS
-   SetOnlyZId(kTRUE);
-
    Bool_t status = KVIDHarpeeICSi::Identify(idr, x, y);
 
    // Set the idcode and type for this telescope

@@ -79,7 +79,6 @@ Bool_t KVVAMOSIDTelescope::Identify(KVIdentificationResult* IDR, Double_t x, Dou
    Double_t e  = (x < 0. ? GetIDMapX() : x);
 
    if (fGrid && fGrid->IsIdentifiable(e, de)) {
-      fGrid->SetOnlyZId(fonlyZId);
       fGrid->Identify(e, de, IDR);
       IDR->IDquality = fGrid->GetQualityCode();
    }

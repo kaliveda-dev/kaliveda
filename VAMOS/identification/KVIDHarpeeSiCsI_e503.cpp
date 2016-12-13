@@ -103,8 +103,6 @@ Bool_t KVIDHarpeeSiCsI_e503::Identify(KVIdentificationResult* idr, Double_t x,
    //found by minimisation process to the KVVAMOSReconNuc and compute again energy.
 
    assert(base_id_result_);
-   //Only Z identification will be performed as A will be obtained from VAMOS
-   SetOnlyZId(kTRUE);
 
 #if __cplusplus < 201103L
    KVIDHarpeeSiCsI::Identify(base_id_result_, x, y);
