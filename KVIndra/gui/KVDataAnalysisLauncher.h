@@ -157,7 +157,9 @@ protected:
    TGNumberEntry* runsPerJob;
    TString         fUserLibraries;
    TString         fUserIncludes;
-
+   TGCheckButton* send_mail_at_job_start;
+   TGCheckButton* send_mail_at_job_end;
+   TGTextEntry* alternative_email;
    Bool_t         checkCompilation;
    Bool_t withBatchParams;
    Bool_t noSystems;
@@ -236,6 +238,17 @@ public:
    void UpdateListOfSelectedRuns();
    void ClearListOfSelectedRuns();
    void EditUserClassFiles();
+
+   Bool_t SendMailAtJobStart()
+   {
+      return send_mail_at_job_start->IsOn();
+   }
+   Bool_t SendMailAtJobEnd()
+   {
+      return send_mail_at_job_end->IsOn();
+   }
+   void SetSendMailAtJobStart();
+   void SetSendMailAtJobEnd();
 
    ClassDef(KVDataAnalysisLauncher, 0) //Graphical interface for launching analysis tasks: KaliVedaGUI
 };

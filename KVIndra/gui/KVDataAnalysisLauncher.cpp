@@ -741,9 +741,10 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
    // Batch parameters
    //if the default batch system does not have time/memory/disk parameters,
    //we do not display the corresponding widgets
-   teBatchMemory = 0;
-   teBatchDisk = 0;
-   teBatchTime = 0;
+   teBatchMemory = nullptr;
+   teBatchDisk = nullptr;
+   teBatchTime = nullptr;
+   send_mail_at_job_end = send_mail_at_job_start = nullptr;
    if (gBatchSystemManager->GetDefaultBatchSystem()->IsA()->GetMethodAllAny("SetJobTime")) {
       withBatchParams = kTRUE;
       TGCompositeFrame* cfBatchPar = new TGCompositeFrame(this, fMainGuiWidth, 20, kVerticalFrame);
@@ -784,7 +785,24 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
       teBatchTime->SetTime(2, 30, 0);
       cf->AddFrame(teBatchTime, eX);
       cfBatchPar->AddFrame(cf, eX);
-      this->AddFrame(cfBatchPar, eX);
+
+      // options to send email at start/end of job (we are assuming CCIN2P3-GE batch system)
+      cf = new TGCompositeFrame(cfBatchPar, fMainGuiWidth, 20, kHorizontalFrame);
+      TGLabel* mail = new TGLabel(cf, "Email Notifications:  ");
+      cf->AddFrame(mail, eX);
+      send_mail_at_job_start = new TGCheckButton(cf, " Start   ");
+      send_mail_at_job_start->SetToolTipText("Notify by email when job starts", TTDELAY);
+      send_mail_at_job_start->Connect("Clicked()", "KVDataAnalysisLauncher", this, "SetSendMailAtJobStart()");
+      cf->AddFrame(send_mail_at_job_start, LHtopleft);
+      send_mail_at_job_end = new TGCheckButton(cf, " End      ");
+      send_mail_at_job_end->SetToolTipText("Notify by email when job ends", TTDELAY);
+      send_mail_at_job_end->Connect("Clicked()", "KVDataAnalysisLauncher", this, "SetSendMailAtJobEnd()");
+      cf->AddFrame(send_mail_at_job_end, LHtopleft);
+      alternative_email = new TGTextEntry(cf, "");
+      cf->AddFrame(alternative_email, eX);
+      cfBatchPar->AddFrame(cf, centerX);
+
+      AddFrame(cfBatchPar, eX);
    } else {
       withBatchParams = kFALSE;
    }
@@ -845,6 +863,20 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
       teBatchMemory->SetText(GUIenv->GetValue("KVDataAnalysisLauncher.BatchMemory", "1G"));
       teBatchDisk->SetText(GUIenv->GetValue("KVDataAnalysisLauncher.BatchDisk", "200M"));
       teBatchTime->SetIntNumber(GUIenv->GetValue("KVDataAnalysisLauncher.BatchTime", 9000));
+      if (GUIenv->GetValue("KVDataAnalysisLauncher.SendMailAtJobStart", kFALSE))
+         send_mail_at_job_start->SetState(kButtonDown, kFALSE);
+      else
+         send_mail_at_job_start->SetState(kButtonUp, kFALSE);
+      if (GUIenv->GetValue("KVDataAnalysisLauncher.SendMailAtJobEnd", kFALSE))
+         send_mail_at_job_end->SetState(kButtonDown, kFALSE);
+      else
+         send_mail_at_job_end->SetState(kButtonUp, kFALSE);
+      TString email = GUIenv->GetValue("KVDataAnalysisLauncher.SendMailAddress", "");
+      if (email == "") {
+         email = gSystem->GetFromPipe("email");//only works at CCIN2P3!!!
+         if (email.Index('=') > -1) email.Remove(0, email.Index('=') + 2);
+      }
+      if (email != "") alternative_email->SetText(email, kFALSE);
    }
 
    fUserLibraries = GUIenv->GetValue("KVDataAnalysisLauncher.UserLibraries", "");
@@ -1264,10 +1296,13 @@ void KVDataAnalysisLauncher::Process(void)
    SetResource("KVDataSelector", teDataSelector->GetText());
    SetResource("NbEventsToRead", Form("%.0f", teNbToRead->GetNumber()));
    GUIenv->SetValue("KVDataAnalysisLauncher.BatchName", teBatchName->GetText());
+   TString email;
    if (withBatchParams) {
       GUIenv->SetValue("KVDataAnalysisLauncher.BatchMemory", teBatchMemory->GetText());
       GUIenv->SetValue("KVDataAnalysisLauncher.BatchDisk", teBatchDisk->GetText());
       GUIenv->SetValue("KVDataAnalysisLauncher.BatchTime", (Int_t)teBatchTime->GetIntNumber());
+      email = alternative_email->GetText();
+      GUIenv->SetValue("KVDataAnalysisLauncher.SendMailAddress", email);
    }
    GUIenv->SaveLevel(kEnvUser);
    if (IsBatch()) {
@@ -1280,6 +1315,11 @@ void KVDataAnalysisLauncher::Process(void)
       gBatchSystem->SetJobTime((Int_t)teBatchTime->GetIntNumber());
       gBatchSystem->SetRunsPerJob(runsPerJob->GetNumber());
       gBatchSystem->SetMultiJobsMode(runsPerJob->GetNumber() < listOfRuns.GetNValues());
+      if (SendMailAtJobStart()) gBatchSystem->SetSendMailOnJobStart();
+      if (SendMailAtJobEnd()) gBatchSystem->SetSendMailOnJobEnd();
+      if (SendMailAtJobStart() || SendMailAtJobEnd()) {
+         if (email != "") gBatchSystem->SetSendMailAddress(email);
+      }
       datan->SetBatchSystem(gBatchSystem);
    } else {
       datan->SetBatchSystem(0);
@@ -2049,6 +2089,18 @@ void KVDataAnalysisLauncher::EditUserClassFiles()
    KVString imp, dec;
    if (!KVBase::FindClassSourceFiles(uclass, imp, dec)) return;
    gSystem->Exec(Form("%s %s %s &", editor.Data(), imp.Data(), dec.Data()));
+}
+
+void KVDataAnalysisLauncher::SetSendMailAtJobStart()
+{
+   GUIenv->SetValue("KVDataAnalysisLauncher.SendMailAtJobStart", SendMailAtJobStart());
+   GUIenv->SaveLevel(kEnvUser);
+}
+
+void KVDataAnalysisLauncher::SetSendMailAtJobEnd()
+{
+   GUIenv->SetValue("KVDataAnalysisLauncher.SendMailAtJobEnd", SendMailAtJobEnd());
+   GUIenv->SaveLevel(kEnvUser);
 }
 
 //__________________________________________

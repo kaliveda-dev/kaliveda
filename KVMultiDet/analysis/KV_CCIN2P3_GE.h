@@ -50,6 +50,11 @@ public:
 
    virtual KVList* GetListOfJobs();
 
+   virtual void SetSendMailOnJobStart();
+   virtual void SetSendMailOnJobEnd();
+   virtual void SetSendMailAddress(const char*);
+
+
    ClassDef(KV_CCIN2P3_GE, 1)  //Interface to CCIN2P3-GE batch job management system
 };
 

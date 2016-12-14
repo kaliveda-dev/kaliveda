@@ -234,6 +234,7 @@ KVAvailableRunsFile* KVDataSet::GetAvailableRunsFile(const Char_t* type)
    //Returns available runs file object for given data 'type' (="raw", "recon", "ident", "root")
    //Object will be created and added to internal list if it does not exist
 
+   if (!fRepository) return nullptr;
    KVAvailableRunsFile* avrf =
       (KVAvailableRunsFile*) fAvailableRuns.FindObjectByName(type);
    if (!avrf) {
@@ -656,9 +657,22 @@ TList* KVDataSet::GetListOfAvailableSystems(KVDataAnalysisTask* datan, KVDBSyste
 
 void KVDataSet::SetName(const char* name)
 {
-   //Set name of dataset. Also sets name of calibration/database directory for data set
+   // Set name of dataset.
+   // Also sets path to directory containing database informations
+   // for this dataset, i.e. list of runs, systems, calibration files etc.
+   //     By default, just the name of the dataset is used, i.e.
+   //         [DATADIR]/name
+   //     (where DATADIR = path given by KVBase::GetDATADIRFilePath())
+   //     However, if the variable
+   //          [name].DataSet.Directory:   [path]
+   //     has been set, the value of [path] will be used.
+   //     If [path] is an absolute path name, it will be used as such.
+   //     If [path] is an incomplete or relative path, it will be prepended
+   //      with [DATADIR]/
    TNamed::SetName(name);
-   fCalibDir = GetDATADIRFilePath(name);
+   TString path = GetDataSetEnv("DataSet.Directory", name);
+   if (gSystem->IsAbsoluteFileName(path)) fCalibDir = path;
+   else fCalibDir = GetDATADIRFilePath(path);
 }
 
 const Char_t* KVDataSet::GetDataSetDir() const
@@ -747,7 +761,8 @@ TString KVDataSet::GetFullPathToRunfile(const Char_t* type,
    //This path should be used with e.g. TChain::Add.
 
    //get name of file from available runs file
-   TString file = GetRunfileName(type, run);
+   TString file("");
+   if (fRepository) file = GetRunfileName(type, run);
    if (file == "")
       return file.Data();
    return fRepository->GetFullPathToOpenFile(this, type, file.Data());
@@ -862,11 +877,13 @@ void KVDataSet::UpdateAvailableRuns(const Char_t* type)
 
 TFile* KVDataSet::NewRunfile(const Char_t* type, Int_t run)
 {
-   //Create a new runfile for the dataset of given datatype.
-   //The name of the new file will be a concatenation of GetBaseFileName(type,run)
-   //and the current date and time (TDatime::AsSQLString).
-   //Once the file has been filled, use CommitRunfile to submit it to the repository.
+   // Create a new runfile for the dataset of given datatype.
+   // (only if this dataset is associated with a data repository)
+   // The name of the new file will be a concatenation of GetBaseFileName(type,run)
+   // and the current date and time (TDatime::AsSQLString).
+   // Once the file has been filled, use CommitRunfile to submit it to the repository.
 
+   if (!fRepository) return nullptr;
    TDatime now;
    TString tmp;
    tmp.Form("%s.%s", GetBaseFileName(type, run), now.AsSQLString());
@@ -879,13 +896,15 @@ TFile* KVDataSet::NewRunfile(const Char_t* type, Int_t run)
 
 void KVDataSet::DeleteRunfile(const Char_t* type, Int_t run, Bool_t confirm)
 {
-   //Delete the file for the given run of data type "type" from the repository.
-   //By default, confirm=kTRUE, which means that the user will be asked to confirm
-   //that the file should be deleted. If confirm=kFALSE, no confirmation will be asked
-   //for and the file will be deleted straight away.
+   // Delete the file for the given run of data type "type" from the repository.
+   // By default, confirm=kTRUE, which means that the user will be asked to confirm
+   // that the file should be deleted. If confirm=kFALSE, no confirmation will be asked
+   // for and the file will be deleted straight away.
    //
-   //WARNING: this really does DELETE files in the repository, they cannot be
-   //retrieved once they have been deleted.
+   // WARNING: this really does DELETE files in the repository, they cannot be
+   // retrieved once they have been deleted.
+
+   if (!fRepository) return;
 
    //get name of file to delete
    TString filename = GetAvailableRunsFile(type)->GetFileName(run);
@@ -1066,9 +1085,11 @@ KVNumberList KVDataSet::GetRunList_VersionSelection(const Char_t* type, const Ch
 //___________________________________________________________________________
 void KVDataSet::CommitRunfile(const Char_t* type, Int_t run, TFile* file)
 {
-   //Commit a runfile previously created with NewRunfile() to the repository.
-   //Any previous version of the runfile will be deleted.
-   //The available runs list for this data 'type'  is updated.
+   // Commit a runfile previously created with NewRunfile() to the repository.
+   // Any previous version of the runfile will be deleted.
+   // The available runs list for this data 'type'  is updated.
+
+   if (!fRepository) return;
 
    //keep name of file for updating available runs list
    TString newfile = gSystem->BaseName(file->GetName());
@@ -1110,19 +1131,17 @@ Bool_t KVDataSet::CheckUserCanAccess()
       return kTRUE;             /* no groups set, all users have access */
 
    //split into array of group names
-   TObjArray* toks = fUserGroups.Tokenize(' ');
+   unique_ptr<TObjArray> toks(fUserGroups.Tokenize(' '));
    TObjString* group_name;
-   TIter next_name(toks);
+   TIter next_name(toks.get());
    while ((group_name = (TObjString*) next_name())) {
       //for each group_name, we check if the user's name appears in the group
       if (!fRepository || (fRepository && fRepository->GetDataSetManager()->
                            CheckUser(group_name->String().Data()))
          ) {
-         delete toks;
          return kTRUE;
       }
    }
-   delete toks;
    return kFALSE;
 }
 
@@ -1185,13 +1204,15 @@ void KVDataSet::CheckMultiRunfiles(const Char_t* data_type)
 
 void KVDataSet::CleanMultiRunfiles(const Char_t* data_type, Bool_t confirm)
 {
-   //Check all runs for a given datatype and make sure that only one version
-   //exists for each run. If not, we print a report on the runfiles which occur
-   //multiple times, with the associated date and file name, and then we
-   //destroy all but the most recent version of the file in the repository, and
-   //update the runlist accordingly.
-   //By default, we ask for confirmation before deleting each file.
-   //Call with confirm=kFALSE to delete WITHOUT CONFIRMATION (DANGER!! WARNING!!!)
+   // Check all runs for a given datatype and make sure that only one version
+   // exists for each run. If not, we print a report on the runfiles which occur
+   // multiple times, with the associated date and file name, and then we
+   // destroy all but the most recent version of the file in the repository, and
+   // update the runlist accordingly.
+   // By default, we ask for confirmation before deleting each file.
+   // Call with confirm=kFALSE to delete WITHOUT CONFIRMATION (DANGER!! WARNING!!!)
+
+   if (!fRepository) return;
 
    KVAvailableRunsFile* ARF = GetAvailableRunsFile(data_type);
    KVNumberList doubles = ARF->CheckMultiRunfiles();
@@ -1307,6 +1328,8 @@ void KVDataSet::CheckUpToDate(const Char_t* data_type,
    //Check whether all files of type "data_type" for run number "run" in the data repository
    //are up to date (i.e. at least as recent) as compared to the files in data repository "other_repos".
 
+   if (!fRepository) return;
+
    KVDataRepository* _or =
       gDataRepositoryManager->GetRepository(other_repos);
    if (!_or) {
@@ -1349,6 +1372,8 @@ KVNumberList KVDataSet::GetUpdatableRuns(const Char_t* data_type,
    //from the repository named "other_repos". See CheckUpToDate().
 
    KVNumberList updates;
+   if (!fRepository) return updates;
+
    KVDataRepository* _or =
       gDataRepositoryManager->GetRepository(other_repos);
    if (!_or) {
@@ -1378,7 +1403,7 @@ KVNumberList KVDataSet::GetRunList(const Char_t* data_type,
    //If a pointer to a reaction system is given, only runs for the
    //given system will be included in the list.
    KVNumberList list;
-   if (!HasDataType(data_type)) {
+   if (!fRepository || !HasDataType(data_type)) {
       Error("GetRunList",
             "No data of type %s available. Runlist will be empty.",
             data_type);

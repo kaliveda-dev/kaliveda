@@ -368,8 +368,8 @@ Bool_t KVDataAnalyser::CheckTaskVariables()
          cout << GetUserClass() << " is not a valid " << fTask->GetUserBaseClass() << endl;
          cout << "Analysis aborted." << endl;
          cout << "====================================" << endl;
+         if (BatchMode()) return kFALSE; // avoid infinite loop in batch mode
          ChooseUserClass();
-         //return kFALSE;
       }
    }
 

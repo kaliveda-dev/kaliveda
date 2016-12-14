@@ -121,10 +121,13 @@ public:
       Warning("BQS_Request", "Only define for KV_CCIN2P3_BQS sub class");
       return "";
    }
-   virtual void SetJobTimeString(const Char_t* = "") {};
-   virtual void SetJobTime(Int_t, Int_t = 0, Int_t = 0) {};
-   virtual void SetJobMemory(const Char_t* = "") {};
-   virtual void SetJobDisk(const Char_t* = "") {};
+   virtual void SetJobTimeString(const Char_t* = "") {}
+   virtual void SetJobTime(Int_t, Int_t = 0, Int_t = 0) {}
+   virtual void SetJobMemory(const Char_t* = "") {}
+   virtual void SetJobDisk(const Char_t* = "") {}
+   virtual void SetSendMailOnJobStart() {}
+   virtual void SetSendMailOnJobEnd() {}
+   virtual void SetSendMailAddress(const char*) {}
 
    virtual void SanitizeJobName() {}
 

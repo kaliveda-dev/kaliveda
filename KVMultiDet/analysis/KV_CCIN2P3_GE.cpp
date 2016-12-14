@@ -373,3 +373,21 @@ KVList* KV_CCIN2P3_GE::GetListOfJobs()
 
    return list_of_jobs;
 }
+
+void KV_CCIN2P3_GE::SetSendMailOnJobStart()
+{
+   // add option to send mail when job starts
+   fParList.SetValue("-m b", "");
+}
+
+void KV_CCIN2P3_GE::SetSendMailOnJobEnd()
+{
+   // add option to send mail when job ends
+   fParList.SetValue("-m e", "");
+}
+
+void KV_CCIN2P3_GE::SetSendMailAddress(const char* email)
+{
+   // set email address for notifications
+   fParList.SetValue("-M ", email);
+}
