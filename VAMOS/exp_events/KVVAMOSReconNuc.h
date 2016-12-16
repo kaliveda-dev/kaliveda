@@ -143,6 +143,7 @@ public:
    Double_t         GetVelocity(const Char_t* tof_name) const;
 
    void             SetBrho(Double_t brho);
+   void             SetPath(Double_t path);
    virtual void     SetECode(UChar_t code_mask);
    virtual void     SetFPCode(UInt_t code_mask);
    virtual void     SetIDCode(UShort_t code_mask);
@@ -156,6 +157,7 @@ public:
 
    void             SetThetaVandPhiV(Double_t th_v, Double_t ph_v);
    void             SetXYf(Float_t x, Float_t y);
+   void             SetFPDirection(Double_t th_f, Double_t ph_f);
 
    Bool_t IsZidentified()                              const;
    Bool_t IsQandAidentified()                          const;
@@ -493,6 +495,14 @@ inline void KVVAMOSReconNuc::SetBrho(Double_t brho)
 }
 //____________________________________________________________________________________________//
 
+inline void KVVAMOSReconNuc::SetPath(Double_t path)
+{
+   //This method allows to set the path for simulations (the path must be set and >0
+   //in order to be able to propagate the nucleus, see Propagate() method)
+   fRT.path = path;
+}
+//____________________________________________________________________________________________//
+
 inline void KVVAMOSReconNuc::SetECode(UChar_t code_mask)
 {
    //Sets code for energy calibration
@@ -585,6 +595,22 @@ inline void KVVAMOSReconNuc::SetXYf(Float_t x, Float_t y)
    fRT.pointFP[0] = x;
    fRT.pointFP[1] = y;
 }
+//____________________________________________________________________________________________//
+
+inline void KVVAMOSReconNuc::SetFPDirection(Double_t th_f, Double_t ph_f)
+{
+   //Set the angle coordinates (ThetaF, PhiF) of the trajectory in the FP-frame ( in degree )
+
+   th_f *= TMath::DegToRad();
+   ph_f *= TMath::DegToRad();
+
+   Double_t xx = TMath::Sin(th_f) * TMath::Cos(ph_f);
+   Double_t yy = TMath::Sin(ph_f);
+   Double_t zz = TMath::Cos(th_f) * TMath::Cos(ph_f);
+
+   fRT.dirFP.SetXYZ(xx, yy, zz);
+}
+
 //____________________________________________________________________________________________//
 
 inline Bool_t KVVAMOSReconNuc::IsZidentified() const
