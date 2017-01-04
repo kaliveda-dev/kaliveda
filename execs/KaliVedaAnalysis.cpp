@@ -8,6 +8,16 @@
 #include "KVBase.h"
 #include "KVDataRepositoryManager.h"
 #include "KVDataAnalyser.h"
+#include <csignal>     /* signal, raise, sig_atomic_t */
+#include <cstdio>
+extern "C"
+{
+   void xcpu_signal_handler(int)
+   {
+      printf("Process received XCPU signal -- analysis will be aborted...\n");
+      KVDataAnalyser::SetAbortProcessingLoop(kTRUE);
+   }
+}
 
 using namespace std;
 
@@ -15,6 +25,8 @@ int main(int argc, char* argv[])
 {
    //Set environment variable KVBATCHNAME with name of batch job before running
    //Set environment variable KVLAUNCHDIR with launch directory path before running
+
+   signal(SIGXCPU, xcpu_signal_handler); //in order to cleanly abort batch jobs which are signalled
 
    TString batchName;
    batchName = gSystem->Getenv("KVBATCHNAME");

@@ -3,6 +3,7 @@
 #include <TStyle.h>
 #include "TPluginManager.h"
 #include "TSystem.h"
+#include "KVDataAnalyser.h"
 
 using namespace std;
 
@@ -83,8 +84,6 @@ ClassImp(KVEventSelector)
 // resulting intermediate file will have a default name
 // allowing it to be found at the end of the analysis)
 ////////////////////////////////////////////////////////////////////////////////
-
-Bool_t KVEventSelector::fCleanAbort = kFALSE;
 
 void KVEventSelector::Begin(TTree* /*tree*/)
 {
@@ -179,9 +178,9 @@ Bool_t KVEventSelector::Process(Long64_t entry)
    //
    // The return value is currently not used.
 
-   if (fCleanAbort) {
+   if (gDataAnalyser && gDataAnalyser->AbortProcessingLoop()) {
       // abort requested by external process
-      Abort(Form("CleanAbort flag set after %lld events", fEventsRead), kAbortFile);
+      Abort(Form("Aborting analysis after %lld events", fEventsRead), kAbortFile);
       return kFALSE;
    }
 

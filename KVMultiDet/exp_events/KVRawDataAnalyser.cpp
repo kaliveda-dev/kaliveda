@@ -84,7 +84,8 @@ void KVRawDataAnalyser::ProcessRun()
    fDetEv = new KVDetectorEvent;
 
    //loop over events in file
-   while ((nevents-- ? fRunFile->GetNextEvent() : kFALSE)) {
+   while ((nevents-- ? fRunFile->GetNextEvent() : kFALSE) && !AbortProcessingLoop()) {
+
       //reconstruct hit groups
       KVSeqCollection* fired = fRunFile->GetFiredDataParameters();
       gMultiDetArray->GetDetectorEvent(fDetEv, fired);
@@ -141,7 +142,7 @@ void KVRawDataAnalyser::SubmitTask()
 
    //loop over runs
    GetRunList().Begin();
-   while (!GetRunList().End()) {
+   while (!GetRunList().End() && !AbortProcessingLoop()) {
       fRunNumber = GetRunList().Next();
       ProcessRun();
    }
@@ -264,6 +265,11 @@ void KVRawDataAnalyser::clearallhistos(TCollection* list)
       if (obj->InheritsFrom("TCollection")) clearallhistos((TCollection*)obj);
       else if (obj->InheritsFrom("TH1"))((TH1*)obj)->Reset();
    }
+}
+
+void KVRawDataAnalyser::AbortDuringRunProcessing()
+{
+   // Method called to abort analysis during processing of a run
 }
 
 TH1* KVRawDataAnalyser::FindHisto(const Char_t* path)

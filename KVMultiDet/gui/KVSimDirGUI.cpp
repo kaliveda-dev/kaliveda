@@ -249,6 +249,7 @@ KVSimDirGUI::KVSimDirGUI()
    radiob = new TGRadioButton(bgroup, "CM");
    radiob->SetState(kButtonDown);
    radiob = new TGRadioButton(bgroup, "Lab");
+   radiob = new TGRadioButton(bgroup, "Projectile");
    bgroup->Connect("Clicked(Int_t)", "KVSimDirGUI", this, "Kinematics(Int_t)");
    fKine = kKCM;
    hf->AddFrame(bgroup, new TGLayoutHints(kLHintsTop | kLHintsLeft, 20, 2, 2, 2));
@@ -718,6 +719,7 @@ void KVSimDirGUI::RunFilter()
    else geometry = "KV";
    TString kinema;
    if (fKine == kKCM) kinema = "cm";
+   else if (fKine == kKProj) kinema = "proj";
    else kinema = "lab";
    TString filter;
    switch (fFilterType) {

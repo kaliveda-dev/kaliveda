@@ -414,7 +414,7 @@ void KVCaloBase::AddNeutrons(Int_t mult, Double_t mke)
    //AddIngValue("Zsum",n->GetZ());
    AddIngValue("Asum", mult);
    AddIngValue("Eksum", mult * mke);
-   AddIngValue("Qsum", nn.GetMassExcess(0, 1));
+   AddIngValue("Qsum", mult * nn.GetMassExcess(0, 1));
    AddIngValue("Msum", mult);
 
 }

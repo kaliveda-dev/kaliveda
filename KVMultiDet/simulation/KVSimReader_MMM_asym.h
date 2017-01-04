@@ -9,10 +9,14 @@
 class KVSimReader_MMM_asym : public KVSimReader {
 protected:
    Int_t idx;
+   Bool_t fApplyBoost;
+   TVector3 fBoostQP;
+   TVector3 fBoostQC;
 
 public:
    KVSimReader_MMM_asym();
    KVSimReader_MMM_asym(KVString filename);
+   void SetBoost(TVector3& vQP, TVector3& vQC);
 
    virtual ~KVSimReader_MMM_asym();
 
@@ -21,6 +25,7 @@ public:
       tree_name = "MMM_asym";
       Info("init", "%s", branch_name.Data());
       idx = 0;
+      fApplyBoost = kFALSE;
    }
 
    virtual void ReadFile();

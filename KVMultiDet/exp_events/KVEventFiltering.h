@@ -29,7 +29,9 @@ public:
    TTree* fTree;
    KVReconstructedEvent* fReconEvent;
    TVector3 fCMVelocity;
+   TVector3 fProjVelocity;
    Bool_t fTransformKinematics;//=kTRUE if simulation not in lab frame
+   TString fNewFrame;   //allow the definition of a specific frame
 
    ClassDef(KVEventFiltering, 1) //Filter simulated events with multidetector response
 };

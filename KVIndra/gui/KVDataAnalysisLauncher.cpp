@@ -1980,6 +1980,7 @@ void KVDataAnalysisLauncher::GenerateNewUserClass()
    SetUserClassList();
    if (ok) {
       SetUserClass(classname);
+      if (IsBatchNameAuto()) SetAutoBatchName();
       EditUserClassFiles();
    }
 }

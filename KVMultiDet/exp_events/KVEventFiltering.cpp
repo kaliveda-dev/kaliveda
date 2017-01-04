@@ -63,6 +63,7 @@ KVEventFiltering::KVEventFiltering()
 {
    // Default constructor
    fTransformKinematics = kTRUE;
+   fNewFrame = "";
 }
 
 //________________________________________________________________
@@ -76,6 +77,7 @@ KVEventFiltering::KVEventFiltering(const KVEventFiltering& obj)  : KVEventSelect
    // If your class allocates memory in its constructor(s) then it is ESSENTIAL :-)
 
    fTransformKinematics = kTRUE;
+   fNewFrame = "";
    obj.Copy(*this);
 }
 
@@ -110,7 +112,8 @@ Bool_t KVEventFiltering::Analysis()
    // procedures as for experimental data.
 
    if (fTransformKinematics) {
-      GetEvent()->SetFrame("lab", fCMVelocity);
+      if (fNewFrame = "proj")   GetEvent()->SetFrame("lab", fProjVelocity);
+      else                    GetEvent()->SetFrame("lab", fCMVelocity);
       gMultiDetArray->DetectEvent(GetEvent(), fReconEvent, "lab");
    } else {
       gMultiDetArray->DetectEvent(GetEvent(), fReconEvent);
@@ -164,18 +167,24 @@ void KVEventFiltering::InitAnalysis()
    KVDBSystem* sys = (gDataBase ? (KVDBSystem*)gDataBase->GetTable("Systems")->GetRecord(system) : 0);
    KV2Body* tb = 0;
 
-   if (sys) tb =  sys->GetKinematics();
+   Bool_t justcreated=kFALSE;
+	if (sys) tb =  sys->GetKinematics();
    else if (system) {
       tb = new KV2Body(system);
       tb->CalculateKinematics();
-   }
+   	justcreated = kTRUE;
+	}
 
    fCMVelocity = (tb ? tb->GetCMVelocity() : TVector3(0, 0, 0));
    fCMVelocity *= -1.0;
 
-   delete tb;
-
-   Int_t run = 0;
+	fProjVelocity = (tb ? tb->GetNucleus(1)->GetVelocity() : TVector3(0, 0, 0));
+   fProjVelocity *= -1.0;
+	
+	if (justcreated)
+		delete tb;
+	
+	Int_t run = 0;
    if (IsOptGiven("Run")) run = GetOpt("Run").Atoi();
    if (!run && sys) run = ((KVDBRun*)sys->GetRuns()->First())->GetNumber();
 
@@ -208,8 +217,10 @@ void KVEventFiltering::InitAnalysis()
       fTransformKinematics = kFALSE;
       Info("InitAnalysis", "Simulation is in laboratory/detector frame");
    } else {
+      fNewFrame = kine;
       Info("InitAnalysis", "Simulation will be transformed to laboratory/detector frame");
    }
+
 
 
    OpenOutputFile(sys, run);

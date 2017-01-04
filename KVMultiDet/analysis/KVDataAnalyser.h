@@ -68,7 +68,18 @@ protected:
 
    virtual const Char_t* GetACliCMode();
 
+   static Bool_t fCleanAbort;//flag to force abort of processing
+
 public:
+   static void SetAbortProcessingLoop(Bool_t now = kTRUE)
+   {
+      // Set flag to force a clean abort of the processing loop
+      fCleanAbort = now;
+   }
+   static Bool_t AbortProcessingLoop()
+   {
+      return fCleanAbort;
+   }
 
    KVDataAnalyser();
    virtual ~ KVDataAnalyser();
@@ -215,21 +226,21 @@ public:
    /* methods which can be used to customise analysis class behaviour.
       they can be called from the analysis class using the global
       pointer to the current data analyser, gDataAnalyser  */
-   virtual void preInitAnalysis() {};
-   virtual void postInitAnalysis() {};
-   virtual void preInitRun() {};
-   virtual void postInitRun() {};
-   virtual void preAnalysis() {};
-   virtual void postAnalysis() {};
-   virtual void preEndRun() {};
-   virtual void postEndRun() {};
-   virtual void preEndAnalysis() {};
-   virtual void postEndAnalysis() {};
+   virtual void preInitAnalysis() {}
+   virtual void postInitAnalysis() {}
+   virtual void preInitRun() {}
+   virtual void postInitRun() {}
+   virtual void preAnalysis() {}
+   virtual void postAnalysis() {}
+   virtual void preEndRun() {}
+   virtual void postEndRun() {}
+   virtual void preEndAnalysis() {}
+   virtual void postEndAnalysis() {}
 
    virtual void WriteBatchInfo(TTree*);
    virtual Int_t GetRunNumberFromFileName(const Char_t*);
 
-   virtual void RegisterUserClass(TObject*) {};
+   virtual void RegisterUserClass(TObject*) {}
 
    void SetUserClassOptions(const Char_t* o = "")
    {

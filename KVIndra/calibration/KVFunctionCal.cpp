@@ -86,7 +86,7 @@ KVFunctionCal::KVFunctionCal(KVDBParameterSet* kvdbps): KVCalibrator()
    for (Int_t pp = 0; pp < fcalibfunction->GetNpar(); pp += 1) {
       fcalibfunction->SetParameter(pp, kvdbps->GetParameter(pp + 1));
    }
-   fcalibfunction->SetRange(kvdbps->GetParameter(kvdbps->GetParamIndex("xmin")), kvdbps->GetParameter(kvdbps->GetParamIndex("xmax")));
+   fcalibfunction->SetRange(kvdbps->GetParameter("xmin"), kvdbps->GetParameter("xmax"));
 
    SetType(kvdbps->GetTitle());
    SetDetector(gMultiDetArray->GetDetector(kvdbps->GetName()));
@@ -107,7 +107,7 @@ void KVFunctionCal::ChangeCalibParameters(KVDBParameterSet* kvdbps)
    for (Int_t pp = 0; pp < fParamNumber - 1; pp += 1) {
       fcalibfunction->SetParameter(pp, kvdbps->GetParameter(pp + 1));
    }
-   fcalibfunction->SetRange(kvdbps->GetParameter(kvdbps->GetParamIndex("xmin")), kvdbps->GetParameter(kvdbps->GetParamIndex("xmax")));
+   fcalibfunction->SetRange(kvdbps->GetParameter("xmin"), kvdbps->GetParameter("xmax"));
 
 }
 

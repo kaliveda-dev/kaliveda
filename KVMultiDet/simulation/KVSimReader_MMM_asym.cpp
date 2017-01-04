@@ -29,6 +29,13 @@ KVSimReader_MMM_asym::KVSimReader_MMM_asym(KVString filename)
 }
 
 
+void KVSimReader_MMM_asym::SetBoost(TVector3& vQP, TVector3& vQC)
+{
+   fApplyBoost = kTRUE;
+   fBoostQP = vQP;
+   fBoostQC = vQC;
+}
+
 KVSimReader_MMM_asym::~KVSimReader_MMM_asym()
 {
    // Destructor
@@ -85,11 +92,34 @@ Bool_t KVSimReader_MMM_asym::ReadNucleus()
 {
 
    Int_t aa = GetIntReadPar(idx++);
-   nuc->SetZ(GetIntReadPar(idx++));
+   Int_t zz = GetIntReadPar(idx++);
+
+   nuc->SetZ(zz);
    nuc->SetA(aa);
-   nuc->SetPx(GetDoubleReadPar(idx++));
-   nuc->SetPy(GetDoubleReadPar(idx++));
-   nuc->SetPz(GetDoubleReadPar(idx++));
+
+   Double_t px = GetDoubleReadPar(idx++);
+   Double_t py = GetDoubleReadPar(idx++);
+   Double_t pz = GetDoubleReadPar(idx++);
+
+   nuc->SetMomentum(px, py, pz);
+
+   if (fApplyBoost) {
+      nuc->SetFrame("QP", fBoostQP, kTRUE);
+      TVector3 momQP = nuc->GetFrame("QP")->GetMomentum();
+
+      nuc->SetFrame("QC", fBoostQC, kTRUE);
+      TVector3 momQC = nuc->GetFrame("QC")->GetMomentum();
+
+      nuc->Clear();
+      nuc->GetParameters()->SetValue("Prov", "QP");
+      nuc->SetZandA(zz, aa);
+      nuc->SetMomentum(momQP.X(), momQP.Y(), momQP.Z());
+
+      nuc = (KVSimNucleus*)evt->AddParticle();
+      nuc->GetParameters()->SetValue("Prov", "QC");
+      nuc->SetZandA(zz, aa);
+      nuc->SetMomentum(momQC.X(), momQC.Y(), momQC.Z());
+   }
 
    return kTRUE;
 

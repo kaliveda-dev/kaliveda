@@ -169,14 +169,14 @@ void KVINDRADB_e475s::ReadCalibFile(ifstream& fin, TString dettype, TString detg
    Info("ReadCalibFile()",
         "Reading calibration parameters of file %s%s", dettype.Data(), detgain.Data());
 
-   KVDBParameterSet* parset = NULL;
-   TList* list_record = new TList();
+   KVDBParameterSet* parset = nullptr;
+   TList list_record;
 
-   Char_t detname[50];
+   TString detname;
    TString sline;
    TString calib_type, calib_signal, calib_runs, calib_ring, calib_mods;
-   TObjArray* toks = NULL;
-   TObjArray* tokspara = NULL;
+   unique_ptr<TObjArray> toks;
+   unique_ptr<TObjArray> tokspara;
    while (fin.good()) {         //reading the file
       sline.ReadLine(fin);
       while (sline.BeginsWith("+KVCalibrator")) {
@@ -184,9 +184,8 @@ void KVINDRADB_e475s::ReadCalibFile(ifstream& fin, TString dettype, TString detg
          while (sline.BeginsWith("<LIST> Type=")) {
             sline.ReplaceAll("<LIST> Type=", "");
             if (sline.Contains("(")) {
-               toks = sline.Tokenize("(");
+               toks.reset(sline.Tokenize("("));
                sline = ((TObjString*)toks->At(0))->GetString();
-               delete toks;
             }
             calib_type = sline;
             sline.ReadLine(fin);
@@ -201,7 +200,7 @@ void KVINDRADB_e475s::ReadCalibFile(ifstream& fin, TString dettype, TString detg
                   calib_runs = sline;
                   cout << calib_runs << endl;
                   sline.ReadLine(fin);
-                  list_record->RemoveAll();
+                  list_record.RemoveAll();
                   while (sline.BeginsWith("<LIST> Rings=")) {
                      sline.ReplaceAll("<LIST> Rings=", "");
                      calib_ring = sline;
@@ -213,23 +212,21 @@ void KVINDRADB_e475s::ReadCalibFile(ifstream& fin, TString dettype, TString detg
                            calib_mods = sline;
                            cout << calib_mods << endl;
                            //sprintf(detname,"%s_%02d%02d_%s",dettype.Data(),calib_ring.Atoi(),calib_mods.Atoi(),detgain.Data());
-                           sprintf(detname, "%s_%02d%02d", dettype.Data(), calib_ring.Atoi(), calib_mods.Atoi());
+                           detname.Form("%s_%02d%02d", dettype.Data(), calib_ring.Atoi(), calib_mods.Atoi());
                         } else {
                            sline.ReplaceAll("<PARAMETER> Function=", "");
                            cout << sline << endl;
-                           toks = sline.Tokenize(":");
-                           TF1 ff(Form("f%s", detname), ((TObjString*)(*toks)[0])->GetString().Data());
+                           toks.reset(sline.Tokenize(":"));
+                           TF1 ff(Form("f%s", detname.Data()), ((TObjString*)toks->At(0))->GetString().Data());
 
-                           TString sparaline = ((TObjString*)(*toks)[1])->GetString();
-                           delete toks;
+                           TString sparaline = ((TObjString*)toks->At(1))->GetString();
 
-                           tokspara = sparaline.Tokenize(" ");
+                           tokspara.reset(sparaline.Tokenize(" "));
                            if (tokspara->GetEntries() != ff.GetNpar()) cout << tokspara->GetEntries() << " " << ff.GetNpar() << endl;
                            for (Int_t pp = 0; pp < ff.GetNpar(); pp += 1) {
-                              ff.SetParameter(pp, ((TObjString*)(*tokspara)[pp])->GetString().Atof());
-                              printf("%d %lf\n", pp, ff.GetParameter(pp));
+                              ff.SetParameter(pp, ((TObjString*)tokspara->At(pp))->GetString().Atof());
+                              printf("%d %g\n", pp, ff.GetParameter(pp));
                            }
-                           delete tokspara;
 
                            parset = new KVDBParameterSet(detname, Form("%s(%s)", calib_type.Data(), detgain.Data()), ff.GetNpar() + 3);
                            parset->SetParamName(0, ff.GetExpFormula().Data());
@@ -243,7 +240,7 @@ void KVINDRADB_e475s::ReadCalibFile(ifstream& fin, TString dettype, TString detg
                            parset->SetParamName(ff.GetNpar() + 2, "xmax");
 
                            fCalibrations->AddRecord(parset);
-                           list_record->Add(parset);
+                           list_record.Add(parset);
 
                         }
                         sline.ReadLine(fin);
@@ -253,8 +250,8 @@ void KVINDRADB_e475s::ReadCalibFile(ifstream& fin, TString dettype, TString detg
                   nl.Begin();
                   while (!nl.End()) {
                      Int_t run = nl.Next();
-                     for (Int_t ll = 0; ll < list_record->GetEntries(); ll += 1)
-                        if (!(((KVDBRecord*)list_record->At(ll))->AddLink("Runs", GetRun(run))))
+                     for (Int_t ll = 0; ll < list_record.GetEntries(); ll += 1)
+                        if (!(((KVDBRecord*)list_record.At(ll))->AddLink("Runs", GetRun(run))))
                            Error("ReadCalibFile()", "Pb de chargements ...");
                   }
                }
@@ -264,10 +261,6 @@ void KVINDRADB_e475s::ReadCalibFile(ifstream& fin, TString dettype, TString detg
    }
 
    fin.close();
-
-   list_record->Clear();
-   delete list_record;
-
 }
 
 //------------------------------

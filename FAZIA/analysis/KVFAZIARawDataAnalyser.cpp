@@ -61,7 +61,7 @@ void KVFAZIARawDataAnalyser::SubmitTask()
 
    //loop over runs
    GetRunList().Begin();
-   while (!GetRunList().End()) {
+   while (!GetRunList().End() && !AbortProcessingLoop()) {
       fRunNumber = GetRunList().Next();
       Info("SubmitTask", "treatment of run# %d", fRunNumber);
       ProcessRun();

@@ -1065,6 +1065,7 @@ TGraphErrors* KVHistoManipulator::MakeGraphFrom(TProfile* pf, Bool_t Error)
    }
    if (!pf->InheritsFrom("TProfile")) {
       //Error("MakeGraphFrom","methode definie uniquement pour les classes TProfile et filles");
+      return NULL;
    }
    Int_t nx = pf->GetNbinsX();
 
@@ -1079,6 +1080,40 @@ TGraphErrors* KVHistoManipulator::MakeGraphFrom(TProfile* pf, Bool_t Error)
 
    return gr;
 }
+
+// //-------------------------------------------------
+// TGraphErrors* KVHistoManipulator::MakeGraphFrom(TH1* pf, Bool_t Error)
+// {
+// //-------------------------------------------------
+//    // Cree un graph à partir d un histo
+//    //
+//    // L'utilisateur doit effacer ce TGraph apres utilisation
+//    //
+//
+//    if (!pf) {
+//       cout << "pointeur histogramme nul" << endl;
+//       return NULL;
+//    }
+//    if (!pf->InheritsFrom("TH1")) {
+//       //Error("MakeGraphFrom","methode definie uniquement pour les classes TProfile et filles");
+//    }
+//    else if (pf->InheritsFrom("TProfile"))
+//    {
+//       return
+//    }
+//    Int_t nx = pf->GetNbinsX();
+//
+//    TGraphErrors* gr = new TGraphErrors();
+//    for (Int_t xx = 1; xx <= nx; xx += 1) {
+//       if (pf->GetBinEntries(xx) > 0) {
+//          gr->SetPoint(gr->GetN(), pf->GetBinCenter(xx), pf->GetBinContent(xx));
+//          if (Error)
+//             gr->SetPointError(gr->GetN() - 1, pf->GetBinWidth(xx) / 2, pf->GetBinError(xx));
+//       }
+//    }
+//
+//    return gr;
+// }
 
 //###############################################################################################################"
 //-------------------------------------------------

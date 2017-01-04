@@ -91,10 +91,13 @@ Bool_t KVSimReader_MMM::ReadNucleus()
    Int_t aa = GetIntReadPar(idx++);
    nuc->SetZ(GetIntReadPar(idx++));
    nuc->SetA(aa);
-   nuc->SetExcitEnergy(GetDoubleReadPar(idx++));
-   nuc->SetPx(GetDoubleReadPar(idx++));
-   nuc->SetPy(GetDoubleReadPar(idx++));
-   nuc->SetPz(GetDoubleReadPar(idx++));
+   Double_t exci = GetDoubleReadPar(idx++);
+   Double_t px = GetDoubleReadPar(idx++);
+   Double_t py = GetDoubleReadPar(idx++);
+   Double_t pz = GetDoubleReadPar(idx++);
+
+   nuc->SetMomentum(px, py, pz);
+   nuc->SetExcitEnergy(exci);
 
    return kTRUE;
 

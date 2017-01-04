@@ -4,7 +4,7 @@
 #ifndef __NEWROOFITRESULT_H
 #define __NEWROOFITRESULT_H
 
-#include "Riosfwd.h"
+#include <iosfwd>
 #include "RooAbsArg.h"
 #include "RooPrintable.h"
 #include "RooDirItem.h"

@@ -68,7 +68,8 @@ class KVSimDirGUI : public KVBase {
    };
    enum {
       kKCM = 1,
-      kKLab
+      kKLab,
+      kKProj
    };
    Int_t fFilterType;
    Int_t fGeoType;

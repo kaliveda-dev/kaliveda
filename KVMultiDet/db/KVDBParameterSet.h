@@ -22,12 +22,12 @@ $Id: KVDBParameterSet.h,v 1.13 2007/04/18 14:28:49 ebonnet Exp $
 #include "KVDBRecord.h"
 #include "TString.h"
 #include "KVDBKey.h"
+#include "KVNameValueList.h"
 
 class KVDBParameterSet: public KVDBRecord {
 protected:
    Int_t fParamNumber;          //number of parameters
-   Double_t* fParameters;       //[fParamNumber] parameter array
-   Char_t** fParamNames;        //[fParamNumber][32] Names of parameters
+   KVNameValueList fParameters;//parameters
 
 public:
    KVDBParameterSet();
@@ -35,13 +35,13 @@ public:
                     UShort_t pnum);
    virtual ~ KVDBParameterSet();
 
-   virtual Int_t GetParamNumber() const;
-   virtual Double_t* GetParameters() const;
+   virtual Int_t GetParamNumber() const
+   {
+      return fParamNumber;
+   }
    virtual Double_t GetParameter(UShort_t i = 0) const;
    virtual Double_t GetParameter(TString name) const;
-   virtual Int_t GetParamIndex(TString name) const;
-   virtual Char_t** GetParamNames() const;
-   virtual Char_t* GetParamName(UShort_t i = 0) const;
+   virtual const Char_t* GetParamName(UShort_t i = 0) const;
    virtual KVRList* GetRuns() const;
    virtual void SetParameter(UShort_t i, Double_t val);
    virtual void SetParameter(Double_t val);
@@ -55,29 +55,14 @@ public:
    ClassDef(KVDBParameterSet, 1)       // Set of parameters for calibration
 };
 
-inline Int_t KVDBParameterSet::GetParamNumber() const
-{
-   return fParamNumber;
-}
-
-inline Double_t* KVDBParameterSet::GetParameters() const
-{
-   return fParameters;
-}
-
 inline Double_t KVDBParameterSet::GetParameter(UShort_t i) const
 {
-   return fParameters[i];
+   return fParameters.GetDoubleValue(i);
 }
 
-inline Char_t** KVDBParameterSet::GetParamNames() const
+inline const Char_t* KVDBParameterSet::GetParamName(UShort_t i) const
 {
-   return fParamNames;
-}
-
-inline Char_t* KVDBParameterSet::GetParamName(UShort_t i) const
-{
-   return fParamNames[i];
+   return fParameters.GetNameAt(i);
 }
 
 inline KVRList* KVDBParameterSet::GetRuns() const
@@ -86,12 +71,12 @@ inline KVRList* KVDBParameterSet::GetRuns() const
 }
 inline void KVDBParameterSet::SetParameter(UShort_t i, Double_t val)
 {
-   fParameters[i] = val;
+   fParameters.GetParameter(i)->Set(val);
 }
 
 inline void KVDBParameterSet::SetParameter(Double_t val)
 {
-   fParameters[0] = val;
+   SetParameter(0, val);
 }
 
 

@@ -12,7 +12,7 @@ ccali.DataRepository.XRDRootDir:       /hpss/in2p3.fr/group/indra
 
 +BatchSystem:    GE
 GE.BatchSystem.Title:   Use Grid Engine batch system
-GE.BatchSystem.DefaultJobOptions:   -P P_indra -o $PWD -j yes -l os='sl6',xrootd=1,irods=1,sps=1 -V -N #JobName#
+GE.BatchSystem.DefaultJobOptions:   -P P_indra -o $PWD -j yes -l os='sl6',xrootd=1,irods=1 -V -N #JobName#
 GE.BatchSystem.JobSubCmd:   qsub
 GE.BatchSystem.JobScript:   $KVROOT/bin/KVA
 GE.BatchSystem.DefaultJobTime:   4000

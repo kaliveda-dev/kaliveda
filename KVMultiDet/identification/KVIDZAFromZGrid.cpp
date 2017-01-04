@@ -173,16 +173,16 @@ void KVIDZAFromZGrid::LoadPIDRanges()
 
 void KVIDZAFromZGrid::PrintPIDLimits()
 {
-   for (int zz = 1; zz <= fZmaxInt; zz++) {
-      Info("PrintPIDLimits", "Z=%2d    [%.4lf  %.4lf]", zz, ((interval*)fTables.At(zz - 1))->fPIDmins.at(0),
-           ((interval*)fTables.At(zz - 1))->fPIDmaxs.at(((interval*)fTables.At(zz - 1))->fNPIDs - 1));
+   for (int zz = fZminInt; zz <= fZmaxInt; zz++) {
+      Info("PrintPIDLimits", "Z=%2d    [%.4lf  %.4lf]", zz, ((interval*)fTables.At(zz - fZminInt))->fPIDmins.at(0),
+           ((interval*)fTables.At(zz - fZminInt))->fPIDmaxs.at(((interval*)fTables.At(zz - fZminInt))->fNPIDs - 1));
    }
 }
 
 bool KVIDZAFromZGrid::is_inside(double pid)
 {
    int zint = TMath::Nint(pid);
-   if (fTables.At(zint - 1)) return ((interval*)fTables.At(zint - 1))->is_inside(pid);
+   if (fTables.At(zint - fZminInt)) return ((interval*)fTables.At(zint - fZminInt))->is_inside(pid);
    else return kFALSE;
 }
 
@@ -236,15 +236,15 @@ void KVIDZAFromZGrid::Identify(Double_t x, Double_t y, KVIdentificationResult* i
       idr->A = Aint;
       idr->Aident = kFALSE;
 
-      if ((fPIDRange && (idr->IDOK) && (idr->Z <= fZmaxInt) && (idr->Z > 0) && (const_cast < KVIDZAFromZGrid* >(this)->is_inside(Z))) ||
+      if ((fPIDRange && (idr->IDOK) && (idr->Z <= fZmaxInt) && (idr->Z > 0) && !fHasMassCut && (const_cast < KVIDZAFromZGrid* >(this)->is_inside(Z))) ||
             (fPIDRange && (idr->IDOK) && (idr->Z <= fZmaxInt) && (idr->Z >= fZminInt - 1) && fHasMassCut && GetIdentifier("MassID")->IsInside(x, y))) {
-//          Info("Identify","try to deduce the mass... (%d)",Zint);
-//         double pid = const_cast < KVIDZAFromZGrid* >(this)->DeduceAfromPID(idr);
          const_cast < KVIDZAFromZGrid* >(this)->DeduceAfromPID(idr);
          if (idr->IDquality < kICODE4) {
             idr->Aident = kTRUE;
             idr->IDOK = kTRUE;
          }
+
+
 //         pid = 0;
 //         idr->PID = std::abs(pid);
 //         idr->A = TMath::Nint(pid);
@@ -338,9 +338,7 @@ double KVIDZAFromZGrid::DeduceAfromPID(KVIdentificationResult* idr)
 {
    int zint = idr->Z;
    double res = 0.;
-   if (fTables.At(zint - 1)) res = ((interval*)fTables.At(zint - 1))->eval(idr);
-//   Info("DeduceAfromPID","PIDA = %lf",res);
-//   Info("DeduceAfromPID","Z=%d  A=%d  code=%d",idr->Z,idr->A,idr->IDquality);
+   if (fTables.At(zint - fZminInt)) res = ((interval*)fTables.At(zint - fZminInt))->eval(idr);
    return res;
 }
 

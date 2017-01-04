@@ -96,7 +96,12 @@ void KVFAZIAUpDater::SetCalibrations(KVDBRun* dbrun)
       if (det && (cal = det->GetCalibrator(par->GetTitle()))) {
          if (det->GetIdentifier() == KVFAZIADetector::kCSI) {
             for (int nn = 0; nn < cal->GetNumberParams(); nn++) cal->SetParameter(nn, par->GetParameter(nn));
-         } else ((KVFAZIACalibrator*)cal)->ChangeParameters(par->GetParameters());
+         } else {
+            Double_t* params = new Double_t[par->GetParamNumber()];
+            for (int y = 0; y < par->GetParamNumber(); ++y) params[y] = par->GetParameter(y);
+            ((KVFAZIACalibrator*)cal)->ChangeParameters(params);
+            delete[] params;
+         }
          cal->SetStatus(1);
       }
    }

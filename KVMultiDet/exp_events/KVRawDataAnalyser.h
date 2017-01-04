@@ -22,6 +22,9 @@ protected:
    void clearallhistos(TCollection*);
 
    Long64_t TotalEntriesToRead;
+
+   void AbortDuringRunProcessing();
+
 public:
    Long64_t GetTotalEntriesToRead() const
    {

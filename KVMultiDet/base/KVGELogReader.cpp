@@ -59,6 +59,11 @@ void KVGELogReader::ReadLine(TString& line, Bool_t& ok)
       fStatus = line;
       fOK = kFALSE;
       return;
+   } else if (line.Contains("XCPU")) {
+      ok = kFALSE;
+      fStatus = "KILLED";
+      fOK = kFALSE;
+      return;
    } else if (line.Contains("cpu time:"))
       ReadCPULimit(line);
    else if (line.Contains("CpuUser ="))

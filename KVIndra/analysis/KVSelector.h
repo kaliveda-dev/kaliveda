@@ -123,7 +123,6 @@ protected:
    void FillTH3(TH3* h3, Double_t one, Double_t two, Double_t three, Double_t four);
 
 public:
-
    KVSelector(TTree* tree = 0);
    virtual ~ KVSelector();
 

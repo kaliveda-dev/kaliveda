@@ -28,6 +28,7 @@ $Author: franklan $
 #include "THashList.h"
 
 using namespace std;
+Bool_t KVDataAnalyser::fCleanAbort = kFALSE;
 
 ClassImp(KVDataAnalyser)
 //////////////////////////////////////////////////

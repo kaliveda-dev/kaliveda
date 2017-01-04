@@ -21,7 +21,6 @@
 #include <KVINDRADB.h>
 
 KVString KVSelector::fBranchName = "INDRAReconEvent";
-
 using namespace std;
 
 ClassImp(KVSelector)
@@ -337,6 +336,12 @@ Bool_t KVSelector::Process(Long64_t entry)      //for ROOT versions > 4.00/08
    //new mass formula and laboratory energies adjusted accordingly.
    //Then the reaction CM momenta of all "OK" particles are calculated and
    //the list of global variables (if one is defined) is filled.
+
+   if (gDataAnalyser->AbortProcessingLoop()) {
+      // abort requested by batch system
+      Abort(Form("Aborting analysis after %d events", totentry), kAbortFile);
+      return kFALSE;
+   }
 
    fTreeEntry = entry;
 
