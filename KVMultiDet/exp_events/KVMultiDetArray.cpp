@@ -2244,6 +2244,27 @@ TGraph* KVMultiDetArray::DrawPunchThroughEsurAVsZ(const Char_t* detector, Int_t 
    return punch;
 }
 
+TGraph* KVMultiDetArray::DrawPunchThroughZVsVpar(const Char_t* detector, Int_t massform)
+{
+   // Creates and fills a TGraph with the Z vs. the punch-through velocity paralllel to the beam
+   // direction in cm/ns for the given detector,
+   // for Z=1-92. The mass of each nucleus is calculated according to the given mass formula
+   // (see KVNucleus).
+
+   TGraph* punch = new TGraph(92);
+   punch->SetName(Form("KVMultiDetpunchthroughV_%s_mass%d", detector, massform));
+   punch->SetTitle(Form("Array Punch-through %s (cm/ns) (mass formula %d)", detector, massform));
+   KVNucleus nuc;
+   nuc.SetMassFormula(massform);
+   for (int Z = 1; Z <= 92; Z++) {
+      nuc.SetZ(Z);
+      nuc.SetE(GetPunchThroughEnergy(detector, nuc.GetZ(), nuc.GetA()));
+      nuc.SetTheta(GetDetector(detector)->GetTheta());
+      punch->SetPoint(Z - 1, nuc.GetVpar(), Z);
+   }
+   return punch;
+}
+
 void KVMultiDetArray::SetROOTGeometry(Bool_t on)
 {
    // Call with on=kTRUE if array uses ROOT geometry for tracking
