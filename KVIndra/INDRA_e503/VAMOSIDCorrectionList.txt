@@ -2,6 +2,8 @@
 
 straight_fct.dat
 straight_fct_chiosi.dat
+duplication_aoq_cuts_sicsi.dat
+ToF_duplication_corr_sicsi.dat
 
 #q_function.dat
 #mq_function.dat

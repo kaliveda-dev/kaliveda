@@ -51,7 +51,6 @@ KVVAMOSDataCorrection_e503::~KVVAMOSDataCorrection_e503()
 void KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
 {
    assert(nuc);
-   Bool_t kst_aoq_corr = kFALSE;
 
    Int_t IDCode = (int) nuc->GetCodes().GetFPCodeIndex();
 
@@ -60,9 +59,6 @@ void KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    if (IDCode == 4) kst_aoq_corr = ApplyAoverQDuplicationCorrections(nuc, flist_aoq_cut_icsi);
 
    //other corrections
-
-
-   //return kst_aoq_corr;
 }
 
 //____________________________________________________________________________//
