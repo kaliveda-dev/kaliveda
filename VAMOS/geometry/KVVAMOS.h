@@ -22,7 +22,6 @@ class KVCalibrator;
 class KVDetector;
 class KVVAMOSTransferMatrix;
 class KVVAMOSReconGeoNavigator;
-class KVVAMOSDataCorrection;
 class KVReconstructedNucleus;
 class KVBasicVAMOSFilter;
 

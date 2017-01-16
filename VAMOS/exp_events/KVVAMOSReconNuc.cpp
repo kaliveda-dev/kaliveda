@@ -11,6 +11,7 @@
 #include "KVIDQA.h"
 #include "KVIDHarpeeICSi_e503.h"
 #include "KVIDHarpeeSiCsI_e503.h"
+#include "KVVAMOSDataCorrection.h"
 
 ClassImp(KVVAMOSReconNuc)
 

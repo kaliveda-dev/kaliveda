@@ -28,6 +28,7 @@
 #include "KVVAMOSDataCorrection.h"
 
 class KVVAMOSDetector;
+class KVVAMOSDataCorrection;
 
 class KVVAMOSReconNuc : public KVReconstructedNucleus {
 private:
@@ -40,7 +41,7 @@ protected:
    };
 
    KVVAMOSReconTrajectory fRT;             //handles trajectory reconstruction data
-   KVVAMOSDataCorrection* fDataCorr;
+   KVVAMOSDataCorrection*  fDataCorr;
    Double_t               fStripFoilEloss; //calculated energy lost in the stripping foil
 
    std::vector<Double_t>  fDetE;           //array with the corrected energy lost in each detector of fDetList
@@ -629,12 +630,6 @@ inline void KVVAMOSReconNuc::SetFPDirection(Double_t th_f, Double_t ph_f)
 inline void KVVAMOSReconNuc::SetDataCorrection(KVVAMOSDataCorrection* data_corr)
 {
    //Set the class to handle corrections of VAMOS data
-
-   if (fDataCorr) {
-      delete fDataCorr;
-      fDataCorr = NULL;
-   }
-
    fDataCorr = data_corr;
 }
 
