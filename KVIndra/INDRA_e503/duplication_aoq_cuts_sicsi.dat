@@ -1,0 +1,76 @@
+################################################################################################
+#
+# Duplication of AoverQ peaks (Silicon:CaesiumIodide) :
+#
+# These parameters are used to make cuts on the mass:charge ratio for e503 experiment
+# in order to correct their associated ToF (see also KVVAMOSDataCorrection_e503 class).
+#
+# Due to a hazardous measurement of ToF on randomly either the rise or the fall  
+# of the HF signal, the mass:charge ratios (obtained from TSI_HF, so HF) show duplications. 
+# A constant offset on the ToF corresponding to the meausrement on rise or fall of the HF 
+# signal should correct this.  
+# We select with cuts in charge_vs_mass:charge the zones corresponding to a measurement of
+# the ToF on the fall of HF (for a same (charge, mass:charge) mean value we basically select 
+# the tasks on the right).
+# For each (charge, mass:charge) mean value and so cut, a constant offset should be obtained 
+# by measuring the difference in ToF between couples in and outside the given cut. 
+# For e503 experiment, the ToF (found around 1.25 for 4848 system) offset to apply in the data
+# in the defined cuts are set in 'ToF_duplication_corr_sicsi.dat' file.
+#
+################################################################################################
+#
+#
+# The format of this file is designed so that it can be easily read by the
+# KVIVDB_e503 parser in a generic way. By doing this we avoid having to define a
+# separate method to read each file as the format is now regulated. 
+#
+# Any field can be made a parameter by prefixing it like this: 
+#     +parameter: some_name = value. 
+#
+# Beware that the parameter will be converted to a Double_t and that 'some_name'
+# is optional and is not used in the program, it is used purely to convey to the
+# human reader what the value of that parameter is.  Parameters will be added in
+# the order they are specified. 
+#
+# Any line without a +something will be ignored by the parser. 
+#
+# WARNING: If you change the record_ids then you will also need to change the
+# hard-coded values in KVIVUpDater_e503.
+#
+#
+################################################################################################
+
+[entry]
++record_id: = duplication_aoq_sicsi_0
+system = 4040
++run_range: = 335-335
++parameter: x0 = 1.99775
++parameter: y0 = 20.8216
++parameter: x1 = 2.00614
++parameter: y1 = 17.039
++parameter: x2 = 2.00964 
++parameter: y2 = 15.9974
++parameter: x3 = 2.01454 
++parameter: y3 = 14.1334
++parameter: x4 = 2.02154 
++parameter: y4 = 12.1051
++parameter: x5 = 2.02783 
++parameter: y5 = 10.0767
++parameter: x6 = 2.03203 
++parameter: y6 = 9.03507
++parameter: x7 = 2.03763 
++parameter: y7 = 7.19856
++parameter: x8 = 2.04043 
++parameter: y8 = 6.29402
++parameter: x9 = 2.04672 
++parameter: y9 = 5.11536
++parameter: x10 = 2.05092 
++parameter: y10 = 4.01894
++parameter: x11 = 2.0929,
++parameter: y11 = 4.26563
++parameter: x12 = 2.03973 
++parameter: y12 = 14.9558
++parameter: x13 = 2.02154 
++parameter: y13 = 21.0135
++parameter: x14 = 1.99775 
++parameter: y14 = 20.8216

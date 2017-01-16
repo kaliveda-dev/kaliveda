@@ -1,0 +1,32 @@
+# Time of Flight correction parameters (Silicon:CaesiumIodide) 
+# for mass:charge duplication (in ns). 
+# Any VAMOS nucleus with (RealZ, RealAoQ) inside the cuts defined in
+# the 'duplication_aoq_cuts_sicsi.dat' will have their ToF modified by the
+# values in this file.
+#
+# For the moment we don't know if IonisationChamber:Silicon ToF corrections 
+# parameters are different so we have created two separated files.
+#
+# The format of this file is designed so that it can be easily read by the
+# KVIVDB_e503 parser in a generic way. By doing this we avoid having to define a
+# separate method to read each file as the format is now regulated. 
+#
+# Any field can be made a parameter by prefixing it like this: 
+#     +parameter: some_name = value. 
+#
+# Beware that the parameter will be converted to a Double_t and that 'some_name'
+# is optional and is not used in the program, it is used purely to convey to the
+# human reader what the value of that parameter is.  Parameters will be added in
+# the order they are specified. 
+#
+# Any line without a +something will be ignored by the parser. 
+#
+# WARNING: If you change the record_ids then you will also need to change the
+# hard-coded values in KVIVUpDater_e503.
+#
+
+[entry]
++record_id: = tof_aoq_sicsi
+system = 4040
++run_range: = 335-335
++parameter: t0 = -1.25
