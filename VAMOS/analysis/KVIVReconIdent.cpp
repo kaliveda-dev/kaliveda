@@ -131,8 +131,8 @@ Bool_t KVIVReconIdent::Analysis(void)
          // old recon ROOT files
 
          KVIVReconEvent* IVevent = (KVIVReconEvent*)GetEvent();
-         // Z-identification, calibration and Q-A identification
-         IVevent->IdentAndCalibVAMOSEvent();
+         // Z-identification, calibration, Q-A identification and corrections
+         IVevent->IdentAndCalibVAMOSEvent(GetDataCorrection());
       }
    }
 
@@ -140,6 +140,17 @@ Bool_t KVIVReconIdent::Analysis(void)
    fIdentTree->Fill();
 
    return kTRUE;
+}
+//_____________________________________
+
+KVVAMOSDataCorrection* KVIVReconIdent::GetDataCorrection()
+{
+   //Returns the KVVAMOSDataCorrection object to apply corrections
+
+   if (!fDataCorr) {
+      fDataCorr = KVVAMOSDataCorrection::MakeDataCorrection(gDataSet->GetName());
+   }
+   return fDataCorr;
 }
 //_____________________________________
 

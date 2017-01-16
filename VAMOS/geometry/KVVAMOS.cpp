@@ -1050,8 +1050,8 @@ KVVAMOSTransferMatrix* KVVAMOS::GetTransferMatrix()
    if (fTransMatrix) return fTransMatrix;
    return (fTransMatrix = new KVVAMOSTransferMatrix(kTRUE));
 }
-//________________________________________________________________
 
+//________________________________________________________________
 void KVVAMOS::Initialize()
 {
    // Initialize data members of the VAMOS detectors and of VAMOS

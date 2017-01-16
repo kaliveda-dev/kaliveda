@@ -218,7 +218,7 @@ void KVVAMOSReconEvent::IdentifyEvent_Z()
    KVReconstructedEvent::IdentifyEvent();
 }
 //________________________________________________________________
-void KVVAMOSReconEvent::IdentAndCalibEvent()
+void KVVAMOSReconEvent::IdentAndCalibEvent(KVVAMOSDataCorrection* data_corr)
 {
 
    //If the nuclei measured in VAMOS have not been previously Z-identified
@@ -308,6 +308,11 @@ void KVVAMOSReconEvent::IdentAndCalibEvent()
 //         std::cout << "Energy_ChIo=" << d->GetEnergy("CHI") << std::endl;
 //         std::cout << "Energy_Si="  << d->GetEnergy("SI")   << std::endl;
 //         std::cout << "Energy_CsI=" << d->GetEnergy("CSI")  << std::endl;
+      }
+
+      if (data_corr && d->IsZidentified() && d->IsCalibrated() && d->IsQandAidentified()) {
+         d->SetDataCorrection(data_corr);
+         d->ApplyCorrections();
       }
    }
 }

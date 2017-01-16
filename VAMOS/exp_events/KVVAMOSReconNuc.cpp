@@ -932,6 +932,12 @@ void KVVAMOSReconNuc::Propagate(ECalib cal)
 }
 //________________________________________________________________
 
+void KVVAMOSReconNuc::ApplyCorrections()
+{
+   GetDataCorrection()->ApplyCorrections(this);
+}
+
+//________________________________________________________________
 void KVVAMOSReconNuc::Print(Option_t* option) const
 {
    IGNORE_UNUSED(option);

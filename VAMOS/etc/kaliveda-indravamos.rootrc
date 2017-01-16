@@ -126,6 +126,7 @@ INDRA_e494s.INDRADB.ChIoSiVoltMeVCalib:             e494s_Volt2MeV.dat
 # Plugin.KVUpDater:    name_of_dataset    name_of_class    name_of_plugin_library   constructor_to_call
 +Plugin.KVUpDater:  INDRA_e494s  KVIVUpDater  VAMOSdb "KVIVUpDater()"
 +Plugin.KVUpDater:  INDRA_e503   KVIVUpDater_e503  VAMOSdb "KVIVUpDater_e503()"
++Plugin.KVVAMOSDataCorrection:   INDRA_e503   KVVAMOSDataCorrection_e503   VAMOSexp_events   "KVVAMOSDataCorrection_e503()"   
 
 #============================== Plugins for identification telescopes
 # The KVMultiDetArray::GetIDTelescopes(KVDetector*de, KVDetector*e) method uses these plugins to

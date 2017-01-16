@@ -8,6 +8,7 @@
 #pragma link C++ class KVIVReconEvent+;
 #pragma link C++ class KVVAMOSReconEvent-;
 #pragma link C++ class KVVAMOSReconNuc-;
+#pragma link C++ class KVVAMOSDataCorrection+;
 
 // Identification correction (idc) namespace
 #pragma link C++ namespace idc;

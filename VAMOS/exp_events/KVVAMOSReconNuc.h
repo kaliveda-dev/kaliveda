@@ -25,6 +25,7 @@
 #include "KVVAMOSReconGeoNavigator.h"
 #include "KVVAMOSReconTrajectory.h"
 #include "KVVAMOSTransferMatrix.h"
+#include "KVVAMOSDataCorrection.h"
 
 class KVVAMOSDetector;
 
@@ -39,6 +40,7 @@ protected:
    };
 
    KVVAMOSReconTrajectory fRT;             //handles trajectory reconstruction data
+   KVVAMOSDataCorrection* fDataCorr;
    Double_t               fStripFoilEloss; //calculated energy lost in the stripping foil
 
    std::vector<Double_t>  fDetE;           //array with the corrected energy lost in each detector of fDetList
@@ -52,6 +54,7 @@ protected:
    virtual void CalibrateFromDetList();
    virtual void MakeDetectorList();
    KVVAMOSReconGeoNavigator* GetNavigator();
+   KVVAMOSDataCorrection* GetDataCorrection();
 
 public:
 
@@ -77,14 +80,14 @@ public:
    virtual void     GetAnglesFromStoppingDetector(Option_t* opt = "random");
    Double_t  GetDeltaPath(KVVAMOSDetector* det) const;
    using    KVReconstructedNucleus::GetEnergy;
-   Int_t    GetDetectorIndex(const Char_t* det_label) const;
+   Int_t     GetDetectorIndex(const Char_t* det_label) const;
    Double_t  GetEnergy(const Char_t* det_label)        const;
    Double_t  GetEnergyAfter(const Char_t* det_label)   const;
    Double_t  GetEnergyBefore(const Char_t* det_label)  const;
    Double_t  GetMassOverQ(const Char_t* tof_name)      const;
    Double_t  GetPath(KVVAMOSDetector* start, KVVAMOSDetector* stop = NULL)      const;
    Double_t  GetPath(const Char_t* start_label, const Char_t* stop_label = "") const;
-   Int_t GetNBeamPeriod(Double_t tof, Double_t dist) const;
+   Int_t     GetNBeamPeriod(Double_t tof, Double_t dist) const;
 
    using KVReconstructedNucleus::GetRealA;
    Float_t GetRealA(const Char_t* tof_name)          const;
@@ -99,6 +102,7 @@ public:
    virtual Bool_t   ReconstructLabTraj();
 
    virtual void     Propagate(ECalib cal = kNoCalib);
+   virtual void     ApplyCorrections();
    virtual void     Print(Option_t* option = "") const;
    virtual void     SetQandAidentification(KVIdentificationResult* idr);
 
@@ -158,6 +162,7 @@ public:
    void             SetThetaVandPhiV(Double_t th_v, Double_t ph_v);
    void             SetXYf(Float_t x, Float_t y);
    void             SetFPDirection(Double_t th_f, Double_t ph_f);
+   void             SetDataCorrection(KVVAMOSDataCorrection*);
 
    Bool_t IsZidentified()                              const;
    Bool_t IsQandAidentified()                          const;
@@ -489,6 +494,14 @@ inline Double_t KVVAMOSReconNuc::GetVelocity(const Char_t* tof_name) const
 }
 //____________________________________________________________________________________________//
 
+inline KVVAMOSDataCorrection* KVVAMOSReconNuc::GetDataCorrection()
+{
+   //returns pointer to the class used for VAMOS data corrections
+   return fDataCorr;
+}
+
+//____________________________________________________________________________________________//
+
 inline void KVVAMOSReconNuc::SetBrho(Double_t brho)
 {
    fRT.Brho = brho;
@@ -609,6 +622,20 @@ inline void KVVAMOSReconNuc::SetFPDirection(Double_t th_f, Double_t ph_f)
    Double_t zz = TMath::Cos(th_f) * TMath::Cos(ph_f);
 
    fRT.dirFP.SetXYZ(xx, yy, zz);
+}
+
+//____________________________________________________________________________________________//
+
+inline void KVVAMOSReconNuc::SetDataCorrection(KVVAMOSDataCorrection* data_corr)
+{
+   //Set the class to handle corrections of VAMOS data
+
+   if (fDataCorr) {
+      delete fDataCorr;
+      fDataCorr = NULL;
+   }
+
+   fDataCorr = data_corr;
 }
 
 //____________________________________________________________________________________________//
