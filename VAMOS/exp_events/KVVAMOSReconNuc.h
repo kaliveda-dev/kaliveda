@@ -41,7 +41,7 @@ protected:
    };
 
    KVVAMOSReconTrajectory fRT;             //handles trajectory reconstruction data
-   KVVAMOSDataCorrection*  fDataCorr;
+   KVVAMOSDataCorrection*  fDataCorr;//!
    Double_t               fStripFoilEloss; //calculated energy lost in the stripping foil
 
    std::vector<Double_t>  fDetE;           //array with the corrected energy lost in each detector of fDetList

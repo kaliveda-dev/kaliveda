@@ -936,7 +936,7 @@ void KVVAMOSReconNuc::Propagate(ECalib cal)
 
 void KVVAMOSReconNuc::ApplyCorrections()
 {
-   Info("ApplyCorrections", "... applying corrections ...");
+   //Info("ApplyCorrections", "... applying corrections ...");
    GetDataCorrection()->ApplyCorrections(this);
 }
 

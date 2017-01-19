@@ -237,7 +237,7 @@ void KVVAMOSReconEvent::IdentAndCalibEvent(KVVAMOSDataCorrection* data_corr)
    while ((d = GetNextNucleus())) {
 
       //debug
-      Info("IdentAndCalibEvent", "... new particle ...");
+      //Info("IdentAndCalibEvent", "... new particle ...");
 
       //-----------------------
       // Z-identification
@@ -262,7 +262,7 @@ void KVVAMOSReconEvent::IdentAndCalibEvent(KVVAMOSDataCorrection* data_corr)
       }
 
       //debug
-      Info("IdentAndCalibEvent", "... Z identification done ...");
+      //Info("IdentAndCalibEvent", "... Z identification done ...");
       //std::cout << "#KVVAMOSReconEvent::IdentAndCalib() -> End of Z identification for the particle... results follow:" << std::endl;
       //std::cout << "IDcode=" << d->GetIDCode() << std::endl;
       //std::cout << "Zident=" <<
@@ -279,7 +279,7 @@ void KVVAMOSReconEvent::IdentAndCalibEvent(KVVAMOSDataCorrection* data_corr)
       if (d->IsZidentified() && !d->IsCalibrated()) d->Calibrate();
 
       //debug
-      Info("IdentAndCalibEvent", "... calibration done ...");
+      //Info("IdentAndCalibEvent", "... calibration done ...");
 
       //--------------------------------------------------------------------------
       //All particles which have been previously Z-identified (IsZidentified=kTRUE)
@@ -289,7 +289,7 @@ void KVVAMOSReconEvent::IdentAndCalibEvent(KVVAMOSDataCorrection* data_corr)
          d->IdentifyQandA();
 
          //debug
-         Info("IdentAndCalibEvent", "... QandA identification done ...");
+         //Info("IdentAndCalibEvent", "... QandA identification done (IDCode=%d) ...", d->GetIDCode());
 
          //debug
 //         std::cout << "#KVVAMOSReconEvent::IdentAndCalib() -> End of A identification for the particle... results follow:" << std::endl;
@@ -318,7 +318,7 @@ void KVVAMOSReconEvent::IdentAndCalibEvent(KVVAMOSDataCorrection* data_corr)
          d->ApplyCorrections();
 
          //debug
-         Info("IdentAndCalibEvent", "... corrections done ...");
+         //Info("IdentAndCalibEvent", "... corrections done ...");
       }
    }
 }

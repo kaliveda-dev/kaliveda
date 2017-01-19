@@ -5,6 +5,8 @@
 #include "KVIDTelescope.h"
 #include "KVIDHarpeeICSi_e503.h"
 #include "KVIDHarpeeSiCsI_e503.h"
+#include "KVParticle.h"
+#include "KVNucleus.h"
 
 ClassImp(KVVAMOSDataCorrection_e503)
 
@@ -20,7 +22,7 @@ ClassImp(KVVAMOSDataCorrection_e503)
 KVVAMOSDataCorrection_e503::KVVAMOSDataCorrection_e503()
 {
    // Default constructor
-   fkverbose      = kTRUE;
+   fkverbose      = kFALSE;
    fkInitialised  = kFALSE;
    fkListSiCsI_OK = kFALSE;
    fkListICSi_OK  = kFALSE;
@@ -106,7 +108,7 @@ Bool_t KVVAMOSDataCorrection_e503::Init()
 void KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
 {
    assert(nuc);
-   Int_t IDCode = (int) nuc->GetCodes().GetFPCodeIndex();
+   Int_t IDCode = nuc->GetIDCode();
 
    if (fkverbose) Info("ApplyCorrections", "... trying to apply e503 corrections to nucleus (IDCode=%d) ...", IDCode);
 
@@ -277,20 +279,22 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyAoverQDuplicationCorrections(KVVAMOSReco
    TIter next_cut(aoq_cut);
    TCutG* cut = NULL;
    while ((cut = dynamic_cast<TCutG*>(next_cut.Next()))) {
-      if (cut->IsInside(Z_nuc, AoQ_nuc)) {//if nuc needs to be corrected
+      if (cut->IsInside(AoQ_nuc, Z_nuc)) {//if nuc needs to be corrected
          //Find new value of mass:charge ratio
          Double_t new_AoQ = -666.;
          Double_t brho    = nuc->GetBrho();
          Double_t path    = -666.;
          Double_t tof     = -666.;
-         nuc->GetCorrFlightDistanceAndTime(path, tof, "TSI_HF");
+         const Char_t* tof_name = "TSI_HF";
+         nuc->GetCorrFlightDistanceAndTime(path, tof, tof_name);
          Double_t time  = tof + ftof_corr_sicsi;
          Double_t beta  = path / time / KVParticle::C();
          Double_t gamma = 1.0 / TMath::Sqrt(1. - beta * beta);
          Double_t tmp   = beta * gamma;
          new_AoQ = brho * KVParticle::C() * 10. / tmp / KVNucleus::u();
+
          //Set new value of mass:charge
-         nuc->SetRealAoverQ(new_AoQ);
+         //nuc->SetRealAoverQ(new_AoQ);
 
          if (fkverbose) Info("ApplyAoverQDuplicationCorrections", "... finishing AoQ corrections [AoQ_old=%e, AoQ_new=%e] ...", AoQ_nuc, new_AoQ);
          return kTRUE;

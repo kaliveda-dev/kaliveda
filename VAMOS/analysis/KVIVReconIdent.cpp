@@ -137,19 +137,12 @@ Bool_t KVIVReconIdent::Analysis(void)
 
          KVIVReconEvent* IVevent = (KVIVReconEvent*)GetEvent();
          // Z-identification, calibration, Q-A identification and corrections
-
-         //debug
-         Info("Analysis", "identification of a new event (mult_vamos=%d)", IVevent->GetVAMOSMult());
-
          IVevent->IdentAndCalibVAMOSEvent(fDataCorr);
-
-         Info("Analysis", "... IdentAndCalibVAMOSEvent done ...");
       }
    }
 
    //Fill Ident tree
    fIdentTree->Fill();
-   Info("Analysis", "... Fill tree done ...");
 
    return kTRUE;
 }
