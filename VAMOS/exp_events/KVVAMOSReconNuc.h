@@ -40,9 +40,9 @@ protected:
       kIsQAidentified = BIT(23)  //flag set when Q and A identification of particle is complete
    };
 
-   KVVAMOSReconTrajectory fRT;             //handles trajectory reconstruction data
+   KVVAMOSReconTrajectory  fRT;             //handles trajectory reconstruction data
    KVVAMOSDataCorrection*  fDataCorr;//!
-   Double_t               fStripFoilEloss; //calculated energy lost in the stripping foil
+   Double_t                fStripFoilEloss; //calculated energy lost in the stripping foil
 
    std::vector<Double_t>  fDetE;           //array with the corrected energy lost in each detector of fDetList
    Float_t                fRealQ;          //Q returned by identification routine
