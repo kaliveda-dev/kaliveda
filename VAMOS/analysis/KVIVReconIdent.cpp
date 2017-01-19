@@ -8,6 +8,7 @@
 #include "KVDataRepositoryManager.h"
 #include "KVDataAnalyser.h"
 #include "KVINDRADB.h"
+#include "Riostream.h"
 
 using namespace std;
 
@@ -106,6 +107,10 @@ void KVIVReconIdent::InitRun(void)
       gVamos->PrintStatusOfIDTelescopes();
       // print status of calibrations
       gVamos->PrintCalibStatusOfDetectors();
+
+      // look for VAMOS data correction class if defined in env
+      fDataCorr = NULL;
+      fDataCorr = GetDataCorrection();
    }
 }
 //_____________________________________
@@ -132,12 +137,19 @@ Bool_t KVIVReconIdent::Analysis(void)
 
          KVIVReconEvent* IVevent = (KVIVReconEvent*)GetEvent();
          // Z-identification, calibration, Q-A identification and corrections
-         IVevent->IdentAndCalibVAMOSEvent(GetDataCorrection());
+
+         //debug
+         Info("Analysis", "identification of a new event (mult_vamos=%d)", IVevent->GetVAMOSMult());
+
+         IVevent->IdentAndCalibVAMOSEvent(fDataCorr);
+
+         Info("Analysis", "... IdentAndCalibVAMOSEvent done ...");
       }
    }
 
    //Fill Ident tree
    fIdentTree->Fill();
+   Info("Analysis", "... Fill tree done ...");
 
    return kTRUE;
 }
@@ -145,11 +157,34 @@ Bool_t KVIVReconIdent::Analysis(void)
 
 KVVAMOSDataCorrection* KVIVReconIdent::GetDataCorrection()
 {
-   //Returns the KVVAMOSDataCorrection object to apply corrections
+   //Returns the KVVAMOSDataCorrection object used to apply corrections on VAMOS
 
    if (!fDataCorr) {
       fDataCorr = KVVAMOSDataCorrection::MakeDataCorrection(gDataSet->GetName());
+
+      KVDBRun* db_run_entry(gIndraDB->GetRun(fRunNumber));
+      assert(db_run_entry);
+
+      Info("GetDataCorrection", "Setting VAMOS ID correction parameters...");
+
+      const TString keyname("VAMOSIDCorrectionParameters");
+
+      Info("GetDataCorrection", "Retrieving records using key \'%s\'...", keyname.Data());
+
+      const KVRList* const records(db_run_entry->GetLinks(keyname));
+      assert(records);
+
+      if (!records) {
+         Error("GetDataCorrection", "Failed to retrieve records using key \"%s\", "
+               "has the key name changed?", keyname.Data());
+      }
+
+      else {
+         fDataCorr->SetIDCorrectionParameters(records);
+         fDataCorr->Init();
+      }
    }
+
    return fDataCorr;
 }
 //_____________________________________

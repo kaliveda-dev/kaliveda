@@ -94,6 +94,7 @@ void KVVAMOSReconNuc::Copy(TObject& obj) const
    KVReconstructedNucleus::Copy(obj);
    KVVAMOSReconNuc& CastedObj = (KVVAMOSReconNuc&)obj;
    CastedObj.fCodes = fCodes;
+   CastedObj.fDataCorr = fDataCorr;
    CastedObj.fRT    = fRT;
    CastedObj.fDetE  = fDetE;
    CastedObj.fStripFoilEloss  = fStripFoilEloss;
@@ -935,6 +936,7 @@ void KVVAMOSReconNuc::Propagate(ECalib cal)
 
 void KVVAMOSReconNuc::ApplyCorrections()
 {
+   Info("ApplyCorrections", "... applying corrections ...");
    GetDataCorrection()->ApplyCorrections(this);
 }
 

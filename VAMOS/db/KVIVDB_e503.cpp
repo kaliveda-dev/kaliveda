@@ -29,7 +29,7 @@ KVIVDB_e503::KVIVDB_e503() :
    // C++11 is supported, use nullptr
    id_correction_parameters_(nullptr),
 #endif
-   verbose_(kFALSE)
+   verbose_(kTRUE)
 {
    Init();
 }
@@ -44,7 +44,7 @@ KVIVDB_e503::KVIVDB_e503(const Char_t* name) :
    // C++11 is supported, use nullptr
    id_correction_parameters_(nullptr),
 #endif
-   verbose_(kFALSE)
+   verbose_(kTRUE)
 {
    Init();
 }

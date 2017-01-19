@@ -18,18 +18,34 @@ ClassImp(KVVAMOSDataCorrection)
 
 KVVAMOSDataCorrection::KVVAMOSDataCorrection() : KVBase("VAMOSDataCorrection", "Correction of VAMOS data")
 {
-   // Default constructor
-   fRecords = new KVList(kFALSE);
+#if __cplusplus < 201103L
+   fRecords = NULL;
+#else
+   fRecords(nullptr);
+#endif
 }
 
 //____________________________________________________________________________//
 KVVAMOSDataCorrection::~KVVAMOSDataCorrection()
 {
    // Destructor
+#if __cplusplus < 201103L
    if (fRecords) {
       delete fRecords;
       fRecords = NULL;
    }
+#endif
+}
+
+
+//____________________________________________________________________________//
+Bool_t KVVAMOSDataCorrection::Init()
+{
+   //Generic (empty) initialisation method.
+   //Override in child classes to apply specific corrections.
+   //Returns kFALSE.
+
+   return kFALSE;
 }
 
 //____________________________________________________________________________//
@@ -38,6 +54,9 @@ KVVAMOSDataCorrection* KVVAMOSDataCorrection::MakeDataCorrection(const Char_t* u
    //Looks for plugin (see $KVROOT/KVFiles/.kvrootrc) with name 'uri'(=name of dataset),
    //loads plugin library, creates object and returns pointer.
    //If no plugin defined for dataset, instanciates a KVVAMOSDataCorrection (default)
+
+   //debug
+   std::cout << "KVVAMOSDataCorrection::MakeDataCorrection, ... creating data correction ..." << std::endl;
 
    //check and load plugin library
    TPluginHandler* ph;
@@ -49,6 +68,10 @@ KVVAMOSDataCorrection* KVVAMOSDataCorrection::MakeDataCorrection(const Char_t* u
    }
 
    dc->fDataSet = uri;
+
+   std::cout << "KVVAMOSDataCorrection::MakeDataCorrection, ... printing info on created object ..." << std::endl;
+   dc->Print();
+
    return dc;
 }
 
@@ -56,16 +79,22 @@ KVVAMOSDataCorrection* KVVAMOSDataCorrection::MakeDataCorrection(const Char_t* u
 Bool_t KVVAMOSDataCorrection::SetIDCorrectionParameters(const KVRList* const records)
 {
    if (!records) {
-      Error("SetIDCorrectionParameters", "Supplied record list is a null pointer");
+      Error("SetIDCorrectionParameters",
+            "Supplied record list is a null pointer");
       return kFALSE;
    }
 
+#if __cplusplus < 201103L
    if (fRecords) {
       delete fRecords;
       fRecords = NULL;
    }
 
    fRecords = new KVList(kFALSE);
+#else
+   fRecords.reset(new KVList(kFALSE));
+#endif
+
    fRecords->AddAll(records);
    return kTRUE;
 }
@@ -73,9 +102,12 @@ Bool_t KVVAMOSDataCorrection::SetIDCorrectionParameters(const KVRList* const rec
 //____________________________________________________________________________//
 const KVList* KVVAMOSDataCorrection::GetIDCorrectionParameters() const
 {
+#if __cplusplus < 201103L
    return fRecords;
+#else
+   return fRecords.get();
+#endif
 }
-
 //____________________________________________________________________________//
 void KVVAMOSDataCorrection::ApplyCorrections(KVVAMOSReconNuc*)
 {

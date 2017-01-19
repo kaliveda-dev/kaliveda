@@ -21,6 +21,9 @@
 # WARNING: If you change the record_ids then you will also need to change the
 # hard-coded values in KVIVUpDater_e503.
 #
+# WARNING: Don't forget to add a new line '[entry]' at the end of this file
+# or the last record will not be saved...
+
 
 [entry]
 +record_id: = straight_fct_chiosi_chio1
@@ -98,3 +101,5 @@ delta_a0 = 0.0538359
 delta_a1 = 0.0103448
 +parameter: a2 = 0.000169057
 delta_a2 = 0.000446351
+
+[entry]

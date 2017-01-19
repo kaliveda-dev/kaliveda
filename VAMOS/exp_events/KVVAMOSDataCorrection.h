@@ -23,6 +23,9 @@ public:
    virtual Bool_t  SetIDCorrectionParameters(const KVRList* const records);
    virtual const KVList* GetIDCorrectionParameters() const;
 
+   // Initialiser to modify in child class if needed
+   virtual Bool_t Init();
+
    virtual void ApplyCorrections(KVVAMOSReconNuc*);
 
    static KVVAMOSDataCorrection* MakeDataCorrection(const Char_t* uri);

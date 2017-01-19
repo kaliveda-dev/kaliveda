@@ -17,9 +17,6 @@
 # For e503 experiment, the ToF (found around 1.25 for 4848 system) offset to apply in the data
 # in the defined cuts are set in 'ToF_duplication_corr_sicsi.dat' file.
 #
-################################################################################################
-#
-#
 # The format of this file is designed so that it can be easily read by the
 # KVIVDB_e503 parser in a generic way. By doing this we avoid having to define a
 # separate method to read each file as the format is now regulated. 
@@ -37,13 +34,13 @@
 # WARNING: If you change the record_ids then you will also need to change the
 # hard-coded values in KVIVUpDater_e503.
 #
-#
-################################################################################################
+# WARNING: Don't forget to add a new line '[entry]' at the end of this file
+# or the last record will not be saved...
 
 [entry]
-+record_id: = duplication_aoq_sicsi_0
++record_id: = duplication_aoq_sicsi0
 system = 4040
-+run_range: = 335-335
++run_range: = 535-535
 +parameter: x0 = 1.99775
 +parameter: y0 = 20.8216
 +parameter: x1 = 2.00614
@@ -74,3 +71,5 @@ system = 4040
 +parameter: y13 = 21.0135
 +parameter: x14 = 1.99775 
 +parameter: y14 = 20.8216
+
+[entry]

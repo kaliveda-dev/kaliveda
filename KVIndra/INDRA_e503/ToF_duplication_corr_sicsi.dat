@@ -1,3 +1,4 @@
+
 # Time of Flight correction parameters (Silicon:CaesiumIodide) 
 # for mass:charge duplication (in ns). 
 # Any VAMOS nucleus with (RealZ, RealAoQ) inside the cuts defined in
@@ -24,9 +25,14 @@
 # WARNING: If you change the record_ids then you will also need to change the
 # hard-coded values in KVIVUpDater_e503.
 #
+# WARNING: Don't forget to add a new line '[entry]' at the end of this file
+# or the last record will not be saved...
 
 [entry]
-+record_id: = tof_aoq_sicsi
++record_id: = tof_aoq_corr_sicsi
 system = 4040
-+run_range: = 335-335
-+parameter: t0 = -1.25
++run_range: = 535-535
++parameter: t0 = -1.25000000000000000e+00
+
+[entry]
+

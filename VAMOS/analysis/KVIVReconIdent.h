@@ -43,7 +43,7 @@ public:
    }
 
 
-   ClassDef(KVIVReconIdent, 0) //Identification and reconstruction of VAMOS and INDRA events from recon data
+   ClassDef(KVIVReconIdent, 1) //Identification and reconstruction of VAMOS and INDRA events from recon data
 };
 
 #endif

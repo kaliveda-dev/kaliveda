@@ -174,7 +174,7 @@ public:
    void SetIsQandAidentified();
    void SetIsQandAunidentified();
 
-   ClassDef(KVVAMOSReconNuc, 4) //Nucleus identified by VAMOS spectrometer
+   ClassDef(KVVAMOSReconNuc, 5) //Nucleus identified by VAMOS spectrometer
 };
 
 //____________________________________________________________________________________________//
