@@ -163,7 +163,7 @@ public:
    void             SetThetaVandPhiV(Double_t th_v, Double_t ph_v);
    void             SetXYf(Float_t x, Float_t y);
    void             SetFPDirection(Double_t th_f, Double_t ph_f);
-   void             SetDataCorrection(KVVAMOSDataCorrection*);
+   void             SetDataCorrection(KVVAMOSDataCorrection* data_corr);
 
    Bool_t IsZidentified()                              const;
    Bool_t IsQandAidentified()                          const;
