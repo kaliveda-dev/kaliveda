@@ -432,7 +432,7 @@ Float_t KVVAMOSWeightFinder::GetTransCoef(Float_t VamosAngle_deg, Float_t delta,
 
    //Use the found values to exctract the entry in fchain corresponding
    //to the wanted trans. coef.
-   if (ndelta > 0 && ntheta > 0 && ntot_delta > 0 && ntot_theta > 0) {
+   if (ndelta >= 0 && ntheta >= 0 && ntot_delta > 0 && ntot_theta > 0) {
       Long64_t pos_tree = (ndelta * ntot_theta) + ntheta; //entry in the tree
       Long64_t pos_chain = num_angle * (ntot_delta * ntot_theta) + pos_tree; //entry in the chain
 
@@ -535,7 +535,7 @@ void KVVAMOSWeightFinder::PrintTransCoefStepVector()
 }
 
 //____________________________________________________________________________//
-Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI)
+Float_t KVVAMOSWeightFinder::GetInverseWeight(Float_t brho, Float_t thetaI)
 {
    //Compute the weight for a given experimental VAMOS event,
    //using the identified VAMOS nucleus informations, which means:
@@ -544,7 +544,7 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI)
    //INDRA convention of the nucleus ( and also the current run number this events
    //belongs to, set as an argument of the class constructor).
    //
-   //The weight will be computed from:
+   //The inverse weight will be computed from:
    //- the chosen run list (see SetRunList() method) and the associated experimental
    //  (BrhoRef, AngleVamos, Scalers_INDRA) values from this run list.
    //- the transmission coefficient obtained from ZGOUBI simulations (normalised over
@@ -580,15 +580,19 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI)
    //    Scaler_i   = value of INDRA scalers for the run i
    //    theta_V    = rotation angle of VAMOS in theta around beam trajectory
 
-   if (fkverbose) Info("GetWeight", "... starting weight computation for VAMOS event with (delta=%f, thetaI=%f, run=%d) ...", brho, thetaI, fRunNumber);
+   if (fkverbose) Info("GetInverseWeight", "... starting weight computation for VAMOS event with (delta=%f, thetaI=%f, run=%d) ...", brho, thetaI, fRunNumber);
 
-   Float_t num = 0.;
-   Float_t denum = 0.;
-
-   Float_t dt_run = GetDeadTime(fRunNumber);
+   Float_t num     = 0.;
+   Float_t denum   = 0.;
+   Float_t dt_corr = -666.;
+   Float_t dt_run  = GetDeadTime(fRunNumber); //default '-666.' value will be returned if not found
 
    //DT found from the event run_number
    if (dt_run >= 0.) {
+      //compute DT_corr for the current run
+      dt_corr = 1. / (1. - dt_run);
+
+      //extract W(Brho, ThetaI) from runlist
       fRunList.Begin();
       while (!fRunList.End()) {
          Int_t next_run = fRunList.Next();
@@ -598,26 +602,33 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI)
          Float_t thetav   = GetThetaVamos(next_run);
          Float_t tc       = GetTransCoef(thetav, brho / brho_ref, thetaI);
 
-         //if values found
-         if (brho_ref > 0 && scaler > 0 && tc >= 0.) {
-            num += tc * scaler;
+         //(brho_ref, scaler) is OK for the given run
+         //if the transmission coef. doesn't exist for the given (ThetaVamos, delta, thetaI)
+         //(i.e tc=-666.), we still consider the scaler in the denumerator, but not in the
+         //numerator (i.e we consider tc=0.)
+         if ((brho_ref > 0) && (scaler > 0)) {
             denum += scaler;
+            if (tc >= 0.) num += tc * scaler;
          }
 
-         //debug
          if (fkverbose) {
-            Info("GetWeight", "... (next_run=%d, brho=%f, thetaI=%f) -> (brho_ref=%f, thetav=%f, scaler=%f, tc=%f) ...",
+            Info("GetInverseWeight", "... (next_run=%d, brho=%f, thetaI=%f) -> (brho_ref=%f, thetav=%f, scaler=%f, tc=%f) ...",
                  next_run, brho, thetaI, brho_ref, thetav, scaler, tc);
-            Info("GetWeight", "... numerator=%f, denumerator=%f", num, denum);
+            Info("GetInverseWeight", "... numerator=%f, denumerator=%f", num, denum);
          }
       }
+
+      //return W_tot
+      return num / denum / dt_corr;
    }
 
+   //DT not found for the current run, weight can't be computed
+   //default value -666. will be returned...
    else {
       if (fkverbose) {
-         Info("GetWeight", "... !!! DT(%d)=%f <0. !!! can't  compute the weight of the event ...", fRunNumber, dt_run);
+         Info("GetInverseWeight", "... !!! DT(current_run=%d)=%f <0. !!! can't compute the weight of the event ...", fRunNumber, dt_run);
       }
-   }
 
-   return 1. / (1. - dt_run) * denum / num;
+      return -666.;
+   }
 }
