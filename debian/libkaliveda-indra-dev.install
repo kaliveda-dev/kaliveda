@@ -78,8 +78,6 @@
 /usr/include/kaliveda/KVINDRADB_e613.h
 /usr/include/kaliveda/KVINDRADB.h
 /usr/include/kaliveda/KVINDRADB1.h
-/usr/include/kaliveda/KVTimeEntry.h
-/usr/include/kaliveda/KVDataAnalysisLauncher.h
 /usr/include/kaliveda/KVNewGridRRMDialog.h
 /usr/include/kaliveda/KVINDRARunSheetGUI.h
 /usr/include/kaliveda/KVIDChIoSiCorr.h

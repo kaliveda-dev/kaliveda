@@ -7,6 +7,7 @@
 #pragma link C++ class KVFAZIA_2B+;
 #pragma link C++ class KVFAZIA+;
 #pragma link C++ class KVFAZIASYM+;
+#pragma link C++ class KVFAZIACOR+;
 #pragma link C++ class KVISOFAZIA+;
 #pragma link C++ class KVFAZIETO+;
 #pragma link C++ class KVFAZIADetector+;

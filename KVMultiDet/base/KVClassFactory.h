@@ -291,6 +291,7 @@ private:
    KVList fImpInc;//list of 'includes' to be added to implementation file
    Bool_t fInlineAllMethods;//kTRUE if all (non-ctor) method implementations written in header
    Bool_t fInlineAllCtors;//kTRUE if all ctor implementations written in header
+   KVString fClassPath;//directory in which to write source files, if not working directory
 
 protected:
 
@@ -383,11 +384,17 @@ public:
    }
    const Char_t* GetHeaderFileName() const
    {
-      return Form("%s.h", fClassName.Data());
+      // Return name of header source file
+      // If path has been set with SetOutputPath() this
+      // is the full path to the file
+      return fClassPath != "" ? Form("%s%s.h", fClassPath.Data(), fClassName.Data()) : Form("%s.h", fClassName.Data());
    }
    const Char_t* GetImpFileName() const
    {
-      return Form("%s.cpp", fClassName.Data());
+      // Return name of implemntation source file
+      // If path has been set with SetOutputPath() this
+      // is the full path to the file
+      return fClassPath != "" ? Form("%s%s.cpp", fClassPath.Data(), fClassName.Data()) : Form("%s.cpp", fClassName.Data());
    }
    void SetClassDesc(const Char_t* d)
    {
@@ -439,6 +446,20 @@ public:
 
    void InlineAllMethods();
    void InlineAllConstructors();
+
+   void SetOutputPath(const KVString& p)
+   {
+      // Set output directory for generated source files
+      // Default is current working directory
+      fClassPath = p;
+      if (!fClassPath.EndsWith("/")) fClassPath.Append("/");
+   }
+   const Char_t* GetOutputPath() const
+   {
+      // Return output directory for generated source files
+      // Default [=""] is current working directory
+      return fClassPath;
+   }
 
    ClassDef(KVClassFactory, 4) //Factory for generating KaliVeda skeleton classes
 };

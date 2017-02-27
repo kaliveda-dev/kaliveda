@@ -66,10 +66,12 @@ public:
    virtual ~ KVIDTelescope();
    void init();
    virtual void AddDetector(KVDetector* d);
-   KVList* GetDetectors() const {
+   KVList* GetDetectors() const
+   {
       return fDetectors;
    };
-   KVDetector* GetDetector(UInt_t n) const {
+   KVDetector* GetDetector(UInt_t n) const
+   {
       //returns the nth detector in the telescope structure
       if (n > GetSize() || n < 1) {
          Error("GetDetector(UInt_t n)", "n must be between 1 and %u",
@@ -81,7 +83,8 @@ public:
    };
    KVDetector* GetDetector(const Char_t* name) const;
    UInt_t GetDetectorRank(KVDetector* kvd);
-   UInt_t GetSize() const {
+   UInt_t GetSize() const
+   {
       //returns number of detectors in telescope
       return (fDetectors ? fDetectors->GetSize() : 0);
    };
@@ -90,10 +93,12 @@ public:
    void SetGroup(KVGroup* kvg);
    UInt_t GetGroupNumber();
 
-   const Char_t* GetVarX() const {
+   const Char_t* GetVarX() const
+   {
       return fVarX.Data();
    }
-   const Char_t* GetVarY() const {
+   const Char_t* GetVarY() const
+   {
       return fVarY.Data();
    }
 
@@ -106,7 +111,8 @@ public:
    virtual Bool_t Identify(KVIdentificationResult*, Double_t x = -1., Double_t y = -1.);
 
    virtual void CalculateParticleEnergy(KVReconstructedNucleus* nuc);
-   virtual Int_t GetCalibStatus() const {
+   virtual Int_t GetCalibStatus() const
+   {
       // When called just after CalculateParticleEnergy(KVReconstructedNucleus*)
       // this method returns a status code which is one of
       //   KVIDTelescope::kCalibStatus_OK,            : fine, OK, all detectors calculated and functioning properly
@@ -121,7 +127,8 @@ public:
    virtual KVIDGraph* GetIDGrid();
    virtual KVIDGraph* GetIDGrid(Int_t);
    virtual KVIDGraph* GetIDGrid(const Char_t*);
-   virtual KVList* GetListOfIDGrids() const {
+   virtual KVList* GetListOfIDGrids() const
+   {
       return fIDGrids;
    }
 
@@ -132,13 +139,15 @@ public:
    virtual Double_t GetPedestalX(Option_t* opt = "");
    virtual Double_t GetPedestalY(Option_t* opt = "");
 
-   void SetHasMassID(Bool_t yes = kTRUE) {
+   void SetHasMassID(Bool_t yes = kTRUE)
+   {
       SetBit(kMassID, yes);
    };
 
    // Returns kTRUE if this telescope is capable of identifying particles' mass (A)
    // as well as their charge (Z).
-   Bool_t HasMassID() const {
+   Bool_t HasMassID() const
+   {
       return TestBit(kMassID);
    };
 
@@ -149,7 +158,8 @@ public:
 
    // Returns kTRUE if telescope has been correctly initialised for identification.
    // Test after Initialize() method has been called.
-   virtual Bool_t IsReadyForID() {
+   virtual Bool_t IsReadyForID()
+   {
       return TestBit(kReadyForID);
    };
 
@@ -164,37 +174,43 @@ public:
       kMeanDE_NoIdentifier   // No identifier found for Z or (Z,A)
    };
    virtual Double_t GetMeanDEFromID(Int_t& status, Int_t Z, Int_t A = -1, Double_t Eres = -1.0);
-   virtual UShort_t GetBadIDCode() {
+   virtual UShort_t GetBadIDCode()
+   {
       // return a general identification code (can be a bitmask) for particles badly identified
       // with this type of ID telescope
       // redefine in child classes; default returns 14.
       return 14;
    };
-   virtual UShort_t GetCoherencyIDCode() {
+   virtual UShort_t GetCoherencyIDCode()
+   {
       // return a general identification code (can be a bitmask) for particles identified
       // with this type of ID telescope after coherency analysis
       // redefine in child classes; default returns 6.
       return 6;
    };
-   virtual UShort_t GetMultiHitFirstStageIDCode() {
+   virtual UShort_t GetMultiHitFirstStageIDCode()
+   {
       // return a general identification code (can be a bitmask) for particles which cannot
       // be identified correctly due to pile-up in a delta-E detector
       // redefine in child classes; default returns 8.
       return 8;
    };
-   virtual UShort_t GetIDCode() {
+   virtual UShort_t GetIDCode()
+   {
       // return a general identification code (can be a bitmask) for particles correctly identified
       // with this type of ID telescope
       // redefine in child classes; default returns 4.
       return 4;
    };
-   virtual UShort_t GetZminCode() {
+   virtual UShort_t GetZminCode()
+   {
       // return a general identification code (can be a bitmask) for particles partially identified
       // with an estimated lower-limit for their charge with this type of ID telescope
       // redefine in child classes; default returns 5.
       return 5;
    };
-   virtual UChar_t GetECode() {
+   virtual UChar_t GetECode()
+   {
       // return a general calibration code (can be a bitmask) for particles correctly identified
       // and calibrated with this type of ID telescope
       // redefine in child classes; default returns 1.
@@ -204,7 +220,8 @@ public:
    virtual void SetIDCode(KVReconstructedNucleus*, UShort_t);
 
    virtual Bool_t CheckTheoreticalIdentificationThreshold(KVNucleus* /*ION*/, Double_t /*EINC*/ = 0.0);
-   virtual Bool_t CanIdentify(Int_t Z, Int_t /*A*/) {
+   virtual Bool_t CanIdentify(Int_t Z, Int_t /*A*/)
+   {
       // Used for filtering simulations
       // Returns kTRUE if this telescope is theoretically capable of identifying a given nucleus,
       // without considering thresholds etc.
@@ -212,7 +229,8 @@ public:
       // dE-E telescopes used to identify charged ions.
       return (Z > 0);
    }
-   Bool_t IsIndependent() const {
+   Bool_t IsIndependent() const
+   {
       // Returns kTRUE is this identification can be made independently of any
       // other telescopes/detectors in the group/array etc.
       // This is the case if

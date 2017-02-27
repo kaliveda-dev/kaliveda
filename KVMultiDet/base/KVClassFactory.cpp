@@ -196,6 +196,7 @@ void KVClassFactory::Copy(TObject& obj)
    }
    if (fHeadInc.GetEntries()) fHeadInc.Copy(((KVClassFactory&)obj).fHeadInc);
    if (fImpInc.GetEntries()) fImpInc.Copy(((KVClassFactory&)obj).fImpInc);
+   ((KVClassFactory&)obj).SetOutputPath(GetOutputPath());
 }
 
 KVClassFactory::KVClassFactory(const KVClassFactory& obj) : TObject()
@@ -425,6 +426,8 @@ void KVClassFactory::WriteClassImp()
 
    ofstream file_cpp;
 
+   // make sure any required directories exist
+   if (fClassPath != "") gSystem->mkdir(fClassPath, kTRUE);
    file_cpp.open(GetImpFileName());
 
    WriteWhoWhen(file_cpp);
@@ -497,6 +500,8 @@ void KVClassFactory::WriteClassHeader()
 
    ofstream file_h;
 
+   // make sure any required directories exist
+   if (fClassPath != "") gSystem->mkdir(fClassPath, kTRUE);
    file_h.open(GetHeaderFileName());
 
    WriteWhoWhen(file_h);
@@ -754,6 +759,8 @@ void KVClassFactory::WriteClassWithTemplateHeader()
 
    ofstream file_h;
 
+   // make sure any required directories exist
+   if (fClassPath != "") gSystem->mkdir(fClassPath, kTRUE);
    file_h.open(GetHeaderFileName());
 
    WriteWhoWhen(file_h);
@@ -828,6 +835,8 @@ void KVClassFactory::WriteClassWithTemplateImp()
 
    ofstream file_cpp;
 
+   // make sure any required directories exist
+   if (fClassPath != "") gSystem->mkdir(fClassPath, kTRUE);
    file_cpp.open(GetImpFileName());
 
    WriteWhoWhen(file_cpp);

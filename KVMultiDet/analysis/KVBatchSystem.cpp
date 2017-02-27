@@ -356,6 +356,7 @@ void KVBatchSystem::GetBatchSystemParameterList(KVNameValueList& nl)
    //   AutoJobName [bool]
    //   AutoJobNameFormat [string]
 
+   nl.Clear();
    nl.SetTitle(GetTitle());
    nl.SetValue("JobName", "");
    nl.SetValue("AutoJobName", kTRUE);

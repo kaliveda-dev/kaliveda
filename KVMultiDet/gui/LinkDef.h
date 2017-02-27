@@ -46,4 +46,7 @@
 #pragma link C++ class KVIDGridEditorCanvas+;
 #pragma link C++ class KVIDGridEditor+;
 #pragma link C++ class KVSpiderIdentificator+;
+#pragma link C++ class KVDataAnalysisLauncher;
+#pragma link C++ class KVGFileList;
+#pragma link C++ class KVGDirectoryList;
 #endif

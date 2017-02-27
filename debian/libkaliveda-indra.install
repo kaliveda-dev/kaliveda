@@ -23,6 +23,7 @@
 /usr/share/kaliveda/data/indra-struct.INDRA_camp5.env
 /usr/share/kaliveda/data/indra-struct.INDRA_e475s.env
 /usr/share/kaliveda/data/indra-struct.INDRA_e494s.env
+/usr/share/kaliveda/data/indra-struct.INDRA_e494s_woVAMOS.env
 /usr/share/kaliveda/data/indra-struct.INDRA_e503.env
 /usr/share/kaliveda/data/indra-struct.INDRA_e613.env
 /usr/share/kaliveda/data/indra-struct.INDRAFAZIA.env
@@ -77,6 +78,7 @@
 /usr/share/kaliveda/INDRA_e416a/matrice3_X3.dat
 /usr/share/kaliveda/INDRA_e416a/calib_SIB2.dat
 /usr/share/kaliveda/INDRA_e416a/matrice3_Y2.dat
+/usr/share/kaliveda/INDRA_camp2/IdentificationBilan.dat
 /usr/share/kaliveda/INDRA_camp2/Runlist.csv
 /usr/share/kaliveda/INDRA_camp2/Systems.dat
 /usr/share/kaliveda/INDRA_camp2/Makefile
@@ -156,7 +158,9 @@
 /usr/share/kaliveda/INDRA_e503/DC_v2.cal
 /usr/share/kaliveda/INDRA_e503/r_phi_In.dat
 /usr/share/kaliveda/INDRA_e503/cuts_brho_4048.root
+/usr/share/kaliveda/INDRA_e503/TransCoef_0p0.root
 /usr/share/kaliveda/INDRA_e503/mq_function_chiosi.dat
+/usr/share/kaliveda/INDRA_e503/TransCoef_4p5.root
 /usr/share/kaliveda/INDRA_e503/VAMOSgeometry/DC.cao
 /usr/share/kaliveda/INDRA_e503/VAMOSgeometry/SI.cao
 /usr/share/kaliveda/INDRA_e503/VAMOSgeometry/CSI.cao
@@ -165,6 +169,7 @@
 /usr/share/kaliveda/INDRA_e503/Offset.cal
 /usr/share/kaliveda/INDRA_e503/Stat_Indra.dat
 /usr/share/kaliveda/INDRA_e503/geom_chiosi.dat
+/usr/share/kaliveda/INDRA_e503/VAMOSDuplicationSiCsICuts.list
 /usr/share/kaliveda/INDRA_e503/r_theta_In.dat
 /usr/share/kaliveda/INDRA_e503/scalersVamos.dat
 /usr/share/kaliveda/INDRA_e503/grid_Q_AQ_chiosi.dat
@@ -200,7 +205,9 @@
 /usr/share/kaliveda/INDRA_e503/grilles_SiLi_CsI.dat
 /usr/share/kaliveda/INDRA_e503/pied_chiosi_607.dat
 /usr/share/kaliveda/INDRA_e503/VAMOSIDCorrectionList.txt
+/usr/share/kaliveda/INDRA_e503/cuts_AoQ_duplication_sicsi_513-550.root
 /usr/share/kaliveda/INDRA_e503/grid_si_tof_vamos.dat
+/usr/share/kaliveda/INDRA_e503/e503_runlist.dat
 /usr/share/kaliveda/INDRA_e503/Reconstruction.cal
 /usr/share/kaliveda/INDRA_e503/brho.dat
 /usr/share/kaliveda/INDRA_e503/Makefile
@@ -217,6 +224,7 @@
 /usr/share/kaliveda/INDRA_e503/grid_chio_si_vamos.dat
 /usr/share/kaliveda/INDRA_e503/ParamFitPG_GG.dat
 /usr/share/kaliveda/INDRA_e503/grid_vamos.dat
+/usr/share/kaliveda/INDRA_e503/VAMOSWeightRunlist.list
 /usr/share/kaliveda/INDRA_e503/thick.dat
 /usr/share/kaliveda/INDRA_e503/Offset_relativiste_chiosi.dat
 /usr/share/kaliveda/INDRA_e503/geom_sicsi_biggercsi.dat
@@ -255,6 +263,7 @@
 /usr/share/kaliveda/INDRA_e503/SI_CSI_C4-9_autofit.dat
 /usr/share/kaliveda/INDRA_e503/ChVolt_e503_etalons.dat
 /usr/share/kaliveda/INDRA_e503/Si.cal
+/usr/share/kaliveda/INDRA_e503/e503_transcoef.list
 /usr/share/kaliveda/INDRA_e503/VAMOS.conf
 /usr/share/kaliveda/INDRA_e503/Offset.cal.11466
 /usr/share/kaliveda/INDRA_e503/cuts_brho_4840.root
@@ -428,10 +437,15 @@
 /usr/share/kaliveda/INDRA_e613/pied_SI_R531.dat
 /usr/share/kaliveda/INDRA_e613/SI_PGtoVolt.dat
 /usr/share/kaliveda/INDRA_e613/Gain_CI_R12.dat
+/usr/share/kaliveda/INDRA_camp1/IdentificationBilan.dat
 /usr/share/kaliveda/INDRA_camp1/Runlist.csv
 /usr/share/kaliveda/INDRA_camp1/Systems.dat
 /usr/share/kaliveda/INDRA_camp1/Makefile
 /usr/share/kaliveda/INDRA_camp1/ChIoPressures.dat
+/usr/share/kaliveda/INDRA_e494s_woVAMOS/Runlist.csv
+/usr/share/kaliveda/INDRA_e494s_woVAMOS/Systems.dat
+/usr/share/kaliveda/INDRA_e494s_woVAMOS/Makefile
+/usr/share/kaliveda/INDRA_e494s_woVAMOS/ChIoPressures.dat
 /usr/share/kaliveda/INDRA_e475s/E475s_calibration_file_CIPG.dat
 /usr/share/kaliveda/INDRA_e475s/E475s_calibration_file_CSILumTot.dat
 /usr/share/kaliveda/INDRA_e475s/Runlist.csv

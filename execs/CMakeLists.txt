@@ -9,10 +9,10 @@ endif()
 set(build_targets
 	analyse_logs delete_logs kvdatanalyser kvtreeanalyzer
 	KaliVedaAnalysis update_runlist kaliveda kaliveda-sim
-   debug
+   debug KaliVedaGUI
 )
 if(USE_INDRA)
-	list(APPEND build_targets KVDataBaseGUI KaliVedaGUI)
+   list(APPEND build_targets KVDataBaseGUI)
 endif()
 
 set(debug_SRC debug.cxx)
@@ -35,7 +35,6 @@ set(KVDataBaseGUI_LIB ${KVIndra_LIB_LIST})
 set(KaliVedaAnalysis_SRC KaliVedaAnalysis.cpp)
 
 set(KaliVedaGUI_SRC KaliVedaGUI.cpp)
-set(KaliVedaGUI_LIB ${KVIndra_LIB_LIST})
 
 set(update_runlist_SRC update_runlist.cxx)
 

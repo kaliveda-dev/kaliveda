@@ -88,18 +88,21 @@ public:
          const Char_t* runfile);
 
    //Returns kTRUE for remote repositories, kFALSE for local repositories
-   virtual Bool_t IsRemote() const {
+   virtual Bool_t IsRemote() const
+   {
       return kFALSE;
    };
    //Always returns kTRUE for local repositories
-   virtual Bool_t IsConnected() {
+   virtual Bool_t IsConnected()
+   {
       return kTRUE;
    };
    //Returns kTRUE if new files can be created and written directly in the repository,
    //returns kFALSE if they have to be written locally then copied to repository
    //This is set by the property [repository name].DataRepository.CanWrite
    //in the repository configuration (see $KVROOT/KVFiles/.kvrootrc)
-   virtual Bool_t CanWrite() const {
+   virtual Bool_t CanWrite() const
+   {
       return fCanWrite;
    }
    virtual KVUniqueNameList* GetDirectoryListing(const KVDataSet* dataset,
@@ -129,23 +132,28 @@ public:
 
    virtual void Print(Option_t* opt = "") const;
 //returns protocol used for remote file transfer
-   virtual const Char_t* GetFileTransferType() const {
+   virtual const Char_t* GetFileTransferType() const
+   {
       return fTransfertype;
    };
 //returns full path to executable used for remote file transfer
-   virtual const Char_t* GetFileTransferExec() const {
+   virtual const Char_t* GetFileTransferExec() const
+   {
       return fTransferExec;
    };
 //returns server url used for remote file transfer
-   virtual const Char_t* GetFileTransferServer() const {
+   virtual const Char_t* GetFileTransferServer() const
+   {
       return fTransferserver;
    };
 //returns user name used for remote file transfer
-   virtual const Char_t* GetFileTransferUser() const {
+   virtual const Char_t* GetFileTransferUser() const
+   {
       return fTransferuser;
    };
 //returns root directory of data repository (fLocalrootdir)
-   virtual const Char_t* GetRootDirectory() const {
+   virtual const Char_t* GetRootDirectory() const
+   {
       return fLocalrootdir;
    };
 
@@ -157,7 +165,8 @@ public:
    virtual TObject* OpenDataSetRunFile(const KVDataSet* ds, const Char_t* type, Int_t run, Option_t* opt = "");
    void CreateAllNeededSubdirectories(const KVDataSet* DataSet, const Char_t* DataType);
 
-   virtual void PrintAvailableDatasetsUpdateWarning() const {
+   virtual void PrintAvailableDatasetsUpdateWarning() const
+   {
       ;
    }
 

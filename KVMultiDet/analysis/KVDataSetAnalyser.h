@@ -25,16 +25,19 @@ protected:
    virtual KVNumberList PrintAvailableRuns(KVString& datatype);
    virtual void set_dataset_pointer(KVDataSet* ds);
    virtual void set_dataset_name(const Char_t* name);
-   void _set_dataset_pointer(KVDataSet* ds) {
+   void _set_dataset_pointer(KVDataSet* ds)
+   {
       fDataSet = ds;
    }
    virtual Bool_t PreSubmitCheck();
    virtual void PostRunReset();
 
-   Bool_t NeedToChooseWhatToDo() const {
+   Bool_t NeedToChooseWhatToDo() const
+   {
       return fChoozDataSet || IsChooseTask();
    }
-   Bool_t NeedToChooseWhatToAnalyse() const {
+   Bool_t NeedToChooseWhatToAnalyse() const
+   {
       return fChoozSystem || fChoozRuns;
    }
    void ChooseWhatToAnalyse();
@@ -54,59 +57,76 @@ public:
    void ChooseRuns(KVDBSystem* system = nullptr, const Char_t* data_type = "");
    void Reset();
 
-   const KVDBSystem* GetSystem() const {
+   const KVDBSystem* GetSystem() const
+   {
       return fSystem;
    }
-   const KVNumberList& GetRunList() const {
+   const KVNumberList& GetRunList() const
+   {
       return fRunList;
    }
-   Int_t GetNumberOfFilesToAnalyse() const {
+   Int_t GetNumberOfFilesToAnalyse() const
+   {
       return fRunList.GetNValues();
    }
-   const KVNumberList& GetFullRunList() const {
+   const KVNumberList& GetFullRunList() const
+   {
       return fFullRunList;
    }
-   const KVDataSet* GetDataSet() const {
+   const KVDataSet* GetDataSet() const
+   {
       return fDataSet;
    }
-   void SetDataSet(KVDataSet* ds) {
+   void SetDataSet(KVDataSet* ds)
+   {
       set_dataset_pointer(ds);
    }
-   void SetDataSet(const Char_t* name) {
+   void SetDataSet(const Char_t* name)
+   {
       set_dataset_name(name);
    }
    void SetSystem(KVDBSystem* syst);
    void SetRuns(const KVNumberList& nl, Bool_t check = kTRUE);
-   void SetFullRunList(const KVNumberList& nl) {
+   void SetFullRunList(const KVNumberList& nl)
+   {
       fFullRunList = nl;
    }
 
-   void ClearRunList() {
+   void ClearRunList()
+   {
       fRunList.Clear();
    }
    Int_t GetRunNumberFromFileName(const Char_t*);
-   void SetChooseDataSet(Bool_t yes = kTRUE) {
+   void SetChooseDataSet(Bool_t yes = kTRUE)
+   {
       fChoozDataSet = yes;
    }
-   Bool_t IsChooseDataSet() const {
+   Bool_t IsChooseDataSet() const
+   {
       return fChoozDataSet;
    }
-   void SetChooseTask(Bool_t yes = kTRUE) {
+   void SetChooseTask(Bool_t yes = kTRUE)
+   {
       fChoozTask = yes;
    }
-   Bool_t IsChooseTask() const {
+   Bool_t IsChooseTask() const
+   {
       return fChoozTask;
    }
-   void SetChooseSystem(Bool_t yes = kTRUE) {
+   void SetChooseSystem(Bool_t yes = kTRUE)
+   {
       fChoozSystem = yes;
    }
-   Bool_t IsChooseSystem() const {
+   Bool_t IsChooseSystem() const
+   {
       return fChoozSystem;
    }
-   void SetChooseRuns(Bool_t yes = kTRUE) {
+   void SetChooseRuns(Bool_t yes = kTRUE)
+   {
       fChoozRuns = yes;
    }
-   Bool_t IsChooseRuns() const {
+   Bool_t IsChooseRuns() const
+   {
       return fChoozRuns;
    }
    void WriteBatchEnvFile(const Char_t* jobname, Bool_t save = kTRUE);

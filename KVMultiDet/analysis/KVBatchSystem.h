@@ -38,31 +38,37 @@ public:
    KVBatchSystem(const Char_t* name);
    virtual ~ KVBatchSystem();
 
-   KVNameValueList& GetParameters() {
+   KVNameValueList& GetParameters()
+   {
       return fParList;
    };
 
-   virtual const Char_t* GetJobSubCmd() const {
+   virtual const Char_t* GetJobSubCmd() const
+   {
       return fJobSubCmd.Data();
    };
    virtual void SubmitTask(KVDataAnalyser* da);
    virtual void SubmitJob();
-   virtual void PrintJobs(Option_t* /* opt */ = "") {
+   virtual void PrintJobs(Option_t* /* opt */ = "")
+   {
       ;
    }
    virtual Bool_t CheckJobParameters();
 
    virtual void Run();
 
-   virtual void SetJobScript(const Char_t* path) {
+   virtual void SetJobScript(const Char_t* path)
+   {
       fJobScript = path;
    };
 
-   virtual void SetDefaultJobOptions(const Char_t* opt) {
+   virtual void SetDefaultJobOptions(const Char_t* opt)
+   {
       //fDefOpt.Form(opt,gSystem->GetGroupInfo()->fGroup.Data());
       fDefOpt = opt;
    };
-   virtual const Char_t* GetDefaultJobOptions() const {
+   virtual const Char_t* GetDefaultJobOptions() const
+   {
       return fDefOpt.Data();
    };
 
@@ -82,7 +88,8 @@ public:
    virtual void ReadBatchEnvFile(TEnv*);
    virtual void Print(Option_t* /*option*/ = "") const;
 
-   virtual void SetAnalyser(KVDataAnalyser* da) {
+   virtual void SetAnalyser(KVDataAnalyser* da)
+   {
       fAnalyser = da;
    }
 
@@ -91,7 +98,8 @@ public:
 
    virtual KVList* GetListOfJobs();
 
-   virtual void AlterJobs(TGWindow*, TList*) {
+   virtual void AlterJobs(TGWindow*, TList*)
+   {
       ;
    }
 

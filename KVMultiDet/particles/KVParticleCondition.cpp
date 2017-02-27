@@ -265,7 +265,6 @@ void KVParticleCondition::CreateClassFactory()
 
    //create new class
    cf = new KVClassFactory(new_class.Data(), "Particle condition to test", "KVParticleCondition");
-
 }
 
 //_____________________________________________________________________________//
@@ -313,19 +312,16 @@ void KVParticleCondition::Optimize()
 
    //generate .cpp and .h for new class
    cf->GenerateCode();
-   KVString H_file(cf->GetHeaderFileName());
-   KVString C_file(cf->GetImpFileName());
 
    //add plugin for new class
    gROOT->GetPluginManager()->AddHandler("KVParticleCondition", cf->GetClassName(), cf->GetClassName(),
                                          Form("%s+", cf->GetImpFileName()), Form("%s()", cf->GetClassName()));
-
    //load plugin
    TPluginHandler* ph;
    if (!(ph = LoadPlugin("KVParticleCondition", cf->GetClassName()))) {
       Error("Optimize", " *** Optimization failed for KVParticleCondition : %s", fCondition.Data());
       Error("Optimize", " *** Use method AddExtraInclude(const Char_t*) to give the names of all necessary header files for compilation of your condition.");
-      Error("Optimize", " *** THIS CONDITION WILL BE EVALUATED AS kFALSE FOR ALL PARTICLES!!!");
+      Fatal("Optimize", " *** THIS CONDITION WILL BE EVALUATED AS kFALSE FOR ALL PARTICLES!!!");
       delete cf;
       cf = 0;
       //we set fOptimal to a non-zero value to avoid calling Optimize
@@ -344,15 +340,12 @@ void KVParticleCondition::Optimize()
    if (!fOptimal) {
       Error("Optimize", " *** Optimization failed for KVParticleCondition : %s", fCondition.Data());
       Error("Optimize", " *** Use method AddExtraInclude(const Char_t*) to give the names of all necessary header files for compilation of your condition.");
-      Error("Optimize", " *** THIS CONDITION WILL BE EVALUATED AS kFALSE FOR ALL PARTICLES!!!");
+      Fatal("Optimize", " *** THIS CONDITION WILL BE EVALUATED AS kFALSE FOR ALL PARTICLES!!!");
       //we set fOptimal to a non-zero value to avoid calling Optimize
       //every time that Test() is called subsequently.
       fOptimal = this;
       fOptOK = kFALSE;
    }
-   //remove temporary files
-   gSystem->Unlink(H_file.Data());
-   gSystem->Unlink(C_file.Data());
    // add to list of optimized conditions
    fOptimal->SetName(GetName());
    fgOptimized.Add(fOptimal);

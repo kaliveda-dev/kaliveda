@@ -42,10 +42,10 @@ void KVTensE::Fill(KVNucleus* c)
    //To calculate in another frame, use KVVarGlob::SetFrame() before
    //calculation begins
 
-   Bool_t ok = (HasLabel() ? c->BelongsToGroup(GetPartGroup()) : kTRUE);
-
-   //check Z of particle
-   if ((c->GetZ() >= GetZmin()) && ok) {
+   // if method is called by FillWithCondition i.e. by KVGVList::CalculateGlobalVariables
+   // (conditioned_fill==kTRUE), all selections have already been tested
+   // if not i.e. Fill method called "by hand", we need to test here
+   if (conditioned_fill || fSelection->Test(c)) {
       Double_t poids = c->GetMass();
       if (poids) poids = 1. / (poids * (c->GetFrame(fFrame.Data(), kFALSE)->Gamma() + 1.));
       tenseurP->Fill(c->GetFrame(fFrame.Data(), kFALSE)->GetMomentum(), poids);

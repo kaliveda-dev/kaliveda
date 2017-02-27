@@ -32,13 +32,16 @@ protected:
    virtual TObject* AddADouble(Int_t i, TGHorizontalFrame* hf);
    virtual TObject* AddAInt(Int_t i, TGHorizontalFrame* hf);
 
-   TObject* GetDataWidget(int i) const {
+   TObject* GetDataWidget(int i) const
+   {
       return fData[i];
    }
-   KVNameValueList* GetList() const {
+   KVNameValueList* GetList() const
+   {
       return theList;
    }
-   TGTransientFrame* GetMain() const {
+   TGTransientFrame* GetMain() const
+   {
       return fMain;
    }
 

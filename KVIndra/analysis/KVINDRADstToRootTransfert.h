@@ -66,7 +66,8 @@ protected:
    TString req_time, req_mem, req_scratch;
    TString cur_time, cur_mem, cur_scratch;
 
-   void SetCampagneNumber() {
+   void SetCampagneNumber()
+   {
       fCampNumber = -1;
       KVString snom = gDataSet->GetName();
       KVNumberList nl = "1 2 4";

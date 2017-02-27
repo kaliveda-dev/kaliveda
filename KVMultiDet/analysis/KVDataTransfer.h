@@ -22,12 +22,15 @@ protected:
    TString fCmdFile;            //name of command file given to transfer agent
    TString fTransferExec;      //full path to transfer client executable
 
-   virtual void SetTransferExec(const Char_t* path) {
+   virtual void SetTransferExec(const Char_t* path)
+   {
       fTransferExec = path;
    }
-   virtual void ChooseAnalysisTask() {
+   virtual void ChooseAnalysisTask()
+   {
    }
-   virtual void SubmitTask() {
+   virtual void SubmitTask()
+   {
    }
 
    virtual void ExecuteCommand() = 0;

@@ -26,7 +26,7 @@ KVBatchSystemParametersGUI::KVBatchSystemParametersGUI(const TGWindow* main, KVN
    fJNF->Connect("TextChanged(const char*)", "KVBatchSystemParametersGUI", this, "UpdateAutoBatchName(const char*)");
    SetAutoBatchName(fAJN->IsDown());
 
-   if (GetList()->GetNameIndex("MultiJobsMode") > -1) {
+   if (GetList()->HasParameter("MultiJobsMode")) {
       fMJ = (TGCheckButton*)GetDataWidget(GetList()->GetNameIndex("MultiJobsMode"));
       fRPJ = (TGNumberEntry*)GetDataWidget(GetList()->GetNameIndex("RunsPerJob"));
       fRPJ->SetLimits(TGNumberFormat::kNELLimitMinMax, 1, dan->GetNumberOfFilesToAnalyse());

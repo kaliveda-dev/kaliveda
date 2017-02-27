@@ -127,6 +127,20 @@ void KVNamedParameter::Set(const KVNamedParameter& p)
    else Warning("Set(const KVNamedParameter&)", "Unknown type of parameter argument");
 }
 
+void KVNamedParameter::Set(TEnv* e, const TString& p)
+{
+   // Look for value in TEnv with same name as this parameter, or prefixed with "p."
+   // If found, set value according to TEnv
+
+   TString name = p;
+   if (name != "") name.Append(".");
+   name += GetName();
+   if (IsString()) Set(e->GetValue(name, GetString()));
+   else if (IsInt()) Set(e->GetValue(name, GetInt()));
+   else if (IsDouble()) Set(e->GetValue(name, GetDouble()));
+   else if (IsBool()) Set((Bool_t)e->GetValue(name, GetBool()));
+}
+
 void KVNamedParameter::Clear(Option_t*)
 {
    // Removes the name and any assigned value
@@ -304,4 +318,16 @@ Int_t KVNamedParameter::Compare(const TObject* obj) const
    // check for equality
    if ((*other) == (*this)) return 0;
    return ((other->fNumber) > fNumber ? -1 : 1);
+}
+
+void KVNamedParameter::WriteToEnv(TEnv* e, const TString& p)
+{
+   // Write parameter in TEnv, using optional prefix p as "p.[name]"
+
+   TString name = p;
+   if (name != "") name.Append(".");
+   name += GetName();
+   if (IsInt()) e->SetValue(name, GetInt());
+   else if (IsDouble()) e->SetValue(name, GetDouble());
+   else e->SetValue(name, GetString());
 }

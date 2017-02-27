@@ -216,12 +216,11 @@ void KVRiso::CalculateRatio(void)
 {
    //Calculation of isotropy ratio from sums of parallel and
    //transverse energies
+   //Limit to 100
 
    if (Riso < 0) {
       if (Epar > 0) {
-         Riso = Etrans / (2. * Epar);
-      } else {
-         Error("CalculateRatio", "The parallel energy is null.");
+         Riso = TMath::Min(100., Etrans / (2. * Epar));
       }
    }
 }

@@ -33,7 +33,8 @@ public:
 
    void SubmitTask();
    void ProcessRun();
-   Int_t GetCurrentRunNumber() const {
+   Int_t GetCurrentRunNumber() const
+   {
       return fRunNumber;
    }
 

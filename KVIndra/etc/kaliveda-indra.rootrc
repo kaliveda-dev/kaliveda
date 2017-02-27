@@ -45,6 +45,7 @@ INDRA_camp1.DataSet.RepositoryDir:   campagne1
 INDRA_camp1.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 INDRA_camp1.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_camp1.HasCalibIdentInfos:   no
+INDRA_camp1.KVMultiDetArray.ROOTGeometry:  yes
 
 +DataSet:    INDRA_camp2
 INDRA_camp2.DataSet.Title:    2nd INDRA campaign (1994)
@@ -52,6 +53,7 @@ INDRA_camp2.DataSet.RepositoryDir:   campagne2
 INDRA_camp2.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 INDRA_camp2.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_camp2.HasCalibIdentInfos:   no
+INDRA_camp2.KVMultiDetArray.ROOTGeometry:  yes
 
 +DataSet:    INDRA_camp4
 INDRA_camp4.DataSet.Title:    4th INDRA campaign (1998/9)
@@ -60,12 +62,14 @@ INDRA_camp4.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyse
 INDRA_camp4.KVDataSet.DataType.Subdir.dst:  dst2
 INDRA_camp4.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_camp4.HasCalibIdentInfos:   no
+INDRA_camp4.KVMultiDetArray.ROOTGeometry:  yes
 
 +DataSet:    INDRA_camp5
 INDRA_camp5.DataSet.Title:    5th INDRA campaign (2001)
 INDRA_camp5.DataSet.RepositoryDir:   campagne5
 INDRA_camp5.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 INDRA_camp5.ReconstructedEventClassName:   KVINDRAReconEvent
+INDRA_camp5.KVMultiDetArray.ROOTGeometry:  yes
 
 +DataSet:    INDRA_e416a
 INDRA_e416a.DataSet.Title:    Fission lifetimes of SHE (E416a) (2005)
@@ -98,6 +102,7 @@ INDRA_e613.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 # INDRA_e613.OnlineAnalysis.DataAnalysisTask.UserClass.Base:     INDRAOnlineDataAnalyser
 INDRA_e613.ReconstructedEventClassName:   KVINDRAReconEvent
 # INDRA_e613.KVGRUNetClientGanilReader.ExpName:    e613
+INDRA_e613.KVMultiDetArray.ROOTGeometry:  yes
 
 +DataSet:    INDRA_e494s_woVAMOS
 INDRA_e494s_woVAMOS.DataSet.Title:   Isospin dependence of level density parameter (E494S) (2007)

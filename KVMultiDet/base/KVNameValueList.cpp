@@ -681,13 +681,7 @@ KVEnv* KVNameValueList::ProduceEnvFile()
    KVEnv* envfile = new KVEnv();
    envfile->SetValue("KVNameValueList.Name", GetName());
    envfile->SetValue("KVNameValueList.Title", GetTitle());
-   for (Int_t ii = 0; ii < GetNpar(); ii += 1) {
-      KVNamedParameter* par = GetParameter(ii);
-      if (par->IsString()) envfile->SetValue(par->GetName(), par->GetString());
-      else if (par->IsInt()) envfile->SetValue(par->GetName(), par->GetInt());
-      else if (par->IsDouble()) envfile->SetValue(par->GetName(), par->GetDouble());
-      else if (par->IsBool()) envfile->SetValue(par->GetName(), par->GetString());
-   }
+   WriteToEnv(envfile);
    return envfile;
 }
 
@@ -726,7 +720,24 @@ void KVNameValueList::WriteClass(const Char_t* classname, const Char_t* classdes
    cf.GenerateCode();
 }
 
+void KVNameValueList::SetFromEnv(TEnv* tenv, const TString& prefix)
+{
+   // Update the values of any parameters in the KVNameValueList which are found
+   // in the TEnv, optionally using the given prefix.
+   // Example: if KVNameValueList contains a parameter "Legs" and if prefix="Large",
+   // then if the TEnv contains a value "Large.Legs", it will be used to update "Legs"
 
+   for (int i = 0; i < GetNpar(); ++i) GetParameter(i)->Set(tenv, prefix);
+}
+
+
+void KVNameValueList::WriteToEnv(TEnv* tenv, const TString& prefix)
+{
+   // Write the values of all parameters in the KVNameValueList in the TEnv,
+   // optionally using the given prefix.
+
+   for (int i = 0; i < GetNpar(); ++i) GetParameter(i)->WriteToEnv(tenv, prefix);
+}
 
 
 

@@ -126,7 +126,7 @@ FAZIADB.Systems:     Systems.dat
 +Plugin.KVMultiDetArray:    ISOFAZIA    KVISOFAZIA    FAZIAgeometry    "KVISOFAZIA()"
 +Plugin.KVMultiDetArray:    FAZIANFS    KVFAZIANFS    FAZIAgeometry    "KVFAZIANFS()"
 +Plugin.KVMultiDetArray:    LNS_2016    KVFAZIALNS2016    FAZIAgeometry    "KVFAZIALNS2016()"
-+Plugin.KVMultiDetArray:    FAZIACOR    KVFAZIASYM    FAZIAgeometry    "KVFAZIASYM()"
++Plugin.KVMultiDetArray:    FAZIACOR    KVFAZIACOR    FAZIAgeometry    "KVFAZIACOR()"
 
 #================================ Plugins for different datasets
 # Each multidetector array has an associated 'KVUpDater' object used to set run parameters.

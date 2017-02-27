@@ -19,10 +19,6 @@ class TChain;
 class KVINDRAReconDataAnalyser: public KVDataSetAnalyser {
 
 protected:
-   KVString fDataSelector;//name of KVDataSelector to use
-   KVString fDataSelectorImp;//name of KVDataSelector implementation file (if it exists)
-   KVString fDataSelectorDec;//name of KVDataSelector header file (if it exists)
-
    virtual KVNumberList PrintAvailableRuns(KVString& datatype);
    KVINDRAEventSelector* fSelector;// the data analysis class
    KVOldINDRASelector* fOldSelector;// backwards compatibility
@@ -46,39 +42,34 @@ protected:
 
 public:
 
-   Long64_t GetTotalEntriesToRead() const {
+   Long64_t GetTotalEntriesToRead() const
+   {
       return TotalEntriesToRead;
    }
 
    KVINDRAReconDataAnalyser();
    virtual ~ KVINDRAReconDataAnalyser();
 
-   virtual void SetKVDataSelector(const Char_t* kvs = "");
-
-   TTree* GetTree() const {
+   TTree* GetTree() const
+   {
       return theChain;
    }
-   void SetTree(TTree* t) {
+   void SetTree(TTree* t)
+   {
       theChain = t;
-   }
-   virtual const Char_t* GetKVDataSelector(void) {
-      return fDataSelector.Data();
    }
 
    virtual void Reset();
-   virtual void ChooseKVDataSelector();
 
    virtual Bool_t CheckTaskVariables(void);
    virtual void SubmitTask();
    virtual void WriteBatchEnvFile(const Char_t*, Bool_t sav = kTRUE);
-   virtual Bool_t ReadBatchEnvFile(const Char_t*);
-
-   virtual const Char_t* ExpandAutoBatchName(const Char_t* format);
 
    void preInitAnalysis();
    void preAnalysis();
    void preInitRun();
-   virtual void RegisterUserClass(TObject* obj) {
+   virtual void RegisterUserClass(TObject* obj)
+   {
       // The user class may inherit from KVINDRAEventSelector or KVOldINDRASelector
       // Only one of the two pointers will be valid
       fSelector = dynamic_cast<KVINDRAEventSelector*>(obj);
@@ -87,19 +78,24 @@ public:
    void PrintTreeInfos();
    TEnv* GetReconDataTreeInfos() const;
 
-   KVString GetDataVersion() const {
+   KVString GetDataVersion() const
+   {
       return fDataVersion;
    }
-   KVString GetDataSeries() const {
+   KVString GetDataSeries() const
+   {
       return fDataSeries;
    }
-   Int_t GetDataReleaseNumber() const {
+   Int_t GetDataReleaseNumber() const
+   {
       return fDataReleaseNum;
    }
-   TTree* GetRawDataTree() const {
+   TTree* GetRawDataTree() const
+   {
       return theRawData;
    }
-   TTree* GetGeneDataTree() const {
+   TTree* GetGeneDataTree() const
+   {
       return theGeneData;
    }
    void CloneRawAndGeneTrees();

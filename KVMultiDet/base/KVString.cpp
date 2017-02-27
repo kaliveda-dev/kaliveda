@@ -17,6 +17,7 @@
 #include "TMath.h"
 #include <TObject.h>
 #include <list>
+#include "TRandom.h"
 
 #ifdef R__GLOBALSTL
 namespace std {
@@ -974,6 +975,19 @@ KVString& KVString::FindCommonTitleCharacters(const TCollection* list, const cha
    }
 
    return *this;
+}
+
+void KVString::RandomLetterSequence(Int_t length)
+{
+   // Generate a random sequence of upper- and lower-case letters
+   // of given length
+
+   Clear();
+   for (Int_t i = 0; i < length; ++i) {
+      UInt_t p = gRandom->Integer(52);
+      if (p < 26) Append((char)p + 'A');
+      else Append((char)(p - 26) + 'a');
+   }
 }
 
 

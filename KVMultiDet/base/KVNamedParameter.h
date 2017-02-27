@@ -5,6 +5,7 @@
 #define __KVNAMEDPARAMETER_H
 
 #include "TNamed.h"
+#include "TEnv.h"
 
 class KVNamedParameter : public TNamed {
 
@@ -17,16 +18,19 @@ class KVNamedParameter : public TNamed {
    enum {
       kBitMask = 0x0003c000
    };
-   void ResetBits() {
+   void ResetBits()
+   {
       ResetBit(kBitMask);
    }
 
-   Int_t GetType() const {
+   Int_t GetType() const
+   {
       // compare this value with the values kIsString, kIsDouble, etc.
       return TestBits(kBitMask);
    }
 
-   void SetType(UInt_t f) {
+   void SetType(UInt_t f)
+   {
       ResetBits();
       SetBit(f);
    }
@@ -52,6 +56,7 @@ public:
    void Set(Int_t);
    void Set(Bool_t);
    void Set(const KVNamedParameter&);
+   void Set(TEnv*, const TString& p = "");
 
    const Char_t* GetString() const;
    const TString& GetTString() const;
@@ -61,19 +66,24 @@ public:
 
    virtual void Clear(Option_t* = "");
 
-   Bool_t IsString() const {
+   Bool_t IsString() const
+   {
       return GetType() == kIsString;
    }
-   Bool_t IsDouble() const {
+   Bool_t IsDouble() const
+   {
       return GetType() == kIsDouble;
    }
-   Bool_t IsInt() const {
+   Bool_t IsInt() const
+   {
       return GetType() == kIsInt;
    }
-   Bool_t IsBool() const {
+   Bool_t IsBool() const
+   {
       return GetType() == kIsBool;
    }
-   Bool_t IsNumber() const {
+   Bool_t IsNumber() const
+   {
       return (IsDouble() || IsInt());
    }
 
@@ -83,6 +93,7 @@ public:
    virtual void ls(Option_t* opt = "") const;
 
    Int_t Compare(const TObject* obj) const;
+   void WriteToEnv(TEnv*, const TString& p = "");
 
    ClassDef(KVNamedParameter, 1) //A generic parameter with a name and a value
 };

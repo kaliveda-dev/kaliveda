@@ -1669,7 +1669,9 @@ KVMultiDetArray* KVMultiDetArray::MakeMultiDetector(const Char_t* dataset_name, 
 
       mda->fDataSet = dataset_name;
       mda->Build(run);
-      // if ROOT geometry is requested by default (KVMultiDetArray.ROOTGeometry: yes)
+      // if ROOT geometry is requested by default ([dataset_name].KVMultiDetArray.ROOTGeometry = yes
+      // or KVMultiDetArray.ROOTGeometry = yes), turn it on
+      mda->fROOTGeometry = KVDataSet::GetDataSetEnv(dataset_name, "KVMultiDetArray.ROOTGeometry", kFALSE);
       if (mda->fROOTGeometry) mda->CheckROOTGeometry();
    } else {
       mda = gMultiDetArray;

@@ -23,7 +23,8 @@ public:
    KVRemoteDataRepository();
    virtual ~ KVRemoteDataRepository();
 
-   virtual Bool_t IsRemote() const {
+   virtual Bool_t IsRemote() const
+   {
       return kTRUE;
    };
    virtual Bool_t IsConnected();

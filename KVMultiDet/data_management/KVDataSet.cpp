@@ -700,10 +700,7 @@ const Char_t* KVDataSet::GetDataSetEnv(const Char_t* type, const Char_t* defval)
    //then simply "type" if no dataset-specific value is found.
    //If neither resource is defined, return the "defval" default value (="" by default)
 
-   TString temp;
-   temp.Form("%s.%s", GetName(), type);
-   if (gEnv->Defined(temp.Data())) return gEnv->GetValue(temp.Data(), "");
-   return gEnv->GetValue(type, defval);
+   return GetDataSetEnv(GetName(), type, defval);
 }
 
 //__________________________________________________________________________________________________________________
@@ -714,10 +711,7 @@ Double_t KVDataSet::GetDataSetEnv(const Char_t* type, Double_t defval) const
    //then simply "type" if no dataset-specific value is found.
    //If neither resource is defined, return the "defval" default value
 
-   TString temp;
-   temp.Form("%s.%s", GetName(), type);
-   if (gEnv->Defined(temp.Data())) return gEnv->GetValue(temp.Data(), 0.0);
-   return gEnv->GetValue(type, defval);
+   return GetDataSetEnv(GetName(), type, defval);
 }
 
 //__________________________________________________________________________________________________________________
@@ -728,8 +722,43 @@ Bool_t KVDataSet::GetDataSetEnv(const Char_t* type, Bool_t defval) const
    //then simply "type" if no dataset-specific value is found.
    //If neither resource is defined, return the "defval" default value
 
+   return GetDataSetEnv(GetName(), type, defval);
+}
+
+const Char_t* KVDataSet::GetDataSetEnv(const Char_t* dataset, const Char_t* type, const Char_t* defval)
+{
+   // Static method to interrogate dataset-specific variables in configuration
+   // Will look for gEnv->GetValue "dataset.type"
+   // then simply "type" if no dataset-specific value is found.
+   // If neither resource is defined, return the "defval" default value (="" by default)
    TString temp;
-   temp.Form("%s.%s", GetName(), type);
+   temp.Form("%s.%s", dataset, type);
+   if (gEnv->Defined(temp.Data())) return gEnv->GetValue(temp.Data(), "");
+   return gEnv->GetValue(type, defval);
+}
+
+Double_t KVDataSet::GetDataSetEnv(const Char_t* dataset, const Char_t* type, Double_t defval)
+{
+   // Static method to interrogate dataset-specific variables in configuration
+   // Will look for gEnv->GetValue "dataset.type"
+   // then simply "type" if no dataset-specific value is found.
+   // If neither resource is defined, return the "defval" default value
+
+   TString temp;
+   temp.Form("%s.%s", dataset, type);
+   if (gEnv->Defined(temp.Data())) return gEnv->GetValue(temp.Data(), 0.0);
+   return gEnv->GetValue(type, defval);
+}
+
+Bool_t KVDataSet::GetDataSetEnv(const Char_t* dataset, const Char_t* type, Bool_t defval)
+{
+   // Static method to interrogate dataset-specific variables in configuration
+   //Will look for gEnv->GetValue "dataset.type"
+   //then simply "type" if no dataset-specific value is found.
+   //If neither resource is defined, return the "defval" default value
+
+   TString temp;
+   temp.Form("%s.%s", dataset, type);
    if (gEnv->Defined(temp.Data())) return gEnv->GetValue(temp.Data(), kFALSE);
    return gEnv->GetValue(type, defval);
 }

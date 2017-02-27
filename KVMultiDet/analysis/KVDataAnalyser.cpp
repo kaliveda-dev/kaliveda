@@ -972,7 +972,7 @@ void KVDataAnalyser::ScanWorkingDirectory(TList** ls)
 {
    //Fill TList with list of files in current working directory.
    //If ls!=0 it is deleted beforehand
-   if (*ls) delete (*ls);
+   if (*ls) delete(*ls);
    TSystemDirectory dir("LocDir", gSystem->WorkingDirectory());
    (*ls) = dir.GetListOfFiles();
 }
@@ -995,7 +995,7 @@ void KVDataAnalyser::CopyAnalysisResultsToLaunchDirectory()
          fname.Form("%s", file->GetName());
          //ajout d une condition pour eviter le transfert des file*.so generes par les KVParticleCondition
          //et aussi les .d generes par les KVParticleCondition
-         if (!(fname.EndsWith(".so") || fname.EndsWith(".d") || fname.EndsWith(".pcm") || fname.EndsWith(".bak"))) {
+         if (!(fname.BeginsWith("KVParticleCondition_") || fname.EndsWith(".so") || fname.EndsWith(".d") || fname.EndsWith(".pcm") || fname.EndsWith(".bak"))) {
             TString path_src, path_trg;
             AssignAndDelete(path_trg, gSystem->ConcatFileName(launchDir.Data(), file->GetName()));
             AssignAndDelete(path_src, gSystem->ConcatFileName(gSystem->WorkingDirectory(),

@@ -450,27 +450,7 @@ void KVEventSelector::RecalculateGlobalVariables()
    //this calculation, make sure that at the END of Analysis() you reset the selection
    //criteria.
 
-   if (gvlist) {
-      gvlist->Reset();
-      if (gvlist->Has1BodyVariables() || gvlist->Has2BodyVariables()) {
-#ifdef WITH_CPP11
-         for (KVEvent::Iterator it1(GetEvent(), KVEvent::Iterator::Type::OK); it1 != KVEvent::Iterator::End(); ++it1) {
-#else
-         for (KVEvent::Iterator it1(GetEvent(), KVEvent::Iterator::OK); it1 != KVEvent::Iterator::End(); ++it1) {
-#endif
-            if (gvlist->Has1BodyVariables()) gvlist->Fill(&(*it1));// calculate 1-body variables
-            if (gvlist->Has2BodyVariables()) {
-               for (KVEvent::Iterator it2(it1); it2 != KVEvent::Iterator::End(); ++it2) {
-                  // calculate 2-body variables
-                  // we use every pair of particles (including identical pairs) in the event
-                  gvlist->Fill2(&(*it1), &(*it2));
-               }
-            }
-         }
-      }
-      // calculate N-body variables
-      if (gvlist->HasNBodyVariables()) gvlist->FillN(GetEvent());
-   }
+   if (gvlist) gvlist->CalculateGlobalVariables(GetEvent());
 }
 
 //____________________________________________________________________________

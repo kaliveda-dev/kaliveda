@@ -21,17 +21,14 @@
 #include "KVDataSetManager.h"
 #include "KVDataSet.h"
 #include "KVDataAnalysisTask.h"
-#include "KVDBSystem.h"
 #include "KV2Body.h"
 #include "KVNucleus.h"
 #include "KVDataBase.h"
-#include "KVINDRAReconDataAnalyser.h"
 #include "KVBatchSystemManager.h"
 #include "TSystemDirectory.h"
 #include "KVInputDialog.h"
 #include "KVBatchSystemGUI.h"
-
-#include <KVNameValueListGUI.h>
+#include "KVBatchSystemParametersGUI.h"
 #include <KVRunFile.h>
 
 #define TTDELAY 750
@@ -401,6 +398,7 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
    }
    ia = 0;
    GetDataAnalyser();//this will set up gBatchSystemManager
+   gBatchSystemManager->GetDefaultBatchSystem()->cd();
 
    // Creation de l'environnement d'affichage et ajout des 2 boutons a cet
    // environnement
@@ -437,9 +435,7 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
                          this,
                          "SetDataSetList(char*)");
    cf->AddFrame(cbRepository, LHtopleft);
-   // cfSelect->AddFrame(cf,eX);
 
-   // cf=new TGCompositeFrame(cfSelect,fMainGuiWidth,350,kHorizontalFrame);
    // Label du Data Set
    lab = new TGLabel(cf, "DATASET : ");
    lab->Resize(150, 20);
@@ -475,54 +471,11 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
    cf->AddFrame(cbTask, LHtopleft);
    cfSelect->AddFrame(cf, centerX);
 
-   // cf=new TGCompositeFrame(cfSelect,fMainGuiWidth,350,kHorizontalFrame);
-   // Label du systeme
-   // lab=new TGLabel(cf,"SYSTEM : ");
-   // lab->SetTextJustify(justMode);
-   // lab->Resize(150,20);
-   // cf->AddFrame(lab,new TGLayoutHints(kLHintsLeft|kLHintsTop,
-   //                                    1,1,1,1));
-   // ComboBox du systeme
-   // cbSystem=new TGComboBox(cf,CB_System);
-   // cbSystem->Select(-1);
-   // cbSystem->Resize(250,20);
-   // cbSystem->Connect("Selected(int)",
-   //                       "KVDataAnalysisLauncher",
-   //           this,
-   //           "SetTriggersList(int)");
-   //  cbSystem->Connect("Selected(int)",
-   //                        "KVDataAnalysisLauncher",
-   //              this,
-   //              "SetRunsList(int)");
-   // cf->AddFrame(cbSystem,LHtopleft);
-   // cfSelect->AddFrame(cf,eX);
-
-   // cf=new TGCompositeFrame(cfSelect,fMainGuiWidth,350,kHorizontalFrame);
-   // Label du Trigger
-   // lab=new TGLabel(cf,"TRIGGER : ");
-   // lab->SetTextJustify(justMode);
-   // lab->Resize(150,20);
-   // cf->AddFrame(lab,new TGLayoutHints(kLHintsLeft|kLHintsTop,
-   //                                    20,1,1,1));
-   // ComboBox du systeme
-   // cbTrigger=new TGComboBox(cf,CB_Trigger);
-   // cbTrigger->Select(-1);
-   // cbTrigger->Resize(100,20);
-   // cbTrigger->Connect("Selected(int)",
-   //                       "KVDataAnalysisLauncher",
-   //           this,
-   //           "SetTriggerRunsList(int)");
-   // cf->AddFrame(cbTrigger,LHtopleft);
-   // /* disable trigger selection */
-   // cbTrigger->SetEnabled(kFALSE);
-   cfSelect->AddFrame(cf, centerX);
-
-
    AddFrame(cfSelect, new TGLayoutHints(kLHintsLeft | kLHintsTop
                                         | kLHintsRight | kLHintsExpandX,
                                         10, 10, 1, 1));
    // Systems list
-   lvSystems = new KVListView(KVDBSystem::Class(), this, fMainGuiWidth, 150);
+   lvSystems = new KVListView(KVDBSystem::Class(), this, fMainGuiWidth, 250);
    lvSystems->SetDataColumns(5);
    lvSystems->SetMaxColumnSize(gEnv->GetValue("KaliVedaGUI.MaxColWidth", 200));
    lvSystems->SetDataColumn(1, "Zproj");
@@ -530,7 +483,7 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
    lvSystems->SetDataColumn(3, "Ebeam");
    lvSystems->GetDataColumn(3)->SetDataFormat("%4.1lf");
    lvSystems->SetDataColumn(4, "#Runs", "GetNumberRuns");
-   lvSystems->SetDataColumn(0, "Name");
+   lvSystems->SetDataColumn(0, "System", "GetName");
    lvSystems->ActivateSortButtons();
    // disable context menu, Browse & multi-select functions
    lvSystems->AllowBrowse(kFALSE);
@@ -542,8 +495,8 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
 
    // Frame pour la liste des runs
 
-   TGCompositeFrame* cfRuns = new TGCompositeFrame(this, fMainGuiWidth, 350, kVerticalFrame);
-   lvRuns = new KVListView(KVRunFile::Class(), cfRuns, fMainGuiWidth, 250);
+   TGCompositeFrame* cfRuns = new TGCompositeFrame(this, fMainGuiWidth, 400, kVerticalFrame);
+   lvRuns = new KVListView(KVRunFile::Class(), cfRuns, fMainGuiWidth, 300);
    lvRuns->SetDataColumns(8);
    lvRuns->SetMaxColumnSize(gEnv->GetValue("KaliVedaGUI.MaxColWidth", 200));
    int iicc = 0;
@@ -587,35 +540,46 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
                  this,
                  "EnterRunlist()");
    cfSelAll->AddFrame(bout, eX);
-
    cfRuns->AddFrame(cfSelAll, eX);
 
-   // label des runs selectionnes
-   selectedRuns = new TGLabel(cfRuns, "Selected Runs :");
-   cfRuns->AddFrame(selectedRuns, eX);
+   TGHorizontalFrame* runs_and_nbevents = new TGHorizontalFrame(cfRuns, fMainGuiWidth, 20);
+   selectedRuns = new TGLabel(runs_and_nbevents, "Selected Runs :");
+   runs_and_nbevents->AddFrame(selectedRuns, new TGLayoutHints(kLHintsExpandX | kLHintsCenterY, 2, 2, 0, 0));
+   TGHorizontalFrame* bidule = new TGHorizontalFrame(runs_and_nbevents);
+   TGLabel* nevents = new TGLabel(bidule, "Events : ");
+   bidule->AddFrame(nevents, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 2, 2, 0, 0));
+   teNbToRead = new TGNumberEntry(bidule, 0);
+#ifdef __WITHOUT_TGNUMBERENTRY_SETNUMSTYLE
+   teNbToRead->SetFormat(TGNumberFormat::kNESInteger, teNbToRead->GetNumAttr());
+#else
+   teNbToRead->SetNumStyle(TGNumberFormat::kNESInteger);
+#endif
+#ifdef __WITHOUT_TGNUMBERENTRY_SETNUMATTR
+   teNbToRead->SetFormat(teNbToRead->GetNumStyle(), TGNumberFormat::kNEANonNegative);
+#else
+   teNbToRead->SetNumAttr(TGNumberFormat::kNEANonNegative);
+#endif
+   teNbToRead->GetNumberEntry()->SetToolTipText("Number of events to read [0 => all events]", TTDELAY);
+   teNbToRead->Resize(150, 20);
+   bidule->AddFrame(teNbToRead, new TGLayoutHints(kLHintsRight | kLHintsCenterY, 2, 2, 0, 0));
+   runs_and_nbevents->AddFrame(bidule, new TGLayoutHints(kLHintsRight, 2, 2, 0, 0));
+   cfRuns->AddFrame(runs_and_nbevents, eX);
 
    AddFrame(cfRuns, eXeY);
 
-   // UserClass and DataSelector et nombre d'evenements
+   // UserClass
    cfAnalysis = new TGCompositeFrame(this, fMainGuiWidth, 20, kVerticalFrame);
    cf = new TGCompositeFrame(cfAnalysis, fMainGuiWidth, 20, kHorizontalFrame);
    // Label for User Class name
    fUserClassLabel = new TGLabel(cf, "User Class");
    cf->AddFrame(fUserClassLabel, eX);
-   // Label du data selector (only for KVINDRAReconDataAnalyser)
-   fDataSelectorLabel = new TGLabel(cf, "-");
-   cf->AddFrame(fDataSelectorLabel, eX);
    // Label du Task
-   lab = new TGLabel(cf, "Number of events to read");
+   lab = new TGLabel(cf, "User class options");
    cf->AddFrame(lab, eX);
 
    cfAnalysis->AddFrame(cf, eX);
 
    cf = new TGCompositeFrame(cfAnalysis, fMainGuiWidth, 20, kHorizontalFrame);
-   //teSelector=new TGTextEntry(cf,"");
-   //teSelector->Resize(233,20);
-   //teSelector->SetToolTipText("Enter the user analysis class name",TTDELAY);
-   //cf->AddFrame(teSelector,eX);
    cbUserClass = new TGComboBox(cf);
    cbUserClass->Select(-1);
    cbUserClass->Resize(150, 20);
@@ -628,41 +592,13 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
    btEditClass->SetToolTipText(Form("Open analysis class source files in %s", gSystem->Getenv("EDITOR")), TTDELAY);
    cf->AddFrame(btEditClass, new TGLayoutHints(kLHintsTop | kLHintsLeft, 2, 2, 2, 2));
 
-   teDataSelector = new TGTextEntry(cf, "");
-   //teDataSelector->Resize(233,20);
-   teDataSelector->SetToolTipText("Enter the KVDataSelector class name.", TTDELAY);
-   cf->AddFrame(teDataSelector, eX);
-
-   teNbToRead = new TGNumberEntry(cf, 0);
-#ifdef __WITHOUT_TGNUMBERENTRY_SETNUMSTYLE
-   teNbToRead->SetFormat(TGNumberFormat::kNESInteger, teNbToRead->GetNumAttr());
-#else
-   teNbToRead->SetNumStyle(TGNumberFormat::kNESInteger);
-#endif
-#ifdef __WITHOUT_TGNUMBERENTRY_SETNUMATTR
-   teNbToRead->SetFormat(teNbToRead->GetNumStyle(), TGNumberFormat::kNEANonNegative);
-#else
-   teNbToRead->SetNumAttr(TGNumberFormat::kNEANonNegative);
-#endif
-   teNbToRead->GetNumberEntry()->SetToolTipText("Enter the number of events to read.", TTDELAY);
-   //teNbToRead->Resize(233,20);
-   cf->AddFrame(teNbToRead, eX);
+   teUserOptions = new TGTextEntry(cf, "");
+   teUserOptions->SetToolTipText("Comma-separated list of options for user analysis class: PAR1=VAL1,PAR2=VAL2,etc.", TTDELAY);
+   cf->AddFrame(teUserOptions, eX);
 
    cfAnalysis->AddFrame(cf, eX);
 
-   this->AddFrame(cfAnalysis, eX);
-   // user analysis class options
-   cf = new TGCompositeFrame(this, fMainGuiWidth, 20, kHorizontalFrame);
-   lab = new TGLabel(cf, "User class options : ");
-   lab->SetTextJustify(justMode);
-   lab->Resize(150, 20);
-   cf->AddFrame(lab, new TGLayoutHints(kLHintsLeft | kLHintsTop,
-                                       1, 1, 1, 1));
-   teUserOptions = new TGTextEntry(cf, "");
-   //teDataSelector->Resize(233,20);
-   teUserOptions->SetToolTipText("Comma-separated list of options for user analysis class: PAR1=VAL1,PAR2=VAL2,etc.", TTDELAY);
-   cf->AddFrame(teUserOptions, eX);
-   AddFrame(cf, new TGLayoutHints(kLHintsCenterX | kLHintsExpandX, 10, 10, 2, 2));
+   AddFrame(cfAnalysis, eX);
 
    cf = new TGCompositeFrame(this, fMainGuiWidth, 20, kHorizontalFrame);
    // Frame for the user's libraries
@@ -682,137 +618,20 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
 
    this->AddFrame(cf, eX);
 
-   cf = new TGCompositeFrame(this, fMainGuiWidth, 20, kHorizontalFrame);
-   TGVerticalFrame* RunMode_frame = new TGVerticalFrame(cf, fMainGuiWidth / 2.,  100);
-   // Radio buttons for the running mode
-   TString tit = "Running Mode";
-   TGHButtonGroup* gb = new TGHButtonGroup(RunMode_frame, tit);
-   rbInteractive = new TGRadioButton(gb, "Now!  ");
-   rbInteractive->SetToolTipText("Run the analysis straight away", TTDELAY);
-   rbBatch = new TGRadioButton(gb, "Batch");
-   rbBatch->
-   SetToolTipText("Submit the analysis as a batch job", TTDELAY);
-   RunMode_frame->AddFrame(gb, new TGLayoutHints(kLHintsTop | kLHintsExpandX, 2, 2, 2, 2));
-   gb->Connect("Clicked(Int_t)", "KVDataAnalysisLauncher", this, "SetBatch()");
-
-   TGHorizontalFrame* hf913 = new TGHorizontalFrame(RunMode_frame, 600, 20);
-   TGLabel* lab586 = new TGLabel(hf913, "Runs per batch job : ");
-   hf913->AddFrame(lab586, new TGLayoutHints(kLHintsTop | kLHintsLeft, 2, 15, 2, 2));
-   runsPerJob = new TGNumberEntry(hf913, 1.0, 5, 0, TGNumberFormat::kNESInteger,
-                                  TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax, 1.0, 1.0);
-   runsPerJob->GetNumberEntry()->SetToolTipText("Number of runs to analyse in each batch job", TTDELAY);
-   //teNbToRead->Resize(233,20);
-   hf913->AddFrame(runsPerJob, new TGLayoutHints(kLHintsTop | kLHintsRight, 2, 2, 2, 2));
-   RunMode_frame->AddFrame(hf913, new TGLayoutHints(kLHintsCenterX, 2, 2, 2, 2));
-   cf->AddFrame(RunMode_frame, new TGLayoutHints(kLHintsCenterX, 2, 2, 2, 2));
-
-   justMode = kTextCenterY | kTextLeft;
-   TGCompositeFrame* cf2 = new TGCompositeFrame(cf, fMainGuiWidth / 2., 20, kVerticalFrame);
-   TGCompositeFrame* cf3 = new TGCompositeFrame(cf2, fMainGuiWidth / 2., 20, kHorizontalFrame);
-   lab = new TGLabel(cf3, " Batch Name ");
-   lab->SetTextJustify(justMode);
-   cf3->AddFrame(lab, new TGLayoutHints(kLHintsLeft, 2, 15, 2, 2));
-   chIsBatchNameAuto = new TGCheckButton(cf3, " Auto");
-   chIsBatchNameAuto->SetTextJustify(justMode);
-   chIsBatchNameAuto->
-   SetToolTipText("Builds the batch name automatically by using the Batch Name Format.", TTDELAY);
-   chIsBatchNameAuto->Connect("Clicked()",
-                              "KVDataAnalysisLauncher", this, "SetBatchNameAuto()");
-   cf3->AddFrame(chIsBatchNameAuto, new TGLayoutHints(kLHintsLeft, 2, 2, 2, 2));
-   cf2->AddFrame(cf3, new TGLayoutHints(kLHintsTop | kLHintsLeft, 1, 1, 1, 1));
-   teBatchName = new TGTextEntry(cf2, "");
-   teBatchName->SetToolTipText("Enter batch name.", TTDELAY);
-   cf2->AddFrame(teBatchName, new TGLayoutHints(kLHintsLeft, 2, 2, 2, 2));
-   teBatchName->Resize(300, 20);
-   lab = new TGLabel(cf2, " Batch Name Format");
-   lab->SetTextJustify(justMode);
-   cf2->AddFrame(lab, new TGLayoutHints(kLHintsLeft, 2, 2, 2, 2));
-   teBatchNameFormat = new TGTextEntry(cf2, "");
-   teBatchNameFormat->
-   SetToolTipText(Form("%s %s",
-                       "Enter batch name format.",
-                       "Examples : $UserClass_$System_$Date or $System_$DataSelector"),
-                  TTDELAY);
-   cf2->AddFrame(teBatchNameFormat, new TGLayoutHints(kLHintsLeft, 2, 2, 2, 2));
-   teBatchNameFormat->Resize(300, 20);
-   cf->AddFrame(cf2, new TGLayoutHints(kLHintsCenterX, 2, 2, 2, 2));
-
-   this->AddFrame(cf, eX);
-
-   // Batch parameters
-   //if the default batch system does not have time/memory/disk parameters,
-   //we do not display the corresponding widgets
-   teBatchMemory = nullptr;
-   teBatchDisk = nullptr;
-   teBatchTime = nullptr;
-   send_mail_at_job_end = send_mail_at_job_start = nullptr;
-   if (gBatchSystemManager->GetDefaultBatchSystem()->IsA()->GetMethodAllAny("SetJobTime")) {
-      withBatchParams = kTRUE;
-      TGCompositeFrame* cfBatchPar = new TGCompositeFrame(this, fMainGuiWidth, 20, kVerticalFrame);
-      cf = new TGCompositeFrame(cfBatchPar, fMainGuiWidth, 20, kHorizontalFrame);
-      fBatchMemLab = new TGLabel(cf, "Batch Memory");
-      cf->AddFrame(fBatchMemLab, eX);
-      fBatchDiskLab = new TGLabel(cf, "Batch Disk");
-      cf->AddFrame(fBatchDiskLab, eX);
-      fBatchTimeLab = new TGLabel(cf, "Batch Time");
-      cf->AddFrame(fBatchTimeLab, eX);
-      cfBatchPar->AddFrame(cf, eX);
-      cf = new TGCompositeFrame(cfBatchPar, fMainGuiWidth, 20, kHorizontalFrame);
-      teBatchMemory = new TGTextEntry(cf, "1G");
-      teBatchMemory->SetToolTipText("Enter max memory per job (xK/xM/xG)", TTDELAY);
-      teBatchMemory->SetAlignment(kTextRight);
-      cf->AddFrame(teBatchMemory, eX);
-      teBatchDisk = new TGTextEntry(cf, "200MB");
-      teBatchDisk->SetToolTipText("Enter max scratch disk per job (xK/xM/xG)", TTDELAY);
-      teBatchDisk->SetAlignment(kTextRight);
-      cf->AddFrame(teBatchDisk, eX);
-#ifdef USE_KVTIMEENTRY
-      teBatchTime = new KVTimeEntry(cf);
-      teBatchTime->GetTextEntry()->SetToolTipText("Enter max CPU time per job (ss/mn:ss/hh:mn:ss)", TTDELAY);
-#else
-      teBatchTime = new TGNumberEntry(cf);
-      teBatchTime->GetNumberEntry()->SetToolTipText("Enter max CPU time per job in seconds", TTDELAY);
-#ifdef __WITHOUT_TGNUMBERENTRY_SETNUMSTYLE
-      teBatchTime->SetFormat(TGNumberFormat::kNESInteger, teBatchTime->GetNumAttr());
-#else
-      teBatchTime->SetNumStyle(TGNumberFormat::kNESInteger);
-#endif
-#ifdef __WITHOUT_TGNUMBERENTRY_SETNUMATTR
-      teBatchTime->SetFormat(teBatchTime->GetNumStyle(), TGNumberFormat::kNEANonNegative);
-#else
-      teBatchTime->SetNumAttr(TGNumberFormat::kNEANonNegative);
-#endif
-#endif
-      teBatchTime->SetTime(2, 30, 0);
-      cf->AddFrame(teBatchTime, eX);
-      cfBatchPar->AddFrame(cf, eX);
-
-      // options to send email at start/end of job (we are assuming CCIN2P3-GE batch system)
-      cf = new TGCompositeFrame(cfBatchPar, fMainGuiWidth, 20, kHorizontalFrame);
-      TGLabel* mail = new TGLabel(cf, "Email Notifications:  ");
-      cf->AddFrame(mail, eX);
-      send_mail_at_job_start = new TGCheckButton(cf, " Start   ");
-      send_mail_at_job_start->SetToolTipText("Notify by email when job starts", TTDELAY);
-      send_mail_at_job_start->Connect("Clicked()", "KVDataAnalysisLauncher", this, "SetSendMailAtJobStart()");
-      cf->AddFrame(send_mail_at_job_start, LHtopleft);
-      send_mail_at_job_end = new TGCheckButton(cf, " End      ");
-      send_mail_at_job_end->SetToolTipText("Notify by email when job ends", TTDELAY);
-      send_mail_at_job_end->Connect("Clicked()", "KVDataAnalysisLauncher", this, "SetSendMailAtJobEnd()");
-      cf->AddFrame(send_mail_at_job_end, LHtopleft);
-      alternative_email = new TGTextEntry(cf, "");
-      cf->AddFrame(alternative_email, eX);
-      cfBatchPar->AddFrame(cf, centerX);
-
-      AddFrame(cfBatchPar, eX);
-   } else {
-      withBatchParams = kFALSE;
-   }
-
    // Process et Quit
 #ifdef KVDAL_DEBUG
    cout << "Creation Process/Quit" << endl;
 #endif
    TGCompositeFrame* cfProcess = new TGCompositeFrame(this, fMainGuiWidth, 20, kHorizontalFrame);
+   withBatch = new TGTextButton(cfProcess, "BatchMode");
+   withBatch->SetToolTipText(gBatchSystem->GetTitle());
+   withBatch->AllowStayDown(kTRUE);
+   withBatch->Connect("Clicked()", "KVDataAnalysisLauncher", this, "SetBatch()");
+   cfProcess->AddFrame(withBatch, eX);
+   doBatchParams = new TGTextButton(cfProcess, "Batch Parameters");
+   doBatchParams->SetToolTipText("Set parameters of batch jobs");
+   doBatchParams->Connect("Clicked()", "KVDataAnalysisLauncher", this, "SetBatchParameters()");
+   cfProcess->AddFrame(doBatchParams, eX);
    // Bouton de process
    bout = new TGTextButton(cfProcess, "&Process", B_Process);
    bout->SetToolTipText("Run the analysis.", TTDELAY);
@@ -849,54 +668,14 @@ KVDataAnalysisLauncher::KVDataAnalysisLauncher(const TGWindow* p, UInt_t w, UInt
    TString tmp(GetResource("Repository", ""));
    SetRepository(tmp.Data());
 
-   tmp = GUIenv->GetValue("KVDataAnalysisLauncher.BatchName", "");
-   teBatchName->SetText(tmp.Data());
-
-   tmp = GUIenv->GetValue("KVDataAnalysisLauncher.BatchNameFormat", "");
-   teBatchNameFormat->SetText(tmp.Data());
    if (GUIenv->GetValue("KVDataAnalysisLauncher.Batch", kFALSE))
-      rbBatch->SetState(kButtonDown);
+      withBatch->SetState(kButtonDown);
    else
-      rbInteractive->SetState(kButtonDown);
-   runsPerJob->SetNumber(GUIenv->GetValue("KVDataAnalysisLauncher.RunsPerJob", 1));
-
-   if (withBatchParams) {
-      teBatchMemory->SetText(GUIenv->GetValue("KVDataAnalysisLauncher.BatchMemory", "1G"));
-      teBatchDisk->SetText(GUIenv->GetValue("KVDataAnalysisLauncher.BatchDisk", "200M"));
-      teBatchTime->SetIntNumber(GUIenv->GetValue("KVDataAnalysisLauncher.BatchTime", 9000));
-      if (GUIenv->GetValue("KVDataAnalysisLauncher.SendMailAtJobStart", kFALSE))
-         send_mail_at_job_start->SetState(kButtonDown, kFALSE);
-      else
-         send_mail_at_job_start->SetState(kButtonUp, kFALSE);
-      if (GUIenv->GetValue("KVDataAnalysisLauncher.SendMailAtJobEnd", kFALSE))
-         send_mail_at_job_end->SetState(kButtonDown, kFALSE);
-      else
-         send_mail_at_job_end->SetState(kButtonUp, kFALSE);
-      TString email = GUIenv->GetValue("KVDataAnalysisLauncher.SendMailAddress", "");
-      if (email == "") {
-         email = gSystem->GetFromPipe("email");
-         if (email.Index('=') > -1) email.Remove(0, email.Index('=') + 2);
-      }
-      if (email != "") alternative_email->SetText(email, kFALSE);
-   }
+      withBatch->SetState(kButtonDown);
+   SetBatch();
 
    fUserLibraries = GUIenv->GetValue("KVDataAnalysisLauncher.UserLibraries", "");
    fUserIncludes = GUIenv->GetValue("KVDataAnalysisLauncher.UserIncludes", "");
-
-   // Connections are made when all the other widgets are mapped
-   //teSelector->Connect("TextChanged(const char*)",
-   //                    "KVDataAnalysisLauncher",this,"SetAutoBatchName()");
-   teDataSelector->Connect("TextChanged(const char*)",
-                           "KVDataAnalysisLauncher", this, "SetAutoBatchName()");
-   teBatchNameFormat->Connect("TextChanged(const char*)",
-                              "KVDataAnalysisLauncher", this, "SetAutoBatchName()");
-
-   if (GUIenv->GetValue("KVDataAnalysisLauncher.AutoBatchName", kFALSE)) {
-      chIsBatchNameAuto->SetState(kButtonDown, kFALSE);
-   } else {
-      chIsBatchNameAuto->SetState(kButtonUp, kFALSE);
-   }
-   SetBatch();
 
 }
 
@@ -908,44 +687,6 @@ KVDataAnalysisLauncher::~KVDataAnalysisLauncher()
    if (GUIenv) delete GUIenv;
    delete ResourceNames;
    delete UserClassNames;
-}
-
-// On va maintenant agir si un evenemnt se produit
-//__________________________________________
-Bool_t KVDataAnalysisLauncher::ProcessMessage(Long_t msg, Long_t, Long_t)
-{
-   // Process messages
-#ifdef KVDAL_DEBUG
-   cout << "KVDataAnalysisLauncher::ProcessMessage " << endl;
-   cout << msg << " : " << par1 << " / " << par2 << endl;
-#endif
-   switch (GET_MSG(msg)) {
-         //       case kC_CONTAINER:
-         //          switch (GET_SUBMSG(msg)) {
-         //             case kCT_ITEMCLICK:
-         //                if (par1 == kButton1) {
-         //                   cout << "Now with " << lcRuns->NumSelected() << " selected items" << endl;
-         //                   if (lcRuns->NumSelected() > 0) {
-         //                      UpdateListOfSelectedRuns();
-         //                   }
-         //                   else {
-         //                      ClearListOfSelectedRuns();
-         //                   }
-         //                }
-         //                break;
-         //
-         //             case kCT_SELCHANGED:
-         //                cout << "SELCHANGED: number selected = " << par2 << endl;
-         //                break;
-         //
-         //             default:
-         //                break;
-         //          }
-
-      default:
-         break;
-   }
-   return kTRUE;
 }
 
 //__________________________________________
@@ -962,7 +703,6 @@ void KVDataAnalysisLauncher::SetRepositoryList(void)
    TObject* o = 0;
    Int_t i = 0;
    while ((o = next())) {
-      //if(((KVDataRepository *)o)->GetDataSetManager()->GetNavailable())
       cbRepository->AddEntry(o->GetName(), i);
       i++;
    }
@@ -977,7 +717,6 @@ void KVDataAnalysisLauncher::SetDataSetList(Char_t* repository)
    // Sets the list of all available data sets in the data sets combo box
    SetResource("Repository", repository);
 
-   //TString ds=GetDataSet();
    TString ds = GetSavedResource("DataSet", "");
 
 #ifdef __WITHOUT_TGCOMBOBOX_REMOVEALL
@@ -1012,8 +751,6 @@ void KVDataAnalysisLauncher::SetTaskList(Char_t* dataset)
 
    SetResource("DataSet", dataset);
 
-   //Info("SetTaskList", "Called with dataset = %s", dataset);
-
    TString ds = GetSavedResource("Task", "");
 
 #ifdef __WITHOUT_TGCOMBOBOX_REMOVEALL
@@ -1029,8 +766,6 @@ void KVDataAnalysisLauncher::SetTaskList(Char_t* dataset)
    Int_t nbt = gDataSet->GetNtasks();
 
    GetDataAnalyser()->SetDataSet(gDataSet);
-   //no systems defined for dataset ?
-   //  noSystems=(!gIndraDB || !gIndraDB->GetSystems()->GetSize());
 
    noSystems = (!gDataBase || !((KVDBTable*)((KVDataBase*)gROOT->FindObjectAny(gDataSet->GetName()))->GetTable("Systems"))->GetRecords()->GetSize());
    if (noSystems) lvSystems->RemoveAll();
@@ -1048,9 +783,6 @@ void KVDataAnalysisLauncher::SetTaskList(Char_t* dataset)
    } else {
       SetSystem();
    }
-
-   //if no systems are defined for dataset, need to set list of triggers now
-   //if(noSystems) SetTriggersList(0);
 }
 
 KVDataSetAnalyser* KVDataAnalysisLauncher::GetDataAnalyser(KVDataAnalysisTask* task)
@@ -1081,27 +813,12 @@ void KVDataAnalysisLauncher::SetSystemList(Int_t itask)
 
    SetResource("Task", task->GetTitle());
 
-   //if needed, set the user class and KVDataSelector fields and/or disable them
-   fDataSelectorLabel->SetText("-");
-   teDataSelector->SetEnabled(kFALSE);
-   teDataSelector->SetToolTipText("");
    if (!task->WithUserClass()) {
       //no user class required
-      //teSelector->SetEnabled(kFALSE);
-      //teSelector->SetText(task->GetUserBaseClass());
-      //teSelector->SetToolTipText("Default analysis class name");
       DisableUserClassList();
    } else {
       //user class required
-      //teSelector->SetEnabled(kTRUE);
-      //teSelector->SetToolTipText(Form("Enter name of user analysis class derived from %s", task->GetUserBaseClass()));
       EnableUserClassList();
-      //is data selector an option ?
-      if (GetDataAnalyser()->IsA()->GetMethodAllAny("SetKVDataSelector")) {
-         fDataSelectorLabel->SetText("Data Selector");
-         teDataSelector->SetEnabled(kTRUE);
-         teDataSelector->SetToolTipText("Enter name of data selector class derived from KVDataSelector");
-      }
    }
    //update display
    cfAnalysis->Layout();
@@ -1118,7 +835,6 @@ void KVDataAnalysisLauncher::SetSystemList(Int_t itask)
    if (ds.Length()) {
       SetSystem(ds.Data());
    } else {
-      //Info("SetSystemList","no selected system");
       SetRunsList();
    }
 }
@@ -1150,11 +866,6 @@ void KVDataAnalysisLauncher::SetRunsList()
          return;
       }
    }
-   //Info("SetRunsList","system=%p",system);
-
-   if (IsBatchNameAuto()) {
-      SetAutoBatchName();
-   }
 
    //Setting name of system in ressources file
    if (!noSystems) {
@@ -1179,18 +890,14 @@ void KVDataAnalysisLauncher::SetRunsList()
    lvRuns->Display(list_of_runs.get());
 
    TString ds = GetSavedResource("RunsList", "");
-   //Info("SetRunsList", "SetRuns");
    SetRuns(ds.Data());
 
-   // Set saved user class, data selector, number of events for current
+   // Set saved user class, number of events for current
    // repository, dataset, task, system, trigger & runs
    ds = GetSavedResource("UserClass", "");
    SetUserClass(ds.Data());
-   ds = GetSavedResource("KVDataSelector", "");
-   teDataSelector->SetText(ds.Data());
    ds = GetSavedResource("NbEventsToRead", "");
    teNbToRead->SetIntNumber(ds.Atoi());
-
 }
 
 
@@ -1256,7 +963,6 @@ void KVDataAnalysisLauncher::Process(void)
       //read user's class name from input box
       if (kvs.Length()) {
          datan->SetUserClassOptions(teUserOptions->GetText());
-         //Info("Process","setting user class now for analyser %s check=%d", datan->ClassName(),checkCompilation);
          datan->SetUserClass(kvs.Data(), checkCompilation);
          if (datan->IsUserClassValid())
             checkCompilation = kFALSE;
@@ -1279,8 +985,6 @@ void KVDataAnalysisLauncher::Process(void)
       //task with default "user" class (i.e. UserClass=no but UserClass.BaseClass!="")
       datan->SetUserClass(task->GetUserBaseClass(), kFALSE);
    }
-   if (datan->InheritsFrom("KVINDRAReconDataAnalyser"))
-      ((KVINDRAReconDataAnalyser*)datan)->SetKVDataSelector(teDataSelector->GetText());
    Long64_t nbEventRead = (Long64_t)teNbToRead->GetIntNumber();
    // if in batch and nbEventRead>0, ask confirmation
    if (IsBatch() && nbEventRead) {
@@ -1292,46 +996,22 @@ void KVDataAnalysisLauncher::Process(void)
          return;
       }
    }
+   // check batch parameters have been set
+   if (IsBatch() && !fBatchParameters.GetNpar()) SetBatchParameters();
    datan->SetNbEventToRead((Long64_t)teNbToRead->GetIntNumber());
    SetResource("RunsList", listOfRuns.AsString());
    SetResource("UserClassOptions", teUserOptions->GetText());
-   SetResource("KVDataSelector", teDataSelector->GetText());
    SetResource("NbEventsToRead", Form("%.0f", teNbToRead->GetNumber()));
-   GUIenv->SetValue("KVDataAnalysisLauncher.BatchName", teBatchName->GetText());
-   TString email;
-   if (withBatchParams) {
-      GUIenv->SetValue("KVDataAnalysisLauncher.BatchMemory", teBatchMemory->GetText());
-      GUIenv->SetValue("KVDataAnalysisLauncher.BatchDisk", teBatchDisk->GetText());
-      GUIenv->SetValue("KVDataAnalysisLauncher.BatchTime", (Int_t)teBatchTime->GetIntNumber());
-      email = alternative_email->GetText();
-      GUIenv->SetValue("KVDataAnalysisLauncher.SendMailAddress", email);
-   }
    GUIenv->SaveLevel(kEnvUser);
    if (IsBatch()) {
       gBatchSystemManager->GetDefaultBatchSystem()->cd();
       gBatchSystem->Clear();
-      KVNameValueList batchParams;
-      gBatchSystem->GetBatchSystemParameterList(batchParams);
-      batchParams.SetValue("AutoJobName", IsBatchNameAuto());
-      batchParams.SetValue("JobName", teBatchName->GetText());
-      batchParams.SetValue("AutoJobNameFormat", teBatchNameFormat->GetText());
-      batchParams.SetValue("JobMemory", teBatchMemory->GetText());
-      batchParams.SetValue("JobDisk", teBatchDisk->GetText());
-      batchParams.SetValue("JobTime", teBatchTime->GetTextEntry()->GetText());
-      batchParams.SetValue("RunsPerJob", runsPerJob->GetNumber());
-      batchParams.SetValue("MultiJobsMode", runsPerJob->GetNumber() < listOfRuns.GetNValues());
-      batchParams.SetValue("EMailOnStart", SendMailAtJobStart());
-      batchParams.SetValue("EMailOnEnd", SendMailAtJobEnd());
-      batchParams.SetValue("EMailAddress", email);
-      gBatchSystem->SetBatchSystemParameters(batchParams);
+      gBatchSystem->SetBatchSystemParameters(fBatchParameters);
       datan->SetBatchSystem(gBatchSystem);
    } else {
       datan->SetBatchSystem(0);
    }
    datan->Run();
-
-   //if no batch system GUI window is already open, open it
-   //if(IsBatch() && !KVBatchSystemGUI::IsOpen()) new KVBatchSystemGUI;
 
    gSystem->SetIncludePath(oriIncludePath.Data());
 }
@@ -1462,19 +1142,16 @@ void KVDataAnalysisLauncher::SetTask(const Char_t* r)
 //__________________________________________
 void KVDataAnalysisLauncher::SetSystem(const Char_t* r)
 {
-   //Info("SetSystem","system=%s",r);
    if (!strcmp(r, "")) {
       //remove all systems from list because no task chosen yet
       lvSystems->RemoveAll();
-      //if( !noSystems ) SetTrigger();
       SetResource("Task", "");
       //empty list of analysis classes and disable it
       DisableUserClassList();
-      //Info("SetSystem","SetRuns()");
       SetRuns();
       lvRuns->RemoveAll();
    } else {
-      lvSystems->ActivateItemWithColumnData("Name", r);
+      lvSystems->ActivateItemWithColumnData("System", r);
       SystemSelectionChanged();
    }
 }
@@ -1482,7 +1159,6 @@ void KVDataAnalysisLauncher::SetSystem(const Char_t* r)
 void KVDataAnalysisLauncher::SystemSelectionChanged()
 {
    KVDBSystem* system = (KVDBSystem*)lvSystems->GetLastSelectedObject();
-   //Info("SystemSelectionChanged","system=%p lastSelectedSystem=%p",system,lastSelectedSystem);
    if (system == lastSelectedSystem) return;
    lastSelectedSystem = system;
    GetDataAnalyser()->SetSystem(system);
@@ -1509,82 +1185,32 @@ void KVDataAnalysisLauncher::SetRuns(const Char_t* r)
 }
 
 //__________________________________________
-void KVDataAnalysisLauncher::SetBatch(void)
+void KVDataAnalysisLauncher::SetBatch()
 {
    // Set the resource KVDataAnalysisLauncher.Batch according
-   // to whether radio button 'Batch' is down or up
-   // Enable or disable 'runs per job' number entry accordingly.
-   // If enabled, we set the resource KVDataAnalysisLauncher.RunsPerJob
-   // according to the current value.
+   // to whether button 'Batch' is down or up
+
+   if (IsBatch()) withBatch->SetText("BatchMode: On");
+   else withBatch->SetText("BatchMode: Off");
    GUIenv->SetValue("KVDataAnalysisLauncher.Batch", IsBatch());
-   if (IsBatch()) {
-      runsPerJob->SetState(kTRUE);
-      GUIenv->SetValue("KVDataAnalysisLauncher.RunsPerJob", (Int_t)runsPerJob->GetNumber());
-      if (!chIsBatchNameAuto->IsEnabled()) {
-         chIsBatchNameAuto->SetEnabled(kTRUE);
-      }
-      SetBatchNameAuto();
-      if (teBatchMemory && teBatchTime && teBatchDisk) {
-         teBatchMemory->SetState(kTRUE);
-         teBatchTime->SetState(kTRUE);
-         teBatchDisk->SetState(kTRUE);
-      }
-   } else {
-      runsPerJob->SetState(kFALSE);
-      teBatchName->SetState(kFALSE);
-      teBatchNameFormat->SetState(kFALSE);
-      chIsBatchNameAuto->SetEnabled(kFALSE);
-      if (teBatchMemory && teBatchTime && teBatchDisk) {
-         teBatchMemory->SetState(kFALSE);
-         teBatchTime->SetState(kFALSE);
-         teBatchDisk->SetState(kFALSE);
-      }
-   }
+   doBatchParams->SetEnabled(IsBatch());
    GUIenv->SaveLevel(kEnvUser);
 }
 
-//__________________________________________
-void KVDataAnalysisLauncher::SetBatchNameAuto(void)
+void KVDataAnalysisLauncher::SetBatchParameters()
 {
-   // Set the resource value according to the check box chIsBatch
-   if (IsBatchNameAuto()) {
-      teBatchName->SetState(kFALSE);
-      teBatchNameFormat->SetState(kTRUE);
-   } else {
-      teBatchName->SetState(kTRUE);
-      teBatchNameFormat->SetState(kFALSE);
-   }
-   GUIenv->SetValue("KVDataAnalysisLauncher.AutoBatchName", IsBatchNameAuto());
-   GUIenv->SaveLevel(kEnvUser);
-   SetAutoBatchName();
-}
-
-//__________________________________________
-void KVDataAnalysisLauncher::SetAutoBatchName(void)
-{
-   // Set the automatic batch name
-   if (!IsBatchNameAuto()) {
-      return;
-   }
-   if (strcmp(teBatchNameFormat->GetText(),
-              GUIenv->GetValue("KVDataAnalysisLauncher.BatchNameFormat", ""))) {
-      GUIenv->SetValue("KVDataAnalysisLauncher.BatchNameFormat",
-                       teBatchNameFormat->GetText());
+   gBatchSystem->GetBatchSystemParameterList(fBatchParameters);
+   // use saved values of batch parameters
+   fBatchParameters.SetFromEnv(GUIenv, "KVDataAnalysisLauncher");
+   Bool_t cancel;
+   new KVBatchSystemParametersGUI(this, &fBatchParameters, GetDataAnalyser(), &cancel);
+   if (!cancel) {
+      // update saved batch parameter resources
+      fBatchParameters.WriteToEnv(GUIenv, "KVDataAnalysisLauncher");
       GUIenv->SaveLevel(kEnvUser);
    }
-
-   // check if the pointers are valid before doing anything...
-   if (GetDataAnalyser()) {
-      if (GetDataAnalyser()->GetAnalysisTask()) {
-         if (GetDataAnalyser()->GetAnalysisTask()->WithUserClass()) {
-            GetDataAnalyser()->SetUserClass(GetUserClass(), kFALSE);
-            if (GetDataAnalyser()->InheritsFrom("KVINDRAReconDataAnalyser"))
-               ((KVINDRAReconDataAnalyser*)GetDataAnalyser())->SetKVDataSelector(teDataSelector->GetText());
-         }
-      }
-      teBatchName->SetText(GetDataAnalyser()->ExpandAutoBatchName(teBatchNameFormat->GetText()));
-   }
 }
+
 
 //__________________________________________
 void KVDataAnalysisLauncher::SetUserLibraries(void)
@@ -1743,11 +1369,9 @@ const Char_t* KVDataAnalysisLauncher::GetSavedResource(const Char_t* name, const
    BuildResourceName(name, res, ful_res);
 
    if (!ful_res.Length()) {
-      //cout << "GetSavedResource: current resource : " << res.Data() << endl;
       return GUIenv->GetValue(res.Data(), defaultvalue);
    }
 
-   //cout << "GetSavedResource: saved resource : " << ful_res.Data() << endl;
    return GUIenv->GetValue(ful_res.Data(), defaultvalue);
 }
 
@@ -1912,8 +1536,6 @@ void KVDataAnalysisLauncher::FillListOfUserClasses()
    }
    // add [NEW] to list
    UserClassNames->Add(new TNamed("[NEW]", "[NEW]"));
-   // Info("FillListOfUserClasses", "User classes found in working directory:");
-   // UserClassNames->ls();
 }
 
 //__________________________________________
@@ -1921,8 +1543,6 @@ void KVDataAnalysisLauncher::FillListOfUserClasses()
 void KVDataAnalysisLauncher::SetUserClassList()
 {
    // Sets the list of all available user classes in the drop down list
-
-   //Info("SetUserClassList", "called");
 
 #ifdef __WITHOUT_TGCOMBOBOX_REMOVEALL
    RemoveAll(cbUserClass);
@@ -1948,21 +1568,20 @@ void KVDataAnalysisLauncher::UserClassSelected(char* class_name)
    // Called when a user class is selected in the combo box.
    // Updates batch name if 'auto batch name' is selected.
 
-   //Info("UserClassSelected", "User class selected : %s", class_name);
-
    if (!strcmp(class_name, "[NEW]")) {
       GenerateNewUserClass();
       return;
    }
-   if (IsBatchNameAuto()) SetAutoBatchName();
 
    // save resource
    SetResource("UserClassOptions", teUserOptions->GetText());
    SetResource("UserClass", class_name);
    teUserOptions->SetText(GetSavedResource("UserClassOptions", ""));
    SetResource("UserClassOptions", teUserOptions->GetText());
-   if (strcmp("", class_name)) btEditClass->SetEnabled(kTRUE);
-   else btEditClass->SetEnabled(kFALSE);
+   if (strcmp("", class_name)) {
+      btEditClass->SetEnabled(kTRUE);
+      GetDataAnalyser()->SetUserClass(class_name, kFALSE);
+   } else btEditClass->SetEnabled(kFALSE);
    checkCompilation = kTRUE;
 }
 
@@ -1977,6 +1596,14 @@ void KVDataAnalysisLauncher::GenerateNewUserClass()
    TString classname;
    Bool_t ok;
    new KVInputDialog(this, "Enter name of new analysis class", &classname, &ok, "Enter name of new analysis class");
+   // check new classname is not name of existing class
+   KVString impfile, decfile;
+   if (KVBase::FindClassSourceFiles(classname, impfile, decfile)) {
+      ok = ok && WarningBox("Replacing existing class",
+                            Form("%s is the name of an existing class defined in [%s,%s].\nDo you want to overwrite this class?\n(All existing code will be lost)",
+                                 classname.Data(), decfile.Data(), impfile.Data()),
+                            kTRUE);
+   }
    if (ok) {
       gDataSet->MakeAnalysisClass(GetTask(), classname);
       FillListOfUserClasses();
@@ -1984,7 +1611,6 @@ void KVDataAnalysisLauncher::GenerateNewUserClass()
    SetUserClassList();
    if (ok) {
       SetUserClass(classname);
-      if (IsBatchNameAuto()) SetAutoBatchName();
       EditUserClassFiles();
    }
 }
@@ -1994,18 +1620,12 @@ void KVDataAnalysisLauncher::GenerateNewUserClass()
 void KVDataAnalysisLauncher::SetUserClass(const Char_t* class_name)
 {
    // Sets selected user class in combo box according to e.g. a previously stored resource value.
-   // Updates batch name if 'auto batch name' is selected.
    // We update the resource corresponding to the current state of the interface.
-
-   //Info("SetUserClass", "Set user class : %s", class_name);
 
    // look for user class in list
    TGLBEntry* e = cbUserClass->FindEntry(class_name);
-   //cbUserClass->EnableTextInput(kFALSE);
 
    if (e) {
-      //Info("SetUserClass", "Found class in list");
-
       Int_t i = e->EntryId();
 #ifdef __WITHOUT_TGCOMBOBOX_SELECT_BOOL_T
       cbUserClass->Select(i);
@@ -2013,7 +1633,6 @@ void KVDataAnalysisLauncher::SetUserClass(const Char_t* class_name)
       cbUserClass->Select(i, kFALSE);
 #endif
       // save current user class options
-      //SetResource( "UserClassOptions", teUserOptions->GetText() );
       // save current user class
       SetResource("UserClass", class_name);
       teUserOptions->SetText(GetSavedResource("UserClassOptions", ""));
@@ -2023,14 +1642,12 @@ void KVDataAnalysisLauncher::SetUserClass(const Char_t* class_name)
    else
       // unknown user class
    {
-      //Info("SetUserClass", "Class not found in list");
       cbUserClass->Select(-1);
       SetResource("UserClass", "");
 
       btEditClass->SetEnabled(kFALSE);
    }
    checkCompilation = kTRUE;
-   //cbUserClass->EnableTextInput(kTRUE);
 }
 
 //__________________________________________
@@ -2052,7 +1669,6 @@ void KVDataAnalysisLauncher::DisableUserClassList()
 {
    // Remove all entries from user class combo box & disable text entry
 
-   //Info("DisableUserClassList", "called");
 #ifdef __WITHOUT_TGCOMBOBOX_REMOVEALL
    RemoveAll(cbUserClass);
 #else
@@ -2060,7 +1676,6 @@ void KVDataAnalysisLauncher::DisableUserClassList()
 #endif
    cbUserClass->Select(-1);
    cbUserClass->SetEnabled(kFALSE);
-   //cbUserClass->EnableTextInput(kFALSE);
    teUserOptions->SetEnabled(kFALSE);
 }
 
@@ -2072,11 +1687,9 @@ void KVDataAnalysisLauncher::EnableUserClassList()
    // fill list with all known user classes & select the one corresponding
    // to the current environment
 
-   //Info("EnableUserClassList", "called");
 
    SetUserClassList();
    SetUserClass(GetSavedResource("UserClass", ""));
-   //cbUserClass->EnableTextInput(kTRUE);
    cbUserClass->SetEnabled(kTRUE);
    teUserOptions->SetEnabled(kTRUE);
 }
@@ -2094,18 +1707,6 @@ void KVDataAnalysisLauncher::EditUserClassFiles()
    KVString imp, dec;
    if (!KVBase::FindClassSourceFiles(uclass, imp, dec)) return;
    gSystem->Exec(Form("%s %s %s &", editor.Data(), imp.Data(), dec.Data()));
-}
-
-void KVDataAnalysisLauncher::SetSendMailAtJobStart()
-{
-   GUIenv->SetValue("KVDataAnalysisLauncher.SendMailAtJobStart", SendMailAtJobStart());
-   GUIenv->SaveLevel(kEnvUser);
-}
-
-void KVDataAnalysisLauncher::SetSendMailAtJobEnd()
-{
-   GUIenv->SetValue("KVDataAnalysisLauncher.SendMailAtJobEnd", SendMailAtJobEnd());
-   GUIenv->SaveLevel(kEnvUser);
 }
 
 //__________________________________________
@@ -2142,9 +1743,11 @@ void KVDataAnalysisLauncher::UpdateListOfSelectedRuns()
    }
    delete novolist;
    SetResource("RunsList", listOfRuns.AsString());
-   selectedRuns->SetText(Form(" Selected Runs : %s", listOfRuns.AsString(MAX_LENGTH_SELECTED_RUNS)));
+   if (listOfRuns.GetNValues())
+      selectedRuns->SetText(Form(" Selected Runs : %s", listOfRuns.AsString(MAX_LENGTH_SELECTED_RUNS)));
+   else
+      selectedRuns->SetText(" Selected Runs : [NONE]");
    fClient->NeedRedraw(selectedRuns);
-   SetRunsPerJobLimits();
 }
 
 //__________________________________________

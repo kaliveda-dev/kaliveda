@@ -27,7 +27,7 @@ ClassImp(KVINDRAReconDataAnalyser)
 //
 ////////////////////////////////////////////////////////////////////////////////
 KVINDRAReconDataAnalyser::KVINDRAReconDataAnalyser()
-   : fDataSelector("none"), fSelector(nullptr), fOldSelector(nullptr), theChain(nullptr),
+   : fSelector(nullptr), fOldSelector(nullptr), theChain(nullptr),
      theRawData(nullptr), theGeneData(nullptr),
      ParVal(nullptr), ParNum(nullptr), parList(nullptr)
 {
@@ -37,7 +37,6 @@ void KVINDRAReconDataAnalyser::Reset()
 {
    //Reset task variables
    KVDataAnalyser::Reset();
-   fDataSelector = "none";
    theChain = nullptr;
    theRawData = nullptr;
    theGeneData = nullptr;
@@ -64,10 +63,6 @@ Bool_t KVINDRAReconDataAnalyser::CheckTaskVariables()
    // Checks the task variables
 
    if (!KVDataAnalyser::CheckTaskVariables()) return kFALSE;
-
-   if (fDataSelector == "none") {
-      ChooseKVDataSelector();
-   }
 
    cout << "============> Analysis summary <=============" << endl;
    cout << "Analysis of runs " << GetRunList().
@@ -134,10 +129,6 @@ void KVINDRAReconDataAnalyser::SubmitTask()
    }
    TotalEntriesToRead = theChain->GetEntries();
    TString option("");
-   if (fDataSelector.Length()) {
-      option.Form("DataSelector=%s", fDataSelector.Data());
-      cout << "Data Selector : " << fDataSelector.Data() << endl;
-   }
 
    // Add the total run list in option
    if (!(option.IsNull())) option += ",";
@@ -184,17 +175,6 @@ void KVINDRAReconDataAnalyser::SubmitTask()
    fOldSelector = nullptr; //deleted by TChain/TTreePlayer
 }
 
-//_________________________________________________________________
-
-void KVINDRAReconDataAnalyser::ChooseKVDataSelector()
-{
-   // Choose the KVDataSelector. Look for source files in current working directory.
-   SetKVDataSelector();
-   cout << "Give the name of the Data Selector: [<RET>=none]" << endl;
-   fDataSelector.ReadToDelim(cin);
-   if (fDataSelector != "") KVBase::FindClassSourceFiles(fDataSelector.Data(), fDataSelectorImp, fDataSelectorDec);
-}
-
 //__________________________________________________________________________________//
 
 void KVINDRAReconDataAnalyser::WriteBatchEnvFile(const Char_t* jobname, Bool_t save)
@@ -205,79 +185,9 @@ void KVINDRAReconDataAnalyser::WriteBatchEnvFile(const Char_t* jobname, Bool_t s
    //where 'jobname' is the name of the job as given to the batch system.
 
    KVDataSetAnalyser::WriteBatchEnvFile(jobname, kFALSE);
-   if (fDataSelector != "none" && fDataSelector != "") {
-      GetBatchInfoFile()->SetValue("KVDataSelector", fDataSelector.Data());
-      if (fDataSelectorImp != "") GetBatchInfoFile()->SetValue("KVDataSelectorImp", fDataSelectorImp.Data());
-      if (fDataSelectorDec != "") GetBatchInfoFile()->SetValue("KVDataSelectorDec", fDataSelectorDec.Data());
-   }
    // backwards-compatible fix for old KVSelector analysis classes
    GetBatchInfoFile()->SetValue("UserClassAlternativeBaseClass", "KVOldINDRASelector");
    if (save) GetBatchInfoFile()->SaveLevel(kEnvUser);
-}
-
-//_________________________________________________________________
-
-Bool_t KVINDRAReconDataAnalyser::ReadBatchEnvFile(const Char_t* filename)
-{
-   //Read the batch env file "filename" and initialise the analysis task using the
-   //informations in the file
-   //Returns kTRUE if all goes well
-
-   Bool_t ok = kFALSE;
-
-   if (!KVDataSetAnalyser::ReadBatchEnvFile(filename)) return ok;
-
-   fDataSelector = GetBatchInfoFile()->GetValue("KVDataSelector", "");
-   if (fDataSelector != "" && fDataSelector != "none") {
-      //if names of source files for selector are known, and if current working directory
-      //is not the same as the launch directory, we have to copy the user's files here
-      fDataSelectorImp = GetBatchInfoFile()->GetValue("KVDataSelectorImp", "");
-      fDataSelectorDec = GetBatchInfoFile()->GetValue("KVDataSelectorDec", "");
-      TString launchDir = GetBatchInfoFile()->GetValue("LaunchDirectory", gSystem->WorkingDirectory());
-      if ((fDataSelectorImp != "") && (launchDir != gSystem->WorkingDirectory())) {
-         TString path_src, path_trg;
-         //copy user's implementation file
-         AssignAndDelete(path_src, gSystem->ConcatFileName(launchDir.Data(), fDataSelectorImp.Data()));
-         AssignAndDelete(path_trg, gSystem->ConcatFileName(gSystem->WorkingDirectory(), fDataSelectorImp.Data()));
-         gSystem->CopyFile(path_src.Data(), path_trg.Data());
-         //copy user's header file
-         AssignAndDelete(path_src, gSystem->ConcatFileName(launchDir.Data(), fDataSelectorDec.Data()));
-         AssignAndDelete(path_trg, gSystem->ConcatFileName(gSystem->WorkingDirectory(), fDataSelectorDec.Data()));
-         gSystem->CopyFile(path_src.Data(), path_trg.Data());
-      }
-   }
-
-   ok = kTRUE;
-
-   return ok;
-}
-
-//_________________________________________________________________
-
-void KVINDRAReconDataAnalyser::SetKVDataSelector(const Char_t* kvs)
-{
-   //Set name of data selector to use. Look for source files in current working directory.
-   fDataSelector = kvs;
-   if (fDataSelector != "") KVBase::FindClassSourceFiles(kvs, fDataSelectorImp, fDataSelectorDec);
-}
-
-//_________________________________________________________________
-
-const Char_t* KVINDRAReconDataAnalyser::ExpandAutoBatchName(const Char_t* format)
-{
-   //Replace any 'special' symbols in "format" with their current values
-   //
-   //  $Date   : current date and time
-   //  $System  :  name of system to be analysed
-   //  $User  :  name of user
-   //  $UserClass or $Selector :  name of user's analysis class
-   //  $DataSelector  :  name of user's data selector (KVDataSelector)
-
-   static KVString tmp;
-   tmp = KVDataSetAnalyser::ExpandAutoBatchName(format);
-   tmp.ReplaceAll("$Selector", GetUserClass());
-   tmp.ReplaceAll("$DataSelector", GetKVDataSelector());
-   return tmp.Data();
 }
 
 KVNumberList KVINDRAReconDataAnalyser::PrintAvailableRuns(KVString& datatype)

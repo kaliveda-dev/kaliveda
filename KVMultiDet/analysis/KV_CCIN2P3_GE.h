@@ -33,18 +33,22 @@ public:
    void PrintJobs(Option_t* opt = "");  /* Print list of all jobs submitted to system */
 
    virtual Bool_t CheckJobParameters();        /* Checks job parameters */
-   void SetMultiJobsMode(Bool_t on = kTRUE) {
+   void SetMultiJobsMode(Bool_t on = kTRUE)
+   {
       fMultiJobs = on;
    }
-   Bool_t MultiJobsMode() const {
+   Bool_t MultiJobsMode() const
+   {
       return fMultiJobs;
    }
 
-   void SetRunsPerJob(Int_t n) {
+   void SetRunsPerJob(Int_t n)
+   {
       // Set number of runs per job submitted in multi jobs mode (default=1)
       fRunsPerJob = n;
    }
-   Int_t GetRunsPerJob() const {
+   Int_t GetRunsPerJob() const
+   {
       // Returns number of runs per job submitted in multi jobs mode
       return fRunsPerJob;
    }

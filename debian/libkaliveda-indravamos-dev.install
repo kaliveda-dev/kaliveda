@@ -17,6 +17,7 @@
 /usr/include/kaliveda/KVHarpeeIC.h
 /usr/include/kaliveda/KVSiliconVamos.h
 /usr/include/kaliveda/KVVAMOSTransferMatrix.h
+/usr/include/kaliveda/KVVAMOSWeightFinder.h
 /usr/include/kaliveda/KVHarpeeSi.h
 /usr/include/kaliveda/KVBasicVAMOSFilter.h
 /usr/include/kaliveda/KVVAMOSCodes.h
@@ -43,10 +44,12 @@
 /usr/include/kaliveda/ThreadedMinimiserImpl.h
 /usr/include/kaliveda/MonoMinimiserData.h
 /usr/include/kaliveda/MEDetectorStack.h
+/usr/include/kaliveda/KVVAMOSDataCorrection.h
 /usr/include/kaliveda/KVVAMOSReconNuc.h
 /usr/include/kaliveda/KVVAMOSReconEvent.h
 /usr/include/kaliveda/CorrectionData.h
 /usr/include/kaliveda/KVINDRA_VAMOS.h
+/usr/include/kaliveda/KVVAMOSDataCorrection_e503.h
 /usr/include/kaliveda/Corrections_e503.h
 /usr/include/kaliveda/AbsorberEnergies.h
 /usr/include/kaliveda/KVIVReconEvent.h

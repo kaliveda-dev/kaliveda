@@ -36,7 +36,8 @@ public:
    virtual void Clear(Option_t* opt = "");
    virtual void ClearSelection(TRegexp&);
    virtual void Print(Option_t* opt = "") const;
-   virtual void ls(Option_t* opt = "") const {
+   virtual void ls(Option_t* opt = "") const
+   {
       Print(opt);
    }
 
@@ -75,10 +76,12 @@ public:
    Int_t GetNameIndex(const Char_t* name);
    const Char_t* GetNameAt(Int_t idx) const;
    Int_t GetNpar() const;
-   Int_t GetEntries() const {
+   Int_t GetEntries() const
+   {
       return GetNpar();
    }
-   Bool_t IsEmpty() const {
+   Bool_t IsEmpty() const
+   {
       return GetNpar() == 0;
    }
 
@@ -98,7 +101,8 @@ public:
    virtual KVEnv* ProduceEnvFile();
    virtual void WriteEnvFile(const Char_t* filename);
 
-   void Sort(Bool_t order = kSortAscending) {
+   void Sort(Bool_t order = kSortAscending)
+   {
       fList.Sort(order);
    }
 
@@ -106,13 +110,16 @@ public:
 
    void WriteClass(const Char_t* classname, const Char_t* classdesc, const Char_t* base_class = "");
 
-   void SetIgnoreBool(Bool_t ignore = kTRUE) {
+   void SetIgnoreBool(Bool_t ignore = kTRUE)
+   {
       // When reading a list from a file using ReadEnvFile(), any string values matching
       // TRUE, FALSE, ON, OFF, YES, NO, OK, NOT are automatically converted to boolean
       // parameters. If you want to disable this and keep such strings as strings,
       // call this method first.
       fIgnoreBool = ignore;
    }
+   void SetFromEnv(TEnv* tenv, const TString& prefix = "");
+   void WriteToEnv(TEnv* tenv, const TString& prefix = "");
 
    ClassDef(KVNameValueList, 4) //A general-purpose list of parameters
 };

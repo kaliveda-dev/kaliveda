@@ -1,8 +1,9 @@
-kaliveda (1.10.13-0ubuntu1) UNRELEASED; urgency=medium
+kaliveda (1.10.13-0ubuntu2) UNRELEASED; urgency=medium
 
   * New release v1.10/13
+  * Packaging update
 
- -- John Frankland <frankland@ganil.fr>  Fri, 27 Jan 2017 12:26:12 +0100
+ -- John Frankland <frankland@ganil.fr>  Wed, 22 Feb 2017 16:07:43 +0100
 
 kaliveda (1.10.12-0ubuntu1) yakkety; urgency=medium
 

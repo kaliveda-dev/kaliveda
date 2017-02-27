@@ -172,7 +172,6 @@
 /usr/include/kaliveda/KVTrieurBloc.h
 /usr/include/kaliveda/KVGaus1D.h
 /usr/include/kaliveda/KVLinuxBatch.h
-/usr/include/kaliveda/KV_CCIN2P3_BQS.h
 /usr/include/kaliveda/KVEventSelector.h
 /usr/include/kaliveda/KVDataAnalyser.h
 /usr/include/kaliveda/KVBatchSystem.h
@@ -180,8 +179,8 @@
 /usr/include/kaliveda/KVAutoFit.h
 /usr/include/kaliveda/KVDataTransferSFTP.h
 /usr/include/kaliveda/KVClust3D.h
+/usr/include/kaliveda/KVSimDirAnalyser.h
 /usr/include/kaliveda/KVBatchJob.h
-/usr/include/kaliveda/KVDataTransferBBFTP.h
 /usr/include/kaliveda/KVDataPatch.h
 /usr/include/kaliveda/KV_CCIN2P3_GE.h
 /usr/include/kaliveda/KVGaxis.h
@@ -189,6 +188,7 @@
 /usr/include/kaliveda/KVDataTransferXRD.h
 /usr/include/kaliveda/KVBatchSystemManager.h
 /usr/include/kaliveda/KVRootBatch.h
+/usr/include/kaliveda/KVDataSetAnalyser.h
 /usr/include/kaliveda/KVGaus2D.h
 /usr/include/kaliveda/KVGumGumDistribution.h
 /usr/include/kaliveda/KVGEBatchJob.h
@@ -274,6 +274,7 @@
 /usr/include/kaliveda/KVIDGridManagerGUI.h
 /usr/include/kaliveda/KVListView.h
 /usr/include/kaliveda/KVWidget.h
+/usr/include/kaliveda/KVDataAnalysisLauncher.h
 /usr/include/kaliveda/KVSpiderIdentificator.h
 /usr/include/kaliveda/KVTestListView.h
 /usr/include/kaliveda/KVLauncherGUI.h
@@ -286,8 +287,10 @@
 /usr/include/kaliveda/KVDalitzPlot.h
 /usr/include/kaliveda/KVBatchSystemGUI.h
 /usr/include/kaliveda/KVSpIdGUI.h
+/usr/include/kaliveda/KVNameValueListGUI.h
 /usr/include/kaliveda/KVTreeAnalyzer.h
 /usr/include/kaliveda/KVCanvas.h
+/usr/include/kaliveda/KVBatchSystemParametersGUI.h
 /usr/include/kaliveda/KVDataRepository.h
 /usr/include/kaliveda/KVDataAnalysisTask.h
 /usr/include/kaliveda/KVDMSDataRepository.h
