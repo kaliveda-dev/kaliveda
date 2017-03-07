@@ -11,6 +11,7 @@
 class KVVAMOSReconTrajectory : public KVBase {
    friend class KVVAMOSReconNuc;
    friend class KVVAMOSTransferMatrix;
+   friend class KVZGOUBIInverseMatrix;
 
 protected:
    enum {
@@ -43,8 +44,7 @@ public:
    virtual void Reset();
 
 
-   inline Double_t GetThetaF() const
-   {
+   inline Double_t GetThetaF() const {
       //Returns the angle (in degree) between the Z-axis and the projection of the velocity vector
       //of the trajectory on the XZ plane (symmetry plane) in the focal-plane frame of reference.
       //It varies between -90 to 90 degrees.
@@ -53,8 +53,7 @@ public:
 
    }
 
-   inline Double_t GetPhiF() const
-   {
+   inline Double_t GetPhiF() const {
       //Returns the angle (in degree) between the velocity vector of the trajectory and its projection
       //on the XZ plane (symmetry plane) in the focal plane frame of reference.
       //It varies between -90 to 90 degrees.
@@ -63,8 +62,7 @@ public:
    }
 
 
-   inline Double_t GetThetaV() const
-   {
+   inline Double_t GetThetaV() const {
       //Returns the angle (in degree) between the Z-axis and the projection of the velocity vector
       //of the trajectory on the XZ plane (symmetry plane) in the laboratory frame of reference and in the
       //VAMOS coordinate system.
@@ -74,8 +72,7 @@ public:
 
    }
 
-   inline Double_t GetPhiV() const
-   {
+   inline Double_t GetPhiV() const {
       //Returns the angle (in degree) between the velocity vector of the trajectory and its projection
       //on the XZ plane (symmetry plane) in the laboratory frame of reference and in the VAMOS coordinate system.
       //It varies between -90 to 90 degrees.
@@ -85,8 +82,7 @@ public:
    }
 
 
-   inline Double_t GetThetaL() const
-   {
+   inline Double_t GetThetaL() const {
       //Returns the angle (in degree) between the Z-axis and the the velocity vector of the trajectory
       //(i.e. polar angle in spherical coordinates) in the laboratory frame of reference and in the VAMOS coordinate system.
       //It varies between 0 to 180 degrees.
@@ -95,8 +91,7 @@ public:
 
    }
 
-   inline Double_t GetPhiL() const
-   {
+   inline Double_t GetPhiL() const {
       //Returns the angle (in degree) between the X-axis and the projection of the velocity vector of the trajectory
       //on the XY-plane (i.e. azimuth angle in spherical coordinates) in the laboratory frame of reference
       //and in the VAMOS coordinate system.
@@ -105,71 +100,61 @@ public:
       return TMath::RadToDeg() * dirLab.Phi();
    }
 
-   inline Float_t GetBrho() const
-   {
+   inline Float_t GetBrho() const {
       //Returns the magnetic rigidity in T.m
       return Brho;
    }
 
-   inline Float_t GetPath() const
-   {
+   inline Float_t GetPath() const {
       //Retruns the path of the particle between the target point to the
       //focal plane in cm
       return path;
    }
 
-   inline void SetFPparamsReady()
-   {
+   inline void SetFPparamsReady() {
       // Set flag when the Focal plane parameters
       // (point and direction) are set.
       SetBit(kFPisOK);
    }
 
-   inline Bool_t FPparamsAreReady() const
-   {
+   inline Bool_t FPparamsAreReady() const {
       // Returns true if the focal plane parameters was set.
       return TestBit(kFPisOK);
    }
 
-   inline void SetLabParamsReady()
-   {
+   inline void SetLabParamsReady() {
       // Set flag when the Laboratory parameters
       // (direction and Brho) are set.
       SetBit(kLabIsOK);
    }
 
-   inline Bool_t LabParamsAreReady() const
-   {
+   inline Bool_t LabParamsAreReady() const {
       // Returns true if the laboratory parameters was set.
       return TestBit(kLabIsOK);
    }
 
-   inline void SetFPtoLabAttempted()
-   {
+   inline void SetFPtoLabAttempted() {
       // Set flag when the reconstruction of the trajectory
       // in the laboratory reference frame is attempted
       // from the parameters of the focal plane.
       SetBit(kFPtoLabAttempted);
    }
 
-   inline Bool_t FPtoLabWasAttempted() const
-   {
+   inline Bool_t FPtoLabWasAttempted() const {
       // Returns true if the reconstruction of the trajector
       // in the laboratory reference frame was attempted
       // from the parameters of the focal plane.
       return TestBit(kFPtoLabAttempted);
    }
 
-   inline void SetLabToFPattempted()
-   {
+   inline void SetLabToFPattempted() {
       // Set flag when the reconstruction of the trajectory
       // at the focal plane reference frame is attempted from
       // the parameters of the laboratory.
       SetBit(kLabToFPattempted);
    }
 
-   inline Bool_t LabToFPwasAttempted() const
-   {
+   inline Bool_t LabToFPwasAttempted() const {
       // Returns true if the reconstruction of the trajectory
       // at the focal plane reference frame is attempted from
       // the parameters of the laboratory.

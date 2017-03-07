@@ -103,6 +103,7 @@ void KVVAMOS::init()
    fVAMOSvol      = NULL;
    fStripFoil     = NULL;
    fTransMatrix   = NULL;
+   fZGOUBIMatrix = NULL;
    fReconNavigator = NULL;
    fWeightFinder  = NULL;
    fRotation      = NULL;
@@ -139,6 +140,7 @@ KVVAMOS::~KVVAMOS()
    SafeDelete(fFiredDets);
    SafeDelete(fStripFoil);
    SafeDelete(fTransMatrix);
+   SafeDelete(fZGOUBIMatrix);
    SafeDelete(fReconNavigator);
    SafeDelete(fWeightFinder);
    SafeDelete(fFilter);
@@ -1055,6 +1057,17 @@ KVVAMOSTransferMatrix* KVVAMOS::GetTransferMatrix()
 }
 //________________________________________________________________
 
+KVZGOUBIInverseMatrix* KVVAMOS::GetZGOUBIInverseMatrix()
+{
+   //Returns the transformation matrix allowing to map the measured
+   //coordinates at the focal plane back to the target. If no matrix
+   //exists then a new matrix is built from coefficient files found
+   //in the directory of the current dataset ( see the method
+   //KVVAMOSTransferMatrix::ReadCoefInDataSet() ).
+   if (fZGOUBIMatrix) return fZGOUBIMatrix;
+   return (fZGOUBIMatrix = new KVZGOUBIInverseMatrix(50, 50, 50, 50));
+}
+//________________________________________________________________
 
 KVVAMOSWeightFinder* KVVAMOS::GetWeightFinder()
 {
@@ -1208,6 +1221,18 @@ void KVVAMOS::SetTransferMatrix(KVVAMOSTransferMatrix* mat)
    if (!mat) return;
    if (fTransMatrix) SafeDelete(fTransMatrix);
    fTransMatrix = mat;
+}
+//________________________________________________________________
+
+void KVVAMOS::SetZGOUBIInverseMatrix(KVZGOUBIInverseMatrix* mat)
+{
+   //Set the transformation matrix allowing to map the measured
+   //coordinates at the focal plane back to the target. If a matrix
+   //already exists then it is deleted first to set the new one.
+
+   if (!mat) return;
+   if (fZGOUBIMatrix) SafeDelete(fZGOUBIMatrix);
+   fZGOUBIMatrix = mat;
 }
 //________________________________________________________________
 

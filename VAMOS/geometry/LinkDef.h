@@ -30,5 +30,8 @@ $Id: VAMOSLinkDef.h,v 1.4 2009/01/14 15:59:49 franklan Exp $
 #pragma link C++ class KVHarpeeSi-;
 #pragma link C++ class KVSeD+;
 #pragma link C++ class KVSiliconVamos+;
+#pragma link C++ class KVZGOUBITrajectory+;
+#pragma link C++ class KVZGOUBIInversePosition+;
+#pragma link C++ class KVZGOUBIInverseMatrix+;
 
 #endif

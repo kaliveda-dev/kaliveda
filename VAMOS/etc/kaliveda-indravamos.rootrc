@@ -270,3 +270,11 @@ INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationCutListSiCsI:  VAMOSDuplication
 
 # Data of multidetectors (INDRA/VAMOS) to be used in the recon->ident analysis using the user class "KVIVReconIdent".
 KVIVReconIdent.DataToAnalyse: INDRA VAMOS
+
+# ZGOUBI Database
++INDRA_e503.KVZGOUBIInverseMatrix.ZGOUBIDatabase:  ZGOUBI_database.root
++INDRA_e494s.KVZGOUBIInverseMatrix.ZGOUBIDatabase:  ZGOUBI_database.root
+
+# Reconstruction method for ReconstructLabTraj: Polynomial or Zgoubi
++INDRA_e503.KVVAMOSReconNuc.ReconstructLabTrajMethod:  Zgoubi
++INDRA_e494s.KVVAMOSReconNuc.ReconstructLabTrajMethod:  Zgoubi
