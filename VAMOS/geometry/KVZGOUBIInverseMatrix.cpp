@@ -165,7 +165,6 @@ void KVZGOUBIInverseMatrix::SetZGOUBITDatabase_from_DataSet()
    }
 }
 
-
 void KVZGOUBIInverseMatrix::AddZGOUBITrajectory(Float_t ThetaVt, Float_t PhiVt, Float_t Deltat, Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t Patht)
 {
    KVZGOUBITrajectory atemp(ThetaVt, PhiVt, Deltat, XFt, ThetaFt, YFt, PhiFt, Patht);
