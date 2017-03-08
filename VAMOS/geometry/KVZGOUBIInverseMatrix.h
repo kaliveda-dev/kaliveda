@@ -14,6 +14,7 @@
 #include "KVDataSet.h"
 #include "KVVAMOSReconTrajectory.h"
 #include "KVVAMOS.h"
+#include "TChain.h"
 
 class KVZGOUBIInverseMatrix : public KVBase {
 protected:

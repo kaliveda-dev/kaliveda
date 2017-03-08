@@ -272,8 +272,8 @@ INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationCutListSiCsI:  VAMOSDuplication
 KVIVReconIdent.DataToAnalyse: INDRA VAMOS
 
 # ZGOUBI Database
-+INDRA_e503.KVZGOUBIInverseMatrix.ZGOUBIDatabase:  ZGOUBI_database.root
-+INDRA_e494s.KVZGOUBIInverseMatrix.ZGOUBIDatabase:  ZGOUBI_database.root
++INDRA_e503.KVZGOUBIInverseMatrix.ZGOUBIDatabase:  ZGOUBI_database
++INDRA_e494s.KVZGOUBIInverseMatrix.ZGOUBIDatabase:  ZGOUBI_database
 
 # Reconstruction method for ReconstructLabTraj: Polynomial or Zgoubi
 +INDRA_e503.KVVAMOSReconNuc.ReconstructLabTrajMethod:  Zgoubi

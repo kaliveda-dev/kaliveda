@@ -131,32 +131,40 @@ void KVZGOUBIInverseMatrix::SetZGOUBITDatabase_from_DataSet()
       Warning("SetZGOUBITFile_fromdataset", "No filename defined. Should be given by %s.KVZGOUBIInverseMatrix.ZGOUBIDatabase", gDataSet->GetName());
       return;
    } else {
+      Bool_t rootfiles_status = true;
+      Int_t rootfile_nb = 1;
+      TString rootfile_name;
       TString fullpath;
-      if (gDataSet->SearchKVFile(filename.Data(), fullpath, hardcoded_datasetsubdir.Data())) {
-         Float_t ThetaVt, PhiVt, Deltat, XFt, ThetaFt, YFt, PhiFt, Patht;
-         TFile* ZGOUBITFile = TFile::Open(fullpath.Data());
-         TTree* t = (TTree*) ZGOUBITFile->Get("tree");
-         //enable reading of all branch
-         t->SetBranchStatus("*", 1);
-         t->SetBranchAddress("ThetaV", &ThetaVt);
-         t->SetBranchAddress("PhiV", &PhiVt);
-         t->SetBranchAddress("Delta", &Deltat);
-         t->SetBranchAddress("XF", &XFt);
-         t->SetBranchAddress("ThetaF", &ThetaFt);
-         t->SetBranchAddress("YF", &YFt);
-         t->SetBranchAddress("PhiF", &PhiFt);
-         t->SetBranchAddress("Path", &Patht);
-         int Database_size = (int) t->GetEntries();
-         for (int i = 0; i < Database_size; i++) {
-            t->GetEntry(i);
-            AddZGOUBITrajectory(ThetaVt, PhiVt, Deltat,  XFt, ThetaFt, YFt, PhiFt, Patht);
+      TChain* t = new TChain("tree");
+      while (rootfiles_status == true) {
+         rootfile_name.Form("%s_%i.root", filename.Data(), rootfile_nb);
+         if (gDataSet->SearchKVFile(rootfile_name.Data(), fullpath, hardcoded_datasetsubdir.Data())) {
+            t->Add(fullpath.Data());
+            rootfile_nb++;
+         } else {
+            rootfiles_status = false;
          }
-      } else {
-         Warning("SetZGOUBITFile_from_DataSet", " %s.ZGOUBIDatabase not found", gDataSet->GetName());
-         return;
       }
+      Float_t ThetaVt, PhiVt, Deltat, XFt, ThetaFt, YFt, PhiFt, Patht;
+      //enable reading of all branch
+      t->SetBranchStatus("*", 1);
+      t->SetBranchAddress("ThetaV", &ThetaVt);
+      t->SetBranchAddress("PhiV", &PhiVt);
+      t->SetBranchAddress("Delta", &Deltat);
+      t->SetBranchAddress("XF", &XFt);
+      t->SetBranchAddress("ThetaF", &ThetaFt);
+      t->SetBranchAddress("YF", &YFt);
+      t->SetBranchAddress("PhiF", &PhiFt);
+      t->SetBranchAddress("Path", &Patht);
+      int Database_size = (int) t->GetEntries();
+      for (int i = 0; i < Database_size; i++) {
+         t->GetEntry(i);
+         AddZGOUBITrajectory(ThetaVt, PhiVt, Deltat,  XFt, ThetaFt, YFt, PhiFt, Patht);
+      }
+      delete t;
    }
 }
+
 
 void KVZGOUBIInverseMatrix::AddZGOUBITrajectory(Float_t ThetaVt, Float_t PhiVt, Float_t Deltat, Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t Patht)
 {
