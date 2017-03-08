@@ -75,9 +75,9 @@ public:
    std::vector<Int_t> GetNearestLinenbs(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt);
    Float_t GetDistance(Float_t xf, Float_t thetaf, Float_t yf, Float_t phif, Int_t linenb);
    Float_t GetDistance(Int_t linenb1, Int_t linenb2);
-   Float_t GetNearestLinedistance2(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt);
+   // Float_t GetNearestLinedistance2(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt);
    std::vector<Int_t> GetLinesinRadius(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radius);
-   void testGetLinesinRadius(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radiusmultiplier);
+   // void testGetLinesinRadius(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radiusmultiplier);
    std::vector<Float_t> testGetLinesinRadius_bari(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radiusmultiplier);
    std::vector<Float_t> testGetLinesinRadius_weight(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radiusmultiplier);
    Float_t GetDistance2D(Float_t xf, Float_t thetaf, Float_t xf_line, Float_t thetaf_line);
