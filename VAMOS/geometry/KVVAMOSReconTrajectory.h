@@ -11,7 +11,7 @@
 class KVVAMOSReconTrajectory : public KVBase {
    friend class KVVAMOSReconNuc;
    friend class KVVAMOSTransferMatrix;
-   friend class KVZGOUBIInverseMatrix;
+   friend class KVZGOUBIReconstruction;
 
 protected:
    enum {

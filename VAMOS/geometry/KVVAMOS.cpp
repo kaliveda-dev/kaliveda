@@ -103,7 +103,7 @@ void KVVAMOS::init()
    fVAMOSvol      = NULL;
    fStripFoil     = NULL;
    fTransMatrix   = NULL;
-   fZGOUBIMatrix = NULL;
+   fZGOUBIReconstruction = NULL;
    fReconNavigator = NULL;
    fWeightFinder  = NULL;
    fRotation      = NULL;
@@ -140,7 +140,7 @@ KVVAMOS::~KVVAMOS()
    SafeDelete(fFiredDets);
    SafeDelete(fStripFoil);
    SafeDelete(fTransMatrix);
-   SafeDelete(fZGOUBIMatrix);
+   SafeDelete(fZGOUBIReconstruction);
    SafeDelete(fReconNavigator);
    SafeDelete(fWeightFinder);
    SafeDelete(fFilter);
@@ -1057,15 +1057,15 @@ KVVAMOSTransferMatrix* KVVAMOS::GetTransferMatrix()
 }
 //________________________________________________________________
 
-KVZGOUBIInverseMatrix* KVVAMOS::GetZGOUBIInverseMatrix()
+KVZGOUBIReconstruction* KVVAMOS::GetZGOUBIReconstruction()
 {
    //Returns the transformation matrix allowing to map the measured
    //coordinates at the focal plane back to the target. If no matrix
    //exists then a new matrix is built from coefficient files found
    //in the directory of the current dataset ( see the method
    //KVVAMOSTransferMatrix::ReadCoefInDataSet() ).
-   if (fZGOUBIMatrix) return fZGOUBIMatrix;
-   return (fZGOUBIMatrix = new KVZGOUBIInverseMatrix(50, 50, 50, 50));
+   if (fZGOUBIReconstruction) return fZGOUBIReconstruction;
+   return (fZGOUBIReconstruction = new KVZGOUBIReconstruction(true));
 }
 //________________________________________________________________
 
@@ -1224,15 +1224,15 @@ void KVVAMOS::SetTransferMatrix(KVVAMOSTransferMatrix* mat)
 }
 //________________________________________________________________
 
-void KVVAMOS::SetZGOUBIInverseMatrix(KVZGOUBIInverseMatrix* mat)
+void KVVAMOS::SetZGOUBIReconstruction(KVZGOUBIReconstruction* mat)
 {
    //Set the transformation matrix allowing to map the measured
    //coordinates at the focal plane back to the target. If a matrix
    //already exists then it is deleted first to set the new one.
 
    if (!mat) return;
-   if (fZGOUBIMatrix) SafeDelete(fZGOUBIMatrix);
-   fZGOUBIMatrix = mat;
+   if (fZGOUBIReconstruction) SafeDelete(fZGOUBIReconstruction);
+   fZGOUBIReconstruction = mat;
 }
 //________________________________________________________________
 

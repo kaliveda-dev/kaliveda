@@ -913,14 +913,14 @@ Bool_t KVVAMOSReconNuc::ReconstructLabTraj()
       Warning("ReconstructLabTraj()", "No method defined. Should be given by %s.KVVAMOSReconNuc.ReconstructLabTrajMethod", gDataSet->GetName());
       return false;
    } else if (filename == "Zgoubi") {
-      KVZGOUBIInverseMatrix* tm = gVamos->GetZGOUBIInverseMatrix();
+      KVZGOUBIReconstruction* tm = gVamos->GetZGOUBIReconstruction();
       return tm->ReconstructFPtoLab(&fRT);
    } else if (filename == "Polynomial") {
       KVVAMOSTransferMatrix* tm = gVamos->GetTransferMatrix();
       return tm->ReconstructFPtoLab(&fRT);
    } else {
       Warning("ReconstructLabTraj()", "Method not valid, should be Polynomial or Zgoubi. Should be given by %s.KVVAMOSReconNuc.ReconstructLabTrajMethod. Zgoubi will be used.", gDataSet->GetName());
-      KVZGOUBIInverseMatrix* tm = gVamos->GetZGOUBIInverseMatrix();
+      KVZGOUBIReconstruction* tm = gVamos->GetZGOUBIReconstruction();
       return tm->ReconstructFPtoLab(&fRT);
    }
 }

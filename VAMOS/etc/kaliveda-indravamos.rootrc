@@ -272,9 +272,20 @@ INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationCutListSiCsI:  VAMOSDuplication
 KVIVReconIdent.DataToAnalyse: INDRA VAMOS
 
 # ZGOUBI Database
-+INDRA_e503.KVZGOUBIInverseMatrix.ZGOUBIDatabase:  ZGOUBI_database
-+INDRA_e494s.KVZGOUBIInverseMatrix.ZGOUBIDatabase:  ZGOUBI_database
+INDRA_e503.KVZGOUBIReconstruction.ZGOUBIDatabase4D:  ZGOUBI_database
+INDRA_e494s.KVZGOUBIReconstruction.ZGOUBIDatabase4D:  ZGOUBI_database
+INDRA_e503.KVZGOUBIReconstruction.ZGOUBIDatabase2D:  ZGOUBI_database
+INDRA_e494s.KVZGOUBIReconstruction.ZGOUBIDatabase2D:  ZGOUBI_database
+
+
+# ZGOUBI Database local
+INDRA_e503.KVZGOUBIReconstruction.ZGOUBIDatabase_local4D:  
+INDRA_e494s.KVZGOUBIReconstruction.ZGOUBIDatabase_local4D:
+INDRA_e503.KVZGOUBIReconstruction.ZGOUBIDatabase_local2D:  
+INDRA_e494s.KVZGOUBIReconstruction.ZGOUBIDatabase_local2D:
+
+INDRA_e494s.KVZGOUBIInverseMatrix.ZGOUBIDatabase_local:
 
 # Reconstruction method for ReconstructLabTraj: Polynomial or Zgoubi
-+INDRA_e503.KVVAMOSReconNuc.ReconstructLabTrajMethod:  Zgoubi
-+INDRA_e494s.KVVAMOSReconNuc.ReconstructLabTrajMethod:  Zgoubi
+INDRA_e503.KVVAMOSReconNuc.ReconstructLabTrajMethod:  Zgoubi
+INDRA_e494s.KVVAMOSReconNuc.ReconstructLabTrajMethod:  Zgoubi

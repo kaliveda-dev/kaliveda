@@ -33,5 +33,7 @@ $Id: VAMOSLinkDef.h,v 1.4 2009/01/14 15:59:49 franklan Exp $
 #pragma link C++ class KVZGOUBITrajectory+;
 #pragma link C++ class KVZGOUBIInversePosition+;
 #pragma link C++ class KVZGOUBIInverseMatrix+;
+#pragma link C++ class KVZGOUBIReconstruction+;
+#pragma link C++ class KVZGOUBIComb+;
 
 #endif

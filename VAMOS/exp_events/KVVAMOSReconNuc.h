@@ -26,7 +26,7 @@
 #include "KVVAMOSReconTrajectory.h"
 #include "KVVAMOSTransferMatrix.h"
 #include "KVVAMOSDataCorrection.h"
-#include "KVZGOUBIInverseMatrix.h"
+#include "KVZGOUBIReconstruction.h"
 
 class KVVAMOSDetector;
 class KVVAMOSDataCorrection;
