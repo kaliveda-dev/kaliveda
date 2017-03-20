@@ -66,6 +66,8 @@ void KVZGOUBIReconstruction::Copy(TObject& obj) const
 
    KVBase::Copy(obj);
    KVZGOUBIReconstruction& CastedObj = (KVZGOUBIReconstruction&)obj;
+   CastedObj.Matrix_2D = Matrix_2D ;
+   CastedObj.Matrix_4D = Matrix_4D ;
 
 }
 //____________________________________________________________________________//

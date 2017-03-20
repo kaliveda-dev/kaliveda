@@ -64,6 +64,16 @@ void KVZGOUBIComb::Copy(TObject& obj) const
 
    KVBase::Copy(obj);
    KVZGOUBIComb& CastedObj = (KVZGOUBIComb&)obj;
+   CastedObj.N1 = N1 ;
+   CastedObj.N2 = N2 ;
+   CastedObj.N3 = N3 ;
+   CastedObj.N4 = N4 ;
+   CastedObj.N5 = N5 ;
+   CastedObj.N6 = N6 ;
+   CastedObj.N7 = N7 ;
+   CastedObj.N8 = N8 ;
+   CastedObj.N9 = N9 ;
+   CastedObj.N10 = N10 ;
 }
 //____________________________________________________________________________//
 
