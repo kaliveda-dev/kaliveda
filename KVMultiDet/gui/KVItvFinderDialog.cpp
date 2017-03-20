@@ -9,6 +9,8 @@
 #include "TROOT.h"
 #include "TGMsgBox.h"
 #include "TGFileDialog.h"
+#include "KVTestIDGridDialog.h"
+
 
 
 #include "KVIdentificationResult.h"
@@ -49,7 +51,7 @@ KVItvFinderDialog::KVItvFinderDialog(KVIDZAFromZGrid* gg, TH2* hh)
    TRootEmbeddedCanvas* fRootEmbeddedCanvas615 = new TRootEmbeddedCanvas(0, fCanvasFrame, 800, 440);
    Int_t wfRootEmbeddedCanvas615 = fRootEmbeddedCanvas615->GetCanvasWindowId();
    fCanvas = new KVCanvas("c123", 10, 10, wfRootEmbeddedCanvas615);
-
+   fPad = fCanvas->cd();
    fCanvas->SetRightMargin(0.02);
    fCanvas->SetTopMargin(0.02);
    fCanvas->SetLeftMargin(0.08);
@@ -74,6 +76,7 @@ KVItvFinderDialog::KVItvFinderDialog(KVIDZAFromZGrid* gg, TH2* hh)
          "sm_delete.xpm",
          "profile_t.xpm",
          "refresh2.xpm",
+         "bld_colorselect.png",
          "latex.xpm",
          "move_cursor.png",
          0
@@ -85,6 +88,7 @@ KVItvFinderDialog::KVItvFinderDialog(KVIDZAFromZGrid* gg, TH2* hh)
          "Remove selected intervals",
          "Find intervals",
          "Update list views",
+         "Test the grid",
          "Set log scale on y axis",
          "Unzoom the histogram",
          0
@@ -95,7 +99,8 @@ KVItvFinderDialog::KVItvFinderDialog(KVIDZAFromZGrid* gg, TH2* hh)
          0,
          0,
          0,
-         300,
+         0,
+         280,
          0,
          0
       };
@@ -105,6 +110,7 @@ KVItvFinderDialog::KVItvFinderDialog(KVIDZAFromZGrid* gg, TH2* hh)
          "RemoveInterval()",
          "Identify()",
          "UpdateLists()",
+         "TestIdent()",
          "SetLogy()",
          "UnzoomHisto()",
          0
@@ -361,7 +367,7 @@ void KVItvFinderDialog::Identify()
 {
    TList* list = fCustomView->GetSelectedObjects();
    if (!list->GetSize()) {
-      ProcessIdentification(1, 25);
+      ProcessIdentification(1, TMath::Min(fGrid->GetIdentifiers()->GetSize(), 25));
       for (int ii = 0; ii < fGrid->GetIntervalSets()->GetSize(); ii++) DrawInterval((interval_set*)fGrid->GetIntervalSets()->At(ii), 0);
    } else {
       for (int ii = 0; ii < list->GetSize(); ii++) {
@@ -432,8 +438,8 @@ void KVItvFinderDialog::NewInterval()
    interval_set* itvs = (interval_set*)list->At(0);
    delete list;
 
-   gPad->WaitPrimitive("TMarker");
-   TMarker* mm = (TMarker*) gPad->GetListOfPrimitives()->Last();
+   fPad->WaitPrimitive("TMarker");
+   TMarker* mm = (TMarker*) fPad->GetListOfPrimitives()->Last();
 
    double pid = mm->GetX();
    int aa = 0;
@@ -465,6 +471,7 @@ void KVItvFinderDialog::NewInterval()
 
 
    KVPIDIntervalPainter* dummy = new KVPIDIntervalPainter(itv, fLinearHisto);
+   fPad->cd();
    fCanvas->GetListOfPrimitives()->Add(dummy);
    dummy->Draw();
    dummy->Connect("IntMod()", "KVItvFinderDialog", this, "UpdatePIDList()");
@@ -472,7 +479,7 @@ void KVItvFinderDialog::NewInterval()
    dummy->SetCanvas(fCanvas);
    fItvPaint.Add(dummy);
 
-   gPad->GetListOfPrimitives()->Remove(mm);
+   fPad->GetListOfPrimitives()->Remove(mm);
    delete mm;
 
    fCurrentView->Display(itvs->GetIntervals());
@@ -596,6 +603,13 @@ void KVItvFinderDialog::UpdateLists()
       fCurrentView->Display(itvs->GetIntervals());
    }
    delete list;
+}
+
+void KVItvFinderDialog::TestIdent()
+{
+   fGrid->SetOnlyZId(0);
+   fGrid->Initialize();
+   new KVTestIDGridDialog(gClient->GetDefaultRoot(), gClient->GetDefaultRoot(), 10, 10, fGrid, fHisto);
 }
 
 void KVItvFinderDialog::SetLogy()

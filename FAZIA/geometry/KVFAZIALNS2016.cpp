@@ -21,8 +21,10 @@ ClassImp(KVFAZIALNS2016)
 ////////////////////////////////////////////////////////////////////////////////
 
 KVFAZIALNS2016::KVFAZIALNS2016()
+   : KVFAZIA()
 {
    // Default constructor
+   SetTitle(ClassName());
 }
 
 KVFAZIALNS2016::~KVFAZIALNS2016()

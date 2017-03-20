@@ -2,6 +2,7 @@
 //Author: ,,,
 
 #include "KVFAZIAIDSiCsI.h"
+#include "KVDataSet.h"
 
 ClassImp(KVFAZIAIDSiCsI)
 
@@ -102,4 +103,5 @@ void KVFAZIAIDSiCsI::Initialize()
    } else {
       ResetBit(kReadyForID);
    }
+   if (!gDataSet->HasCalibIdentInfos()) SetBit(kReadyForID);
 }

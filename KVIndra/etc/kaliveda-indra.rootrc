@@ -46,6 +46,7 @@ INDRA_camp1.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyse
 INDRA_camp1.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_camp1.HasCalibIdentInfos:   no
 INDRA_camp1.KVMultiDetArray.ROOTGeometry:  yes
+INDRA_camp1.DataSet.RunFile.DoNotDelete: raw dst
 
 +DataSet:    INDRA_camp2
 INDRA_camp2.DataSet.Title:    2nd INDRA campaign (1994)
@@ -54,6 +55,7 @@ INDRA_camp2.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyse
 INDRA_camp2.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_camp2.HasCalibIdentInfos:   no
 INDRA_camp2.KVMultiDetArray.ROOTGeometry:  yes
+INDRA_camp2.DataSet.RunFile.DoNotDelete: raw dst
 
 +DataSet:    INDRA_camp4
 INDRA_camp4.DataSet.Title:    4th INDRA campaign (1998/9)
@@ -63,6 +65,7 @@ INDRA_camp4.KVDataSet.DataType.Subdir.dst:  dst2
 INDRA_camp4.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_camp4.HasCalibIdentInfos:   no
 INDRA_camp4.KVMultiDetArray.ROOTGeometry:  yes
+INDRA_camp4.DataSet.RunFile.DoNotDelete: raw dst
 
 +DataSet:    INDRA_camp5
 INDRA_camp5.DataSet.Title:    5th INDRA campaign (2001)
@@ -70,6 +73,7 @@ INDRA_camp5.DataSet.RepositoryDir:   campagne5
 INDRA_camp5.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 INDRA_camp5.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_camp5.KVMultiDetArray.ROOTGeometry:  yes
+INDRA_camp5.DataSet.RunFile.DoNotDelete: raw
 
 +DataSet:    INDRA_e416a
 INDRA_e416a.DataSet.Title:    Fission lifetimes of SHE (E416a) (2005)
@@ -78,6 +82,7 @@ INDRA_e416a.DataSet.UserGroup:   e416a
 INDRA_e416a.DataSet.RunFileName.raw:    Run%d%*
 INDRA_e416a.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 INDRA_e416a.ReconstructedEventClassName:   KVINDRAReconEvent
+INDRA_e416a.DataSet.RunFile.DoNotDelete: raw
 
 +DataSet:    INDRA_e475s
 INDRA_e475s.DataSet.Title:    Isospin dependence of the emission of complex fragments (E475S) (2006)
@@ -86,6 +91,7 @@ INDRA_e475s.DataSet.RunFileName.raw:    run_%04d.dat%*
 INDRA_e475s.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 INDRA_e475s.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_e475s.KVDataSet.DataType.Subdir.recon:  recon
+INDRA_e475s.DataSet.RunFile.DoNotDelete: raw
 
 +DataSet:   t10_02
 t10_02.DataSet.Title:    Test INDRA T10_02 (Nov.-Dec. 2010)
@@ -93,6 +99,7 @@ t10_02.DataSet.RepositoryDir:   t10_02
 t10_02.DataSet.RunFileName.raw:    run_%04d.dat%*
 t10_02.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 t10_02.ReconstructedEventClassName:   KVINDRAReconEvent
+t10_02.DataSet.RunFile.DoNotDelete: raw
 
 +DataSet:   INDRA_e613
 INDRA_e613.DataSet.Title:    The Last Experiment (Ever)
@@ -103,6 +110,7 @@ INDRA_e613.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 INDRA_e613.ReconstructedEventClassName:   KVINDRAReconEvent
 # INDRA_e613.KVGRUNetClientGanilReader.ExpName:    e613
 INDRA_e613.KVMultiDetArray.ROOTGeometry:  yes
+INDRA_e613.DataSet.RunFile.DoNotDelete: raw
 
 +DataSet:    INDRA_e494s_woVAMOS
 INDRA_e494s_woVAMOS.DataSet.Title:   Isospin dependence of level density parameter (E494S) (2007)
@@ -111,6 +119,7 @@ INDRA_e494s_woVAMOS.DataSet.RunFileName.raw:    run_%04d.dat%*
 INDRA_e494s_woVAMOS.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_e494s_woVAMOS.HasCalibIdentInfos:   no
 INDRA_e494s_woVAMOS.KVMultiDetArray.ROOTGeometry:  yes
+INDRA_e494s_woVAMOS.DataSet.RunFile.DoNotDelete: raw
 
 # INDRA analyser for Reconstruction DataAnalysisTask
 Reconstruction.DataAnalysisTask.Analyser:     INDRARawDataRecon
@@ -466,7 +475,6 @@ Plugin.KVDataBase:    INDRA_camp1    KVINDRADB1     KVIndradb    "KVINDRADB1(con
 +Plugin.KVDataBase:    INDRA_e613    KVINDRADB_e613     KVIndradb    "KVINDRADB_e613(const Char_t*)"
 +Plugin.KVDataBase:    INDRA_camp5    KVINDRADB     KVIndradb    "KVINDRADB(const Char_t*)"
 +Plugin.KVDataBase:    t10_02   KVINDRADB     KVIndradb    "KVINDRADB(const Char_t*)"
-+Plugin.KVDataBase:    INDRAFAZIA   KVINDRADB     KVIndradb    "KVINDRADB(const Char_t*)"
 +Plugin.KVDataBase:    INDRA_e494s_woVAMOS    KVINDRADB     KVIndradb  "KVINDRADB(const Char_t*)"
 
 #================================ Plugins for different datasets
@@ -479,7 +487,6 @@ Plugin.KVUpDater:    INDRA_e416a    KVINDRAUpDater_e416a     KVIndradb    "KVIND
 +Plugin.KVUpDater:    INDRA_e613    KVINDRAUpDater_e613     KVIndradb    "KVINDRAUpDater_e613()"
 +Plugin.KVUpDater:    INDRA_camp*    KVINDRAUpDater     KVIndradb    "KVINDRAUpDater()"
 +Plugin.KVUpDater:    t10_02    KVINDRAUpDater     KVIndradb    "KVINDRAUpDater()"
-+Plugin.KVUpDater:    INDRAFAZIA   KVINDRAUpDater     KVIndradb    "KVINDRAUpDater()"
 +Plugin.KVUpDater:    INDRA_e494s_woVAMOS    KVINDRAUpDater     KVIndradb  "KVINDRAUpDater()"
 
 #============================== Plugins for identification telescopes

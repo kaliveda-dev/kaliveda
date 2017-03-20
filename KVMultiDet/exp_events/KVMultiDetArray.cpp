@@ -67,6 +67,14 @@ KVMultiDetArray::KVMultiDetArray()
    gMultiDetArray = this;
 }
 
+KVMultiDetArray::KVMultiDetArray(const Char_t* name, const Char_t* type)
+   : KVGeoStrucElement(name, type), fTrajectories(kTRUE)
+{
+   // Constructor with name and optional type
+   init();
+   gMultiDetArray = this;
+}
+
 void KVMultiDetArray::init()
 {
    //Basic initialisation called by constructor.
@@ -965,11 +973,11 @@ void KVMultiDetArray::DetectEvent(KVEvent* event, KVReconstructedEvent* rec_even
                last_det = GetDetector(part->GetParameters()->GetStringValue("STOPPING DETECTOR"));
             if (!last_det) continue;
             KVReconstructedNucleus* recon_nuc = (KVReconstructedNucleus*)rec_event->AddParticle();
+            // copy parameter list
+            part->GetParameters()->Copy(*(recon_nuc->GetParameters()));
             recon_nuc->Reconstruct(last_det);
             recon_nuc->SetZandA(part->GetZ(), part->GetA());
             recon_nuc->SetE(part->GetFrame(detection_frame, kFALSE)->GetE());
-            // copy parameter list
-            part->GetParameters()->Copy(*(recon_nuc->GetParameters()));
             if (part->GetParameters()->HasParameter("IDENTIFYING TELESCOPE")) {
                KVIDTelescope* idt = GetIDTelescope(part->GetParameters()->GetStringValue("IDENTIFYING TELESCOPE"));
                if (idt) {
@@ -1025,9 +1033,7 @@ void KVMultiDetArray::DetectEvent(KVEvent* event, KVReconstructedEvent* rec_even
       // events will not work
       KVGroup* grp_tch;
       TIter nxt_grp(fHitGroups->GetGroups());
-      while ((grp_tch = (KVGroup*) nxt_grp())) {
-         grp_tch->ClearHitDetectors();
-      }
+      while ((grp_tch = (KVGroup*) nxt_grp())) grp_tch->ClearHitDetectors();
       KVReconstructedNucleus* recon_nuc;
       while ((part = event->GetNextParticle())) {
          if (part->BelongsToGroup("DETECTED")) {
@@ -1037,11 +1043,11 @@ void KVMultiDetArray::DetectEvent(KVEvent* event, KVReconstructedEvent* rec_even
             if (!last_det || !(last_det->IsOK())) continue;
 
             recon_nuc = (KVReconstructedNucleus*)rec_event->AddParticle();
+            // copy parameter list
+            part->GetParameters()->Copy(*(recon_nuc->GetParameters()));
             recon_nuc->Reconstruct(last_det);
             recon_nuc->SetZandA(part->GetZ(), part->GetA());
             recon_nuc->SetE(part->GetFrame(detection_frame, kFALSE)->GetE());
-            // copy parameter list
-            part->GetParameters()->Copy(*(recon_nuc->GetParameters()));
 
             if (part->GetParameters()->HasParameter("IDENTIFYING TELESCOPE")) {
                KVIDTelescope* idt = GetIDTelescope(part->GetParameters()->GetStringValue("IDENTIFYING TELESCOPE"));
@@ -1683,11 +1689,21 @@ KVMultiDetArray* KVMultiDetArray::MakeMultiDetector(const Char_t* dataset_name, 
 
 KVUpDater* KVMultiDetArray::GetUpDater()
 {
-   // Return pointer to KVUpDater defined by dataset for this multidetector
-   // Will create a new KVUpDater if none exists
+   // Return pointer to KVUpDater defined by dataset for this multidetector, the class used
+   // is defined as a plugin like this:
+   //
+   // # Plugin.KVUpDater:    name_of_dataset    name_of_class    name_of_plugin_library   constructor_to_call
+   //
+   // However, if a dataset defines a variable like this:
+   //
+   // [dataset].ExpSetUp.Updater.[multidetector name]: [name_of_dataset for plugin]
+   //
+   // then we use the updater plugin defined for the given dataset
 
    if (!fUpDater) {
-      fUpDater = KVUpDater::MakeUpDater(fDataSet);
+      KVString alt_updater = KVDataSet::GetDataSetEnv(fDataSet, Form("ExpSetUp.Updater.%s", GetName()), "");
+      if (alt_updater != "") fUpDater = KVUpDater::MakeUpDater(alt_updater);
+      else fUpDater = KVUpDater::MakeUpDater(fDataSet);
    }
    return fUpDater;
 }
@@ -1858,13 +1874,10 @@ void KVMultiDetArray::PrintStatusOfIDTelescopes()
    // Print full status report on ID telescopes in array, using informations stored in
    // fStatusIDTelescopes (see GetStatusOfIDTelescopes).
 
-   if (!GetCurrentRunNumber()) {
-      Info("PrintStatusOfIDTelescopes", "Cannot know status without knowing RUN NUMBER");
-      return;
-   }
-
-   cout << endl << "-----STATUS OF IDENTIFICATION TELESCOPES FOR RUN "
-        << GetCurrentRunNumber() << "------" << endl << endl;
+   cout << endl << "-----STATUS OF IDENTIFICATION TELESCOPES";
+   if (GetCurrentRunNumber()) cout << " FOR RUN "
+                                      << GetCurrentRunNumber();
+   cout << "------" << endl << endl;
    //get list of active telescopes
    TString id_labels = gDataSet->GetDataSetEnv("ActiveIdentifications");
    if (id_labels == "") {
@@ -2738,5 +2751,18 @@ void KVMultiDetArray::AssociateTrajectoriesAndNodes()
    while ((tr = (KVGeoDNTrajectory*)it())) {
       tr->AddToNodes();
       tr->GetNodeAt(0)->GetDetector()->GetGroup()->AddTrajectory(tr);
+   }
+}
+
+void KVMultiDetArray::FillDetectorList(KVReconstructedNucleus*, KVHashList* DetList, const KVString& DetNames)
+{
+   // Called when required to fill KVReconstructedNucleus::fDetList with pointers to
+   // the detectors whose names are stored in KVReconstructedNucleus::fDetNames.
+
+   DetList->Clear();
+   DetNames.Begin("/");
+   while (!DetNames.End()) {
+      KVDetector* det = GetDetector(DetNames.Next(kTRUE));
+      if (det) DetList->Add(det);
    }
 }

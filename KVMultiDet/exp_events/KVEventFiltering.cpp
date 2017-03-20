@@ -163,7 +163,9 @@ void KVEventFiltering::InitAnalysis()
    gDataSetManager->GetDataSet(dataset)->cd();
 
    TString system = GetOpt("System").Data();
-   KVDBSystem* sys = (gDataBase ? (KVDBSystem*)gDataBase->GetTable("Systems")->GetRecord(system) : 0);
+   KVDBSystem* sys = (gDataBase ?
+                      (gDataBase->GetTable("Systems") ? (KVDBSystem*)gDataBase->GetTable("Systems")->GetRecord(system) : nullptr)
+                         : nullptr);
    KV2Body* tb = 0;
 
    Bool_t justcreated = kFALSE;
@@ -186,8 +188,10 @@ void KVEventFiltering::InitAnalysis()
    Int_t run = 0;
    if (IsOptGiven("Run")) run = GetOpt("Run").Atoi();
    if (!run && sys) run = ((KVDBRun*)sys->GetRuns()->First())->GetNumber();
+   else run = -1;
 
    KVMultiDetArray::MakeMultiDetector(dataset, run);
+   if (run == -1) gMultiDetArray->InitializeIDTelescopes();
    gMultiDetArray->SetSimMode();
 
    TString geo = GetOpt("Geometry").Data();

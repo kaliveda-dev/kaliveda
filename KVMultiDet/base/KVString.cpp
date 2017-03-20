@@ -990,6 +990,13 @@ void KVString::RandomLetterSequence(Int_t length)
    }
 }
 
+void KVString::Capitalize()
+{
+   // Change first character of string from lower to upper case
+
+   if ((*this)[0] >= 'a' && (*this)[0] <= 'z')(*this)[0] -= ('a' - 'A');
+}
+
 
 KVString::KVString(Double_t value, Double_t error): TString(""), kObjArr(nullptr), fIterIndex(-1), fEndList(kTRUE)
 {

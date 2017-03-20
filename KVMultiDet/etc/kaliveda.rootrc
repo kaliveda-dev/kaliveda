@@ -60,6 +60,9 @@ DataSet.RunFileName.recon:    run%d.recon.root
 DataSet.RunFileName.ident:    run%d.ident.root
 DataSet.RunFileName.root:    run%d.root
 #
+# Default types of runfiles which must not be deleted (to avoid accidents)
+DataSet.RunFile.DoNotDelete: all
+#
 # Default base classes for reading runfiles of different types
 # DataSet.RunFileClass.online:    KVRawDataReader
 DataSet.RunFileClass.raw:    KVRawDataReader

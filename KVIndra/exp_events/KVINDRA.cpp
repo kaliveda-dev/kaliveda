@@ -431,6 +431,7 @@ void KVINDRA::FillListsOfDetectorsByType()
    TIter next_det(GetDetectors());
    KVDetector* kvd;
    while ((kvd = (KVDetector*) next_det())) {
+      kvd->SetNameOfArray("INDRA");
       if (kvd->InheritsFrom("KVChIo")) {
          fChIo->Add(kvd);
       }

@@ -25,7 +25,7 @@ The <a href="#KVImpactParameter:MakeScale">MakeScale</a> method calculates the r
 impact parameter, using
 END_HTML
 BEGIN_LATEX
-\hat{b}^{2} = \int^{\infty}_{x=X} Y(x) dx #divide  \int_{0}^{\infty} Y(x) dx
+\hat{b}^{2} = \frac{\int^{\infty}_{x=X} Y(x) dx}{\int_{0}^{\infty} Y(x) dx}
 END_LATEX
 BEGIN_HTML
 To obtain the impact parameter distribution for some selection of events,
@@ -78,7 +78,7 @@ void KVImpactParameter::MakeScale(Int_t npoints, Double_t bmax)
    // b_hat is calculated from the distribution of x, Y(x), using the following formula:
    /*
    BEGIN_LATEX
-   \hat{b}^{2} = \int^{\infty}_{x=X} Y(x) dx #divide  \int_{0}^{\infty} Y(x) dx
+   \hat{b}^{2} = \frac{\int^{\infty}_{x=X} Y(x) dx}{\int_{0}^{\infty} Y(x) dx}
    END_LATEX
    */
    // npoints = number of points for which to calculate the impact parameter.
@@ -127,14 +127,13 @@ void KVImpactParameter::make_scale(Int_t npoints)
 
 void KVImpactParameter::MakeAbsoluteScale(Int_t npoints, Double_t bmax)
 {
-
    // Calculate the relationship between the impact parameter and the observable
    // whose distribution is contained in the histogram fData.
    // For a given value X of the observable x, the reduced impact parameter
    // b_hat is calculated from the distribution of x, Y(x), using the following formula:
    /*
    BEGIN_LATEX
-   \hat{b}^{2} = \int^{\infty}_{x=X} Y(x) dx #divide  \int_{0}^{\infty} Y(x) dx
+   \hat{b}^{2} = \frac{\int^{\infty}_{x=X} Y(x) dx}{\int_{0}^{\infty} Y(x) dx}
    END_LATEX
    */
    // npoints = number of points for which to calculate the impact parameter.

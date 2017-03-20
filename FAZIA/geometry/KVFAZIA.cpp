@@ -17,6 +17,8 @@
 #include "TGeoCompositeShape.h"
 #include "TGeoEltu.h"
 
+#include <KVReconstructedNucleus.h>
+
 
 ClassImp(KVFAZIA)
 
@@ -30,11 +32,10 @@ ClassImp(KVFAZIA)
 ////////////////////////////////////////////////////////////////////////////////
 KVFAZIA* gFazia;
 
-KVFAZIA::KVFAZIA()
+KVFAZIA::KVFAZIA(const Char_t* title)
+   : KVMultiDetArray("FAZIA", title)
 {
    // Default constructor
-   SetName("FAZIA");
-   SetTitle(ClassName());
    fStartingBlockNumber = 0;
    gFazia = this;
    fDetectorLabels = "";
@@ -219,4 +220,103 @@ void KVFAZIA::GetDetectorEvent(KVDetectorEvent* detev, TSeqCollection* signals)
 
 }
 
+void KVFAZIA::FillDetectorList(KVReconstructedNucleus* rnuc, KVHashList* DetList, const KVString& DetNames)
+{
+   // Protected method, called when required to fill fDetList with pointers to
+   // the detectors whose names are stored in fDetNames.
+   // Also set all raw data values in the detectors.
+
+   KVFAZIADetector* det = 0;
+   Double_t val = -1;
+   DetList->Clear();
+   DetNames.Begin("/");
+   while (!DetNames.End()) {
+      KVString sdet = DetNames.Next(kTRUE);
+      det = (KVFAZIADetector*)GetDetector(sdet.Data());
+      if (!det) {
+         det = (KVFAZIADetector*)GetDetector(KVFAZIADetector::GetNewName(sdet.Data()));
+      }
+
+      if (det) {
+         DetList->Add(det);
+         if (!strcmp(det->GetLabel(), "SI1")) {
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QL1.Amplitude", sdet.Data()));
+            det->SetQL1Amplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QL1.RawAmplitude", sdet.Data()));
+            det->SetQL1RawAmplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QL1.BaseLine", sdet.Data()));
+            det->SetQL1BaseLine(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QL1.SigmaBaseLine", sdet.Data()));
+            det->SetQL1SigmaBaseLine(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QL1.RiseTime", sdet.Data()));
+            det->SetQL1RiseTime(val);
+
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.FPGAEnergy", sdet.Data()));
+            det->SetQH1FPGAEnergy(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.Amplitude", sdet.Data()));
+            det->SetQH1Amplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.RawAmplitude", sdet.Data()));
+            det->SetQH1RawAmplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.BaseLine", sdet.Data()));
+            det->SetQH1BaseLine(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.SigmaBaseLine", sdet.Data()));
+            det->SetQH1SigmaBaseLine(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.RiseTime", sdet.Data()));
+            det->SetQH1RiseTime(val);
+
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I1.Amplitude", sdet.Data()));
+            det->SetI1Amplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I1.RawAmplitude", sdet.Data()));
+            det->SetI1RawAmplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I1.BaseLine", sdet.Data()));
+            det->SetI1BaseLine(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I1.SigmaBaseLine", sdet.Data()));
+            det->SetI1SigmaBaseLine(val);
+
+         } else if (!strcmp(det->GetLabel(), "SI2")) {
+
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.FPGAEnergy", sdet.Data()));
+            det->SetQ2FPGAEnergy(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.Amplitude", sdet.Data()));
+            det->SetQ2Amplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.RawAmplitude", sdet.Data()));
+            det->SetQ2RawAmplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.BaseLine", sdet.Data()));
+            det->SetQ2BaseLine(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.SigmaBaseLine", sdet.Data()));
+            det->SetQ2SigmaBaseLine(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.RiseTime", sdet.Data()));
+            det->SetQ2RiseTime(val);
+
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I2.Amplitude", sdet.Data()));
+            det->SetI2Amplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I2.RawAmplitude", sdet.Data()));
+            det->SetI2RawAmplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I2.BaseLine", sdet.Data()));
+            det->SetI2BaseLine(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I2.SigmaBaseLine", sdet.Data()));
+            det->SetI2SigmaBaseLine(val);
+         } else if (!strcmp(det->GetLabel(), "CSI")) {
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.FPGAEnergy", sdet.Data()));
+            det->SetQ3FPGAEnergy(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.FPGAFastEnergy", sdet.Data()));
+            det->SetQ3FastFPGAEnergy(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.Amplitude", sdet.Data()));
+            det->SetQ3Amplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.RawAmplitude", sdet.Data()));
+            det->SetQ3RawAmplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.FastAmplitude", sdet.Data()));
+            det->SetQ3FastAmplitude(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.BaseLine", sdet.Data()));
+            det->SetQ3BaseLine(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.SigmaBaseLine", sdet.Data()));
+            det->SetQ3SigmaBaseLine(val);
+            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.RiseTime", sdet.Data()));
+            det->SetQ3RiseTime(val);
+
+         }
+
+      }
+   }
+}
 

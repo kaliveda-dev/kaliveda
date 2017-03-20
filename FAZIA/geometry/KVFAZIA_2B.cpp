@@ -18,9 +18,10 @@ ClassImp(KVFAZIA_2B)
 ////////////////////////////////////////////////////////////////////////////////
 
 KVFAZIA_2B::KVFAZIA_2B()
+   : KVFAZIA()
 {
    // Default constructor
-
+   SetTitle(ClassName());
 }
 
 void KVFAZIA_2B::GetGeometryParameters()

@@ -16,12 +16,12 @@ $Author: franklan $
 #include "TFile.h"
 #include "TEnv.h"
 #include "TSystem.h"
+#include "KVDataAnalysisTask.h"
 
 class KVDataBase;
 class KVDataSetManager;
 class KVDataRepository;
 class KVDBSystem;
-class KVDataAnalysisTask;
 class TObjArray;
 class KVDBRun;
 class KVAvailableRunsFile;
@@ -52,17 +52,16 @@ protected:
    virtual void OpenDataBase(Option_t* opt = "") const;
    virtual void OpenDBFile(const Char_t* full_path_to_dbfile) const;
    virtual void WriteDBFile(const Char_t* full_path_to_dbfile) const;
-   void SetDBFileName(const Char_t* name)
-   {
+   void SetDBFileName(const Char_t* name) {
       fDBFileName = name;
    };
    const Char_t* GetDBFileName() const;
-   void SetDBName(const Char_t* name)
-   {
+   void SetDBName(const Char_t* name) {
       fDBName = name;
    };
    const Char_t* GetDBName() const;
    const Char_t* GetFullPathToDB() const;
+   void SetDataSetSpecificTaskParameters(KVDataAnalysisTask*) const;
 
 public:
 
@@ -73,44 +72,36 @@ public:
 
    virtual Bool_t CheckUserCanAccess();
 
-   virtual void SetDataPathSubdir(const Char_t* s)
-   {
+   virtual void SetDataPathSubdir(const Char_t* s) {
       SetLabel(s);
    };
    // Returns name of top-level directory in data repository used to store data files for this dataset
-   virtual const Char_t* GetDataPathSubdir() const
-   {
+   virtual const Char_t* GetDataPathSubdir() const {
       return GetLabel();
    };
-   const Char_t* GetDataTypeSubdir(const Char_t* type) const
-   {
+   const Char_t* GetDataTypeSubdir(const Char_t* type) const {
       // returns name to be used for subdirectory corresponding to given data type
       KVString snom;
       snom.Form("KVDataSet.DataType.Subdir.%s", type);
       return GetDataSetEnv(snom.Data(), type);
    };
-   virtual const Char_t* GetAvailableDataTypes() const
-   {
+   virtual const Char_t* GetAvailableDataTypes() const {
       return fDatatypes.Data();
    };
    virtual void AddAvailableDataType(const Char_t*);
-   virtual void SetUserGroups(const Char_t* groups)
-   {
+   virtual void SetUserGroups(const Char_t* groups) {
       fUserGroups = groups;
    };
    // Returns kTRUE if this dataset is available for analysis, i.e. if any associated data files are stored in the data repository
-   virtual Bool_t IsAvailable() const
-   {
+   virtual Bool_t IsAvailable() const {
       return TestBit(kAvailable);
    };
-   virtual void SetAvailable(Bool_t yes = kTRUE)
-   {
+   virtual void SetAvailable(Bool_t yes = kTRUE) {
       SetBit(kAvailable, yes);
    };
    virtual void CheckAvailable();
 
-   virtual Bool_t HasDataType(const Char_t* data_type) const
-   {
+   virtual Bool_t HasDataType(const Char_t* data_type) const {
       // Returns kTRUE if data files of the given type are stored in the data repository
       KVString _dt = data_type;
       _dt.Remove(TString::kBoth, ' ');
@@ -187,8 +178,7 @@ public:
 
    virtual Bool_t DataBaseNeedsUpdate() const;
 
-   virtual const Char_t* GetReconstructedEventClassName() const
-   {
+   virtual const Char_t* GetReconstructedEventClassName() const {
       // Returns the name of the class used to store reconstructed events for this dataset.
       // This is defined by the value of environment variable
       //        [dataset name].ReconstructedEventClassName:      [name of class]
@@ -200,8 +190,7 @@ public:
    TString GetOutputRepository(const Char_t* taskname);
    void CopyRunfilesToRepository(const Char_t* type, KVNumberList runs, const Char_t* destrepo);
 
-   Bool_t HasCalibIdentInfos() const
-   {
+   Bool_t HasCalibIdentInfos() const {
       // If calibration/identification parameters are available for this dataset
       // This is mostly important for filtering simulations: identification telescopes are only
       // considered 'ready for identification' if they have (at least one) associated identification

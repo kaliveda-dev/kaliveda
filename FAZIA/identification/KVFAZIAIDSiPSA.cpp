@@ -2,6 +2,7 @@
 //Author: John Frankland,,,
 
 #include "KVFAZIAIDSiPSA.h"
+#include "KVDataSet.h"
 
 ClassImp(KVFAZIAIDSiPSA)
 
@@ -91,6 +92,7 @@ void KVFAZIAIDSiPSA::Initialize()
    } else {
       ResetBit(kReadyForID);
    }
+   if (!gDataSet->HasCalibIdentInfos()) SetBit(kReadyForID);
 
 }
 

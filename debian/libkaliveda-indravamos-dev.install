@@ -15,6 +15,7 @@
 /usr/lib/libVAMOSdb.rootmap
 /usr/lib/libVAMOSgeometry.rootmap
 /usr/include/kaliveda/KVHarpeeIC.h
+/usr/include/kaliveda/KVZGOUBIInversePosition.h
 /usr/include/kaliveda/KVSiliconVamos.h
 /usr/include/kaliveda/KVVAMOSTransferMatrix.h
 /usr/include/kaliveda/KVVAMOSWeightFinder.h
@@ -29,6 +30,8 @@
 /usr/include/kaliveda/KVVAMOSReconTrajectory.h
 /usr/include/kaliveda/KVVAMOSDetector.h
 /usr/include/kaliveda/KVHarpeeCsI.h
+/usr/include/kaliveda/KVZGOUBITrajectory.h
+/usr/include/kaliveda/KVZGOUBIInverseMatrix.h
 /usr/include/kaliveda/KVSeD.h
 /usr/include/kaliveda/KVDriftChamber.h
 /usr/include/kaliveda/KVSeDPositionCal.h

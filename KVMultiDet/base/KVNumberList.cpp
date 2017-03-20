@@ -812,7 +812,36 @@ KVNumberList KVNumberList::operator-(const KVNumberList& other)
    return tmp;
 }
 
+//____________________________________________________________________________________________//
+
 void KVNumberList::Print(Option_t*) const
 {
    PrintLimits();
+}
+
+//____________________________________________________________________________________________//
+
+TList* KVNumberList::CutInSubList(Int_t number)
+{
+   //Create sublist of KVNumberList with "number" values
+   //TList object has to be deleted after use by the user
+   TList* list = new TList();
+   list->SetOwner(kTRUE);
+
+   KVNumberList* nl = 0;
+   Begin();
+   while (!End()) {
+      Int_t vv = Next();
+      if (!nl) {
+         nl = new KVNumberList();
+         list->Add(nl);
+      } else if (nl->GetNValues() >= number) {
+         nl = new KVNumberList();
+         list->Add(nl);
+      }
+      nl->Add(vv);
+   }
+
+   return list;
+
 }

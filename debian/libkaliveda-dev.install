@@ -150,7 +150,9 @@
 /usr/include/kaliveda/KVNuclData.h
 /usr/include/kaliveda/KVChargeRadius.h
 /usr/include/kaliveda/KVElementDensityTable.h
+/usr/include/kaliveda/KVExcitedState.h
 /usr/include/kaliveda/KVMassExcessTable.h
+/usr/include/kaliveda/KVLevelScheme.h
 /usr/include/kaliveda/KVLifeTimeTable.h
 /usr/include/kaliveda/KVAbundance.h
 /usr/include/kaliveda/KVNDTManager.h
@@ -257,6 +259,7 @@
 /usr/include/kaliveda/KVKeyHandler.h
 /usr/include/kaliveda/KVTextEntry.h
 /usr/include/kaliveda/KVZALineFinder.h
+/usr/include/kaliveda/KVItvFinderDialog.h
 /usr/include/kaliveda/KVNuclearChart.h
 /usr/include/kaliveda/KVInputDialog.h
 /usr/include/kaliveda/KVNewGridDialog.h
@@ -271,6 +274,7 @@
 /usr/include/kaliveda/KVLVEntry.h
 /usr/include/kaliveda/KVDropDownDialog.h
 /usr/include/kaliveda/KVSimDirGUI.h
+/usr/include/kaliveda/KVPIDIntervalPainter.h
 /usr/include/kaliveda/KVIDGridManagerGUI.h
 /usr/include/kaliveda/KVListView.h
 /usr/include/kaliveda/KVWidget.h

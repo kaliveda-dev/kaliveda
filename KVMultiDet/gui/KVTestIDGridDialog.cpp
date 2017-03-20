@@ -16,6 +16,7 @@
 #include "TLine.h"
 #include "KVNuclearChart.h"
 #include "KVIdentificationResult.h"
+#include "KVIDZAFromZGrid.h"
 
 TString KVTestIDGridDialog::fNameData = "htemp";
 TString KVTestIDGridDialog::fNameZreal = "hzreal";
@@ -291,6 +292,10 @@ void KVTestIDGridDialog::TestGrid()
 
    Int_t hnmin = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->First())->GetA() - ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->First())->GetZ() - 1.0;
    Int_t hnmax = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->Last())->GetA() - ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->Last())->GetZ() + 1.0;
+   if (fSelectedGrid->InheritsFrom("KVIDZAFromZGrid")) {
+      interval* itv = (interval*)((interval_set*)((KVIDZAFromZGrid*)fSelectedGrid)->GetIntervalSets()->Last())->GetIntervals()->Last();
+      hnmax = itv->GetA() - itv->GetZ();
+   }
 
    TH2F* hdata = (TH2F*) gROOT->FindObject(fNameData.Data());
    if (!hdata) {
@@ -321,7 +326,7 @@ void KVTestIDGridDialog::TestGrid()
 
    // A vs Z map in caze of !IsOnlyZId()
    TH2F* hazreal = 0;
-   if (!fSelectedGrid->IsOnlyZId()) hazreal = new TH2F("AZMap", "Z vs. A", 30 * (hnmax - hnmin - 1), hnmin, hnmax, 30 * (hzrealxmax - hzrealxmin - 1), hzrealxmin, hzrealxmax);
+   if (!fSelectedGrid->IsOnlyZId()) hazreal = new TH2F("AZMap", "Z vs. A", 30 * (hnmax - hnmin + 0.5), hnmin - 0.5, hnmax + 1, 30 * (hzrealxmax - hzrealxmin + 1), hzrealxmin - 1, hzrealxmax + 1);
 
    //progress bar set up
    fProgressBar->SetRange(0, hdata->GetSum());

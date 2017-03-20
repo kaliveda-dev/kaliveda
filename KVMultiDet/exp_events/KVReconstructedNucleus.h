@@ -37,7 +37,7 @@ protected:
 
    TClonesArray fIDResults;//results of every identification attempt made for this nucleus, in order of the ID telescopes used
 
-   virtual void MakeDetectorList();
+   void MakeDetectorList();
 
 public:
 
@@ -68,7 +68,7 @@ public:
       // Return pointer to list of detectors through which particle passed,
       // in reverse order (i.e. first detector in list is the one in which particle stopped).
 
-      if (!fDetList.GetEntries()) {
+      if (fDetList.IsEmpty()) {
          const_cast<KVReconstructedNucleus*>(this)->MakeDetectorList();
       }
       return &fDetList;

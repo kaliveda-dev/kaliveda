@@ -18,9 +18,10 @@ ClassImp(KVISOFAZIA)
 ////////////////////////////////////////////////////////////////////////////////
 
 KVISOFAZIA::KVISOFAZIA()
+   : KVFAZIA()
 {
    // Default constructor
-
+   SetTitle(ClassName());
 }
 
 void KVISOFAZIA::GetGeometryParameters()

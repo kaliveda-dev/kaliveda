@@ -1,16 +1,19 @@
 # fichier d initialisation pour la lecture des dataset INDRAFAZIA
 #
 +DataSet:	  INDRAFAZIA
-INDRAFAZIA.DataSet.Title:    INDRA-FAZIA Campaign (2017-)
+INDRAFAZIA.DataSet.Title:    INDRA-FAZIA Campaign (2018-)
 INDRAFAZIA.DataSet.RepositoryDir:	indrafazia
 INDRAFAZIA.ReconstructedEventClassName:	KVReconstructedEvent
 INDRAFAZIA.KVDataSet.DataType.Subdir.recon:  recon
 INDRAFAZIA.KVDataSet.DataType.Subdir.root:  root
 INDRAFAZIA.DataSet.ExpSetUp.ClassList: KVFAZIA KVINDRA
+INDRAFAZIA.ExpSetUp.Updater.INDRA: INDRA_camp1
+INDRAFAZIA.ExpSetUp.Updater.FAZIA: FAZIASYM
+INDRAFAZIA.HasCalibIdentInfos:   no
+INDRAFAZIA.ActiveIdentifications:      CSI SI-CSI CI-SI CI-CSI Si-Si Si-CsI Si CsI
 
 +Plugin.KVMultiDetArray:    INDRAFAZIA    KVExpSetUp    KVMultiDetexp_events    "KVExpSetUp()"
-+Plugin.KVDataBase:   INDRAFAZIA    KVDataBase     KVMultiDetdb   "KVDataBase(const Char_t*)"
-+Plugin.KVUpDater: INDRAFAZIA KVUpDater KVMultiDetdb "KVUpDater()"
++Plugin.KVDataBase:   INDRAFAZIA    KVINDRADB     KVIndradb   "KVINDRADB(const Char_t*)"
 +Plugin.KVFAZIA:    INDRAFAZIA    KVFAZIETO    FAZIAgeometry    "KVFAZIETO()"
 +Plugin.KVINDRA:    INDRAFAZIA    KVINDRA    KVIndraexp_events    "KVINDRA()"
 

@@ -16,6 +16,7 @@
 /usr/lib/libFAZIAevents.rootmap
 /usr/include/kaliveda/KVFAZIARawEvent.h
 /usr/include/kaliveda/KVISOFAZIA.h
+/usr/include/kaliveda/KVFAZIACOR.h
 /usr/include/kaliveda/KVFAZIANFS.h
 /usr/include/kaliveda/KVFAZIABlock.h
 /usr/include/kaliveda/KVFAZIETO.h

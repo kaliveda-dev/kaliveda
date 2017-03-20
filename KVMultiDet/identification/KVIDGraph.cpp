@@ -1266,7 +1266,7 @@ void KVIDGraph::TestIdentification(TH2F* data, TH1F* id_real,
                   Float_t RealA, RealZ;
                   RealA = (idr->Aident ? idr->PID : (Float_t)idr->A);
                   RealZ = (idr->Aident ? (Float_t)idr->Z : idr->PID);
-                  if (zaMap) z_a_real->Fill(RealA - RealZ, gRandom->Gaus(RealZ, 0.15), weight);
+                  if (zaMap && (idr->IDquality == 0) && idr->Aident) z_a_real->Fill(RealA - RealZ, gRandom->Gaus(RealZ, 0.15), weight);
                }
             }
          }

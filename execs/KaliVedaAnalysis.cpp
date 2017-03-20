@@ -7,7 +7,8 @@
 #include "TSystem.h"
 #include "KVBase.h"
 #include "KVDataRepositoryManager.h"
-#include "KVDataAnalyser.h"
+#include <KVDataSetAnalyser.h>
+#include <KVSimDirAnalyser.h>
 #include <csignal>     /* signal, raise, sig_atomic_t */
 #include <cstdio>
 extern "C"
@@ -55,10 +56,24 @@ int main(int argc, char* argv[])
    new KVDataRepositoryManager();
    gDataRepositoryManager->Init();
 
-   //create analyser and initialise it using the batch env file
-   KVDataAnalyser* ia = new KVDataAnalyser();
+   TString analyserClass = gSystem->Getenv("KVANALYSER");
+
+   // create analyser and initialise it using the batch env file
+   KVDataAnalyser* ia = nullptr;
+   if (analyserClass != "") {
+      printf("Analyser class set at batch submission: %s\n", analyserClass.Data());
+      TClass* acl = TClass::GetClass(analyserClass);
+      if (acl->InheritsFrom("KVDataSetAnalyser")) ia = new KVDataSetAnalyser;
+      else if (acl->InheritsFrom("KVSimDirAnalyser")) ia = new KVSimDirAnalyser;
+      else {
+         printf("Unknown inheritance of analyser class: abort\n");
+         return 0;
+      }
+   } else
+      ia = new KVDataAnalyser;
    ia->SetBatchMode();
    ia->SetBatchName(batchName.Data());
+   ia->UseBaseClassSubmitTask();//see comments in KVDataAnalyser::Run()
    ia->Run();
 
    //delete batch env files

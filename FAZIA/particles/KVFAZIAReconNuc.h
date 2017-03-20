@@ -32,8 +32,6 @@ protected:
    Float_t fESI1;//si1 contribution to energy
    Float_t fESI2;//si2 contribution to energy
 
-   virtual void MakeDetectorList();
-
 public:
 
    KVFAZIAReconNuc();
@@ -53,8 +51,7 @@ public:
 
    virtual void Calibrate();
 
-   Float_t GetEnergySI1()
-   {
+   Float_t GetEnergySI1() {
       // Return the calculated SI1 contribution to the particle's energy
       //
       // This may be negative, in case the SI1 contribution was calculated
@@ -64,8 +61,7 @@ public:
 
       return fESI1;
    };
-   Float_t GetEnergySI2()
-   {
+   Float_t GetEnergySI2() {
       // Return the calculated SI2 contribution to the particle's energy
       //
       // This may be negative, in case the SI2 contribution was calculated
@@ -74,8 +70,7 @@ public:
 
       return fESI2;
    };
-   Float_t GetEnergyCSI()
-   {
+   Float_t GetEnergyCSI() {
       // Return the calculated CsI contribution to the particle's energy
       return fECSI;
    };

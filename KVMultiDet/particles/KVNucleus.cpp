@@ -920,6 +920,21 @@ Double_t KVNucleus::GetBindingEnergy(Int_t z, Int_t a) const
                     GetMassExcess(z, a));
 }
 
+Double_t KVNucleus::GetLiquidDropBindingEnergy(Int_t z, Int_t a) const
+{
+   // Returns ground state binding energy in MeV for this nucleus calculated from Brack & Guet
+   // liquid drop formula (see KVNucleus::LiquiDrop_BrackGuet).
+   // The convention is : binding energy is positive if nucleus is bound.
+   // If optional arguments (z,a) are given we return the binding energy for the
+   // required nucleus.
+
+   CheckZAndA(z, a);
+
+   return a ==
+          0 ? 0. : (z * GetMassExcess(1, 1) + (a - z) * GetMassExcess(0, 1) -
+                    GetExtraMassExcess(z, a));
+}
+
 //________________________________________________________________________________________
 
 Double_t KVNucleus::GetBindingEnergyPerNucleon(Int_t z, Int_t a) const

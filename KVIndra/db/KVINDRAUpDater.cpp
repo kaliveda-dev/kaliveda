@@ -102,53 +102,12 @@ void KVINDRAUpDater::SetCalibrationParameters(UInt_t run)
 }
 
 //_______________________________________________________________//
-
-void KVINDRAUpDater::SetIdentificationParameters(UInt_t run)
-{
-   // Set identification parameters for this run.
-   // Will call gMultiDetArray->InitializeIDTelescopes() in order to initialize
-   // identifications & set status IsReadyForID() of each ID telescope for run.
-
-   cout << "Setting identification parameters of INDRA array for run " << run << ":" <<
-        endl;
-   SetIDGrids(run);
-   gMultiDetArray->InitializeIDTelescopes();
-}
-
-//_______________________________________________________________//
-//
-// void KVINDRAUpDater::SetTarget(KVDBRun * kvrun)
-// {
-//     //Set target used during this run
-//     //If no target is found in the database, the existing target (if there is one)
-//     //will be removed, and INDRA will have no target defined.
-//
-//     cout << "--> Setting Target:" << endl;
-//
-//     //remove existing target
-//     gIndra->SetTarget(0);
-//     if (!kvrun->GetSystem() || !kvrun->GetSystem()->GetTarget())
-//     {
-//         cout << "      No target defined for run." << endl;
-//         return;
-//     }
-//
-//     gIndra->SetTarget((KVTarget *) kvrun->GetSystem()->GetTarget());
-//
-//     cout << "      " << gIndra->GetTarget()->
-//     GetName() << " Total Thickness: " << gIndra->GetTarget()->
-//     GetTotalThickness()
-//     << " mg/cm2" << endl;
-// }
-
-//_______________________________________________________________//
 void KVINDRAUpDater::SetTrigger(KVDBRun* kvrun)
 {
    //Set trigger used during this run
 
    cout << "--> Setting Trigger:" << endl;
-   gIndra->SetTrigger(dynamic_cast <
-                      KVINDRADBRun* >(kvrun)->GetTrigger());
+   gIndra->SetTrigger(kvrun->GetTrigger());
    cout << "      M>=" << (Int_t)gIndra->GetTrigger() << endl;
 }
 

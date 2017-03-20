@@ -22,7 +22,7 @@ void makedoc(const TString& output_dir = "htmldoc")
    h.SetFileDefinition(KVFileDef());
    h.SetAuthorTag("//Author:");
    h.SetCopyrightTag("//Created");
-   h.SetHomepage("http://indra.in2p3.fr/KaliVedaDoc");
+   h.SetHomepage("http://indra.in2p3.fr/kaliveda");
 
    // "hide" the CMakeCache.txt & install_manifest.txt files
    // or links will be generated for them under "Further reading..."

@@ -70,8 +70,7 @@ protected:
    KVUniqueNameList fTrajectories;//! list of all possible trajectories through detectors of array
 
    virtual void RenumberGroups();
-   virtual void BuildGeometry()
-   {
+   virtual void BuildGeometry() {
       AbstractMethod("BuildGeometry");
    };
    virtual void MakeListOfDetectors();
@@ -98,15 +97,13 @@ protected:
 
    void CalculateReconstructionTrajectories();
    void DeduceIdentificationTelescopesFromGeometry();
-   void AddTrajectory(KVGeoDNTrajectory* d)
-   {
+   void AddTrajectory(KVGeoDNTrajectory* d) {
       fTrajectories.Add(d);
    }
    void AssociateTrajectoriesAndNodes();
 
 public:
-   void CreateGeoManager(Double_t dx = 500, Double_t dy = 500, Double_t dz = 500)
-   {
+   void CreateGeoManager(Double_t dx = 500, Double_t dy = 500, Double_t dz = 500) {
       if (!gGeoManager) {
 
          new TGeoManager(GetName(), Form("%s geometry for dataset %s", GetName(), fDataSet.Data()));
@@ -135,10 +132,10 @@ public:
       kFilterType_Full
    };
    KVMultiDetArray();
+   KVMultiDetArray(const Char_t* name, const Char_t* type = "");
    virtual ~KVMultiDetArray();
 
-   void SetFilterType(Int_t t)
-   {
+   void SetFilterType(Int_t t) {
       fFilterType = t;
    };
    void init();
@@ -151,8 +148,7 @@ public:
    virtual KVTelescope* GetTelescope(const Char_t* name) const;
    virtual KVGroup* GetGroupWithDetector(const Char_t*);
    virtual KVGroup* GetGroup(const Char_t*);
-   virtual KVGroup* GetGroupWithAngles(Float_t /*theta*/, Float_t /*phi*/)
-   {
+   virtual KVGroup* GetGroupWithAngles(Float_t /*theta*/, Float_t /*phi*/) {
       return 0;
    }
    void RemoveGroup(KVGroup*);
@@ -160,12 +156,10 @@ public:
    void ReplaceDetector(const Char_t* name, KVDetector* new_kvd);
 
    void AddACQParam(KVACQParam*);
-   KVSeqCollection* GetACQParams()
-   {
+   KVSeqCollection* GetACQParams() {
       return fACQParams;
    };
-   KVACQParam* GetACQParam(const Char_t* name)
-   {
+   KVACQParam* GetACQParam(const Char_t* name) {
       return (KVACQParam*) fACQParams->FindObject(name);
    };
    virtual void SetArrayACQParams();
@@ -175,15 +169,13 @@ public:
    virtual void GetDetectorEvent(KVDetectorEvent* detev, TSeqCollection* fired_params = 0);
    virtual void ReconstructEvent(KVReconstructedEvent*, KVDetectorEvent*);
    KVNameValueList* DetectParticle_TGEO(KVNucleus* part);
-   virtual KVNameValueList* DetectParticle(KVNucleus* part)
-   {
+   virtual KVNameValueList* DetectParticle(KVNucleus* part) {
       return DetectParticle_TGEO(part);
    }
    void DetectParticleIn(const Char_t* detname, KVNucleus* kvp);
 
    KVIDTelescope* GetIDTelescope(const Char_t* name) const;
-   KVSeqCollection* GetListOfIDTelescopes() const
-   {
+   KVSeqCollection* GetListOfIDTelescopes() const {
       return fIDTelescopes;
    };
    KVList* GetIDTelescopeTypes();
@@ -194,28 +186,24 @@ public:
    void SetTarget(KVTarget* target);
    void SetTargetMaterial(const Char_t* material);
    void SetTargetThickness(const Float_t thickness);
-   KVTarget* GetTarget()
-   {
+   KVTarget* GetTarget() {
       return fTarget;
    };
 
    virtual Double_t GetTargetEnergyLossCorrection(KVReconstructedNucleus*);
 
-   Bool_t IsRemoving()
-   {
+   Bool_t IsRemoving() {
       return TestBit(kIsRemoving);
    }
 
    virtual void SetPedestals(const Char_t*);
 
-   virtual Bool_t IsBuilt() const
-   {
+   virtual Bool_t IsBuilt() const {
       return TestBit(kIsBuilt);
    }
    static KVMultiDetArray* MakeMultiDetector(const Char_t* dataset_name, Int_t run = -1, TString classname = "KVMultiDetArray");
 
-   Bool_t IsBeingDeleted()
-   {
+   Bool_t IsBeingDeleted() {
       return TestBit(kIsBeingDeleted);
    }
    KVUpDater* GetUpDater();
@@ -223,20 +211,16 @@ public:
    virtual void SetRunIdentificationParameters(UShort_t n);
    virtual void SetRunCalibrationParameters(UShort_t n);
 
-   Bool_t ParamsSet()
-   {
+   Bool_t ParamsSet() {
       return TestBit(kParamsSet);
    };
-   Bool_t IDParamsSet()
-   {
+   Bool_t IDParamsSet() {
       return (TestBit(kIDParamsSet) || ParamsSet());
    };
-   Bool_t CalParamsSet()
-   {
+   Bool_t CalParamsSet() {
       return (TestBit(kCalParamsSet) || ParamsSet());
    };
-   UInt_t GetCurrentRunNumber() const
-   {
+   UInt_t GetCurrentRunNumber() const {
       return fCurrentRun;
    };
 
@@ -246,8 +230,7 @@ public:
    virtual void UpdateIdentifications();
    virtual void UpdateCalibrators();
 
-   virtual Double_t GetTotalSolidAngle(void)
-   {
+   virtual Double_t GetTotalSolidAngle(void) {
       return 0;
    }
 
@@ -257,16 +240,14 @@ public:
    void PrintCalibStatusOfDetectors();
 
 
-   virtual void SetSimMode(Bool_t on = kTRUE)
-   {
+   virtual void SetSimMode(Bool_t on = kTRUE) {
       // Set simulation mode of array (and of all detectors in array)
       // If on=kTRUE (default), we are in simulation mode (calculation of energy losses etc.)
       // If on=kFALSE, we are analysing/reconstruction experimental data
       fSimMode = on;
       const_cast<KVSeqCollection*>(GetDetectors())->Execute("SetSimMode", Form("%d", (Int_t)on));
    };
-   virtual Bool_t IsSimMode() const
-   {
+   virtual Bool_t IsSimMode() const {
       // Returns simulation mode of array:
       //   IsSimMode()=kTRUE : we are in simulation mode (calculation of energy losses etc.)
       //   IsSimMode()=kFALSE: we are analysing/reconstruction experimental data
@@ -279,8 +260,7 @@ public:
    virtual TGraph* DrawPunchThroughZVsVpar(const Char_t* detector, Int_t massform = KVNucleus::kBetaMass);
 
    virtual void SetROOTGeometry(Bool_t on = kTRUE);
-   Bool_t IsROOTGeometry() const
-   {
+   Bool_t IsROOTGeometry() const {
       // Return kTRUE if the geometry of this multidetector is described by ROOT geometry
       // i.e. if the detectors have ROOT geometry volume & shape informations
       // (we only test the first detector)
@@ -295,14 +275,12 @@ public:
    void FillListOfIDTelescopes(KVIDGraph* gr) const;
 
    void Draw(Option_t* option = "");
-   const TSeqCollection* GetTrajectories() const
-   {
+   const TSeqCollection* GetTrajectories() const {
       // Get list of all possible trajectories for particles traversing array
       return &fTrajectories;
    }
 
-   void CheckROOTGeometry()
-   {
+   void CheckROOTGeometry() {
       // Turns on ROOT geometry if not already in use
       if (!IsROOTGeometry()) SetROOTGeometry();
    }
@@ -310,6 +288,7 @@ public:
    void FillHistogramsForAllIDTelescopes(KVSeqCollection* list);
 
    void SetDetectorTransparency(Char_t);
+   virtual void FillDetectorList(KVReconstructedNucleus* rnuc, KVHashList* DetList, const KVString& DetNames);
 
    ClassDef(KVMultiDetArray, 7) //Base class for multidetector arrays
 };

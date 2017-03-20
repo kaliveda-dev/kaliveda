@@ -1,0 +1,2 @@
+run=666 | aqcuisition status=Running | starting date=Sun Jun  7 22:38:10 2017 | stopping date=Mon Jun  8 16:19:13 2017 | read events=8 | good events=8 | store events=8 | wrong number of blocks=0 | block errors=0 | nfiles=10 | frequency=0.40 | duration=68530.5
+run=667 | aqcuisition status=Running | starting date=Sun Jun  7 23:38:10 2017 | stopping date=Mon Jun  8 16:19:13 2017 | read events=8 | good events=8 | store events=8 | wrong number of blocks=0 | block errors=0 | nfiles=10 | frequency=0.40 | duration=68530.5

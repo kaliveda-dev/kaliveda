@@ -49,6 +49,7 @@ private:
    TList* fWorkDirInit;//list of files in working directory before task runs
    TList* fWorkDirEnd;//list of files in working directory after task runs
    static Bool_t fCleanAbort;//flag to force abort of processing
+   Bool_t fUseBaseClassSubmitTask;
 
 protected:
    void ScanWorkingDirectory(TList**);
@@ -59,21 +60,17 @@ protected:
 
    const Char_t* GetACliCMode();
 
-   TEnv* GetBatchInfoFile() const
-   {
+   TEnv* GetBatchInfoFile() const {
       return fBatchEnv;
    }
-   virtual Bool_t PreSubmitCheck()
-   {
+   virtual Bool_t PreSubmitCheck() {
       return kTRUE;
    }
    virtual void PostRunReset();
-   virtual Bool_t NeedToChooseWhatToDo() const
-   {
+   virtual Bool_t NeedToChooseWhatToDo() const {
       return !GetAnalysisTask();
    }
-   virtual Bool_t NeedToChooseWhatToAnalyse() const
-   {
+   virtual Bool_t NeedToChooseWhatToAnalyse() const {
       AbstractMethod("NeedToChooseWhatToAnalyse");
       return kTRUE;
    }
@@ -92,22 +89,18 @@ public:
 private:
    EProofMode fProofMode;
 public:
-   void SetProofMode(EProofMode e)
-   {
+   void SetProofMode(EProofMode e) {
       fProofMode = e;
    }
-   EProofMode GetProofMode() const
-   {
+   EProofMode GetProofMode() const {
       return fProofMode;
    }
 
-   static void SetAbortProcessingLoop(Bool_t now = kTRUE)
-   {
+   static void SetAbortProcessingLoop(Bool_t now = kTRUE) {
       // Set flag to force a clean abort of the processing loop
       fCleanAbort = now;
    }
-   static Bool_t AbortProcessingLoop()
-   {
+   static Bool_t AbortProcessingLoop() {
       return fCleanAbort;
    }
 
@@ -115,17 +108,14 @@ public:
    virtual ~ KVDataAnalyser();
 
    void SetUserClass(const Char_t* kvs, Bool_t check = kTRUE);
-   const Char_t* GetUserClass()
-   {
+   const Char_t* GetUserClass() {
       return fUserClass.Data();
    }
-   Bool_t IsUserClassValid() const
-   {
+   Bool_t IsUserClassValid() const {
       return fUserClassIsOK;
    }
 
-   virtual Int_t GetNumberOfFilesToAnalyse() const
-   {
+   virtual Int_t GetNumberOfFilesToAnalyse() const {
       return 0;
    }
 
@@ -137,30 +127,24 @@ public:
    virtual Bool_t CheckTaskVariables();
    Bool_t DoUserClassFilesExist();
 
-   void SetBatchMode(Bool_t on = kTRUE)
-   {
+   void SetBatchMode(Bool_t on = kTRUE) {
       fBatch = on;
    }
-   Bool_t BatchMode() const
-   {
+   Bool_t BatchMode() const {
       return fBatch;
    }
-   void SetBatchName(const Char_t* batchname)
-   {
+   void SetBatchName(const Char_t* batchname) {
       fBatchName = batchname;
    }
-   const Char_t* GetBatchName()
-   {
+   const Char_t* GetBatchName() {
       return fBatchName.Data();
    }
-   void SetBatchSystem(KVBatchSystem* bs)
-   {
+   void SetBatchSystem(KVBatchSystem* bs) {
       fBatchSystem = bs;
       fChoseRunMode = kTRUE;
       if (bs) fBatchSystem->cd();
    }
-   virtual const KVBatchSystem* GetBatchSystem()
-   {
+   virtual const KVBatchSystem* GetBatchSystem() {
       return fBatchSystem;
    }
    Bool_t RunningInLaunchDirectory();
@@ -169,48 +153,39 @@ public:
    const Char_t* GetBatchStatusFileName() const;
    void UpdateBatchStatusFile(Int_t totev, Int_t evread, TString disk) const;
    void DeleteBatchStatusFile() const;
-   virtual Long64_t GetTotalEntriesToRead() const
-   {
+   virtual Long64_t GetTotalEntriesToRead() const {
       return 0;
    }
    Bool_t CheckStatusUpdateInterval(Int_t nevents) const;
    void DoStatusUpdate(Int_t nevents) const;
 
-   KVDataAnalysisTask* GetAnalysisTask() const
-   {
+   KVDataAnalysisTask* GetAnalysisTask() const {
       return fTask;
    }
-   const KVString& GetDataType() const
-   {
+   const KVString& GetDataType() const {
       return fDataType;
    }
-   const KVString& GetUserIncludes() const
-   {
+   const KVString& GetUserIncludes() const {
       return fIncludes;
    }
-   const KVString& GetUserLibraries() const
-   {
+   const KVString& GetUserLibraries() const {
       return fLibraries;
    }
-   virtual void SetFileList(TList*)
-   {
+   virtual void SetFileList(TList*) {
       AbstractMethod("SetFileList(TList*)");
    }
 
-   void SetNbEventToRead(Long64_t nb = 0)
-   {
+   void SetNbEventToRead(Long64_t nb = 0) {
       nbEventToRead = nb;
    }
 
-   Long64_t GetNbEventToRead(void) const
-   {
+   Long64_t GetNbEventToRead(void) const {
       return nbEventToRead;
    }
 
    void ChooseNbEventToRead();
    void SetAnalysisTask(KVDataAnalysisTask* at);
-   void SetDataType(const Char_t* name)
-   {
+   void SetDataType(const Char_t* name) {
       fDataType = name;
    }
 
@@ -219,21 +194,17 @@ public:
 
    virtual void Reset();
 
-   void SetParent(KVDataAnalyser* da)
-   {
+   void SetParent(KVDataAnalyser* da) {
       fParent = da;
    }
-   KVDataAnalyser* GetParent() const
-   {
+   KVDataAnalyser* GetParent() const {
       return fParent;
    }
 
-   const KVString& GetUserClassImp() const
-   {
+   const KVString& GetUserClassImp() const {
       return fUserClassImp;
    }
-   const KVString& GetUserClassDec() const
-   {
+   const KVString& GetUserClassDec() const {
       return fUserClassDec;
    }
 
@@ -261,12 +232,10 @@ public:
 
    virtual void RegisterUserClass(TObject*) {}
 
-   void SetUserClassOptions(const Char_t* o = "")
-   {
+   void SetUserClassOptions(const Char_t* o = "") {
       fUserClassOptions = o;
    }
-   const KVString& GetUserClassOptions() const
-   {
+   const KVString& GetUserClassOptions() const {
       return fUserClassOptions;
    }
 
@@ -276,36 +245,32 @@ public:
 
    virtual void AddJobDescriptionList(TList*);
 
-   void SetMenus(Bool_t on = kTRUE)
-   {
+   void SetMenus(Bool_t on = kTRUE) {
       fMenus = on;
    }
-   Bool_t IsMenus() const
-   {
+   Bool_t IsMenus() const {
       return fMenus;
    }
-   void SetQuit(Bool_t yes = kTRUE)
-   {
+   void SetQuit(Bool_t yes = kTRUE) {
       fQuit = yes;
    }
-   Bool_t IsQuit() const
-   {
+   Bool_t IsQuit() const {
       return fQuit;
    }
-   void SetSubmit(Bool_t yes = kTRUE)
-   {
+   void SetSubmit(Bool_t yes = kTRUE) {
       fSubmit = yes;
    }
-   Bool_t IsSubmit() const
-   {
+   Bool_t IsSubmit() const {
       return fSubmit;
    }
-   virtual KVString GetRootDirectoryOfDataToAnalyse() const
-   {
+   virtual KVString GetRootDirectoryOfDataToAnalyse() const {
       AbstractMethod("GetRootDirectoryOfDataToAnalyse");
       return "";
    }
    virtual const Char_t* GetRecognisedAutoBatchNameKeywords() const;
+   void UseBaseClassSubmitTask() {
+      fUseBaseClassSubmitTask = kTRUE;
+   }
 
    ClassDef(KVDataAnalyser, 0)  //For submitting & performing data analysis tasks
 };

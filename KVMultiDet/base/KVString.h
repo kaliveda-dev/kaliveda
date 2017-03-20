@@ -32,14 +32,14 @@ protected:
 
 public:
 
-   KVString() : TString(), kObjArr(nullptr), fIterIndex(-1), fEndList(kTRUE)
-   {}
-   KVString(const Char_t* s): TString(s), kObjArr(nullptr), fIterIndex(-1), fEndList(kTRUE)
-   {}
-   KVString(const TString& s): TString(s), kObjArr(nullptr), fIterIndex(-1), fEndList(kTRUE)
-   {}
-   KVString(const KVString& s): TString((const TString&)s), kObjArr(nullptr), fIterIndex(-1), fEndList(kTRUE)
-   {}
+   KVString() : TString(), kObjArr(nullptr), fIterIndex(-1), fEndList(kTRUE) {
+   }
+   KVString(const Char_t* s): TString(s), kObjArr(nullptr), fIterIndex(-1), fEndList(kTRUE) {
+   }
+   KVString(const TString& s): TString(s), kObjArr(nullptr), fIterIndex(-1), fEndList(kTRUE) {
+   }
+   KVString(const KVString& s): TString((const TString&)s), kObjArr(nullptr), fIterIndex(-1), fEndList(kTRUE) {
+   }
    KVString(Double_t value, Double_t error);
 
    virtual ~ KVString() {}
@@ -61,12 +61,10 @@ public:
 #endif
 #ifdef __WITH_KVSTRING_REMOVE
    KVString& Remove(TString::EStripType s, char c);     // Like Strip() but changing string directly
-   KVString& Remove(Ssiz_t pos)
-   {
+   KVString& Remove(Ssiz_t pos) {
       return (KVString&)(TString::Remove(pos));
    };                           // Remove pos to end of string
-   KVString& Remove(Ssiz_t pos, Ssiz_t n)
-   {
+   KVString& Remove(Ssiz_t pos, Ssiz_t n) {
       return (KVString&)(TString::Remove(pos, n));
    };                           // Remove n chars starting at pos
 #endif
@@ -105,6 +103,8 @@ public:
    KVString& FindCommonTitleCharacters(const TCollection*, const char bug = '*');
 
    void RandomLetterSequence(Int_t length);
+
+   void Capitalize();
 
    ClassDef(KVString, 1)//TString wrapper compatible with ROOT versions 3.10/02 onwards
 };

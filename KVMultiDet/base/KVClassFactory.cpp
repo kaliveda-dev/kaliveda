@@ -86,7 +86,8 @@ KVString __add_indented_line(const KVString& line, const KVString& indent, Bool_
 }
 
 KVClassFactory::KVClassFactory()
-   : fBaseClass(nullptr), fHasBaseClass(kFALSE), fBaseClassTObject(kFALSE), fInlineAllMethods(kFALSE), fInlineAllCtors(kFALSE)
+   : fBaseClass(nullptr), fHasBaseClass(kFALSE), fBaseClassTObject(kFALSE), fInlineAllMethods(kFALSE), fInlineAllCtors(kFALSE),
+     fInheritAllCtors(kTRUE)
 {
    // Default ctor
 }
@@ -96,7 +97,8 @@ KVClassFactory::KVClassFactory(const Char_t* classname,
                                const Char_t* base_class,
                                Bool_t withTemplate,
                                const Char_t* templateFile)
-   : fBaseClass(nullptr), fHasBaseClass(kFALSE), fBaseClassTObject(kFALSE), fInlineAllMethods(kFALSE), fInlineAllCtors(kFALSE)
+   : fBaseClass(nullptr), fHasBaseClass(kFALSE), fBaseClassTObject(kFALSE), fInlineAllMethods(kFALSE), fInlineAllCtors(kFALSE),
+     fInheritAllCtors(kTRUE)
 {
    //Create a new class with the following characteristics:
    //
@@ -614,7 +616,7 @@ void KVClassFactory::GenerateCode()
    } else {
       AddDefaultConstructor();
       AddDestructor();
-      AddAllBaseConstructors();
+      if (fInheritAllCtors) AddAllBaseConstructors();
       AddCopyConstructor();
       AddMemberInitialiserConstructor();
       AddAssignmentOperator();
@@ -1032,7 +1034,7 @@ void KVClassFactory::AddMethodArgument(const Char_t* method_name, const Char_t* 
 
 //______________________________________________________
 
-void KVClassFactory::AddMethodBody(const Char_t* method_name, KVString& body)
+void KVClassFactory::AddMethodBody(const Char_t* method_name, const KVString& body)
 {
    //Set the body of the code for method 'method_name' added to the class using AddMethod.
    //N.B. does not work for implementing constructors, see AddConstructor
@@ -1339,7 +1341,7 @@ void KVClassMethod::write_method_body(KVString& decl)
       //write body of method
       decl += __add_indented_line(fFields.GetStringValue("Body"), indentation);
    } else {
-      decl += __add_indented_line("// Write your code here", indentation);
+      decl += __add_indented_line("   // Write your code here", indentation);
       if (fFields.HasParameter("ReturnType") && strcmp(fFields.GetStringValue("ReturnType"), "void")) {
          KVString return_dir = "return (";
          return_dir += GetReturnType();

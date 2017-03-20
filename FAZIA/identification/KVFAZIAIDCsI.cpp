@@ -5,6 +5,7 @@
 #include "KVIDGCsI.h"
 #include "KVIdentificationResult.h"
 #include "KVFAZIADetector.h"
+#include "KVDataSet.h"
 
 ClassImp(KVFAZIAIDCsI)
 
@@ -91,4 +92,5 @@ void KVFAZIAIDCsI::Initialize()
    } else {
       ResetBit(kReadyForID);
    }
+   if (!gDataSet->HasCalibIdentInfos()) SetBit(kReadyForID);
 }

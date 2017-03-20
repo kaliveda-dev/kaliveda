@@ -182,7 +182,10 @@ void KVBatchSystem::SubmitJob()
    gSystem->Setenv("KVBATCHNAME", GetJobName());
    gSystem->Setenv("KVLAUNCHDIR", gSystem->WorkingDirectory());
    cout << GetJobSubCmdLine() << endl;
-   if (fAnalyser) fAnalyser->WriteBatchEnvFile(GetJobName());
+   if (fAnalyser) {
+      fAnalyser->WriteBatchEnvFile(GetJobName());
+      gSystem->Setenv("KVANALYSER", fAnalyser->ClassName());
+   }
    gSystem->Exec(GetJobSubCmdLine());
 }
 

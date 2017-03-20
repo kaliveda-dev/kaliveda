@@ -6,7 +6,6 @@ $Author: franklan $
 */
 
 #include "KVDataAnalysisTask.h"
-#include "KVDataSet.h"
 #include "TSystem.h"
 #include "Riostream.h"
 #include "TObjString.h"
@@ -213,25 +212,6 @@ void KVDataAnalysisTask::SetUserBaseClass(const Char_t* base_name)
       if (gDebug > 1) Info("SetUserBaseClass", "Analysis task=%s :\nUser analysis class derives from %s, extension of %s in plugin %s",
                               GetName(), fBaseClass.Data(), fPluginBase.Data(), fPluginURI.Data());
    }
-}
-
-void KVDataAnalysisTask::SetParametersForDataSet(KVDataSet* dataset)
-{
-   //PRIVATE METHOD
-   //Called by KVDataSet::SetAnalysisTasks
-   //Check environment variables (i.e. .kvrootrc) to see if the task parameters
-   //have been "tweaked" for the dataset.
-
-   KVString envar = dataset->GetDataSetEnv(Form("%s.DataAnalysisTask.Analyser", GetName()));
-   if (envar != "") fAnalyser = envar;
-   envar = dataset->GetDataSetEnv(Form("%s.DataAnalysisTask.UserClass.Base", GetName()));
-   if (envar != "") SetUserBaseClass(envar);
-   envar = dataset->GetDataSetEnv(Form("%s.DataAnalysisTask.Prereq", GetName()));
-   if (envar != "") SetPrereq(envar);
-   envar = dataset->GetDataSetEnv(Form("%s.DataAnalysisTask.UserClass.ExtraACliCIncludes", GetName()));
-   if (envar != "") fExtraAClicIncludes = envar;
-   Int_t nev = (Int_t)dataset->GetDataSetEnv(Form("%s.DataAnalysisTask.StatusUpdateInterval", GetName()), 0.0);
-   if (nev > 0) fStatusUpdateInterval = nev;
 }
 
 Bool_t KVDataAnalysisTask::CheckUserBaseClassIsLoaded()

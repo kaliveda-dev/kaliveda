@@ -172,6 +172,7 @@ KVDataAnalyser::KVDataAnalyser()
 #else
    fProofMode = None;
 #endif
+   fUseBaseClassSubmitTask = kFALSE;
 }
 
 KVDataAnalyser::~KVDataAnalyser()
@@ -225,7 +226,20 @@ void KVDataAnalyser::Run()
             ScanWorkingDirectory(&fWorkDirInit);
          }
          if (!PreSubmitCheck()) return;
-         SubmitTask();
+
+         // The following horrific kludge is supposed to solve the following problem:
+         //   when running in batch mode (GridEngine) the data analyser created in
+         //   KaliVedaAnalysis.cpp has to be of the right type (KVSimDirAnalyser or KVDataSetAnalyser)
+         //   in order for it to read all necessary informations from the batch env file
+         //   by calling the appropriate ReadBatchEnvFile override.
+         //   However, when Run() is called for this object from KaliVedaAnalysis.cpp,
+         //   we have to call the KVDataAnalyser::SubmitTask method, not the override in the
+         //   derived class.
+         if (fUseBaseClassSubmitTask)
+            KVDataAnalyser::SubmitTask();
+         else
+            SubmitTask();
+
          if (!RunningInLaunchDirectory() && fParent) {
             //when batch job runs in directory different to launch directory,
             //we scan the list of files present in the current working directory

@@ -17,15 +17,12 @@ class KVINDRAUpDater: public KVUpDater {
 public:
 
    KVINDRAUpDater();
-   virtual ~ KVINDRAUpDater()
-   {
+   virtual ~ KVINDRAUpDater() {
    };
 
    virtual void SetParameters(UInt_t run);
-   virtual void SetIdentificationParameters(UInt_t);
    virtual void SetCalibrationParameters(UInt_t);
 
-   //virtual void SetTarget(KVDBRun *);
    virtual void SetTrigger(KVDBRun*);
    virtual void SetGains(KVDBRun*);
 
@@ -33,7 +30,6 @@ public:
    virtual void SetCalibParameters(KVDBRun*);
    virtual void SetChIoPressures(KVDBRun*);
    virtual void SetPedestals(KVDBRun*);
-   //virtual void SetIDGrids(UInt_t);
 
    virtual void SetChVoltParameters(KVDBRun*);
    virtual void SetLitEnergyCsIParameters(KVDBRun*);

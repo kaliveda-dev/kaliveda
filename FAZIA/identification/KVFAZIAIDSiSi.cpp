@@ -4,7 +4,7 @@
 #include "KVFAZIAIDSiSi.h"
 #include "KVIDZAGrid.h"
 #include "KVFAZIADetector.h"
-
+#include "KVDataSet.h"
 
 ClassImp(KVFAZIAIDSiSi)
 
@@ -49,6 +49,7 @@ void KVFAZIAIDSiSi::Initialize()
    } else {
       ResetBit(kReadyForID);
    }
+   if (!gDataSet->HasCalibIdentInfos()) SetBit(kReadyForID);
 }
 
 //________________________________________________________________

@@ -54,6 +54,7 @@ public:
 public:
    TGTransientFrame* fMain;
    KVCanvas* fCanvas;
+   TVirtualPad* fPad;
 
    TGToolBar* fToolBar;
    TGToolBar* fToolBar2;
@@ -106,6 +107,7 @@ public:
    void MassesUp();//{Info("ChangeMasses","Not yet implemented");}
    void MassesDown();//{Info("ChangeMasses","Not yet implemented");}
    void UpdateLists();//{cout << "toto" << endl;}
+   void TestIdent();//;{cout << "TestIdent()" << endl;}
    void SetLogy();
    void UnzoomHisto();
 

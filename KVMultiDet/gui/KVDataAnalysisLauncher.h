@@ -155,8 +155,7 @@ public:
    KVDataAnalysisLauncher(const TGWindow* p = 0, UInt_t w = 200, UInt_t h = 400);
    ~KVDataAnalysisLauncher();
 
-   virtual void Exit(void)
-   {
+   virtual void Exit(void) {
       gApplication->SetReturnFromRun(kTRUE);
       gApplication->Terminate(0);
    }
@@ -185,12 +184,11 @@ public:
    virtual void SetSystem(const Char_t* s = "");
    virtual void SetRuns(const Char_t* s = "");
 
-   virtual Bool_t IsBatch(void)
-   {
+   virtual Bool_t IsBatch(void) {
       return withBatch->IsDown();
    }
    void SetBatch();
-   void SetBatchParameters();
+   Bool_t SetBatchParameters();
 
    virtual void SetUserLibraries(void);
    virtual void SetUserIncludes(void);

@@ -21,8 +21,10 @@ ClassImp(KVFAZIASYM)
 ////////////////////////////////////////////////////////////////////////////////
 
 KVFAZIASYM::KVFAZIASYM()
+   : KVFAZIA()
 {
    // Default constructor
+   SetTitle(ClassName());
 }
 
 KVFAZIASYM::~KVFAZIASYM()

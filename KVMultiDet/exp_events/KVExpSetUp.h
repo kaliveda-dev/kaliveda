@@ -20,6 +20,9 @@ public:
    virtual ~KVExpSetUp();
    virtual void Build(Int_t run = -1);
 
+   void SetParameters(UShort_t n);
+   void FillDetectorList(KVReconstructedNucleus* rnuc, KVHashList* DetList, const KVString& DetNames);
+
    ClassDef(KVExpSetUp, 1) //Describe an experimental set-up made of several KVMultiDetArray objects
 };
 

@@ -31,8 +31,10 @@ void KVFAZIANFS::GetGeometryParameters()
 }
 
 KVFAZIANFS::KVFAZIANFS()
+   : KVFAZIA()
 {
    // Default constructor
+   SetTitle(ClassName());
 }
 
 KVFAZIANFS::~KVFAZIANFS()

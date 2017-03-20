@@ -12,7 +12,6 @@ $Author: franklan $
 #include "KVDataSetManager.h"
 #include "KVDataBase.h"
 #include "TSystem.h"
-#include "KVDataAnalysisTask.h"
 #include "TObjArray.h"
 #include "TObjString.h"
 #include "KVDBSystem.h"
@@ -302,6 +301,25 @@ const Char_t* KVDataSet::GetFullPathToDB() const
    return dbfile_fullpath.Data();
 }
 
+void KVDataSet::SetDataSetSpecificTaskParameters(KVDataAnalysisTask* t) const
+{
+   //PROTECTED METHOD
+   //Called by KVDataSet::SetAnalysisTasks
+   //Check environment variables (i.e. .kvrootrc) to see if the task parameters
+   //have been "tweaked" for the dataset.
+
+   KVString envar = GetDataSetEnv(Form("%s.DataAnalysisTask.Analyser", t->GetName()));
+   if (envar != "") t->SetDataAnalyser(envar);
+   envar = GetDataSetEnv(Form("%s.DataAnalysisTask.UserClass.Base", t->GetName()));
+   if (envar != "") t->SetUserBaseClass(envar);
+   envar = GetDataSetEnv(Form("%s.DataAnalysisTask.Prereq", t->GetName()));
+   if (envar != "") t->SetPrereq(envar);
+   envar = GetDataSetEnv(Form("%s.DataAnalysisTask.UserClass.ExtraACliCIncludes", t->GetName()));
+   if (envar != "") t->SetExtraAClicIncludes(envar);
+   Int_t nev = (Int_t)GetDataSetEnv(Form("%s.DataAnalysisTask.StatusUpdateInterval", t->GetName()), 0.0);
+   if (nev > 0) t->SetStatusUpdateInterval(nev);
+}
+
 //_______________________________________________________________//
 
 void KVDataSet::SaveDataBase() const
@@ -584,7 +602,7 @@ void KVDataSet::SetAnalysisTasks(const KVSeqCollection* task_list)
       if (availables == "" || availables.Contains(dat->GetName())) {
          KVDataAnalysisTask* new_task = new KVDataAnalysisTask(*dat);
          //check if any dataset-specific parameters need to be changed
-         new_task->SetParametersForDataSet(this);
+         SetDataSetSpecificTaskParameters(new_task);
          if (HasDataType(new_task->GetPrereq())) {
             fTasks.Add(new_task);
          } else
@@ -938,8 +956,9 @@ void KVDataSet::DeleteRunfile(const Char_t* type, Int_t run, Bool_t confirm)
       return;
    }
    //delete file
-   //add a safety condition for raw files
-   if (!strcmp(type, "raw") || !strcmp(type, "dst")) {
+   //prevent accidental deletion of certain types of runfiles
+   KVString doNotDelete = GetDataSetEnv("DataSet.RunFile.DoNotDelete", "all");
+   if (doNotDelete == "all" || doNotDelete.Contains(type)) {
       Error("DeleteRunFile", "%s files cannot be deleted", type);
       return;
    }
@@ -1562,7 +1581,7 @@ KVDataAnalysisTask* KVDataSet::GetAnalysisTaskAny(const Char_t* keywords) const
    //make new copy of default analysis task
    KVDataAnalysisTask* new_task = new KVDataAnalysisTask(*tsk);
    //check if any dataset-specific parameters need to be changed
-   new_task->SetParametersForDataSet(const_cast<KVDataSet*>(this));
+   SetDataSetSpecificTaskParameters(new_task);
    return new_task; //must be deleted by user
 }
 

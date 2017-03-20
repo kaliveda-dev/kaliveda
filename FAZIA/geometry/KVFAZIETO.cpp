@@ -17,8 +17,10 @@ ClassImp(KVFAZIETO)
 ////////////////////////////////////////////////////////////////////////////////
 
 KVFAZIETO::KVFAZIETO()
+   : KVFAZIA()
 {
    // Default constructor
+   SetTitle(ClassName());
 }
 
 KVFAZIETO::~KVFAZIETO()
