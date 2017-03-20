@@ -68,6 +68,7 @@ public:
    std::vector<Int_t> GetNearestLinenbs(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Int_t nblines);
    Float_t GetDistance(Float_t xf, Float_t thetaf, Float_t yf, Float_t phif, Int_t linenb);
    Float_t GetDistance(Int_t linenb1, Int_t linenb2);
+   <<< <<< < HEAD
    std::vector<Int_t> GetLinesinRadius(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radius);
    // std::vector<Float_t> testGetLinesinRadius_bari(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radiusmultiplier);
    //std::vector<Float_t> testGetLinesinRadius_weight(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radiusmultiplier);
@@ -80,6 +81,19 @@ public:
       characteristicdistance_phif = d_PhiF;
    }
 
+   == == == =
+      // Float_t GetNearestLinedistance2(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt);
+      std::vector<Int_t> GetLinesinRadius(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radius);
+   // void testGetLinesinRadius(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radiusmultiplier);
+   std::vector<Float_t> testGetLinesinRadius_bari(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radiusmultiplier);
+   std::vector<Float_t> testGetLinesinRadius_weight(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radiusmultiplier);
+   Float_t GetDistance2D(Float_t xf, Float_t thetaf, Float_t xf_line, Float_t thetaf_line);
+   Float_t GetDistance2D(Float_t xf, Float_t thetaf, Int_t linenb);
+   Float_t GetDistance2D(Int_t linenb1, Int_t linenb2);
+   std::vector<Int_t> GetNearestLinenbs2D(Float_t XFt, Float_t ThetaFt);
+   std::vector<Int_t> GetLinesinRadius2D(Float_t XFt, Float_t ThetaFt, Float_t radius);
+   std::vector<Float_t> testGetLinesinRadius_weight2D(Float_t XFt, Float_t ThetaFt, Float_t radiusmultiplier);
+   >>> >>> > origin / 1.10
    ClassDef(KVZGOUBIInverseMatrix, 1) //Class used to reconstruct trajectories in VAMOS
 };
 
