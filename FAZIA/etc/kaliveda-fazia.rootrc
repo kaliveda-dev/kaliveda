@@ -178,6 +178,7 @@ FAZIADB.Systems:     Systems.dat
 +Plugin.KVIDTelescope:    ^ISOFAZIA.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
 +Plugin.KVIDTelescope:    ^FAZIASYM.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
 +Plugin.KVIDTelescope:    ^FAZIASYM.Si-CsI$                 KVFAZIAIDSiCsI_FAZIASYM            FAZIAidentification           "KVFAZIAIDSiCsI_FAZIASYM()"
++Plugin.KVIDTelescope:    ^FAZIACOR.Si-Si$                 KVFAZIAIDSiSi_FAZIACOR            FAZIAidentification           "KVFAZIAIDSiSi_FAZIACOR()"
 +Plugin.KVIDTelescope:    ^FAZIASYM.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
 +Plugin.KVIDTelescope:    ^FAZIASYM.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
 +Plugin.KVIDTelescope:    ^LNS_2014.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
@@ -192,7 +193,6 @@ FAZIADB.Systems:     Systems.dat
 +Plugin.KVIDTelescope:    ^LNS_2016.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
 +Plugin.KVIDTelescope:    ^LNS_2016.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
 +Plugin.KVIDTelescope:    ^LNS_2016.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^FAZIACOR.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
 +Plugin.KVIDTelescope:    ^FAZIACOR.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
 +Plugin.KVIDTelescope:    ^FAZIACOR.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
 +Plugin.KVIDTelescope:    ^FAZIACOR.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
@@ -267,10 +267,10 @@ LNS_2016.IdentificationParameterFile.Si-Si:       SI-SI-Grids.dat
 LNS_2016.IdentificationParameterFile.Si-CsI:       SI-CSI-Grids.dat
 LNS_2016.ActiveIdentifications:         Si-CsI Si-Si
 
-#FAZIACOR.IdentificationParameterFile.Si-Si:       SI-SI-Grids.dat
+FAZIACOR.IdentificationParameterFile.Si-Si:       ID_SI1_SI2_FAZIACOR.dat
 #FAZIACOR.IdentificationParameterFile.CsI:
 FAZIACOR.IdentificationParameterFile.Si-CsI:       ID_SI2_CSI_FAZIACOR.dat
-FAZIACOR.ActiveIdentifications:         Si-CsI
+FAZIACOR.ActiveIdentifications:       Si-CsI Si-Si
 
 # file which gather all calibration files
 FAZIADB.CalibrationFiles:     CalibrationFiles.dat
