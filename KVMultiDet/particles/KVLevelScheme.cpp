@@ -328,34 +328,28 @@ void KVLevelScheme::Draw(Option_t* option)
 
    double max = GetLevelEnergy(GetNLevels() - 1);
    if (hh) delete hh;
-   hh = new TH2F(Form("dumhist%s", fCompNuc->GetSymbol()), "", (ncol + 10), 0, (ncol + 10)*dx + 0.5 * dx, 1000, -200, max + 200);
+   hh = new TH2F(Form("dumhist%s", fCompNuc->GetSymbol()), "", 1, 0, ncol * dx + 0.5 * dx, 1000, -200, max + 200);
 
-   TString opt = option;
+//   TString opt = option;
    gStyle->SetOptStat(0);
-   if (!opt.Contains("same")) {
-      if (cc) delete cc;
-      cc = new TCanvas(Form("levels%s", fCompNuc->GetSymbol()), Form("levels%s", fCompNuc->GetSymbol()), (ncol) * (dx) * 0.4 * 400, 800);
-      cc->SetTickx(1);
-      cc->SetTicky(1);
-      cc->SetTopMargin(0.02);
-      cc->SetBottomMargin(0.02);
-      cc->SetRightMargin(0.02);
-      cc->SetLeftMargin(0.02);
+//   if (!opt.Contains("same")) {
+   if (cc) delete cc;
+   cc = new TCanvas(Form("levels%s", fCompNuc->GetSymbol()), Form("levels%s", fCompNuc->GetSymbol()), (ncol) * (dx) * 0.4 * 400, 800);
+   cc->SetTickx(1);
+   cc->SetTicky(1);
+   cc->SetTopMargin(0.02);
+   cc->SetBottomMargin(0.02);
+   cc->SetRightMargin(0.02);
+   cc->SetLeftMargin(0.02);
 
-      hh->GetXaxis()->SetAxisColor(0);
-      hh->GetYaxis()->SetAxisColor(0);
+   hh->GetXaxis()->SetAxisColor(0);
+   hh->GetYaxis()->SetAxisColor(0);
 
-      hh->GetXaxis()->SetLabelSize(0);
-      hh->GetYaxis()->SetNdivisions(0);
+   hh->GetXaxis()->SetLabelSize(0);
+   hh->GetYaxis()->SetNdivisions(0);
 
-      hh->Draw();
-   }
-
-//    DrawThreshold("7Li");
-//    DrawThreshold("1H");
-//    DrawThreshold("2H");
-//    //    DrawThreshold("8Be",ncol+2,txs,dx,ddx);
-//    DrawThreshold("7Li",2000);
+   hh->Draw();
+//   }
 
    for (int ic = 0; ic < 20; ic++) cols[ic] = 0;
    cols[0] = GetLevelEnergy(0);
@@ -395,7 +389,7 @@ void KVLevelScheme::Draw(Option_t* option)
    tte->SetTextSize(txs);
    tte->Draw();
 
-   hh->GetXaxis()->SetRangeUser(0, dx * (ncol + 1));
+   hh->GetXaxis()->SetLimits(0, dx * (ncol + 0.5));
 }
 
 void KVLevelScheme::DrawThreshold(const char* symb, Option_t* option, double ex)
@@ -459,5 +453,5 @@ void KVLevelScheme::DrawThreshold(const char* symb, Option_t* option, double ex)
 
 
    cc->SetWindowSize((ncol) * (dx) * 0.35 * 400, 800);
-   hh->GetXaxis()->SetRangeUser(0, dx * (ncol + 1));
+   hh->GetXaxis()->SetLimits(0, dx * (ncol + 0.5));
 }
