@@ -132,7 +132,9 @@ public:
    Double_t          GetGamma(const Char_t* tof_name)    const;
    const   TVector3& GetLabDirection()                   const;
    Float_t           GetPath()                           const;
+   Double_t          GetPhiVE()                          const;
    Double_t          GetPhiF()                           const;
+   Double_t          GetPhiI()                           const;
    Double_t          GetPhiL()                           const;
    Double_t          GetPhiV()                           const;
    Int_t             GetQ()                              const;
@@ -142,7 +144,9 @@ public:
 
 
    virtual Double_t  GetStripFoilEnergyLoss()            const;
+   Double_t          GetThetaVE()                        const;
    Double_t          GetThetaF()                         const;
+   Double_t          GetThetaI()                         const;
    Double_t          GetThetaL()                         const;
    Double_t          GetThetaV()                         const;
    Float_t           GetXf()                             const;
@@ -416,9 +420,21 @@ inline Float_t KVVAMOSReconNuc::GetPath() const
 }
 //____________________________________________________________________________________________//
 
+inline Double_t KVVAMOSReconNuc::GetPhiVE() const
+{
+   return fRT.GetPhiVE();
+}
+//____________________________________________________________________________________________//
+
 inline Double_t KVVAMOSReconNuc::GetPhiF() const
 {
    return fRT.GetPhiF();
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetPhiI() const
+{
+   return fRT.GetPhiI();
 }
 //____________________________________________________________________________________________//
 
@@ -468,9 +484,21 @@ inline Double_t KVVAMOSReconNuc::GetStripFoilEnergyLoss() const
 }
 //____________________________________________________________________________________________//
 
+inline Double_t KVVAMOSReconNuc::GetThetaVE() const
+{
+   return fRT.GetThetaVE();
+}
+//____________________________________________________________________________________________//
+
 inline Double_t KVVAMOSReconNuc::GetThetaF() const
 {
    return fRT.GetThetaF();
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetThetaI() const
+{
+   return fRT.GetThetaI();
 }
 //____________________________________________________________________________________________//
 

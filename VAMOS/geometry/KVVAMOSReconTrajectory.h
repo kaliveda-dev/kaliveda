@@ -25,8 +25,9 @@ protected:
 
    Float_t pointFP[2];//point of intersection (Xf, Yf in cm) of the trajectory and the focal plane in the FP-frame
    TVector3 dirFP;    //trajectory normalized direction in the FP-frame
+   TVector3 dirVE;    //trajectory normalized direction at the entrance window of VAMOS in lab. ref. frame (ion-optic standard)
 
-   TVector3 dirLab;   //trajectory normalized direction at the target point in the lab-frame
+   TVector3 dirLab;   //trajectory normalized direction at the target point in the lab-frame (VAMOS standard)
    Float_t Brho;      //magnetic rigidity in the laboratory (T.m)
    Float_t path;      //path of the nucleus, from the target to the focal plane (cm)
 
@@ -65,16 +66,15 @@ public:
    inline Double_t GetThetaV() const {
       //Returns the angle (in degree) between the Z-axis and the projection of the velocity vector
       //of the trajectory on the XZ plane (symmetry plane) in the laboratory frame of reference and in the
-      //VAMOS coordinate system.
+      //ion-optics formalism.
       //It varies between -90 to 90 degrees.
 
       return TMath::RadToDeg() * TMath::ATan(dirLab.X() / dirLab.Z());
-
    }
 
    inline Double_t GetPhiV() const {
       //Returns the angle (in degree) between the velocity vector of the trajectory and its projection
-      //on the XZ plane (symmetry plane) in the laboratory frame of reference and in the VAMOS coordinate system.
+      //on the XZ plane (symmetry plane) in the laboratory frame of reference and in the ion-optics formalism.
       //It varies between -90 to 90 degrees.
 
 
@@ -98,6 +98,47 @@ public:
       //It varies between -179.999... to 180 degrees.
 
       return TMath::RadToDeg() * dirLab.Phi();
+   }
+
+   inline Double_t GetThetaI() const {
+      //Returns the angle (in degree) between the Z-axis and the the velocity vector of the trajectory
+      //(i.e. polar angle in spherical coordinates) in the laboratory frame of reference and in the INDRA coordinate system.
+      //It varies between 0 to 180 degrees.
+
+      return GetThetaL();
+   }
+
+   inline Double_t GetPhiI() const {
+      //Returns the angle (in degree) between the X-axis and the projection of the velocity vector of the trajectory
+      //on the XY-plane (i.e. azimuth angle in spherical coordinates) in the laboratory frame of reference
+      //and in the VAMOS coordinate system.
+      //It varies between 0... to 359.999... degrees.
+
+      //Convert phi angle in VAMOS standard (in rad) to INDRA standard (in rad)
+      Double_t PhiINDRA = GetPhiL() * TMath::DegToRad();
+      //- convert phi (VAMOS ref. frame ) range from [-Pi; Pi] to [0, 2*Pi]
+      if (PhiINDRA < 0) PhiINDRA += 2.*TMath::Pi();
+      //- convert phi in VAMOS frame (and range [0, 2*Pi]) to INDRA ref. frame
+      PhiINDRA -= 1.*TMath::Pi() / 2.;
+      if (PhiINDRA < 0) PhiINDRA += 2.*TMath::Pi();
+
+      return PhiINDRA * TMath::RadToDeg();
+   }
+
+   inline Double_t GetThetaVE() const {
+      //Returns the theta angle (in degree) of the reconstructed trajectory at the entrance of VAMOS window
+      //i.e before passing inside the ion-optics components.
+      //It varies between -90 to 90 degrees.
+
+      return TMath::RadToDeg() * TMath::ATan(dirVE.X() / dirVE.Z());
+   }
+
+   inline Double_t GetPhiVE() const {
+      //Returns the phi angle (in degree) of the reconstructed trajectory at the entrance of VAMOS window
+      //i.e before passing inside the ion-optics components.
+      //It varies between -90 to 90 degrees.
+
+      return TMath::RadToDeg() * TMath::ASin(dirVE.Y() / dirVE.Mag());
    }
 
    inline Float_t GetBrho() const {

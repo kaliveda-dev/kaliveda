@@ -203,6 +203,7 @@ Bool_t KVZGOUBIReconstruction::ReconstructFPtoLab(KVVAMOSReconTrajectory* traj)
        Double_t X     = TMath::Sin(theta) * TMath::Cos(phi);
        Double_t Y     = TMath::Sin(phi);
        Double_t Z     = TMath::Cos(theta) * TMath::Cos(phi);
+
        traj->dirLab.SetXYZ(X, Y, Z);
        traj->dirLab.RotateY(gVamos->GetAngle()*TMath::DegToRad());
        ok = kTRUE;
@@ -225,6 +226,7 @@ Bool_t KVZGOUBIReconstruction::ReconstructFPtoLab(KVVAMOSReconTrajectory* traj)
          Double_t Y     = TMath::Sin(phi);
          Double_t Z     = TMath::Cos(theta) * TMath::Cos(phi);
 
+         traj->dirVE.SetXYZ(X, Y, Z);
          traj->dirLab.SetXYZ(X, Y, Z);
          traj->dirLab.RotateY(gVamos->GetAngle()*TMath::DegToRad());
          ok = kTRUE;
