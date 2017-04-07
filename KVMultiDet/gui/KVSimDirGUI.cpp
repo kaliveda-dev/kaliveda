@@ -501,15 +501,15 @@ void KVSimDirGUI::SelectAnalysisClass()
    fi.fFileTypes = filetypes;
    new KVFileDialog(gClient->GetDefaultRoot(), MainFrame, kKVFDOpen, &fi);
    if (fi.fFilename) {
-      fAnalClassName = fi.fFilename;
+      fAnalClassName = gSystem->BaseName(fi.fFilename);
       Int_t idot = fAnalClassName.Index(".");
       if (idot < 0) return;
       fAnalClassName.Remove(idot, 2);
-      if (FindClassSourceFiles(gSystem->BaseName(fAnalClassName), fAnalClassImp, fAnalClassHeader, fi.fIniDir)) {
+      if (FindClassSourceFiles(fAnalClassName, fAnalClassImp, fAnalClassHeader, fi.fIniDir)) {
          fTEAnalysisClassFileName->SetText(fAnalClassName);
-         fAnalClassName = gSystem->BaseName(fAnalClassName);
          fAnalClassDir = fi.fIniDir;
-         cout << "Found class header " << fAnalClassHeader << " and implementation " << fAnalClassImp << " in " << fAnalClassDir << endl;
+         cout << "Found class header " << gSystem->BaseName(fAnalClassHeader) << " and implementation "
+              << gSystem->BaseName(fAnalClassImp) << " in " << fAnalClassDir << endl;
       }
    }
    dir = fi.fIniDir;
