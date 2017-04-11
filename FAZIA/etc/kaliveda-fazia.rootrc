@@ -307,7 +307,7 @@ QL1.TauRC: 250
 QL1.ChannelWidth: 4
 QL1.ShaperRiseTime: 2
 QL1.ShaperFlatTop: 1
-QL1.PZCorrection: 1 
+QL1.PZCorrection: 0
 QL1.MinimumAmplitude: 2 
 
 QH1.BaseLineLength: 100
@@ -315,7 +315,7 @@ QH1.TauRC: 40
 QH1.ChannelWidth: 10
 QH1.ShaperRiseTime: 2
 QH1.ShaperFlatTop: 1
-QH1.PZCorrection: 1 
+QH1.PZCorrection: 0
 QH1.MinimumAmplitude: 2 
 
 I1.BaseLineLength: 30
@@ -330,7 +330,7 @@ Q2.TauRC: 40
 Q2.ChannelWidth: 10
 Q2.ShaperRiseTime: 2
 Q2.ShaperFlatTop: 1
-Q2.PZCorrection: 1 
+Q2.PZCorrection: 0
 Q2.MinimumAmplitude: 2 
 
 I2.BaseLineLength: 30
@@ -344,8 +344,8 @@ Q3.BaseLineLength: 100
 Q3.TauRC: 40
 Q3.ChannelWidth: 10
 Q3.ShaperRiseTime: 2
-Q3.ShaperFlatTop: 1
-Q3.PZCorrection: 1
+Q3.ShaperFlatTop: 10
+Q3.PZCorrection: 0
 Q3.FastShaperRiseTime:  	  0.7
 Q3.FastShaperFlatTop:	  0.5
 Q3.MinimumAmplitude: 5 
@@ -355,38 +355,38 @@ Q3.MinimumAmplitude: 5
 ###
 
 # standard values
-ISOFAZIA.QL1.BaseLineLength:  	  500
+ISOFAZIA.QL1.BaseLineLength:  	  100
 ISOFAZIA.QL1.TauRC:  		  250
 ISOFAZIA.QL1.ChannelWidth: 		  4
 ISOFAZIA.QL1.ShaperRiseTime:  	  2
 ISOFAZIA.QL1.ShaperFlatTop:	  2
 ISOFAZIA.QL1.PZCorrection: 		  0 
 
-ISOFAZIA.QH1.BaseLineLength:  	  500
+ISOFAZIA.QH1.BaseLineLength:  	  100
 ISOFAZIA.QH1.TauRC:  		  40
 ISOFAZIA.QH1.ChannelWidth: 		  10
 ISOFAZIA.QH1.ShaperRiseTime:  	  2
 ISOFAZIA.QH1.ShaperFlatTop:	  2
 ISOFAZIA.QH1.PZCorrection: 		  0 
 
-ISOFAZIA.I1.BaseLineLength:	  30
+ISOFAZIA.I1.BaseLineLength:	  50
 ISOFAZIA.I1.ChannelWidth:  		  4
 ISOFAZIA.I1.InterpolatedChannelWidth:  	  0.2 	  
 ISOFAZIA.I1.Interpolation: 		  1
 #
-ISOFAZIA.Q2.BaseLineLength:	  500
+ISOFAZIA.Q2.BaseLineLength:	  100
 ISOFAZIA.Q2.TauRC:			  40
 ISOFAZIA.Q2.ChannelWidth:  		  10
 ISOFAZIA.Q2.ShaperRiseTime:	  2
 ISOFAZIA.Q2.ShaperFlatTop: 		  2
 ISOFAZIA.Q2.PZCorrection:  		  0 
 
-ISOFAZIA.I2.BaseLineLength:	  30
+ISOFAZIA.I2.BaseLineLength:	  50
 ISOFAZIA.I2.ChannelWidth:  		  4
 ISOFAZIA.I2.InterpolatedChannelWidth:  	  0.2 	  
 ISOFAZIA.I2.Interpolation: 		  1
 #
-ISOFAZIA.Q3.BaseLineLength:	  250
+ISOFAZIA.Q3.BaseLineLength:	  100
 ISOFAZIA.Q3.TauRC:			  40
 ISOFAZIA.Q3.ChannelWidth:  		  10
 ISOFAZIA.Q3.FastShaperRiseTime:  	  0.7
