@@ -34,7 +34,7 @@ void KVFAZIACOR::GetGeometryParameters()
 {
    //Defined number of blocks, the distance from the target and the minimum polar angle
    fNblocks = 4;
-   fFDist = 80.0;
+   fFDist = 80.3;
    fFThetaMin = 2.1;
 }
 
@@ -47,7 +47,7 @@ void KVFAZIACOR::RutherfordTelescope()
 
    KVMaterial silicon("Si");
 
-   const double radius = 5 * KVUnits::mm / 2.;
+   const double radius = 9 * KVUnits::mm / 2.;
 
    const double thick = 525 * KVUnits::um;
    const double centre_dist = 1 * KVUnits::mm;
@@ -61,9 +61,9 @@ void KVFAZIACOR::RutherfordTelescope()
    ruth_tel->AddNode(si_det, 2, new TGeoTranslation(0, 0, centre_dist / 2));
 
    // front entrance of first detector at 2 metres from target
-   const double distance = 2.20 * KVUnits::m + 0.5 * total_thickness;
-   const double theta = 1.84;
-   const double phi = -90;
+   const double distance = 2.27 * KVUnits::m + 0.5 * total_thickness;
+   const double theta = 0.99;
+   const double phi = -54.07;
 
    TGeoRotation rot1, rot2;
    rot2.SetAngles(phi + 90, theta, 0);
