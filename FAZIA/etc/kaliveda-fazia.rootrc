@@ -43,6 +43,10 @@ FAZIASYM.GeoType:        compact
 FAZIASYM.DistanceFAZIA:   80.0
 FAZIASYM.ThetaMinCompactGeo: 2.1
 
+FAZIACOR.GeoType:        compact
+FAZIACOR.DistanceFAZIA:   80.3
+FAZIACOR.ThetaMinCompactGeo: 2.1
+
 +DataSet:   LNS_2014
 LNS_2014.DataSet.Title:    FAZIA commissioning at LNS (2014)
 LNS_2014.DataSet.RepositoryDir:   LNS_2014
@@ -99,7 +103,7 @@ LNS_2016.KVDataSet.DataType.Subdir.root:  root
 LNS_2016.DataSet.RunFile.DoNotDelete: bin
 
 +DataSet:   FAZIACOR
-FAZIACOR.DataSet.Title:   Test done at LNS during July 2016
+FAZIACOR.DataSet.Title:   FAZIA-COR experiment at LNS (2017)
 FAZIACOR.DataSet.RepositoryDir:   FAZIACOR
 FAZIACOR.DataSet.RunFileName.raw:    run%06d.root
 FAZIACOR.ReconstructedEventClassName:	KVReconstructedEvent
@@ -183,7 +187,7 @@ FAZIA.ReconstructedNuclei.AcceptECodes: 1-2
 +Plugin.KVIDTelescope:    ^ISOFAZIA.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
 +Plugin.KVIDTelescope:    ^FAZIASYM.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
 +Plugin.KVIDTelescope:    ^FAZIASYM.Si-CsI$                 KVFAZIAIDSiCsI_FAZIASYM            FAZIAidentification           "KVFAZIAIDSiCsI_FAZIASYM()"
-+Plugin.KVIDTelescope:    ^FAZIACOR.Si-Si$                 KVFAZIAIDSiSi_FAZIACOR            FAZIAidentification           "KVFAZIAIDSiSi_FAZIACOR()"
++Plugin.KVIDTelescope:    ^FAZIACOR.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
 +Plugin.KVIDTelescope:    ^FAZIASYM.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
 +Plugin.KVIDTelescope:    ^FAZIASYM.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
 +Plugin.KVIDTelescope:    ^LNS_2014.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"

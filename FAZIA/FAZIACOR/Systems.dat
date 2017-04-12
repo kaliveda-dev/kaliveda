@@ -11,7 +11,7 @@
 #      7         12C           490
 #     11         CD2           266
 #     12         CH2           346
-# 
+#
 # Exact beam energies (from machine):
 #   32S/20Ne@50 MeV/A : 50.6332
 #   32S/20Ne@25 MeV/A : 24.7544
@@ -37,13 +37,13 @@ Runs: 167-177 10122-10176
 
 +32S + 197Au 50.0 MeV/A
 32 16 197 79 50.6332
-Target: 4 0
+Target: 1 0
 Gold 0.154
 Runs: 191-205
 
 +32S + 12C 50.0 MeV/A
 32 16 12 6 50.6332
-Target: 6 0
+Target: 1 0
 Carbon 0.239
 Runs: 206-566 569-3580
 
@@ -52,26 +52,26 @@ Runs: 3581 6373 10177-10180
 
 +20Ne + 197Au 50.0 MeV/A
 20 10 197 79 50.6332
-Target: 4 0
+Target: 1 0
 Gold 0.154
 Runs: 3591-3630 4564-4566 10002-10012
 
 +20Ne + 12C(239) 50.0 MeV/A
 20 10 12 6 50.6332
-Target: 6 0
+Target: 1 0
 Carbon 0.239
 Runs: 3631-4563
 
 +20Ne + 12C(209) 50.0 MeV/A
 20 10 12 6 50.6332
-Target: 5 0
+Target: 1 0
 Carbon 0.209
 Runs: 4567-5893 5896-6372 6374-10001 10025-10084
 
 +20Ne + CH2 50.0 MeV/A
 20 10 12 6 50.6332
-Target: 12 0
-CH2 0.346
+Target: 1 0
+Carbon 0.346
 Runs: 10013-10024
 
 +Pulser Ramp
@@ -79,49 +79,49 @@ Runs: 10085-10104 16138-16149
 
 +20Ne + 12C 25.0 MeV/A
 20 10 12 6 24.7544
-Target: 5 0
+Target: 1 0
 Carbon 0.209
 Runs: 10181-10311 10328-14898 15105-16137
 
 +20Ne + 197Au(154) 25.0 MeV/A
 20 10 197 79 24.7544
-Target: 4 0
+Target: 1 0
 Gold 0.154
 Runs: 10312-10327
 
 +20Ne + 197Au(328) 25.0 MeV/A
 20 10 197 79 24.7544
-Target: 3 0
+Target: 1 0
 Gold 0.328
 Runs: 14899-14934
 
 +20Ne + CH2 25.0 MeV/A
 20 10 12 6 24.7544
-Target: 12 0
-CH2 0.346
+Target: 1 0
+Carbon 0.346
 Runs: 14936-15009
 
 +20Ne + CD2 25.0 MeV/A
-20 10 12 6 24.7544
-Target: 11 0
-CH2 0.266
+20 10 1 6 24.7544
+Target: 1 0
+Carbon 0.266
 Runs: 15010-15103
 
 +32S + 12C(209) 25.0 MeV/A
 32 16 12 6 24.7544
-Target: 5 0
+Target: 1 0
 Carbon 0.209
 Runs: 16172-16202
 
 +32S + 197Au 25.0 MeV/A
 32 16 197 79 24.7544
-Target: 3 0
+Target: 1 0
 Gold 0.328
 Runs: 16203-16303
 
 +32S + 12C(490) 25.0 MeV/A
 32 16 12 6 24.7544
-Target: 7 0
+Target: 1 0
 Carbon 0.490
 Runs: 16304-20225
 
