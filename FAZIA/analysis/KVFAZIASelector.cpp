@@ -525,8 +525,8 @@ void KVFAZIASelector::CheckBatchOutputFiles(const Char_t* kvsname, Bool_t erasea
          fr.ReadLine(0);
          KVString line = fr.GetCurrentLine();
          //Info in <KVDataAnalyser::SetRuns>: Accepted runs : 14788-14807
-         if (line.BeginsWith("Info in <KVDataAnalyser::SetRuns>: Accepted runs :")) {
-            line.ReplaceAll("Info in <KVDataAnalyser::SetRuns>: Accepted runs :", "");
+         if (line.BeginsWith("Info in <KVFAZIAReconDataAnalyser::SetRuns>: Accepted runs :")) {
+            line.ReplaceAll("Info in <KVFAZIAReconDataAnalyser::SetRuns>: Accepted runs :", "");
             linit.Add(line.Data());
             linit_all.Add(line.Data());
          } else if (line.BeginsWith("Info in <KVFAZIAReconDataAnalyser::SubmitTask>: treatment of run#")) {
