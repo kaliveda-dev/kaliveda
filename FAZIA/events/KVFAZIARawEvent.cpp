@@ -73,7 +73,8 @@ const Char_t* KVFAZIARawEvent::GetFPGAEnergy(Int_t blk, Int_t qua, Int_t tel, TS
 {
 
    TString sene = "";
-   sene.Form("ENER%d-B%03d-Q%d-T%d-%s", idx, blk, qua, tel, signaltype.Data());
+//   sene.Form("ENER%d-B%03d-Q%d-T%d-%s", idx, blk, qua, tel, signaltype.Data()); -> old detector names...
+   sene.Form("ENER%d-%s-%d", idx, signaltype.Data(), 100 * blk + 10 * qua + tel);
    //rustines for RUTHERFORD Telescope
    if (blk == 0 && qua == 0 && tel == 0)
       sene.Form("ENER%d-RUTH-%s", idx, signaltype.Data());
