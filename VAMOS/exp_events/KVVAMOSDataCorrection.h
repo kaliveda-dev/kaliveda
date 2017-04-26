@@ -27,7 +27,7 @@ public:
    // Initialiser to modify in child class if needed
    virtual void Init();
 
-   virtual void ApplyCorrections(KVVAMOSReconNuc*);
+   virtual Bool_t ApplyCorrections(KVVAMOSReconNuc*);
 
    static KVVAMOSDataCorrection* MakeDataCorrection(const Char_t* uri, Int_t run_number);
 

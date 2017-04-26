@@ -25,7 +25,6 @@ calibration and identification</h4>
 
 void KVIVReconIdent::InitAnalysis(void)
 {
-
    TString dt;
    dt = gDataSet->GetDataSetEnv("KVIVReconIdent.DataToAnalyse", "INDRA VAMOS");
    dt.ToLower();
@@ -136,7 +135,7 @@ Bool_t KVIVReconIdent::Analysis(void)
 
          KVIVReconEvent* IVevent = (KVIVReconEvent*)GetEvent();
          // Z-identification, calibration and Q-A identification (and corrections)
-         IVevent->IdentAndCalibVAMOSEvent(fDataCorr);
+         IVevent->IdentAndCalibVAMOSEvent();
       }
    }
 
@@ -149,7 +148,7 @@ Bool_t KVIVReconIdent::Analysis(void)
 
 KVVAMOSDataCorrection* KVIVReconIdent::GetDataCorrection()
 {
-   //Returns the KVVAMOSDataCorrection object used to apply corrections on VAMOS
+   //Returns the KVVAMOSDataCorrection pointer used to apply corrections on VAMOS
 
    if (!fDataCorr) {
       fDataCorr = KVVAMOSDataCorrection::MakeDataCorrection(gDataSet->GetName(), fRunNumber);
@@ -177,8 +176,8 @@ KVVAMOSDataCorrection* KVIVReconIdent::GetDataCorrection()
 
    return fDataCorr;
 }
-//_____________________________________
 
+//_____________________________________
 void KVIVReconIdent::EndAnalysis(void)
 {
 }

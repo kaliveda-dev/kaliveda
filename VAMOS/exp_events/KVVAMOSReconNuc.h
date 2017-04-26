@@ -25,39 +25,95 @@
 #include "KVVAMOSReconGeoNavigator.h"
 #include "KVVAMOSReconTrajectory.h"
 #include "KVVAMOSTransferMatrix.h"
-#include "KVVAMOSDataCorrection.h"
 #include "KVZGOUBIReconstruction.h"
 
 class KVVAMOSDetector;
-class KVVAMOSDataCorrection;
 
 class KVVAMOSReconNuc : public KVReconstructedNucleus {
+
 private:
 
    KVVAMOSCodes fCodes; //Focal plane Pos. recon., calib. and ident. codes
+
 protected:
 
    enum {
-      kIsQAidentified = BIT(23)  //flag set when Q and A identification of particle is complete
+      kIsBasicQAidentified = BIT(23),  //flag set when default Q and A identification of particle is complete
+      kIsCorrQAidentified = BIT(24),   //flag set when corrected Q and A identification of particle is complete
    };
 
    KVVAMOSReconTrajectory  fRT;             //handles trajectory reconstruction data
-   KVVAMOSDataCorrection*  fDataCorr;//!data correction
+
    Double_t                fStripFoilEloss; //calculated energy lost in the stripping foil
+   std::vector<Double_t>   fDetE;           //array with the corrected energy lost in each detector of fDetList
 
-   std::vector<Double_t>  fDetE;           //array with the corrected energy lost in each detector of fDetList
-   Float_t                fRealQ;          //Q returned by identification routine
-   Float_t                fRealAoQ;        //A/Q returned by identification routine
-   Float_t                fToFFHOffset;    //ToF offset correction for HF (in ns)
-   UChar_t fQ;                             //charge state
-   Bool_t  fQMeasured;                     //true/false if charge state is measured/calculated
-   Bool_t  fVAMeasured;                    //true/false if A from IdentifyQandA() method was measured/calculated
+   //Observables returned by the mass and charge identification
+   //routine (see IdentifyQandA() method)
+   //
+   //For the following observables, basic corrections on path, time of flight and
+   //energy losses are applied:
+   //   - path: path correction from FP to stop detector is applied (see GetDeltaPath())
+   //   - ToF: HF frequency correction is applied (see GetCorrectedT_HF() method)
+   //   - Eloss: Eloss of target, strip foil and detectors is applied
+   //
+   //Any other wanted corrections need to be defined in an analysis class
+   //with a KVVAMOSDataCorrection inherited class.
+   //
+   //NOTE: if no corrections are applied on a given observable, then
+   //      the returned value will be the uncorrected one
+   Float_t                fBasicToF;        //ToF corrected of HF frequency for the first TCode OK, in ns
+   Float_t                fBasicPath;       //Path corrected of FP-stop_detector distance, in cm
+   Float_t                fBasicRealAE;     //Mass returned for the first TCode OK
+   Float_t                fBasicRealAoQ;    //Mass over charge ration for the first TCode OK
+   Float_t                fBasicRealQ;      //float value of identified charge state
+   Int_t                  fBasicQ;          //int value of identified charge state
+   Float_t                fBasicRealA;      //float value of identified mass
+   Int_t                  fBasicA;          //int value of identified mass
+   Bool_t                 fkIsBasicQandAID; //=kTRUE if basic Q and A identification was OK
 
+   //CsI minimizer informations
+   Int_t   fA_CsI;                  //the mass found by CsI minimizer
+
+   //Observables returned by the mass and charge identification
+   //routine (see IdentifyQandA() method) AFTER data corrections
+   //class call set in fDataCorr (see KVVAMOSDataCorrection class
+   //and ApplyCorrection() method).
+   Float_t                fToF_corr;       //ToF for the first TCode OK after ApplyCorrection() call
+   Float_t                fPath_corr;      //Path after ApplyCorrection() call
+   Float_t                fRealAE_corr;    //Mass after ApplyCorrection() call
+   Float_t                fRealAoQ_corr;   //Mass over charge ration after ApplyCorrection() call
+   Bool_t                 fkIsCorrected;   //=kTRUE if any correction were applied to the nucleus
+   Bool_t                 fkIsCorrQandAID; //=kTRUE if corrected Q and A identification was OK
+
+
+   //Final results of identification applied
+   //NOTE: mass results are set using
+   //KVNucleus::SetA() and KVNucleus::SetRealA()
+   Float_t fRealQ;
+   UChar_t fQ;                      //integer value of fRealQ
+   Bool_t  fQMeasured;              //true/false if charge state is measured/calculated
+   Bool_t  fVAMeasured;             //true/false if A from IdentifyQandA() method was measured/calculated
+
+   //debug
+   Bool_t  fdebug;     //=kTRUE for verbose mode
+
+   //-------inline protected methods-------
+   void SetBasicToF(Float_t tof);
+   void SetBasicPath(Float_t dist);
+   void SetBasicRealAE(Float_t realAE);
+   void SetBasicRealAoverQ(Float_t realAoQ);
+   void SetBasicRealQ(Float_t realQ);
+   void SetBasicQ(Int_t intQ);
+   void SetBasicRealA(Float_t realA);
+   void SetBasicA(Int_t intA);
+   void SetIsBasicQandAidentified();
+   void SetIsBasicQandAunidentified();
+
+   void SetAMinimizer(Int_t a);
 
    virtual void CalibrateFromDetList();
    virtual void MakeDetectorList();
    KVVAMOSReconGeoNavigator* GetNavigator();
-   KVVAMOSDataCorrection* GetDataCorrection();
 
 public:
 
@@ -71,118 +127,172 @@ public:
       return fDetE;
    }
 
-   Bool_t StoppedInChIo();
-   Bool_t StoppedInSi();
-   Bool_t StoppedInCsI();
-
-   Bool_t  GetCorrFlightDistanceAndTime(Double_t& dist, Double_t& tof, const Char_t* tof_name) const;
-   virtual Double_t  GetCorrectedT_HF(Double_t tof, Double_t dist)   const;
    virtual void     Calibrate();
    virtual Bool_t   CheckTrackingCoherence();
    virtual void     Clear(Option_t* t = "");
    virtual void     GetAnglesFromStoppingDetector(Option_t* opt = "random");
-   Double_t  GetDeltaPath(KVVAMOSDetector* det) const;
    using     KVReconstructedNucleus::GetEnergy;
    Int_t     GetDetectorIndex(const Char_t* det_label) const;
    Double_t  GetEnergy(const Char_t* det_label)        const;
    Double_t  GetEnergyAfter(const Char_t* det_label)   const;
    Double_t  GetEnergyBefore(const Char_t* det_label)  const;
-   Double_t  GetMassOverQ(const Char_t* tof_name)      const;
-   Double_t  GetPath(KVVAMOSDetector* start, KVVAMOSDetector* stop = NULL)      const;
-   Double_t  GetPath(const Char_t* start_label, const Char_t* stop_label = "") const;
-   Int_t     GetNBeamPeriod(Double_t tof, Double_t dist) const;
 
    using KVReconstructedNucleus::GetRealA;
-   Float_t GetRealA(const Char_t* tof_name)          const;
-   Float_t GetRealAoverQ(const Char_t* tof_name)     const;
-   Float_t GetRealQ(const Char_t* tof_name)          const;
+   Float_t   CalculateRealAE(const Char_t* tof_name)         const;
+   Float_t   CalculateRealAoverQ(const Char_t* tof_name)     const;
+   Float_t   CalculateRealQ(const Char_t* tof_name)          const;
 
-   virtual void     IdentifyZ();
-   virtual void     IdentifyQandA();
+   Double_t  CalculatePath(KVVAMOSDetector* start, KVVAMOSDetector* stop = NULL)      const;
+   Double_t  CalculatePath(const Char_t* start_label, const Char_t* stop_label = "")  const;
+   Double_t  FindDeltaPath(KVVAMOSDetector* det) const;
+   Bool_t    CalculateCorrFlightDistanceAndTime(Double_t& dist, Double_t& tof, const Char_t* tof_name) const;
+   virtual   Double_t  CalculateCorrectedT_HF(Double_t tof, Double_t dist)   const;
+   Int_t     CalculateNBeamPeriod(Double_t tof, Double_t dist) const;
+
    virtual void     ReconstructTrajectory();
    virtual void     ReconstructFPtraj();
    virtual Bool_t   ReconstructFPtrajByFitting();
    virtual Bool_t   ReconstructLabTraj();
-
    virtual void     Propagate(ECalib cal = kNoCalib);
-   virtual void     ApplyCorrections();
+   virtual void     IdentifyZ();
+   virtual void     IdentifyQandA();
+   using            KVReconstructedNucleus::SetIdentification;
+   virtual void     SetZIdentification(KVIdentificationResult* idr, KVIDTelescope* idt);
+   virtual void     SetBasicQandAIdentification(KVIdentificationResult* idr);
+   virtual void     SetBasicQandAIdentification(const Char_t* tof_name, Float_t tof, Float_t dist, Float_t realAE, Float_t realAoQ);
+   virtual void     SetCorrectedQandAIdentification();
+
+   virtual void     SetCorrected(Bool_t corrected);
+   virtual void     SetVerbose(Bool_t verbose);
+
    virtual void     Print(Option_t* option = "") const;
-   virtual void     SetQandAidentification(KVIdentificationResult* idr);
 
    virtual Int_t GetIDCode() const {
       // Returns value of VEDA ID code
       return const_cast<KVVAMOSReconNuc*>(this)->GetCodes().GetVedaIDCode();
    }
 
+   Bool_t StoppedInChIo();
+   Bool_t StoppedInSi();
+   Bool_t StoppedInCsI();
+
    //-------------- inline methods -----------------//
+   //Energy losses
    static  Double_t         CalculateEnergy(Int_t Z, Int_t A, Int_t Q, Double_t Brho);
    static  Double_t         CalculateEnergy(Int_t Z, Int_t A, Double_t beta);
    static  Double_t         CalculateEnergy(Int_t Q, Double_t Brho, Double_t beta);
-   static  Double_t         CalculateMassOverQ(Double_t Brho, Double_t beta);
-   static  Double_t         CalculateRealA(Int_t Z, Double_t E, Double_t beta);
-   Double_t          GetAoverQ()                         const;
-   Double_t          GetBeta(const Char_t* tof_name)     const;
-   Float_t           GetBrho()                           const;
-   KVVAMOSCodes&     GetCodes();
+
+   virtual Double_t         GetStripFoilEnergyLoss()            const;
+
+   //Mass and Mass over Charge computation methods
+   static  Double_t         CalculateRealAE(Double_t E, Double_t beta);
+   static  Double_t         CalculateRealAoverQ(Double_t Brho, Double_t beta);
+
+   //Velocity computation methods
+   Double_t          CalculateGamma(Double_t& dist, Double_t& tof, const Char_t* tof_name)    const;
+   Double_t          CalculateBeta(Double_t& dist, Double_t& tof, const Char_t* tof_name)     const;
+   using KVReconstructedNucleus::GetVelocity;
+   Double_t          CalculateVelocity(Double_t& dist, Double_t& tof, const Char_t* tof_name) const;
+
+   //------Getters------
    using             KVReconstructedNucleus::GetDetector;
    KVDetector*       GetDetector(const Char_t* det_label);
    Double_t          GetEnergy(Int_t idx_det)            const;
    Double_t          GetEnergyBeforeVAMOS()              const;
-   const   TVector3&        GetFocalPlaneDirection()     const;
-   Double_t          GetGamma(const Char_t* tof_name)    const;
+
+   //Reconstruction at FP results
+   const   TVector3& GetFocalPlaneDirection()            const;
    const   TVector3& GetLabDirection()                   const;
-   Float_t           GetPath()                           const;
-   Double_t          GetPhiVE()                          const;
-   Double_t          GetPhiF()                           const;
-   Double_t          GetPhiI()                           const;
-   Double_t          GetPhiL()                           const;
-   Double_t          GetPhiV()                           const;
-   Int_t             GetQ()                              const;
-   Float_t           GetRealAoverQ()                     const;
-   Float_t           GetRealQ()                          const;
-   Float_t           GetToFHFOffset()                    const;
-
-
-   virtual Double_t  GetStripFoilEnergyLoss()            const;
-   Double_t          GetThetaVE()                        const;
+   Float_t           GetXf()                             const;
+   Float_t           GetYf()                             const;
    Double_t          GetThetaF()                         const;
+   Double_t          GetPhiF()                           const;
+   Float_t           GetPath()                           const;
+   Float_t           GetBrho()                           const;
+   Double_t          GetThetaVE()                        const;
    Double_t          GetThetaI()                         const;
    Double_t          GetThetaL()                         const;
    Double_t          GetThetaV()                         const;
-   Float_t           GetXf()                             const;
-   Float_t           GetYf()                             const;
-   using KVReconstructedNucleus::GetVelocity;
-   Double_t         GetVelocity(const Char_t* tof_name) const;
+   Double_t          GetPhiVE()                          const;
+   Double_t          GetPhiI()                           const;
+   Double_t          GetPhiL()                           const;
+   Double_t          GetPhiV()                           const;
 
+   //CsI minimizer informations
+   Int_t GetAMinimizer()                      const;
+
+   //Mass and Mass over Charge uncorrected observables
+   Float_t GetBasicToF()                      const;
+   Float_t GetBasicPath()                     const;
+   Float_t GetBasicBeta()                     const;
+   Float_t GetBasicGamma()                    const;
+   Float_t GetBasicVelocity()                 const;
+   Float_t GetBasicRealAE()                   const;
+   Float_t GetBasicRealAoverQ()               const;
+   Float_t GetBasicRealQ()                    const;
+   Int_t   GetBasicQ()                        const;
+   Float_t GetBasicRealA()                    const;
+   Int_t   GetBasicA()                        const;
+   Bool_t  IsBasicQandAidentified()           const;
+
+   //Mass and Mass over Charge corrected observables
+   Float_t GetCorrectedToF()                  const;
+   Float_t GetCorrectedPath()                 const;
+   Float_t GetCorrectedBeta()                 const;
+   Float_t GetCorrectedGamma()                const;
+   Float_t GetCorrectedVelocity()             const;
+   Float_t GetCorrectedRealAE()               const;
+   Float_t GetCorrectedRealAoverQ()           const;
+   Float_t GetCorrectedRealQ()                const;
+   Int_t   GetCorrectedQ()                    const;
+   Float_t GetCorrectedRealA()                const;
+   Int_t   GetCorrectedA()                    const;
+   Bool_t  IsCorrectedQandAidentified()       const;
+
+   //Final ID results
+   KVVAMOSCodes&     GetCodes();
+   Float_t           GetRealQ();
+   Int_t             GetQ();
+   Bool_t            IsDataCorrected();
+
+   //------Setters------
+   //Energy losses
+   virtual void     SetStripFoilEnergyLoss(Double_t e);
+
+   //Reconstruction at FP results (only use for simulations),
+   //else all should be defined in 'fRT' at the raw->recon step
+   virtual void     SetFPCode(UInt_t code_mask);
    void             SetBrho(Double_t brho);
    void             SetPath(Double_t path);
-   virtual void     SetECode(UChar_t code_mask);
-   virtual void     SetFPCode(UInt_t code_mask);
-   virtual void     SetIDCode(UShort_t code_mask);
-   void             SetQ(Int_t q);
-   virtual void     SetQMeasured(Bool_t yes = kTRUE);
-   void             SetRealAoverQ(Float_t AoQ);
-   void             SetRealQ(Float_t Q);
-   virtual void     SetStripFoilEnergyLoss(Double_t e);
-   virtual void     SetTCode(UShort_t code_mask);
-   virtual void     SetTCode(const Char_t* parname);
-
    void             SetThetaVandPhiV(Double_t th_v, Double_t ph_v);
    void             SetXYf(Float_t x, Float_t y);
    void             SetFPDirection(Double_t th_f, Double_t ph_f);
-   void             SetDataCorrection(KVVAMOSDataCorrection* data_corr);
-   void             SetToFHFOffset(Float_t tof_offset_ns);
 
-   Bool_t IsZidentified()                              const;
-   Bool_t IsQandAidentified()                          const;
-   Bool_t IsQMeasured()                                const;
+   //Mass and Mass over Charge corrected observables
+   void SetCorrectedToF(Float_t tof);
+   void SetCorrectedPath(Float_t path);
+   void SetCorrectedRealAE(Float_t realAE);
+   void SetCorrectedRealAoverQ(Float_t realAoQ);
+   void SetIsCorrectedQandAidentified();
+   void SetIsCorrectedQandAunidentified();
 
-   void SetIsZidentified();
-   void SetIsZunidentified();
-   void SetIsQandAidentified();
-   void SetIsQandAunidentified();
+   //Final ID results
+   virtual void     SetECode(UChar_t code_mask);
+   virtual void     SetIDCode(UShort_t code_mask);
+   virtual void     SetTCode(UShort_t code_mask);
+   virtual void     SetTCode(const Char_t* parname);
+   virtual void     SetQ(Int_t q);
+   virtual void     SetRealQ(Float_t q);
+   virtual void     SetQMeasured(Bool_t yes = kTRUE);
+   void             SetIsZidentified();
+   void             SetIsZunidentified();
+   void             SetIsQandAidentified();
+   void             SetIsQandAunidentified();
+   Bool_t           IsZidentified()                              const;
+   Bool_t           IsQandAidentified()                          const;
+   Bool_t           IsQMeasured()                                const;
 
-   ClassDef(KVVAMOSReconNuc, 5) //Nucleus identified by VAMOS spectrometer
+   ClassDef(KVVAMOSReconNuc, 7) //Nucleus identified by VAMOS spectrometer
 };
 
 //____________________________________________________________________________________________//
@@ -258,42 +368,47 @@ inline Double_t KVVAMOSReconNuc::CalculateEnergy(Int_t Q, Double_t Brho, Double_
    // where
    //   gamma : Lorentz factor calculated from beta (velocity/c)
 
-   Double_t M = CalculateMassOverQ(Brho, beta) * Q;
+   Double_t M = CalculateRealAoverQ(Brho, beta) * Q;
    if (M <= 0) return 0.;
    Double_t gamma = 1.0 / TMath::Sqrt(1 - beta * beta);
    return (gamma - 1) * M ;
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::CalculateRealA(Int_t Z, Double_t E, Double_t beta)
+//inline Double_t KVVAMOSReconNuc::CalculateRealAE(Int_t Z, Double_t E, Double_t beta)
+inline Double_t KVVAMOSReconNuc::CalculateRealAE(Double_t E, Double_t beta)
 {
-   // Calculates the real value of the mass number deduced from the
+   // Calculates the mass number deduced from the
    // energy E and and beta (i.e. velocity/c).
    // Begin_Latex
-   // A = #frac{E}{(#gamma-1)u}
+   // A_{E} = #frac{E}{(#gamma-1)u}
    // End_Latex
    // where
    //   u     : atomic mass unit in MeV/c^2
    //   gamma : Lorentz factor calculated from beta
 
-   assert(Z > 0);
+   //assert(Z > 0);
    assert(E > 0.);
    assert((beta > 0.) && (beta < 1.));
 
    if (beta <= 0) return 0.;
 
    Double_t gamma = 1.0 / TMath::Sqrt(1 - beta * beta);
-   Double_t realA = E / ((gamma - 1) * u());
-   if (Z > 0) {
-      static KVNucleus nuc;
-      nuc.SetZandA(Z, TMath::Nint(realA));
-      realA -= nuc.GetMassExcess() / u();
-   }
-   return realA;
+   Double_t realAE = E / ((gamma - 1) * u());
+
+   // UPDATE 16/04/2017: since RealAE is not the final mass
+   // why bothering with mass excess ?
+   //   if (Z > 0) {
+   //      static KVNucleus nuc;
+   //      nuc.SetZandA(Z, TMath::Nint(realAE));
+   //      realAE -= nuc.GetMassExcess() / u();
+   //   }
+
+   return realAE;
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::CalculateMassOverQ(Double_t Brho, Double_t beta)
+inline Double_t KVVAMOSReconNuc::CalculateRealAoverQ(Double_t Brho, Double_t beta)
 {
    // Calculates the ratio between the mass (MeV/c^2) and the charge state Q
    // calculated from the magnetic rigitidy Brho and the relativistic beta
@@ -319,19 +434,93 @@ inline Double_t KVVAMOSReconNuc::CalculateMassOverQ(Double_t Brho, Double_t beta
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetAoverQ() const
+inline Double_t KVVAMOSReconNuc::CalculateVelocity(Double_t& dist, Double_t& tof, const Char_t* tof_name) const
 {
-   // returns the ration A/Q calculated from the integer values of the
-   // identified A and Q.
-   return Double_t(GetA()) / GetQ();
+   // returns the velocity calculated from the time of flight measurement
+   // with name 'tof_name'.
+
+   if (CalculateCorrFlightDistanceAndTime(dist, tof, tof_name)) return dist / tof;
+   return 0.;
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetBeta(const Char_t* tof_name) const
+inline Double_t KVVAMOSReconNuc::CalculateBeta(Double_t& dist, Double_t& tof, const Char_t* tof_name) const
 {
    // returns beta= v/c where 'v' is the velocity of this nucleus
    // calculated from the time of flight with name 'tof_name'.
-   return GetVelocity(tof_name) / C();
+
+   return CalculateVelocity(dist, tof, tof_name) / C();
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::CalculateGamma(Double_t& dist, Double_t& tof, const Char_t* tof_name) const
+{
+   // returns the relativistic quantity gamma calculated from the
+   // velocity deduced from the time of flight measurment with name
+   // 'tof_name', with only basic path, tof and eloss corrections.
+
+   Double_t b = CalculateBeta(dist, tof, tof_name);
+   return 1.0 / TMath::Sqrt(1. - b * b);
+}
+
+
+//_____________________________________GETTERS________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetStripFoilEnergyLoss() const
+{
+   // Returns calculated energy loss in stripping foil of reconstructed nucleus ( in MeV )
+   return fStripFoilEloss;
+}
+
+
+//_____________________________RECONSTRUCTION AT FP___________________________________________//
+inline const TVector3& KVVAMOSReconNuc::GetFocalPlaneDirection() const
+{
+   // Returns the trajectory normalized direction in the focal-plane frame
+   // of reference
+   return fRT.dirFP;
+}
+//____________________________________________________________________________________________//
+
+inline const TVector3& KVVAMOSReconNuc::GetLabDirection() const
+{
+   // Returns the trajectory normalized direction at the target point in the
+   // laboratory frame of reference.
+   return fRT.dirLab;
+}
+//____________________________________________________________________________________________//
+
+inline Float_t KVVAMOSReconNuc::GetXf() const
+{
+   return fRT.pointFP[0];
+}
+//____________________________________________________________________________________________//
+
+inline Float_t KVVAMOSReconNuc::GetYf() const
+{
+   return fRT.pointFP[1];
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetThetaF() const
+{
+   return fRT.GetThetaF();
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetPhiF() const
+{
+   return fRT.GetPhiF();
+}
+//____________________________________________________________________________________________//
+
+inline Float_t KVVAMOSReconNuc::GetPath() const
+{
+   return fRT.path;
+
+   // This line is the correction proposed by M. Camano if the reconstruction
+   // returns the projection of the real path on the horizontal plane
+   // return fRT.path/TMath::Cos( GetPhiV()*TMath::DetToRad() );
 }
 //____________________________________________________________________________________________//
 
@@ -340,11 +529,53 @@ inline Float_t KVVAMOSReconNuc::GetBrho() const
    return fRT.Brho;
 }
 //____________________________________________________________________________________________//
-
-inline KVVAMOSCodes& KVVAMOSReconNuc::GetCodes()
+inline Double_t KVVAMOSReconNuc::GetPhiVE() const
 {
-   return fCodes;
+   return fRT.GetPhiVE();
 }
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetPhiI() const
+{
+   return fRT.GetPhiI();
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetPhiL() const
+{
+   return fRT.GetPhiL();
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetPhiV() const
+{
+   return fRT.GetPhiV();
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetThetaVE() const
+{
+   return fRT.GetThetaVE();
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetThetaI() const
+{
+   return fRT.GetThetaI();
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetThetaL() const
+{
+   return fRT.GetThetaL();
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetThetaV() const
+{
+   return fRT.GetThetaV();
+}
+
 //____________________________________________________________________________________________//
 
 inline KVDetector* KVVAMOSReconNuc::GetDetector(const Char_t* det_label)
@@ -372,174 +603,280 @@ inline Double_t KVVAMOSReconNuc::GetEnergyBeforeVAMOS() const
 }
 //____________________________________________________________________________________________//
 
-inline const TVector3& KVVAMOSReconNuc::GetFocalPlaneDirection() const
-{
-   // Returns the trajectory normalized direction in the focal-plane frame
-   // of reference
-   return fRT.dirFP;
-}
-//____________________________________________________________________________________________//
-
-inline Double_t KVVAMOSReconNuc::GetGamma(const Char_t* tof_name) const
-{
-   // returns the relativistic quantitie gamma calculated from the
-   // velocity deduced from the time of flight measurment with name
-   // 'tof_name'
-   Double_t b = GetBeta(tof_name);
-   return 1.0 / TMath::Sqrt(1 - b * b);
-}
-//____________________________________________________________________________________________//
-
-inline const TVector3& KVVAMOSReconNuc::GetLabDirection() const
-{
-   // Returns the trajectory normalized direction at the target point in the
-   // laboratory frame of reference.
-   return fRT.dirLab;
-}
-//____________________________________________________________________________________________//
-
 inline KVVAMOSReconGeoNavigator* KVVAMOSReconNuc::GetNavigator()
 {
    return gVamos->GetReconNavigator();
 }
 //____________________________________________________________________________________________//
 
-inline KVVAMOSDataCorrection* KVVAMOSReconNuc::GetDataCorrection()
+inline Int_t KVVAMOSReconNuc::GetAMinimizer() const
 {
-   //returns pointer to the class used for VAMOS data corrections
-   return fDataCorr;
+   //return the mass found by the CsI energy minimizer
+   //will return default value '-666' if IDCode!=3.
+   return fA_CsI;
+}
+//__________________________________BASIC ID OBSERVABLES_____________________________________//
+
+inline Float_t KVVAMOSReconNuc::GetBasicToF() const
+{
+   //return the ToF for the first TCode OK
+   //in IdentifyQandA() method
+   return fBasicToF;
 }
 //____________________________________________________________________________________________//
 
-inline Float_t KVVAMOSReconNuc::GetPath() const
+inline Float_t KVVAMOSReconNuc::GetBasicPath() const
 {
-   return fRT.path;
-   // This line is the correction proposed by M. Camano if the reconstruction
-   // returns the projection of the real path on the horizontal plane
-// return fRT.path/TMath::Cos( GetPhiV()*TMath::DetToRad() );
+   //return the path for the first TCode OK
+   //in IdentifyQandA() method
+   return fBasicPath;
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetPhiVE() const
+inline Float_t KVVAMOSReconNuc::GetBasicBeta() const
 {
-   return fRT.GetPhiVE();
+   //return the beta=v/c before data corrections
+   return GetBasicVelocity() / C();
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetPhiF() const
+inline Float_t KVVAMOSReconNuc::GetBasicGamma() const
 {
-   return fRT.GetPhiF();
+   //return the velocity of the particle
+
+   Double_t b = GetBasicBeta();
+   return 1.0 / TMath::Sqrt(1. - b * b);
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetPhiI() const
+inline Float_t KVVAMOSReconNuc::GetBasicVelocity() const
 {
-   return fRT.GetPhiI();
+   //return the velocity of the particle
+   return fBasicPath / fBasicToF;
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetPhiL() const
+inline Float_t KVVAMOSReconNuc::GetBasicRealAE() const
 {
-   return fRT.GetPhiL();
+   //return the Mass of the particle computed from energy
+   //conservation (set when calling IdentifyQandA() method)
+   return fBasicRealAE;
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetPhiV() const
+inline Float_t KVVAMOSReconNuc::GetBasicRealAoverQ() const
 {
-   return fRT.GetPhiV();
+   //return the Masse over Charge ratio of the particle computed from
+   //energy conservation (set when calling IdentifyQandA() method)
+   return fBasicRealAoQ;
 }
 //____________________________________________________________________________________________//
 
-inline Int_t KVVAMOSReconNuc::GetQ() const
+inline Float_t KVVAMOSReconNuc::GetBasicRealQ() const
 {
-   //Returns the charge state of this nucleus (number of protons minus number of electrons).
-   return (Int_t)fQ;
+   //return the basic charge state from IdentifyQandA()
+   //
+   //if the charge state was set by hand, return it
+   //else compute it from fBasicRealAE and fBasicRealAoverQ
+
+   if (fBasicRealQ > 0.) return fBasicRealQ;
+   else return GetBasicRealAE() / GetBasicRealAoverQ();
+}
+//____________________________________________________________________________________________//
+inline Int_t KVVAMOSReconNuc::GetBasicQ() const
+{
+   // return the charge state of this nucleus (number of protons minus number of electrons).
+   // from IdentifyQandA().
+   // If the charge state was set by hand (so using KVIDQA grids), return the defined one
+   // (so fBasicQ variable),
+   // else return the integer value of GetBasicRealQ().
+
+   if (fBasicQ > 0) return fBasicQ;
+   else {
+      Float_t qq = GetBasicRealQ();
+      return TMath::Nint(qq);
+   }
+}
+
+//____________________________________________________________________________________________//
+
+inline Float_t KVVAMOSReconNuc::GetBasicRealA() const
+{
+   // return the mass of the nucleus from IdentifyQandA()
+   // identification routine.
+   // If it was defined by hand (so using KVIDQA grids), return the defined one
+   // (so fBasicRealA)
+   // else compute it from:
+   // Begin_Latex
+   // A = (int) Q * A_{E}
+   // End_Latex
+   // where
+   //   (int) Q   : integer value of the charge state identified in
+   //               basic identification (see IdentifyQandA() method)
+   //   A_E       : mass from energy conservation formula (see CalculateRealAE() method)
+   //               from basic identification (see IdentifyQandA() method)
+
+   if (fBasicRealA > 0.) return fBasicRealA;
+   else {
+      Float_t aa = GetBasicQ() * GetBasicRealAoverQ();
+      return aa;
+   }
 }
 //____________________________________________________________________________________________//
 
-inline Float_t KVVAMOSReconNuc::GetRealAoverQ() const
+inline Int_t KVVAMOSReconNuc::GetBasicA() const
 {
-   // returns the real value of A/Q deduced in IdentifyQandA()
-   return (fRealAoQ > 0 ? fRealAoQ : (GetQ() > 0 ? ((Float_t)GetA()) / GetQ() : 0.));
+   // return the integer value of the mass of the nucleus
+   // from IdentifyQandA() identification routine.
+   // If it was defined by hand (so using KVIDQA grids)
+   // return the defined one (so fBasicA),
+   // else compute the integer value from GetBasicRealA()
+
+   if (fBasicA > 0) return fBasicA;
+   else {
+      Int_t aa = TMath::Nint(GetBasicRealA());
+      return aa;
+   }
+}
+
+//___________________________OBSERVABLES FROM KVVAMOSDATACORRECTION___________________________//
+inline Float_t KVVAMOSReconNuc::GetCorrectedToF() const
+{
+   //return the uncorrected ToF for the first TCode OK
+   //(see IdentifyQandA() method)
+   return fToF_corr;
+}
+
+//____________________________________________________________________________________________//
+
+inline Float_t KVVAMOSReconNuc::GetCorrectedPath() const
+{
+   //return the uncorrected Path i.e the path from
+   //FP reconstruction routine
+   return fPath_corr;
 }
 //____________________________________________________________________________________________//
 
-inline Float_t KVVAMOSReconNuc::GetRealQ() const
+inline Float_t KVVAMOSReconNuc::GetCorrectedBeta() const
 {
-   // returns the real value of Q deduced from identification
-   return (fRealQ > 0 ? fRealQ : (Float_t)GetQ());
+   //return the uncorrected beta=v/c
+   return GetCorrectedVelocity() / C();
 }
 //____________________________________________________________________________________________//
 
-inline Float_t  KVVAMOSReconNuc::GetToFHFOffset() const
+inline Float_t KVVAMOSReconNuc::GetCorrectedGamma() const
 {
-   // Returns the ToF offset applied in identification
-   return fToFFHOffset;
-}
+   //return the velocity of the particle
 
-inline Double_t KVVAMOSReconNuc::GetStripFoilEnergyLoss() const
-{
-   // Returns calculated energy loss in stripping foil of reconstructed nucleus ( in MeV )
-   return fStripFoilEloss;
+   Double_t b = GetCorrectedBeta();
+   return 1.0 / TMath::Sqrt(1. - b * b);
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetThetaVE() const
+inline Float_t KVVAMOSReconNuc::GetCorrectedVelocity() const
 {
-   return fRT.GetThetaVE();
+   //return the uncorrected velocity of the particle
+   return GetCorrectedPath() / GetCorrectedToF();
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetThetaF() const
+inline Float_t KVVAMOSReconNuc::GetCorrectedRealAE() const
 {
-   return fRT.GetThetaF();
+   //return the Mass of the particle computed from energy
+   //conservation (set when calling IdentifyQandA() method)
+   return fRealAE_corr;
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetThetaI() const
+inline Float_t KVVAMOSReconNuc::GetCorrectedRealAoverQ() const
 {
-   return fRT.GetThetaI();
+   //return the Masse over Charge ratio of the particle computed from
+   //energy conservation (set when calling IdentifyQandA() method)
+   return fRealAoQ_corr;
+}
+
+//____________________________________________________________________________________________//
+inline Float_t KVVAMOSReconNuc::GetCorrectedRealQ() const
+{
+   //return the uncorrected charge state
+   Float_t qq;
+   if (fRealAoQ_corr > 0 && fRealAE_corr > 0) qq = fRealAE_corr / fRealAoQ_corr;
+   else qq = -666.;
+
+   return qq;
+}
+
+//____________________________________________________________________________________________//
+inline Int_t KVVAMOSReconNuc::GetCorrectedQ() const
+{
+   //return the uncorrected charge state
+   Int_t qq = TMath::Nint(GetCorrectedRealQ());
+   return qq;
+}
+
+//____________________________________________________________________________________________//
+inline Float_t KVVAMOSReconNuc::GetCorrectedRealA() const
+{
+   //return the corrected mass
+   Float_t aa;
+   Int_t qq = GetCorrectedQ();
+
+   if (qq > 0) aa = GetCorrectedQ() * GetCorrectedRealAoverQ();
+   else aa = -666.;
+
+   return aa;
+}
+
+//____________________________________________________________________________________________//
+inline Int_t KVVAMOSReconNuc::GetCorrectedA() const
+{
+   //return the mass
+   Int_t aa = TMath::Nint(GetCorrectedRealA());
+   return aa;
+}
+
+//_____________________________VAMOS SPECIFIC ID RESULTS______________________________________//
+
+inline KVVAMOSCodes& KVVAMOSReconNuc::GetCodes()
+{
+   return fCodes;
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetThetaL() const
+inline Float_t KVVAMOSReconNuc::GetRealQ()
 {
-   return fRT.GetThetaL();
+   // return the final identificated value of Q
+   return fRealQ;
 }
 //____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetThetaV() const
+inline Int_t KVVAMOSReconNuc::GetQ()
 {
-   return fRT.GetThetaV();
+   // return the finalidentificated integer value of Q
+   return fQ;
 }
-//____________________________________________________________________________________________//
 
-inline Float_t KVVAMOSReconNuc::GetXf() const
+inline Bool_t KVVAMOSReconNuc::IsDataCorrected()
 {
-   return fRT.pointFP[0];
+   // return kTRUE if any data correction have been applied to the data
+   return fkIsCorrected;
 }
-//____________________________________________________________________________________________//
 
-inline Float_t KVVAMOSReconNuc::GetYf() const
+//_____________________________________SETTERS_______________________________________________//
+//____________________________ ______ENERGY LOSS_____________________________________________//
+inline void KVVAMOSReconNuc::SetStripFoilEnergyLoss(Double_t e)
 {
-   return fRT.pointFP[1];
+   // Set energy loss in the stripping foil ( in MeV ) of reconstructed nucleus
+   fStripFoilEloss = e;
 }
-//____________________________________________________________________________________________//
 
-inline Double_t KVVAMOSReconNuc::GetVelocity(const Char_t* tof_name) const
+//__________________________________FP RECONSTRUCTION________________________________________//
+
+inline void KVVAMOSReconNuc::SetFPCode(UInt_t code_mask)
 {
-   // returns the velocity calculated from the time of flight measurement
-   // with name 'tof_name'. Before the velocity calculation, the
-   // flight distance and the path are corrected (see GetPath and
-   // GetCorrectedT_HF methods)
-
-   Double_t t, d;
-   t = d = 0.;
-   if (GetCorrFlightDistanceAndTime(d, t, tof_name)) return d / t;
-   return 0.;
+   //Sets code for energy calibration
+   GetCodes().SetFPCode(code_mask);
 }
-//____________________________________________________________________________________________//
-
 inline void KVVAMOSReconNuc::SetBrho(Double_t brho)
 {
    fRT.Brho = brho;
@@ -552,78 +889,8 @@ inline void KVVAMOSReconNuc::SetPath(Double_t path)
    //in order to be able to propagate the nucleus, see Propagate() method)
    fRT.path = path;
 }
-//____________________________________________________________________________________________//
 
-inline void KVVAMOSReconNuc::SetECode(UChar_t code_mask)
-{
-   //Sets code for energy calibration
-   GetCodes().SetECode(code_mask);
-}
 //____________________________________________________________________________________________//
-
-inline void KVVAMOSReconNuc::SetFPCode(UInt_t code_mask)
-{
-   //Sets code for energy calibration
-   GetCodes().SetFPCode(code_mask);
-}
-//____________________________________________________________________________________________//
-
-inline void KVVAMOSReconNuc::SetIDCode(UShort_t code_mask)
-{
-   //Sets code for identification
-   GetCodes().SetIDCode(code_mask);
-}
-//____________________________________________________________________________________________//
-
-inline void KVVAMOSReconNuc::SetQ(Int_t q)
-{
-   // set charge state.
-   fQ = (UChar_t) q;
-}
-//____________________________________________________________________________________________//
-
-inline void KVVAMOSReconNuc::SetQMeasured(Bool_t yes)
-{
-   // Call with yes=kTRUE for reconstructed nuclei whose
-   // charge state, Q, was measured during IdentifyQandA(), not calculated
-   fQMeasured = yes;
-}
-//____________________________________________________________________________________________//
-
-inline void KVVAMOSReconNuc::SetRealAoverQ(Float_t AoQ)
-{
-   fRealAoQ = AoQ;
-}
-//____________________________________________________________________________________________//
-
-inline void KVVAMOSReconNuc::SetRealQ(Float_t Q)
-{
-   fRealQ = Q;
-}
-//____________________________________________________________________________________________//
-
-inline void KVVAMOSReconNuc::SetStripFoilEnergyLoss(Double_t e)
-{
-   // Set energy loss in the stripping foil ( in MeV ) of reconstructed nucleus
-   fStripFoilEloss = e;
-}
-//____________________________________________________________________________________________//
-
-inline void KVVAMOSReconNuc::SetTCode(UShort_t code_mask)
-{
-   //Sets code for energy calibration
-   GetCodes().SetTCode(code_mask);
-}
-//____________________________________________________________________________________________//
-
-inline void KVVAMOSReconNuc::SetTCode(const Char_t* parname)
-{
-   //Sets code for energy calibration from the name of the acquisition
-   //parameter used for the time of flight of the nucleus
-   GetCodes().SetTCode(parname);
-}
-//____________________________________________________________________________________________//
-
 inline void KVVAMOSReconNuc::SetThetaVandPhiV(Double_t th_v, Double_t ph_v)
 {
    // Set ThetaV and PhiV in Degree
@@ -661,19 +928,136 @@ inline void KVVAMOSReconNuc::SetFPDirection(Double_t th_f, Double_t ph_f)
 
    fRT.dirFP.SetXYZ(xx, yy, zz);
 }
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetAMinimizer(Int_t a)
+{
+   fA_CsI = a;
+}
+
+//___________________________________BASIC ID OBSERVABLES_____________________________________//
+
+inline void KVVAMOSReconNuc::SetBasicToF(Float_t tof)
+{
+   fBasicToF = tof;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetBasicPath(Float_t dist)
+{
+   fBasicPath = dist;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetBasicRealAE(Float_t realAE)
+{
+   fBasicRealAE = realAE;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetBasicRealAoverQ(Float_t realAoQ)
+{
+   fBasicRealAoQ = realAoQ;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetBasicRealQ(Float_t realQ)
+{
+   fBasicRealQ = realQ;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetBasicQ(Int_t Q)
+{
+   fBasicQ = Q;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetBasicRealA(Float_t realA)
+{
+   fBasicRealA = realA;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetBasicA(Int_t A)
+{
+   fBasicA = A;
+}
+
+//___________________________OBSERVABLES FROM KVVAMOSDATACORRECTION___________________________//
+inline void KVVAMOSReconNuc::SetCorrectedToF(Float_t tof)
+{
+   fToF_corr = tof;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetCorrectedPath(Float_t dist)
+{
+   fPath_corr = dist;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetCorrectedRealAE(Float_t realAE)
+{
+   fRealAE_corr = realAE;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetCorrectedRealAoverQ(Float_t realAoQ)
+{
+   fRealAoQ_corr = realAoQ;
+}
+
+//_____________________________VAMOS SPECIFIC ID RESULTS______________________________________//
+inline void KVVAMOSReconNuc::SetECode(UChar_t code_mask)
+{
+   //Sets code for energy calibration
+   GetCodes().SetECode(code_mask);
+}
+
 //____________________________________________________________________________________________//
 
-inline void KVVAMOSReconNuc::SetDataCorrection(KVVAMOSDataCorrection* data_corr)
+inline void KVVAMOSReconNuc::SetIDCode(UShort_t code_mask)
 {
-   //Set the class to handle corrections of VAMOS data
-   fDataCorr = data_corr;
+   //Sets code for identification
+   GetCodes().SetIDCode(code_mask);
 }
 //____________________________________________________________________________________________//
 
-inline void KVVAMOSReconNuc::SetToFHFOffset(Float_t tof_offset_ns)
+inline void KVVAMOSReconNuc::SetTCode(UShort_t code_mask)
 {
-   //Set an offset to ToF value if it is measured by HF time
-   fToFFHOffset = tof_offset_ns;
+   //Sets code for energy calibration
+   GetCodes().SetTCode(code_mask);
+}
+//____________________________________________________________________________________________//
+
+inline void KVVAMOSReconNuc::SetTCode(const Char_t* parname)
+{
+   //Sets code for energy calibration from the name of the acquisition
+   //parameter used for the time of flight of the nucleus
+   GetCodes().SetTCode(parname);
+}
+//____________________________________________________________________________________________//
+
+inline void KVVAMOSReconNuc::SetRealQ(Float_t q)
+{
+   // set final charge state.
+   fRealQ = q;
+}
+//____________________________________________________________________________________________//
+
+inline void KVVAMOSReconNuc::SetQ(Int_t q)
+{
+   // set final charge state.
+   fQ = (UChar_t) q;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetQMeasured(Bool_t yes)
+{
+   // Call with yes=kTRUE for reconstructed nuclei whose
+   // charge state, Q, was measured during IdentifyQandA(), not calculated
+   fQMeasured = yes;
 }
 //____________________________________________________________________________________________//
 
@@ -683,11 +1067,18 @@ inline Bool_t KVVAMOSReconNuc::IsZidentified() const
 }
 //____________________________________________________________________________________________//
 
-inline Bool_t KVVAMOSReconNuc::IsQandAidentified() const
+inline Bool_t KVVAMOSReconNuc::IsBasicQandAidentified() const
 {
-   return TestBit(kIsQAidentified);
+   return TestBit(kIsBasicQAidentified);
 }
 //____________________________________________________________________________________________//
+
+inline Bool_t KVVAMOSReconNuc::IsCorrectedQandAidentified() const
+{
+   return TestBit(kIsCorrQAidentified);
+}
+//____________________________________________________________________________________________//
+
 
 inline Bool_t KVVAMOSReconNuc::IsQMeasured() const
 {
@@ -696,7 +1087,6 @@ inline Bool_t KVVAMOSReconNuc::IsQMeasured() const
    return fQMeasured;
 }
 //____________________________________________________________________________________________//
-
 
 inline void KVVAMOSReconNuc::SetIsZidentified()
 {
@@ -710,16 +1100,40 @@ inline void KVVAMOSReconNuc::SetIsZunidentified()
 }
 //____________________________________________________________________________________________//
 
-inline void KVVAMOSReconNuc::SetIsQandAidentified()
+inline void KVVAMOSReconNuc::SetIsBasicQandAidentified()
 {
-   SetBit(kIsQAidentified);
+   SetBit(kIsBasicQAidentified);
 }
 //____________________________________________________________________________________________//
 
-inline void KVVAMOSReconNuc::SetIsQandAunidentified()
+inline void KVVAMOSReconNuc::SetIsBasicQandAunidentified()
 {
-   ResetBit(kIsQAidentified);
+   ResetBit(kIsBasicQAidentified);
+}
+//____________________________________________________________________________________________//
+
+inline void KVVAMOSReconNuc::SetIsCorrectedQandAidentified()
+{
+   SetBit(kIsCorrQAidentified);
+}
+//____________________________________________________________________________________________//
+
+inline void KVVAMOSReconNuc::SetIsCorrectedQandAunidentified()
+{
+   ResetBit(kIsCorrQAidentified);
+}
+//____________________________________________________________________________________________//
+
+inline void KVVAMOSReconNuc::SetCorrected(Bool_t corrected)
+{
+   //=kTRUE if any correction was applied to the data
+   fkIsCorrected = corrected;
 }
 
+//______________________________________VERBOSE_______________________________________________//
+inline void KVVAMOSReconNuc::SetVerbose(Bool_t debug)
+{
+   fdebug = debug;
+}
 
 #endif

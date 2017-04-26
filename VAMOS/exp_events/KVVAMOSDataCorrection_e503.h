@@ -7,37 +7,56 @@
 #include "KVVAMOSDataCorrection.h"
 
 class KVVAMOSDataCorrection_e503 : public KVVAMOSDataCorrection {
+
 protected:
-
    Bool_t   fkverbose;
-   Bool_t   fkInitialised;
+   Bool_t   fkIsInit;
 
-   Float_t ftof_corr_sicsi;          //correction of ToF (in ns) for AoQ duplication correction for SiCsI telescopes
-   Float_t ftof_corr_icsi;           //correction of ToF (in ns) for AoQ duplication correction for ICSi telescopes
-   KVHashList* flist_aoq_cut_sicsi;       //list of TCutG* for AoQ duplication correction for SiCsI telescopes
-   KVHashList* flist_aoq_cut_icsi;        //list of TCutG* for AoQ duplication correction for ICSi telescopes
+   //ToF corrections
+   //-----Si-CsI-----
+   KVHashList* flist_HFcuts_sicsi;     //list of TCutG* for HF frequency corrections
+   std::vector<Int_t> fvec_nHF_sicsi;  //vector containing the number of times the beam pulse period must be corrected for each cut
 
+   KVHashList* flist_aoq_cut_sicsi;    //list of TCutG* for AoQ duplication corrections
+   Float_t ftof_corr_sicsi;            //correction of ToF (in ns) for AoQ duplication corrections
 
-   //Si-CsI
-   virtual void ReadDuplicationSiCsICutFileListInDataSet();
-   virtual void ReadDuplicationICSiCutFileListInDataSet();
-   virtual void ReadDuplicationCutFileList(std::ifstream& file, Int_t type);
+   //-----IC-Si-----
+   KVHashList* flist_HFcuts_icsi;
+   std::vector<Int_t> fvec_nHF_icsi;
 
-   virtual Bool_t ApplyAoverQDuplicationCorrections(KVVAMOSReconNuc*, KVHashList*, Float_t);
+   KVHashList* flist_aoq_cut_icsi;
+   Float_t ftof_corr_icsi;
+
+   //-----Global offset-----
+   Float_t ftof_offset; //glogal offset to correct AoQ=2 misalignments
+
+   //Readers in DataSet
+   void ReadHFCutFilesListInDataSet();
+   void ReadHFCutFileList(std::ifstream& file, Int_t type);
+   void ReadDuplicationCutFilesListInDataSet();
+   void ReadDuplicationCutFileList(std::ifstream& file, Int_t type);
+   void ReadDuplicationToFOffsetsInDataSet();
+   void ReadAdditionalToFOffsetInDataSet();
+
+   //Corrections
+   Bool_t ApplyHFCorrections(KVVAMOSReconNuc*, KVHashList*, std::vector<Int_t>);
+   Bool_t ApplyToFDuplicationCorrections(KVVAMOSReconNuc*, KVHashList*, Float_t);
+   Bool_t ApplyToFOffset(KVVAMOSReconNuc*);
+
 
 public:
-   KVVAMOSDataCorrection_e503();
+   KVVAMOSDataCorrection_e503(Int_t run_number);
    virtual ~KVVAMOSDataCorrection_e503();
-
    virtual void Copy(TObject&) const;
 
    virtual void Init();
-   virtual void ApplyCorrections(KVVAMOSReconNuc*);
+   virtual Bool_t ApplyCorrections(KVVAMOSReconNuc*);
 
-   virtual void SetVerbose(Bool_t status = kTRUE)
-   {
+   void PrintInitInfos();
+   virtual void SetVerbose(Bool_t status = kTRUE) {
       fkverbose = status;
    }
+
 
    ClassDef(KVVAMOSDataCorrection_e503, 1) //Base class to use for VAMOS data corrections for e503 experiment
 };

@@ -51,7 +51,7 @@ KVVAMOSDataCorrection* KVVAMOSDataCorrection::MakeDataCorrection(const Char_t* u
    //If no plugin defined for dataset, instanciates a KVVAMOSDataCorrection (default)
 
    //debug
-   std::cout << "KVVAMOSDataCorrection::MakeDataCorrection, ... creating data correction ..." << std::endl;
+   std::cout << "<KVVAMOSDataCorrection::MakeDataCorrection> ... creating data correction ..." << std::endl;
 
    //check and load plugin library
    TPluginHandler* ph;
@@ -66,7 +66,7 @@ KVVAMOSDataCorrection* KVVAMOSDataCorrection::MakeDataCorrection(const Char_t* u
    dc->fRunNumber = run_number;
    dc->Init();
 
-   std::cout << "KVVAMOSDataCorrection::MakeDataCorrection, ... printing info on created object ..." << std::endl;
+   std::cout << "<KVVAMOSDataCorrection::MakeDataCorrection> ... printing infos about created object ..." << std::endl;
    dc->Print();
 
    return dc;
@@ -98,7 +98,8 @@ const KVList* KVVAMOSDataCorrection::GetIDCorrectionParameters() const
    return fRecords;
 }
 //____________________________________________________________________________//
-void KVVAMOSDataCorrection::ApplyCorrections(KVVAMOSReconNuc*)
+Bool_t KVVAMOSDataCorrection::ApplyCorrections(KVVAMOSReconNuc*)
 {
    // Generic (empty) method. Override in child classes to apply specific corrections.
+   return kFALSE;
 }

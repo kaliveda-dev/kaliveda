@@ -18,9 +18,9 @@ ClassImp(KVVAMOSReconNuc)
 ////////////////////////////////////////////////////////////////////////////////
 // BEGIN_HTML <!--
 /* -->
-<h2>KVVAMOSReconNuc</h2>
-<h4>Nucleus identified by VAMOS spectrometer</h4>
-<!-- */
+   <h2>KVVAMOSReconNuc</h2>
+   <h4>Nucleus identified by VAMOS spectrometer</h4>
+   <!-- */
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -93,16 +93,23 @@ void KVVAMOSReconNuc::Copy(TObject& obj) const
 
    KVReconstructedNucleus::Copy(obj);
    KVVAMOSReconNuc& CastedObj = (KVVAMOSReconNuc&)obj;
-   CastedObj.fCodes = fCodes;
-   CastedObj.fRT    = fRT;
-   CastedObj.fDataCorr = fDataCorr;
-   CastedObj.fDetE  = fDetE;
+   CastedObj.fCodes    = fCodes;
+   CastedObj.fRT       = fRT;
+   CastedObj.fDetE     = fDetE;
    CastedObj.fStripFoilEloss  = fStripFoilEloss;
-   CastedObj.fRealQ     = fRealQ;
-   CastedObj.fRealAoQ   = fRealAoQ;
-   CastedObj.fQ         = fQ;
-   CastedObj.fQMeasured = fQMeasured;
-   CastedObj.fToFFHOffset = fToFFHOffset;
+   CastedObj.fBasicToF     = fBasicToF;
+   CastedObj.fBasicPath    = fBasicPath;
+   CastedObj.fBasicRealAE  = fBasicRealAE;
+   CastedObj.fBasicRealAoQ = fBasicRealAoQ;
+   CastedObj.fBasicRealQ   = fBasicRealQ;
+   CastedObj.fBasicQ       = fBasicQ;
+   CastedObj.fBasicRealA   = fBasicRealA;
+   CastedObj.fBasicA       = fBasicA;
+   CastedObj.fToF_corr     = fToF_corr;
+   CastedObj.fPath_corr    = fPath_corr;
+   CastedObj.fRealAE_corr  = fRealAE_corr;
+   CastedObj.fRealAoQ_corr = fRealAoQ_corr;
+   CastedObj.fA_CsI        = fA_CsI;
 }
 //________________________________________________________________
 
@@ -114,10 +121,28 @@ void KVVAMOSReconNuc::init()
 
    fStripFoilEloss = 0;
    fDetE.clear();
-   fRealQ = fRealAoQ = 0.;
-   fQ = 0;
-   fToFFHOffset = 0.;
-   fQMeasured = kFALSE;
+
+   //basic Q and A ID results
+   fBasicToF     = -666.;
+   fBasicPath    = -666.;
+   fBasicRealAE  = -666.;
+   fBasicRealAoQ = -666.;
+   fBasicRealQ   = -666.;
+   fBasicQ       = -666;
+   fBasicRealA   = -666.;
+   fBasicA       = -666;
+
+   //corrected Q and A ID results
+   fToF_corr     = -666.;
+   fPath_corr    = -666.;
+   fRealAE_corr  = -666.;
+   fRealAoQ_corr = -666.;
+
+   fA_CsI        = -666;
+
+   fkIsCorrected = kFALSE;
+
+   fdebug = kFALSE;
 }
 //________________________________________________________________
 
@@ -149,10 +174,9 @@ void KVVAMOSReconNuc::Calibrate()
    if (IsCalibrated() && GetEnergy() > 0) {
 
       // set angles of momentum from trajectory reconstruction
-
       if (fRT.FPtoLabWasAttempted()) {
-         SetTheta(GetThetaL());
-         SetPhi(GetPhiL() - 90);
+         SetTheta(GetThetaI());
+         SetPhi(GetPhiI());
       }
 
       if (GetZ()) {
@@ -385,10 +409,11 @@ void KVVAMOSReconNuc::GetAnglesFromStoppingDetector(Option_t*)
 }
 //________________________________________________________________
 
-Float_t KVVAMOSReconNuc::GetRealA(const Char_t* tof_name) const
+Float_t KVVAMOSReconNuc::CalculateRealAE(const Char_t* tof_name) const
 {
    // Returns the real value of the mass number calculated for the
-   // measured energy and the measured time of flight.
+   // measured energy and the measured time of flight, without any
+   // corrections
    // Begin_Latex
    // A = #frac{E}{(#gamma-1)u}
    // End_Latex
@@ -400,14 +425,18 @@ Float_t KVVAMOSReconNuc::GetRealA(const Char_t* tof_name) const
    //           with name tof_name
    //
 
-   return CalculateRealA(GetZ(), GetEnergyBeforeVAMOS(), GetBeta(tof_name));
+   //return CalculateRealAE(GetZ(), GetEnergyBeforeVAMOS(), GetBeta(tof_name));
+   Double_t dist, tof;
+   dist = tof = 0.;
+   return CalculateRealAE(GetEnergyBeforeVAMOS(), CalculateBeta(dist, tof, tof_name));
 }
 //________________________________________________________________
 
-Float_t KVVAMOSReconNuc::GetRealAoverQ(const Char_t* tof_name) const
+Float_t KVVAMOSReconNuc::CalculateRealAoverQ(const Char_t* tof_name) const
 {
    // returns the ratio between the mass number A and the charge state Q
-   // calculated from the measurment of the Time of Flight of the nucleus.
+   // calculated from the measurment of the Time of Flight of the nucleus,
+   // BEFORE any correction of the data.
    // The returned value is real. Returns zero if the time of flight is
    // not correct.
    // Begin_Latex
@@ -419,41 +448,27 @@ Float_t KVVAMOSReconNuc::GetRealAoverQ(const Char_t* tof_name) const
    //   beta and gamma: relativistic quantities calculated from the velocity
    //                   deduced from the time of flight measurment
    //                   with name tof_name
+   Double_t dist, tof;
+   dist = tof = 0.;
 
-   return GetMassOverQ(tof_name) / u();
+   return CalculateRealAoverQ(GetBrho(), CalculateBeta(dist, tof, tof_name)) / u();
 }
 //________________________________________________________________
 
-Float_t KVVAMOSReconNuc::GetRealQ(const Char_t* tof_name) const
+Float_t KVVAMOSReconNuc::CalculateRealQ(const Char_t* tof_name) const
 {
    // Returns the real value of the charge state calculated for the
    // measured energy and the measured time of flight (tof_name).
+   Double_t dist, tof;
+   dist = tof = 0.;
 
-   Double_t beta = GetBeta(tof_name);
-   Double_t A = CalculateRealA(GetZ(), GetEnergyBeforeVAMOS(), beta);
-   Double_t AoQ = CalculateMassOverQ(GetBrho(), beta) / u();
+   Double_t beta = CalculateBeta(dist, tof, tof_name);
+   //Double_t A    = CalculateRealAE(GetZ(), GetEnergyBeforeVAMOS(), beta);
+   Double_t A    = CalculateRealAE(GetEnergyBeforeVAMOS(), beta);
+   Double_t AoQ  = CalculateRealAoverQ(GetBrho(), beta) / u();
    return (AoQ > 0. ? A / AoQ : 0.);
 }
 
-//________________________________________________________________
-
-Double_t KVVAMOSReconNuc::GetMassOverQ(const Char_t* tof_name) const
-{
-   // returns the ratio between the mass (MeV/c^2) and the charge state Q
-   // calculated from the measurment of the Time of Flight of the nucleus.
-   // The returned value is real. Returns zero if the time of flight is
-   // not correct.
-   // Begin_Latex
-   // #frac{A}{Q} = 10 C #frac{B_{#rho}}{ #gamma #beta}
-   // End_Latex
-   // where
-   //   C             : speed of light in vacuum in cm/ns
-   //   beta and gamma: relativistic quantities calculated from the velocity
-   //                   deduced from the time of flight measurment
-   //                   with name tof_name
-
-   return CalculateMassOverQ(GetBrho(), GetBeta(tof_name));
-}
 //________________________________________________________________
 
 void KVVAMOSReconNuc::IdentifyZ()
@@ -490,16 +505,16 @@ void KVVAMOSReconNuc::IdentifyZ()
                idt->Identify(IDR);
 
                //debug
-//               Info("IdentifyZ", "after ident, IDR infos follow...");
-//               IDR->Print();
-//               std::cout << "IDR::IDOK=" << IDR->IDOK << std::endl;
-//               std::cout << "IDR::IDquality=" << IDR->IDquality << std::endl;
-//               std::cout << "IDR::IDcode=" << IDR->IDcode << std::endl;
-//               std::cout << "IDR::Zident=" << IDR->Zident << std::endl;
-//               std::cout << "IDR::Z=" << IDR->Z << std::endl;
-//               std::cout << "IDR::Aident=" << IDR->Aident << std::endl;
-//               std::cout << "IDR::A=" << IDR->A << std::endl;
-//               std::cout << "IDR::PID=" << IDR->PID << std::endl;
+               //               Info("IdentifyZ", "after ident, IDR infos follow...");
+               //               IDR->Print();
+               //               std::cout << "IDR::IDOK=" << IDR->IDOK << std::endl;
+               //               std::cout << "IDR::IDquality=" << IDR->IDquality << std::endl;
+               //               std::cout << "IDR::IDcode=" << IDR->IDcode << std::endl;
+               //               std::cout << "IDR::Zident=" << IDR->Zident << std::endl;
+               //               std::cout << "IDR::Z=" << IDR->Z << std::endl;
+               //               std::cout << "IDR::Aident=" << IDR->Aident << std::endl;
+               //               std::cout << "IDR::A=" << IDR->A << std::endl;
+               //               std::cout << "IDR::PID=" << IDR->PID << std::endl;
 
                // for all nuclei we take the first identification which gives IDOK==kTRUE
                if (!ok && IDR->IDOK) {
@@ -513,19 +528,7 @@ void KVVAMOSReconNuc::IdentifyZ()
                   }
 
                   //Setting the identification
-                  SetIdentifyingTelescope(idt);
-                  SetIdentification(IDR);
-
-                  //When identification is done by a KVIDHarpeeSiCsI_e503,
-                  //the mass is changed "by hand" to the one found by the minimiser,
-                  //IDR->Aident is also changed and the call to SetIdentification(IDR)
-                  //will not keep the information about the PID of the grid,
-                  //Here we save it by hand...
-                  if ((idt->InheritsFrom(KVIDHarpeeSiCsI_e503::Class()))) {
-                     KVIDHarpeeSiCsI_e503* sicsi = static_cast<KVIDHarpeeSiCsI_e503*>(idt);
-                     assert(sicsi);
-                     SetRealZ(sicsi->GetBasePID());
-                  }
+                  SetZIdentification(IDR, idt);
                }
             } else
                IDR->IDattempted = kFALSE;
@@ -556,6 +559,10 @@ void KVVAMOSReconNuc::IdentifyQandA()
    //
    // +e503:
 
+   //Raw identification:
+   //Apply VAMOS routine identification
+   //without any application of data corrections
+   //and save the associated informations.
    Bool_t ok = kFALSE;
    KVSeqCollection* idt_list = GetIDTelescopes();
    if (idt_list && idt_list->GetSize() > 0) {
@@ -567,6 +574,7 @@ void KVVAMOSReconNuc::IdentifyQandA()
          // is telescope able to identify for this run ?
          if (!idt->IsReadyForID()) continue;
 
+         //------e494s experiment case------
          if (idt->InheritsFrom(KVIDQA::Class())) { // if ID-telescope for Q and A identification (e494s)
             KVIDQA* qa_idt = (KVIDQA*)idt;
 
@@ -578,20 +586,34 @@ void KVVAMOSReconNuc::IdentifyQandA()
                IDR.Clear();
                IDR.IDattempted = kTRUE;
 
-               Double_t beta    = GetBeta(tof_name);
-               Double_t realA   = CalculateRealA(GetZ(), GetEnergyBeforeVAMOS(), beta);
-               Double_t realAoQ = CalculateMassOverQ(GetBrho(), beta) / u();
+               Double_t dist, tof;
+               dist = tof = 0.;
+               Double_t beta    = CalculateBeta(dist, tof, tof_name);
+               Double_t realA   = CalculateRealAE(GetEnergyBeforeVAMOS(), beta);
+               Double_t realAoQ = CalculateRealAoverQ(GetBrho(), beta) / u();
 
                qa_idt->Identify(&IDR, tof_name, realAoQ, realA);
                // for all nuclei we take the first identification which gives IDOK==kTRUE
                if (IDR.IDOK) {
-                  SetQandAidentification(&IDR);
-                  SetRealAoverQ(realAoQ);
-                  SetRealQ(qa_idt->GetRealQ());
+                  SetBasicQandAIdentification(&IDR);
+                  SetBasicRealAoverQ(realAoQ);
+                  SetBasicRealQ(qa_idt->GetRealQ());
+                  SetBasicToF(tof);
+                  SetBasicPath(dist);
+
+                  if (fdebug) {
+                     Info("IdentifyQandA", "ToF=%lf, Path=%lf, Beta=%lf, RealAE=%lf, RealAoQ=%lf, RealQ=%lf, RealA=%lf, Q=%d, A=%d",
+                          GetBasicToF(), GetBasicPath(), GetBasicBeta(), GetBasicRealAE(), GetBasicRealAoverQ(), GetBasicRealQ(),
+                          GetBasicRealA(), GetBasicQ(), GetBasicA());
+                  }
+
                   return;
                }
             }
-         } else { // if ID-Telescope for e503 experiment
+         }
+
+         //------e503 experiment case------
+         else {
             if (idt->InheritsFrom(KVIDHarpeeICSi_e503::Class()) || idt->InheritsFrom(KVIDHarpeeSiCsI_e503::Class())) {
                // loop over the time acquisition parameters
                const Char_t* tof_name = NULL;
@@ -600,45 +622,32 @@ void KVVAMOSReconNuc::IdentifyQandA()
                   const KVString str(tof_name);
                   if (str != "TSI_HF") continue;
 
-                  Double_t beta    = GetBeta(tof_name);
-                  Double_t RealA   = CalculateRealA(GetZ(), GetEnergyBeforeVAMOS(), beta);
-                  Double_t RealAoQ = CalculateMassOverQ(GetBrho(), beta) / u();
+                  Double_t dist, tof;
+                  dist = tof = 0.;
+                  Double_t beta    = CalculateBeta(dist, tof, tof_name);
+                  Double_t realAE  = CalculateRealAE(GetEnergyBeforeVAMOS(), beta);
+                  Double_t realAoQ = CalculateRealAoverQ(GetBrho(), beta) / u();
 
-                  //debug
-                  //std::cout << "KVVAMOSReconNuc::IdentifyQandA(): beta=" << beta << std::endl;
-                  //std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realA=" << RealA << std::endl;
-                  //std::cout << "KVVAMOSReconNuc::IdentifyQandA(): realAoQ=" << RealAoQ << std::endl;
+                  //Set the basic ID results
+                  SetBasicQandAIdentification(tof_name, tof, dist, realAE, realAoQ);
 
-                  //Save the results
-                  SetTCode(KVVAMOSCodes::GetTCode(tof_name));
-                  SetQMeasured(kFALSE); //Q was calculated not measured (specific to KVVAMOSReconNuc)
-                  if ((RealA > 0.)) { //Real A is OK
-                     SetAMeasured(kFALSE); //A found by calculation not measurements
-                     SetRealA(RealA);
-                     SetA(TMath::Nint(GetRealA()));
-
-                     if ((RealAoQ > 0.)) { //RealAoQ is OK
-                        SetIsQandAidentified();
-                        SetRealAoverQ(RealAoQ);
-                        SetRealQ(RealA / RealAoQ);
-                        SetQ(TMath::Nint(GetRealQ()));
-
-                        // since changing mass is done by leaving momentum unchanged, the kinetic
-                        // energy is changed too.
-                        // Keep its value and set it again at the end.
-                        Double_t E = GetEnergy();
-                        SetEnergy(E);
-                     }
+                  if (fdebug) {
+                     Info("IdentifyQandA", "ToF=%lf, Path=%lf, Beta=%lf, RealAE=%lf, RealAoQ=%lf, RealQ=%lf, RealA=%lf, Q=%d, A=%d",
+                          GetBasicToF(), GetBasicPath(), GetBasicBeta(), GetBasicRealAE(), GetBasicRealAoverQ(), GetBasicRealQ(),
+                          GetBasicRealA(), GetBasicQ(), GetBasicA());
                   }
 
                   return;
                }
-            } else continue; //Not ID-Telescope for e494s either e503
+            }
+
+            //------ ??? stg is wrong, Not ID-Telescope for e494s either e503 ??? ------
+            else continue;
          }
       }
    }
-   /******* UNIDENTIFIED PARTICLES *******/
 
+   /******* UNIDENTIFIED PARTICLES *******/
    /*** general ID code for non-identified particles ***/
    SetTCode(kTCode0);
 }
@@ -758,7 +767,7 @@ void KVVAMOSReconNuc::ReconstructFPtraj()
 
    fRT.SetFPparamsReady();
 
-//    Info("ReconstructFPtraj","\n    Xf= %f, Yf= %f, Thetaf= %f, Phif= %f\n    FPCode%d %s", GetXf(), GetYf(),GetThetaF(),GetPhiF(),GetCodes().GetFPCodeIndex(), GetCodes().GetFPStatus());
+   //    Info("ReconstructFPtraj","\n    Xf= %f, Yf= %f, Thetaf= %f, Phif= %f\n    FPCode%d %s", GetXf(), GetYf(),GetThetaF(),GetPhiF(),GetCodes().GetFPCodeIndex(), GetCodes().GetFPStatus());
 }
 //________________________________________________________________
 
@@ -863,7 +872,6 @@ Bool_t KVVAMOSReconNuc::ReconstructFPtrajByFitting()
             IncDetBitmask = (IncDetBitmask | 4)^res;
          }
 
-
          if ((Ncomp == 2) || ((Ncomp == 1) && !IncDetBitmask)) {
             // we break the look if:
             //    - the Focal plane Position is reconstructed from 2 complete position measurment
@@ -891,7 +899,7 @@ Bool_t KVVAMOSReconNuc::ReconstructFPtrajByFitting()
 
             fRT.SetFPparamsReady();
 
-//          Info("ReconstructFPtrajByFitting","\n    Xf= %f, Yf= %f, Thetaf= %f, Phif= %f\n    FPCode%d %s", GetXf(), GetYf(),GetThetaF(),GetPhiF(),GetCodes().GetFPCodeIndex(), GetCodes().GetFPStatus());
+            //          Info("ReconstructFPtrajByFitting","\n    Xf= %f, Yf= %f, Thetaf= %f, Phif= %f\n    FPCode%d %s", GetXf(), GetYf(),GetThetaF(),GetPhiF(),GetCodes().GetFPCodeIndex(), GetCodes().GetFPStatus());
             break;
          }
       }
@@ -940,19 +948,12 @@ void KVVAMOSReconNuc::Propagate(ECalib cal)
 
    GetNavigator()->PropagateNucleus(this, cal);
 
-// if( !CheckTrackingCoherence() ){
-//    Info("Propagate","NO tracking coherence");
-//    GetDetectorList()->ls();
-//    GetParameters()->Print();
-//    cout<<endl;
-// }
-}
-//________________________________________________________________
-
-void KVVAMOSReconNuc::ApplyCorrections()
-{
-   //Info("ApplyCorrections", "... applying corrections ...");
-   GetDataCorrection()->ApplyCorrections(this);
+   // if( !CheckTrackingCoherence() ){
+   //    Info("Propagate","NO tracking coherence");
+   //    GetDetectorList()->ls();
+   //    GetParameters()->Print();
+   //    cout<<endl;
+   // }
 }
 //________________________________________________________________
 
@@ -961,14 +962,105 @@ void KVVAMOSReconNuc::Print(Option_t* option) const
    IGNORE_UNUSED(option);
 
    KVReconstructedNucleus::Print();
-   cout << " =======> ";
-   cout << " Q= " << GetQ() << ", Brho= " << GetBrho() << " T.m, ThetaV= " << GetThetaV() << " deg, PhiV= " << GetPhiV() << " deg" << endl;
+   //cout << " =======> ";
+   //cout << " Q= " << GetQ() << ", Brho= " << GetBrho() << " T.m, ThetaV= " << GetThetaV() << " deg, PhiV= " << GetPhiV() << " deg" << endl;
 }
 //________________________________________________________________
 
-void KVVAMOSReconNuc::SetQandAidentification(KVIdentificationResult* idr)
+void KVVAMOSReconNuc::SetZIdentification(KVIdentificationResult* idr, KVIDTelescope* idt)
 {
+   // VAMOS specific Z identification.
+   // Call of usual KVReconstructedNucleus::SetIdentification() method
+   // then save VAMOS specific observables
+   //
+   // The mass (A) information in KVIdentificationResult is only used if the mass
+   // was measured as part of the identification, or if it was estimated by the
+   // CsI minimizer in case of 'IDCode=3'.
+   // Otherwise the nucleus' mass formula
+   // will be used to calculate A from the measured Z.
+
+   //usual ident setters
+   SetIdentifyingTelescope(idt);
+   SetIdentification(idr);
+
+   //when identification is done by a 'KVIDHarpeeSiCsI_e503'
+   //inherited ID telescope, the mass is changed "by hand" to the one
+   //found by the minimiser, so IDR->Aident is also changed and the call
+   //to SetIdentification(IDR) will not keep the information about the PID
+   //of the Z grid.
+   //Here we save it by hand...
+   if ((idt->InheritsFrom(KVIDHarpeeSiCsI_e503::Class()))) {
+      KVIDHarpeeSiCsI_e503* sicsi = static_cast<KVIDHarpeeSiCsI_e503*>(idt);
+      assert(sicsi);
+
+      SetRealZ(sicsi->GetBasePID()); //save the PID of Z grid by hand
+      SetAMinimizer(idr->PID);       //save the mass found by minimizer by hand
+   }
+
+   if (fdebug) {
+      Info("SetZIdentification", "IDCode=%d, PID=%lf, Zident=%d, RealZ=%lf, Aident=%d, RealA=%lf, A_CsI=%d",
+           GetIDCode(), idr->PID, (int) IsZMeasured(), GetRealZ(), (int) IsAMeasured(), GetRealA(), GetAMinimizer());
+   }
+}
+//________________________________________________________________
+
+void KVVAMOSReconNuc::SetBasicQandAIdentification(const Char_t* tof_name, Float_t tof, Float_t dist, Float_t realAE, Float_t realAoQ)
+{
+   //Set the basic Q and A identification routine
+   //WITHOUT data corrections (so the results from
+   //IdentifyQandA()).
+   //
+   //NOTE: if no corrections applied, these will be
+   //the final identification results of the VAMOS
+   //particle.
+
+   SetTCode(KVVAMOSCodes::GetTCode(tof_name));
+   SetBasicToF(tof);
+   SetBasicPath(dist);
+   SetBasicRealAE(realAE);
+   SetBasicRealAoverQ(realAoQ);
+
+   //Since changing mass is done by leaving momentum unchanged, the kinetic
+   //energy is changed too.
+   //Keep its value and set it again at the end.
+   Double_t E = GetEnergy();
+   SetA(GetBasicA());
+   SetRealA(GetBasicRealA());
+   SetEnergy(E);
+
+   if (GetBasicQ() > 0 && GetBasicA() > 0) SetIsBasicQandAidentified();
+}
+//________________________________________________________________
+void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
+{
+   //Set the corrected Q and A identification from
+   //KVDataCorrection (see ApplyCorrection() method)
+   //as final results
+   //
+   //Corrected observables must be set in the KVVAMOSDataCorrection inherited
+   //class set in 'fDataCorr' pointer.
+   //
+   //Here we only modify the mass of the nucleus from the corrected
+   //values...
+
+   //Since changing mass is done by leaving momentum unchanged, the kinetic
+   //energy is changed too.
+   //Keep its value and set it again at the end.
+   Double_t E = GetEnergy();
+   SetA(GetCorrectedA());
+   SetRealA(GetCorrectedRealA());
+   SetEnergy(E);
+
+   if (GetCorrectedQ() > 0 && GetCorrectedA() > 0) SetIsCorrectedQandAidentified();
+}
+//________________________________________________________________
+
+void KVVAMOSReconNuc::SetBasicQandAIdentification(KVIdentificationResult* idr)
+{
+   //Specific to KVIDQA grid results
+   //
    // Set Q and A identification of nucleus from informations in identification result object
+   // from the KVIDQA GRID.
    // The mass (A) information in KVIdentificationResult is only used if the mass
    // was measured as part of the identification. Otherwise the nucleus' mass formula
    // will be used to calculate A from the measured Z.
@@ -977,7 +1069,7 @@ void KVVAMOSReconNuc::SetQandAidentification(KVIdentificationResult* idr)
    if (!IsAMeasured()) SetAMeasured(idr->Aident);
    SetQ(idr->Z);
    if (idr->Aident) {
-      if (idr->Zident) SetIsQandAidentified();
+      if (idr->Zident) SetIsBasicQandAidentified();
       // since changing mass is done by leaving momentum unchanged, the kinetic
       // energy is changed too.
       // Keep its value and set it again at the end.
@@ -1017,7 +1109,7 @@ Bool_t KVVAMOSReconNuc::CheckTrackingCoherence()
 }
 //________________________________________________________________
 
-Bool_t KVVAMOSReconNuc::GetCorrFlightDistanceAndTime(Double_t& dist, Double_t& tof, const Char_t* tof_name) const
+Bool_t KVVAMOSReconNuc::CalculateCorrFlightDistanceAndTime(Double_t& dist, Double_t& tof, const Char_t* tof_name) const
 {
    // Returns true if the corrected flight distance (dist) and the corrected time of flight (tof)
    // is correctly calculated.
@@ -1028,7 +1120,6 @@ Bool_t KVVAMOSReconNuc::GetCorrFlightDistanceAndTime(Double_t& dist, Double_t& t
    //  - the path (from target point to focal plan) corrected on the distance
    //    covered between the focal plan and the start detector for HF-time.
    //  - the distance between the two detectors.
-
 
    dist = tof = 0.;
 
@@ -1080,19 +1171,19 @@ Bool_t KVVAMOSReconNuc::GetCorrFlightDistanceAndTime(Double_t& dist, Double_t& t
       return kFALSE;
    }
 
-   dist = GetPath(start, stop);
+   dist = CalculatePath(start, stop);
 
    if (dist <= 0.) return kFALSE;
 
    // update: add possibility to offset ToF for HF time
    // (in order to correct the experimental 'jitter' problem)
-   tof  = (isT_HF ? GetCorrectedT_HF(calibT + fToFFHOffset, dist) : calibT);
+   tof  = (isT_HF ? CalculateCorrectedT_HF(calibT, dist) : calibT);
 
    return kTRUE;
 }
 //________________________________________________________________
 
-Double_t KVVAMOSReconNuc::GetCorrectedT_HF(Double_t tof, Double_t dist) const
+Double_t KVVAMOSReconNuc::CalculateCorrectedT_HF(Double_t tof, Double_t dist) const
 {
    // Returns the corrected time of flight obtained from beam pulse HF, by
    // removing or adding N times the beam pulse period. N is fitted by
@@ -1119,15 +1210,18 @@ Double_t KVVAMOSReconNuc::GetCorrectedT_HF(Double_t tof, Double_t dist) const
 
    if (!IsCalibrated() || (GetEnergy() <= 0)) return tof;
    if (gVamos->GetBeamPeriod() < 0) {
-      Warning("GetCorrectedT_HF", "No correction because the beam pulse period is unknown");
+      Warning("CalculateCorrectedT_HF", "No correction because the beam pulse period is unknown");
       return tof;
    }
 
-   return tof + GetNBeamPeriod(tof, dist) * gVamos->GetBeamPeriod();
+   Double_t corr_tof = tof + CalculateNBeamPeriod(tof, dist) * gVamos->GetBeamPeriod();
+   if (fdebug) Info("CalculateCorrectedT_HF", "... tof=%lf, corr_tof=%lf ...", tof, corr_tof);
+
+   return corr_tof;
 }
 //________________________________________________________________
 
-Int_t  KVVAMOSReconNuc::GetNBeamPeriod(Double_t tof, Double_t dist) const
+Int_t  KVVAMOSReconNuc::CalculateNBeamPeriod(Double_t tof, Double_t dist) const
 {
    //Returns the number of time we add/remove the beam pulse period to
    //the time of flight obtained from beam pulse HF
@@ -1136,15 +1230,13 @@ Int_t  KVVAMOSReconNuc::GetNBeamPeriod(Double_t tof, Double_t dist) const
    Double_t delta_t = (dist / (C() * TMath::Sqrt(1. - alpha * alpha))) - tof;
    Int_t n = TMath::Nint(delta_t / gVamos->GetBeamPeriod());
 
-   //debug
-   //std::cout << "KVVAMOSReconNuc::GetCorrectedT_HF(): delta_t=" << delta_t << " beam_period="
-   //          << gVamos->GetBeamPeriod() << " N=" << n << std::endl;
+   if (fdebug) Info("CalculateNBeamPeriod", "... alpha=%lf, delta_t=%lf, n=%d ...", alpha, delta_t, n);
 
    return n;
 }
 //________________________________________________________________
 
-Double_t KVVAMOSReconNuc::GetPath(KVVAMOSDetector* start, KVVAMOSDetector* stop) const
+Double_t KVVAMOSReconNuc::CalculatePath(KVVAMOSDetector* start, KVVAMOSDetector* stop) const
 {
    // Returns the flight distance travelled by the nucleus from the start detector to the stop detector.
    // If stop=NULL, returns the distance from the target point to the start detector,
@@ -1159,44 +1251,39 @@ Double_t KVVAMOSReconNuc::GetPath(KVVAMOSDetector* start, KVVAMOSDetector* stop)
 
    if (const_cast<KVVAMOSReconNuc*>(this)->GetCodes().TestFPCode(kFPCode0)) return 0.;
 
-   Double_t dp_start = GetDeltaPath(start);
+   Double_t dp_start = FindDeltaPath(start);
    if (dp_start) {
-      // case where stop signal is given by detector i.e. 'stop' not null
+      //------case where stop signal is given by detector i.e. 'stop' not null------
       if (stop) {
-         Double_t dp_stop = GetDeltaPath(stop);
-
-         //debug
-         //std::cout << "KVVAMOSReconNuc::GetPath(): (stop found) dp_start="  << dp_start
-         //         <<  " dp_stop=" <<  dp_stop << std::endl;
+         Double_t dp_stop = FindDeltaPath(stop);
 
          if (dp_stop) {
-            //debug
-            //std::cout << "path_tot=Abs(dp_start-dp_stop)=" << TMath::Abs(dp_stop - dp_start) <<  std::endl;
             return TMath::Abs(dp_stop - dp_start);
          }
 
          else {
-            //debug
-            //std::cout << "path_tot=0" << std::endl;
+            if (fdebug) Warning("GetPath", "... <stop detector> delta_path=%lf, returning 0 ...", dp_stop);
             return 0.;
          }
 
       }
-      // case where stop signal is given by HF i.e. 'stop' is null
+
+      //------case where stop signal is given by HF i.e. 'stop' is null------
       else if (GetPath() > 0) {
-         //debug
-         //std::cout << "KVVAMOSReconNuc::GetPath(): (no stop) path=" << GetPath()
-         //          << " dp_start=" << dp_start << " path_tot=path+dp_start="
-         //          <<  GetPath() + dp_start << std::endl;
+         //for debugging
+         if (fdebug) {
+            Info("GetPath", "HF signal used for ToF measurement \n Path BEFORE correction=%lf \n Path AFTER correction=%lf",
+                 GetPath(), GetPath() + dp_start);
+         }
+
          return GetPath() + dp_start;
       }
-
    }
    return 0.;
 }
 //________________________________________________________________
 
-Double_t KVVAMOSReconNuc::GetPath(const Char_t* start_label, const Char_t* stop_label) const
+Double_t KVVAMOSReconNuc::CalculatePath(const Char_t* start_label, const Char_t* stop_label) const
 {
    // Returns the flight distance travelled by the nucleus from the start detector to the stop detector.
    // If stop=NULL, returns the distance from the target point to the start detector,
@@ -1212,13 +1299,13 @@ Double_t KVVAMOSReconNuc::GetPath(const Char_t* start_label, const Char_t* stop_
 
    KVVAMOSDetector* start = (KVVAMOSDetector*)GetDetectorList()->FindObjectByLabel(start_label);
 
-   if (!strcmp(stop_label, "")) return GetPath(start);
+   if (!strcmp(stop_label, "")) return CalculatePath(start);
    KVVAMOSDetector* stop = (KVVAMOSDetector*)GetDetectorList()->FindObjectByLabel(stop_label);
-   return GetPath(start, stop);
+   return CalculatePath(start, stop);
 }
 //________________________________________________________________
 
-Double_t KVVAMOSReconNuc::GetDeltaPath(KVVAMOSDetector* det) const
+Double_t KVVAMOSReconNuc::FindDeltaPath(KVVAMOSDetector* det) const
 {
    //returns the DeltaPath value associated to the detector 'det' used to correct
    //the flight distance.
@@ -1244,13 +1331,13 @@ Double_t KVVAMOSReconNuc::GetDeltaPath(KVVAMOSDetector* det) const
       tmp = par->GetName();
       if (tmp.BeginsWith(Form("DPATH:%s", det->GetTBaseName()))) {
          //debug
-         //Info("GetDeltaPath", "DeltaPath for the detector %s is given by %s", det->GetName(), par->GetName());
+         if (fdebug) Info("FindDeltaPath", "DeltaPath for the detector %s is given by %s", det->GetName(), par->GetName());
          return par->GetDouble();
       }
    }
 
    // No parameter found
-   Warning("GetDeltaPath", "DeltaPath not found for the detector %s", det->GetName());
+   Warning("FindDeltaPath", "DeltaPath not found for the detector %s", det->GetName());
 
    return 0.;
 }

@@ -174,7 +174,6 @@ void KVINDRA_VAMOS::DetectEvent(KVEvent* event, KVReconstructedEvent* rec_event,
 #endif
       _part = (KVNucleus*)part->GetFrame(detection_frame, kFALSE);
 
-
       if (_part->GetTheta() > 14) continue;
 
       _part->SetE0();
@@ -225,7 +224,7 @@ void KVINDRA_VAMOS::DetectEvent(KVEvent* event, KVReconstructedEvent* rec_event,
          recon_nuc->SetZMeasured();
          recon_nuc->SetQMeasured();
          recon_nuc->SetAMeasured();
-         recon_nuc->SetIsQandAidentified();
+         //recon_nuc->SetIsBasicQandAidentified();
 
          // Clear this nucleus detected in VAMOS in order to inhibit the
          // its detection in INDRA

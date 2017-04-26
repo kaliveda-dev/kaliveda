@@ -23,6 +23,7 @@ void KVVAMOSReconEvent::init()
 {
    //Default initialisations
    fCodeMask = NULL;
+   fkverbose = kFALSE;
 }
 //________________________________________________________________
 
@@ -218,7 +219,7 @@ void KVVAMOSReconEvent::IdentifyEvent_Z()
    KVReconstructedEvent::IdentifyEvent();
 }
 //________________________________________________________________
-void KVVAMOSReconEvent::IdentAndCalibEvent(KVVAMOSDataCorrection* data_corr)
+void KVVAMOSReconEvent::IdentAndCalibEvent()
 {
 
    //If the nuclei measured in VAMOS have not been previously Z-identified
@@ -261,64 +262,38 @@ void KVVAMOSReconEvent::IdentAndCalibEvent(KVVAMOSDataCorrection* data_corr)
          }
       }
 
-      //debug
-      //Info("IdentAndCalibEvent", "... Z identification done ...");
-      //std::cout << "#KVVAMOSReconEvent::IdentAndCalib() -> End of Z identification for the particle... results follow:" << std::endl;
-      //std::cout << "IDcode=" << d->GetIDCode() << std::endl;
-      //std::cout << "Zident=" <<
-      //std::cout << "Z="      << d->GetZ()      << std::endl;
-      //std::cout << "RealZ="  << d->GetRealZ()  << std::endl;
-      //std::cout << "A="      << d->GetA()      << std::endl;
-      //std::cout << "RealA="  << d->GetRealA()  << std::endl;
-      //std::cout << "RealQ="  << d->GetRealQ()  << std::endl;
-      //std::cout << "RealAoQ=" << d->GetRealAoverQ() << std::endl;
+      if (fkverbose) {
+         Info("IdentAndCalibEvent", "... Z identification done, results follow ...");
+         if (d->GetIDCode() == 3) {
+            Info("IdentAndCalibEvent", "IDCode=%d \nZident=%d, Zmeasured=%d, Ameasured=%d \nRealZ=%lf, RealA=%lf \nZ=%d, A=%d, A_CsI=%d",
+                 d->GetIDCode(), (int) d->IsZidentified(), (int) d->IsZMeasured(), (int) d->IsAMeasured(), d->GetRealZ(), d->GetRealA(), d->GetZ(), d->GetA(), d->GetAMinimizer());
+         } else {
+            Info("IdentAndCalibEvent", "IDCode=%d \nZident=%d, Zmeasured=%d, Ameasured=%d \nRealZ=%lf, RealA=%lf \nZ=%d, A=%d",
+                 d->GetIDCode(), (int) d->IsZidentified(), (int) d->IsZMeasured(), (int) d->IsAMeasured(), d->GetRealZ(), d->GetRealA(), d->GetZ(), d->GetA());
+         }
+      }
 
       //-----------------------
       // Calibration
       //-----------------------
-      if (d->IsZidentified() && !d->IsCalibrated()) d->Calibrate();
-
-      //debug
-      //Info("IdentAndCalibEvent", "... calibration done ...");
+      if (d->IsZidentified() && !d->IsCalibrated()) {
+         d->Calibrate();
+         if (fkverbose) Info("IdentAndCalibEvent", "... calibration done ...");
+      }
 
       //--------------------------------------------------------------------------
       //All particles which have been previously Z-identified (IsZidentified=kTRUE)
       //and calibrated (IsCalibrated=kTRUE) will be Q and A identified.
       //--------------------------------------------------------------------------
-      if (d->IsZidentified() && d->IsCalibrated() && !d->IsQandAidentified()) {
+      if (d->IsZidentified() && d->IsCalibrated() && !d->IsBasicQandAidentified()) {
          d->IdentifyQandA();
 
-         //debug
-         //Info("IdentAndCalibEvent", "... QandA identification done (IDCode=%d) ...", d->GetIDCode());
-
-         //debug
-//         std::cout << "#KVVAMOSReconEvent::IdentAndCalib() -> End of A identification for the particle... results follow:" << std::endl;
-//         std::cout << "IDcode="      << d->GetIDCode() << std::endl;
-//         std::cout << "IsZMeasured=" << d->IsZMeasured() << std::endl;
-//         std::cout << "IsAMeasured=" << d->IsAMeasured() << std::endl;
-//         std::cout << "IsQMeasured=" << d->IsQMeasured() << std::endl;
-//         std::cout << "IsQandAidentified=" << d->IsQandAidentified() << std::endl;
-//         std::cout << "Z="      << d->GetZ()      << std::endl;
-//         std::cout << "RealZ="  << d->GetRealZ()  << std::endl;
-//         std::cout << "A="      << d->GetA()      << std::endl;
-//         std::cout << "RealA="  << d->GetRealA()  << std::endl;
-//         std::cout << "RealAoQ=" << d->GetRealAoverQ() << std::endl;
-//         std::cout << "RealQ="  << d->GetRealQ()  << std::endl;
-//         std::cout << "Z=" << d->GetZ() << std::endl;
-//         std::cout << "A=" << d->GetA() << std::endl;
-//         std::cout << "Q=" << d->GetQ() << std::endl;
-//         std::cout << "PID=" << d->GetPID()    << std::endl;
-//         std::cout << "Energy_ChIo=" << d->GetEnergy("CHI") << std::endl;
-//         std::cout << "Energy_Si="  << d->GetEnergy("SI")   << std::endl;
-//         std::cout << "Energy_CsI=" << d->GetEnergy("CSI")  << std::endl;
-      }
-
-      if (data_corr && d->IsZidentified() && d->IsCalibrated() && d->IsQandAidentified()) {
-         d->SetDataCorrection(data_corr);
-         d->ApplyCorrections();
-
-         //debug
-         //Info("IdentAndCalibEvent", "... corrections done ...");
+         if (fkverbose) {
+            Info("IdentAndCalibEvent", "... Basic Q and A identification done, results follow ...");
+            Info("IdentAndCalibEvent", "IDCode=%d \nZident=%d, Zmeasured=%d, Ameasured=%d, QandAidentified=%d \nToF=%lf, Path=%lf, Beta=%lf \nrealAE=%lf, realAoQ=%lf \nrealQ=%lf, intQ=%d, realA=%lf, intA=%d",
+                 d->GetIDCode(), (int) d->IsZidentified(), (int) d->IsZMeasured(), (int) d->IsAMeasured(), d->IsBasicQandAidentified(), d->GetBasicToF(), d->GetBasicPath(), d->GetBasicBeta(),
+                 d->GetBasicRealAE(), d->GetBasicRealAoverQ(), d->GetBasicRealQ(), d->GetBasicQ(), d->GetBasicRealA(), d->GetBasicA());
+         }
       }
    }
 }
