@@ -124,7 +124,7 @@ void KVVAMOSDataCorrection_e503::Init()
 
          //Global ToF offset for AoQ=2 misalignments
          ftof_offset = -666.;
-         ReadAdditionalToFOffsetInDataSet();
+         ReadAdditionalToFAndPathOffsetsInDataSet();
 
          Info("Init", "... initiliasing of correction class done ...");
          fkIsInit = kTRUE;
@@ -454,17 +454,18 @@ void KVVAMOSDataCorrection_e503::ReadDuplicationToFOffsetsInDataSet()
 }
 
 //____________________________________________________________________________//
-void KVVAMOSDataCorrection_e503::ReadAdditionalToFOffsetInDataSet()
+void KVVAMOSDataCorrection_e503::ReadAdditionalToFAndPathOffsetsInDataSet()
 {
-   //Find in '$KVROOT/KVFiles/VAMOS/etc/.kvrootrc' the values of a general ToF offset
-   //to apply to correct AoQ=2 misalignments.
-   //All data will be applied this ToF offset
+   //Find in '$KVROOT/KVFiles/VAMOS/etc/.kvrootrc' the values of general ToF offset
+   //and also Path offset to apply to correct AoQ=2 misalignments.
+   //All data will be applied these ToF and Path offsets.
    //
    //NOTE: these corrections are applied AFTER HF corrections and AFTER ToF duplication
    //corrections
    //
 
-   ftof_offset = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.ToFOffset", 0.); //in ns
+   ftof_offset  = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.ToFOffset", 0.);  //in ns
+   fpath_offset = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.PathOffset", 0.); //in cm
 }
 
 //____________________________________________________________________________//
@@ -501,7 +502,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    }
 
    //AoQ=2 misalignment corrections
-   Bool_t koffset = ApplyToFOffset(nuc);
+   Bool_t koffset = ApplyToFAndPathOffset(nuc);
 
    if (kCsI_HFcorr || kCsI_DUcorr || kSi_HFcorr || kSi_DUcorr  || koffset) return kTRUE;
    else return kFALSE;
@@ -664,7 +665,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFDuplicationCorrections(KVVAMOSReconNu
 }
 
 //____________________________________________________________________________//
-Bool_t KVVAMOSDataCorrection_e503::ApplyToFOffset(KVVAMOSReconNuc* nuc)
+Bool_t KVVAMOSDataCorrection_e503::ApplyToFAndPathOffset(KVVAMOSReconNuc* nuc)
 {
    //Apply a general ime of flight offset to correct AoQ=2 misalignments
    //
@@ -678,7 +679,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFOffset(KVVAMOSReconNuc* nuc)
 
    //debug
    if (fkverbose) {
-      Info("ApplyToFOffset", "... before ToF duplication corrections ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+      Info("ApplyToFAndPathOffset", "... before ToF and Path corrections ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
            nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
            nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
    }
@@ -688,7 +689,9 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFOffset(KVVAMOSReconNuc* nuc)
    //and after ToF duplication corrections, we modify here the former
    //corrected ToF
    Float_t corr_tof = nuc->GetCorrectedToF();
+   Float_t corr_path = nuc->GetCorrectedPath();
    nuc->SetCorrectedToF(corr_tof + ftof_offset);
+   nuc->SetCorrectedPath(corr_path + fpath_offset);
 
    Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
    Double_t AE  = nuc->GetEnergyBeforeVAMOS() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
@@ -699,7 +702,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFOffset(KVVAMOSReconNuc* nuc)
 
    //debug
    if (fkverbose) {
-      Info("ApplyToFOffset", "... after ToF duplication corrections ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+      Info("ApplyToFOffset", "... after ToF and Path corrections ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
            nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
            nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
    }
@@ -764,6 +767,7 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    }
 
    //-------Global ToF offset to correct AoQ=2 misalignments-------
-   printf("###### AoQ=2 misalignment ToF correction ######\n");
-   printf("tof_offset=%lf\n", ftof_offset);
+   printf("###### AoQ=2 misalignment ToF and Path corrections ######\n");
+   printf("ToF Offset = %lf ns\n", ftof_offset);
+   printf("Path Offset = %lf cm\n", fpath_offset);
 }

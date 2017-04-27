@@ -28,7 +28,8 @@ protected:
    Float_t ftof_corr_icsi;
 
    //-----Global offset-----
-   Float_t ftof_offset; //glogal offset to correct AoQ=2 misalignments
+   Float_t ftof_offset; //glogal offset in ToF to correct AoQ=2 misalignments
+   Float_t fpath_offset; //global offset in Path to correct AoQ=2 misalignments
 
    //Readers in DataSet
    void ReadHFCutFilesListInDataSet();
@@ -36,12 +37,12 @@ protected:
    void ReadDuplicationCutFilesListInDataSet();
    void ReadDuplicationCutFileList(std::ifstream& file, Int_t type);
    void ReadDuplicationToFOffsetsInDataSet();
-   void ReadAdditionalToFOffsetInDataSet();
+   void ReadAdditionalToFAndPathOffsetsInDataSet();
 
    //Corrections
    Bool_t ApplyHFCorrections(KVVAMOSReconNuc*, KVHashList*, std::vector<Int_t>);
    Bool_t ApplyToFDuplicationCorrections(KVVAMOSReconNuc*, KVHashList*, Float_t);
-   Bool_t ApplyToFOffset(KVVAMOSReconNuc*);
+   Bool_t ApplyToFAndPathOffset(KVVAMOSReconNuc*);
 
 
 public:
