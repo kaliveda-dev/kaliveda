@@ -272,8 +272,10 @@ INDRA_e503.KVVAMOSDataCorrection_e503.HFCutListSiCsI:  VAMOSHFCutListSiCsI.list
 # Time of flight correction to apply to correct ToF duplication (in ns)
 INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset: 1.2
 
-# Global time of flight and path offset to apply to correct AoQ=2 misalignments (in ns and cm)
-INDRA_e503.KVVAMOSDataCorrection_e503.ToFOffset: -0.5
+# Time of flight offset to apply to correct AoQ=2 misalignments (in ns)
+#INDRA_e503.KVVAMOSDataCorrection_e503.ToFOffset: -0.5
+INDRA_e503.KVVAMOSDataCorrection_e503.ToFOffset: 5
+# Path offset to apply to correct AoQ=2 misalignments (in cm)
 INDRA_e503.KVVAMOSDataCorrection_e503.PathOffset: 0.
 
 #File with list of files containing TEnv to build pol2 function to correct ToF for AoQ=2 misalignments 
