@@ -15,9 +15,10 @@ ClassImp(KVVAMOSDataCorrection)
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-KVVAMOSDataCorrection::KVVAMOSDataCorrection() : KVBase("VAMOSDataCorrection", "Correction of VAMOS data")
+KVVAMOSDataCorrection::KVVAMOSDataCorrection(Int_t run_number) : KVBase("VAMOSDataCorrection", "Correction of VAMOS data")
 {
-   fRecords = NULL;
+   fRecords   = NULL;
+   fRunNumber = run_number;
 }
 
 //____________________________________________________________________________//
@@ -57,13 +58,12 @@ KVVAMOSDataCorrection* KVVAMOSDataCorrection::MakeDataCorrection(const Char_t* u
    TPluginHandler* ph;
    KVVAMOSDataCorrection* dc = 0;
    if (!(ph = KVBase::LoadPlugin("KVVAMOSDataCorrection", uri))) {
-      dc = new KVVAMOSDataCorrection();
+      dc = new KVVAMOSDataCorrection(run_number);
    } else {
-      dc = (KVVAMOSDataCorrection*) ph->ExecPlugin(0);
+      dc = (KVVAMOSDataCorrection*) ph->ExecPlugin(1, run_number);
    }
 
    dc->fDataSet   = uri;
-   dc->fRunNumber = run_number;
    dc->Init();
 
    std::cout << "<KVVAMOSDataCorrection::MakeDataCorrection> ... printing infos about created object ..." << std::endl;

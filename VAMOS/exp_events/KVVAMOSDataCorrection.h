@@ -16,7 +16,7 @@ protected:
    Int_t fRunNumber;  //!run number associated to this data corrector
 
 public:
-   KVVAMOSDataCorrection();
+   KVVAMOSDataCorrection(Int_t run_number);
    virtual ~KVVAMOSDataCorrection();
 
    // This functions add/call all the identification correction parameter

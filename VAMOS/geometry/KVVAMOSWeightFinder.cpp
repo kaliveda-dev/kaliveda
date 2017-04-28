@@ -18,6 +18,7 @@ ClassImp(KVVAMOSWeightFinder)
 <!-- */
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
+KVVAMOSWeightFinder* gVAMOSWeightFinder = 0;
 
 KVVAMOSWeightFinder::KVVAMOSWeightFinder(Int_t run_number = -1) : KVBase("VAMOSWeightFinder", "Normalisation weight estimator of VAMOS events")
 {
@@ -50,6 +51,8 @@ KVVAMOSWeightFinder::~KVVAMOSWeightFinder()
 
    delete fchain;
    fchain = NULL;
+
+   if (gVAMOSWeightFinder == this) gVAMOSWeightFinder = 0;
 }
 //____________________________________________________________________________//
 
@@ -69,6 +72,12 @@ void KVVAMOSWeightFinder::Copy(TObject& obj) const
    CastedObj.fchain = fchain;
 }
 //____________________________________________________________________________//
+void KVVAMOSWeightFinder::cd()
+{
+   //Make this the default batch system
+   gVAMOSWeightFinder = this;
+}
+
 void KVVAMOSWeightFinder::SetRunList(KVNumberList& nl)
 {
    fRunList.Clear();

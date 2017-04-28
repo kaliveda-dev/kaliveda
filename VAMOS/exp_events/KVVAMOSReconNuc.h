@@ -286,10 +286,7 @@ public:
    virtual void     SetQMeasured(Bool_t yes = kTRUE);
    void             SetIsZidentified();
    void             SetIsZunidentified();
-   void             SetIsQandAidentified();
-   void             SetIsQandAunidentified();
    Bool_t           IsZidentified()                              const;
-   Bool_t           IsQandAidentified()                          const;
    Bool_t           IsQMeasured()                                const;
 
    ClassDef(KVVAMOSReconNuc, 7) //Nucleus identified by VAMOS spectrometer

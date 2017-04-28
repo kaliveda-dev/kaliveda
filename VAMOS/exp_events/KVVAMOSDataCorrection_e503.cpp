@@ -22,12 +22,11 @@ ClassImp(KVVAMOSDataCorrection_e503)
 ////////////////////////////////////////////////////////////////////////////////
 
 //____________________________________________________________________________//
-KVVAMOSDataCorrection_e503::KVVAMOSDataCorrection_e503(Int_t run_number = -1)
+KVVAMOSDataCorrection_e503::KVVAMOSDataCorrection_e503(Int_t run_number = -1) : KVVAMOSDataCorrection(run_number)
 {
    // Default constructor
    fkverbose   = kFALSE;
    fkIsInit    = kFALSE;
-   fRunNumber  = run_number;
 
    // HF frequency correction
    flist_HFcuts_sicsi = new KVHashList;
@@ -311,7 +310,7 @@ void KVVAMOSDataCorrection_e503::ReadDuplicationCutFilesListInDataSet()
    }
    std::ifstream ifile0;
    if (gDataSet->OpenDataSetFile(filename0.Data(), ifile0)) {
-      Info("ReadDuplicationCutFileListInDataSet", "list of Si-CsI cut files in: '%s' ", filename0.Data());
+      Info("ReadDuplicationCutFilesListInDataSet", "list of Si-CsI cut files in: '%s' ", filename0.Data());
       ReadDuplicationCutFileList(ifile0, 0);
       ifile0.close();
    }
@@ -413,7 +412,6 @@ void KVVAMOSDataCorrection_e503::ReadDuplicationCutFileList(std::ifstream& file,
 
                         if (type == 0) {
                            KVHashList* ll0 = (KVHashList*) flist_aoq_cut_sicsi->At(nSi - 1);
-                           ll0->ls();
                            assert(ll0);
                            ll0->Add(copy_cut);
                         }
@@ -716,54 +714,67 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    //--------HF frequency corrections--------
    printf("###### HF frequency corrections ######\n");
    printf("->Si-CsI:\n");
-   Int_t ii = 0;
-   TCutG* cut = NULL;
-   for (std::vector<Int_t>::iterator it = fvec_nHF_sicsi.begin() ; it != fvec_nHF_sicsi.end(); ++it) {
-      Int_t nHF = *it;
-      cut       = (TCutG*) flist_HFcuts_sicsi->At(ii);
-      assert(cut);
-      printf("nHF=%d\n", nHF);
-      cut->Print();
-      printf("\n");
-      ii++;
+   printf("%d cuts set\n", GetNCutHFSiCsI());
+   if (fkverbose) {
+      printf("list of Si-CsI HF cuts follow:\n");
+      Int_t ii = 0;
+      TCutG* cut = NULL;
+      for (std::vector<Int_t>::iterator it = fvec_nHF_sicsi.begin() ; it != fvec_nHF_sicsi.end(); ++it) {
+         Int_t nHF = *it;
+         cut       = (TCutG*) flist_HFcuts_sicsi->At(ii);
+         assert(cut);
+         printf("nHF=%d\n", nHF);
+         cut->Print();
+         printf("\n");
+         ii++;
+      }
    }
 
-   printf("->IC-Si:\n");
-   ii = 0;
-   for (std::vector<Int_t>::iterator it = fvec_nHF_icsi.begin() ; it != fvec_nHF_icsi.end(); ++it) {
-      Int_t nHF = *it;
-      cut       = (TCutG*) flist_HFcuts_icsi->At(ii);
-      assert(cut);
-      printf("nHF=%d\n", nHF);
-      cut->Print();
-      printf("\n");
-      ii++;
+   printf("\n->IC-Si:\n");
+   printf("%d cuts set\n", GetNCutHFICSi());
+   if (fkverbose) {
+      printf("list of IC-Si HF cuts follow:\n");
+      Int_t ii = 0;
+      TCutG* cut = NULL;
+      for (std::vector<Int_t>::iterator it = fvec_nHF_icsi.begin() ; it != fvec_nHF_icsi.end(); ++it) {
+         Int_t nHF = *it;
+         cut       = (TCutG*) flist_HFcuts_icsi->At(ii);
+         assert(cut);
+         printf("nHF=%d\n", nHF);
+         cut->Print();
+         printf("\n");
+         ii++;
+      }
    }
 
    //-------ToF duplication corrections--------
    printf("###### ToF duplication corrections ######\n");
    printf("-> Si-CsI:\n");
    printf("tof_corr=%lf\n", ftof_corr_sicsi);
-   flist_aoq_cut_sicsi->ls();
-   printf("list of cuts follows:\n");
+   if (fkverbose) {
+      flist_aoq_cut_sicsi->ls();
+      printf("list of cuts follows:\n");
 
-   KVHashList* ll0 = NULL;
-   TIter it0(flist_aoq_cut_sicsi);
-   while ((ll0 = (KVHashList*) it0.Next())) {
-      ll0->ls();
-      ll0->Print();
+      KVHashList* ll0 = NULL;
+      TIter it0(flist_aoq_cut_sicsi);
+      while ((ll0 = (KVHashList*) it0.Next())) {
+         ll0->ls();
+         ll0->Print();
+      }
    }
 
    printf("\n-> IC-Si:\n");
    printf("tof_corr=%lf\n", ftof_corr_icsi);
-   flist_aoq_cut_icsi->ls();
-   printf("list of cuts follows:\n");
+   if (fkverbose) {
+      flist_aoq_cut_icsi->ls();
+      printf("list of cuts follows:\n");
 
-   KVHashList* ll1 = NULL;
-   TIter it1(flist_aoq_cut_icsi);
-   while ((ll1 = (KVHashList*) it1.Next())) {
-      ll1->ls();
-      ll1->Print();
+      KVHashList* ll1 = NULL;
+      TIter it1(flist_aoq_cut_icsi);
+      while ((ll1 = (KVHashList*) it1.Next())) {
+         ll1->ls();
+         ll1->Print();
+      }
    }
 
    //-------Global ToF offset to correct AoQ=2 misalignments-------

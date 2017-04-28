@@ -56,8 +56,8 @@ public:
    virtual ~KVVAMOSWeightFinder();
    virtual void Copy(TObject&) const;
 
+   void cd();
    void SetRunList(KVNumberList& nl);
-
    void Init();
 
    Int_t   GetRunPosition(Int_t run_number);
@@ -89,5 +89,8 @@ public:
 
    ClassDef(KVVAMOSWeightFinder, 1) //Class used to compute normalisation weights for VAMOS events
 };
+
+//Global variable
+R__EXTERN KVVAMOSWeightFinder* gVAMOSWeightFinder;
 
 #endif

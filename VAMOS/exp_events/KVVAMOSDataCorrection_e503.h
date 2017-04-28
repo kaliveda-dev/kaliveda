@@ -58,6 +58,13 @@ public:
       fkverbose = status;
    }
 
+   Int_t GetNCutHFSiCsI() {
+      return static_cast<int>(fvec_nHF_sicsi.size());
+   }
+   Int_t GetNCutHFICSi() {
+      return static_cast<int>(fvec_nHF_icsi.size());
+   }
+
 
    ClassDef(KVVAMOSDataCorrection_e503, 1) //Base class to use for VAMOS data corrections for e503 experiment
 };

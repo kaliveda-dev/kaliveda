@@ -113,7 +113,7 @@ INDRA_e494s.INDRADB.ChIoSiVoltMeVCalib:             e494s_Volt2MeV.dat
 # Plugin.KVMultiDetArray:    name_of_dataset    name_of_class    name_of_plugin_library   constructor_to_call
 +Plugin.KVMultiDetArray:  INDRA_e503   KVINDRA_VAMOS     VAMOSexp_events  "KVINDRA_VAMOS()"
 +Plugin.KVMultiDetArray:  INDRA_e494s  KVINDRA_VAMOS     VAMOSexp_events  "KVINDRA_VAMOS()"
-+Plugin.KVVAMOSDataCorrection:   INDRA_e503   KVVAMOSDataCorrection_e503   VAMOSexp_events   "KVVAMOSDataCorrection_e503()" 
++Plugin.KVVAMOSDataCorrection:   INDRA_e503   KVVAMOSDataCorrection_e503   VAMOSexp_events   "KVVAMOSDataCorrection_e503(Int_t)" 
 
 # Plugins for different datasets
 # Each dataset has an associated database of informations on runs, calibration parameters, etc.
