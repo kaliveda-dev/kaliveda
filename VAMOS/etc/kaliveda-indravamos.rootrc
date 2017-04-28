@@ -274,6 +274,7 @@ INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset: 1.2
 
 # Time of flight offset to apply to correct AoQ=2 misalignments (in ns)
 INDRA_e503.KVVAMOSDataCorrection_e503.ToFOffset: -0.5
+
 # Path offset to apply to correct AoQ=2 misalignments (in cm)
 INDRA_e503.KVVAMOSDataCorrection_e503.PathOffset: 0.
 
