@@ -463,7 +463,6 @@ Float_t KVVAMOSReconNuc::CalculateRealQ(const Char_t* tof_name) const
    dist = tof = 0.;
 
    Double_t beta = CalculateBeta(dist, tof, tof_name);
-   //Double_t A    = CalculateRealAE(GetZ(), GetEnergyBeforeVAMOS(), beta);
    Double_t A    = CalculateRealAE(GetEnergyBeforeVAMOS(), beta);
    Double_t AoQ  = CalculateRealAoverQ(GetBrho(), beta) / u();
    return (AoQ > 0. ? A / AoQ : 0.);
@@ -504,19 +503,6 @@ void KVVAMOSReconNuc::IdentifyZ()
                IDR->IDattempted = kTRUE;
                idt->Identify(IDR);
 
-               //debug
-               //               Info("IdentifyZ", "after ident, IDR infos follow...");
-               //               IDR->Print();
-               //               std::cout << "IDR::IDOK=" << IDR->IDOK << std::endl;
-               //               std::cout << "IDR::IDquality=" << IDR->IDquality << std::endl;
-               //               std::cout << "IDR::IDcode=" << IDR->IDcode << std::endl;
-               //               std::cout << "IDR::Zident=" << IDR->Zident << std::endl;
-               //               std::cout << "IDR::Z=" << IDR->Z << std::endl;
-               //               std::cout << "IDR::Aident=" << IDR->Aident << std::endl;
-               //               std::cout << "IDR::A=" << IDR->A << std::endl;
-               //               std::cout << "IDR::PID=" << IDR->PID << std::endl;
-
-               // for all nuclei we take the first identification which gives IDOK==kTRUE
                if (!ok && IDR->IDOK) {
                   ok = kTRUE;
                   SetIsZidentified(); //Set bit to kIdentified and add 1 identified particle and subtract 1 unidentified particle from each detector in its list
@@ -529,6 +515,11 @@ void KVVAMOSReconNuc::IdentifyZ()
 
                   //Setting the identification
                   SetZIdentification(IDR, idt);
+
+                  if (fdebug) {
+                     Info("IdentifyZ", "... Z identification set, printing particle infos ... \nIDCode=%d \nZMeasured=%d, AMeasured=%d \nRealZ=%lf, RealA=%lf, \nZ=%d, A=%d, Aminimizer=%d",
+                          GetIDCode(), (int) IsZMeasured(), (int) IsAMeasured(), GetRealZ(), GetRealA(), GetZ(), GetA(), GetAMinimizer());
+                  }
                }
             } else
                IDR->IDattempted = kFALSE;
@@ -589,13 +580,14 @@ void KVVAMOSReconNuc::IdentifyQandA()
                Double_t dist, tof;
                dist = tof = 0.;
                Double_t beta    = CalculateBeta(dist, tof, tof_name);
-               Double_t realA   = CalculateRealAE(GetEnergyBeforeVAMOS(), beta);
+               Double_t realAE  = CalculateRealAE(GetEnergyBeforeVAMOS(), beta);
                Double_t realAoQ = CalculateRealAoverQ(GetBrho(), beta) / u();
 
-               qa_idt->Identify(&IDR, tof_name, realAoQ, realA);
+               qa_idt->Identify(&IDR, tof_name, realAoQ, realAE);
                // for all nuclei we take the first identification which gives IDOK==kTRUE
                if (IDR.IDOK) {
                   SetBasicQandAIdentification(&IDR);
+                  SetBasicRealAE(realAE);
                   SetBasicRealAoverQ(realAoQ);
                   SetBasicRealQ(qa_idt->GetRealQ());
                   SetBasicToF(tof);
@@ -632,9 +624,9 @@ void KVVAMOSReconNuc::IdentifyQandA()
                   SetBasicQandAIdentification(tof_name, tof, dist, realAE, realAoQ);
 
                   if (fdebug) {
-                     Info("IdentifyQandA", "ToF=%lf, Path=%lf, Beta=%lf, RealAE=%lf, RealAoQ=%lf, RealQ=%lf, RealA=%lf, Q=%d, A=%d",
+                     Info("IdentifyQandA", "ToF=%lf, Path=%lf, Beta=%lf, RealAE=%lf, RealAoQ=%lf, RealQ=%lf, RealZ=%lf, RealA=%lf, Q=%d, Z=%d, A=%d",
                           GetBasicToF(), GetBasicPath(), GetBasicBeta(), GetBasicRealAE(), GetBasicRealAoverQ(), GetBasicRealQ(),
-                          GetBasicRealA(), GetBasicQ(), GetBasicA());
+                          GetRealZ(), GetBasicRealA(), GetBasicQ(), GetZ(), GetBasicA());
                   }
 
                   return;
@@ -998,8 +990,9 @@ void KVVAMOSReconNuc::SetZIdentification(KVIdentificationResult* idr, KVIDTelesc
    }
 
    if (fdebug) {
-      Info("SetZIdentification", "IDCode=%d, PID=%lf, Zident=%d, RealZ=%lf, Aident=%d, RealA=%lf, A_CsI=%d",
-           GetIDCode(), idr->PID, (int) IsZMeasured(), GetRealZ(), (int) IsAMeasured(), GetRealA(), GetAMinimizer());
+      Info("SetZIdentification", "... setting the following IDR for identification ... \nIDR::IDCode=%d \nIDR::IDOK=%d, IDR::IDquality=%d \nIDR::Zident=%d, IDR::Aident=%d \nIDR::PID=%lf, IDR::Z=%d, IDR::A=%d",
+           idr->IDcode, (int) idr->IDOK, idr->IDquality, (int) idr->Zident, (int) idr->Aident, idr->PID, idr->Z, idr->A);
+      idr->Print();
    }
 }
 //________________________________________________________________

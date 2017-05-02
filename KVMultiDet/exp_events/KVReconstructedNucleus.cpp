@@ -375,12 +375,8 @@ void KVReconstructedNucleus::Identify()
                return;
             }
          }
-
-
       }
-
    }
-
 }
 
 //______________________________________________________________________________________________//
@@ -620,13 +616,6 @@ void KVReconstructedNucleus::SetIdentification(KVIdentificationResult* idr)
    } else {
       SetRealZ(idr->PID);
    }
-   //debug
-//   std::cout << "KVReconstructedNucleus::SetIdentification() IDCode=" << idr->IDcode << std::endl;
-//   std::cout << "KVReconstructedNucleus::SetIdentification() Zident=" << idr->Zident << std::endl;
-//   std::cout << "KVReconstructedNucleus::SetIdentification() Z=" << idr->Z << std::endl;
-//   std::cout << "KVReconstructedNucleus::SetIdentification() PID=" << idr->PID << std::endl;
-//   std::cout << "KVReconstructedNucleus::SetIdentification() RealZ=" << GetRealZ() << std::endl;
-//   std::cout << "KVReconstructedNucleus::SetIdentification() Aident=" << idr->Aident << std::endl;
 }
 
 void KVReconstructedNucleus::SubtractEnergyFromAllDetectors()

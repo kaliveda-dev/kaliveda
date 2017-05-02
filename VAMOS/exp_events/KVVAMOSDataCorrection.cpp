@@ -63,7 +63,7 @@ KVVAMOSDataCorrection* KVVAMOSDataCorrection::MakeDataCorrection(const Char_t* u
       dc = (KVVAMOSDataCorrection*) ph->ExecPlugin(1, run_number);
    }
 
-   dc->fDataSet   = uri;
+   dc->fDataSet = uri;
    dc->Init();
 
    std::cout << "<KVVAMOSDataCorrection::MakeDataCorrection> ... printing infos about created object ..." << std::endl;

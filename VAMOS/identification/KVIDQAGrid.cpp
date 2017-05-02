@@ -554,8 +554,8 @@ void KVIDQAGrid::MakeYvsAoQGrid(const Char_t* Y, Int_t Qmin, Int_t Qmax, Int_t A
       line->SetQ(q);
 
       Int_t npoints_added = 0;
-      //for ( a=Amin; a<=Amax; a++){
-      for (a = Amin; a <= Amax; a = a + Amax - Amin) {
+      for (a = Amin; a <= Amax; a++) {
+         //for (a = Amin; a <= Amax; a = a + Amax - Amin) {
          line->SetPoint(npoints_added, (1.*a) / q, 1.*(*y));
          npoints_added++;
       }
