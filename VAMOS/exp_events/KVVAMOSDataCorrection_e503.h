@@ -20,12 +20,18 @@ protected:
    KVHashList* flist_aoq_cut_sicsi;    //list of TCutG* for AoQ duplication corrections
    Float_t ftof_corr_sicsi;            //correction of ToF (in ns) for AoQ duplication corrections
 
+   Bool_t fkfunc_ztof_sicsi_init; //=kTRUE if the pol2 function was correctly init
+   TF1*   ffunc_ztof_sicsi; //pol2 function for AoQ=2 misalignments corrections
+
    //-----IC-Si-----
    KVHashList* flist_HFcuts_icsi;
    std::vector<Int_t> fvec_nHF_icsi;
 
    KVHashList* flist_aoq_cut_icsi;
    Float_t ftof_corr_icsi;
+
+   Bool_t fkfunc_ztof_icsi_init;
+   TF1*    ffunc_ztof_icsi;
 
    //-----Global offset-----
    Float_t ftof_offset; //glogal offset in ToF to correct AoQ=2 misalignments
@@ -38,11 +44,14 @@ protected:
    void ReadDuplicationCutFileList(std::ifstream& file, Int_t type);
    void ReadDuplicationToFOffsetsInDataSet();
    void ReadAdditionalToFAndPathOffsetsInDataSet();
+   void ReadToFOffsetZFunctionFilesListInDataSet();
+   void ReadToFOffsetZFunctionFileList(std::ifstream& file, Int_t type);
 
    //Corrections
    Bool_t ApplyHFCorrections(KVVAMOSReconNuc*, KVHashList*, std::vector<Int_t>);
    Bool_t ApplyToFDuplicationCorrections(KVVAMOSReconNuc*, KVHashList*, Float_t);
    Bool_t ApplyToFAndPathOffset(KVVAMOSReconNuc*);
+   Bool_t ApplyToFOffsetZFunctionCorrections(KVVAMOSReconNuc*, TF1*);
 
 
 public:

@@ -9,6 +9,7 @@
 #include "KVNucleus.h"
 #include "TCutG.h"
 #include "TKey.h"
+#include "TF1.h"
 
 ClassImp(KVVAMOSDataCorrection_e503)
 
@@ -53,6 +54,14 @@ KVVAMOSDataCorrection_e503::KVVAMOSDataCorrection_e503(Int_t run_number = -1) : 
       //for each Si detectors
       flist_aoq_cut_icsi->Add(new KVHashList);
    }
+
+   fkfunc_ztof_sicsi_init = kFALSE;
+   ffunc_ztof_sicsi = new TF1("func_ztof_sicsi", "pol2", 0, 25);
+   ffunc_ztof_sicsi->SetParameters(0., 0., 0.);
+
+   fkfunc_ztof_icsi_init = kFALSE;
+   ffunc_ztof_icsi  = new TF1("func_ztof_icsi", "pol2", 0, 25);
+   ffunc_ztof_icsi->SetParameters(0., 0., 0.);
 }
 
 //____________________________________________________________________________//
@@ -77,6 +86,16 @@ KVVAMOSDataCorrection_e503::~KVVAMOSDataCorrection_e503()
    if (flist_aoq_cut_icsi) {
       delete flist_aoq_cut_icsi;
       flist_aoq_cut_icsi = NULL;
+   }
+
+   if (ffunc_ztof_sicsi) {
+      delete ffunc_ztof_sicsi;
+      ffunc_ztof_sicsi = NULL;
+   }
+
+   if (ffunc_ztof_icsi) {
+      delete ffunc_ztof_icsi;
+      ffunc_ztof_icsi = NULL;
    }
 #endif
 }
@@ -124,6 +143,9 @@ void KVVAMOSDataCorrection_e503::Init()
          //Global ToF offset for AoQ=2 misalignments
          ftof_offset = -666.;
          ReadAdditionalToFAndPathOffsetsInDataSet();
+
+         //ToF offset in function of Z for AoQ=2 misalignments
+         ReadToFOffsetZFunctionFilesListInDataSet();
 
          Info("Init", "... initiliasing of correction class done ...");
          fkIsInit = kTRUE;
@@ -467,6 +489,154 @@ void KVVAMOSDataCorrection_e503::ReadAdditionalToFAndPathOffsetsInDataSet()
 }
 
 //____________________________________________________________________________//
+void KVVAMOSDataCorrection_e503::ReadToFOffsetZFunctionFilesListInDataSet()
+{
+   // Read the file containing infos to use
+   // for e503 A/Q=2 misalignments in function
+   // of the charge Z of the VAMOS particle.
+   // This file is set in the dataset directory:
+   // $KVROOT/KVFiles/INDRA_e503
+   //
+   // This file, specific to a given dataset, is found and
+   // opened using its name given by the following environment
+   // variable defined in $KVROOT/KVFiles/.kvrootrc:
+   //
+   // INDRA_e503.KVVAMOSDataCorrection_e503.ToFOffsetZFunctionSiCsI:  [file_name]
+   //
+   // This file contains a list of *.root file names, each
+   // of them associated to a system/range of runs.
+   // Each of these *.root files contains more specificly a
+   // TEnv object with the parameters of a function to use to correct the
+   // A/Q=2 misalignments, by applying an offset in the ToF of the identified particle.
+   // The correction applied will be: ToF+=ToF_offset,
+   // where ToF_offset = f(Z) and 'f' is a pol2 function.
+   // In the associated TEnv is also saved the run range.
+   //
+   // The idea to apply an ToF offset depending on the Z of the particle comes
+   // from a possible wrong calibration of the ToF general offset applied
+   // when in was calibrated (by using 40Ca elastic collisions). In fact it
+   // is possible that this calibration is wrong as the raise time of
+   // the Si signals (used as a 'start' in ToF measurements) depends
+   // strongly on the charge Z of the particle passing through the Si.
+   //
+   // As an example, we observe for the 40Ca+48Ca system an offset varying between 0 ns
+   //(Z=20) and -2.7 ns (Z=5), and the tendency matches a pol2 function.
+
+
+   //--------Si-CsI--------
+   //Find the list file to use
+   TString filename0 = gDataSet->GetDataSetEnv("KVVAMOSDataCorrection_e503.ToFOffsetZFunctionSiCsI");
+   if (filename0 == "") {
+      Warning("ReadToFOffsetZFunctionFilesListInDataSet", "No filename defined for Si-CsI telescopes. It can be defined by %s.KVVAMOSDataCorrection_e503.ToFOffsetZFunctionSiCsI", gDataSet->GetName());
+      return;
+   }
+   std::ifstream ifile0;
+   if (gDataSet->OpenDataSetFile(filename0.Data(), ifile0)) {
+      Info("ReadToFOffsetZFunctionFilesListInDataSet", "list of Si-CsI files in: '%s' ", filename0.Data());
+      ReadToFOffsetZFunctionFileList(ifile0, 0);
+      ifile0.close();
+   }
+
+   //--------IC-Si--------
+   //Find the list file to use
+   TString filename1 = gDataSet->GetDataSetEnv("KVVAMOSDataCorrection_e503.ToFOffsetZFunctionICSi");
+   if (filename1 == "") {
+      Warning("ReadToFOffsetZFunctionFilesListInDataSet", "No filename defined for IC-SI telescopes. It can be defined by %s.KVVAMOSDataCorrection_e503.ToFOffsetZFunctionICSi", gDataSet->GetName());
+      return;
+   }
+   std::ifstream ifile1;
+   if (gDataSet->OpenDataSetFile(filename1.Data(), ifile1)) {
+      Info("ReadToFOffsetZFunctionFilesListInDataSet", "list of IC-Si cut files in: '%s' ", filename1.Data());
+      ReadToFOffsetZFunctionFileList(ifile1, 1);
+      ifile1.close();
+   }
+}
+
+//____________________________________________________________________________//
+void KVVAMOSDataCorrection_e503::ReadToFOffsetZFunctionFileList(std::ifstream& file, Int_t type)
+{
+   //Protected method to read and set the ToF correction in function of the
+   //charge Z of the particle for the dataset e503.
+   //Set 'type' to 0 for SiCsI telescopes and set 'type' to 1 for ICSi telescopes
+   //For each file listed in this list file we:
+   //- read the TEnv in the file to access to the run range of the file
+   //- if 'fRunNumber' is in the run range we create in 'ffunc_ztof_sicsi'
+   //  the pol2 function with the parameters set in the TEnv and stop the research.
+
+   Bool_t found = kFALSE; //flag set to kTRUE as soon as we have found the good file
+
+   std::string newline;
+   while ((std::getline(file, newline)) && (!found)) {
+      //Ignore comments in the file
+      if (newline.compare(0, 1, "#") != 0) {
+         TString fullpath;
+         TFile* file = NULL;
+         if (gDataSet->SearchKVFile(newline.c_str(), fullpath, gDataSet->GetName())) {
+            //debug
+            //std::cout << fullpath.Data() << std::endl;
+
+            file = TFile::Open(fullpath.Data());
+            if (file) {
+
+               if (fkverbose) {
+                  Info("ReadToFOffsetZFunctionFileList", "... file %s opened, infos follow ...", file->GetName());
+                  file->ls();
+               }
+
+               //find the TEnv and access to runlist and tof_corr values
+               TEnv* env = (TEnv*) file->Get("TEnv");
+               assert(env);
+
+               if (fkverbose) {
+                  Info("ReadToFOffsetZFunctionFileList", "... TEnv infos follow ...");
+                  env->Print();
+               }
+
+               const Char_t* runlist = env->GetValue("runlist", "");
+               if (fkverbose) {
+                  Info("ReadToFOffsetZFunctionFileList", "... run (=%d) | runlist of the file (=%s) ...",
+                       fRunNumber, runlist);
+               }
+
+               //check if 'fRunNumber' is in run range
+               KVNumberList nl(runlist);
+               if (nl.Contains(fRunNumber)) {
+
+                  if (fkverbose) {
+                     Info("ReadToFOffsetZFunctionFileList", "... run (=%d) is in the runlist of the file (=%s) ...",
+                          fRunNumber, runlist);
+                  }
+
+                  //exctract pol2 coefficients from TEnv
+                  Double_t xmin = env->GetValue("xmin", 0.);
+                  Double_t xmax = env->GetValue("xmax", 25.);
+                  Double_t p0   = env->GetValue("p0", 0.);
+                  Double_t p1   = env->GetValue("p1", 0.);
+                  Double_t p2   = env->GetValue("p2", 0.);
+
+                  if (type == 0) {
+                     ffunc_ztof_sicsi->SetRange(xmin, xmax);
+                     ffunc_ztof_sicsi->SetParameters(p0, p1, p2);
+                     fkfunc_ztof_sicsi_init = kTRUE;
+                  }
+
+                  else if (type == 1) {
+                     ffunc_ztof_icsi->SetRange(xmin, xmax);
+                     ffunc_ztof_sicsi->SetParameters(p0, p1, p2);
+                     fkfunc_ztof_icsi_init = kTRUE;
+                  }
+
+                  found = kTRUE;
+               }
+
+               file->Close();
+            }//end of file is ok
+         }//end of SearchKVFile
+      }//end of line ok
+   }//all lines read
+}
+
+//____________________________________________________________________________//
 Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
 {
    assert(nuc);
@@ -484,25 +654,29 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    if (fkverbose) Info("ApplyCorrections", "... trying to apply e503 corrections to nucleus (IDCode=%d) ...", IDCode);
 
    //Si-CsI telescopes corrections
-   Bool_t kCsI_HFcorr = kFALSE;
-   Bool_t kCsI_DUcorr = kFALSE;
+   Bool_t kCsI_HFcorr   = kFALSE;
+   Bool_t kCsI_DUcorr   = kFALSE;
+   Bool_t kCsI_ZToFfunc = kFALSE;
    if (IDCode == 3) {
       kCsI_HFcorr = ApplyHFCorrections(nuc, flist_HFcuts_sicsi, fvec_nHF_sicsi);
       kCsI_DUcorr = ApplyToFDuplicationCorrections(nuc, flist_aoq_cut_sicsi, ftof_corr_sicsi);
+      if (fkfunc_ztof_sicsi_init) kCsI_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_sicsi);
    }
 
    //IC-Si telescopes corrections
-   Bool_t kSi_HFcorr = kFALSE;
-   Bool_t kSi_DUcorr = kFALSE;
+   Bool_t kSi_HFcorr   = kFALSE;
+   Bool_t kSi_DUcorr   = kFALSE;
+   Bool_t kSi_ZToFfunc = kFALSE;
    if (IDCode == 4) {
       kSi_HFcorr = ApplyHFCorrections(nuc, flist_HFcuts_icsi, fvec_nHF_icsi);
       kSi_DUcorr = ApplyToFDuplicationCorrections(nuc, flist_aoq_cut_icsi, ftof_corr_icsi);
+      if (fkfunc_ztof_icsi_init) kSi_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_icsi);
    }
 
-   //AoQ=2 misalignment corrections
+   //AoQ=2 misalignment global corrections
    Bool_t koffset = ApplyToFAndPathOffset(nuc);
 
-   if (kCsI_HFcorr || kCsI_DUcorr || kSi_HFcorr || kSi_DUcorr  || koffset) return kTRUE;
+   if (kCsI_HFcorr || kCsI_DUcorr || kCsI_ZToFfunc || kSi_HFcorr || kSi_DUcorr || kSi_ZToFfunc || koffset) return kTRUE;
    else return kFALSE;
 }
 
@@ -665,7 +839,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFDuplicationCorrections(KVVAMOSReconNu
 //____________________________________________________________________________//
 Bool_t KVVAMOSDataCorrection_e503::ApplyToFAndPathOffset(KVVAMOSReconNuc* nuc)
 {
-   //Apply a general ime of flight offset to correct AoQ=2 misalignments
+   //Apply a general time of flight offset to correct AoQ=2 misalignments
    //
    //Return kTRUE if correction applied.
    //Return kFALSE if no correction needed.
@@ -701,6 +875,53 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFAndPathOffset(KVVAMOSReconNuc* nuc)
    //debug
    if (fkverbose) {
       Info("ApplyToFOffset", "... after ToF and Path corrections ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+           nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
+           nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
+   }
+
+   return kTRUE;
+}
+
+//____________________________________________________________________________//
+Bool_t KVVAMOSDataCorrection_e503::ApplyToFOffsetZFunctionCorrections(KVVAMOSReconNuc* nuc, TF1* func)
+{
+   //Apply time of flight offset in function of the charge Z of the particle
+   //to correct AoQ=2 misalignments.
+   //
+   //Return kTRUE if correction applied.
+   //Return kFALSE if no correction needed.
+   //
+   //NOTE: for the moment the duplication corrections are applied AFTER HF corrections,
+   //      AFTER ToF duplication corrections and AFTER the global ToF+Path offset ...
+
+   assert(nuc);
+
+   //debug
+   if (fkverbose) {
+      Info("ApplyToFOffsetZFunctionCorrections", "... before ToF ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+           nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
+           nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
+   }
+
+   //apply corrections
+   //as the duplication corrections are applied after HF corrections
+   //and after ToF duplication corrections, we modify here the former
+   //corrected ToF
+   Float_t realZ    = nuc->GetRealZ();
+   Float_t tof      = nuc->GetCorrectedToF();
+   Float_t corr_tof = func->Eval(realZ);
+   nuc->SetCorrectedToF(tof + corr_tof);
+
+   Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
+   Double_t AE  = nuc->GetEnergyBeforeVAMOS() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
+
+   nuc->SetCorrectedRealAoverQ(AoQ);
+   nuc->SetCorrectedRealAE(AE);
+   nuc->SetCorrected(kTRUE);
+
+   //debug
+   if (fkverbose) {
+      Info("ApplyToFOffsetZFunctionCorrections", "... after ToF corrections ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
            nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
            nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
    }
@@ -778,7 +999,16 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    }
 
    //-------Global ToF offset to correct AoQ=2 misalignments-------
-   printf("###### AoQ=2 misalignment ToF and Path corrections ######\n");
+   printf("###### AoQ=2 global misalignment: ToF and Path corrections ######\n");
    printf("ToF Offset = %lf ns\n", ftof_offset);
    printf("Path Offset = %lf cm\n", fpath_offset);
+
+   //-------ToF offset in function of the charge Z of the particle to correct AoQ=2 misalignments-------
+   printf("###### AoQ=2 misalignment: ToF correction in function of Z ######\n");
+   printf("-> Si-CsI:\n");
+   printf("Initialised = %d\n", (int) fkfunc_ztof_sicsi_init);
+   ffunc_ztof_sicsi->Print();
+   printf("-> IC-Si:\n");
+   printf("Initialised = %d\n", (int) fkfunc_ztof_icsi_init);
+   ffunc_ztof_icsi->Print();
 }

@@ -97,6 +97,7 @@ const KVList* KVVAMOSDataCorrection::GetIDCorrectionParameters() const
 {
    return fRecords;
 }
+
 //____________________________________________________________________________//
 Bool_t KVVAMOSDataCorrection::ApplyCorrections(KVVAMOSReconNuc*)
 {
