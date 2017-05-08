@@ -118,7 +118,7 @@ void KVIDGridEditorCanvas::HandleInput(EEventType event, Int_t px, Int_t py)
 
             RunAutoExec();
 
-            if (fSelected->InheritsFrom("TH2")) {
+            if (fSelected && fSelected->InheritsFrom("TH2")) {
                oldx = GetEventX();
                oldy = GetEventY();
                xmin = AbsPixeltoX(oldx);
