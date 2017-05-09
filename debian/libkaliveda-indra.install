@@ -141,7 +141,9 @@
 /usr/share/kaliveda/INDRA_e503/cuts_brho_4040.root
 /usr/share/kaliveda/INDRA_e503/IonisationChamber_v3.cal
 /usr/share/kaliveda/INDRA_e503/CsI_v3.cal
+/usr/share/kaliveda/INDRA_e503/VAMOSHFCutListSiCsI.list
 /usr/share/kaliveda/INDRA_e503/CsI.pied
+/usr/share/kaliveda/INDRA_e503/HFCutFile_4048_SiCsI.root
 /usr/share/kaliveda/INDRA_e503/m_function.dat
 /usr/share/kaliveda/INDRA_e503/q_function.dat
 /usr/share/kaliveda/INDRA_e503/r_th10_1013.dat
@@ -172,6 +174,7 @@
 /usr/share/kaliveda/INDRA_e503/r_theta_In.dat
 /usr/share/kaliveda/INDRA_e503/scalersVamos.dat
 /usr/share/kaliveda/INDRA_e503/grid_Q_AQ_chiosi.dat
+/usr/share/kaliveda/INDRA_e503/VAMOSDuplicationCutSiCsI.list
 /usr/share/kaliveda/INDRA_e503/Codeurs.dat
 /usr/share/kaliveda/INDRA_e503/DriftChamberRef.cal
 /usr/share/kaliveda/INDRA_e503/geom.dat
@@ -242,6 +245,7 @@
 /usr/share/kaliveda/INDRA_e503/ChVolt.dat
 /usr/share/kaliveda/INDRA_e503/cuts_brho_chiosi_4048.root
 /usr/share/kaliveda/INDRA_e503/VAMOStransMatrixCoef.list
+/usr/share/kaliveda/INDRA_e503/DuplicationCutFile_4048_SiCsI.root
 /usr/share/kaliveda/INDRA_e503/VAMOSGridFiles.txt
 /usr/share/kaliveda/INDRA_e503/Grid_ChioSi_C4-9_R322-606.dat
 /usr/share/kaliveda/INDRA_e503/AUTOMATE_E503_RUNS_452_AND_453.LOG

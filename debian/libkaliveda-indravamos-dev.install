@@ -52,11 +52,8 @@
 /usr/include/kaliveda/KVVAMOSDataCorrection.h
 /usr/include/kaliveda/KVVAMOSReconNuc.h
 /usr/include/kaliveda/KVVAMOSReconEvent.h
-/usr/include/kaliveda/CorrectionData.h
 /usr/include/kaliveda/KVINDRA_VAMOS.h
 /usr/include/kaliveda/KVVAMOSDataCorrection_e503.h
-/usr/include/kaliveda/Corrections_e503.h
-/usr/include/kaliveda/AbsorberEnergies.h
 /usr/include/kaliveda/KVIVReconEvent.h
 /usr/include/kaliveda/KVIVReconIdent.h
 /usr/include/kaliveda/KVIVRawDataReconstructor.h
