@@ -278,8 +278,9 @@ LNS_2016.ActiveIdentifications:         Si-CsI Si-Si
 
 FAZIACOR.IdentificationParameterFile.Si-Si:       ID_SI1_SI2_FAZIACOR.dat
 #FAZIACOR.IdentificationParameterFile.CsI:
+FAZIACOR.IdentificationParameterFile.Si:       ID_SI1PSA_OnlyZ.dat
 FAZIACOR.IdentificationParameterFile.Si-CsI:       ID_SI2_CSI_FAZIACOR.dat
-FAZIACOR.ActiveIdentifications:       Si-CsI Si-Si
+FAZIACOR.ActiveIdentifications:       Si-CsI Si-Si Si
 
 # file which gather all calibration files
 FAZIADB.CalibrationFiles:     CalibrationFiles.dat
