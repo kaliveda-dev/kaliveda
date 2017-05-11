@@ -205,149 +205,149 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
             }
          }
       }
-   }
 #endif
-      // calculate N-body variables
-      if (HasNBodyVariables()) FillN(e);
    }
+   // calculate N-body variables
+   if (HasNBodyVariables()) FillN(e);
+}
 
 //_________________________________________________________________
-   KVVarGlob* KVGVList::GetGV(const Char_t* nom)
-   {
-      //Return pointer to global variable in list with name 'nom'
+KVVarGlob* KVGVList::GetGV(const Char_t* nom)
+{
+   //Return pointer to global variable in list with name 'nom'
 
-      return (KVVarGlob*) FindObject(nom);
-   }
-
-//_________________________________________________________________
-   void KVGVList::Add(TObject* obj)
-   {
-      // Overrides TList::Add(TObject*) so that global variable pointers are sorted
-      // between the 3 lists used for 1-body, 2-body & N-body variables.
-
-      if (obj->InheritsFrom("KVVarGlob")) {
-         // put global variable pointer in appropriate list
-         KVVarGlob* vg = (KVVarGlob*)obj;
-         if (vg->IsOneBody()) fVG1.Add(vg);
-         else if (vg->IsTwoBody()) fVG2.Add(vg);
-         else if (vg->IsNBody()) fVGN.Add(vg);
-      }
-      // add object to main list
-      KVList::Add(obj);
-   }
+   return (KVVarGlob*) FindObject(nom);
+}
 
 //_________________________________________________________________
+void KVGVList::Add(TObject* obj)
+{
+   // Overrides TList::Add(TObject*) so that global variable pointers are sorted
+   // between the 3 lists used for 1-body, 2-body & N-body variables.
 
-   TObject** KVGVList::GetGVRef(const Char_t* name)
-   {
-      // Returns pointer to pointer holding address of GV in list with given name.
-      // This can be used in order to store global variables used in a KVSelector in a TTree:
-      //
-      // [ in MySelector::InitAnalysis... ]
-      //    AddGV("KVZmax", "zmax");
-      //    TTree* tree = new TTree(...);
-      //    tree->Branch("zmax", "KVZmax", GetGVList()->GetGVRef("zmax"));
-      //
-      // This will create a leaf called "zmax" containing the global variable for each event.
-      // In the Tree Viewer you can plot the values of this leaf variable in the same way as
-      // you would with any simple variable.
-      //
-      // Note that if you want to store all of the global variables in the tree, you just need to
-      // do the following:
-      //
-      // [in MySelector::InitAnalysis... ]
-      //    AddGV("KVZmax", "zmax");
-      //    AddGV("KVZtot", "ztot");
-      //    AddGV("KVEtrans", "etrans");
-      //    etc. etc.
-      //    TTree* tree = new TTree(...);
-      //    tree->Branch(GetGVList());
-      //
-      // This will create a leaf for each global variable in the list.
-
-      TObject* obj = FindObject(name);
-      if (obj) return GetObjectRef(obj);
-      return 0;
+   if (obj->InheritsFrom("KVVarGlob")) {
+      // put global variable pointer in appropriate list
+      KVVarGlob* vg = (KVVarGlob*)obj;
+      if (vg->IsOneBody()) fVG1.Add(vg);
+      else if (vg->IsTwoBody()) fVG2.Add(vg);
+      else if (vg->IsNBody()) fVGN.Add(vg);
    }
+   // add object to main list
+   KVList::Add(obj);
+}
 
 //_________________________________________________________________
 
-   void KVGVList::MakeBranches(TTree* tree)
-   {
-      // Create a branch in the TTree for each global variable in the list.
-      // A leaf with the name of each global variable will be created to hold the
-      // value of the variable (result of GetValue() method).
-      // For multi-valued global variables we add a branch for each value with name
-      //   GVname.ValueName
-      // Any variable for which KVVarGlob::SetMaxNumBranches(0) was called will not
-      // be added to the TTree.
+TObject** KVGVList::GetGVRef(const Char_t* name)
+{
+   // Returns pointer to pointer holding address of GV in list with given name.
+   // This can be used in order to store global variables used in a KVSelector in a TTree:
+   //
+   // [ in MySelector::InitAnalysis... ]
+   //    AddGV("KVZmax", "zmax");
+   //    TTree* tree = new TTree(...);
+   //    tree->Branch("zmax", "KVZmax", GetGVList()->GetGVRef("zmax"));
+   //
+   // This will create a leaf called "zmax" containing the global variable for each event.
+   // In the Tree Viewer you can plot the values of this leaf variable in the same way as
+   // you would with any simple variable.
+   //
+   // Note that if you want to store all of the global variables in the tree, you just need to
+   // do the following:
+   //
+   // [in MySelector::InitAnalysis... ]
+   //    AddGV("KVZmax", "zmax");
+   //    AddGV("KVZtot", "ztot");
+   //    AddGV("KVEtrans", "etrans");
+   //    etc. etc.
+   //    TTree* tree = new TTree(...);
+   //    tree->Branch(GetGVList());
+   //
+   // This will create a leaf for each global variable in the list.
 
-      if (!tree) return;
-      if (fNbIBranch >= MAX_CAP_BRANCHES && fNbBranch >= MAX_CAP_BRANCHES) return;
+   TObject* obj = FindObject(name);
+   if (obj) return GetObjectRef(obj);
+   return 0;
+}
 
-      // Make sure all variables are initialised before proceeding
-      Init();
+//_________________________________________________________________
 
-      TIter next(this);
-      KVVarGlob* ob;
-      while ((ob = (KVVarGlob*)next())) {
-         if (ob->GetNumberOfBranches()) { //skip variables for which KVVarGlob::SetMaxNumBranches(0) was called
-            if (ob->GetNumberOfValues() > 1) {
-               // multi-valued variable
-               for (int i = 0; i < ob->GetNumberOfBranches(); i++) {
-                  // replace any nasty mathematical symbols which could pose problems
-                  // in names of TTree leaves/branches
-                  TString sane_name(ob->GetValueName(i));
-                  sane_name.ReplaceAll("*", "star");
-                  if (ob->GetValueType(i) == 'I') {
-                     if (fNbIBranch < MAX_CAP_BRANCHES)  tree->Branch(Form("%s.%s", ob->GetName(), sane_name.Data()), &fIBranchVar[ fNbIBranch++ ], Form("%s.%s/I", ob->GetName(), sane_name.Data()));
-                  } else {
-                     if (fNbBranch < MAX_CAP_BRANCHES)  tree->Branch(Form("%s.%s", ob->GetName(), sane_name.Data()), &fBranchVar[ fNbBranch++ ], Form("%s.%s/D", ob->GetName(), sane_name.Data()));
-                  }
-                  if (fNbIBranch == MAX_CAP_BRANCHES) break;
-                  if (fNbBranch == MAX_CAP_BRANCHES) break;
-               }
-            } else {
-               if (ob->GetValueType(0) == 'I') {
-                  if (fNbIBranch < MAX_CAP_BRANCHES)   tree->Branch(ob->GetName(), &fIBranchVar[ fNbIBranch++ ], Form("%s/I", ob->GetName()));
+void KVGVList::MakeBranches(TTree* tree)
+{
+   // Create a branch in the TTree for each global variable in the list.
+   // A leaf with the name of each global variable will be created to hold the
+   // value of the variable (result of GetValue() method).
+   // For multi-valued global variables we add a branch for each value with name
+   //   GVname.ValueName
+   // Any variable for which KVVarGlob::SetMaxNumBranches(0) was called will not
+   // be added to the TTree.
+
+   if (!tree) return;
+   if (fNbIBranch >= MAX_CAP_BRANCHES && fNbBranch >= MAX_CAP_BRANCHES) return;
+
+   // Make sure all variables are initialised before proceeding
+   Init();
+
+   TIter next(this);
+   KVVarGlob* ob;
+   while ((ob = (KVVarGlob*)next())) {
+      if (ob->GetNumberOfBranches()) { //skip variables for which KVVarGlob::SetMaxNumBranches(0) was called
+         if (ob->GetNumberOfValues() > 1) {
+            // multi-valued variable
+            for (int i = 0; i < ob->GetNumberOfBranches(); i++) {
+               // replace any nasty mathematical symbols which could pose problems
+               // in names of TTree leaves/branches
+               TString sane_name(ob->GetValueName(i));
+               sane_name.ReplaceAll("*", "star");
+               if (ob->GetValueType(i) == 'I') {
+                  if (fNbIBranch < MAX_CAP_BRANCHES)  tree->Branch(Form("%s.%s", ob->GetName(), sane_name.Data()), &fIBranchVar[ fNbIBranch++ ], Form("%s.%s/I", ob->GetName(), sane_name.Data()));
                } else {
-                  if (fNbBranch < MAX_CAP_BRANCHES)    tree->Branch(ob->GetName(), &fBranchVar[ fNbBranch++ ], Form("%s/D", ob->GetName()));
+                  if (fNbBranch < MAX_CAP_BRANCHES)  tree->Branch(Form("%s.%s", ob->GetName(), sane_name.Data()), &fBranchVar[ fNbBranch++ ], Form("%s.%s/D", ob->GetName(), sane_name.Data()));
                }
+               if (fNbIBranch == MAX_CAP_BRANCHES) break;
+               if (fNbBranch == MAX_CAP_BRANCHES) break;
+            }
+         } else {
+            if (ob->GetValueType(0) == 'I') {
+               if (fNbIBranch < MAX_CAP_BRANCHES)   tree->Branch(ob->GetName(), &fIBranchVar[ fNbIBranch++ ], Form("%s/I", ob->GetName()));
+            } else {
+               if (fNbBranch < MAX_CAP_BRANCHES)    tree->Branch(ob->GetName(), &fBranchVar[ fNbBranch++ ], Form("%s/D", ob->GetName()));
             }
          }
       }
    }
+}
 
 //_________________________________________________________________
 
-   void KVGVList::FillBranches()
-   {
-      // Use this method ONLY if you first use MakeBranches(TTree*) in order to
-      // automatically create branches for your global variables.
-      // Call this method for each event in order to put the values of the variables
-      // in the branches ready for TTree::Fill to be called (note that Fill() is not
-      // called in this method: you should do it after this).
+void KVGVList::FillBranches()
+{
+   // Use this method ONLY if you first use MakeBranches(TTree*) in order to
+   // automatically create branches for your global variables.
+   // Call this method for each event in order to put the values of the variables
+   // in the branches ready for TTree::Fill to be called (note that Fill() is not
+   // called in this method: you should do it after this).
 
-      if (!fNbBranch && !fNbIBranch) return;  // MakeBranches has not been called
+   if (!fNbBranch && !fNbIBranch) return;  // MakeBranches has not been called
 
-      int INT_index = 0;
-      int FLT_index = 0;
-      TIter next(this);
-      KVVarGlob* ob;
-      while ((ob = (KVVarGlob*)next())) {
-         if (ob->GetNumberOfBranches()) { //skip variables for which KVVarGlob::SetMaxNumBranches(0) was called
+   int INT_index = 0;
+   int FLT_index = 0;
+   TIter next(this);
+   KVVarGlob* ob;
+   while ((ob = (KVVarGlob*)next())) {
+      if (ob->GetNumberOfBranches()) { //skip variables for which KVVarGlob::SetMaxNumBranches(0) was called
 
-            if (ob->GetNumberOfValues() > 1) {
-               // multi-valued variable
-               for (int j = 0; j < ob->GetNumberOfBranches(); j++) {
-                  if (ob->GetValueType(j) == 'I') fIBranchVar[ INT_index++ ] = (Int_t)ob->GetValue(j);
-                  else fBranchVar[ FLT_index++ ] = ob->GetValue(j);
-               }
-            } else {
-               if (ob->GetValueType(0) == 'I') fIBranchVar[ INT_index++ ] = (Int_t)ob->GetValue();
-               else fBranchVar[ FLT_index++ ] = ob->GetValue();
+         if (ob->GetNumberOfValues() > 1) {
+            // multi-valued variable
+            for (int j = 0; j < ob->GetNumberOfBranches(); j++) {
+               if (ob->GetValueType(j) == 'I') fIBranchVar[ INT_index++ ] = (Int_t)ob->GetValue(j);
+               else fBranchVar[ FLT_index++ ] = ob->GetValue(j);
             }
-
+         } else {
+            if (ob->GetValueType(0) == 'I') fIBranchVar[ INT_index++ ] = (Int_t)ob->GetValue();
+            else fBranchVar[ FLT_index++ ] = ob->GetValue();
          }
+
       }
    }
+}
