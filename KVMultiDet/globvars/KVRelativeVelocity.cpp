@@ -45,7 +45,7 @@ KVRelativeVelocity::KVRelativeVelocity(void): KVVarGlobMean()
 }
 
 //_________________________________________________________________
-KVRelativeVelocity::KVRelativeVelocity(Char_t* nom): KVVarGlobMean(nom)
+KVRelativeVelocity::KVRelativeVelocity(const Char_t* nom): KVVarGlobMean(nom)
 {
 //
 // Constructeur avec un nom (may not be modified)

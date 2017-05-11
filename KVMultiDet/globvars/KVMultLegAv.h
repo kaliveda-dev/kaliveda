@@ -15,7 +15,7 @@ class KVMultLegAv: public KVMultLeg {
 // Methodes
 public:
    KVMultLegAv(void);           // constructeur par defaut
-   KVMultLegAv(char* nom);
+   KVMultLegAv(const char* nom);
 
    virtual ~ KVMultLegAv(void);        // destructeur
 

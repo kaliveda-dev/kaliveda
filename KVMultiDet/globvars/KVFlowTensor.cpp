@@ -58,7 +58,7 @@ KVFlowTensor::KVFlowTensor(void): KVVarGlob(), fTensor(3)
 }
 
 //_________________________________________________________________
-KVFlowTensor::KVFlowTensor(Char_t* nom): KVVarGlob(nom), fTensor(3)
+KVFlowTensor::KVFlowTensor(const Char_t* nom): KVVarGlob(nom), fTensor(3)
 {
    // Constructor with a name for the global variable
    init_KVFlowTensor();

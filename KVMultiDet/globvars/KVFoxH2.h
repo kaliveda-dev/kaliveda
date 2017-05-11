@@ -28,7 +28,7 @@ protected:
 
 public:
    KVFoxH2(void);       // default constructor
-   KVFoxH2(Char_t* nom);      // constructor with aname
+   KVFoxH2(const Char_t* nom);      // constructor with aname
    KVFoxH2(const KVFoxH2& a);// copy constructor
 
    void Init(void);

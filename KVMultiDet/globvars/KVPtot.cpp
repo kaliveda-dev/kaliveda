@@ -81,7 +81,7 @@ KVPtot::KVPtot(void): KVVarGlob()
 }
 
 //_________________________________________________________________
-KVPtot::KVPtot(Char_t* nom, const Char_t* frm): KVVarGlob(nom)
+KVPtot::KVPtot(const Char_t* nom, const Char_t* frm): KVVarGlob(nom)
 {
    // Create KVPtot with name "nom" and using Lorentz frame whose name is "frame" to calculate
    // the sum of momenta. If "frame" is not given, the laboratory reference frame is assumed.

@@ -39,7 +39,7 @@ protected:
 
 public:
    KVVarGlob1(void);            // constructeur par defaut
-   KVVarGlob1(Char_t* nom);
+   KVVarGlob1(const Char_t* nom);
    KVVarGlob1(const KVVarGlob1& a);     // constructeur par Copy
 
    virtual ~ KVVarGlob1(void);  // destructeur

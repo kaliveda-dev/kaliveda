@@ -4,8 +4,6 @@
 // 18/02/2004
 // Creation d'une classe Variable Globale.
 // Retourne le Zmax de l'enenemnt et le pointeur du fragment le plus lourd
-#include <math.h>
-#include <stdio.h>
 #include "KVZmax.h"
 
 ClassImp(KVZmax)
@@ -41,7 +39,6 @@ void KVZmax::init_KVZmax(void)
 //
    nb++;
    nb_crea++;
-   heaviest = 0;
    fSorted = kFALSE;
    //set up list of indices
    for (int i = 1; i <= 50; i++)
@@ -51,7 +48,7 @@ void KVZmax::init_KVZmax(void)
 }
 
 //_________________________________________________________________
-KVZmax::KVZmax(void): KVVarGlob1()
+KVZmax::KVZmax(void): KVVarGlob()
 {
 //
 // Createur par default
@@ -69,7 +66,7 @@ KVZmax::KVZmax(void): KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVZmax::KVZmax(Char_t* nom): KVVarGlob1(nom)
+KVZmax::KVZmax(const Char_t* nom): KVVarGlob(nom)
 {
 //
 // Constructeur avec un nom
@@ -81,7 +78,7 @@ KVZmax::KVZmax(Char_t* nom): KVVarGlob1(nom)
 }
 
 //_________________________________________________________________
-KVZmax::KVZmax(const KVZmax& a) : KVVarGlob1()
+KVZmax::KVZmax(const KVZmax& a) : KVVarGlob()
 {
 //
 // Contructeur par Copy
@@ -109,11 +106,6 @@ KVZmax::~KVZmax(void)
    nb--;
 
    nb_dest++;
-   if (heaviest) {
-      heaviest->Clear("nodelete");
-      delete heaviest;
-      heaviest = 0;
-   }
 }
 
 //_________________________________________________________________
@@ -131,15 +123,13 @@ void KVZmax::Copy(TObject& a)
    cout << "Copy de " << GetName() << "..." << endl;
 #endif
    ((KVZmax&) a).Reset();
-   KVVarGlob1::Copy(a);
+   KVVarGlob::Copy(a);
 
    //copy list of fragments if it exists
-   if (heaviest) {
-      KVNucleus* tmp;
-      TIter next(heaviest);
-      while ((tmp = (KVNucleus*) next()))
-         ((KVZmax&) a).Fill(tmp);
-   }
+   KVNucleus* tmp;
+   TIter next(&heaviest);
+   while ((tmp = (KVNucleus*) next()))
+      ((KVZmax&) a).Fill(tmp);
 #ifdef DEBUG_KVZmax
    cout << "Nom de la Copy (resultat) : " << a.GetName() << endl;
 #endif
@@ -171,11 +161,6 @@ void KVZmax::Init(void)
 //
 // Remise a Zero de la variable et du pointeur
 //
-   KVVarGlob1::Init();
-   if (heaviest) {
-      heaviest->SetOwner(kFALSE);
-      heaviest->Clear("nodelete");
-   }
    fSorted = kFALSE;
 }
 
@@ -185,38 +170,29 @@ void KVZmax::Reset(void)
 //
 // Remise a Zero de la variable et du pointeur
 //
-   KVVarGlob1::Reset();
-   if (heaviest) {
-      heaviest->Clear("nodelete");
-   }
+   heaviest.Clear();
    fSorted = kFALSE;
 }
 
 //_________________________________________________________________
 void KVZmax::Fill(KVNucleus* c)
 {
-   //We use the TList sorting mechanism in order to rank the fragments.
-   //Each new nucleus has its pointer added to the TList.
+   // We use the TList sorting mechanism in order to rank the fragments.
+   // Each new nucleus has its pointer added to the TList.
 
-   if (!heaviest) {
-      heaviest = new TList;
-      heaviest->SetOwner(kFALSE);
-   }
-   heaviest->Add(c);
+   heaviest.Add(c);
 }
 
 //_________________________________________________________________
-KVNucleus* KVZmax::GetZmax(Int_t i)
+KVNucleus* KVZmax::GetZmax(Int_t i) const
 {
-   //Pointer to (i+1)th heaviest fragment (i=0 : Zmax, i=1 : Zmax2, etc.)
+   // Pointer to (i+1)th heaviest fragment (i=0 : Zmax, i=1 : Zmax2, etc.)
 
-   if (!heaviest)
-      return 0;
    if (!fSorted) {
-      heaviest->Sort();
+      heaviest.Sort();
       fSorted = kTRUE;
    }
-   return (KVNucleus*) heaviest->At(i);
+   return (KVNucleus*) heaviest.At(i);
 }
 
 //_________________________________________________________________
@@ -246,13 +222,7 @@ Double_t* KVZmax::GetValuePtr(void)
    //
    //  USER MUST DELETE ARRAY AFTER USING !!!
 
-   if (!heaviest)
-      return 0;
-   UInt_t size_event = heaviest->GetSize();
-   if (!fSorted) {
-      heaviest->Sort();
-      fSorted = kTRUE;
-   }
+   UInt_t size_event = heaviest.GetEntries();
    Double_t* v = new Double_t[size_event];
    for (UInt_t u = 0; u < size_event; u++)
       v[u] = GetValue(u);

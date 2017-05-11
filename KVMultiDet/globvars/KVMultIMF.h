@@ -23,7 +23,7 @@ protected:
 
 public:
    KVMultIMF(void);            // constructeur par defaut
-   KVMultIMF(Char_t* nom);
+   KVMultIMF(const Char_t* nom);
 
    virtual ~ KVMultIMF(void);  // destructeur
 

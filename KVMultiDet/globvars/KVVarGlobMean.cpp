@@ -150,7 +150,7 @@ KVVarGlobMean::KVVarGlobMean(void): KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVVarGlobMean::KVVarGlobMean(Char_t* nom): KVVarGlob1(nom)
+KVVarGlobMean::KVVarGlobMean(const Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom

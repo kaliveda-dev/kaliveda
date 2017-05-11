@@ -48,7 +48,7 @@ KVEtrans::KVEtrans(void): KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVEtrans::KVEtrans(Char_t* nom): KVVarGlob1(nom)
+KVEtrans::KVEtrans(const Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom

@@ -20,7 +20,7 @@ KVTensPCM::KVTensPCM(void)
 }
 
 //_________________________________________________________________
-KVTensPCM::KVTensPCM(Char_t* nom): KVTensP(nom, "CM")
+KVTensPCM::KVTensPCM(const Char_t* nom): KVTensP(nom, "CM")
 {
 //
 // Constructeur avec un nom

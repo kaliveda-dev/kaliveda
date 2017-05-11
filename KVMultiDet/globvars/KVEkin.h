@@ -23,7 +23,7 @@ protected:
 
 public:
    KVEkin(void);               // constructeur par defaut
-   KVEkin(Char_t* nom);
+   KVEkin(const Char_t* nom);
    KVEkin(const KVEkin& a);    // constructeur par Copy
 
    virtual ~ KVEkin(void);     // destructeur

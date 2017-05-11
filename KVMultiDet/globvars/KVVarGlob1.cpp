@@ -63,7 +63,7 @@ KVVarGlob1::KVVarGlob1(void): KVVarGlob()
 }
 
 //_________________________________________________________________
-KVVarGlob1::KVVarGlob1(Char_t* nom): KVVarGlob(nom)
+KVVarGlob1::KVVarGlob1(const Char_t* nom): KVVarGlob(nom)
 {
 //
 // Constructeur avec un nom

@@ -178,7 +178,7 @@ KVCalorimetry::KVCalorimetry(void): KVCaloBase()
 }
 
 //_________________________________________________________________
-KVCalorimetry::KVCalorimetry(Char_t* nom): KVCaloBase(nom)
+KVCalorimetry::KVCalorimetry(const Char_t* nom): KVCaloBase(nom)
 {
 // Constructeur avec un nom
 

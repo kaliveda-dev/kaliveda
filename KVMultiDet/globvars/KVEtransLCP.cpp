@@ -15,7 +15,7 @@ KVEtransLCP::KVEtransLCP()
 }
 
 //_________________________________________________________________
-KVEtransLCP::KVEtransLCP(Char_t* name): KVEtrans(name)
+KVEtransLCP::KVEtransLCP(const Char_t* name): KVEtrans(name)
 {
    //ctor with name
 }

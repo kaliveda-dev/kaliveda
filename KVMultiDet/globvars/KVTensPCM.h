@@ -11,7 +11,7 @@
 class KVTensPCM: public KVTensP {
 public:
    KVTensPCM(void);             // constructeur par defaut
-   KVTensPCM(Char_t* nom);
+   KVTensPCM(const Char_t* nom);
 
    virtual ~ KVTensPCM(void);  // destructeur
 

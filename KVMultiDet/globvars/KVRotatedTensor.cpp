@@ -28,7 +28,7 @@ KVRotatedTensor::KVRotatedTensor(void): KVTensPCM()
 }
 
 //_________________________________________________________________
-KVRotatedTensor::KVRotatedTensor(Char_t* nom): KVTensPCM(nom)
+KVRotatedTensor::KVRotatedTensor(const Char_t* nom): KVTensPCM(nom)
 {
    // Constructor with a name for the global variable
    init_KVRotatedTensor();

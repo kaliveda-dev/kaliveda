@@ -37,7 +37,7 @@ private:
 
 public:
    KVTenseur3(void);
-   KVTenseur3(Char_t* nom);
+   KVTenseur3(const Char_t* nom);
    KVTenseur3(const KVTenseur3& t);
 
    virtual ~ KVTenseur3(void);

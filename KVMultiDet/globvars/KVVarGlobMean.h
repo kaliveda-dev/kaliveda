@@ -74,7 +74,7 @@ protected:
 
 public:
    KVVarGlobMean(void);         // constructeur par defaut
-   KVVarGlobMean(Char_t* nom);
+   KVVarGlobMean(const Char_t* nom);
    KVVarGlobMean(const KVVarGlobMean& a);       // constructeur par Copy
 
    virtual ~ KVVarGlobMean(void);       // destructeur

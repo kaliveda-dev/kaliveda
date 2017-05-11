@@ -15,7 +15,7 @@ class KVZtotAv: public KVZtot {
 // Methodes
 public:
    KVZtotAv(void);              // constructeur par defaut
-   KVZtotAv(char* nom);
+   KVZtotAv(const char* nom);
 
    virtual ~ KVZtotAv(void);   // destructeur
 

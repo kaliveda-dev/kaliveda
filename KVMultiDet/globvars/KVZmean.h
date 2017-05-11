@@ -23,7 +23,7 @@ protected:
 
 public:
    KVZmean(void);              // constructeur par defaut
-   KVZmean(char* nom);
+   KVZmean(const char* nom);
    KVZmean(const KVZmean& a);  // constructeur par Copy
 
    virtual ~ KVZmean(void);    // destructeur

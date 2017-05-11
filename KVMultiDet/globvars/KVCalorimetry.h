@@ -34,7 +34,7 @@ protected:
 public:
 
    KVCalorimetry(void);
-   KVCalorimetry(Char_t* nom);
+   KVCalorimetry(const Char_t* nom);
 
    virtual ~KVCalorimetry(void);
 

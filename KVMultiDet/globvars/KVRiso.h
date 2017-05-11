@@ -32,7 +32,7 @@ protected:
 
 public:
    KVRiso(void);               // constructeur par defaut
-   KVRiso(Char_t* nom);
+   KVRiso(const Char_t* nom);
    KVRiso(const KVRiso& a);    // constructeur par Copy
 
    virtual ~ KVRiso(void);     // destructeur

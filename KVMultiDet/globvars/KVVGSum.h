@@ -36,7 +36,7 @@ protected:
 
 public:
    KVVGSum(void);       // default constructor
-   KVVGSum(Char_t* nom);      // constructor with a name
+   KVVGSum(const Char_t* nom);      // constructor with a name
    KVVGSum(const KVVGSum& a);// copy constructor
 
    virtual ~KVVGSum(void);    // destructor

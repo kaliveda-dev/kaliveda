@@ -26,7 +26,7 @@ protected:
 
 public:
    KVRelativeVelocity(void);        // default constructor
-   KVRelativeVelocity(Char_t* nom);    // constructor with aname
+   KVRelativeVelocity(const Char_t* nom);    // constructor with aname
    KVRelativeVelocity(const KVRelativeVelocity& a);// copy constructor
 
    virtual ~KVRelativeVelocity(void);     // destructor

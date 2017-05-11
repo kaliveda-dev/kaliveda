@@ -36,7 +36,7 @@ KVQuadMoment::KVQuadMoment(const KVQuadMoment& obj) : KVVarGlob()
 
 //________________________________________________________________
 
-KVQuadMoment::KVQuadMoment(Char_t* nom) : KVVarGlob(nom)
+KVQuadMoment::KVQuadMoment(const Char_t* nom) : KVVarGlob(nom)
 {
    // Write your code here
    init_KVQuadMoment();

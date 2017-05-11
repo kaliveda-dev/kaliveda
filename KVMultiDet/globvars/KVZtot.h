@@ -23,7 +23,7 @@ protected:
 
 public:
    KVZtot(void);               // constructeur par defaut
-   KVZtot(char* nom);
+   KVZtot(const char* nom);
    KVZtot(const KVZtot& a);    // constructeur par Copy
 
    virtual ~ KVZtot(void);     // destructeur

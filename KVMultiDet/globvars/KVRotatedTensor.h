@@ -15,7 +15,7 @@ class KVRotatedTensor: public KVTensPCM {
 
 public:
    KVRotatedTensor(void);
-   KVRotatedTensor(Char_t* nom);
+   KVRotatedTensor(const Char_t* nom);
    KVRotatedTensor(const KVRotatedTensor& a);
 
    virtual ~KVRotatedTensor(void);

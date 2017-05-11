@@ -15,7 +15,7 @@ class KVRisoAv: public KVRiso {
 // Methodes
 public:
    KVRisoAv(void);              // constructeur par defaut
-   KVRisoAv(char* nom);
+   KVRisoAv(const char* nom);
 
    virtual ~ KVRisoAv(void);   // destructeur
 

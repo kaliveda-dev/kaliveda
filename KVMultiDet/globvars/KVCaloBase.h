@@ -41,7 +41,7 @@ protected:
 public:
 
    KVCaloBase(void);
-   KVCaloBase(Char_t* nom);
+   KVCaloBase(const Char_t* nom);
    KVCaloBase(const KVCaloBase& a);
 
    virtual ~KVCaloBase(void);

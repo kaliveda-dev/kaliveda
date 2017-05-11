@@ -15,7 +15,7 @@ class KVZboundAv: public KVZbound {
 // Methodes
 public:
    KVZboundAv(void);            // constructeur par defaut
-   KVZboundAv(char* nom);
+   KVZboundAv(const char* nom);
 
    virtual ~ KVZboundAv(void); // destructeur
 

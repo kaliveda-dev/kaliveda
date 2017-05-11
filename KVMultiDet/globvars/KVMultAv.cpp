@@ -55,7 +55,7 @@ KVMultAv::KVMultAv(void): KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVMultAv::KVMultAv(Char_t* nom): KVVarGlob1(nom)
+KVMultAv::KVMultAv(const Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom

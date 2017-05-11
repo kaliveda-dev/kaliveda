@@ -26,7 +26,7 @@ public:
 
 public:
    KVZBoundMean(void);
-   KVZBoundMean(Char_t* nom);
+   KVZBoundMean(const Char_t* nom);
    KVZBoundMean(const KVZBoundMean& a);
 
    virtual ~KVZBoundMean(void);

@@ -95,7 +95,7 @@ KVVGSum::KVVGSum(void): KVVarGlobMean()
 
 //_________________________________________________________________
 
-KVVGSum::KVVGSum(Char_t* nom): KVVarGlobMean(nom)
+KVVGSum::KVVGSum(const Char_t* nom): KVVarGlobMean(nom)
 {
    init_KVVGSum();
 }

@@ -27,7 +27,7 @@ KVRisoAv::KVRisoAv(void): KVRiso()
 }
 
 //_________________________________________________________________
-KVRisoAv::KVRisoAv(char* nom): KVRiso(nom)
+KVRisoAv::KVRisoAv(const char* nom): KVRiso(nom)
 {
 //
 // Constructeur avec un nom

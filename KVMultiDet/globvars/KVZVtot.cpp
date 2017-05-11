@@ -80,7 +80,7 @@ KVZVtot::KVZVtot(void): KVPtot()
 }
 
 //_________________________________________________________________
-KVZVtot::KVZVtot(Char_t* nom, const Char_t* frm): KVPtot(nom, frm)
+KVZVtot::KVZVtot(const Char_t* nom, const Char_t* frm): KVPtot(nom, frm)
 {
 //
 // Constructeur avec un nom

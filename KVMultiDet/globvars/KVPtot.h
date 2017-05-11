@@ -31,7 +31,7 @@ protected:
 
 public:
    KVPtot(void);               // constructeur par defaut
-   KVPtot(Char_t* nom, const Char_t* frm = "");
+   KVPtot(const Char_t* nom, const Char_t* frm = "");
    KVPtot(const KVPtot& a);    // constructeur par Copy
 
    virtual ~ KVPtot(void);     // destructeur

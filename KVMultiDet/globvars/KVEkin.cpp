@@ -49,7 +49,7 @@ KVEkin::KVEkin(void): KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVEkin::KVEkin(Char_t* nom): KVVarGlob1(nom)
+KVEkin::KVEkin(const Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom

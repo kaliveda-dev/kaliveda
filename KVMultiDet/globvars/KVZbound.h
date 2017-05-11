@@ -39,7 +39,7 @@ protected:
 
 public:
    KVZbound(void);             // constructeur par defaut
-   KVZbound(Char_t* nom);
+   KVZbound(const Char_t* nom);
    KVZbound(const KVZbound& a);        // constructeur par Copy
 
    virtual ~ KVZbound(void);   // destructeur

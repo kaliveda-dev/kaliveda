@@ -53,7 +53,7 @@ KVMultIMF::KVMultIMF(void): KVZbound()
 }
 
 //_________________________________________________________________
-KVMultIMF::KVMultIMF(Char_t* nom): KVZbound(nom)
+KVMultIMF::KVMultIMF(const Char_t* nom): KVZbound(nom)
 {
 //
 // Constructeur avec un nom

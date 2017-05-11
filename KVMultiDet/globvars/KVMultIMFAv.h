@@ -15,7 +15,7 @@ class KVMultIMFAv: public KVMultIMF {
 // Methodes
 public:
    KVMultIMFAv(void);           // constructeur par defaut
-   KVMultIMFAv(char* nom);
+   KVMultIMFAv(const char* nom);
 
    virtual ~ KVMultIMFAv(void);        // destructeur
 

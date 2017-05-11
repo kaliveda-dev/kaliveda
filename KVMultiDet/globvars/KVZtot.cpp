@@ -53,7 +53,7 @@ KVZtot::KVZtot(void): KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVZtot::KVZtot(char* nom): KVVarGlob1(nom)
+KVZtot::KVZtot(const char* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom

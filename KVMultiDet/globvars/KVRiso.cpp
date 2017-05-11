@@ -102,7 +102,7 @@ KVRiso::KVRiso(void): KVVarGlob()
 }
 
 //_________________________________________________________________
-KVRiso::KVRiso(Char_t* nom): KVVarGlob(nom)
+KVRiso::KVRiso(const Char_t* nom): KVVarGlob(nom)
 {
 //
 // Constructeur avec un nom

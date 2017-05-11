@@ -52,7 +52,7 @@ KVFoxH2::KVFoxH2(void): KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVFoxH2::KVFoxH2(Char_t* nom): KVVarGlob1(nom)
+KVFoxH2::KVFoxH2(const Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom (may not be modified)

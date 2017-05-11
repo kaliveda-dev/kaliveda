@@ -7,7 +7,7 @@ class KVEtransLCP: public KVEtrans {
 
 public:
    KVEtransLCP(void);
-   KVEtransLCP(Char_t*);
+   KVEtransLCP(const Char_t*);
 
    virtual ~ KVEtransLCP(void);
 

@@ -30,7 +30,7 @@ KVMultLegAv::KVMultLegAv(void): KVMultLeg()
 }
 
 //_________________________________________________________________
-KVMultLegAv::KVMultLegAv(char* nom): KVMultLeg(nom)
+KVMultLegAv::KVMultLegAv(const char* nom): KVMultLeg(nom)
 {
 //
 // Constructeur avec un nom

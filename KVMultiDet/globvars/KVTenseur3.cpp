@@ -116,7 +116,7 @@ KVTenseur3::KVTenseur3(void): KVBase("KVTenseur3", "KVTenseur3")
 }
 
 //_________________________________________________________________
-KVTenseur3::KVTenseur3(Char_t* nom): KVBase(nom)
+KVTenseur3::KVTenseur3(const Char_t* nom): KVBase(nom)
 {
 //
 // Createur avec nom

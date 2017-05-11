@@ -55,7 +55,7 @@ KVMultLeg::KVMultLeg(void): KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVMultLeg::KVMultLeg(Char_t* nom): KVVarGlob1(nom)
+KVMultLeg::KVMultLeg(const Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom

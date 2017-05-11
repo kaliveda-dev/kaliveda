@@ -26,7 +26,7 @@ protected:
 
 public:
    KVMultLeg(void);            // constructeur par defaut
-   KVMultLeg(Char_t* nom);
+   KVMultLeg(const Char_t* nom);
    KVMultLeg(const KVMultLeg& a);      // constructeur par Copy
 
    virtual ~ KVMultLeg(void);  // destructeur

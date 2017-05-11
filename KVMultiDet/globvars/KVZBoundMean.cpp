@@ -58,7 +58,7 @@ KVZBoundMean::KVZBoundMean(void): KVVarGlobMean()
 }
 
 //_________________________________________________________________
-KVZBoundMean::KVZBoundMean(Char_t* nom): KVVarGlobMean(nom)
+KVZBoundMean::KVZBoundMean(const Char_t* nom): KVVarGlobMean(nom)
 {
 //
 // Constructeur avec un nom (may not be modified)

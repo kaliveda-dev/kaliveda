@@ -101,7 +101,7 @@ KVZbound::KVZbound(void): KVVarGlob1()
 }
 
 //_________________________________________________________________
-KVZbound::KVZbound(Char_t* nom): KVVarGlob1(nom)
+KVZbound::KVZbound(const Char_t* nom): KVVarGlob1(nom)
 {
 //
 // Constructeur avec un nom

@@ -40,7 +40,7 @@ KVZboundAv::KVZboundAv(void): KVZbound()
 }
 
 //_________________________________________________________________
-KVZboundAv::KVZboundAv(char* nom): KVZbound(nom)
+KVZboundAv::KVZboundAv(const char* nom): KVZbound(nom)
 {
 //
 // Constructeur avec un nom

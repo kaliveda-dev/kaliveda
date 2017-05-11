@@ -30,7 +30,7 @@ KVMultIMFAv::KVMultIMFAv(void): KVMultIMF()
 }
 
 //_________________________________________________________________
-KVMultIMFAv::KVMultIMFAv(char* nom): KVMultIMF(nom)
+KVMultIMFAv::KVMultIMFAv(const char* nom): KVMultIMF(nom)
 {
 //
 // Constructeur avec un nom

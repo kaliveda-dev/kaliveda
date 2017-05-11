@@ -31,7 +31,7 @@ KVZtotAv::KVZtotAv(void): KVZtot()
 }
 
 //_________________________________________________________________
-KVZtotAv::KVZtotAv(char* nom): KVZtot(nom)
+KVZtotAv::KVZtotAv(const char* nom): KVZtot(nom)
 {
 //
 // Constructeur avec un nom

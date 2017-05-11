@@ -23,7 +23,7 @@ protected:
 
 public:
    KVMultAv(void);             // constructeur par defaut
-   KVMultAv(Char_t* nom);
+   KVMultAv(const Char_t* nom);
    KVMultAv(const KVMultAv& a);        // constructeur par Copy
 
    virtual ~ KVMultAv(void);   // destructeur

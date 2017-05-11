@@ -23,7 +23,7 @@ protected:
 
 public:
    KVEtrans(void);             // constructeur par defaut
-   KVEtrans(Char_t* nom);
+   KVEtrans(const Char_t* nom);
    KVEtrans(const KVEtrans& a);        // constructeur par Copy
 
    virtual ~ KVEtrans(void);   // destructeur

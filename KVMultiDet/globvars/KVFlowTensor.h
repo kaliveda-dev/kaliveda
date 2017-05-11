@@ -49,7 +49,7 @@ protected:
 
 public:
    KVFlowTensor(void);
-   KVFlowTensor(Char_t* nom);
+   KVFlowTensor(const Char_t* nom);
    KVFlowTensor(const KVFlowTensor& a);
 
    virtual ~KVFlowTensor(void);

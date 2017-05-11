@@ -16,7 +16,7 @@ class KVQuadMoment : public KVVarGlob {
 public:
    KVQuadMoment();
    KVQuadMoment(const KVQuadMoment& obj);
-   KVQuadMoment(Char_t* nom);
+   KVQuadMoment(const Char_t* nom);
    virtual ~KVQuadMoment();
    void Copy(TObject& obj) const;
 

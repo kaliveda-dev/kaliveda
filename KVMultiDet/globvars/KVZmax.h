@@ -7,11 +7,11 @@
 
 #ifndef KVZmax_h
 #define KVZmax_h
-#include "KVVarGlob1.h"
+#include "KVVarGlob.h"
 
 //#define DEBUG_KVZmax
 
-class KVZmax: public KVVarGlob1 {
+class KVZmax: public KVVarGlob {
 public:
 // Champs Statiques:
    static Int_t nb;
@@ -19,8 +19,8 @@ public:
    static Int_t nb_dest;
 // Champs prives:
 protected:
-   TList* heaviest;            //sorted list of pointers to nuclei, sorted by decreasing Z
-   Bool_t fSorted;              //true if list has been sorted already
+   mutable TList heaviest;            //sorted list of pointers to nuclei, sorted by decreasing Z
+   mutable Bool_t fSorted;              //true if list has been sorted already
 // Methodes
 protected:
    void init_KVZmax(void);
@@ -29,7 +29,7 @@ protected:
 
 public:
    KVZmax(void);               // constructeur par defaut
-   KVZmax(Char_t* nom);
+   KVZmax(const Char_t* nom);
    KVZmax(const KVZmax& a);    // constructeur par Copy
 
    virtual ~ KVZmax(void);     // destructeur
@@ -50,10 +50,10 @@ public:
    virtual TObject* GetObject(void) const
    {
       // Retourne le pointeur du fragment le plus lourd.
-      return (TObject*) const_cast<KVZmax*>(this)->GetZmax(0);
-   };
+      return GetZmax(0);
+   }
 
-   KVNucleus* GetZmax(Int_t i);
+   KVNucleus* GetZmax(Int_t i) const;
 
    Double_t* GetValuePtr(void);
 

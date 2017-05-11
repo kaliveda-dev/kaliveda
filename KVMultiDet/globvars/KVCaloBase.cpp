@@ -89,7 +89,7 @@ KVCaloBase::KVCaloBase(void): KVVarGlob()
 }
 
 //_________________________________________________________________
-KVCaloBase::KVCaloBase(Char_t* nom): KVVarGlob(nom)
+KVCaloBase::KVCaloBase(const Char_t* nom): KVVarGlob(nom)
 {
 // Constructeur avec un nom
 

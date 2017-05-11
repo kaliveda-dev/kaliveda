@@ -24,7 +24,7 @@ protected:
 
 public:
    KVZVtot(void);              // constructeur par defaut
-   KVZVtot(Char_t* nom, const Char_t* frm = "");
+   KVZVtot(const Char_t* nom, const Char_t* frm = "");
    KVZVtot(const KVZVtot& a);  // constructeur par Copy
 
    virtual ~ KVZVtot(void);    // destructeur
