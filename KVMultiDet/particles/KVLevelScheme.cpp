@@ -306,7 +306,7 @@ void KVLevelScheme::SetDrawStyle(double deMin, double fullWidth, double lineWidt
    txs = textSize;
 }
 
-void KVLevelScheme::Draw(Option_t* option)
+void KVLevelScheme::Draw(Option_t* /*option*/)
 {
    ncol = 1;
    int icol = 0;
