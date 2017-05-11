@@ -93,7 +93,12 @@ macro( create_config_header )
 	set(__WITH_KVSTRING_ITOA)
 	if(ROOT_VERSION VERSION_LESS 5.33.02)
 		set(__WITH_KVSTRING_ITOA yes)
-	endif(ROOT_VERSION VERSION_LESS 5.33.02)
+   endif(ROOT_VERSION VERSION_LESS 5.33.02)
+
+   set(__WITH_TITER_BUG)
+   if(ROOT_VERSION VERSION_LESS 5.34.28)
+      set(__WITH_TITER_BUG yes)
+   endif(ROOT_VERSION VERSION_LESS 5.34.28)
 
 	#--- get infos on number of processors on machine
 	include(ProcessorCount)

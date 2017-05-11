@@ -573,7 +573,7 @@ Float_t KVVAMOSWeightFinder::GetInverseWeight(Float_t brho, Float_t thetaI)
    //
    // where:
    // Begin_Latex
-   // #frac{1}{W(B #rho , #theta _{I}) = #frac{#sum_{i}^{RunList}Scaler^{i} #cdot T(#delta ^{i}, #theta_{I} , #theta ^{i}_{V})}{#sum_{i}^{RunList}Scaler^{i}}
+   // #frac{1}{W(B #rho , #theta _{I})} = #frac{#sum_{i}^{RunList}Scaler^{i} #cdot T(#delta ^{i}, #theta_{I} , #theta ^{i}_{V})}{#sum_{i}^{RunList}Scaler^{i}}
    // End_Latex
    // and:
    // Begin_Latex

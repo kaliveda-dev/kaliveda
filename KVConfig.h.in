@@ -132,4 +132,7 @@ using std::unique_ptr;
 //SOLUTION:   use KVString instead of TString
 #cmakedefine __WITH_KVSTRING_ITOA
 
+//--------Bug in TIter::operator*() before ROOT v5.34.28
+#cmakedefine __WITH_TITER_BUG
+
 #endif
