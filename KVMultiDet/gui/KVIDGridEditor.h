@@ -110,6 +110,7 @@ protected:
    Double_t fSpiderFactor;
    Int_t    fSpiderZp;
    TString  fSpiderOption;
+   Bool_t   fAutoZoomMode;
 
 protected:
 
@@ -122,6 +123,7 @@ protected:
    void MoveHor(Int_t sign);
    void MoveVert(Int_t sign);
 
+   void ZoomOnMouser();
    void AddMethod(const char* theMethod);
    void SelectTrans(TPaveLabel* label);
 

@@ -2180,6 +2180,11 @@ Bool_t KVIDGridEditor::HandleKey(Int_t , Int_t py)
          UpdateViewer();
          break;
 
+      case kKey_f:
+//      ZoomOnMouser();
+         fAutoZoomMode = !fAutoZoomMode;
+         break;
+
       case kKey_a:
          lplabel3->Execute("SetFillColor", "kGreen");
          SelectLines("All");
@@ -2215,18 +2220,22 @@ Bool_t KVIDGridEditor::HandleKey(Int_t , Int_t py)
          break;
 
       case kKey_Left:
+      case kKey_4:
          MoveHor(1);
          break;
 
       case kKey_Right:
+      case kKey_6:
          MoveHor(-1);
          break;
 
       case kKey_Down:
+      case kKey_2:
          MoveVert(1);
          break;
 
       case kKey_Up:
+      case kKey_8:
          MoveVert(-1);
          break;
 
@@ -2280,6 +2289,11 @@ void KVIDGridEditor::MoveVert(Int_t sign)
 
    yAxis->SetRange(XX1 + dX, XX2 + dX);
    UpdateViewer();
+}
+
+void KVIDGridEditor::ZoomOnMouser()
+{
+
 }
 
 
