@@ -67,6 +67,8 @@ KVHistogram::KVHistogram(TCutG* cut)
    fParams.SetValue("SELECTION", "");
    fParams.SetValue("EXPRESSION", "");
    fParams.SetValue("WEIGHT", "1");
+   fParams.SetValue("MEANRMSX", -1);
+   fParams.SetValue("MEANRMSY", -1);
    SetName(cut->GetName());
    SetLabel(cut->ClassName());
 }
