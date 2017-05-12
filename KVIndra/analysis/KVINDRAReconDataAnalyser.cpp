@@ -18,6 +18,7 @@ $Date: 2007/11/15 14:59:45 $
 #include "TChain.h"
 #include "KVAvailableRunsFile.h"
 #include "KVINDRA.h"
+#include "TProof.h"
 
 using namespace std;
 
@@ -240,8 +241,13 @@ void KVINDRAReconDataAnalyser::preInitAnalysis()
    // detector are needed e.g. to define histograms in InitAnalysis().
    // Note that at this stage we are not analysing a given run, so the parameters
    // of the array are not set (they will be set in preInitRun()).
+   //
+   // Note for PROOF: as this will be called both on master and on slave workers,
+   // in order to reduce memory footprint we only build INDRA on the slaves
 
-   if (!gIndra) KVMultiDetArray::MakeMultiDetector(GetDataSet()->GetName());
+   if (!gProof || !gProof->IsMaster()) {
+      if (!gIndra) KVMultiDetArray::MakeMultiDetector(GetDataSet()->GetName());
+   }
 }
 
 
