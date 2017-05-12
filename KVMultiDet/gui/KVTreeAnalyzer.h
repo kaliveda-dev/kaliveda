@@ -128,6 +128,8 @@
 class KVHistogram;
 
 class KVTreeAnalyzer : public TNamed {
+private:
+   const Char_t* get_leaf_type_name(const TNamed* l);
    static KVList* fgAnalyzerList;//! static list of all analyzers in memory
 
    void init();

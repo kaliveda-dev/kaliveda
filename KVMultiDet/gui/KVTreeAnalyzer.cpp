@@ -461,7 +461,19 @@ void KVTreeAnalyzer::FillLeafList()
       // clone list of leaves
       fLeafList.Clear();
       TCollection* clones = (TCollection*)fTree->GetListOfLeaves()->Clone();
-      fLeafList.AddAll(clones);
+      // when using a split object to fill the tree
+      // there is a redundant leaf/branch corresponding to the object itself
+      // more precisely there will be a TLeafElement in the list of leaves
+      // and a TBranchElement in the list of branches with the same name
+      TIter next(clones);
+      TObject* o;
+      while ((o = next())) {
+         if (o->InheritsFrom("TLeafElement")
+               && fTree->GetListOfBranches()->FindObject(o->GetName())
+               && fTree->GetListOfBranches()->FindObject(o->GetName())->InheritsFrom("TBranchElement"))
+            continue;
+         fLeafList.Add(o);
+      }
       delete clones;
 
       stuff.AddAll(&fLeafList);
@@ -1568,6 +1580,12 @@ void KVTreeAnalyzer::DefineWeight(const Char_t* Weight)
    fWeight = Weight;
 }
 
+const Char_t* KVTreeAnalyzer::get_leaf_type_name(const TNamed* l)
+{
+   TLeaf* lf = (TLeaf*)fChain->GetListOfLeaves()->FindObject(l->GetName());
+   return lf->GetTypeName();
+}
+
 void KVTreeAnalyzer::DrawLeafExpr()
 {
    // Method called when user hits 'draw' button in TTree GUI.
@@ -1599,11 +1617,11 @@ void KVTreeAnalyzer::DrawLeafExpr()
    Xexpr = (fXLeaf->InheritsFrom("TLeaf") ? fXLeaf->GetName() : fXLeaf->GetTitle());
    Yexpr = (fYLeaf->InheritsFrom("TLeaf") ? fYLeaf->GetName() : fYLeaf->GetTitle());
    if (threeDexp) Zexpr = (fZLeaf->InheritsFrom("TLeaf") ? fZLeaf->GetName() : fZLeaf->GetTitle());
-   if (fXLeaf->InheritsFrom("TLeaf") && !strcmp(((TLeaf*)fXLeaf)->GetTypeName(), "Char_t")) {
+   if (fXLeaf->InheritsFrom("TLeaf") && !strcmp(get_leaf_type_name(fXLeaf), "Char_t")) {
       TString tmp = Xexpr;
       Xexpr.Form("int(%s)", tmp.Data());
    }
-   if (fYLeaf->InheritsFrom("TLeaf") && !strcmp(((TLeaf*)fYLeaf)->GetTypeName(), "Char_t")) {
+   if (fYLeaf->InheritsFrom("TLeaf") && !strcmp(get_leaf_type_name(fYLeaf), "Char_t")) {
       TString tmp = Yexpr;
       Yexpr.Form("int(%s)", tmp.Data());
    }
@@ -1639,7 +1657,7 @@ void KVTreeAnalyzer::DrawLeafExpr()
    xmin = fTree->GetMinimum(Xexpr);
    xmax = fTree->GetMaximum(Xexpr);
    if (fXLeaf->InheritsFrom("TLeaf") &&
-         (!strcmp(((TLeaf*)fXLeaf)->GetTypeName(), "Int_t") || !strcmp(((TLeaf*)fXLeaf)->GetTypeName(), "Short_t") || !strcmp(((TLeaf*)fXLeaf)->GetTypeName(), "Char_t"))
+         (!strcmp(get_leaf_type_name(fXLeaf), "Int_t") || !strcmp(get_leaf_type_name(fXLeaf), "Short_t") || !strcmp(get_leaf_type_name(fXLeaf), "Char_t"))
       ) {
       xmin -= 0.5;
       xmax += 0.5;
@@ -1648,7 +1666,7 @@ void KVTreeAnalyzer::DrawLeafExpr()
    ymin = fTree->GetMinimum(Yexpr);
    ymax = fTree->GetMaximum(Yexpr);
    if (fYLeaf->InheritsFrom("TLeaf") &&
-         (!strcmp(((TLeaf*)fYLeaf)->GetTypeName(), "Int_t") || !strcmp(((TLeaf*)fYLeaf)->GetTypeName(), "Short_t") || !strcmp(((TLeaf*)fYLeaf)->GetTypeName(), "Char_t"))
+         (!strcmp(get_leaf_type_name(fYLeaf), "Int_t") || !strcmp(get_leaf_type_name(fYLeaf), "Short_t") || !strcmp(get_leaf_type_name(fYLeaf), "Char_t"))
       ) {
       ymin -= 0.5;
       ymax += 0.5;
@@ -1709,9 +1727,9 @@ void KVTreeAnalyzer::DrawAsDalitz()
    Zexpr = (fZLeaf->InheritsFrom("TLeaf") ? fZLeaf->GetName() : fZLeaf->GetTitle());
    fLeafExpr.Form("%s:%s:%s", Xexpr.Data(), Yexpr.Data(), Zexpr.Data());
 
-   TString xType(((TLeaf*)fXLeaf)->GetTypeName());
-   TString yType(((TLeaf*)fYLeaf)->GetTypeName());
-   TString zType(((TLeaf*)fZLeaf)->GetTypeName());
+   TString xType(get_leaf_type_name(fXLeaf));
+   TString yType(get_leaf_type_name(fYLeaf));
+   TString zType(get_leaf_type_name(fZLeaf));
 
    if ((!xType.Contains(yType.Data())) || (!yType.Contains(zType.Data()))) {
       Warning("DrawAsDalitz", "Leaves %s must have the same type !", fLeafExpr.Data());
@@ -1819,7 +1837,7 @@ void KVTreeAnalyzer::DrawLeaf(TObject* obj)
 
    TH1* histo = nullptr;
    if (obj->InheritsFrom("TLeaf")) {
-      TLeaf* leaf = dynamic_cast<TLeaf*>(obj);
+      TLeaf* leaf = (TLeaf*)fChain->GetListOfLeaves()->FindObject(obj->GetName());//dynamic_cast<TLeaf*>(obj);
       TString expr = leaf->GetName();
       TString type = leaf->GetTypeName();
       // check histo not already in list

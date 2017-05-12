@@ -1011,7 +1011,7 @@ void KVDataAnalysisLauncher::Process(void)
       gBatchSystem->SetBatchSystemParameters(fBatchParameters);
       datan->SetBatchSystem(gBatchSystem);
    } else {
-      datan->SetBatchSystem(0);
+      datan->SetBatchSystem(nullptr);
    }
    datan->Run();
 
