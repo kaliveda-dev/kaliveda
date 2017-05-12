@@ -16,6 +16,8 @@
 // Don't forget that for every class used in the analysis, you must put a
 // line '#include' at the beginning of this file.
 
+#include "KVDataAnalyser.h"
+
 void KVINDRAEventSelectorTemplate::InitAnalysis(void)
 {
    // Declaration of histograms, global variables, etc.
@@ -53,8 +55,8 @@ void KVINDRAEventSelectorTemplate::InitAnalysis(void)
 
    /*** DEFINE WHERE TO SAVE THE RESULTS ***/
    // When running in batch/PROOF mode, we use the job name
-   if (gBatchSystem)
-      SetCombinedOutputFile(Form("%s.root", gBatchSystem->GetJobName()));
+   if (gDataAnalyser->GetBatchSystem())
+      SetCombinedOutputFile(Form("%s.root", gDataAnalyser->GetBatchSystem()->GetJobName()));
    else
       SetCombinedOutputFile(Form("KVINDRAEventSelectorTemplate_results.root"));
 }
