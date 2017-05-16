@@ -424,7 +424,7 @@ FAZIASYM.QH1.PZCorrection: 		  0
 
 FAZIASYM.I1.BaseLineLength:	  50
 FAZIASYM.I1.ChannelWidth:  		  4
-FAZIASYM.I1.InterpolatedChannelWidth:  	  0.4
+FAZIASYM.I1.InterpolatedChannelWidth:  	  0.2
 FAZIASYM.I1.Interpolation: 		  1
 #
 FAZIASYM.Q2.BaseLineLength:	  100
@@ -436,7 +436,7 @@ FAZIASYM.Q2.PZCorrection:  		  0
 
 FAZIASYM.I2.BaseLineLength:	  50
 FAZIASYM.I2.ChannelWidth:  		  4
-FAZIASYM.I2.InterpolatedChannelWidth:  	  0.4
+FAZIASYM.I2.InterpolatedChannelWidth:  	  0.2
 FAZIASYM.I2.Interpolation: 		  1
 #
 FAZIASYM.Q3.BaseLineLength:	  100
