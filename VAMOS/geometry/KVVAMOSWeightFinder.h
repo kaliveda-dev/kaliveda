@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <cassert>
+#include <utility>
 
 class KVVAMOSWeightFinder : public KVBase {
 protected:
@@ -74,7 +75,7 @@ public:
       return GetInfoValue(run_number, 1);
    }
 
-   Float_t GetTransCoef(Float_t VamosAngle_deg, Float_t delta, Float_t thetaI_rad);
+   std::pair<Float_t, Float_t> GetTransCoef(Float_t VamosAngle_deg, Float_t delta, Float_t thetaI_rad);
 
    void PrintRunInfoVector();
    void PrintTransCoefInfoVector();
@@ -84,7 +85,7 @@ public:
       fkverbose = verbose;
    }
 
-   Float_t GetInverseWeight(Float_t brho_exp, Float_t thetaI_exp);
+   Float_t GetWeight(Float_t brho_exp, Float_t thetaI_exp);
 
 
    ClassDef(KVVAMOSWeightFinder, 1) //Class used to compute normalisation weights for VAMOS events

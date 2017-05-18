@@ -1071,12 +1071,7 @@ KVZGOUBIReconstruction* KVVAMOS::GetZGOUBIReconstruction()
 
 KVVAMOSWeightFinder* KVVAMOS::GetWeightFinder()
 {
-   //Returns the transformation matrix allowing to map the measured
-   //coordinates at the focal plane back to the target. If no matrix
-   //exists then a new matrix is built from coefficient files found
-   //in the directory of the current dataset ( see the method
-   //KVVAMOSTransferMatrix::ReadCoefInDataSet() ).
-
+   //Returns the weight estimator for events normalisation.
    if (fWeightFinder) return fWeightFinder;
    return (fWeightFinder = new KVVAMOSWeightFinder((Int_t) fCurrentRun));
 }

@@ -116,7 +116,7 @@ void KVVAMOSWeightFinder::ReadRunListInDataSet()
    //
    // [dataset_name].KVVAMOSWeightFinder.RunListFile:  [file_name]
    //
-   // This file contains a list of: Run, Brho, ThetaVamos, DT, Scalers
+   // This file contains a list of: Run Brho ThetaVamos DT Scalers
 
    //Find the file to use
    TString filename = gDataSet->GetDataSetEnv("KVVAMOSWeightFinder.RunListFile");
@@ -388,13 +388,15 @@ Bool_t KVVAMOSWeightFinder::CheckTransCoefSteps()
 }
 
 //____________________________________________________________________________//
-Float_t KVVAMOSWeightFinder::GetTransCoef(Float_t VamosAngle_deg, Float_t delta, Float_t thetaI_rad)
+std::pair<Float_t, Float_t> KVVAMOSWeightFinder::GetTransCoef(Float_t VamosAngle_deg, Float_t delta, Float_t thetaI_rad)
 {
    //Find the trans. coef. for a given (ThetaVamos, delta, thetaI) triplet.
    //First find the path to the file coresponding to the given ThetaVamos
    //(precision of 0.1 deg) and containing a TTree of its associated trans. coefs.
    //Then use the associated steps to extract the correct entry number of the
    //couple (delta, thetaI) in the TTree.
+   //
+   //Return a pair of <trans. coef., trans. coef. variance>
 
    //Find VamosAngle position in fvec_TCfiles
    Int_t num_angle = 0;
@@ -425,7 +427,7 @@ Float_t KVVAMOSWeightFinder::GetTransCoef(Float_t VamosAngle_deg, Float_t delta,
    if (TMath::Abs(line.at(0) - VamosAngle_deg) > 0.1) {
       if (fkverbose) Error("GetTransCoef", "... found VamosAngle in steps vector (=%f) is different from given angle (=%f) ...",
                               line.at(0), VamosAngle_deg);
-      return -666.;
+      return std::make_pair(-666., -666.);
    }
 
    Int_t ndelta = GetNValue(delta, line.at(1), line.at(2), line.at(3));
@@ -447,8 +449,9 @@ Float_t KVVAMOSWeightFinder::GetTransCoef(Float_t VamosAngle_deg, Float_t delta,
 
       if (fkverbose) Info("GetTransCoef", "... found entry in tree (=%lli) and entry in chain (=%lli / %lli) ...", pos_tree, pos_chain, fchain->GetEntries());
 
-      Float_t tc, dd, tt;
+      Float_t tc, dtc, dd, tt;
       fchain->SetBranchAddress("TransCoef", &tc);
+      fchain->SetBranchAddress("DeltaTransCoef", &dtc); //variance of trans. coef. from MC
       fchain->SetBranchAddress("Zdelta", &dd);
       fchain->SetBranchAddress("ZthetaI", &tt);
       fchain->GetEntry(pos_chain, 1);
@@ -459,10 +462,10 @@ Float_t KVVAMOSWeightFinder::GetTransCoef(Float_t VamosAngle_deg, Float_t delta,
               VamosAngle_deg, delta, thetaI_rad, GetClosestValue(delta, line.at(3)), GetClosestValue(thetaI_rad, line.at(7)), dd, tt);
       }
 
-      return tc;
+      return std::make_pair(tc, dtc);
    }
 
-   else return -666.;
+   else return std::make_pair(-666., -666.);
 }
 //____________________________________________________________________________//
 
@@ -544,37 +547,34 @@ void KVVAMOSWeightFinder::PrintTransCoefStepVector()
 }
 
 //____________________________________________________________________________//
-Float_t KVVAMOSWeightFinder::GetInverseWeight(Float_t brho, Float_t thetaI)
+Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI)
 {
    //Compute the weight for a given experimental VAMOS event,
    //using the identified VAMOS nucleus informations, which means:
-   //(bro_exp, thetaI_rad) where 'brho' is in T.m of the nucleus,
-   //'thetaI' is the experimental theta angle in rad and in lab. ref. frame in
-   //INDRA convention of the nucleus ( and also the current run number this events
+   //(bro_exp, thetaI_rad) where 'brho' is the magnetic rigidity of the nucleus (in T.m),
+   //and 'thetaI' is the experimental theta angle in rad and in lab. ref. frame (in
+   //INDRA convention) of the nucleus (and also the current run number this events
    //belongs to, set as an argument of the class constructor).
    //
-   //The inverse weight will be computed from:
+   //The weight will be computed from:
    //- the chosen run list (see SetRunList() method) and the associated experimental
    //  (BrhoRef, AngleVamos, Scalers_INDRA) values from this run list.
    //- the transmission coefficient obtained from ZGOUBI simulations (normalised over
-   //  2*TMath::Pi() in phi angle in lab. ref. frame and INDRA convention, depending on
-   //  the (brho, thetaI) of the nucleus).
-   //- the experimental DeadTime associated to fRunNumber, the run number the VAMOS
+   //  2.*TMath::Pi() in phi angle in lab. ref. frame and INDRA convention, depending on
+   //  the (brho, thetaI) of the nucleus.
+   //- the experimental Dead Time (DT) associated to fRunNumber, the run number the VAMOS
    //  events belongs to.
    //
-   //It was chosen to apply a weighted average on VAMOS events only defined by their
+   //The computed weight is similar to a weighted average on VAMOS events only defined by their
    //(Brho, thetaI) values. In this way we are able to use ALL the statistics without
    //applying cuts on overlaping experimental Brho.
    //
-   //The returned total weight 'W_tot' will be:
+   //The returned total weight 'W' will be:
+   //
    // Begin_Latex
-   // W_{tot}(B #rho , theta_{I}, run_number)= DT_{corr}(run_number) * W(B #rho , #theta _{I})
+   // #W(B #rho , #theta _{I}) = #frac{ #sum_{i}^{RunList}Scaler^{i} }{ #sum_{i}^{RunList}Scaler^{i} #cdot T(#delta ^{i}, #theta_{I} , #theta ^{i}_{V})}
    // End_Latex
    //
-   // where:
-   // Begin_Latex
-   // #frac{1}{W(B #rho , #theta _{I})} = #frac{#sum_{i}^{RunList}Scaler^{i} #cdot T(#delta ^{i}, #theta_{I} , #theta ^{i}_{V})}{#sum_{i}^{RunList}Scaler^{i}}
-   // End_Latex
    // and:
    // Begin_Latex
    // DT_{corr}(run_number) = #frac{1}{1-DT(run_number)}
@@ -593,15 +593,11 @@ Float_t KVVAMOSWeightFinder::GetInverseWeight(Float_t brho, Float_t thetaI)
 
    Float_t num     = 0.;
    Float_t denum   = 0.;
-   Float_t dt_corr = -666.;
    Float_t dt_run  = GetDeadTime(fRunNumber); //default '-666.' value will be returned if not found
+   Float_t dt_corr = 1. / (1. - dt_run);
 
-   //DT found from the event run_number
-   if (dt_run >= 0.) {
-      //compute DT_corr for the current run
-      dt_corr = 1. / (1. - dt_run);
-
-      //extract W(Brho, ThetaI) from runlist
+   if (dt_run >= 0.) {//DT found from the event run_number
+      //Compute W(Brho, ThetaI) from runlist
       fRunList.Begin();
       while (!fRunList.End()) {
          Int_t next_run = fRunList.Next();
@@ -609,33 +605,37 @@ Float_t KVVAMOSWeightFinder::GetInverseWeight(Float_t brho, Float_t thetaI)
          Float_t brho_ref = GetBrhoRef(next_run);
          Float_t scaler   = GetScalerINDRA(next_run);
          Float_t thetav   = GetThetaVamos(next_run);
-         Float_t tc       = GetTransCoef(thetav, brho / brho_ref, thetaI);
+         std::pair<Float_t, Float_t> pair_tc = GetTransCoef(thetav, brho / brho_ref, thetaI);
+         Float_t tc  = pair_tc.first; // trans. coef.
+         Float_t dtc = pair_tc.second; //variance of trans. coef.
 
-         //(brho_ref, scaler) is OK for the given run
-         //if the transmission coef. doesn't exist for the given (ThetaVamos, delta, thetaI)
-         //(i.e tc=-666.), we still consider the scaler in the denumerator, but not in the
-         //numerator (i.e we consider tc=0.)
-         if ((brho_ref > 0) && (scaler > 0)) {
-            denum += scaler;
-            if (tc >= 0.) num += tc * scaler;
+         if ((brho_ref > 0) && (scaler > 0)) {//(brho_ref, scaler) is OK for the given run
+            if ((tc >= 0.)) { //trans. coef. exists for the given (ThetaVamos, delta, thetaI)
+               denum += scaler * tc;
+            }
+
+            //if trans. coef. doesn't exist for the given (ThetaVamos, delta, thetaI),
+            //we still consider the scaler in the numerator (i.e tc=0.)
+            num += scaler;
          }
 
          if (fkverbose) {
-            Info("GetInverseWeight", "... (next_run=%d, brho=%f, thetaI=%f) -> (brho_ref=%f, thetav=%f, scaler=%f, tc=%f) ...",
-                 next_run, brho, thetaI, brho_ref, thetav, scaler, tc);
-            Info("GetInverseWeight", "... numerator=%f, denumerator=%f", num, denum);
+            Info("GetWeight", "... (next_run=%d, brho=%lf, thetaI=%lf) -> (brho_ref=%lf, thetav=%lf, scaler=%lf, tc=%lf, var_tc=%lf) ...",
+                 next_run, brho, thetaI, brho_ref, thetav, scaler, tc, dtc);
+            Info("GetWeight", "... numerator=%lf, denumerator=%lf", num, denum);
          }
       }
 
-      //return W_tot
-      return num / denum / dt_corr;
+      //return Weight
+      Float_t weight = (denum > 0 ? num / denum * dt_corr : -666.);
+      return weight;
    }
 
    //DT not found for the current run, weight can't be computed
    //default value -666. will be returned...
    else {
       if (fkverbose) {
-         Info("GetInverseWeight", "... !!! DT(current_run=%d)=%f <0. !!! can't compute the weight of the event ...", fRunNumber, dt_run);
+         Info("GetWeight", "... !!! DT(current_run=%d)=%f <0. !!! can't compute the weight of the event ...", fRunNumber, dt_run);
       }
 
       return -666.;

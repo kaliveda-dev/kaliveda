@@ -1,97 +1,102 @@
-SI.WIDTH: 5.355556
-SI.HEIGHT: 7.000000
+#KaliVeda geometry file for Harpee Si Wall
+#Date of creation: 20170518
+#Distances in cm
 
-# number of absorber (i.e. volumes)
+#Position from focal plan reference frame
+#Z= focal-plan position minus SI position from target
+# = CHI.Z + CHI.THICK/2 + SI.THICK/2
+# = 61.6 + 6.902 + 0.025
+SI.Z: 68.53
+
+#Number of absorber (i.e. volumes)
 SI.NABS: 1
 
-# thickness in cm
-
-# silicon
+#Silicon
 SI.ABS.1.MATERIAL: Si
 SI.ABS.1.THICK: 0.05
 
-#active absorber (i.e. volume)
+#Active absorber (i.e. volume)
 SI.ACTIVEABS: 1
 
-# position from focal plan reference frame
-# Z= focal-plan position minus SI position from target
-#      = CHI.Z + CHI.THICK/2 + SI.THICK/2
-#      = 61.6 + 6.902 + 0.025
-SI.Z: 68.53
+SI.WIDTH: 5.22
+SI.HEIGHT: 7.6
+#SI.WIDTH.DEADZONE: 0
+#SI.HEIGHT.DEADZONE: 0
 
-# X and Y reference positions
-SI_01.X: 21.422222
-SI_01.Y: 3.500000
+#X and Y reference positions
+SI_01.X: 20.88
+SI_01.Y: 3.8
 SI_01.ABS.1.THICK: 0.0522
 
-SI_02.X: 16.066667
-SI_02.Y: 3.500000
-SI_02.ABS.1.THICK: 0.0530
+SI_02.X: 15.66
+SI_02.Y: 3.8
+SI_02.ABS.1.THICK: 0.053
 
-SI_03.X: 10.711111
-SI_03.Y: 3.500000
+SI_03.X: 10.44
+SI_03.Y: 3.8
 SI_03.ABS.1.THICK: 0.0531
 
-SI_04.X: 5.355556
-SI_04.Y: 3.500000
+SI_04.X: 5.22
+SI_04.Y: 3.8
 SI_04.ABS.1.THICK: 0.0532
 
-SI_05.X: 0.000000
-SI_05.Y: 3.500000
+SI_05.X: 0
+SI_05.Y: 3.8
 SI_05.ABS.1.THICK: 0.0533
 
-SI_06.X: -5.355556
-SI_06.Y: 3.500000
+SI_06.X: -5.22
+SI_06.Y: 3.8
 SI_06.ABS.1.THICK: 0.0533
 
-SI_07.X: -10.711111
-SI_07.Y: 3.500000
+SI_07.X: -10.44
+SI_07.Y: 3.8
 SI_07.ABS.1.THICK: 0.0534
 
-SI_08.X: -16.066667
-SI_08.Y: 3.500000
+SI_08.X: -15.66
+SI_08.Y: 3.8
 SI_08.ABS.1.THICK: 0.0535
 
-SI_09.X: -21.422222
-SI_09.Y: 3.500000
+SI_09.X: -20.88
+SI_09.Y: 3.8
 SI_09.ABS.1.THICK: 0.0531
 
-SI_10.X: -21.422222
-SI_10.Y: -3.500000
+SI_10.X: -20.88
+SI_10.Y: -3.8
 SI_10.ABS.1.THICK: 0.0535
 
-SI_11.X: -16.066667
-SI_11.Y: -3.500000
+SI_11.X: -15.66
+SI_11.Y: -3.8
 SI_11.ABS.1.THICK: 0.0524
 
-SI_12.X: -10.711111
-SI_12.Y: -3.500000
+SI_12.X: -10.44
+SI_12.Y: -3.8
 SI_12.ABS.1.THICK: 0.0531
 
-SI_13.X: -5.355556
-SI_13.Y: -3.500000
+SI_13.X: -5.22
+SI_13.Y: -3.8
 SI_13.ABS.1.THICK: 0.0529
 
-SI_14.X: 0.000000
-SI_14.Y: -3.500000
+SI_14.X: 0
+SI_14.Y: -3.8
 SI_14.ABS.1.THICK: 0.0524
 
-SI_15.X: 5.355556
-SI_15.Y: -3.500000
+SI_15.X: 5.22
+SI_15.Y: -3.8
 SI_15.ABS.1.THICK: 0.0533
 
-SI_16.X: 10.711111
-SI_16.Y: -3.500000
+SI_16.X: 10.44
+SI_16.Y: -3.8
 SI_16.ABS.1.THICK: 0.0537
 
-SI_17.X: 16.066667
-SI_17.Y: -3.500000
+SI_17.X: 15.66
+SI_17.Y: -3.8
 SI_17.ABS.1.THICK: 0.0519
 
-SI_18.X: 21.422222
-SI_18.Y: -3.500000
-SI_18.ABS.1.THICK: 0.0530
+SI_18.X: 20.88
+SI_18.Y: -3.8
+SI_18.ABS.1.THICK: 0.053
 
-SI.REF.X: 0.8
-SI.REF.Y: -1.76
-SI.REF.Z: 0.0
+#X,Y and Z refernece positions offsets
+SI.REF.X: 4.316800
+SI.REF.Y: -0.454100
+SI.REF.Z: -3.470000

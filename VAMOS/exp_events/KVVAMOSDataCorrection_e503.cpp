@@ -1008,7 +1008,11 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    printf("-> Si-CsI:\n");
    printf("Initialised = %d\n", (int) fkfunc_ztof_sicsi_init);
    ffunc_ztof_sicsi->Print();
+   printf("p0=%lf \np1=%f \np2=%f\n", ffunc_ztof_sicsi->GetParameter(0), ffunc_ztof_sicsi->GetParameter(1), ffunc_ztof_sicsi->GetParameter(2));
+
    printf("-> IC-Si:\n");
+
    printf("Initialised = %d\n", (int) fkfunc_ztof_icsi_init);
    ffunc_ztof_icsi->Print();
+   printf("p0=%lf \np1=%f \np2=%f\n", ffunc_ztof_icsi->GetParameter(0), ffunc_ztof_icsi->GetParameter(1), ffunc_ztof_icsi->GetParameter(2));
 }
