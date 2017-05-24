@@ -119,7 +119,7 @@ void KVVAMOS::init()
       new KVIDGridManager;
 
    fFilter = NULL;
-
+   SetToFlist_deltapath();
    Info("init", "To be implemented");
 }
 //________________________________________________________________
@@ -1292,4 +1292,326 @@ Bool_t KVVAMOS::IsUsedToMeasure(const Char_t* type, KVVAMOSDetector* det)
    types = det ? &det->GetPositionTypes() : &GetPositionTypes();
    i = types->Index(Form(":%s,", type));
    return i >= 0;
+}
+
+//________________________________________________________________
+
+void KVVAMOS::SetToFlist_deltapath()
+{
+   //Set list of distance between FP and detectors in z by using .cao files in VAMOSgeometry
+
+   ifstream geometryfile;
+
+   TString fullpath;
+
+   TString svalue;
+   TString sline;
+   Ssiz_t pos = 0;
+   Float_t position = 0;
+   Float_t positionref = 0;
+   Bool_t flagvalue = false;
+   Bool_t flagref = false;
+   TString dataset(gDataSet->GetName());
+   TString VAMOSgeometryfolder = dataset + "/VAMOSgeometry";
+
+
+   if (gDataSet->SearchKVFile("CHI.cao", fullpath, VAMOSgeometryfolder.Data())) {
+      svalue = "";
+      sline = "";
+      pos = 0;
+      position = 0;
+      positionref = 0;
+      flagvalue = false;
+      flagref = false;
+      geometryfile.open(fullpath, ifstream::in);
+      while (geometryfile.good()) {
+         sline.ReadLine(geometryfile);
+
+         if (!geometryfile.eof()) {
+            if (sline.Sizeof() > 1 && !sline.BeginsWith("#")) {
+               if (sline.BeginsWith("CHI.Z")) {
+                  pos = sline.Index(("CHI.Z:")) ;
+                  pos = pos + 7 ;
+                  flagvalue = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &position);
+                  }
+               }
+
+               if (sline.BeginsWith("CHI.REF.Z")) {
+                  pos = sline.Index(("CHI.REF.Z:")) ;
+                  pos = pos + 11 ;
+                  flagref = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &positionref);
+                  }
+               }
+            }
+         }
+      }
+      if (flagvalue == true || flagref == true) {
+         ToFlist_deltapath.SetValue("CHI", position - positionref);
+      }
+      std::cout << "CHI:" << ToFlist_deltapath.GetDoubleValue("CHI") << std::endl;
+      geometryfile.close();
+   }
+
+   if (gDataSet->SearchKVFile("SED.cao", fullpath, VAMOSgeometryfolder.Data())) {
+      svalue = "";
+      sline = "";
+      pos = 0;
+      position = 0;
+      positionref = 0;
+      flagvalue = false;
+      flagref = false;
+      geometryfile.open(fullpath, ifstream::in);
+      while (geometryfile.good()) {
+         sline.ReadLine(geometryfile);
+
+         if (!geometryfile.eof()) {
+            if (sline.Sizeof() > 1 && !sline.BeginsWith("#")) {
+               if (sline.BeginsWith("SED1.Z")) {
+                  pos = sline.Index(("SED1.Z:")) ;
+                  pos = pos + 8 ;
+                  flagvalue = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &position);
+                  }
+               }
+
+               if (sline.BeginsWith("SED1.REF.Z")) {
+                  pos = sline.Index(("SED1.REF.Z:")) ;
+                  pos = pos + 12 ;
+                  flagref = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &positionref);
+                  }
+               }
+            }
+         }
+      }
+      if (flagvalue == true || flagref == true) {
+         ToFlist_deltapath.SetValue("SED1", position - positionref);
+         std::cout << "SED1:" << ToFlist_deltapath.GetDoubleValue("SED1") << std::endl;
+      }
+      geometryfile.close();
+   }
+
+   if (gDataSet->SearchKVFile("SED.cao", fullpath, VAMOSgeometryfolder.Data())) {
+      svalue = "";
+      sline = "";
+      pos = 0;
+      position = 0;
+      positionref = 0;
+      flagvalue = false;
+      flagref = false;
+      geometryfile.open(fullpath, ifstream::in);
+      while (geometryfile.good()) {
+         sline.ReadLine(geometryfile);
+
+         if (!geometryfile.eof()) {
+            if (sline.Sizeof() > 1 && !sline.BeginsWith("#")) {
+               if (sline.BeginsWith("SED2.Z")) {
+                  pos = sline.Index(("SED2.Z:")) ;
+                  pos = pos + 8 ;
+                  flagvalue = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &position);
+                  }
+               }
+
+               if (sline.BeginsWith("SED2.REF.Z")) {
+                  pos = sline.Index(("SED2.REF.Z:")) ;
+                  pos = pos + 12 ;
+                  flagref = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &positionref);
+                  }
+               }
+            }
+         }
+      }
+      if (flagvalue == true || flagref == true) {
+         ToFlist_deltapath.SetValue("SED2", position - positionref);
+         std::cout << "SED2:" << ToFlist_deltapath.GetDoubleValue("SED2") << std::endl;
+      }
+      geometryfile.close();
+   }
+
+   if (gDataSet->SearchKVFile("SI.cao", fullpath, VAMOSgeometryfolder.Data())) {
+      svalue = "";
+      sline = "";
+      pos = 0;
+      position = 0;
+      positionref = 0;
+      flagvalue = false;
+      flagref = false;
+      geometryfile.open(fullpath, ifstream::in);
+      while (geometryfile.good()) {
+         sline.ReadLine(geometryfile);
+
+         if (!geometryfile.eof()) {
+            if (sline.Sizeof() > 1 && !sline.BeginsWith("#")) {
+               if (sline.BeginsWith("SI.Z")) {
+                  pos = sline.Index(("SI.Z:")) ;
+                  pos = pos + 6 ;
+                  flagvalue = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &position);
+                  }
+               }
+
+               if (sline.BeginsWith("SI.REF.Z")) {
+                  pos = sline.Index(("SI.REF.Z:")) ;
+                  pos = pos + 10 ;
+                  flagref = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &positionref);
+                  }
+               }
+            }
+         }
+      }
+      if (flagvalue == true || flagref == true) {
+         for (int i = 1; i <= 18; i++) {
+            ToFlist_deltapath.SetValue(Form("SI_%.2i", i), position - positionref);
+         }
+      }
+      std::cout << "SI:" << ToFlist_deltapath.GetDoubleValue("SI_01") << std::endl;
+      geometryfile.close();
+   }
+
+   if (gDataSet->SearchKVFile("DC.cao", fullpath, VAMOSgeometryfolder.Data())) {
+      svalue = "";
+      sline = "";
+      pos = 0;
+      position = 0;
+      positionref = 0;
+      flagvalue = false;
+      flagref = false;
+      geometryfile.open(fullpath, ifstream::in);
+      while (geometryfile.good()) {
+         sline.ReadLine(geometryfile);
+
+         if (!geometryfile.eof()) {
+            if (sline.Sizeof() > 1 && !sline.BeginsWith("#")) {
+               if (sline.BeginsWith("DC1.Z")) {
+                  pos = sline.Index(("DC1.Z:")) ;
+                  pos = pos + 7 ;
+                  flagvalue = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &position);
+                  }
+               }
+
+               if (sline.BeginsWith("DC1.REF.Z")) {
+                  pos = sline.Index(("DC1.REF.Z:")) ;
+                  pos = pos + 10 ;
+                  flagref = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &positionref);
+                  }
+               }
+            }
+         }
+      }
+
+      if (flagvalue == true || flagref == true) {
+         ToFlist_deltapath.SetValue("DC1", position - positionref);
+      }
+      std::cout << "DC1:" << ToFlist_deltapath.GetDoubleValue("DC1") << std::endl;
+      geometryfile.close();
+   }
+
+   if (gDataSet->SearchKVFile("DC.cao", fullpath, VAMOSgeometryfolder.Data())) {
+      svalue = "";
+      sline = "";
+      pos = 0;
+      position = 0;
+      positionref = 0;
+      flagvalue = false;
+      flagref = false;
+      geometryfile.open(fullpath, ifstream::in);
+      while (geometryfile.good()) {
+         sline.ReadLine(geometryfile);
+
+         if (!geometryfile.eof()) {
+            if (sline.Sizeof() > 1 && !sline.BeginsWith("#")) {
+               if (sline.BeginsWith("DC2.Z")) {
+                  pos = sline.Index(("DC2.Z:")) ;
+                  pos = pos + 7 ;
+                  flagvalue = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &position);
+                  }
+               }
+
+               if (sline.BeginsWith("DC2.REF.Z")) {
+                  pos = sline.Index(("DC2.REF.Z:")) ;
+                  pos = pos + 10 ;
+                  flagref = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &positionref);
+                  }
+               }
+            }
+         }
+      }
+
+      if (flagvalue == true || flagref == true) {
+         ToFlist_deltapath.SetValue("DC2", position - positionref);
+      }
+      std::cout << "DC2:" << ToFlist_deltapath.GetDoubleValue("DC2") << std::endl;
+      geometryfile.close();
+   }
+
+   if (gDataSet->SearchKVFile("CSI.cao", fullpath, VAMOSgeometryfolder.Data())) {
+      svalue = "";
+      sline = "";
+      pos = 0;
+      position = 0;
+      positionref = 0;
+      flagvalue = false;
+      flagref = false;
+      geometryfile.open(fullpath, ifstream::in);
+      while (geometryfile.good()) {
+         sline.ReadLine(geometryfile);
+
+         if (!geometryfile.eof()) {
+            if (sline.Sizeof() > 1 && !sline.BeginsWith("#")) {
+               if (sline.BeginsWith("CSI.Z")) {
+                  pos = sline.Index(("CSI.Z:")) ;
+                  pos = pos + 7 ;
+                  flagvalue = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &position);
+                  }
+               }
+
+               if (sline.BeginsWith("CSI.REF.Z")) {
+                  pos = sline.Index(("CSI.REF.Z:")) ;
+                  pos = pos + 11 ;
+                  flagref = true;
+                  if (sline.Tokenize(svalue, pos, "|")) {
+                     sscanf(svalue.Data(), "%f", &positionref);
+                  }
+               }
+            }
+         }
+      }
+      if (flagvalue == true || flagref == true) {
+         for (int i = 1; i <= 80; i++) {
+            ToFlist_deltapath.SetValue(Form("CSI%.2i", i), position - positionref);
+         }
+      }
+      std::cout << "CSI:" << ToFlist_deltapath.GetDoubleValue("CSI01") << std::endl;
+      geometryfile.close();
+   }
+
+
+}
+
+KVNameValueList KVVAMOS::GetToFlist_deltapath()
+{
+   return ToFlist_deltapath;
 }

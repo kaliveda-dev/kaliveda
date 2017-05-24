@@ -1298,6 +1298,7 @@ Double_t KVVAMOSReconNuc::CalculatePath(const Char_t* start_label, const Char_t*
 }
 //________________________________________________________________
 
+/*
 Double_t KVVAMOSReconNuc::FindDeltaPath(KVVAMOSDetector* det) const
 {
    //returns the DeltaPath value associated to the detector 'det' used to correct
@@ -1333,6 +1334,19 @@ Double_t KVVAMOSReconNuc::FindDeltaPath(KVVAMOSDetector* det) const
    Warning("FindDeltaPath", "DeltaPath not found for the detector %s", det->GetName());
 
    return 0.;
+}
+*/
+
+Double_t KVVAMOSReconNuc::FindDeltaPath(KVVAMOSDetector* det) const
+{
+   // Method used to find the deltapath by bypassing the ROOT geometry. Problem in ROOT geometry, see commented version of KVVAMOSReconNuc::FindDeltaPath(KVVAMOSDetector* det)
+   Double_t deltapathtemp = 0;
+   if (!det) return 0.;
+   if (gVamos->GetToFlist_deltapath().HasParameter(det->GetName())) {
+      deltapathtemp = gVamos->GetToFlist_deltapath().GetDoubleValue(det->GetName()) * TMath::Sqrt(1 + TMath::Power(TMath::Tan(GetThetaF() / 1000.), 2) + TMath::Power(TMath::Tan(GetPhiF() / 1000.), 2));
+      return deltapathtemp;
+   }
+   return 0;
 }
 //________________________________________________________________
 

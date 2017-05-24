@@ -65,6 +65,8 @@ protected:
 
    KVBasicVAMOSFilter* fFilter; //! geometric basic VAMOS filter
 
+   KVNameValueList ToFlist_deltapath; //list of distance between FP and detectors in z
+
    virtual void   BuildFocalPlaneGeometry(TEnv* infos);
    virtual Bool_t BuildGeoVolume(TEnv* infos);
    virtual void   BuildVAMOSGeometry();
@@ -115,6 +117,9 @@ public:
    void     TargetToFocal(const Double_t* target, Double_t* focal);
    void     TargetToFocalVect(const Double_t* target, Double_t* focal);
    virtual void     UpdateGeometry();
+   void          SetFocalPlanePosition(Double_t pos);
+   void          SetToFlist_deltapath();
+   KVNameValueList GetToFlist_deltapath();
 
    // ----- inline methods
 
@@ -143,7 +148,7 @@ public:
    void          SetBrhoRef(Double_t Brho);
    void          SetCurrentRunNumber(UInt_t run);
    void          SetECalibStatus(Bool_t status);
-   void          SetFocalPlanePosition(Double_t pos);
+
 
    //----- static methods
 

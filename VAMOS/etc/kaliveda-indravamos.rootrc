@@ -265,6 +265,9 @@ KVVAMOSTransferMatrix.CoefficientFile: VAMOStransMatrixCoef.list
 INDRA_e503.KVVAMOSWeightFinder.RunListFile:  e503_runlist.dat
 INDRA_e503.KVVAMOSWeightFinder.TransCoefFileList:  e503_transcoef.list
 
+INDRA_e494s.KVVAMOSWeightFinder.RunListFile:  e494s_runlist.dat
+INDRA_e494s.KVVAMOSWeightFinder.TransCoefFileList:  e494s_transcoef.list
+
 # File with list of files containing cuts for Mass:Charge ratio duplication correction
 INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationCutListSiCsI:  VAMOSDuplicationCutSiCsI.list
 INDRA_e503.KVVAMOSDataCorrection_e503.HFCutListSiCsI:  VAMOSHFCutListSiCsI.list
@@ -300,7 +303,6 @@ INDRA_e494s.KVZGOUBIReconstruction.ZGOUBIDatabase_local4D:
 INDRA_e503.KVZGOUBIReconstruction.ZGOUBIDatabase_local2D:  
 INDRA_e494s.KVZGOUBIReconstruction.ZGOUBIDatabase_local2D:
 
-INDRA_e494s.KVZGOUBIInverseMatrix.ZGOUBIDatabase_local:
 
 # Reconstruction method for ReconstructLabTraj: Polynomial or Zgoubi
 INDRA_e503.KVVAMOSReconNuc.ReconstructLabTrajMethod:  Zgoubi
