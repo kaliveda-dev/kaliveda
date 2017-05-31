@@ -1343,7 +1343,7 @@ Double_t KVVAMOSReconNuc::FindDeltaPath(KVVAMOSDetector* det) const
    Double_t deltapathtemp = 0;
    if (!det) return 0.;
    if (gVamos->GetToFlist_deltapath().HasParameter(det->GetName())) {
-      deltapathtemp = gVamos->GetToFlist_deltapath().GetDoubleValue(det->GetName()) * TMath::Sqrt(1 + TMath::Power(TMath::Tan(GetThetaF() / 1000.), 2) + TMath::Power(TMath::Tan(GetPhiF() / 1000.), 2));
+      deltapathtemp = gVamos->GetToFlist_deltapath().GetDoubleValue(det->GetName()) * TMath::Sqrt(1. + TMath::Power(TMath::Tan(GetThetaF() * TMath::DegToRad()), 2) + TMath::Power(TMath::Tan(GetPhiF() * TMath::DegToRad()), 2));
       return deltapathtemp;
    }
    return 0;
