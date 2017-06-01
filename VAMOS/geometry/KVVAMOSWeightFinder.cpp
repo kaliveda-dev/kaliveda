@@ -230,7 +230,7 @@ Float_t KVVAMOSWeightFinder::GetInfoValue(Int_t run_number, Int_t num_value)
 
    Int_t pos = GetRunPosition(run_number);
 
-   if (pos > 0) val = GetInfoLine(pos).at(num_value);
+   if (pos >= 0) val = GetInfoLine(pos).at(num_value);
 
    return val;
 }
