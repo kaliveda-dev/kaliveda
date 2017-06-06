@@ -17,7 +17,7 @@ protected:
    KVHashList* flist_HFcuts_sicsi;     //list of TCutG* for HF frequency corrections
    std::vector<Int_t> fvec_nHF_sicsi;  //vector containing the number of times the beam pulse period must be corrected for each cut
 
-   KVHashList* flist_aoq_cut_sicsi;    //list of TCutG* for AoQ duplication corrections
+   KVHashList* flist_aoq_cut_sicsi;    //list of RealZ:BasicAoQ TCutG* for AoQ duplication corrections
    Float_t ftof_corr_sicsi;            //correction of ToF (in ns) for AoQ duplication corrections
 
    Bool_t fkfunc_ztof_sicsi_init; //=kTRUE if the pol2 function was correctly init
@@ -33,24 +33,18 @@ protected:
    Bool_t fkfunc_ztof_icsi_init;
    TF1*    ffunc_ztof_icsi;
 
-   //-----Global offset-----
-   Float_t ftof_offset; //glogal offset in ToF to correct AoQ=2 misalignments
-   Float_t fpath_offset; //global offset in Path to correct AoQ=2 misalignments
-
    //Readers in DataSet
    void ReadHFCutFilesListInDataSet();
    void ReadHFCutFileList(std::ifstream& file, Int_t type);
    void ReadDuplicationCutFilesListInDataSet();
    void ReadDuplicationCutFileList(std::ifstream& file, Int_t type);
    void ReadDuplicationToFOffsetsInDataSet();
-   void ReadAdditionalToFAndPathOffsetsInDataSet();
    void ReadToFOffsetZFunctionFilesListInDataSet();
    void ReadToFOffsetZFunctionFileList(std::ifstream& file, Int_t type);
 
    //Corrections
    Bool_t ApplyHFCorrections(KVVAMOSReconNuc*, KVHashList*, std::vector<Int_t>);
    Bool_t ApplyToFDuplicationCorrections(KVVAMOSReconNuc*, KVHashList*, Float_t);
-   Bool_t ApplyToFAndPathOffset(KVVAMOSReconNuc*);
    Bool_t ApplyToFOffsetZFunctionCorrections(KVVAMOSReconNuc*, TF1*);
 
 

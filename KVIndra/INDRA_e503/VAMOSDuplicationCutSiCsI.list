@@ -1,2 +1,2 @@
-# List of *.root files containing cuts for Mass:Charge duplication corrections
-DuplicationCutFile_4048_SiCsI.root
+# List of *.root files containing cuts on RealZ vs BasicAoQ maps to correct Mass:Charge duplications
+DuplicationCutFile_all_SiCsI.root

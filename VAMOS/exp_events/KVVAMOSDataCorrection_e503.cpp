@@ -140,10 +140,6 @@ void KVVAMOSDataCorrection_e503::Init()
          ReadDuplicationCutFilesListInDataSet();
          ReadDuplicationToFOffsetsInDataSet();
 
-         //Global ToF offset for AoQ=2 misalignments
-         ftof_offset = -666.;
-         ReadAdditionalToFAndPathOffsetsInDataSet();
-
          //ToF offset in function of Z for AoQ=2 misalignments
          ReadToFOffsetZFunctionFilesListInDataSet();
 
@@ -469,23 +465,8 @@ void KVVAMOSDataCorrection_e503::ReadDuplicationToFOffsetsInDataSet()
    //
    //By default this offset is equal to 1.25 ns.
 
-   ftof_corr_sicsi = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset", 1.25);  // in ns
-   ftof_corr_icsi  = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset", 1.25);  //in ns
-}
-
-//____________________________________________________________________________//
-void KVVAMOSDataCorrection_e503::ReadAdditionalToFAndPathOffsetsInDataSet()
-{
-   //Find in '$KVROOT/KVFiles/VAMOS/etc/.kvrootrc' the values of general ToF offset
-   //and also Path offset to apply to correct AoQ=2 misalignments.
-   //All data will be applied these ToF and Path offsets.
-   //
-   //NOTE: these corrections are applied AFTER HF corrections and AFTER ToF duplication
-   //corrections
-   //
-
-   ftof_offset  = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.ToFOffset", 0.);  //in ns
-   fpath_offset = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.PathOffset", 0.); //in cm
+   ftof_corr_sicsi = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset", 1.05);  // in ns
+   ftof_corr_icsi  = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset", 1.05);  //in ns
 }
 
 //____________________________________________________________________________//
@@ -660,7 +641,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    if (IDCode == 3) {
       kCsI_HFcorr = ApplyHFCorrections(nuc, flist_HFcuts_sicsi, fvec_nHF_sicsi);
       kCsI_DUcorr = ApplyToFDuplicationCorrections(nuc, flist_aoq_cut_sicsi, ftof_corr_sicsi);
-      if (fkfunc_ztof_sicsi_init) kCsI_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_sicsi);
+      //if (fkfunc_ztof_sicsi_init) kCsI_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_sicsi);
    }
 
    //IC-Si telescopes corrections
@@ -670,13 +651,10 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    if (IDCode == 4) {
       kSi_HFcorr = ApplyHFCorrections(nuc, flist_HFcuts_icsi, fvec_nHF_icsi);
       kSi_DUcorr = ApplyToFDuplicationCorrections(nuc, flist_aoq_cut_icsi, ftof_corr_icsi);
-      if (fkfunc_ztof_icsi_init) kSi_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_icsi);
+      //if (fkfunc_ztof_icsi_init) kSi_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_icsi);
    }
 
-   //AoQ=2 misalignment global corrections
-   Bool_t koffset = ApplyToFAndPathOffset(nuc);
-
-   if (kCsI_HFcorr || kCsI_DUcorr || kCsI_ZToFfunc || kSi_HFcorr || kSi_DUcorr || kSi_ZToFfunc || koffset) return kTRUE;
+   if (kCsI_HFcorr || kCsI_DUcorr || kCsI_ZToFfunc || kSi_HFcorr || kSi_DUcorr || kSi_ZToFfunc) return kTRUE;
    else return kFALSE;
 }
 
@@ -837,52 +815,6 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFDuplicationCorrections(KVVAMOSReconNu
 }
 
 //____________________________________________________________________________//
-Bool_t KVVAMOSDataCorrection_e503::ApplyToFAndPathOffset(KVVAMOSReconNuc* nuc)
-{
-   //Apply a general time of flight offset to correct AoQ=2 misalignments
-   //
-   //Return kTRUE if correction applied.
-   //Return kFALSE if no correction needed.
-   //
-   //NOTE: for the moment the duplication corrections are applied AFTER HF corrections
-   //      and AFTER ToF duplication corrections...
-
-   assert(nuc);
-
-   //debug
-   if (fkverbose) {
-      Info("ApplyToFAndPathOffset", "... before ToF and Path corrections ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
-           nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
-           nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
-   }
-
-   //apply corrections
-   //as the duplication corrections are applied after HF corrections
-   //and after ToF duplication corrections, we modify here the former
-   //corrected ToF
-   Float_t corr_tof = nuc->GetCorrectedToF();
-   Float_t corr_path = nuc->GetCorrectedPath();
-   nuc->SetCorrectedToF(corr_tof + ftof_offset);
-   nuc->SetCorrectedPath(corr_path + fpath_offset);
-
-   Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
-   Double_t AE  = nuc->GetEnergyBeforeVAMOS() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
-
-   nuc->SetCorrectedRealAoverQ(AoQ);
-   nuc->SetCorrectedRealAE(AE);
-   nuc->SetCorrected(kTRUE);
-
-   //debug
-   if (fkverbose) {
-      Info("ApplyToFOffset", "... after ToF and Path corrections ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
-           nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
-           nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
-   }
-
-   return kTRUE;
-}
-
-//____________________________________________________________________________//
 Bool_t KVVAMOSDataCorrection_e503::ApplyToFOffsetZFunctionCorrections(KVVAMOSReconNuc* nuc, TF1* func)
 {
    //Apply time of flight offset in function of the charge Z of the particle
@@ -972,6 +904,7 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    printf("###### ToF duplication corrections ######\n");
    printf("-> Si-CsI:\n");
    printf("tof_corr=%lf\n", ftof_corr_sicsi);
+   printf("%d cuts set\n", flist_aoq_cut_sicsi->GetEntries());
    if (fkverbose) {
       flist_aoq_cut_sicsi->ls();
       printf("list of cuts follows:\n");
@@ -986,6 +919,7 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
 
    printf("\n-> IC-Si:\n");
    printf("tof_corr=%lf\n", ftof_corr_icsi);
+   printf("%d cuts set\n", flist_aoq_cut_icsi->GetEntries());
    if (fkverbose) {
       flist_aoq_cut_icsi->ls();
       printf("list of cuts follows:\n");
@@ -997,11 +931,6 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
          ll1->Print();
       }
    }
-
-   //-------Global ToF offset to correct AoQ=2 misalignments-------
-   printf("###### AoQ=2 global misalignment: ToF and Path corrections ######\n");
-   printf("ToF Offset = %lf ns\n", ftof_offset);
-   printf("Path Offset = %lf cm\n", fpath_offset);
 
    //-------ToF offset in function of the charge Z of the particle to correct AoQ=2 misalignments-------
    printf("###### AoQ=2 misalignment: ToF correction in function of Z ######\n");
