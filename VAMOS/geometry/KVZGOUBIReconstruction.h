@@ -23,6 +23,7 @@ public:
    virtual void Copy(TObject&) const;
    void Init();
    Bool_t ReconstructFPtoLab(KVVAMOSReconTrajectory* traj);
+   Bool_t ReconstructFPtoLab(Double_t x_f, Double_t y_f, Double_t theta_f, Double_t phi_f, Double_t& brho, Double_t& path, Double_t& theta_v, Double_t& phi_v);
    ClassDef(KVZGOUBIReconstruction, 1) //Class used to access one ZGOUBI Trajectory
 };
 

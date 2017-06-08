@@ -235,3 +235,31 @@ Bool_t KVZGOUBIReconstruction::ReconstructFPtoLab(KVVAMOSReconTrajectory* traj)
    traj->SetFPtoLabAttempted();
    return ok;
 }
+
+//________________________________________________________________
+
+Bool_t KVZGOUBIReconstruction::ReconstructFPtoLab(Double_t x_f, Double_t y_f, Double_t theta_f, Double_t phi_f, Double_t& brho, Double_t& path, Double_t& theta_v, Double_t& phi_v)
+{
+   // x_f and y_f in cm.
+   // phi_f, theta_f, phi_l and theta_l in degree.
+
+   static KVVAMOSReconTrajectory traj;
+
+   traj.pointFP[0] = x_f;
+   traj.pointFP[1] = y_f;
+   Double_t x = TMath::Sin(theta_f * TMath::DegToRad()) * TMath::Cos(phi_f * TMath::DegToRad());
+   Double_t y = TMath::Sin(phi_f * TMath::DegToRad());
+   Double_t z = TMath::Cos(theta_f * TMath::DegToRad()) * TMath::Cos(phi_f * TMath::DegToRad());
+   traj.dirFP.SetXYZ(x, y, z);
+   traj.SetFPparamsReady();
+
+   Bool_t status = ReconstructFPtoLab(&traj);
+
+   path    = traj.GetPath();
+   brho    = traj.GetBrho();
+   theta_v = traj.GetThetaV();
+   phi_v   = traj.GetPhiV();
+
+   return status;
+}
+//________________________________________________________________
