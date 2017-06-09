@@ -1,3 +1,3 @@
 # List of *.root files containing TEnv with infos to build a ToF offset in function of Z,
 # to correct AoQ=2 misalignments
-ToFOffsetZFunctionFile_4048_SiCsI.root
+ToFOffsetZFunctionFile_all_SiCsI.root
