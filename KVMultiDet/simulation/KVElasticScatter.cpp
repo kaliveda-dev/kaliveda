@@ -340,11 +340,19 @@ void KVElasticScatter::CalculateScattering(Int_t N)
       fTarget->DetectParticle(fProj);
       fKinematics->CalculateKinematics();
       //set random direction of outgoing projectile
-      fProj->SetRandomMomentum(fProj->GetEnergy(),
-                               fTelescope->GetThetaMin(),
-                               fTelescope->GetThetaMax(),
-                               fTelescope->GetPhiMin(),
-                               fTelescope->GetPhiMax(), "random");
+
+      double th, ph;
+      th = ph = 0;
+      fDetector->GetRandomAngles(th, ph);
+      fProj->SetEnergy(fProj->GetEnergy());
+      fProj->SetTheta(th);
+      fProj->SetPhi(ph);
+
+//      fProj->SetRandomMomentum(fProj->GetEnergy(),
+//                               fTelescope->GetThetaMin(),
+//                               fTelescope->GetThetaMax(),
+//                               fTelescope->GetPhiMin(),
+//                               fTelescope->GetPhiMax(), "random");
       //set energy of scattered nucleus
       //WARNING: for inverse kinematics reactions, their are two energies for
       //each angle below the maximum scattering angle.

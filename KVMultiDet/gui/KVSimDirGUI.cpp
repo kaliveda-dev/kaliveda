@@ -736,9 +736,13 @@ void KVSimDirGUI::ImportSimulation()
    TGFileInfo fi;
    fi.fIniDir = StrDup(fSelectedSimDir->GetDirectory());
    fi.fFileTypes = filetypes;
+   fi.SetMultipleSelection(true);
 
    new KVFileDialog(gClient->GetDefaultRoot(), MainFrame, kKVFDOpen, &fi);
-   if (fi.fFilename) {
+
+   bool one_file = (!fi.fMultipleSelection && fi.fFilename);
+   bool many_files = (fi.fMultipleSelection && fi.fFileNamesList);//may only be one
+   if (one_file || many_files) {
       // set up list of KVSimReader plugins
       KVString plugins = KVBase::GetListOfPlugins("KVSimReader");
       KVString choices;
@@ -755,12 +759,30 @@ void KVSimDirGUI::ImportSimulation()
       new KVDropDownDialog(MainFrame, "Choose the simulation model and type of events", choices, 0, &model, &ok);
       if (ok) {
 
-         KVSimReader* SR = KVSimReader::MakeSimReader(model);
-         SR->ConvertAndSaveEventsInFile(fi.fFilename);
-         delete SR;
+         if (one_file) {
+            unique_ptr<KVSimReader> SR(KVSimReader::MakeSimReader(model));
+            SR->ConvertAndSaveEventsInFile(fi.fFilename);
+         } else {
+            if (fi.fFileNamesList->GetEntries() == 1) {
+               unique_ptr<KVSimReader> SR(KVSimReader::MakeSimReader(model));
+               SR->ConvertAndSaveEventsInFile(fi.fFileNamesList->First()->GetName());
+            } else {
+               TIter it(fi.fFileNamesList);
+               TObject* o;
+               int i = 1;
+               while ((o = it())) {
+                  unique_ptr<KVSimReader> SR(KVSimReader::MakeSimReader(model));
+                  SR->SetMultiFiles();
+                  SR->SetFileIndex(i++);
+                  SR->ConvertAndSaveEventsInFile(o->GetName());
+               }
+            }
+         }
 
          RefreshSimDir();
       }
+   } else if (fi.fMultipleSelection && fi.fFileNamesList) {
+      fi.fFileNamesList->ls();
    }
 }
 

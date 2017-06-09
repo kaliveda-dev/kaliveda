@@ -126,7 +126,7 @@ void KVSimDir::AnalyseDirectory()
       if (aFile->IsDirectory()) continue;
 
       KVString fileName = aFile->GetName();
-      if (!fileName.EndsWith(".root"))  continue; /* skip non-ROOT files */
+      if (!fileName.EndsWith(".root") && !fileName.Contains(".root."))  continue; /* skip non-ROOT files */
 
       AnalyseFile(fileName);
 

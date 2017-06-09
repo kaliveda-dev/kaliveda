@@ -94,7 +94,7 @@ void KVSimReader_ELIE_asym::ConvertEventsInFile(KVString filename)
    define_output_filename();
    tree_title.Form("ELIE secondary events %s + %s %.1f MeV/nuc.",
                    proj.GetSymbol(), targ.GetSymbol(), ebeam);
-   Run(root_file_name);
+   Run();
    CloseFile();
 }
 

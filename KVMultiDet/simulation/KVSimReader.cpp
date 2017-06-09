@@ -49,6 +49,8 @@ void KVSimReader::init()
    evt = 0;
    nuc = 0 ;
    nevt = 0;
+   fMultiFiles = kFALSE;
+   fFileIndex = 1;
 
    tree_name = "SIMULATION_NAME";
    tree_title = "SIMULATION";
@@ -75,7 +77,7 @@ void KVSimReader::ConvertEventsInFile(KVString filename)
    // Method called by constructors with KVString filename argument
    if (!OpenFileToRead(filename)) return;
 
-   Run(root_file_name);
+   Run();
 
    CloseFile();
 }
@@ -103,14 +105,21 @@ void KVSimReader::CleanAll()
 }
 
 //____________________________________________________
-void KVSimReader::DeclareTree(KVString filename, Option_t* option)
+void KVSimReader::DeclareTree(Option_t* option)
 {
+   // Use root_file_name as basename for file
+   // If multiple files are being read, they will be named
+   //    [root_file_name].1
+   //    [root_file_name].2
+   //    [root_file_name].etc
 
+   TString filename;
+   filename = root_file_name;
+   if (fMultiFiles) filename += Form(".%d", fFileIndex);
    Info("DeclareTree", "Ouverture du fichier de stockage %s", filename.Data());
-   root_file_name = filename;
-   file = new TFile(root_file_name.Data(), option);
+   file = new TFile(filename, option);
 
-   tree = new TTree(tree_name.Data(), tree_title.Data());
+   tree = new TTree(tree_name, tree_title);
    KVEvent::MakeEventBranch(tree, branch_name, "KVSimEvent", &evt);
 }
 
@@ -250,7 +259,7 @@ KVSimReader* KVSimReader::MakeSimReader(const char* model_uri)
 }
 
 //____________________________________________________
-void KVSimReader::Run(KVString filename, Option_t* option)
+void KVSimReader::Run(Option_t* option)
 {
 
    AddInfo("ascii file read", GetFileName().Data());
@@ -259,7 +268,7 @@ void KVSimReader::Run(KVString filename, Option_t* option)
    chrono.Start();
 
    evt = new KVSimEvent();
-   if (HasToFill()) DeclareTree(filename, option);
+   if (HasToFill()) DeclareTree(option);
    nuc = 0;
    nevt = 0;
 
