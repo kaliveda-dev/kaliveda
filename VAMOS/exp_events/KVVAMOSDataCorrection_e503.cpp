@@ -256,11 +256,8 @@ void KVVAMOSDataCorrection_e503::ReadHFCutFileList(std::ifstream& file, Int_t ty
                //check if 'fRunNumber' is in run range
                KVNumberList nl(runlist);
                if (nl.Contains(fRunNumber)) {
-
-                  if (fkverbose) {
-                     Info("ReadHFCutFileList", "... Run %d is in the runlist of the file '%s' ...",
-                          fRunNumber, runlist);
-                  }
+                  Info("ReadHFCutFileList", "... Run %d is in the runlist '%s' of the file '%s' ...",
+                       fRunNumber, runlist, file->GetName());
 
                   //exctract and set cuts list
                   TKey* key = NULL;
@@ -292,8 +289,8 @@ void KVVAMOSDataCorrection_e503::ReadHFCutFileList(std::ifstream& file, Int_t ty
                }
 
                else if (fkverbose) {
-                  Info("ReadHFCutFileList", "... Run %d is NOT in the runlist of the file '%s' ...",
-                       fRunNumber, runlist);
+                  Info("ReadHFCutFileList", "... Run %d is NOT in the runlist '%s' of the file '%s' ...",
+                       fRunNumber, runlist, file->GetName());
                }
 
                file->Close();
@@ -402,12 +399,8 @@ void KVVAMOSDataCorrection_e503::ReadDuplicationCutFileList(std::ifstream& file,
                //check if 'fRunNumber' is in run range
                KVNumberList nl(runlist);
                if (nl.Contains(fRunNumber)) {
-
-                  if (fkverbose) {
-                     Info("ReadDuplicationCutFileList", "... Run %d is in the runlist of the file '%s' ...",
-                          fRunNumber, runlist);
-
-                  }
+                  Info("ReadDuplicationCutFileList", "... Run %d is in the runlist '%s' of the file '%s' ...",
+                       fRunNumber, runlist, file->GetName());
 
                   //exctract cuts list
                   TKey* key = NULL;
@@ -449,8 +442,8 @@ void KVVAMOSDataCorrection_e503::ReadDuplicationCutFileList(std::ifstream& file,
 
                   found = kTRUE;
                } else if (fkverbose) {
-                  Info("ReadDuplicationCutFileList", "... Run %d is NOT the runlist of the file '%s' ...",
-                       fRunNumber, runlist);
+                  Info("ReadDuplicationCutFileList", "... Run %d is NOT the runlist '%s' of the file '%s' ...",
+                       fRunNumber, runlist, file->GetName());
                }
 
                file->Close();
@@ -590,11 +583,9 @@ void KVVAMOSDataCorrection_e503::ReadToFOffsetZFunctionFileList(std::ifstream& f
                //check if 'fRunNumber' is in run range
                KVNumberList nl(runlist);
                if (nl.Contains(fRunNumber)) {
+                  Info("ReadToFOffsetZFunctionFileList", "... Run %d is in the runlist '%s' of the file '%s' ...",
+                       fRunNumber, runlist, file->GetName());
 
-                  if (fkverbose) {
-                     Info("ReadToFOffsetZFunctionFileList", "... Run %d is in the runlist of the file '%s' ...",
-                          fRunNumber, runlist);
-                  }
 
                   //exctract pol2 coefficients from TEnv
                   Double_t xmin = env->GetValue("xmin", 0.);
@@ -619,8 +610,8 @@ void KVVAMOSDataCorrection_e503::ReadToFOffsetZFunctionFileList(std::ifstream& f
                }
 
                else if (fkverbose) {
-                  Info("ReadToFOffsetZFunctionFileList", "... Run %d is NOT in the runlist of the file '%s' ...",
-                       fRunNumber, runlist);
+                  Info("ReadToFOffsetZFunctionFileList", "... Run %d is NOT in the runlist '%s' of the file '%s' ...",
+                       fRunNumber, runlist, file->GetName());
                }
 
                file->Close();
@@ -645,7 +636,10 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    nuc->SetCorrectedRealAE(nuc->GetBasicRealAE());
    nuc->SetCorrectedRealAoverQ(nuc->GetBasicRealAoverQ());
 
-   if (fkverbose) Info("ApplyCorrections", "... trying to apply e503 corrections to nucleus (IDCode=%d) ...", IDCode);
+   if (fkverbose) {
+      printf("\n\n");
+      Info("ApplyCorrections", "... trying to apply e503 corrections to nucleus (IDCode=%d) ...", IDCode);
+   }
 
    //Si-CsI telescopes corrections
    Bool_t kCsI_HFcorr   = kFALSE;
@@ -654,7 +648,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    if (IDCode == 3) {
       kCsI_HFcorr = ApplyHFCorrections(nuc, flist_HFcuts_sicsi, fvec_nHF_sicsi);
       kCsI_DUcorr = ApplyToFDuplicationCorrections(nuc, flist_aoq_cut_sicsi, ftof_corr_sicsi);
-      //if (fkfunc_ztof_sicsi_init) kCsI_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_sicsi);
+      if (fkfunc_ztof_sicsi_init) kCsI_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_sicsi);
    }
 
    //IC-Si telescopes corrections
@@ -664,7 +658,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    if (IDCode == 4) {
       kSi_HFcorr = ApplyHFCorrections(nuc, flist_HFcuts_icsi, fvec_nHF_icsi);
       kSi_DUcorr = ApplyToFDuplicationCorrections(nuc, flist_aoq_cut_icsi, ftof_corr_icsi);
-      //if (fkfunc_ztof_icsi_init) kSi_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_icsi);
+      if (fkfunc_ztof_icsi_init) kSi_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_icsi);
    }
 
    if (kCsI_HFcorr || kCsI_DUcorr || kCsI_ZToFfunc || kSi_HFcorr || kSi_DUcorr || kSi_ZToFfunc) return kTRUE;
@@ -843,7 +837,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFOffsetZFunctionCorrections(KVVAMOSRec
 
    //debug
    if (fkverbose) {
-      Info("ApplyToFOffsetZFunctionCorrections", "... before ToF ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+      Info("ApplyToFOffsetZFunctionCorrections", "... before ToF AoQ=2 misalignment corrections ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
            nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
            nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
    }
@@ -866,7 +860,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFOffsetZFunctionCorrections(KVVAMOSRec
 
    //debug
    if (fkverbose) {
-      Info("ApplyToFOffsetZFunctionCorrections", "... after ToF corrections ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+      Info("ApplyToFOffsetZFunctionCorrections", "... after ToF AoQ=2 misalignment corrections ...\nIDCode=%d, \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
            nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
            nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
    }
