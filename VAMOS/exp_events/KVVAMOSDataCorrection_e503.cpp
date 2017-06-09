@@ -26,7 +26,7 @@ ClassImp(KVVAMOSDataCorrection_e503)
 KVVAMOSDataCorrection_e503::KVVAMOSDataCorrection_e503(Int_t run_number = -1) : KVVAMOSDataCorrection(run_number)
 {
    // Default constructor
-   fkverbose   = kTRUE;
+   fkverbose   = kFALSE;
    fkIsInit    = kFALSE;
 
    // HF frequency correction
