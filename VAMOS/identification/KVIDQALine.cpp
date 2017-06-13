@@ -32,9 +32,8 @@ KVIDQALine::KVIDQALine()
 KVIDQALine::~KVIDQALine()
 {
    // Destructor
-
    fMarkers->Delete();
-   SafeDelete(fMarkers);
+   fMarkers = NULL;
 }
 //________________________________________________________________
 
@@ -55,8 +54,8 @@ void KVIDQALine::init()
    fNextAinc = kTRUE;
 
    //no draw points of this line, just draw its KVIDQAMarkers
-   SetMarkerStyle(1);
-   SetWidth(0.);
+   SetMarkerStyle(24);
+   SetWidth(0.5);
 }
 //________________________________________________________________
 
