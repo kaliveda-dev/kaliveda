@@ -47,7 +47,6 @@ protected:
    Bool_t ApplyToFDuplicationCorrections(KVVAMOSReconNuc*, KVHashList*, Float_t);
    Bool_t ApplyToFOffsetZFunctionCorrections(KVVAMOSReconNuc*, TF1*);
 
-
 public:
    KVVAMOSDataCorrection_e503(Int_t run_number);
    virtual ~KVVAMOSDataCorrection_e503();
@@ -55,6 +54,8 @@ public:
 
    virtual void Init();
    virtual Bool_t ApplyCorrections(KVVAMOSReconNuc*);
+   virtual void IdentifyCorrectedNucleus(KVVAMOSReconNuc*);
+   virtual Double_t CalculateKE(KVVAMOSReconNuc*);
 
    void PrintInitInfos();
    virtual void SetVerbose(Bool_t status = kTRUE) {

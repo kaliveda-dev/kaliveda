@@ -869,6 +869,27 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFOffsetZFunctionCorrections(KVVAMOSRec
 }
 
 //____________________________________________________________________________//
+void KVVAMOSDataCorrection_e503::IdentifyCorrectedNucleus(KVVAMOSReconNuc*)
+{
+   //Once the nucleus has been corrected (see ApplyCorrections() method), we need
+   //to identify its final charge state 'Q' and mass 'A'.
+   //To do so we use the corrected "AE vs AoQ" maps, where 'AE' is the corrected
+   //mass found by energy conservation law and 'AoQ' is the corrected
+   //mass:charge ratio found by Lorentz law.
+   //The integer value of charge state 'Q_int' is thus found using the associated
+   //grids (see KVIDQAGrid class) where the value of Q is linearised.
+   //The definitive mass 'A' is then obtained from 'AoQ/Q_int'.
+   //
+   //NOTE:This process
+}
+
+//____________________________________________________________________________//
+void CalculateKE(KVVAMOSReconNuc*)
+{
+
+}
+
+//____________________________________________________________________________//
 void KVVAMOSDataCorrection_e503::PrintInitInfos()
 {
    //--------HF frequency corrections--------
