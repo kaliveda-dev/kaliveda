@@ -142,7 +142,7 @@ void KVVAMOSReconNuc::init()
 
    fkIsCorrected = kFALSE;
 
-   fdebug = kFALSE;
+   fdebug = kTRUE;
 }
 //________________________________________________________________
 
@@ -165,11 +165,16 @@ void KVVAMOSReconNuc::Calibrate()
    if (gVamos->Calibrate(this)) {
       // if the nucleus is calibrated by this way then the energy losses
       // in each detector are not calculated then they are set to -1
+      if (fdebug) Info("Calibrate", "... gVamos->Calibrate() was success, CalibrateFromDetList() won't be called ...");
       if (fDetE.empty()) {
          Int_t N = GetDetectorList()->GetEntries();
          fDetE.resize(N, -1.);
       }
-   } else CalibrateFromDetList();
+   } else {
+      if (fdebug) Info("Calibrate", "... gVamos->Calibrate() wasn't success, CalibrateFromDetList() will be called ...");
+      CalibrateFromDetList();
+   }
+
 
    if (IsCalibrated() && GetEnergy() > 0) {
 
@@ -199,8 +204,8 @@ void KVVAMOSReconNuc::Calibrate()
       }
    }
 }
-//________________________________________________________________
 
+//________________________________________________________________
 void KVVAMOSReconNuc::CalibrateFromDetList()
 {
    // The energy of each particle is calculated as follows:
@@ -223,7 +228,6 @@ void KVVAMOSReconNuc::CalibrateFromDetList()
    // The flag returned by IsCalibrated will be true is the energy code is different from kECode0.
 
    //status code
-
    SetECode(kECode0);
 
    //uncharged particles
@@ -297,7 +301,7 @@ void KVVAMOSReconNuc::CalibrateFromDetList()
             Bool_t isOK = kFALSE;
             Edet = det->GetEnergy();
 
-//          Warning("CalibrateFromDetList","MeasuredDE>MaxDE in %s, Z= %d, A=%d, MeasuredDE= %f MeV, MaxDE %f MeV",det->GetName(), z0, a0, Edet,det->GetMaxDeltaE( z0, a0 ));
+            Warning("CalibrateFromDetList", "MeasuredDE>MaxDE in %s, Z= %d, A=%d, MeasuredDE= %f MeV, MaxDE %f MeV", det->GetName(), z0, a0, Edet, det->GetMaxDeltaE(z0, a0));
 
             while (!isOK && (z - GetZ() <= 10)) {
                //increase Z
@@ -305,9 +309,9 @@ void KVVAMOSReconNuc::CalibrateFromDetList()
                //modify A only if it is not measured
                if (!IsAMeasured()) a = GetAFromZ(z, (Char_t)GetMassFormula());
                isOK  = (Edet <= det->GetMaxDeltaE(z, a));
-//             Info("CalibrateFromDetList","changing Z= %d, A=%d, MeasuredDE= %f MeV, MaxDE %f MeV", z, a, Edet,det->GetMaxDeltaE( z, a ));
+               Info("CalibrateFromDetList", "changing Z= %d, A=%d, MeasuredDE= %f MeV, MaxDE %f MeV", z, a, Edet, det->GetMaxDeltaE(z, a));
             }
-//          Info("CalibrateFromDetList","MeasuredDE<MaxDE in %s by changing Z: %d->%d, A: %d->%d \n",det->GetName(), z0 ,z, a0 ,a);
+            Info("CalibrateFromDetList", "MeasuredDE<MaxDE in %s by changing Z: %d->%d, A: %d->%d \n", det->GetName(), z0 , z, a0 , a);
             SetZandA(z, a);
             det->SetEResAfterDetector(Etot);
             Edet  = det->GetCorrectedEnergy(this, -1, transmission);
@@ -330,7 +334,7 @@ void KVVAMOSReconNuc::CalibrateFromDetList()
          if (det->GetNHits() > 1) {
             if (!(det->Fired() && det->IsECalibrated()))
                det->SetEnergyLoss(Edet + det->GetEnergy());// sum up calculated energy losses in uncalibrated detector
-            //       Info("CalibrateFromDetList","MultiHit in %s", det->GetName());
+            Info("CalibrateFromDetList", "MultiHit in %s", det->GetName());
          } else if (!det->Fired() || !det->IsECalibrated())
             det->SetEnergyLoss(Edet);
 
@@ -339,7 +343,7 @@ void KVVAMOSReconNuc::CalibrateFromDetList()
          Etot += Edet;
          fDetE[idx] = Edet;
          if (det->IsUsedToMeasure("E")) SetECode(kECode2);
-         //    Info("CalibrateFromDetList","Calculated DeltaE= %f in %s, idx= %d", Edet, det->GetName(), idx);
+         Info("CalibrateFromDetList", "Calculated DeltaE= %f in %s, idx= %d", Edet, det->GetName(), idx);
       }
 
       // reset thicknesses of absorbers
@@ -566,7 +570,7 @@ void KVVAMOSReconNuc::IdentifyQandA()
          if (!idt->IsReadyForID()) continue;
 
          //------e494s experiment case------
-         if (idt->InheritsFrom(KVIDQA::Class())) { // if ID-telescope for Q and A identification (e494s)
+         if (idt->InheritsFrom(KVIDQA::Class())) {// if ID-telescope for Q and A identification (e494s)
             KVIDQA* qa_idt = (KVIDQA*)idt;
 
             static KVIdentificationResult IDR;

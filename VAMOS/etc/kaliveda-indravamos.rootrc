@@ -136,10 +136,12 @@ INDRA_e494s.INDRADB.ChIoSiVoltMeVCalib:             e494s_Volt2MeV.dat
 ################################################
 +Plugin.KVIDTelescope:  ^INDRA_e503.VAMOS.SI-CSI$  KVIDHarpeeSiCsI_e503  VAMOSidentification    "KVIDHarpeeSiCsI_e503()"
 +Plugin.KVIDTelescope:  ^INDRA_e503.VAMOS.CHI-SI$  KVIDHarpeeICSi_e503   VAMOSidentification    "KVIDHarpeeICSi_e503()"
++Plugin.KVIDTelescope:  ^INDRA_e503.VAMOS.QA.SI$   KVIDQA                VAMOSidentification    "KVIDQA()"
++Plugin.KVIDTelescope:  ^INDRA_e503.VAMOS.QA.CSI$  KVIDQA                VAMOSidentification    "KVIDQA()"
 ###############################################
 
 #======================= Identification parameter files for different datasets
-# Format is
+# Format is:
 #
 # [dataset name].IdentificationParameterFile.[identification telescope label]:      [filename]
 #
@@ -157,6 +159,8 @@ INDRA_e503.IdentificationParameterFile.SI75-SILI:     grilles_fit_Si75_SiLi.dat
 INDRA_e503.IdentificationParameterFile.SILI-CSI:      grilles_fit_SiLi_CsI.dat
 INDRA_e503.IdentificationParameterFile.VAMOS.CHI-SI:  grid_chio_si_vamos.dat
 INDRA_e503.IdentificationParameterFile.VAMOS.SI-CSI:  grid_vamos.dat
+INDRA_e503.IdentificationParameterFile.VAMOS.QA.SI:   grid_VAMOS_QA_SI.dat
+INDRA_e503.IdentificationParameterFile.VAMOS.QA.CSI:  grid_VAMOS_QA_CSI.dat
 ###############################################
 INDRA_e494s.IdentificationParameterFile.CI-SI:         grilles_ChIo_Si.dat
 INDRA_e494s.IdentificationParameterFile.CI-CSI:        grilles_ChIo_CsI.dat
@@ -184,6 +188,7 @@ KVVAMOSReconNuc.MassFormula:        2
 #
 # The following are specific grids for specific telescopes
 KVIDTelescope.DefaultGrid.VAMOS.QA.SI:          KVIDQAGrid
+KVIDTelescope.DefaultGrid.VAMOS.QA.CSI:         KVIDQAGrid
 
 # Default identification/cut classes for different ID graphs
 # Used by KVIDGridManagerGUI when creating new grids

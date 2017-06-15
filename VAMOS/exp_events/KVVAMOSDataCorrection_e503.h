@@ -55,7 +55,7 @@ public:
    virtual void Init();
    virtual Bool_t ApplyCorrections(KVVAMOSReconNuc*);
    virtual void IdentifyCorrectedNucleus(KVVAMOSReconNuc*);
-   virtual Double_t CalculateKE(KVVAMOSReconNuc*);
+   virtual Double_t CalibrateFromDetList(KVVAMOSReconNuc*);
 
    void PrintInitInfos();
    virtual void SetVerbose(Bool_t status = kTRUE) {

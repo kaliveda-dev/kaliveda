@@ -16,9 +16,9 @@ ClassImp(KVVAMOSDataCorrection_e503)
 ////////////////////////////////////////////////////////////////////////////////
 // BEGIN_HTML <!--
 /* -->
-<h2>KVVAMOSDataCorrection_e503</h2>
-<h4>Base class to use for VAMOS data corrections for e503 experiment</h4>
-<!-- */
+   <h2>KVVAMOSDataCorrection_e503</h2>
+   <h4>Base class to use for VAMOS data corrections for e503 experiment</h4>
+   <!-- */
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -641,6 +641,12 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
       Info("ApplyCorrections", "... trying to apply e503 corrections to nucleus (IDCode=%d) ...", IDCode);
    }
 
+   //-----Re-Calculate KE-----
+   Double_t energy_after = CalibrateFromDetList(nuc);
+   Double_t AE  = energy_after / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
+   nuc->SetCorrectedRealAE(AE);
+
+   //-----AoQ - ToF corrections-----
    //Si-CsI telescopes corrections
    Bool_t kCsI_HFcorr   = kFALSE;
    Bool_t kCsI_DUcorr   = kFALSE;
@@ -660,6 +666,20 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
       kSi_DUcorr = ApplyToFDuplicationCorrections(nuc, flist_aoq_cut_icsi, ftof_corr_icsi);
       if (fkfunc_ztof_icsi_init) kSi_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_icsi);
    }
+
+   //-----Identification with grids-----
+   //To be implemented
+
+   //-----Set final mass-----
+   //To be implemented
+
+   //-----Re-calculate KE for IDCode3-----
+   //Indeed, for Si-CsI identifiactions, the former KE was computed from
+   //mass estimation for CsI detectors.
+   //We have found the correct mass using previous corrections and KVIDQAGrid,
+   //so we need to re-calculate KE from correct mass
+   //To be implemented
+
 
    if (kCsI_HFcorr || kCsI_DUcorr || kCsI_ZToFfunc || kSi_HFcorr || kSi_DUcorr || kSi_ZToFfunc) return kTRUE;
    else return kFALSE;
@@ -884,9 +904,260 @@ void KVVAMOSDataCorrection_e503::IdentifyCorrectedNucleus(KVVAMOSReconNuc*)
 }
 
 //____________________________________________________________________________//
-void CalculateKE(KVVAMOSReconNuc*)
+Double_t KVVAMOSDataCorrection_e503::CalibrateFromDetList(KVVAMOSReconNuc* nuc)
 {
+   // Iterate over the list of aligned detectors (the list is in reverse
+   // order) and add up the energies of all the absorbers, making our way
+   // back towards the target. We must do this explicitly as the VAMOS
+   // definition of "calibrated detector" may differ from the standard
+   // KaliVeda definition.  All we care about here is that the detector is
+   // calibrated in energy.
 
+   Double_t total_energy   = 0.;
+   Double_t detector_eloss = 0.;
+   Double_t absorber_eloss = 0.;
+
+   KVVAMOSDetector* det(NULL);
+
+   //stopping detector
+   KVVAMOSDetector* stop_det = static_cast<KVVAMOSDetector*>(nuc->GetStoppingDetector());
+   assert(stop_det);
+
+   //identifying telescope
+   KVIDTelescope* idt = nuc->GetIdentifyingTelescope();
+   if (!idt) return -666.;
+   KVVAMOSDetector* resi_det = static_cast<KVVAMOSDetector*>(idt->GetDetector(2));
+   TList* det_list = resi_det->GetAlignedDetectors(KVGroup::kBackwards);
+
+   //const Bool_t kICSi(idt->InheritsFrom("KVIDHarpeeICSi_e503"));
+   const Bool_t kSiCsI(idt->InheritsFrom("KVIDHarpeeSiCsI_e503"));
+
+   //idt identification result
+   KVIdentificationResult* idr = nuc->GetIdentificationResult(idt);
+   if (!idr) return -666.;
+
+   KVNucleus sim_nucleus; //buffer nucleus for backward propagation
+   if (idr->Zident && idr->Aident) {
+      sim_nucleus.SetZandA(idr->Z, idr->A);
+   } else {
+      // A Value is automatically calculated.
+      sim_nucleus.SetZ(idr->Z);
+   }
+
+   //debug
+   if (fkverbose) {
+      Info("CalbrateFromDetList", "... initialisation ... \nstop_det is %s \nresi_det is %s \nidt is %s \n... printing idt idr ...",
+           stop_det->GetName(), resi_det->GetName(), idt->GetName());
+      printf("IDattempted=%d, IDOK=%d, IDquality=%d, IDcode=%d \nZident=%d, Aident=%d\n Z=%d, A=%d \nComment='%s'\n",
+             (int) idr->IDattempted, (int) idr->IDOK, idr->IDquality, idr->IDcode,
+             (int) idr->Zident, (int) idr->Aident, idr->Z, idr->A, idr->GetComment());
+      printf("... printing list of aligned detectors (backward) ...");
+      det_list->Print();
+   }
+
+   //-----Iteration over detector list in REVERSE order -----
+   TIter next_det(det_list);
+   while ((det = static_cast<KVVAMOSDetector*>(next_det()))) {
+
+      const Bool_t kDetectorIsDC(det->InheritsFrom("KVDriftChamber"));
+      //const Bool_t kDetectorIsIC(det->InheritsFrom("KVHarpeeIC"));
+      const Bool_t kDetectorIsSi(det->InheritsFrom("KVHarpeeSi"));
+      const Bool_t kDetectorIsCsI(det->InheritsFrom("KVHarpeeCsI"));
+
+      //-----Iteration over all absorbers of the current detector-----
+      // For each detector we iterate IN REVERSE over the absorbers (making
+      // our way towards the target) and sum either the calculated energy
+      // loss in the dead layers or the calibrated energy in the active
+      // layer.
+      KVList* absorbers(det->GetListOfAbsorbers());
+
+      detector_eloss = 0.;
+      KVMaterial* abs = NULL;
+
+      TIter next_absorber(absorbers, kIterBackward);
+      while ((abs = static_cast<KVMaterial*>(next_absorber()))) {
+         absorber_eloss = 0.;
+
+         //-----Absorber is ACTIVE LAYER-----
+         // The absorber is the active layer of the detector and so we
+         // can simply call the detector's GetCalibE function, or in the
+         // case of the CsI detector (which requires the Z and A values)
+         // GetCorrectedEnergy(). Also the drift chamber is not
+         // calibrated in energy and must be calculated.
+         if (abs == det->GetActiveLayer()) {
+            //-----CsI case-----
+            if (kDetectorIsCsI) {
+               KVHarpeeCsI* csi(static_cast<KVHarpeeCsI*>(det));
+               assert(csi);
+
+               // Be careful: This only works because the energy of
+               // the nucleus is not used in GetCorrectedEnergy(), should
+               // this change then we will need to rethink.
+               absorber_eloss = csi->GetCorrectedEnergy(&sim_nucleus, -1., 0);
+
+               if (fkverbose) Info("CalibrateFromDetList", "... det is CsI, eloss=%lf MeV...", absorber_eloss);
+            }
+
+            //-----Drift Chambers-----
+            //DC are not energy calibrated, we calculate energy loss
+            else if (kDetectorIsDC) {
+               KVMaterial* drift_active = static_cast<KVMaterial*>(abs);
+               assert(drift_active);
+
+               absorber_eloss = drift_active->GetDeltaEFromERes(sim_nucleus.GetZ(), sim_nucleus.GetA(), total_energy);
+               if (fkverbose) Info("CalibrateFromDetList", "... det is DC%d, eloss=%lf MeV...", det->GetNumber(), absorber_eloss);
+            }
+
+            //-----IC or Si-----
+            else {
+               absorber_eloss = det->GetCalibE();
+               if (fkverbose) Info("CalibrateFromDetList", "... det is %s, eloss=%lf MeV", det->GetName(), absorber_eloss);
+            }
+
+            //sum energies
+            detector_eloss += absorber_eloss;
+            total_energy += absorber_eloss;
+
+            if (fkverbose) Info("CalibrateFromDetList", "... after active layer: det_eloss=%lf MeV, etot=%lf MeV, ...", detector_eloss, total_energy);
+            continue;
+         }//end of active layer case
+
+         //-----Absorber IS NOT ACTIVE LAYER-----
+         // Total energy is the residual energy since we are working towards
+         // the target from the stopping detector
+         Double_t incident_energy = abs->GetIncidentEnergyFromERes(sim_nucleus.GetZ(), sim_nucleus.GetA(), total_energy);
+
+         // Vector normal to absorber surface, pointing from the origin
+         // toward the material - in this case simply the z direction (beam
+         // direction)
+         TVector3 norm(0, 0, 1);
+         sim_nucleus.SetEnergy(incident_energy);
+         sim_nucleus.SetTheta(nuc->GetThetaF());
+         sim_nucleus.SetPhi(nuc->GetPhiF());
+
+         absorber_eloss = abs->GetELostByParticle(&sim_nucleus, &norm);
+
+         detector_eloss += absorber_eloss;
+         total_energy += absorber_eloss;
+
+         if (fkverbose) {
+            Info("CalibrateFromDetList", "... after inactive layer: absorber_eloss=%lf MeV, det_eloss=%lf MeV, etot=%lf MeV...",
+                 absorber_eloss, detector_eloss, total_energy);
+         }
+      }//end of absorber loop
+
+      //-----Si->CsI dead layer correction -----
+      if (kDetectorIsSi && kSiCsI) {
+         // Be careful here! This calculation relies upon the silicon
+         // detector having only one absorber, which is calibrated. If the
+         // silicon detector has any dead layers then this calculation will
+         // not be accurate, as we only make use of the calibrated energy.
+         //
+         // The alternative would be to use detector_eloss in the incident
+         // energy calculation but that is also problematic, as you introduce
+         // a cyclic dependency on the calculated total energy! We end up in
+         // this situation as the residual energy from the CsI detector is
+         // zero and so reliable calculations of the CsI incident energy are
+         // not possible.
+
+         // silicon detector incident energy
+         assert((detector->GetCalibE() >= 0.) &&
+                (detector->GetCalibE() < 3000.));
+
+         Double_t incident_energy = det->GetEResFromDeltaE(sim_nucleus.GetZ(), sim_nucleus.GetA(), det->GetCalibE());
+
+         // Vector normal to dead-layer surface, pointing from the origin
+         // toward the material - in this case simply the z direction (beam
+         // direction)
+         TVector3 norm(0, 0, 1);
+         KVMaterial isobutane("C4H10", 13.65 * KVUnits::cm);
+         isobutane.SetPressure(40.*KVUnits::mbar);
+
+         sim_nucleus.SetEnergy(incident_energy);
+         sim_nucleus.SetTheta(nuc->GetThetaF());
+         sim_nucleus.SetPhi(nuc->GetPhiF());
+
+         absorber_eloss = isobutane.GetELostByParticle(&sim_nucleus, &norm);
+         total_energy += absorber_eloss;
+
+         // The silicon detector losses have already been taken into account
+         // above.
+         if (fkverbose) {
+            Info("CalibrateFromDetList", "... IC->CsI dead layer correction: absorber_eloss=%lf MeV, total energy=%lf MeV  ...",
+                 absorber_eloss, total_energy);
+         }
+         continue;
+      }//end of si-csi dead layer corrections
+
+      //-----SED corrections-----
+      if (kDetectorIsDC && (det->GetNumber() == 2)) {
+         // We calculate the incident energy to the second drift chamber
+         // from its residual energy and use it as the basis for calculating
+         // the energy loss in the sed. Care is needed to set the correct
+         // effective thickness of the material for the particle.
+
+         // Vector normal to SED surface, pointing from the origin toward the
+         // material - in this case 45 degrees (the beam [0,0,1] sees the
+         // thickness as 1.273um)
+         TVector3 norm(0, -1, 1);
+         KVMaterial sed("Myl", 0.9 * KVUnits::um);
+
+         // total_energy at this point includes the second drift chamber
+         // energy losses and so this needs to be subtracted again to get the
+         // residual energy.
+         Double_t drift_2_incident_energy = det->GetIncidentEnergyFromERes(sim_nucleus.GetZ(), sim_nucleus.GetA(), total_energy - detector_eloss);
+
+         // Nucleus is defined just prior to entering the second drift
+         // chamber and is used only to evaluate the direction in which it is
+         // travelling.
+         sim_nucleus.SetEnergy(drift_2_incident_energy);
+         sim_nucleus.SetTheta(nuc->GetThetaI());
+         sim_nucleus.SetPhi(nuc->GetPhiI());
+
+         // Normalised!
+         TVector3 momentum(sim_nucleus.GetMomentum());
+         Double_t mag(momentum.Mag());
+
+         TVector3 dir;
+         dir.SetX(momentum.X() / mag);
+         dir.SetY(momentum.Y() / mag);
+         dir.SetZ(momentum.Z() / mag);
+
+         Double_t effective_thickness(sed.GetEffectiveThickness(norm, dir));
+
+         // Set the linear thickness of the SED to the correct effective
+         // thickness.
+         sed.SetThickness(effective_thickness);
+
+         absorber_eloss = sed.GetDeltaEFromERes(sim_nucleus.GetZ(), sim_nucleus.GetA(), drift_2_incident_energy);
+         total_energy += absorber_eloss;
+
+         // The drift chamber energy losses have already been accounted for
+         // above.
+         if (fkverbose) Info("CalibrateFromDetList", "... SED correction: absorber_eloss=%lf, etot=%lf ...", absorber_eloss, total_energy);
+         continue;
+      }//end of SED corrections
+   }//end of detector loop
+
+   //-----Final corrections to the energy for the strip foil and the target-----
+   //strip foil
+   KVMaterial strip_foil(20.*KVUnits::ug, "C");
+
+   absorber_eloss = strip_foil.GetDeltaEFromERes(sim_nucleus.GetZ(), sim_nucleus.GetA(), total_energy);
+   total_energy += absorber_eloss;
+
+   if (fkverbose) Info("CalibrateFromDetList", "... strip foil correction: absorber_eloss=%lf, etot=%lf ...", absorber_eloss, total_energy);
+
+   //target
+   KVTarget* target = gMultiDetArray->GetTarget();
+   assert(target);
+
+   absorber_eloss = target->GetDeltaEFromERes(sim_nucleus.GetZ(), sim_nucleus.GetA(), total_energy);
+   total_energy += absorber_eloss;
+
+   if (fkverbose) Info("CalibrateFromDetList", "... target corrections: absorber_eloss=%lf, etot=%lf ...", absorber_eloss, total_energy);
+
+   return total_energy;
 }
 
 //____________________________________________________________________________//
