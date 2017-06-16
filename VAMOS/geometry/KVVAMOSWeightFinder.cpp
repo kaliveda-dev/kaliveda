@@ -627,7 +627,7 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI)
       }
 
       //return Weight
-      Float_t weight = (denum > 0 ? num / denum * dt_corr : -666.);
+      Float_t weight = (denum > 0 ? num / denum* dt_corr : -666.);
       return weight;
    }
 

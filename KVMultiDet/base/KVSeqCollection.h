@@ -25,7 +25,8 @@ class KVSeqCollection : public TSeqCollection {
 protected:
    TSeqCollection* fCollection;//Pointer to embedded ROOT collection
 
-   virtual void Changed() {
+   virtual void Changed()
+   {
       // Called by Add/RemoveObject, Clear and Delete.
       // We make it emit the "Modified()" signal, if
       // the kSignals bit has been set using SendModifiedSignals(kTRUE).
@@ -47,10 +48,12 @@ public:
    virtual void Copy(TObject& obj) const;
    KVSeqCollection& operator=(const KVSeqCollection&);
 
-   virtual void Modified() {
+   virtual void Modified()
+   {
       Emit("Modified()");
    }  // *SIGNAL*
-   virtual void SendModifiedSignals(Bool_t yes = kTRUE) {
+   virtual void SendModifiedSignals(Bool_t yes = kTRUE)
+   {
       // yes=kTRUE: turns on signals-and-slots mechanism, list will
       //           emit 'Modified()' signal every time a change
       //           occurs (objects added or removed).
@@ -59,16 +62,19 @@ public:
       // By default, the 'Modified()' signal is NOT enabled.
       SetBit(kSignals, yes);
    }
-   virtual Bool_t IsSendingModifiedSignals() const {
+   virtual Bool_t IsSendingModifiedSignals() const
+   {
       // returns kTRUE if 'Modified()' signal is active
       // (see SendModifiedSignals).
       return TestBit(kSignals);
    }
 
-   virtual TObject* At(Int_t idx) const {
+   virtual TObject* At(Int_t idx) const
+   {
       return fCollection->At(idx);
    }
-   virtual void      AddFirst(TObject* obj) {
+   virtual void      AddFirst(TObject* obj)
+   {
       // Add an object to the list.
       // If the cleanup mechanism is in use, we set the TObject::kMustCleanup bit
       // of the object before adding it to the list.
@@ -77,7 +83,8 @@ public:
       fCollection->AddFirst(obj);
       Changed();
    }
-   virtual void      AddLast(TObject* obj) {
+   virtual void      AddLast(TObject* obj)
+   {
       // Add an object to the list.
       // If the cleanup mechanism is in use, we set the TObject::kMustCleanup bit
       // of the object before adding it to the list.
@@ -86,7 +93,8 @@ public:
       fCollection->AddLast(obj);
       Changed();
    }
-   virtual void      AddAt(TObject* obj, Int_t idx) {
+   virtual void      AddAt(TObject* obj, Int_t idx)
+   {
       // Add an object to the list.
       // If the cleanup mechanism is in use, we set the TObject::kMustCleanup bit
       // of the object before adding it to the list.
@@ -95,7 +103,8 @@ public:
       fCollection->AddAt(obj, idx);
       Changed();
    }
-   virtual void      AddAfter(const TObject* after, TObject* obj) {
+   virtual void      AddAfter(const TObject* after, TObject* obj)
+   {
       // Add an object to the list.
       // If the cleanup mechanism is in use, we set the TObject::kMustCleanup bit
       // of the object before adding it to the list.
@@ -104,7 +113,8 @@ public:
       fCollection->AddAfter(after, obj);
       Changed();
    }
-   virtual void      AddBefore(const TObject* before, TObject* obj) {
+   virtual void      AddBefore(const TObject* before, TObject* obj)
+   {
       // Add an object to the list.
       // If the cleanup mechanism is in use, we set the TObject::kMustCleanup bit
       // of the object before adding it to the list.
@@ -113,19 +123,24 @@ public:
       fCollection->AddBefore(before, obj);
       Changed();
    }
-   virtual TObject*  Before(const TObject* obj) const {
+   virtual TObject*  Before(const TObject* obj) const
+   {
       return fCollection->Before(obj);
    }
-   virtual TObject*  After(const TObject* obj) const {
+   virtual TObject*  After(const TObject* obj) const
+   {
       return fCollection->After(obj);
    }
-   virtual TObject*  First() const {
+   virtual TObject*  First() const
+   {
       return fCollection->First();
    }
-   virtual TObject*  Last() const {
+   virtual TObject*  Last() const
+   {
       return fCollection->Last();
    }
-   virtual void       Add(TObject* obj) {
+   virtual void       Add(TObject* obj)
+   {
       // Add an object to the list.
       // If the cleanup mechanism is in use, we set the TObject::kMustCleanup bit
       // of the object before adding it to the list.
@@ -140,31 +155,38 @@ public:
    virtual TIterator* MakeIterator(Bool_t dir = kIterForward) const;
    virtual TObject*   Remove(TObject* obj);
    virtual void RecursiveRemove(TObject* obj);
-   virtual Int_t GetSize() const {
+   virtual Int_t GetSize() const
+   {
       return fCollection ? fCollection->GetSize() : 0;
    }
-   virtual void SetOwner(Bool_t enable = kTRUE) {
+   virtual void SetOwner(Bool_t enable = kTRUE)
+   {
       TSeqCollection::SetOwner(enable);
       fCollection->SetOwner(enable);
    }
-   const Char_t* CollectionClassName() const {
+   const Char_t* CollectionClassName() const
+   {
       // Return classname of embedded collection object
       return fCollection->ClassName();
    }
    virtual void SetCleanup(Bool_t enable = kTRUE);
-   virtual Bool_t IsCleanup() const {
+   virtual Bool_t IsCleanup() const
+   {
       // Returns kTRUE if the ROOT cleanup mechanism is used to ensure that any objects in the list
       // which get deleted elsewhere are removed from this list
       return TestBit(kCleanup);
    }
 
-   virtual TObject* FindObject(const char* name) const {
+   virtual TObject* FindObject(const char* name) const
+   {
       return fCollection->FindObject(name);
    }
-   virtual TObject* FindObject(const TObject* obj) const {
+   virtual TObject* FindObject(const TObject* obj) const
+   {
       return fCollection->FindObject(obj);
    }
-   virtual TObject* FindObjectByName(const Char_t* name) const {
+   virtual TObject* FindObjectByName(const Char_t* name) const
+   {
       return fCollection->FindObject(name);
    }
    virtual TObject* FindObjectByType(const Char_t*) const;
@@ -179,7 +201,8 @@ public:
 
 #ifdef __WITHOUT_TCOLLECTION_GETENTRIES
    //we add the GetEntries method added to TCollection from ROOT v4.03/04 onwards
-   virtual Int_t GetEntries() const {
+   virtual Int_t GetEntries() const
+   {
       return GetSize();
    };
 #endif
@@ -201,14 +224,17 @@ public:
    static KVSeqCollection* MakeListFromFileWithClass(TFile* file, const TClass* _class);
    static KVSeqCollection* MakeListFromFileWithClass(TFile* file, const Char_t* class_name);
 
-   virtual Bool_t IsSortable() const {
+   virtual Bool_t IsSortable() const
+   {
       return fCollection->IsSortable();
    }
-   virtual Bool_t IsSorted() const {
+   virtual Bool_t IsSorted() const
+   {
       return fCollection->IsSorted();
    }
 
-   TSeqCollection* GetCollection() const {
+   TSeqCollection* GetCollection() const
+   {
       return fCollection;
    }
 

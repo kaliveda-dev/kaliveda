@@ -54,21 +54,26 @@ public:
    void SortIDTelescopes();
 
    void GetDetectorEvent(KVDetectorEvent* detev, TSeqCollection* fired_params);
-   Int_t GetNumberOfBlocks() const {
+   Int_t GetNumberOfBlocks() const
+   {
       return fNblocks;
    }
-   void IncludeTargetInGeometry(Bool_t include = kTRUE) {
+   void IncludeTargetInGeometry(Bool_t include = kTRUE)
+   {
       fBuildTarget = include;
    }
 
-   KVString GetDetectorLabels() const {
+   KVString GetDetectorLabels() const
+   {
       return fDetectorLabels;
    }
-   const Char_t* GetSignalTypes() const {
+   const Char_t* GetSignalTypes() const
+   {
       return fSignalTypes.Data();
    }
 
-   void SetGeometryImportParameters(Double_t dt = 0.25, Double_t dp = 1.0, Double_t tmin = 2., Double_t pmin = 0, Double_t tmax = 20., Double_t pmax = 360.) {
+   void SetGeometryImportParameters(Double_t dt = 0.25, Double_t dp = 1.0, Double_t tmin = 2., Double_t pmin = 0, Double_t tmax = 20., Double_t pmax = 360.)
+   {
       // Set angular arguments for call to KVGeoImport::ImportGeometry in KVFAZIA::Build
       fImport_dPhi = dp;
       fImport_dTheta = dt;

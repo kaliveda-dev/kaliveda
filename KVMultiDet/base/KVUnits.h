@@ -30,11 +30,11 @@ namespace KVUnits {
    const long double torr = 1.0l;
    const long double atm = 760.l;
    const long double Pa = atm / 101325.l;
-   const long double mbar = 100.l* Pa;
+   const long double mbar = 100.l * Pa;
    // volumes
    const long double cc = 1.0l;
    const long double litre = 1.e+3l;
-   const long double cl = 10.l* cc;
+   const long double cl = 10.l * cc;
    const long double ml = cc;
    // energies
    const long double MeV = 1.0l;

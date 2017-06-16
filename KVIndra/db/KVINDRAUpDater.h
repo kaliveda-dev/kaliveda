@@ -17,7 +17,8 @@ class KVINDRAUpDater: public KVUpDater {
 public:
 
    KVINDRAUpDater();
-   virtual ~ KVINDRAUpDater() {
+   virtual ~ KVINDRAUpDater()
+   {
    };
 
    virtual void SetParameters(UInt_t run);

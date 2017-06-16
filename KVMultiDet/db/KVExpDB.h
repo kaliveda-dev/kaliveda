@@ -40,30 +40,38 @@ public:
    virtual void LinkRecordToRunRange(KVDBRecord* rec,  KVNumberList nl);
    virtual void LinkRecordToRun(KVDBRecord* rec,  Int_t run);
 
-   void AddRun(KVDBRun* r) {
+   void AddRun(KVDBRun* r)
+   {
       fRuns->AddRecord(r);
    }
-   virtual KVSeqCollection* GetRuns() const {
+   virtual KVSeqCollection* GetRuns() const
+   {
       return fRuns->GetRecords();
    }
-   KVDBRun* GetDBRun(Int_t number) const {
+   KVDBRun* GetDBRun(Int_t number) const
+   {
       return (KVDBRun*)fRuns->GetRecord(number);
    }
-   Int_t GetFirstRunNumber() const {
+   Int_t GetFirstRunNumber() const
+   {
       return kFirstRun;
    }
-   Int_t GetLastRunNumber() const {
+   Int_t GetLastRunNumber() const
+   {
       return kLastRun;
    }
 
-   virtual KVDBSystem* GetSystem(const Char_t* system) const {
+   virtual KVDBSystem* GetSystem(const Char_t* system) const
+   {
       return (KVDBSystem*) fSystems->GetRecord(system);
    }
-   virtual KVSeqCollection* GetSystems() const {
+   virtual KVSeqCollection* GetSystems() const
+   {
       return fSystems->GetRecords();
    }
 
-   void AddSystem(KVDBSystem* r) {
+   void AddSystem(KVDBSystem* r)
+   {
       fSystems->AddRecord(r);
    }
    void WriteSystemsFile() const;
@@ -72,7 +80,8 @@ public:
    virtual void Save(const Char_t*);
 
    virtual const Char_t* GetDBEnv(const Char_t*) const;
-   const Char_t* GetCalibFileName(const Char_t* type) const {
+   const Char_t* GetCalibFileName(const Char_t* type) const
+   {
       return GetDBEnv(type);
    }
 

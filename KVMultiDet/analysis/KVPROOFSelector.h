@@ -48,11 +48,13 @@ public:
    virtual void ParseOptions();
 
    KVPROOFSelector(TTree* /*tree*/ = 0) :
-      fEventsRead(0), fEventsReadInterval(100), fDisableCreateTreeFile(kFALSE) {
+      fEventsRead(0), fEventsReadInterval(100), fDisableCreateTreeFile(kFALSE)
+   {
       lhisto = new KVHashList();
       ltree = new KVHashList();
    }
-   virtual ~KVPROOFSelector() {
+   virtual ~KVPROOFSelector()
+   {
       lhisto->Clear();
       delete lhisto;
       lhisto = 0;
@@ -60,10 +62,12 @@ public:
       delete ltree;
       ltree = 0;
    }
-   void SetEventsReadInterval(Long64_t N) {
+   void SetEventsReadInterval(Long64_t N)
+   {
       fEventsReadInterval = N;
    }
-   virtual Int_t   Version() const {
+   virtual Int_t   Version() const
+   {
       return 3;
    }
    virtual void    Begin(TTree* tree);
@@ -96,7 +100,8 @@ public:
    virtual const TString& GetOpt(const Char_t* option) const;
    virtual void UnsetOpt(const Char_t* opt);
 
-   void SetCombinedOutputFile(const TString& filename) {
+   void SetCombinedOutputFile(const TString& filename)
+   {
       // Call in InitAnalysis() to set the name of the single output file
       // containing all histograms and TTrees produced by analysis.
       // This is equivalent to running the analysis with option
@@ -106,7 +111,8 @@ public:
       // histograms and TTrees will be written in separate files.
       fCombinedOutputFile = filename;
    }
-   Long64_t GetCycleNumber() const {
+   Long64_t GetCycleNumber() const
+   {
       // Returns the argument 'entry' passed to Process(Long64_t entry)
       return fEventsRead;
    }

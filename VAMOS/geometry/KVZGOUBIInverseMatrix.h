@@ -73,7 +73,8 @@ public:
    //std::vector<Float_t> testGetLinesinRadius_weight(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Float_t radiusmultiplier);
    std::vector<Float_t> testGetResults_weight(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Int_t nblines);
    std::vector<Float_t> testGetResults_weight_comb(Float_t XFt, Float_t ThetaFt, Float_t YFt, Float_t PhiFt, Int_t nblines);
-   void Setcharacteristicdistance(Float_t d_XF, Float_t d_ThetaF, Float_t d_YF, Float_t d_PhiF) {
+   void Setcharacteristicdistance(Float_t d_XF, Float_t d_ThetaF, Float_t d_YF, Float_t d_PhiF)
+   {
       characteristicdistance_xf = d_XF;
       characteristicdistance_thetaf = d_ThetaF;
       characteristicdistance_yf = d_YF;

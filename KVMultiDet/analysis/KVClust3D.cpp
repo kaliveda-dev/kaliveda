@@ -242,9 +242,9 @@ void KVClust3D::Clusterize()
       }
    }
 
-   for (Int_t nx = 2; nx <= GetNbinsX() -1; nx += 1) {
-      for (Int_t ny = 2; ny <= GetNbinsY() -1; ny += 1) {
-         for (Int_t nz = 2; nz <= GetNbinsZ() -1; nz += 1) {
+   for (Int_t nx = 2; nx <= GetNbinsX() - 1; nx += 1) {
+      for (Int_t ny = 2; ny <= GetNbinsY() - 1; ny += 1) {
+         for (Int_t nz = 2; nz <= GetNbinsZ() - 1; nz += 1) {
             Int_t idx = fCluster->GetBinContent(nx, ny, nz);
             if (idx >= 1) { //Cellule avec la bonne densite
                if (idx > 1) { //cellule deja affectee

@@ -58,14 +58,17 @@ public:
    virtual Double_t CalibrateFromDetList(KVVAMOSReconNuc*);
 
    void PrintInitInfos();
-   virtual void SetVerbose(Bool_t status = kTRUE) {
+   virtual void SetVerbose(Bool_t status = kTRUE)
+   {
       fkverbose = status;
    }
 
-   Int_t GetNCutHFSiCsI() {
+   Int_t GetNCutHFSiCsI()
+   {
       return static_cast<int>(fvec_nHF_sicsi.size());
    }
-   Int_t GetNCutHFICSi() {
+   Int_t GetNCutHFICSi()
+   {
       return static_cast<int>(fvec_nHF_icsi.size());
    }
 

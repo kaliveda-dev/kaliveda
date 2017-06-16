@@ -29,10 +29,12 @@ public:
 
    //To decide if only Z identification will be proceed or both (Z,A) identification
    //By default (Z,A) identification will be used when possible
-   void SetOnlyZId(Bool_t onlyZId) {
+   void SetOnlyZId(Bool_t onlyZId)
+   {
       fonlyZId = onlyZId;
    }
-   Bool_t IsOnlyZId() {
+   Bool_t IsOnlyZId()
+   {
       return fonlyZId;
    }
 
@@ -40,7 +42,8 @@ public:
    // virtual const Char_t *GetIDSubCodeString(KVIDSubCode & concat) const;
 
    using KVINDRAIDTelescope::GetIDGrid;
-   virtual KVIDGraph* GetIDGrid() {
+   virtual KVIDGraph* GetIDGrid()
+   {
       return fGrid;
    };
    ClassDef(KVVAMOSIDTelescope, 1) //A deltaE-E identification telescope in VAMOS

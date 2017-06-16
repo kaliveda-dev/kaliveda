@@ -153,22 +153,27 @@ public:
 
    static UInt_t    CalculateUniqueID(KVBase* param, KVVAMOSDetector* det = NULL);
    static UChar_t   GetACQParamTypeIdx(const Char_t* type, KVVAMOSDetector* det = NULL);
-   static UChar_t   GetACQParamTypeIdxFromID(UInt_t id) {
+   static UChar_t   GetACQParamTypeIdxFromID(UInt_t id)
+   {
       return (id / 1000) % 10;
    }
-   static KVString& GetACQParamTypes() {
+   static KVString& GetACQParamTypes()
+   {
       return fACQParamTypes;
    }
    static UChar_t   GetPositionTypeIdx(const Char_t* type, KVVAMOSDetector* det = NULL);
-   static UChar_t   GetPositionTypeIdxFromID(UInt_t id) {
+   static UChar_t   GetPositionTypeIdxFromID(UInt_t id)
+   {
       return (id / 10000) % 10;
    }
-   static KVString& GetPositionTypes() {
+   static KVString& GetPositionTypes()
+   {
       return fPositionTypes;
    }
    static Bool_t    IsUsedToMeasure(const Char_t* type, KVVAMOSDetector* det = NULL);
 
-   void ShowECalibPar() {
+   void ShowECalibPar()
+   {
       cout << "par0= " << fECalibPar[0] << endl;
       cout << "par1= " << fECalibPar[1] << endl;
       cout << "par2= " << fECalibPar[2] << endl;

@@ -48,55 +48,72 @@ private:
    static Double_t kSpeedOfLight;       //speed of light in cm/ns
 
    // TLorentzVector setters should not be used
-   void SetVect(const TVector3& vect3) {
+   void SetVect(const TVector3& vect3)
+   {
       TLorentzVector::SetVect(vect3);
    }
-   void SetVectM(const TVector3& spatial, Double_t mass) {
+   void SetVectM(const TVector3& spatial, Double_t mass)
+   {
       TLorentzVector::SetVectM(spatial, mass);
    }
-   void SetVectMag(const TVector3& spatial, Double_t magnitude) {
+   void SetVectMag(const TVector3& spatial, Double_t magnitude)
+   {
       TLorentzVector::SetVectMag(spatial, magnitude);
    }
-   void SetPerp(Double_t p) {
+   void SetPerp(Double_t p)
+   {
       TLorentzVector::SetPerp(p);
    }
-   void SetPtEtaPhiE(Double_t pt, Double_t eta, Double_t phi, Double_t e) {
+   void SetPtEtaPhiE(Double_t pt, Double_t eta, Double_t phi, Double_t e)
+   {
       TLorentzVector::SetPtEtaPhiE(pt, eta, phi, e);
    }
-   void SetPtEtaPhiM(Double_t pt, Double_t eta, Double_t phi, Double_t m) {
+   void SetPtEtaPhiM(Double_t pt, Double_t eta, Double_t phi, Double_t m)
+   {
       TLorentzVector::SetPtEtaPhiM(pt, eta, phi, m);
    }
-   void SetPx(Double_t a) {
+   void SetPx(Double_t a)
+   {
       TLorentzVector::SetPx(a);
    }
-   void SetPy(Double_t a) {
+   void SetPy(Double_t a)
+   {
       TLorentzVector::SetPy(a);
    }
-   void SetPz(Double_t a) {
+   void SetPz(Double_t a)
+   {
       TLorentzVector::SetPz(a);
    }
-   void SetPxPyPzE(Double_t px, Double_t py, Double_t pz, Double_t e) {
+   void SetPxPyPzE(Double_t px, Double_t py, Double_t pz, Double_t e)
+   {
       TLorentzVector::SetPxPyPzE(px, py, pz, e);
    }
-   void SetRho(Double_t rho) {
+   void SetRho(Double_t rho)
+   {
       TLorentzVector::SetRho(rho);
    }
-   void SetT(Double_t a) {
+   void SetT(Double_t a)
+   {
       TLorentzVector::SetT(a);
    }
-   void SetX(Double_t a) {
+   void SetX(Double_t a)
+   {
       TLorentzVector::SetX(a);
    }
-   void SetY(Double_t a) {
+   void SetY(Double_t a)
+   {
       TLorentzVector::SetY(a);
    }
-   void SetZ(Double_t a) {
+   void SetZ(Double_t a)
+   {
       TLorentzVector::SetZ(a);
    }
-   void SetXYZM(Double_t x, Double_t y, Double_t z, Double_t m) {
+   void SetXYZM(Double_t x, Double_t y, Double_t z, Double_t m)
+   {
       TLorentzVector::SetXYZM(x, y, z, m);
    }
-   void SetXYZT(Double_t x, Double_t y, Double_t z, Double_t t) {
+   void SetXYZT(Double_t x, Double_t y, Double_t z, Double_t t)
+   {
       TLorentzVector::SetXYZT(x, y, z, t);
    }
 
@@ -113,7 +130,8 @@ protected:
 
 public:
 
-   Bool_t HasFrame(const Char_t* frame) {
+   Bool_t HasFrame(const Char_t* frame)
+   {
       // Check if a given frame has been defined
       // Note that this may be a frame defined by transformation of another frame
       // Also: frame names are case-insensitive
@@ -145,16 +163,20 @@ public:
 #endif
    virtual void Clear(Option_t* opt = "");
 
-   virtual void SetMass(Double_t m) {
+   virtual void SetMass(Double_t m)
+   {
       SetXYZM(Px(), Py(), Pz(), m);
    };
-   Double_t GetMass() const {
+   Double_t GetMass() const
+   {
       return M();
    };
-   void SetMomentum(const TVector3& v) {
+   void SetMomentum(const TVector3& v)
+   {
       SetXYZM(v(0), v(1), v(2), M());
    };
-   void SetMomentum(const TVector3* v) {
+   void SetMomentum(const TVector3* v)
+   {
       SetXYZM((*v)(0), (*v)(1), (*v)(2), M());
    };
    void SetMomentum(Double_t px, Double_t py, Double_t pz, Option_t* opt =
@@ -164,109 +186,134 @@ public:
                           Double_t phmin, Double_t phmax,
                           Option_t* opt = "isotropic");
    virtual void Print(Option_t* t = "") const;
-   void Set4Mom(const TLorentzVector& p) {
+   void Set4Mom(const TLorentzVector& p)
+   {
       SetVect(p.Vect());
       SetT(p.E());
    }
-   void SetE(Double_t a) {
+   void SetE(Double_t a)
+   {
       SetKE(a);
    };
    void SetKE(Double_t ecin);
-   void SetEnergy(Double_t e) {
+   void SetEnergy(Double_t e)
+   {
       SetKE(e);
    };
    void SetVelocity(const TVector3&);
-   TVector3 GetMomentum() const {
+   TVector3 GetMomentum() const
+   {
       return Vect();
    };
-   Double_t GetKE() const {
+   Double_t GetKE() const
+   {
       Double_t e = E();
       Double_t m = M();
       //return (E() - M());
       return e - m;
    };
-   Double_t GetEnergy() const {
+   Double_t GetEnergy() const
+   {
       return GetKE();
    };
-   Double_t GetTransverseEnergy() const {
+   Double_t GetTransverseEnergy() const
+   {
       Double_t etran = TMath::Sin(Theta());
       etran = TMath::Power(etran, 2.0);
       etran *= GetKE();
       return etran;
    };
-   Double_t GetEtran() const {
+   Double_t GetEtran() const
+   {
       return GetTransverseEnergy();
    };
 
-   Double_t GetLongitudinalEnergy() const {
+   Double_t GetLongitudinalEnergy() const
+   {
       Double_t elong = TMath::Cos(Theta());
       elong = TMath::Power(elong, 2.0);
       elong *= GetKE();
       return elong;
    };
-   Double_t GetElong() const {
+   Double_t GetElong() const
+   {
       return GetLongitudinalEnergy();
    };
 
-   Double_t GetRTransverseEnergy() const {
+   Double_t GetRTransverseEnergy() const
+   {
       Double_t etran = Mt() - GetMass();
       return etran;
    };
-   Double_t GetREtran() const {
+   Double_t GetREtran() const
+   {
       return GetRTransverseEnergy();
    };
-   Double_t GetE() const {
+   Double_t GetE() const
+   {
       return GetKE();
    };
-   Double_t GetWaveLength() const {
+   Double_t GetWaveLength() const
+   {
       //should be in fm
       if (GetMomentum().Mag() == 0)
          return 0;
       Double_t h = TMath::H() * TMath::C() / TMath::Qe() * 1e9; //in MeV.fm
       return h / GetMomentum().Mag();
    };
-   Double_t GetThermalWaveLength(Double_t temp) const {
+   Double_t GetThermalWaveLength(Double_t temp) const
+   {
       //should be in fm
       Double_t h = TMath::H() * TMath::C() / TMath::Qe() * 1e9; //in MeV.fm
       return h / TMath::Sqrt(TMath::TwoPi() * temp * GetMass());
    };
    TVector3 GetVelocity() const;
-   TVector3 GetV() const {
+   TVector3 GetV() const
+   {
       return GetVelocity();
    };
-   Double_t GetVpar() const {
+   Double_t GetVpar() const
+   {
       return GetV().z();
    };
    Double_t GetVperp() const;
-   Double_t GetTheta() const {
+   Double_t GetTheta() const
+   {
       return TMath::RadToDeg() * Theta();
    };
-   Double_t GetCosTheta() const {
+   Double_t GetCosTheta() const
+   {
       return TMath::Cos(Theta());
    }
-   Double_t GetPhi() const {
+   Double_t GetPhi() const
+   {
       Double_t phi = TMath::RadToDeg() * Phi();
       return (phi < 0 ? 360. + phi : phi);
    };
-   void SetTheta(Double_t theta) {
+   void SetTheta(Double_t theta)
+   {
       TLorentzVector::SetTheta(TMath::DegToRad() * theta);
    }
-   void SetPhi(Double_t phi) {
+   void SetPhi(Double_t phi)
+   {
       TLorentzVector::SetPhi(TMath::DegToRad() * phi);
    }
 
    virtual Bool_t IsOK();
    void SetIsOK(Bool_t flag = kTRUE);
-   void ResetIsOK() {
+   void ResetIsOK()
+   {
       ResetBit(kIsOKSet);
    }
 
-   KVList* GetListOfFrames(void) {
+   KVList* GetListOfFrames(void)
+   {
       return (KVList*)&fBoosted;
    }
    void ls(Option_t* option = "") const;
 
-   void SetE0(TVector3* e = 0) {
+   void SetE0(TVector3* e = 0)
+   {
       if (!fE0)
          fE0 = new TVector3;
       if (!e) {
@@ -275,13 +322,16 @@ public:
          *fE0 = *e;
       }
    };
-   TVector3* GetPInitial() const {
+   TVector3* GetPInitial() const
+   {
       return fE0;
    };
-   void SetIsDetected() {
+   void SetIsDetected()
+   {
       SetBit(kIsDetected);
    };
-   Bool_t IsDetected() {
+   Bool_t IsDetected()
+   {
       return TestBit(kIsDetected);
    }
    KVParticle& operator=(const KVParticle& rhs);
@@ -307,10 +357,12 @@ public:
 
    KVParticle const* GetFrame(const Char_t* frame, Bool_t warn_and_return_null_if_unknown = kTRUE);
 
-   const Char_t* GetFrameName(void) const {
+   const Char_t* GetFrameName(void) const
+   {
       return fFrameName;
    }
-   void SetFrameName(const Char_t* framename) {
+   void SetFrameName(const Char_t* framename)
+   {
       // Set the (non-persistent) name of the reference frame for this particle's kinematics.
       // Also sets a (persistent) parameter "frameName"
       fFrameName = framename;
@@ -318,10 +370,12 @@ public:
       else GetParameters()->RemoveParameter("frameName");
    }
 
-   KVNameValueList* GetParameters() const {
+   KVNameValueList* GetParameters() const
+   {
       return (KVNameValueList*)&fParameters;
    }
-   template<typename ValType> void SetParameter(const Char_t* name, ValType value) const {
+   template<typename ValType> void SetParameter(const Char_t* name, ValType value) const
+   {
       GetParameters()->SetValue(name, value);
    }
 

@@ -39,19 +39,23 @@ public:
    virtual Bool_t  SetIDCorrectionParameters(const KVRList* const records);
    virtual const KVList* GetIDCorrectionParameters() const;
 
-   Int_t GetAMinimiser() {
+   Int_t GetAMinimiser()
+   {
       return Amin_;   //A from minimiser
    }
 
-   Int_t GetBaseQualityCode() {
+   Int_t GetBaseQualityCode()
+   {
       return ICode_;   //Quality code from KVIDZAGrid
    }
 
-   Double_t GetBasePID() {
+   Double_t GetBasePID()
+   {
       return base_id_result_->PID;
    }
 
-   Int_t GetQualityCode() {
+   Int_t GetQualityCode()
+   {
       return MCode_;   //Global returned quality code
    }
 
