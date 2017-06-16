@@ -110,7 +110,7 @@ public:
       return fGainCorrection;
    };
 
-   void DeduceACQParameters(Int_t zz = -1, Int_t aa = -1);
+   void DeduceACQParameters(KVEvent*, KVNumberList&);
 
    ClassDef(KVCsI, 5)           // The CsI(Tl) detectors of the INDRA array
 };

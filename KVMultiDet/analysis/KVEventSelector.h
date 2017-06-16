@@ -226,6 +226,7 @@ public:
    void AddTree(TTree* tree);
 
    void FillHisto(const Char_t* sname, Double_t one, Double_t two = 1, Double_t three = 1, Double_t four = 1);
+   void FillHisto(const Char_t* sname, const Char_t* label, Double_t weight = 1);
    void FillTree(const Char_t* sname = "");
 
    KVHashList* GetHistoList() const;

@@ -360,7 +360,7 @@ Short_t KVChIo::GetCalcACQParam(KVACQParam* ACQ, Double_t ECalc) const
 
 //______________________________________________________________________________
 
-void KVChIo::DeduceACQParameters(Int_t, Int_t)
+void KVChIo::DeduceACQParameters(KVEvent*, KVNumberList&)
 {
 
    Double_t volts = GetVoltsFromEnergy(GetEnergy());

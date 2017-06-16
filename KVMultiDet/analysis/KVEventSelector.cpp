@@ -548,6 +548,18 @@ void KVEventSelector::FillHisto(const Char_t* histo_name, Double_t one, Double_t
 
 }
 
+void KVEventSelector::FillHisto(const Char_t* histo_name, const Char_t* label, Double_t weight)
+{
+   // Fill 1D histogram with named bins
+   TH1* h1 = 0;
+   if ((h1 = GetHisto(histo_name))) {
+      h1->Fill(label, weight);
+   } else {
+      Warning("FillHisto", "%s introuvable", histo_name);
+   }
+
+}
+
 //____________________________________________________________________________
 
 void KVEventSelector::FillTH1(TH1* h1, Double_t one, Double_t two)

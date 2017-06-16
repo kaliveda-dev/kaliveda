@@ -13,7 +13,7 @@
    return defval
 #define CHECK_ION_FIND_MAT_AND_EXEC(method,defval) \
    if(!CheckIon(Z,A)){ \
-      Warning(#method , "Ion Z=%d out of range table limits", Z); \
+      if(Z) Warning(#method , "Ion Z=%d out of range table limits", Z); \
       return defval; \
    } \
    KVIonRangeTableMaterial* M = GetMaterial(mat); \

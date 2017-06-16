@@ -2486,7 +2486,7 @@ void KVTreeAnalyzer::OpenChain()
 
    static TString dir(".");
    const char* filetypes[] = {
-      "ROOT files", "*.root",
+      "ROOT files", "*.root*",
       0, 0
    };
    TGFileInfo fi;

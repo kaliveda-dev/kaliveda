@@ -659,17 +659,15 @@ void KVMultiDetArray::DetectEvent(KVEvent* event, KVReconstructedEvent* rec_even
       fHitGroups->Clear();
    }
 
-   TObjArray* toks = 0;
-
    // iterate through list of particles
    KVNucleus* part, *_part;
    KVNameValueList* det_stat = new KVNameValueList();
    KVNameValueList* nvl = 0;
-   KVNameValueList* un = 0;
-   if (fFilterType == kFilterType_Full) un = new KVNameValueList();
+   KVNameValueList un;
 
+   Int_t part_index = 0; //index of particle in event
    while ((part = event->GetNextParticle())) {  // loop over particles
-
+      ++part_index;
       TList* lidtel = 0;
 
 #ifdef KV_DEBUG
@@ -919,24 +917,20 @@ void KVMultiDetArray::DetectEvent(KVEvent* event, KVReconstructedEvent* rec_even
       if (nvl) {
 
          for (Int_t ii = 0; ii < nvl->GetNpar(); ii += 1) {
-            part->GetParameters()->SetValue(nvl->GetNameAt(ii), nvl->GetDoubleValue(ii));
-            //On enregistre les detecteurs touches avec le Z et A de la particule
-            //Si il y a plusieurs particules, on somme les Z et A de celles ci
-            //Cela servira pour deduire les parametres d acquisition
-            //printf("%s %d %d\n",nvl->GetNameAt(ii),part->GetZ(),part->GetA());
-            //
-            //Specifique au cas fFilterType == kFilterType_Full
-            //
+            TString detname = nvl->GetNameAt(ii);
+            part->GetParameters()->SetValue(detname, nvl->GetDoubleValue(ii));
+            // For fFilterType == kFilterType_Full:
+            //  for each detector hit we record the index of each particle hitting the detector
+            //    [detector]="13" => detector hit by particle 13
+            //  if more than one we have
+            //    [detector]="1 6"  => detector hit by particles 1 & 6
             if (fFilterType == kFilterType_Full) {
-               if (un->HasParameter(nvl->GetNameAt(ii))) {
-                  TString a_z(un->GetStringValue(nvl->GetNameAt(ii)));
-                  toks = a_z.Tokenize(" ");
-                  Int_t zz  = part->GetZ() + ((TObjString*)toks->At(0))->GetString().Atoi();
-                  Int_t aa  = part->GetA() + ((TObjString*)toks->At(1))->GetString().Atoi();
-                  un->SetValue(nvl->GetNameAt(ii), Form("%d %d", zz, aa));
-                  delete toks;
+               if (un.HasParameter(detname)) {
+                  KVNumberList ppp(un.GetStringValue(detname));
+                  ppp.Add(part_index);
+                  un.SetValue(detname, ppp.AsString());
                } else {
-                  un->SetValue(nvl->GetNameAt(ii), Form("%d %d", part->GetZ(), part->GetA()));
+                  un.SetValue(detname, Form("%d", part_index));
                }
             }
          }
@@ -1106,21 +1100,13 @@ void KVMultiDetArray::DetectEvent(KVEvent* event, KVReconstructedEvent* rec_even
    }
 
    if (fFilterType == kFilterType_Full) {
-      //On calcule les parametres d acquisition
-      //un->Print();
+      // Calculate acquisition parameters, taking into account pile-up
       KVDetector* det = 0;
-      for (Int_t nn = 0; nn < un->GetNpar(); nn += 1) {
-
-         det = GetDetector(un->GetNameAt(nn));
-         TString a_z(un->GetStringValue(nn));
-         toks = a_z.Tokenize(" ");
-         Int_t zz  = ((TObjString*)toks->At(0))->GetString().Atoi();
-         Int_t aa  = ((TObjString*)toks->At(1))->GetString().Atoi();
-
-         det->DeduceACQParameters(zz, aa);
-         delete toks;
+      for (Int_t nn = 0; nn < un.GetNpar(); nn += 1) {
+         det = GetDetector(un.GetNameAt(nn));
+         KVNumberList ppp(un.GetStringValue(nn));
+         det->DeduceACQParameters(event, ppp);
       }
-      delete un;
 
       // before reconstruction we have to clear the list of 'hits' of each detector
       // (they currently hold the addresses of the simulated particles which were detected)

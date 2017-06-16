@@ -761,10 +761,12 @@ void KVSimDirGUI::ImportSimulation()
 
          if (one_file) {
             unique_ptr<KVSimReader> SR(KVSimReader::MakeSimReader(model));
+            SR->SetOutputDirectory(fSelectedSimDir->GetDirectory());
             SR->ConvertAndSaveEventsInFile(fi.fFilename);
          } else {
             if (fi.fFileNamesList->GetEntries() == 1) {
                unique_ptr<KVSimReader> SR(KVSimReader::MakeSimReader(model));
+               SR->SetOutputDirectory(fSelectedSimDir->GetDirectory());
                SR->ConvertAndSaveEventsInFile(fi.fFileNamesList->First()->GetName());
             } else {
                TIter it(fi.fFileNamesList);
@@ -774,6 +776,7 @@ void KVSimDirGUI::ImportSimulation()
                   unique_ptr<KVSimReader> SR(KVSimReader::MakeSimReader(model));
                   SR->SetMultiFiles();
                   SR->SetFileIndex(i++);
+                  SR->SetOutputDirectory(fSelectedSimDir->GetDirectory());
                   SR->ConvertAndSaveEventsInFile(o->GetName());
                }
             }

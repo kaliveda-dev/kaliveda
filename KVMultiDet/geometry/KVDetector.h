@@ -42,6 +42,7 @@ class KVCalibrator;
 class TGeoVolume;
 class TTree;
 class TGraph;
+class KVEvent;
 
 class KVDetector: public KVMaterial, public KVPosition {
 
@@ -67,16 +68,20 @@ private:
    Int_t fUnidentP;             //! temporary counters, determine state of identified/unidentified particle flags
 
    /* make KVPosition methods private to avoid misuse */
-   void SetMatrix(const TGeoHMatrix* m) {
+   void SetMatrix(const TGeoHMatrix* m)
+   {
       KVPosition::SetMatrix(m);
    }
-   void SetShape(TGeoBBox* s) {
+   void SetShape(TGeoBBox* s)
+   {
       KVPosition::SetShape(s);
    }
-   TGeoHMatrix* GetMatrix() const {
+   TGeoHMatrix* GetMatrix() const
+   {
       return KVPosition::GetMatrix();
    }
-   TGeoBBox* GetShape() const {
+   TGeoBBox* GetShape() const
+   {
       return KVPosition::GetShape();
    }
    TString fKVDetectorFiredACQParameterListFormatString;//!
@@ -130,31 +135,38 @@ public:
 
    virtual void SetMaterial(const Char_t* type);
    void AddAbsorber(KVMaterial*);
-   void SetActiveLayer(KVMaterial* actif) {
+   void SetActiveLayer(KVMaterial* actif)
+   {
       fActiveLayer = actif;
       SetBit(kActiveSet);
    }
-   KVMaterial* GetActiveLayer() const {
+   KVMaterial* GetActiveLayer() const
+   {
       //Get pointer to the "active" layer in the detector, i.e. the one in which energy losses are measured
       return fActiveLayer;
    }
    KVMaterial* GetAbsorber(Int_t i) const;
-   KVMaterial* GetAbsorber(const Char_t* name) const {
+   KVMaterial* GetAbsorber(const Char_t* name) const
+   {
       // Return absorber with given name
       return (KVMaterial*)(fAbsorbers ? fAbsorbers->FindObject(name) : 0);
    }
-   KVList* GetListOfAbsorbers() const {
+   KVList* GetListOfAbsorbers() const
+   {
       return fAbsorbers;
    }
-   Int_t GetNumberOfAbsorberLayers() const {
+   Int_t GetNumberOfAbsorberLayers() const
+   {
       return fAbsorbers->GetEntries();
    }
    virtual const Char_t* GetArrayName();
-   virtual Double_t GetDepthInTelescope() const {
+   virtual Double_t GetDepthInTelescope() const
+   {
       return fDepthInTelescope;
    }
 
-   Double_t GetTotalThicknessInCM() {
+   Double_t GetTotalThicknessInCM()
+   {
       // Calculate and return the total thickness in centimetres of ALL absorbers making up the detector,
       // not just the active layer (value returned by GetThickness()).
 
@@ -164,11 +176,13 @@ public:
       while ((mat = (KVMaterial*)next())) fTotThickness += mat->GetThickness();
       return fTotThickness;
    };
-   KVGeoDetectorNode* GetNode() {
+   KVGeoDetectorNode* GetNode()
+   {
       return &fNode;
    }
 
-   const Char_t* GetMaterialName() const {
+   const Char_t* GetMaterialName() const
+   {
       if (GetActiveLayer())
          return GetActiveLayer()->GetName();
       return KVMaterial::GetName();
@@ -180,23 +194,27 @@ public:
    void SetGain(Double_t gain);
    Double_t GetGain() const;
 
-   virtual Double_t GetEnergy() {
+   virtual Double_t GetEnergy()
+   {
       //
       // Returns energy lost in active layer by particles.
       //
       return (GetActiveLayer() ? GetActiveLayer()->GetEnergyLoss() : KVMaterial::GetEnergyLoss());
    };
-   virtual void SetEnergy(Double_t e) {
+   virtual void SetEnergy(Double_t e)
+   {
       //
       //Set value of energy lost in active layer
       //
       if (GetActiveLayer()) GetActiveLayer()->SetEnergyLoss(e);
       else KVMaterial::SetEnergyLoss(e);
    };
-   virtual Double_t GetEnergyLoss() {
+   virtual Double_t GetEnergyLoss()
+   {
       return GetEnergy();
    };
-   virtual void SetEnergyLoss(Double_t e) {
+   virtual void SetEnergyLoss(Double_t e)
+   {
       SetEnergy(e);
    };
    virtual Double_t GetCorrectedEnergy(KVNucleus*, Double_t e =
@@ -205,7 +223,8 @@ public:
 
    void AddACQParam(KVACQParam*);
    virtual KVACQParam* GetACQParam(const Char_t* /*name*/);
-   KVList* GetACQParamList() {
+   KVList* GetACQParamList()
+   {
       return fACQParams;
    };
    virtual Float_t GetACQData(const Char_t* /*name*/);
@@ -216,18 +235,21 @@ public:
    KVCalibrator* GetCalibrator(const Char_t* name,
                                const Char_t* type) const;
    KVCalibrator* GetCalibrator(const Char_t* type) const;
-   KVList* GetListOfCalibrators() const {
+   KVList* GetListOfCalibrators() const
+   {
       return fCalibrators;
    }
    virtual Bool_t IsCalibrated() const;
 
    virtual void Clear(Option_t* opt = "");
-   virtual void Reset() {
+   virtual void Reset()
+   {
       Clear();
    }
    virtual void Print(Option_t* option = "") const;
 
-   void AddHit(KVNucleus* part) {
+   void AddHit(KVNucleus* part)
+   {
       // Add to the list of particles hitting this detector in an event
 
       if (!fParticles) {
@@ -238,24 +260,29 @@ public:
    }
 
    // Return the list of particles hitting this detector in an event
-   KVList* GetHits() const {
+   KVList* GetHits() const
+   {
       return fParticles;
    }
-   void ClearHits() {
+   void ClearHits()
+   {
       // clear the list of particles hitting this detector in an event
       if (fParticles) fParticles->Clear();
    }
    // Return the number of particles hitting this detector in an event
-   Int_t GetNHits() const {
+   Int_t GetNHits() const
+   {
       return (fParticles ? fParticles->GetEntries() : 0);
    }
 
    inline UShort_t GetSegment() const;
    inline virtual void SetSegment(UShort_t s);
-   Bool_t IsAnalysed() {
+   Bool_t IsAnalysed()
+   {
       return TestBit(kIsAnalysed);
    }
-   void SetAnalysed(Bool_t b = kTRUE) {
+   void SetAnalysed(Bool_t b = kTRUE)
+   {
       SetBit(kIsAnalysed, b);
    }
    inline virtual Bool_t Fired(Option_t* opt = "any");
@@ -266,27 +293,32 @@ public:
    virtual void RemoveCalibrators();
 
    virtual void AddIDTelescope(TObject* idt);
-   KVList* GetIDTelescopes() {
+   KVList* GetIDTelescopes()
+   {
       //Return list of IDTelescopes to which detector belongs
       return fIDTelescopes;
    }
    KVList* GetAlignedIDTelescopes();
    TList* GetTelescopesForIdentification();
 
-   inline void IncrementUnidentifiedParticles(Int_t n = 1) {
+   inline void IncrementUnidentifiedParticles(Int_t n = 1)
+   {
       fUnidentP += n;
       fUnidentP = (fUnidentP > 0) * fUnidentP;
       SetBit(kUnidentifiedParticle, (Bool_t)(fUnidentP > 0));
    }
-   inline void IncrementIdentifiedParticles(Int_t n = 1) {
+   inline void IncrementIdentifiedParticles(Int_t n = 1)
+   {
       fIdentP += n;
       fIdentP = (fIdentP > 0) * fIdentP;
       SetBit(kIdentifiedParticle, (Bool_t)(fIdentP > 0));
    }
-   Bool_t BelongsToUnidentifiedParticle() const {
+   Bool_t BelongsToUnidentifiedParticle() const
+   {
       return TestBit(kUnidentifiedParticle);
    }
-   Bool_t BelongsToIdentifiedParticle() const {
+   Bool_t BelongsToIdentifiedParticle() const
+   {
       return TestBit(kIdentifiedParticle);
    }
 
@@ -299,13 +331,16 @@ public:
    virtual Double_t GetEntranceWindowSurfaceArea();
 
    virtual void SetFiredBitmask(KVString&);
-   Binary8_t GetFiredBitmask() const {
+   Binary8_t GetFiredBitmask() const
+   {
       return fFiredMask;
    }
-   virtual const Char_t* GetFiredACQParameterListFormatString() const {
+   virtual const Char_t* GetFiredACQParameterListFormatString() const
+   {
       return fKVDetectorFiredACQParameterListFormatString.Data();
    }
-   virtual Short_t GetCalcACQParam(KVACQParam*, Double_t) const {
+   virtual Short_t GetCalcACQParam(KVACQParam*, Double_t) const
+   {
       // Calculates & returns value of given acquisition parameter corresponding to
       // given calculated energy loss in the detector
       // Returns -1 if detector is not calibrated
@@ -336,10 +371,12 @@ public:
 
    virtual Double_t GetSmallestEmaxValid(Int_t Z, Int_t A);
 
-   virtual void SetEResAfterDetector(Double_t e) {
+   virtual void SetEResAfterDetector(Double_t e)
+   {
       fEResforEinc = e;
    }
-   virtual Double_t GetEResAfterDetector() const {
+   virtual Double_t GetEResAfterDetector() const
+   {
       return fEResforEinc;
    }
 
@@ -348,7 +385,8 @@ public:
    virtual TList* GetAlignedDetectors(UInt_t direction = /*KVGroup::kBackwards*/ 1);
    void ResetAlignedDetectors(UInt_t direction = /*KVGroup::kBackwards*/ 1);
 
-   virtual void SetSimMode(Bool_t on = kTRUE) {
+   virtual void SetSimMode(Bool_t on = kTRUE)
+   {
       // Set simulation mode of detector
       // If on=kTRUE (default), we are in simulation mode (calculation of energy losses etc.)
       // If on=kFALSE, we are analysing/reconstruction experimental data
@@ -356,7 +394,8 @@ public:
       // whenever the energy loss in the active layer is >0
       fSimMode = on;
    }
-   virtual Bool_t IsSimMode() const {
+   virtual Bool_t IsSimMode() const
+   {
       // Returns simulation mode of detector:
       //   IsSimMode()=kTRUE : we are in simulation mode (calculation of energy losses etc.)
       //   IsSimMode()=kFALSE: we are analysing/reconstruction experimental data
@@ -365,27 +404,32 @@ public:
       return fSimMode;
    }
 
-   virtual Bool_t IsPresent() const {
+   virtual Bool_t IsPresent() const
+   {
       // return the presence or not of the detector
       return fPresent;
    }
-   void SetPresent(Bool_t yes = kTRUE) {
+   void SetPresent(Bool_t yes = kTRUE)
+   {
       fPresent = yes;
    }
-   virtual Bool_t IsDetecting() const {
+   virtual Bool_t IsDetecting() const
+   {
       // return if the detector is ready to detect or not
       return fDetecting;
    }
-   void SetDetecting(Bool_t yes = kTRUE) {
+   void SetDetecting(Bool_t yes = kTRUE)
+   {
       fDetecting = yes;
    }
 
-   virtual Bool_t IsOK() const {
+   virtual Bool_t IsOK() const
+   {
       //return kTRUE if detector is here and working
       return (fPresent && fDetecting);
    }
 
-   virtual void DeduceACQParameters(Int_t /*zz*/ = -1, Int_t /*aa*/ = -1) {}
+   virtual void DeduceACQParameters(KVEvent*, KVNumberList&) {}
 
    KVGroup* GetGroup() const;
    UInt_t GetGroupNumber();
@@ -406,20 +450,24 @@ public:
    TGeoBBox* GetEntranceWindowShape() const;
    TVector3 GetRandomPointOnEntranceWindow() const;
    TVector3 GetCentreOfEntranceWindow() const;
-   const KVPosition& GetEntranceWindow() const {
+   const KVPosition& GetEntranceWindow() const
+   {
       return fEWPosition;
    }
 
    void SetThickness(Double_t thick);
-   Bool_t IsSingleLayer() const {
+   Bool_t IsSingleLayer() const
+   {
       // Returns kTRUE for detectors with a single absorber layer
       return fSingleLayer;
    }
    Bool_t HasSameStructureAs(const KVDetector*) const;
-   void SetNameOfArray(const TString& n) {
+   void SetNameOfArray(const TString& n)
+   {
       fNameOfArray = n;
    }
-   const Char_t* GetNameOfArray() const {
+   const Char_t* GetNameOfArray() const
+   {
       // Return name of multidetector array this detector belongs to
       return fNameOfArray;
    }

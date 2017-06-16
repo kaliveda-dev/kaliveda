@@ -38,6 +38,7 @@ protected:
    Bool_t kmode;
    Bool_t fMultiFiles;
    Int_t fFileIndex;
+   TString fOutputDirectory;//! where to save converted events
 
    //infos ou objets specifiques a une simulation
    //
@@ -54,14 +55,21 @@ public:
 
    void CleanAll();
 
-   void SetMultiFiles(Bool_t on = kTRUE) {
+   void SetMultiFiles(Bool_t on = kTRUE)
+   {
       fMultiFiles = on;
    }
-   void SetFileIndex(Int_t i) {
+   void SetFileIndex(Int_t i)
+   {
       fFileIndex = i;
    }
+   void SetOutputDirectory(const TString& where)
+   {
+      fOutputDirectory = where;
+   }
 
-   virtual KVString GetDate() {
+   virtual KVString GetDate()
+   {
       TDatime now;
       KVString stime;
       stime.Form("%d_%02d_%02d_%02d:%02d:%02d",
@@ -76,18 +84,22 @@ public:
 
    }
 
-   void SetFillingMode(Bool_t mode = kTRUE) {
+   void SetFillingMode(Bool_t mode = kTRUE)
+   {
       kmode = mode;
    }
    virtual void DeclareTree(Option_t* option);
 
-   TTree* GetTree() {
+   TTree* GetTree()
+   {
       return tree;
    }
-   virtual void FillTree() {
+   virtual void FillTree()
+   {
       GetTree()->Fill();
    }
-   virtual Bool_t HasToFill() {
+   virtual Bool_t HasToFill()
+   {
       return kmode;
    }
    virtual void SaveTree();
@@ -112,20 +124,25 @@ public:
    virtual Bool_t ReadEvent();
    virtual Bool_t ReadNucleus();
 
-   Int_t GetNumberOfEvents() {
+   Int_t GetNumberOfEvents()
+   {
       return nevt;
    }
 
-   void SetTreeName(const Char_t* n) {
+   void SetTreeName(const Char_t* n)
+   {
       tree_name = n;
    }
-   void SetTreeTitle(const Char_t* n) {
+   void SetTreeTitle(const Char_t* n)
+   {
       tree_title = n;
    }
-   void SetROOTFileName(const Char_t* n) {
+   void SetROOTFileName(const Char_t* n)
+   {
       root_file_name = n;
    }
-   void SetBranchName(const Char_t* n) {
+   void SetBranchName(const Char_t* n)
+   {
       branch_name = n;
    }
 

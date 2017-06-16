@@ -9,6 +9,7 @@
 #include "KVGEBatchJob.h"
 #include "KVDataRepository.h"
 #include "KVDataSetAnalyser.h"
+#include "KVSimDirAnalyser.h"
 
 using namespace std;
 
@@ -385,26 +386,52 @@ void KV_CCIN2P3_GE::Run()
 
    if (!CheckJobParameters()) return;
 
-   if (MultiJobsMode() && fAnalyser->InheritsFrom("KVDataSetAnalyser")) {
-      //submit jobs for every GetRunsPerJob() runs in runlist
-      KVDataSetAnalyser* ana = dynamic_cast<KVDataSetAnalyser*>(fAnalyser);
-      KVNumberList runs = ana->GetRunList();
-      runs.Begin();
-      Int_t remaining_runs = runs.GetNValues();
-      fCurrJobRunList.Clear();
-      while (remaining_runs && !runs.End()) {
-         Int_t run = runs.Next();
-         remaining_runs--;
-         fCurrJobRunList.Add(run);
-         if ((fCurrJobRunList.GetNValues() == GetRunsPerJob()) || runs.End()) {
-            // submit job for GetRunsPerJob() runs (or less if we have reached end of runlist 'runs')
-            ana->SetRuns(fCurrJobRunList, kFALSE);
-            ana->SetFullRunList(runs);
-            SubmitJob();
-            fCurrJobRunList.Clear();
+   if (MultiJobsMode()) {
+      if (fAnalyser->InheritsFrom("KVDataSetAnalyser")) {
+         //submit jobs for every GetRunsPerJob() runs in runlist
+         KVDataSetAnalyser* ana = dynamic_cast<KVDataSetAnalyser*>(fAnalyser);
+         KVNumberList runs = ana->GetRunList();
+         runs.Begin();
+         Int_t remaining_runs = runs.GetNValues();
+         fCurrJobRunList.Clear();
+         while (remaining_runs && !runs.End()) {
+            Int_t run = runs.Next();
+            remaining_runs--;
+            fCurrJobRunList.Add(run);
+            if ((fCurrJobRunList.GetNValues() == GetRunsPerJob()) || runs.End()) {
+               // submit job for GetRunsPerJob() runs (or less if we have reached end of runlist 'runs')
+               ana->SetRuns(fCurrJobRunList, kFALSE);
+               ana->SetFullRunList(runs);
+               SubmitJob();
+               fCurrJobRunList.Clear();
+            }
          }
+         ana->SetRuns(runs, kFALSE);
+      } else if (fAnalyser->InheritsFrom("KVSimDirAnalyser")) {
+         // here we understand "run" to mean "file"
+         KVSimDirAnalyser* ana = dynamic_cast<KVSimDirAnalyser*>(fAnalyser);
+         TList* file_list = ana->GetFileList();
+         Int_t remaining_runs = ana->GetNumberOfFilesToAnalyse();
+         fCurrJobRunList.Clear();
+         TList cur_file_list;
+         TObject* of;
+         TIter it(file_list);
+         Int_t file_no = 1;
+         while ((of = it())) {
+            cur_file_list.Add(of);
+            fCurrJobRunList.Add(file_no);
+            remaining_runs--;
+            file_no++;
+            if ((fCurrJobRunList.GetNValues() == GetRunsPerJob()) || (remaining_runs == 0)) {
+               // submit job for GetRunsPerJob() files (or less if we have reached end of list)
+               ana->SetFileList(&cur_file_list);
+               SubmitJob();
+               fCurrJobRunList.Clear();
+               cur_file_list.Clear();
+            }
+         }
+         ana->SetFileList(file_list);
       }
-      ana->SetRuns(runs, kFALSE);
    } else {
       SubmitJob();
    }

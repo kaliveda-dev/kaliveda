@@ -51,6 +51,7 @@ void KVSimReader::init()
    nevt = 0;
    fMultiFiles = kFALSE;
    fFileIndex = 1;
+   fOutputDirectory = "./";
 
    tree_name = "SIMULATION_NAME";
    tree_title = "SIMULATION";
@@ -112,10 +113,13 @@ void KVSimReader::DeclareTree(Option_t* option)
    //    [root_file_name].1
    //    [root_file_name].2
    //    [root_file_name].etc
+   // Files are written in fOutputDirectory (default: "./")
 
    TString filename;
    filename = root_file_name;
    if (fMultiFiles) filename += Form(".%d", fFileIndex);
+   if (!fOutputDirectory.EndsWith("/")) fOutputDirectory += "/";
+   filename.Prepend(fOutputDirectory);
    Info("DeclareTree", "Ouverture du fichier de stockage %s", filename.Data());
    file = new TFile(filename, option);
 

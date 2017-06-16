@@ -70,7 +70,7 @@ public:
 
    virtual void SetMylarThicknesses(Float_t thickF, Float_t thickB);
 
-   void DeduceACQParameters(Int_t zz = -1, Int_t a = -1);
+   void DeduceACQParameters(KVEvent*, KVNumberList&);
 
    ClassDef(KVChIo, 5)          //The ionisation chamber detectors (ChIo) of the INDRA array
 };

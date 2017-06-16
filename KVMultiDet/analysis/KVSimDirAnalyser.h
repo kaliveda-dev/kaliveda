@@ -33,6 +33,10 @@ public:
    {
       fListOfSimFiles = l;
    }
+   TList* GetFileList() const
+   {
+      return fListOfSimFiles;
+   }
    Int_t GetNumberOfFilesToAnalyse() const
    {
       return fListOfSimFiles ? fListOfSimFiles->GetEntries() : 0;

@@ -370,7 +370,7 @@ TF1* KVSilicon::GetELossFunction(Int_t Z, Int_t A)
    return KVDetector::GetELossFunction(Z, A);
 }
 
-void KVSilicon::DeduceACQParameters(Int_t , Int_t)
+void KVSilicon::DeduceACQParameters(KVEvent*, KVNumberList&)
 {
 
    Double_t volts = GetVoltsFromEnergy(GetEnergy());
