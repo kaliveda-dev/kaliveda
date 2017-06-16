@@ -137,6 +137,10 @@ void KVVAMOSReconNuc::init()
    fPath_corr    = -666.;
    fRealAE_corr  = -666.;
    fRealAoQ_corr = -666.;
+   fRealQ_corr   = -666.;
+   fRealA_corr   = -666.;
+   fKE_corr      = -666.;
+   fEBeforeVAMOS_corr = -666.;
 
    fA_CsI        = -666;
 
@@ -895,7 +899,7 @@ Bool_t KVVAMOSReconNuc::ReconstructFPtrajByFitting()
 
             fRT.SetFPparamsReady();
 
-            //          Info("ReconstructFPtrajByFitting","\n    Xf= %f, Yf= %f, Thetaf= %f, Phif= %f\n    FPCode%d %s", GetXf(), GetYf(),GetThetaF(),GetPhiF(),GetCodes().GetFPCodeIndex(), GetCodes().GetFPStatus());
+            //Info("ReconstructFPtrajByFitting","\n    Xf= %f, Yf= %f, Thetaf= %f, Phif= %f\n    FPCode%d %s", GetXf(), GetYf(),GetThetaF(),GetPhiF(),GetCodes().GetFPCodeIndex(), GetCodes().GetFPStatus());
             break;
          }
       }
@@ -1032,7 +1036,7 @@ void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
 {
    //Set the corrected Q and A identification from
    //KVDataCorrection (see ApplyCorrection() method)
-   //as final results
+   //as final results.
    //
    //Corrected observables must be set in the KVVAMOSDataCorrection inherited
    //class set in 'fDataCorr' pointer.
@@ -1043,10 +1047,12 @@ void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
    //Since changing mass is done by leaving momentum unchanged, the kinetic
    //energy is changed too.
    //Keep its value and set it again at the end.
-   Double_t E = GetEnergy();
+   Double_t E = GetCorrectedEnergyBeforeVAMOS();
    SetA(GetCorrectedA());
    SetRealA(GetCorrectedRealA());
    SetEnergy(E);
+   SetRealQ(GetCorrectedRealQ());
+   SetQ(GetCorrectedQ());
 
    if (GetCorrectedQ() > 0 && GetCorrectedA() > 0) SetIsCorrectedQandAidentified();
 }

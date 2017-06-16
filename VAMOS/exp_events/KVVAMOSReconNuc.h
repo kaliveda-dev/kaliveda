@@ -78,12 +78,16 @@ protected:
    //routine (see IdentifyQandA() method) AFTER data corrections
    //class call set in fDataCorr (see KVVAMOSDataCorrection class
    //and ApplyCorrection() method).
-   Float_t                fToF_corr;       //ToF for the first TCode OK after ApplyCorrection() call
-   Float_t                fPath_corr;      //Path after ApplyCorrection() call
-   Float_t                fRealAE_corr;    //Mass after ApplyCorrection() call
-   Float_t                fRealAoQ_corr;   //Mass over charge ration after ApplyCorrection() call
-   Bool_t                 fkIsCorrected;   //=kTRUE if any correction were applied to the nucleus
-   Bool_t                 fkIsCorrQandAID; //=kTRUE if corrected Q and A identification was OK
+   Float_t                fToF_corr;          //ToF for the first TCode OK after ApplyCorrection() call
+   Float_t                fPath_corr;         //Path after ApplyCorrections() call
+   Double_t               fKE_corr;           //KE corrected (not including strip foil+target)
+   Double_t               fEBeforeVAMOS_corr; //Energy corrected from data correction class (including strip foil+target)
+   Float_t                fRealAE_corr;       //Mass after ApplyCorrections() call
+   Float_t                fRealAoQ_corr;      //Mass over charge ration after ApplyCorrections() call
+   Float_t                fRealQ_corr;        //Q float value after ID
+   Float_t                fRealA_corr;        //A float value after ID
+   Bool_t                 fkIsCorrected;      //=kTRUE if any correction were applied to the nucleus
+   Bool_t                 fkIsCorrQandAID;    //=kTRUE if corrected Q and A identification was OK
 
 
    //Final results of identification applied
@@ -240,6 +244,8 @@ public:
    //Mass and Mass over Charge corrected observables
    Float_t GetCorrectedToF()                  const;
    Float_t GetCorrectedPath()                 const;
+   Double_t GetCorrectedEnergy()              const;
+   Double_t GetCorrectedEnergyBeforeVAMOS()   const;
    Float_t GetCorrectedBeta()                 const;
    Float_t GetCorrectedGamma()                const;
    Float_t GetCorrectedVelocity()             const;
@@ -255,7 +261,7 @@ public:
    KVVAMOSCodes&     GetCodes();
    Float_t           GetRealQ();
    Int_t             GetQ();
-   Bool_t            IsDataCorrected();
+   Bool_t            IsCorrected();
 
    //------Setters------
    //Energy losses
@@ -273,10 +279,15 @@ public:
    //Mass and Mass over Charge corrected observables
    void SetCorrectedToF(Float_t tof);
    void SetCorrectedPath(Float_t path);
+   void SetCorrectedEnergyBeforeVAMOS(Double_t energy_mev);
+   void SetCorrectedEnergy(Double_t energy_mev);
    void SetCorrectedRealAE(Float_t realAE);
    void SetCorrectedRealAoverQ(Float_t realAoQ);
+   void SetCorrectedRealQ(Float_t realQ);
+   void SetCorrectedRealA(Float_t realA);
    void SetIsCorrectedQandAidentified();
    void SetIsCorrectedQandAunidentified();
+   void SetIsDataCorrected(Bool_t);
 
    //Final ID results
    virtual void     SetECode(UChar_t code_mask);
@@ -756,6 +767,18 @@ inline Float_t KVVAMOSReconNuc::GetCorrectedPath() const
 }
 //____________________________________________________________________________________________//
 
+inline Double_t KVVAMOSReconNuc::GetCorrectedEnergy() const
+{
+   return fKE_corr;
+}
+//____________________________________________________________________________________________//
+
+inline Double_t KVVAMOSReconNuc::GetCorrectedEnergyBeforeVAMOS() const
+{
+   return fEBeforeVAMOS_corr;
+}
+//____________________________________________________________________________________________//
+
 inline Float_t KVVAMOSReconNuc::GetCorrectedBeta() const
 {
    //return the uncorrected beta=v/c
@@ -797,45 +820,31 @@ inline Float_t KVVAMOSReconNuc::GetCorrectedRealAoverQ() const
 //____________________________________________________________________________________________//
 inline Float_t KVVAMOSReconNuc::GetCorrectedRealQ() const
 {
-   //return the uncorrected charge state
-   Float_t qq;
-   if (fRealAoQ_corr > 0 && fRealAE_corr > 0) qq = fRealAE_corr / fRealAoQ_corr;
-   else qq = -666.;
-
-   return qq;
+   //return the corrected charge state
+   return fRealQ_corr;
 }
 
 //____________________________________________________________________________________________//
 inline Int_t KVVAMOSReconNuc::GetCorrectedQ() const
 {
-   //return the uncorrected charge state
-   Int_t qq = TMath::Nint(GetCorrectedRealQ());
-   return qq;
+   //return integer value of corrected Q
+   return TMath::Nint(fRealQ_corr);
 }
 
 //____________________________________________________________________________________________//
 inline Float_t KVVAMOSReconNuc::GetCorrectedRealA() const
 {
    //return the corrected mass
-   Float_t aa;
-   Int_t qq = GetCorrectedQ();
-
-   if (qq > 0) aa = GetCorrectedQ() * GetCorrectedRealAoverQ();
-   else aa = -666.;
-
-   return aa;
+   return fRealA_corr;
 }
 
 //____________________________________________________________________________________________//
 inline Int_t KVVAMOSReconNuc::GetCorrectedA() const
 {
-   //return the mass
-   Int_t aa = TMath::Nint(GetCorrectedRealA());
-   return aa;
+   return TMath::Nint(fRealA_corr);
 }
 
 //_____________________________VAMOS SPECIFIC ID RESULTS______________________________________//
-
 inline KVVAMOSCodes& KVVAMOSReconNuc::GetCodes()
 {
    return fCodes;
@@ -855,7 +864,7 @@ inline Int_t KVVAMOSReconNuc::GetQ()
    return fQ;
 }
 
-inline Bool_t KVVAMOSReconNuc::IsDataCorrected()
+inline Bool_t KVVAMOSReconNuc::IsCorrected()
 {
    // return kTRUE if any data correction have been applied to the data
    return fkIsCorrected;
@@ -996,6 +1005,18 @@ inline void KVVAMOSReconNuc::SetCorrectedPath(Float_t dist)
 }
 
 //____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetCorrectedEnergy(Double_t energy_mev)
+{
+   fKE_corr = energy_mev;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetCorrectedEnergyBeforeVAMOS(Double_t energy_mev)
+{
+   fEBeforeVAMOS_corr = energy_mev;
+}
+
+//____________________________________________________________________________________________//
 inline void KVVAMOSReconNuc::SetCorrectedRealAE(Float_t realAE)
 {
    fRealAE_corr = realAE;
@@ -1005,6 +1026,18 @@ inline void KVVAMOSReconNuc::SetCorrectedRealAE(Float_t realAE)
 inline void KVVAMOSReconNuc::SetCorrectedRealAoverQ(Float_t realAoQ)
 {
    fRealAoQ_corr = realAoQ;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetCorrectedRealQ(Float_t realQ)
+{
+   fRealQ_corr = realQ;
+}
+
+//____________________________________________________________________________________________//
+inline void KVVAMOSReconNuc::SetCorrectedRealA(Float_t realA)
+{
+   fRealA_corr = realA;
 }
 
 //_____________________________VAMOS SPECIFIC ID RESULTS______________________________________//
