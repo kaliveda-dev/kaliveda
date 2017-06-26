@@ -21,13 +21,14 @@ using namespace std;
 KVSimFile::KVSimFile()
 {
    // Default constructor
-   fFiltered = kFALSE;
+   fFiltered = fGemini = kFALSE;
 }
 
 KVSimFile::KVSimFile(KVSimDir* parent, const Char_t* filename, const Char_t* treeinfo, Long64_t treeEntries, const Char_t* treename, const Char_t* branchname)
    : KVBase(filename, treeinfo), fSimDir(parent), fFiltered(kFALSE), fEvents(treeEntries), fTreeName(treename), fBranchName(branchname)
 {
    // Default constructor for simulated events file
+   fGemini = kFALSE;
 }
 
 KVSimFile::KVSimFile(KVSimDir* parent, const Char_t* filename, const Char_t* treeinfo, Long64_t treeEntries, const Char_t* treename, const Char_t* branchname,
@@ -36,6 +37,7 @@ KVSimFile::KVSimFile(KVSimDir* parent, const Char_t* filename, const Char_t* tre
      fRunNumber(run_number), fGeoType(geo_type), fTreeName(treename), fBranchName(branchname), fOrigFile(orig_file), fFiltType(filt_type)
 {
    // Default constructor for filtered (reconstructed) simulated events file
+   fGemini = kFALSE;
 }
 //________________________________________________________________
 
@@ -79,6 +81,7 @@ void KVSimFile::Copy(TObject& obj) const
    CastedObj.fBranchName = fBranchName;
    CastedObj.fOrigFile = fOrigFile;
    CastedObj.fFiltType = fFiltType;
+   CastedObj.fGemini = fGemini;
 }
 
 void KVSimFile::ls(Option_t*) const
@@ -97,5 +100,9 @@ void KVSimFile::ls(Option_t*) const
       cout << "----run:" << fRunNumber << endl;
       cout << "----geometry:" << fGeoType << endl;
       cout << "----filter:" << fFiltType << endl;
+      cout << "----gemini:";
+      if (fGemini) cout << " yes";
+      else cout << " no";
+      cout << endl;
    }
 }

@@ -59,8 +59,10 @@ class KVSimDirGUI : public KVBase {
    KVString fDataset;
    KVString fSystem;
    KVString fRun;
-   TGRadioButton* kaliveda_geom;
-   TGRadioButton* root_geom;
+   TGCheckButton* phi_rotation_check;
+   Bool_t fRandomPhi;
+   TGCheckButton* gemini_decay;
+   Bool_t fGemDecay;
    enum {
       kFTGeo = 1,
       kFTSeuils,
@@ -107,22 +109,25 @@ public:
    void SelectDataSet(const char*);
    void SelectSystem(const char*);
    void SelectRun(const char*);
-   void FilterType(Int_t i)
-   {
+   void FilterType(Int_t i) {
       fFilterType = i;
    }
-   void GeoType(Int_t i)
-   {
+   void GeoType(Int_t i) {
       fGeoType = i;
    }
-   void Kinematics(Int_t i)
-   {
+   void Kinematics(Int_t i) {
       fKine = i;
    }
+   void SetRandomPhi(Bool_t on) {
+      fRandomPhi = on;
+   }
+   void SetGeminiDecay(Bool_t on) {
+      fGemDecay = on;
+   }
+
    //void ChangeOutputDirectory();
    void Run();
-   void EnableProof()
-   {
+   void EnableProof() {
 //      if (fWithPROOF) return;
       fWithPROOF = kTRUE;
       // make sure both buttons are down - note use of SetState(kButtonEngaged), not SetDown(kTRUE)
@@ -136,8 +141,7 @@ public:
 //         proof_analysis->SetState(kButtonEngaged);
 //      }
    }
-   void DisableProof()
-   {
+   void DisableProof() {
 //      if (!fWithPROOF) return;
       fWithPROOF = kFALSE;
       // make sure both buttons are up

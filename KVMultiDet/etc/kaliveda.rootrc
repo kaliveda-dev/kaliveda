@@ -329,7 +329,7 @@ KaliVeda.GUI.MimeTypes.TEntryList.Icon:   rootdb_t.xpm
 KVListView.MaxListLength: 20000
 
 # Control whether to use by default ROOT geometry for detector arrays
-KVMultiDetArray.ROOTGeometry:    no
+KVMultiDetArray.ROOTGeometry:    yes
 
 # Controls which options are set at start up of KVTreeAnalyzer
 KVTreeAnalyzer.LogScale:         off

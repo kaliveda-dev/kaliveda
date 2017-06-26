@@ -125,7 +125,7 @@ KVSimDirGUI::KVSimDirGUI()
    fLVfiltData->SetDataColumn(1, "DataSet");
    fLVfiltData->SetDataColumn(2, "System");
    fLVfiltData->SetDataColumn(3, "Run");
-   fLVfiltData->SetDataColumn(4, "Geometry");
+   fLVfiltData->SetDataColumn(4, "Gemini", "IsGemini");
    fLVfiltData->SetDataColumn(5, "FilterType");
    fLVfiltData->SetDataColumn(6, "Events");
    fLVfiltData->ActivateSortButtons();
@@ -241,11 +241,19 @@ KVSimDirGUI::KVSimDirGUI()
    bgroup->Connect("Clicked(Int_t)", "KVSimDirGUI", this, "FilterType(Int_t)");
    fFilterType = kFTSeuils;
    hf->AddFrame(bgroup, new TGLayoutHints(kLHintsTop | kLHintsLeft | kLHintsExpandY, 2, 2, 2, 2));
-   bgroup = new TGButtonGroup(hf, "Geometry");
-   kaliveda_geom = new TGRadioButton(bgroup, "KaliVeda");
-   root_geom = new TGRadioButton(bgroup, "ROOT");
-   bgroup->Connect("Clicked(Int_t)", "KVSimDirGUI", this, "GeoType(Int_t)");
-   root_geom->SetState(kButtonDown);
+   bgroup = new TGButtonGroup(hf, "Options");
+   phi_rotation_check = new TGCheckButton(bgroup, "Random phi");
+   phi_rotation_check->Connect("Toggled(Bool_t)", "KVSimDirGUI", this, "SetRandomPhi(Bool_t)");
+   phi_rotation_check->SetToolTipText("Random rotation around beam axis before detection");
+   fRandomPhi = kTRUE;
+   phi_rotation_check->SetState(kButtonDown);
+#ifdef WITH_GEMINI
+   gemini_decay = new TGCheckButton(bgroup, "Gemini++ decay");
+   gemini_decay->Connect("Toggled(Bool_t)", "KVSimDirGUI", this, "SetGeminiDecay(Bool_t)");
+   gemini_decay->SetToolTipText("Use Gemini++ to calculate statistical decay before detection");
+   gemini_decay->SetState(kButtonUp);
+#endif
+   fGemDecay = kFALSE;
    fGeoType = kGTROOT;
    hf->AddFrame(bgroup, new TGLayoutHints(kLHintsTop | kLHintsLeft, 20, 2, 2, 2));
    bgroup = new TGButtonGroup(hf, "Kinematics");
@@ -528,13 +536,11 @@ void KVSimDirGUI::SelectDataSet(const char* name)
       fSystem = "";
       fRun = "";
       ds->cd();
-      // disable filtering with KaliVeda geometry if multidetector has default ROOT geometry
-      if (ds->GetDataSetEnv("KVMultiDetArray.ROOTGeometry", kFALSE)) {
-         kaliveda_geom->SetState(kButtonUp);
-         root_geom->SetState(kButtonDown);
-         kaliveda_geom->SetEnabled(kFALSE);
+      // use ROOT geometry if available
+      if (ds->GetDataSetEnv("KVMultiDetArray.ROOTGeometry", kTRUE)) {
+         GeoType(kGTROOT);
       } else {
-         kaliveda_geom->SetEnabled(kTRUE);
+         GeoType(kGTKaliVeda);
       }
       KVSeqCollection* systems = 0;
       if (gDataBase && gDataBase->GetTable("Systems")) systems = gDataBase->GetTable("Systems")->GetRecords();
@@ -655,9 +661,12 @@ void KVSimDirGUI::RunAnalysis(const TString& type)
    gDataAnalyser = KVDataAnalyser::GetAnalyser(anTask->GetDataAnalyser());
    gDataAnalyser->SetAnalysisTask(anTask);
    gDataAnalyser->SetFileList(runs_to_analyse);
-   if (anTask->WithUserClass())
+   if (anTask->WithUserClass()) {
       gDataAnalyser->SetUserClass(fAnalClassName);
-   else if (strcmp(anTask->GetUserBaseClass(), ""))
+      if (!gDataAnalyser->IsUserClassValid()) {
+         new TGMsgBox(gClient->GetRoot(), MainFrame, "KVSimDirGUI::RunAnalysis", "Compilation failed. Correct mistakes and try again!", kMBIconExclamation);
+      }
+   } else if (strcmp(anTask->GetUserBaseClass(), ""))
       gDataAnalyser->SetUserClass(anTask->GetUserBaseClass(), kFALSE);//task with default "user" class
    Bool_t all_events = fCBAllEvents->IsDown();
    if (!all_events)
@@ -722,6 +731,8 @@ void KVSimDirGUI::SetFilterOptions()
       r.Form(",Run=%s", fRun.Data());
       options += r;
    }
+   if (!fRandomPhi) options += ",PhiRot=no";
+   if (fGemDecay) options += ",Gemini=yes";
    gDataAnalyser->SetUserClassOptions(options);
 }
 

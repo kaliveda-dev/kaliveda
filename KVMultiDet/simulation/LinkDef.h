@@ -12,6 +12,7 @@
 #pragma link C++ class KVElasticCountRate+;
 #pragma link C++ class KVElasticCountRates+;
 #pragma link C++ class KVElasticScatterEvent+;
+#pragma link C++ class KVEventFiltering+;
 #pragma link C++ class KVFissionKinematics+;
 #ifdef WITH_GEMINI
 #pragma link C++ class KVGemini+;

@@ -648,6 +648,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    //As the recon->ident energy calibration is somehow
    //foggy, apply own energy calibration here.
    if (fkverbose) Info("ApplyCorrections", "... energy re-computation ...");
+
    //before corrections of energy
    Double_t KEold       = nuc->GetKE();
    Double_t EbfVAMOSold = nuc->GetEnergyBeforeVAMOS();
@@ -658,6 +659,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    Double_t KEnew;
    Double_t EbfVAMOSnew;
    CalibrateFromDetList(nuc, KEnew, EbfVAMOSnew);
+
    if (EbfVAMOSnew >= 0. && KEnew >= 0.) {
       Double_t AE  = KEnew / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
       nuc->SetCorrectedRealAE(AE);

@@ -13,7 +13,6 @@
 #pragma link C++ class KVEventReconstructor+;
 #pragma link C++ class KVGroupReconstructor+;
 #pragma link C++ class KVReconNucTrajectory+;
-#pragma link C++ class KVEventFiltering+;
 #pragma link C++ class KVReconstructedNucleus-;//customised streamer
 #pragma link C++ class KVDetectorEvent+;
 #pragma link C++ class KVReconstructedEvent-;//customised streamer
