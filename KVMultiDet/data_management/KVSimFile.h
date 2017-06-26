@@ -22,6 +22,7 @@ protected:
    TString fBranchName;//name of branch containing events
    TString fOrigFile;//name of simulated events file filtered to generate this file
    TString fFiltType;//type of filtering used (Geo, Geo+Thresh, or Full)
+   Bool_t fGemini;//true if statistical decay calculated with Gemini++ before filter
 
 public:
    KVSimFile();
@@ -36,6 +37,15 @@ public:
    {
       return fFiltered;
    }
+   Bool_t IsGemini() const
+   {
+      return fGemini;
+   }
+   void SetGemini(Bool_t yes = kTRUE)
+   {
+      fGemini = yes;
+   }
+
    KVSimDir* GetSimDir() const
    {
       // return pointer to KVSimDir dataset to which this file belongs

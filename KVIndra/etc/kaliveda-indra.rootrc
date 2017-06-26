@@ -45,7 +45,6 @@ INDRA_camp1.DataSet.RepositoryDir:   campagne1
 INDRA_camp1.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 INDRA_camp1.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_camp1.HasCalibIdentInfos:   no
-INDRA_camp1.KVMultiDetArray.ROOTGeometry:  yes
 INDRA_camp1.DataSet.RunFile.DoNotDelete: raw dst
 
 +DataSet:    INDRA_camp2
@@ -54,7 +53,6 @@ INDRA_camp2.DataSet.RepositoryDir:   campagne2
 INDRA_camp2.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 INDRA_camp2.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_camp2.HasCalibIdentInfos:   no
-INDRA_camp2.KVMultiDetArray.ROOTGeometry:  yes
 INDRA_camp2.DataSet.RunFile.DoNotDelete: raw dst
 
 +DataSet:    INDRA_camp4
@@ -64,7 +62,6 @@ INDRA_camp4.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyse
 INDRA_camp4.KVDataSet.DataType.Subdir.dst:  dst2
 INDRA_camp4.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_camp4.HasCalibIdentInfos:   no
-INDRA_camp4.KVMultiDetArray.ROOTGeometry:  yes
 INDRA_camp4.DataSet.RunFile.DoNotDelete: raw dst
 
 +DataSet:    INDRA_camp5
@@ -72,7 +69,6 @@ INDRA_camp5.DataSet.Title:    5th INDRA campaign (2001)
 INDRA_camp5.DataSet.RepositoryDir:   campagne5
 INDRA_camp5.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 INDRA_camp5.ReconstructedEventClassName:   KVINDRAReconEvent
-INDRA_camp5.KVMultiDetArray.ROOTGeometry:  yes
 INDRA_camp5.DataSet.RunFile.DoNotDelete: raw
 
 +DataSet:    INDRA_e416a
@@ -83,6 +79,7 @@ INDRA_e416a.DataSet.RunFileName.raw:    Run%d%*
 INDRA_e416a.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 INDRA_e416a.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_e416a.DataSet.RunFile.DoNotDelete: raw
+INDRA_e416a.KVMultiDetArray.ROOTGeometry:  no
 
 +DataSet:    INDRA_e475s
 INDRA_e475s.DataSet.Title:    Isospin dependence of the emission of complex fragments (E475S) (2006)
@@ -109,7 +106,6 @@ INDRA_e613.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 # INDRA_e613.OnlineAnalysis.DataAnalysisTask.UserClass.Base:     INDRAOnlineDataAnalyser
 INDRA_e613.ReconstructedEventClassName:   KVINDRAReconEvent
 # INDRA_e613.KVGRUNetClientGanilReader.ExpName:    e613
-INDRA_e613.KVMultiDetArray.ROOTGeometry:  yes
 INDRA_e613.DataSet.RunFile.DoNotDelete: raw
 
 +DataSet:    INDRA_e494s_woVAMOS
@@ -118,7 +114,6 @@ INDRA_e494s_woVAMOS.DataSet.RepositoryDir:   e494s
 INDRA_e494s_woVAMOS.DataSet.RunFileName.raw:    run_%04d.dat%*
 INDRA_e494s_woVAMOS.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_e494s_woVAMOS.HasCalibIdentInfos:   no
-INDRA_e494s_woVAMOS.KVMultiDetArray.ROOTGeometry:  yes
 INDRA_e494s_woVAMOS.DataSet.RunFile.DoNotDelete: raw
 
 # INDRA analyser for Reconstruction DataAnalysisTask

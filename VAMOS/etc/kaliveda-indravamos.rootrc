@@ -14,6 +14,7 @@ INDRA_e503.ReconAnalysis.DataAnalysisTask.UserClass.Base:  IVSelector/TSelector
 INDRA_e503.IdentAnalysis.DataAnalysisTask.Analyser:        IVReconData
 INDRA_e503.IdentAnalysis.DataAnalysisTask.UserClass.Base:  IVSelector/TSelector
 INDRA_e503.ReconstructedEventClassName:   KVIVReconEvent
+INDRA_e503.KVMultiDetArray.ROOTGeometry:  no
 
 # We must protect Mark Boisjoli's work from being overwritten. Therefore we make
 # the default recon and ident directories recon3/ident3 instead of the
@@ -35,6 +36,7 @@ INDRA_e494s.ReconAnalysis.DataAnalysisTask.UserClass.Base:  IVSelector/TSelector
 INDRA_e494s.IdentAnalysis.DataAnalysisTask.Analyser:        IVReconData
 INDRA_e494s.IdentAnalysis.DataAnalysisTask.UserClass.Base:  IVSelector/TSelector
 INDRA_e494s.ReconstructedEventClassName:   KVIVReconEvent
+INDRA_e494s.KVMultiDetArray.ROOTGeometry:  no
 
 # New data reduction November 2016
 INDRA_e494s.KVDataSet.DataType.Subdir.ident:  ident4

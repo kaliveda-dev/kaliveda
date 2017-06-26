@@ -40,7 +40,7 @@ public:
    virtual  KVLVColumnData*      GetDataColumn(Int_t index) const
    {
       return ((KVLVContainer*)GetContainer())->GetDataColumn(index);
-   };
+   }
 
    virtual void Display(const TCollection* l)
    {

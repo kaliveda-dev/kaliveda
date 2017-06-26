@@ -59,8 +59,10 @@ class KVSimDirGUI : public KVBase {
    KVString fDataset;
    KVString fSystem;
    KVString fRun;
-   TGRadioButton* kaliveda_geom;
-   TGRadioButton* root_geom;
+   TGCheckButton* phi_rotation_check;
+   Bool_t fRandomPhi;
+   TGCheckButton* gemini_decay;
+   Bool_t fGemDecay;
    enum {
       kFTGeo = 1,
       kFTSeuils,
@@ -119,6 +121,15 @@ public:
    {
       fKine = i;
    }
+   void SetRandomPhi(Bool_t on)
+   {
+      fRandomPhi = on;
+   }
+   void SetGeminiDecay(Bool_t on)
+   {
+      fGemDecay = on;
+   }
+
    //void ChangeOutputDirectory();
    void Run();
    void EnableProof()

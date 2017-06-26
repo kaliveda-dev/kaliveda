@@ -7,11 +7,17 @@
 #include "KVEventSelector.h"
 #include "KVClassMonitor.h"
 #include "KVReconstructedEvent.h"
+#include <KVSimEvent.h>
 
 class KVDBSystem;
 class KVEventFiltering : public KVEventSelector {
    //KVClassMonitor memory_check;
    Long64_t fEVN;//event number counter
+   Bool_t fRotate;//true if random phi rotation should be applied [default: yes]
+   Bool_t fGemini;//true if Gemini++ decay should be performed before detection [default: no]
+   KVSimEvent fGemEvent;//event after decay with Gemini
+
+   void RandomRotation(KVEvent* to_rotate, const TString& frame_name = "") const;
 public:
    KVEventFiltering();
    KVEventFiltering(const KVEventFiltering&) ;

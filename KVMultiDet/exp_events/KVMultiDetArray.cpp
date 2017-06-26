@@ -1669,9 +1669,9 @@ KVMultiDetArray* KVMultiDetArray::MakeMultiDetector(const Char_t* dataset_name, 
 
       mda->fDataSet = dataset_name;
       mda->Build(run);
-      // if ROOT geometry is requested by default ([dataset_name].KVMultiDetArray.ROOTGeometry = yes
-      // or KVMultiDetArray.ROOTGeometry = yes), turn it on
-      mda->fROOTGeometry = KVDataSet::GetDataSetEnv(dataset_name, "KVMultiDetArray.ROOTGeometry", kFALSE);
+      // if ROOT geometry is not allowed ([dataset_name].KVMultiDetArray.ROOTGeometry = no
+      // or KVMultiDetArray.ROOTGeometry = no), disable it
+      mda->fROOTGeometry = KVDataSet::GetDataSetEnv(dataset_name, "KVMultiDetArray.ROOTGeometry", kTRUE);
       if (mda->fROOTGeometry) mda->CheckROOTGeometry();
       // set dataset-dependent lists of acceptable ID/E codes for reconstructed nuclei
       KVString codes = KVDataSet::GetDataSetEnv(dataset_name, Form("%s.ReconstructedNuclei.AcceptIDCodes", mda->GetName()), "");

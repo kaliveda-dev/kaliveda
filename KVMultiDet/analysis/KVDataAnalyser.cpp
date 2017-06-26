@@ -309,13 +309,13 @@ Bool_t KVDataAnalyser::CheckTaskVariables()
          ChooseUserClass();
       }
 
-      while (!CheckIfUserClassIsValid(fUserClassAlternativeBaseClass)) {
+      if (!CheckIfUserClassIsValid(fUserClassAlternativeBaseClass)) {
          cout << "============> Warning <=============" << endl;
          cout << GetUserClass() << " is not a valid " << fTask->GetUserBaseClass() << endl;
          cout << "Analysis aborted." << endl;
          cout << "====================================" << endl;
-         if (BatchMode()) return kFALSE; // avoid infinite loop in batch mode
-         ChooseUserClass();
+         /*if (BatchMode())*/ return kFALSE; // avoid infinite loop in batch mode
+         //ChooseUserClass();
       }
    }
 
