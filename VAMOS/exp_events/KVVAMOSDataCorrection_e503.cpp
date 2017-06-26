@@ -465,7 +465,8 @@ void KVVAMOSDataCorrection_e503::ReadDuplicationToFOffsetsInDataSet()
    //
    //NOTE: these corrections are applied AFTER HF corrections
    //
-   //By default this offset is equal to 1.25 ns.
+   //By default this offset is equal to 1.05 ns (value found from 40Ca+40Ca elastic
+   //duplicated pics).
 
    ftof_corr_sicsi = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset", 1.05);  // in ns
    ftof_corr_icsi  = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset", 1.05);  //in ns
@@ -635,15 +636,18 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    nuc->SetCorrectedToF(nuc->GetBasicToF());
    nuc->SetCorrectedPath(nuc->GetBasicPath());
    nuc->SetCorrectedRealAE(nuc->GetBasicRealAE());
-   nuc->SetCorrectedRealAoverQ(nuc->GetBasicRealAoverQ());
+   Float_t aq = nuc->GetBasicRealAoverQ();
+   nuc->SetCorrectedRealAoverQ(aq);
 
    if (fkverbose) {
-      printf("\n\n");
-      Info("ApplyCorrections", "... trying to apply e503 corrections to nucleus (IDCode=%d) ...", IDCode);
+      printf("\n\n_________________________________________________________________\n");
+      Info("ApplyCorrections", "... trying to apply e503 corrections to a new nucleus (IDCode=%d) ...", IDCode);
    }
 
-   //-----Re-Calculate Energy-----
-   if (fkverbose) Info("ApplyCorrections", "... energy re-calibration ...");
+   //-----Re-calculate energy-----
+   //As the recon->ident energy calibration is somehow
+   //foggy, apply own energy calibration here.
+   if (fkverbose) Info("ApplyCorrections", "... energy re-computation ...");
    //before corrections of energy
    Double_t KEold       = nuc->GetKE();
    Double_t EbfVAMOSold = nuc->GetEnergyBeforeVAMOS();
@@ -654,8 +658,8 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    Double_t KEnew;
    Double_t EbfVAMOSnew;
    CalibrateFromDetList(nuc, KEnew, EbfVAMOSnew);
-   if (EbfVAMOSnew >= 0.) {
-      Double_t AE  = EbfVAMOSnew / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
+   if (EbfVAMOSnew >= 0. && KEnew >= 0.) {
+      Double_t AE  = KEnew / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
       nuc->SetCorrectedRealAE(AE);
       nuc->SetCorrectedEnergyBeforeVAMOS(EbfVAMOSnew);
       nuc->SetCorrectedEnergy(KEnew);
@@ -664,11 +668,14 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
 
    //debug
    if (fkverbose) {
-      printf("BEFORE: IsCorrected=%d, EbfVAMOS=%lf MeV, KE=%lf MeV, RealAE=%lf\n", (int) IsCold, EbfVAMOSold, KEold, realAEold);
-      printf("AFTER:  IsCorrected=%d, EbfVAMOS=%lf MeV, KE=%lf MeV, RealAE=%lf\n", (int) nuc->IsCorrected(), nuc->GetCorrectedEnergyBeforeVAMOS(), nuc->GetCorrectedEnergy(), nuc->GetCorrectedRealAE());
+      printf("BEFORE: IsCorrected=%d, EbfVAMOS=%lf MeV, KE=%lf MeV, CorrAE=%lf\n", (int) IsCold, EbfVAMOSold, KEold, realAEold);
+      printf("AFTER:  IsCorrected=%d, EbfVAMOS=%lf MeV, KE=%lf MeV, CorrAE=%lf\n", (int) nuc->IsCorrected(), nuc->GetCorrectedEnergyBeforeVAMOS(), nuc->GetCorrectedEnergy(), nuc->GetCorrectedRealAE());
    }
 
    //-----AoQ - ToF corrections-----
+   //Apply ToF duplications/offset corrections using
+   //corrected AoQ obervable, as it is only dependant of ToF
+   //(considering path and brho are OK, which is more or less sure...)
    //Si-CsI telescopes corrections
    Bool_t kCsI_HFcorr   = kFALSE;
    Bool_t kCsI_DUcorr   = kFALSE;
@@ -693,29 +700,59 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    if (kCsI_HFcorr || kCsI_DUcorr || kCsI_ZToFfunc || kSi_HFcorr || kSi_DUcorr || kSi_ZToFfunc) nuc->SetCorrected(kTRUE);
 
    //-----Identification with grids-----
+   //Use KVIDQA grids on previously corrected
+   //'AE vs AoQ' observables to find
+   //the charge state 'Q' and mass 'A'
    Bool_t kidentOK = kFALSE;
    if (nuc->IsCorrected()) {
-      if (fkverbose) Info("ApplyCorrections", "... trying to apply identification to nucleus (IDCode=%d) ...", IDCode);
+      if (fkverbose) Info("ApplyCorrections", "... trying to apply KVIDQA grids identification to nucleus ...");
       kidentOK = IdentifyCorrectedNucleus(nuc);
       if (fkverbose) {
-         if (kidentOK)  printf("identification was success");
-         else printf("identification was failure");
+         if (kidentOK)  printf("identification with grids was success\n");
+         else printf("identification with grids was failure");
       }
    }
 
-   //-----Re-calculate KE for IDCode3-----
-   //Indeed, for Si-CsI identifiactions, the former KE was computed from
-   //mass estimation for CsI detectors.
-   //We have found the correct mass using previous corrections and KVIDQAGrid,
-   //so we need to re-calculate KE from correct mass
+   //-----Re-calculate-----
+   //At this step: -all corrections were applied
+   //              -energy re-computation was applied
+   //              -QA ID grids were used on corrected 'AE vs AoQ' data to
+   //               extract the final charge state and mass
+   //
+   //The final step done here is to re-calculate the energy with the
+   //final mass, as the final mass can be different from the mass saved
+   //in ID telescope's identification result used in all previous energy
+   //calibrations (in the case of an KVIDHarpeeSiCsI_e503 inherited telescope,
+   //the mass saved in the IDR is the one from minimizer; in the case of an
+   //KVIDHarpeeICSi_e503 inherited telescope it is usually the one
+   //from mass formula).
    if (kidentOK) {
-      if (fkverbose) Info("ApplyCorrections", "... applying final energy correction after corrections+identification ...");
       Double_t KElast;
       Double_t EbfVAMOSlast;
+
+      if (fkverbose) {
+         Info("ApplyCorrections", "... final identification set for the nucleus, infos follow ...");
+         printf("BEFORE: IsCorrQandAID=%d, IsBasicQandAID=%d, RealZ=%lf, Z=%d, RealQ=%lf, Q=%d, RealA=%lf, A=%d, KE=%lf MeV, EBeforeVAMOS=%lf MeV\n",
+                (int) nuc->IsCorrectedQandAidentified(), (int) nuc->IsBasicQandAidentified(),
+                nuc->GetRealZ(), nuc->GetZ(), nuc->GetRealQ(), nuc->GetQ(), nuc->GetRealA(), nuc->GetA(),
+                nuc->GetKE(), nuc->GetCorrectedEnergyBeforeVAMOS());
+      }
+
       CalibrateFromDetList(nuc, KElast, EbfVAMOSlast);
       nuc->SetCorrectedEnergy(KElast);
       nuc->SetCorrectedEnergyBeforeVAMOS(EbfVAMOSlast);
+
+      //use all corrected observables to set the final
+      //mass, charge and energies...
       nuc->SetCorrectedQandAIdentification();
+
+      if (fkverbose) {
+         Info("ApplyCorrections", "... final identification set for the nucleus, infos follow ...");
+         printf("AFTER: IsCorrQandAID=%d, IsBasicQandAID=%d, RealZ=%lf, Z=%d, RealQ=%lf, Q=%d, RealA=%lf, A=%d, KE=%lf MeV, EBeforeVAMOS=%lf MeV\n",
+                (int) nuc->IsCorrectedQandAidentified(), (int) nuc->IsBasicQandAidentified(),
+                nuc->GetRealZ(), nuc->GetZ(), nuc->GetRealQ(), nuc->GetQ(), nuc->GetRealA(), nuc->GetA(),
+                nuc->GetKE(), nuc->GetCorrectedEnergyBeforeVAMOS());
+      }
    }
 
    return kTRUE;
@@ -762,8 +799,8 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrections(KVVAMOSReconNuc* nuc, KVHa
       if (fkverbose) Info("ApplyHFCorrection_e503", "Si-CsI: BasicTof=%lf, DeltaE=%lf", basic_tof, basic_deltae);
    }
 
-   if (idt->InheritsFrom("KVIDHarpeeICS")) {
-      KVIDHarpeeSiCsI_e503* icsi = static_cast<KVIDHarpeeSiCsI_e503*>(idt);
+   if (idt->InheritsFrom("KVIDHarpeeICSi_e503")) {
+      KVIDHarpeeICSi_e503* icsi = static_cast<KVIDHarpeeICSi_e503*>(idt);
       basic_deltae = icsi->GetIDMapY();
       if (fkverbose) Info("ApplyHFCorrection_e503", "IC-Si: BasicTof=%lf, DeltaE=%lf", basic_tof, basic_deltae);
    }
@@ -779,21 +816,22 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrections(KVVAMOSReconNuc* nuc, KVHa
          nuc->SetCorrectedToF(basic_tof - nHF * gVamos->GetBeamPeriod());
 
          Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
-         Double_t AE  = nuc->GetCorrectedEnergyBeforeVAMOS() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
+         Double_t AE  = nuc->GetCorrectedEnergy() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
 
          nuc->SetCorrectedRealAoverQ(AoQ);
          nuc->SetCorrectedRealAE(AE);
          nuc->SetCorrected(kTRUE);
 
          if (fkverbose) {
-            Info("ApplyHFCorrection_e503", "... HF corrections applied ...\nIDCode=%d \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
-                 nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
+            Info("ApplyHFCorrection_e503", "... HF corrections applied with cut '%s' ...\nIDCode=%d \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+                 cut->GetName(), nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
                  nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
          }
 
          return kTRUE;
       }
 
+      else if (fkverbose) Info("ApplyHFCorrection_e503", "... HF corrections not applied with cut '%s' ...", cut->GetName());
       nn++;
    }
 
@@ -810,7 +848,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFDuplicationCorrections(KVVAMOSReconNu
    //given run and a given IDCode).
    //
    //We then re-calculate the nucleus corrected AE and AoQ taking the new ToF into
-   //account. For AE, we also consider the new energy estimation with 'ecorr'
+   //account.
    //
    //Return kTRUE if correction applied.
    //Return kFALSE if no correction needed.
@@ -862,7 +900,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFDuplicationCorrections(KVVAMOSReconNu
          nuc->SetCorrectedToF(corr_tof + tof_offset);
 
          Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
-         Double_t AE  = nuc->GetCorrectedEnergyBeforeVAMOS() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
+         Double_t AE  = nuc->GetCorrectedEnergy() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
 
          nuc->SetCorrectedRealAoverQ(AoQ);
          nuc->SetCorrectedRealAE(AE);
@@ -870,13 +908,15 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFDuplicationCorrections(KVVAMOSReconNu
 
          //debug
          if (fkverbose) {
-            Info("ApplyToFDuplicationCorrections", "... after ToF duplication corrections ...\nIDCode=%d, nSi=%d \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
-                 nuc->GetIDCode(), nSi, nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
+            Info("ApplyToFDuplicationCorrections", "... after ToF duplication corrections with cut '%s' ...\nIDCode=%d, nSi=%d \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+                 cut->GetName(), nuc->GetIDCode(), nSi, nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
                  nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
          }
 
          return kTRUE;
       }
+
+      else Info("ApplyToFDuplicationCorrections", "... ToF duplication corrections not applied with cut '%s' ...", cut->GetName());
    }
 
    if (fkverbose) Info("ApplyToFDuplicationCorrections", "... finished ToF duplication corrections, did nothing ...");
@@ -907,7 +947,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFOffsetZFunctionCorrections(KVVAMOSRec
            nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
    }
 
-   //apply corrections
+   //apply corrections...
    //as the duplication corrections are applied after HF corrections
    //and after ToF duplication corrections, we modify here the former
    //corrected ToF
@@ -917,7 +957,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFOffsetZFunctionCorrections(KVVAMOSRec
    nuc->SetCorrectedToF(tof + corr_tof);
 
    Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
-   Double_t AE  = nuc->GetCorrectedEnergyBeforeVAMOS() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
+   Double_t AE  = nuc->GetCorrectedEnergy() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
 
    nuc->SetCorrectedRealAoverQ(AoQ);
    nuc->SetCorrectedRealAE(AE);
@@ -1180,28 +1220,24 @@ void KVVAMOSDataCorrection_e503::CalibrateFromDetList(KVVAMOSReconNuc* nuc, Doub
       }//end of SED corrections
    }//end of detector loop
 
-   //set KE
-   ke = total_energy;
+   //Set energy prior entering in VAMOS, after target and strip foil
+   eBeforeVAMOS = total_energy;
 
    //-----Final corrections to the energy for the strip foil and the target-----
    //strip foil
-   KVMaterial strip_foil(20.*KVUnits::ug, "C");
-
-   absorber_eloss = strip_foil.GetDeltaEFromERes(sim_nucleus.GetZ(), sim_nucleus.GetA(), total_energy);
+   absorber_eloss = gVamos->GetStripFoilEnergyLossCorrection(nuc);
    total_energy += absorber_eloss;
-
    if (fkverbose) Info("CalibrateFromDetList", "... strip foil correction: absorber_eloss=%lf, etot=%lf ...", absorber_eloss, total_energy);
 
    //target
-   KVTarget* target = gMultiDetArray->GetTarget();
-   assert(target);
+   if (gMultiDetArray->GetTarget()) {
+      absorber_eloss = gMultiDetArray->GetTargetEnergyLossCorrection(nuc);
+      total_energy += absorber_eloss;
+      if (fkverbose) Info("CalibrateFromDetList", "... target corrections: absorber_eloss=%lf, etot=%lf ...", absorber_eloss, total_energy);
+   } else if (fkverbose) Warning("CalibrateFromDetList", "... target corrections can't be applied, target not found ...");
 
-   absorber_eloss = target->GetDeltaEFromERes(sim_nucleus.GetZ(), sim_nucleus.GetA(), total_energy);
-   total_energy += absorber_eloss;
-
-   if (fkverbose) Info("CalibrateFromDetList", "... target corrections: absorber_eloss=%lf, etot=%lf ...", absorber_eloss, total_energy);
-
-   eBeforeVAMOS =  total_energy;
+   //Set kinetic energy before target and strip foil
+   ke = total_energy;
 }
 
 //____________________________________________________________________________//
@@ -1212,12 +1248,12 @@ Bool_t KVVAMOSDataCorrection_e503::IdentifyCorrectedNucleus(KVVAMOSReconNuc* nuc
    //ApplyToFOffsetZFunctionCorrections() methods), we need
    //to identify its final charge state 'Q' and mass 'A'.
    //
-   //To do so we use the corrected "AE vs AoQ" maps, where 'AE' is the corrected
-   //mass found by energy conservation law and 'AoQ' is the corrected
+   //To do so we use the corrected "CorrAE vs CorrAoQ" maps, where 'CorrAE' is the corrected
+   //mass found by energy conservation law and 'CorrAoQ' is the corrected
    //mass:charge ratio found by Lorentz law.
    //The integer value of charge state 'Q_int' is thus found using the associated
    //KVIDTelescope's KVIDQAGrid grid (see KVIDQA class) where the value of Q is linearised.
-   //The definitive mass 'A' is then obtained from 'AoQ/Q_int'.
+   //The definitive mass 'A' is then obtained from 'CorrAoQ/Q_int'.
 
    Bool_t ok = kFALSE;
 
@@ -1226,7 +1262,7 @@ Bool_t KVVAMOSDataCorrection_e503::IdentifyCorrectedNucleus(KVVAMOSReconNuc* nuc
       printf("RealQ=%lf, Q=%d, RealA=%lf, A=%d\n", nuc->GetRealQ(), nuc->GetQ(), nuc->GetRealA(), nuc->GetA());
    }
 
-   //Find the KVIDQA telescope
+   //Find the KVIDQA telescopes
    KVSeqCollection* idt_list = nuc->GetIDTelescopes();
    if (fkverbose) {
       Info("IdentifyCorrectedNucleus", "... list of nucleus' associated KVIDTelescopes follows ...");
@@ -1239,43 +1275,67 @@ Bool_t KVVAMOSDataCorrection_e503::IdentifyCorrectedNucleus(KVVAMOSReconNuc* nuc
 
       while ((idt = (KVIDTelescope*) next())) {
          if (idt->InheritsFrom(KVIDQA::Class())) {
-            if (fkverbose) Info("IdentifyCorrectedNucleus", "... found the following KVIDQA telescope: '%s' ...", idt->GetName());
-            KVIDQA* qa_idt = (KVIDQA*)idt;
-            static KVIdentificationResult IDR;
+            if (fkverbose) {
+               printf("\n");
+               Info("IdentifyCorrectedNucleus", "... found the following KVIDQA telescopes: '%s' ...", idt->GetName());
+            }
 
-            //loop over the time acquisition parameters as
-            //the QA ID telescopes need the ToF as argument
-            const Char_t* tof_name = NULL;
-            for (Short_t i = 0; !ok && (tof_name = nuc->GetCodes().GetToFName(i)); i++) {
-               IDR.Clear();
-               IDR.IDattempted = kTRUE;
+            //Find the correct associated KVIDQA telescope,
+            //depending of nucleus' IDCode
+            TString name = idt->GetName();
+            Bool_t idt_ok = kFALSE;
 
-               qa_idt->Identify(&IDR, tof_name, nuc->GetCorrectedRealAoverQ(), nuc->GetCorrectedRealAE());
-               if (fkverbose) {
-                  Info("IdentifyCorrectedNucleus", "... identification results from QA grid for tof_name='%s' ...", tof_name);
-                  printf("IDR::IDOK=%d, IDR::IDCode=%d \nIDR::Zident=%d, IDR::Aident=%d \nIDR::PID=%lf, IDR::Z=%d, IDR::A=%d\n",
-                         (int) IDR.IDOK, IDR.IDcode, (int) IDR.Zident, (int) IDR.Aident, IDR.PID, IDR.Z, IDR.A);
-               }
+            if ((nuc->GetIDCode() == 3) && (name.Contains("VID_QA_CSI"))) idt_ok = kTRUE;
+            else if ((nuc->GetIDCode() == 4) && (name.Contains("VID_QA_CSI"))) idt_ok = kTRUE;
 
-               //ID went well
-               if (IDR.IDOK) {
-                  nuc->SetRealQ(IDR.PID);
+            //Corresponding KVIDQA found
+            if (idt_ok) {
+               KVIDQA* qa_idt = (KVIDQA*)idt;
+               static KVIdentificationResult IDR;
 
-                  //the kept mass is the ratio between the corrected AoQ
-                  //and the integer value of the found charge
-                  Double_t final_mass = nuc->GetCorrectedRealAoverQ() / nuc->GetQ();
-                  nuc->SetCorrectedRealA(final_mass);
-                  ok = kTRUE;
+               //loop over the time acquisition parameters as
+               //the QA ID telescopes need the ToF as argument
+               const Char_t* tof_name = NULL;
+               for (Short_t i = 0; !ok && (tof_name = nuc->GetCodes().GetToFName(i)); i++) {
+                  IDR.Clear();
+                  IDR.IDattempted = kTRUE;
+
+                  qa_idt->Identify(&IDR, tof_name, nuc->GetCorrectedRealAoverQ(), nuc->GetCorrectedRealAE());
+                  if (fkverbose) {
+                     Info("IdentifyCorrectedNucleus", "... identification results from KVIDQA='%s' for tof_name='%s' follow ...", qa_idt->GetName(), tof_name);
+                     printf("IDR::IDOK=%d, IDR::IDCode=%d \nIDR::Zident=%d, IDR::Aident=%d \nIDR::PID=%lf, IDR::Z=%d, IDR::A=%d\n",
+                            (int) IDR.IDOK, IDR.IDcode, (int) IDR.Zident, (int) IDR.Aident, IDR.PID, IDR.Z, IDR.A);
+                  }
+
+                  //ID went well
+                  if (IDR.IDOK) {
+                     if (fkverbose) {
+                        Info("IdentifyCorrectedNucleus", "... idr from idt='%s' kept, setting final id results to the nucleus ...", qa_idt->GetName());
+                        printf("BEFORE: CorrRealQ=%lf, CorrQ=%d, CorrRealA=%lf, CorrA=%d\n",
+                               nuc->GetCorrectedRealQ(), nuc->GetCorrectedQ(), nuc->GetCorrectedRealA(), nuc->GetCorrectedA());
+                     }
+
+                     //The kept mass is the ratio between the corrected AoQ
+                     //and the integer value of the found charge
+                     //NOTE: Corrected Q and A values must be changed here, but corrected final Q and
+                     //A will be changed after energy re-calculation !!!
+                     nuc->SetCorrectedRealQ(IDR.PID);
+                     Double_t aa = nuc->GetCorrectedRealAoverQ() * nuc->GetCorrectedQ();
+                     nuc->SetCorrectedRealA(aa);
+                     ok = kTRUE;
+                     if (fkverbose) {
+                        printf("AFTER: CorrRealAoQ=%lf \nCorrRealQ=%lf, CorrQ=%d, CorrRealA=%lf, CorrA=%d\n",
+                               nuc->GetCorrectedRealAoverQ(),
+                               nuc->GetCorrectedRealQ(), nuc->GetCorrectedQ(), nuc->GetCorrectedRealA(), nuc->GetCorrectedA());
+                     }
+                  }
                }
             }
+
+            //Corresponding KVIDQA not found
+            else if (fkverbose) Error("IdentifyCorrectedNucleus", "... KVIDTelescope='%s' not used for ID (IDCode=%d) ...", idt->GetName(), nuc->GetIDCode());
          }
       }
-   }
-
-
-   if (fkverbose) {
-      Info("IdentifyCorrectedNucleus", "... after identification ...");
-      printf("RealQ=%lf, Q=%d, RealA=%lf, A=%d\n", nuc->GetRealQ(), nuc->GetQ(), nuc->GetRealA(), nuc->GetA());
    }
 
    return ok;

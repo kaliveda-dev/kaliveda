@@ -127,8 +127,7 @@ public:
    virtual void Copy(TObject&) const;
    void init();
 
-   vector<Double_t> GetDetEVector() const
-   {
+   vector<Double_t> GetDetEVector() const {
       return fDetE;
    }
 
@@ -172,8 +171,7 @@ public:
 
    virtual void     Print(Option_t* option = "") const;
 
-   virtual Int_t GetIDCode() const
-   {
+   virtual Int_t GetIDCode() const {
       // Returns value of VEDA ID code
       return const_cast<KVVAMOSReconNuc*>(this)->GetCodes().GetVedaIDCode();
    }
@@ -1134,6 +1132,7 @@ inline void KVVAMOSReconNuc::SetIsZunidentified()
 
 inline void KVVAMOSReconNuc::SetIsBasicQandAidentified()
 {
+   ResetBit(kIsCorrQAidentified);
    SetBit(kIsBasicQAidentified);
 }
 //____________________________________________________________________________________________//
@@ -1146,6 +1145,7 @@ inline void KVVAMOSReconNuc::SetIsBasicQandAunidentified()
 
 inline void KVVAMOSReconNuc::SetIsCorrectedQandAidentified()
 {
+   ResetBit(kIsBasicQAidentified);
    SetBit(kIsCorrQAidentified);
 }
 //____________________________________________________________________________________________//

@@ -109,6 +109,8 @@ void KVVAMOSReconNuc::Copy(TObject& obj) const
    CastedObj.fPath_corr    = fPath_corr;
    CastedObj.fRealAE_corr  = fRealAE_corr;
    CastedObj.fRealAoQ_corr = fRealAoQ_corr;
+   CastedObj.fKE_corr      = fKE_corr;
+   CastedObj.fEBeforeVAMOS_corr = fEBeforeVAMOS_corr;
    CastedObj.fA_CsI        = fA_CsI;
 }
 //________________________________________________________________
@@ -1047,10 +1049,10 @@ void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
    //Since changing mass is done by leaving momentum unchanged, the kinetic
    //energy is changed too.
    //Keep its value and set it again at the end.
-   Double_t E = GetCorrectedEnergyBeforeVAMOS();
+   Double_t KE = GetCorrectedEnergy();
    SetA(GetCorrectedA());
    SetRealA(GetCorrectedRealA());
-   SetEnergy(E);
+   SetEnergy(KE);
    SetRealQ(GetCorrectedRealQ());
    SetQ(GetCorrectedQ());
 
