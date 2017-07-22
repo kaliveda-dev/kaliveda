@@ -26,11 +26,15 @@ class KVIDHarpeeICSi_e503 : public KVIDHarpeeICSi {
 
    Bool_t kInitialised_;
 
-   enum VIDSubCode {
-      kSegmentMisfire = -1
-   };
+protected:
+   KVIDLine* fPunchThrough; //punch-through line
 
 public:
+
+   enum VIDSubCode {
+      kSegmentMisfire = -1,
+      kBelowPunchThrough = KVIDZAGrid::kICODE10 + 1
+   };
 
    KVIDHarpeeICSi_e503();
    virtual ~KVIDHarpeeICSi_e503();
@@ -46,6 +50,10 @@ public:
 
    virtual Bool_t  SetIDCorrectionParameters(const KVRList* const records);
    virtual const KVList* GetIDCorrectionParameters() const;
+
+   KVIDLine* GetPunchThroughLine() {
+      return fPunchThrough;
+   }
 
    ClassDef(KVIDHarpeeICSi_e503, 1)
 };

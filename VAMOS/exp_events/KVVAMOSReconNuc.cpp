@@ -996,6 +996,13 @@ void KVVAMOSReconNuc::SetZIdentification(KVIdentificationResult* idr, KVIDTelesc
    // Otherwise the nucleus' mass formula
    // will be used to calculate A from the measured Z.
 
+   //debug
+   if (fdebug) {
+      Info("SetZIdentification", "... setting the following IDR for identification ... \nIDR::IDCode=%d \nIDR::IDOK=%d, IDR::IDquality=%d \nIDR::Zident=%d, IDR::Aident=%d \nIDR::PID=%lf, IDR::Z=%d, IDR::A=%d",
+           idr->IDcode, (int) idr->IDOK, idr->IDquality, (int) idr->Zident, (int) idr->Aident, idr->PID, idr->Z, idr->A);
+      idr->Print();
+   }
+
    //usual ident setters
    SetIdentifyingTelescope(idt);
    SetIdentification(idr);
@@ -1014,10 +1021,14 @@ void KVVAMOSReconNuc::SetZIdentification(KVIdentificationResult* idr, KVIDTelesc
       SetAMinimizer(idr->PID);       //save the mass found by minimizer by hand
    }
 
-   if (fdebug) {
-      Info("SetZIdentification", "... setting the following IDR for identification ... \nIDR::IDCode=%d \nIDR::IDOK=%d, IDR::IDquality=%d \nIDR::Zident=%d, IDR::Aident=%d \nIDR::PID=%lf, IDR::Z=%d, IDR::A=%d",
-           idr->IDcode, (int) idr->IDOK, idr->IDquality, (int) idr->Zident, (int) idr->Aident, idr->PID, idr->Z, idr->A);
-      idr->Print();
+   //when identification is done by a 'KVIDHarpeeICSi_e503' inherited
+   //ID telescope, a special IDquality code can be set for the
+   //punch-through particules if the user wants to, by drawing a
+   //KVIDLine labelled "Punch-through" in the grid.
+   //if such a line was defined, then a special IDCode will be set
+   //for particles below the line.
+   if ((idt->InheritsFrom(KVIDHarpeeICSi_e503::Class())) && (idr->IDquality = KVIDHarpeeICSi_e503::kBelowPunchThrough)) {
+      SetIDCode(kIDCode10);
    }
 }
 //________________________________________________________________

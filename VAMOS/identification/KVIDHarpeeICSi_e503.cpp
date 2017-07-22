@@ -120,6 +120,11 @@ Double_t KVIDHarpeeICSi_e503::GetIDMapY(Option_t* opt)
             // for identification
             fGrid = tmp;
 
+            //find the punch-through line in the associated grid
+            //it would be better to directly use a KVIDGChIoSi grid
+            //but we do so for the moment...
+            fPunchThrough = (KVIDLine*) fGrid->GetCut("Punch_through");
+
             // returns the calibrated ACQ parameter i.e. energy measured
             // in the fired section of HarpeeIC
             if (cal->GetStatus()) E = cal->Compute();
@@ -197,6 +202,15 @@ Bool_t KVIDHarpeeICSi_e503::Identify(
    // identification even if the derived class initialisation fails.
 
    Bool_t status = KVIDHarpeeICSi::Identify(idr, x, y);
+
+   //if a particle is well-identified (i.e. not too far from the identification lines)
+   //but it lies below the 'Punch_through' line, we give it a warning code
+   if (idr->IDquality < KVIDZAGrid::kICODE4) {
+      if (fPunchThrough && fPunchThrough->WhereAmI(x, y, "below")) {
+         idr->IDquality = kBelowPunchThrough;
+         idr->SetComment("warning: point below punch-through line");
+      }
+   }
 
    // Set the idcode and type for this telescope
    idr->IDcode = fIDCode;
