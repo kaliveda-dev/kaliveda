@@ -106,14 +106,20 @@ void KVVAMOSReconNuc::Copy(TObject& obj) const
    CastedObj.fBasicRealA   = fBasicRealA;
    CastedObj.fBasicA       = fBasicA;
    CastedObj.fBasicNHF     = fBasicNHF;
+   CastedObj.fkIsBasicQandAID = fkIsBasicQandAID;
+
    CastedObj.fToF_corr     = fToF_corr;
    CastedObj.fPath_corr    = fPath_corr;
    CastedObj.fRealAE_corr  = fRealAE_corr;
    CastedObj.fRealAoQ_corr = fRealAoQ_corr;
+   CastedObj.fRealQ_corr   = fRealQ_corr;
+   CastedObj.fRealA_corr   = fRealA_corr;
    CastedObj.fKE_corr      = fKE_corr;
    CastedObj.fEBeforeVAMOS_corr = fEBeforeVAMOS_corr;
    CastedObj.fA_CsI        = fA_CsI;
    CastedObj.fCorrNHF      = fCorrNHF;
+   CastedObj.fkIsCorrected = fkIsCorrected;
+   CastedObj.fkIsCorrQandAID = fkIsCorrQandAID;
 }
 //________________________________________________________________
 
@@ -150,9 +156,11 @@ void KVVAMOSReconNuc::init()
 
    fA_CsI        = -666;
 
-   fkIsCorrected = kFALSE;
+   fkIsCorrected   = kFALSE;
+   fkIsCorrQandAID = kFALSE;
+   fkIsBasicQandAID = kFALSE;
 
-   fdebug = kFALSE;
+   fdebug = kTRUE;
 }
 //________________________________________________________________
 
