@@ -206,7 +206,7 @@ Bool_t KVIDHarpeeICSi_e503::Identify(
    //if a particle is well-identified (i.e. not too far from the identification lines)
    //but it lies below the 'Punch_through' line, we give it a warning code
    if (idr->IDquality < KVIDZAGrid::kICODE4) {
-      if (fPunchThrough && fPunchThrough->WhereAmI(x, y, "below")) {
+      if (fPunchThrough && fPunchThrough->WhereAmI(GetIDMapX(), GetIDMapY(), "below")) {
          idr->IDquality = kBelowPunchThrough;
          idr->SetComment("warning: point below punch-through line");
       }

@@ -1035,7 +1035,7 @@ void KVVAMOSReconNuc::SetZIdentification(KVIdentificationResult* idr, KVIDTelesc
    //KVIDLine labelled "Punch-through" in the grid.
    //if such a line was defined, then a special IDCode will be set
    //for particles below the line.
-   if ((idt->InheritsFrom(KVIDHarpeeICSi_e503::Class())) && (idr->IDquality = KVIDHarpeeICSi_e503::kBelowPunchThrough)) {
+   if ((idt->InheritsFrom(KVIDHarpeeICSi_e503::Class())) && (idr->IDquality == KVIDHarpeeICSi_e503::kBelowPunchThrough)) {
       SetIDCode(kIDCode10);
    }
 }
