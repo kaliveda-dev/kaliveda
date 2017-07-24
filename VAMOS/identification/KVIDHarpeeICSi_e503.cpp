@@ -47,7 +47,8 @@ KVIDHarpeeICSi_e503::KVIDHarpeeICSi_e503() :
    // as there is no easy way for constructors to handle errors. Instead you
    // should call Init() immediately after you construct this object.
 
-   fIDCode = kIDCode4;
+   fIDCode  = kIDCode4;
+   fverbose = kTRUE;
 }
 
 Bool_t KVIDHarpeeICSi_e503::Init()
@@ -62,6 +63,8 @@ Bool_t KVIDHarpeeICSi_e503::Init()
    if (kInitialised_) return kTRUE;
 
    kInitialised_ = kTRUE;
+   fPunchThrough = NULL;
+
    return kTRUE;
 
 }
@@ -206,10 +209,14 @@ Bool_t KVIDHarpeeICSi_e503::Identify(
    //if a particle is well-identified (i.e. not too far from the identification lines)
    //but it lies below the 'Punch_through' line, we give it a warning code
    if (idr->IDquality < KVIDZAGrid::kICODE4) {
-      if (fPunchThrough && fPunchThrough->WhereAmI(GetIDMapX(), GetIDMapY(), "below")) {
-         idr->IDquality = kBelowPunchThrough;
-         idr->SetComment("warning: point below punch-through line");
-      }
+      if (fPunchThrough) {
+         if (fverbose) Info("Identify", "... puch-through line found for detector %s (ICSegment=%d) ...", GetName(), ic->GetFiredSegNumber());
+         if (fPunchThrough->WhereAmI(GetIDMapX(), GetIDMapY(), "below")) {
+            idr->IDquality = kBelowPunchThrough;
+            idr->SetComment("warning: point below punch-through line");
+            if (fverbose) Info("Identify", "... point(%lf, %lf) is below punch-through line ...", GetIDMapX(), GetIDMapY());
+         } else if (fverbose) Info("Identify", "... point(%lf, %lf) is above punch-through line ...", GetIDMapX(), GetIDMapY());
+      } else if (fverbose) Info("Identify", "... no puch-through line found for detector %s (ICSegment=%d)...", GetName(), ic->GetFiredSegNumber());
    }
 
    // Set the idcode and type for this telescope

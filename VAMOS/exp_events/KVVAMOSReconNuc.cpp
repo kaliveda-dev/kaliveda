@@ -160,7 +160,7 @@ void KVVAMOSReconNuc::init()
    fkIsCorrQandAID = kFALSE;
    fkIsBasicQandAID = kFALSE;
 
-   fdebug = kTRUE;
+   fdebug = kFALSE;
 }
 //________________________________________________________________
 

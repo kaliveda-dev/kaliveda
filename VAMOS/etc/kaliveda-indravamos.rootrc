@@ -161,8 +161,8 @@ INDRA_e503.IdentificationParameterFile.SI75-SILI:     grilles_fit_Si75_SiLi.dat
 INDRA_e503.IdentificationParameterFile.SILI-CSI:      grilles_fit_SiLi_CsI.dat
 INDRA_e503.IdentificationParameterFile.VAMOS.CHI-SI:  grids_VAMOS_DEE_ICSI.dat
 INDRA_e503.IdentificationParameterFile.VAMOS.SI-CSI:  grids_VAMOS_DEE_SICSI.dat
-INDRA_e503.IdentificationParameterFile.VAMOS.QA.SI:   grid_VAMOS_QA_SI.dat
-INDRA_e503.IdentificationParameterFile.VAMOS.QA.CSI:  grid_VAMOS_QA_CSI.dat
+INDRA_e503.IdentificationParameterFile.VAMOS.QA.SI:   grids_VAMOS_QA_SI.dat
+INDRA_e503.IdentificationParameterFile.VAMOS.QA.CSI:  grids_VAMOS_QA_CSI.dat
 ###############################################
 INDRA_e494s.IdentificationParameterFile.CI-SI:         grilles_ChIo_Si.dat
 INDRA_e494s.IdentificationParameterFile.CI-CSI:        grilles_ChIo_CsI.dat

@@ -28,6 +28,7 @@ class KVIDHarpeeICSi_e503 : public KVIDHarpeeICSi {
 
 protected:
    KVIDLine* fPunchThrough; //punch-through line
+   Bool_t fverbose;
 
 public:
 
@@ -53,6 +54,10 @@ public:
 
    KVIDLine* GetPunchThroughLine() {
       return fPunchThrough;
+   }
+
+   void SetVerbose(Bool_t verb) {
+      fverbose = verb;
    }
 
    ClassDef(KVIDHarpeeICSi_e503, 1)
