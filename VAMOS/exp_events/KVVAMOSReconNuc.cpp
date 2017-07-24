@@ -1036,7 +1036,8 @@ void KVVAMOSReconNuc::SetZIdentification(KVIdentificationResult* idr, KVIDTelesc
    //if such a line was defined, then a special IDCode will be set
    //for particles below the line.
    if ((idt->InheritsFrom(KVIDHarpeeICSi_e503::Class())) && (idr->IDquality == KVIDHarpeeICSi_e503::kBelowPunchThrough)) {
-      SetIDCode(kIDCode10);
+      SetIDCode(kIDCode11);
+      if (fdebug) Info("SetZIdentification", "... point is below punch-through, changing IDCode ...");
    }
 }
 //________________________________________________________________

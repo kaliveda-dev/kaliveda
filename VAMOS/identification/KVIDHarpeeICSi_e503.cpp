@@ -48,7 +48,7 @@ KVIDHarpeeICSi_e503::KVIDHarpeeICSi_e503() :
    // should call Init() immediately after you construct this object.
 
    fIDCode  = kIDCode4;
-   fverbose = kTRUE;
+   fverbose = kFALSE;
 }
 
 Bool_t KVIDHarpeeICSi_e503::Init()
@@ -211,11 +211,13 @@ Bool_t KVIDHarpeeICSi_e503::Identify(
    if (idr->IDquality < KVIDZAGrid::kICODE4) {
       if (fPunchThrough) {
          if (fverbose) Info("Identify", "... puch-through line found for detector %s (ICSegment=%d) ...", GetName(), ic->GetFiredSegNumber());
+
          if (fPunchThrough->WhereAmI(GetIDMapX(), GetIDMapY(), "below")) {
             idr->IDquality = kBelowPunchThrough;
             idr->SetComment("warning: point below punch-through line");
             if (fverbose) Info("Identify", "... point(%lf, %lf) is below punch-through line ...", GetIDMapX(), GetIDMapY());
          } else if (fverbose) Info("Identify", "... point(%lf, %lf) is above punch-through line ...", GetIDMapX(), GetIDMapY());
+
       } else if (fverbose) Info("Identify", "... no puch-through line found for detector %s (ICSegment=%d)...", GetName(), ic->GetFiredSegNumber());
    }
 
