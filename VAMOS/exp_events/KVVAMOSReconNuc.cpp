@@ -594,7 +594,7 @@ void KVVAMOSReconNuc::IdentifyQandA()
          if (!idt->IsReadyForID()) continue;
 
          //------e494s experiment case------
-         if (idt->InheritsFrom(KVIDQA::Class())) {// if ID-telescope for Q and A identification (e494s)
+         if (idt->InheritsFrom(KVIDQA::Class())) {// if ID-telescope for Q and A identification
             KVIDQA* qa_idt = (KVIDQA*)idt;
 
             static KVIdentificationResult IDR;
@@ -625,9 +625,9 @@ void KVVAMOSReconNuc::IdentifyQandA()
                   SetBasicNHF(nHF);
 
                   if (fdebug) {
-                     Info("IdentifyQandA", "ToF=%lf, Path=%lf, Beta=%lf, RealAE=%lf, RealAoQ=%lf, RealQ=%lf, RealA=%lf, Q=%d, A=%d",
-                          GetBasicToF(), GetBasicPath(), GetBasicBeta(), GetBasicRealAE(), GetBasicRealAoverQ(), GetBasicRealQ(),
-                          GetBasicRealA(), GetBasicQ(), GetBasicA());
+                     Info("IdentifyQandA", "ToF=%lf, nHF=%d, Path=%lf, Beta=%lf, RealAE=%lf, RealAoQ=%lf, RealQ=%lf, RealA=%lf, Q=%d, A=%d",
+                          GetBasicToF(), GetBasicNHF() , GetBasicPath(), GetBasicBeta(), GetBasicRealAE(),
+                          GetBasicRealAoverQ(), GetBasicRealQ(), GetBasicRealA(), GetBasicQ(), GetBasicA());
                   }
 
                   return;
@@ -654,12 +654,12 @@ void KVVAMOSReconNuc::IdentifyQandA()
                   Double_t realAoQ = CalculateRealAoverQ(GetBrho(), beta) / u();
 
                   //Set the basic ID results
-                  SetBasicQandAIdentification(tof_name, tof, nHF, dist, realAE, realAoQ);
+                  SetBasicQandAIdentification(tof_name, tof, dist, nHF, realAE, realAoQ);
 
                   if (fdebug) {
-                     Info("IdentifyQandA", "ToF=%lf, Path=%lf, Beta=%lf, RealAE=%lf, RealAoQ=%lf, RealQ=%lf, RealZ=%lf, RealA=%lf, Q=%d, Z=%d, A=%d",
-                          GetBasicToF(), GetBasicPath(), GetBasicBeta(), GetBasicRealAE(), GetBasicRealAoverQ(), GetBasicRealQ(),
-                          GetRealZ(), GetBasicRealA(), GetBasicQ(), GetZ(), GetBasicA());
+                     Info("IdentifyQandA", "ToF=%lf, nHF=%d, Path=%lf, Beta=%lf, RealAE=%lf, RealAoQ=%lf, RealQ=%lf, RealZ=%lf, RealA=%lf, Q=%d, Z=%d, A=%d",
+                          GetBasicToF(), GetBasicNHF() , GetBasicPath(), GetBasicBeta(), GetBasicRealAE(),
+                          GetBasicRealAoverQ(), GetBasicRealQ(), GetRealZ(), GetBasicRealA(), GetBasicQ(), GetZ(), GetBasicA());
                   }
 
                   return;
@@ -1213,12 +1213,10 @@ Bool_t KVVAMOSReconNuc::CalculateCorrFlightDistanceAndTime(Double_t& dist, Doubl
    }
 
    dist = CalculatePath(start, stop);
-
    if (dist <= 0.) return kFALSE;
 
-   // update: add possibility to offset ToF for HF time
-   // (in order to correct the experimental 'jitter' problem)
    tof  = (isT_HF ? CalculateCorrectedT_HF(calibT, dist, nHF) : calibT);
+   if (fdebug) Info("CaluclateCorrFlightDistanceAndTime", "... end of computation, corr_dist=%lf, corr_tof=%lf, nHF=%d ...", dist, tof, nHF);
 
    return kTRUE;
 }

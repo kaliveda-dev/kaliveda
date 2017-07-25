@@ -238,7 +238,10 @@ void KVVAMOSReconEvent::IdentAndCalibEvent()
    while ((d = GetNextNucleus())) {
 
       //debug
-      //Info("IdentAndCalibEvent", "... new particle ...");
+      if (fkverbose) {
+         printf("\n");
+         Info("IdentAndCalibEvent", "... new particle ...");
+      }
 
       //-----------------------
       // Z-identification
@@ -290,9 +293,9 @@ void KVVAMOSReconEvent::IdentAndCalibEvent()
 
          if (fkverbose) {
             Info("IdentAndCalibEvent", "... Basic Q and A identification done, results follow ...");
-            Info("IdentAndCalibEvent", "IDCode=%d \nZident=%d, Zmeasured=%d, Ameasured=%d, QandAidentified=%d \nToF=%lf, Path=%lf, Beta=%lf \nrealAE=%lf, realAoQ=%lf \nrealQ=%lf, intQ=%d, realA=%lf, intA=%d",
-                 d->GetIDCode(), (int) d->IsZidentified(), (int) d->IsZMeasured(), (int) d->IsAMeasured(), d->IsBasicQandAidentified(), d->GetBasicToF(), d->GetBasicPath(), d->GetBasicBeta(),
-                 d->GetBasicRealAE(), d->GetBasicRealAoverQ(), d->GetBasicRealQ(), d->GetBasicQ(), d->GetBasicRealA(), d->GetBasicA());
+            Info("IdentAndCalibEvent", "IDCode=%d \nZident=%d, Zmeasured=%d, Ameasured=%d, QandAidentified=%d \nToF=%lf, nHF=%d, Path=%lf, Beta=%lf \nrealAE=%lf, realAoQ=%lf \nrealQ=%lf, intQ=%d, realA=%lf, intA=%d",
+                 d->GetIDCode(), (int) d->IsZidentified(), (int) d->IsZMeasured(), (int) d->IsAMeasured(), d->IsBasicQandAidentified(), d->GetBasicToF(), d->GetBasicNHF(),
+                 d->GetBasicPath(), d->GetBasicBeta(), d->GetBasicRealAE(), d->GetBasicRealAoverQ(), d->GetBasicRealQ(), d->GetBasicQ(), d->GetBasicRealA(), d->GetBasicA());
          }
       }
    }
