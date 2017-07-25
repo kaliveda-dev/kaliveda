@@ -656,6 +656,7 @@ void KVVAMOSReconNuc::IdentifyQandA()
                   //Set the basic ID results
                   SetBasicQandAIdentification(tof_name, tof, dist, nHF, realAE, realAoQ);
 
+
                   if (fdebug) {
                      Info("IdentifyQandA", "ToF=%lf, nHF=%d, Path=%lf, Beta=%lf, RealAE=%lf, RealAoQ=%lf, RealQ=%lf, RealZ=%lf, RealA=%lf, Q=%d, Z=%d, A=%d",
                           GetBasicToF(), GetBasicNHF() , GetBasicPath(), GetBasicBeta(), GetBasicRealAE(),
