@@ -1068,7 +1068,7 @@ void KVVAMOSReconNuc::SetBasicQandAIdentification(const Char_t* tof_name, Float_
    SetRealA(GetBasicRealA());
    SetEnergy(E);
 
-   if (GetBasicQ() > 0 && GetBasicA() > 0) SetIsBasicQandAidentified();
+   SetIsBasicQandAidentified();
 }
 //________________________________________________________________
 void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
@@ -1077,8 +1077,10 @@ void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
    //KVDataCorrection (see ApplyCorrection() method)
    //as final results.
    //
+   //Also set the energy and angles (so momentum) of the nucleus
+   //
    //Corrected observables must be set in the KVVAMOSDataCorrection inherited
-   //class set in 'fDataCorr' pointer.
+   //class set to 'fDataCorr' pointer.
    //
    //Here we only modify the mass of the nucleus from the corrected
    //values...
@@ -1087,13 +1089,15 @@ void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
    //energy is changed too.
    //Keep its value and set it again at the end.
    Double_t KE = GetCorrectedEnergy();
-   SetA(GetCorrectedA());
    SetRealA(GetCorrectedRealA());
+   SetA(GetCorrectedA());
    SetEnergy(KE);
+   SetTheta(GetThetaI());
+   SetPhi(GetPhiI());
    SetRealQ(GetCorrectedRealQ());
    SetQ(GetCorrectedQ());
 
-   if (GetCorrectedQ() > 0 && GetCorrectedA() > 0) SetIsCorrectedQandAidentified();
+   SetIsCorrectedQandAidentified();
 }
 //________________________________________________________________
 
@@ -1164,6 +1168,7 @@ Bool_t KVVAMOSReconNuc::CalculateCorrFlightDistanceAndTime(Double_t& dist, Doubl
    //  - the distance between the two detectors.
 
    dist = tof = 0.;
+   nHF = 0;
 
    KVACQParam* par = gVamos->GetVACQParam(tof_name);
    if (!par) {
@@ -1223,7 +1228,7 @@ Bool_t KVVAMOSReconNuc::CalculateCorrFlightDistanceAndTime(Double_t& dist, Doubl
 }
 //________________________________________________________________
 
-Double_t KVVAMOSReconNuc::CalculateCorrectedT_HF(Double_t tof, Double_t dist, Int_t nHF) const
+Double_t KVVAMOSReconNuc::CalculateCorrectedT_HF(Double_t tof, Double_t dist, Int_t& nHF) const
 {
    // Returns the corrected time of flight obtained from beam pulse HF, by
    // removing or adding N times the beam pulse period. N is fitted by

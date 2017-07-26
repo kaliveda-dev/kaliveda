@@ -153,7 +153,7 @@ public:
    Double_t  CalculatePath(const Char_t* start_label, const Char_t* stop_label = "")  const;
    Double_t  FindDeltaPath(KVVAMOSDetector* det) const;
    Bool_t    CalculateCorrFlightDistanceAndTime(Double_t& dist, Double_t& tof, Int_t& nHF, const Char_t* tof_name) const;
-   virtual   Double_t  CalculateCorrectedT_HF(Double_t tof, Double_t dist, Int_t nHF)   const;
+   virtual   Double_t  CalculateCorrectedT_HF(Double_t tof, Double_t dist, Int_t& nHF)   const;
    Int_t     CalculateNBeamPeriod(Double_t tof, Double_t dist) const;
 
    virtual void     ReconstructTrajectory();
