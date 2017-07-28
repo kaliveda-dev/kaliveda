@@ -66,7 +66,6 @@ Bool_t KVIDHarpeeICSi_e503::Init()
    fPunchThrough = NULL;
 
    return kTRUE;
-
 }
 
 //________________________________________________________________
