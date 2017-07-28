@@ -918,7 +918,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyToFDuplicationCorrections(KVVAMOSReconNu
          return kTRUE;
       }
 
-      else Info("ApplyToFDuplicationCorrections", "... ToF duplication corrections not applied with cut '%s' ...", cut->GetName());
+      else if (fkverbose) Info("ApplyToFDuplicationCorrections", "... ToF duplication corrections not applied with cut '%s' ...", cut->GetName());
    }
 
    if (fkverbose) Info("ApplyToFDuplicationCorrections", "... finished ToF duplication corrections, did nothing ...");
