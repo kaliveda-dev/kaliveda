@@ -133,6 +133,14 @@ namespace KVSQLite {
    void database::add_table(table& t)
    {
       // add table to database (if it does not exist already)
+      // WARNING: after calling this method, do not use the table given as argument
+      //     it does not correspond to the table in the database
+      //     instead use db["table name"] to access the table
+      //
+      //   e.g. KVSQLite::table tt("some table");
+      //        tt.add_column(...);
+      //        db.add_table(tt);
+      //        db["some table"]["column"].set_data(...)
 
       std::string command("CREATE TABLE IF NOT EXISTS ");
       command += "'";
@@ -144,6 +152,7 @@ namespace KVSQLite {
          command += t[i].get_declaration();
       }
       command += ")";
+      //std::cout << command << std::endl;
       if (fDBserv->Exec(command.c_str()))
          fTables.insert(std::pair<std::string, KVSQLite::table>(t.name(), t));
    }
@@ -204,6 +213,7 @@ namespace KVSQLite {
          }
       }
       com += ")";
+      std::cout << com << std::endl;
       fSQLstmt.reset(fDBserv->Statement(com.c_str()));
       return true;
    }
@@ -233,9 +243,15 @@ namespace KVSQLite {
 
       static TString decl;
       decl.Form("%s %s", name().c_str(), type_name().c_str());
-      if (fConstraint.BeginsWith("FOREIGN KEY")) decl += ",";
-      decl += " ";
-      decl += fConstraint;
+      if (fForeignKey) {
+         decl += ", FOREIGN KEY(";
+         decl += name().c_str();
+         decl += ") REFERENCES ";
+         decl += Form(" %s(%s)", fFKtable.c_str(), fFKcolumn.c_str());
+      } else {
+         decl += " ";
+         decl += fConstraint;
+      }
       return decl.Data();
    }
 
@@ -264,7 +280,10 @@ namespace KVSQLite {
       fSQLstmt->NextIteration();
       int idx = 0;
       for (int i = 0; i < ncol; ++i) {
-         if (!(*fBulkTable)[i].primary_key())(*fBulkTable)[i].set_data_in_statement(fSQLstmt.get(), idx++);
+         if (!(*fBulkTable)[i].primary_key()) {
+            (*fBulkTable)[i].set_data_in_statement(fSQLstmt.get(), idx);
+            ++idx;
+         }
       }
    }
 
@@ -487,11 +506,12 @@ namespace KVSQLite {
             s->SetInt(idx, fData.GetInt());
             break;
          case KVSQLite::column_type::TEXT:
-            s->SetString(idx, fData.GetString());
+            s->SetString(idx, fData.GetString(), -1);
             break;
          case KVSQLite::column_type::BLOB:
+            s->SetBinary(idx, fBlob, fBlobSize);
+            break;
          default:
-            // nothing to do for BLOB types (yet)
             break;
       }
    }
@@ -509,10 +529,30 @@ namespace KVSQLite {
             fData.Set(s->IsNull(index()) ? "" : s->GetString(index()));
             break;
          case KVSQLite::column_type::BLOB:
+            if (!fBlob) fBlob = (void*) new unsigned char[256];
+            s->GetBinary(index(), fBlob, fBlobSize);
+            break;
          default:
-            // nothing to do for BLOB types (yet)
             break;
       }
+   }
+
+   void column::set_foreign_key(const std::string& _table, const std::string& _column)
+   {
+      // declare this column to be a foreign key i.e. linked to the given
+      // _column name in another _table
+      fForeignKey = true;
+      fFKtable = _table;
+      fFKcolumn = _column;
+   }
+
+   void column::set_foreign_key(const table& _table, const column& _column)
+   {
+      // declare this column to be a foreign key i.e. linked to the given
+      // _column name in another _table
+      fForeignKey = true;
+      fFKtable = _table.name();
+      fFKcolumn = _column.name();
    }
 
    void table::init_type_map()
@@ -550,13 +590,38 @@ namespace KVSQLite {
       return add_column(name, type_map[type]);
    }
 
-   void table::add_primary_key(const std::string& name)
+   const column& table::add_primary_key(const std::string& name)
    {
       // add a PRIMARY KEY column to the table
+      // returns reference to primary key (cannot be modified)
+      //
       // by default this is an INTEGER type column
       // as it is auto-incremented with each inserted row, it should not
       // be included in TSQLStatement used to write data to db
-      add_column(name, KVSQLite::column_type::INTEGER).set_constraint("PRIMARY KEY");
+
+      column& c = add_column(name, KVSQLite::column_type::INTEGER);
+      c.set_constraint("PRIMARY KEY");
+      return c;
+   }
+
+   const column& table::add_foreign_key(const std::string& name, const std::string& other_table, const std::string& other_column)
+   {
+      // add a foreign key to the table, which is an INTEGER reference to
+      // another column in another table. returns reference to key (cannot be modified)
+
+      column& c = add_column(name, KVSQLite::column_type::INTEGER);
+      c.set_foreign_key(other_table, other_column);
+      return c;
+   }
+
+   const column& table::add_foreign_key(const std::string& name, const table& other_table, const column& other_column)
+   {
+      // add a foreign key to the table, which is an INTEGER reference to
+      // another column in another table. returns reference to key (cannot be modified)
+
+      column& c = add_column(name, KVSQLite::column_type::INTEGER);
+      c.set_foreign_key(other_table, other_column);
+      return c;
    }
 
 

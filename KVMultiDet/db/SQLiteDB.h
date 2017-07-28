@@ -35,24 +35,41 @@ namespace KVSQLite {
    typedef KVSQLite::insert_mode::types KVSQLite_insert_mode;
    typedef KVSQLite::column_type::types KVSQLite_column_type;
 
+   class table;
+
    class column {
+
+      friend class table;
+
       std::pair<std::string, KVSQLite_column_type> fNameType; //name & type of column
       TString fConstraint;//column constraint
       int fIndex;//index of column
       static std::map<KVSQLite::column_type::types, std::string> inv_type_map;
       KVNamedParameter fData; // data item in column
+      void* fBlob;//! binary data
+      Long_t fBlobSize;// size of blob
       bool fPrimaryKey;
+      bool fForeignKey;
+      std::string fFKtable;//table for foreign key
+      std::string fFKcolumn;//column for foreign key
 
       void init_type_map();
       std::string _type();
 
-   public:
       column(int idx, const std::string& name, KVSQLite_column_type type)
-         : fNameType(name, type), fConstraint(""), fIndex(idx), fData(name.c_str()), fPrimaryKey(false)
+         : fNameType(name, type), fConstraint(""), fIndex(idx), fData(name.c_str()),
+           fBlob(nullptr), fBlobSize(0),
+           fPrimaryKey(false), fForeignKey(false),
+           fFKtable(""), fFKcolumn("")
       {
          if (!inv_type_map.size()) init_type_map();
       }
-      virtual ~column() {}
+   public:
+      virtual ~column()
+      {
+         // clean up binary data
+         if (fBlob) delete[](unsigned char*)fBlob;
+      }
 
       const std::string& name() const
       {
@@ -82,6 +99,18 @@ namespace KVSQLite {
       {
          fData.Set(x);
       }
+      template<typename T>
+      void set_binary_data(T& x)
+      {
+         fBlob = (void*)&x;
+         fBlobSize = sizeof(x);
+      }
+      template<typename T>
+      void set_binary_data(T* x)
+      {
+         fBlob = (void*)x;
+         fBlobSize = sizeof(*x);
+      }
 
       void set_data_in_statement(TSQLStatement*, int idx = -1) const;
       void set_data_from_statement(TSQLStatement* s);
@@ -90,20 +119,30 @@ namespace KVSQLite {
          // set constraint for column, one of:
          //   PRIMARY KEY
          //   UNIQUE
-         //   FOREIGN KEY
          //   CHECK
          //   NOT NULL
          //   DEFAULT
          fConstraint = c;
          if (c == "PRIMARY KEY") fPrimaryKey = true;
       }
+      void set_foreign_key(const std::string& _table, const std::string& _column);
+      void set_foreign_key(const table& _table, const column& _column);
       bool primary_key() const
       {
          return fPrimaryKey;
       }
+      bool foreign_key() const
+      {
+         return fForeignKey;
+      }
       const KVNamedParameter& data() const
       {
          return fData;
+      }
+      template<typename T>
+      T* binary_data() const
+      {
+         return static_cast<T*>(fBlob);
       }
 
       ClassDef(column, 0) //Column in an SQLite database table
@@ -160,7 +199,9 @@ namespace KVSQLite {
          return add_column(KVSQLite::column(fColumns.size(), name, type));
       }
       column& add_column(const std::string& name, const std::string& type);
-      void add_primary_key(const std::string& name);
+      const column& add_primary_key(const std::string& name);
+      const column& add_foreign_key(const std::string& name, const std::string& other_table, const std::string& other_column);
+      const column& add_foreign_key(const std::string& name, const table& other_table, const column& other_column);
       KVSQLite::column& operator[](int i)
       {
          return fColumns[i];
