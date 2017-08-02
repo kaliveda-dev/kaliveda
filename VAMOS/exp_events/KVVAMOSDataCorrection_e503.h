@@ -25,13 +25,13 @@ protected:
 
    //-----IC-Si-----
    KVHashList* flist_HFcuts_icsi;
-   std::vector<Int_t> fvec_nHF_icsi;
+   std::vector< std::vector<Int_t> > fvec_nHF_icsi; //vector containing <nHF, IDCode, TINDRA_HF_min, TINDRA_HF_max> vectors associated to each cut
 
    KVHashList* flist_aoq_cut_icsi;
    Float_t ftof_corr_icsi;
 
    Bool_t fkfunc_ztof_icsi_init;
-   TF1*    ffunc_ztof_icsi;
+   TF1*   ffunc_ztof_icsi;
 
    //Readers in DataSet
    void ReadHFCutFilesListInDataSet();
@@ -43,7 +43,8 @@ protected:
    void ReadToFOffsetZFunctionFileList(std::ifstream& file, Int_t type);
 
    //Corrections
-   Bool_t ApplyHFCorrections(KVVAMOSReconNuc*, KVHashList*, std::vector<Int_t>);
+   Bool_t ApplySiCsIHFCorrections(KVVAMOSReconNuc*, KVHashList*, std::vector<Int_t>);
+   Bool_t ApplyICSiHFCorrections(KVVAMOSReconNuc*, KVHashList*, std::vector< std::vector<Int_t> >);
    Bool_t ApplyToFDuplicationCorrections(KVVAMOSReconNuc*, KVHashList*, Float_t);
    Bool_t ApplyToFOffsetZFunctionCorrections(KVVAMOSReconNuc*, TF1*);
 
@@ -60,17 +61,14 @@ public:
    virtual void CalibrateFromDetList(KVVAMOSReconNuc*, Double_t& ke, Double_t& eBeforeVAMOS);
 
    void PrintInitInfos();
-   virtual void SetVerbose(Bool_t status = kTRUE)
-   {
+   virtual void SetVerbose(Bool_t status = kTRUE) {
       fkverbose = status;
    }
 
-   Int_t GetNCutHFSiCsI()
-   {
+   Int_t GetNCutHFSiCsI() {
       return static_cast<int>(fvec_nHF_sicsi.size());
    }
-   Int_t GetNCutHFICSi()
-   {
+   Int_t GetNCutHFICSi() {
       return static_cast<int>(fvec_nHF_icsi.size());
    }
 

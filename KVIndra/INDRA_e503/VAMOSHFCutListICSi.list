@@ -1,0 +1,5 @@
+# List of *.root files containing cuts for beam pulse corrections on ToF
+HFCutFile_4040_ICSi.root
+HFCutFile_4048_ICSi.root
+HFCutFile_4840_ICSi.root
+HFCutFile_4848_ICSi.root

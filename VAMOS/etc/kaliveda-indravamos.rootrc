@@ -275,9 +275,12 @@ INDRA_e503.KVVAMOSWeightFinder.TransCoefFileList:  e503_transcoef.list
 INDRA_e494s.KVVAMOSWeightFinder.RunListFile:  e494s_runlist.dat
 INDRA_e494s.KVVAMOSWeightFinder.TransCoefFileList:  e494s_transcoef.list
 
-# File with list of files containing cuts for Mass:Charge ratio duplication correction
-INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationCutListSiCsI:  VAMOSDuplicationCutSiCsI.list
+# Files with beam pulse frequency correction for ToF
 INDRA_e503.KVVAMOSDataCorrection_e503.HFCutListSiCsI:  VAMOSHFCutListSiCsI.list
+INDRA_e503.KVVAMOSDataCorrection_e503.HFCutListICSi:  VAMOSHFCutListICSi.list
+
+# Files with list of files containing cuts for Mass:Charge ratio duplication correction
+INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationCutListSiCsI:  VAMOSDuplicationCutSiCsI.list
 
 # Time of flight correction to apply to correct ToF duplication (in ns)
 INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset: 1.01
