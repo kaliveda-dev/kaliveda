@@ -781,7 +781,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
       kidentOK = IdentifyCorrectedNucleus(nuc);
       if (fkverbose) {
          if (kidentOK)  printf("identification with grids was success\n");
-         else printf("identification with grids was failure");
+         else printf("identification with grids was failure\n");
       }
    }
 
@@ -993,6 +993,10 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyICSiHFCorrections(KVVAMOSReconNuc* nuc, 
             const Char_t* t_type = tof_name + 1;
             if (det->IsStartForT(t_type)) {
                if (det->IsStartForT(t_type) && (calibT = det->GetCalibT(t_type)) > 0) tof = calibT;
+
+               //in any case the ToF must be set to CalibT for IDCode==11
+               //as it will be not modified if not inside a cut...
+               nuc->SetCorrectedToF(tof);
             }
 
             if (fkverbose) Info("ApplyICSiHFCorrection_e503", "IDCode=%d, CalibT=%lf", idc, tof);
@@ -1009,8 +1013,6 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyICSiHFCorrections(KVVAMOSReconNuc* nuc, 
             sie = det->GetCalibE();
             deltae += sie;
          }
-
-
       }
 
       if (fkverbose) Info("ApplyICSiHFCorrections", "IDCode=%d, ICEMeV=%lf, SiEMeV=%lf, DeltaE_tot=%lf", idc, ice, sie, deltae);
@@ -1023,7 +1025,6 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyICSiHFCorrections(KVVAMOSReconNuc* nuc, 
    tihf = indra_hf->GetData();
 
    if (fkverbose) Info("ApplyICSiCorrections", "TINDRA_HF=%lf", tihf);
-
 
    //------Check if the point is inside a defined cut------
    Int_t nn = 0;
@@ -1511,7 +1512,7 @@ Bool_t KVVAMOSDataCorrection_e503::IdentifyCorrectedNucleus(KVVAMOSReconNuc* nuc
             Bool_t idt_ok = kFALSE;
 
             if ((nuc->GetIDCode() == 3) && (name.Contains("VID_QA_CSI"))) idt_ok = kTRUE;
-            else if ((nuc->GetIDCode() == 4) && (name.Contains("VID_QA_CSI"))) idt_ok = kTRUE;
+            else if (((nuc->GetIDCode() == 4) || (nuc->GetIDCode() == 11)) && (name.Contains("VID_QA_CSI"))) idt_ok = kTRUE;
 
             //Corresponding KVIDQA found
             if (idt_ok) {
