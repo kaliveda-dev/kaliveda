@@ -1465,8 +1465,10 @@ void KVVAMOSDataCorrection_e503::CalibrateFromDetList(KVVAMOSReconNuc* nuc, Doub
 
    //target
    if (gMultiDetArray->GetTarget()) {
-      absorber_eloss = gMultiDetArray->GetTargetEnergyLossCorrection(nuc);
+      KVTarget* target(gVamos->GetTarget());
+      absorber_eloss = target->GetDeltaEFromERes(sim_nucleus.GetZ(), sim_nucleus.GetA(), total_energy);
       total_energy += absorber_eloss;
+
       if (fkverbose) Info("CalibrateFromDetList", "... target corrections: absorber_eloss=%lf, etot=%lf ...", absorber_eloss, total_energy);
    } else if (fkverbose) Warning("CalibrateFromDetList", "... target corrections can't be applied, target not found ...");
 
