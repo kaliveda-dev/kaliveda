@@ -1465,7 +1465,7 @@ void KVVAMOSDataCorrection_e503::CalibrateFromDetList(KVVAMOSReconNuc* nuc, Doub
 
    //target
    if (gMultiDetArray->GetTarget()) {
-      KVTarget* target(gVamos->GetTarget());
+      KVTarget* target(gMultiDetArray->GetTarget());
       absorber_eloss = target->GetDeltaEFromERes(sim_nucleus.GetZ(), sim_nucleus.GetA(), total_energy);
       total_energy += absorber_eloss;
 
