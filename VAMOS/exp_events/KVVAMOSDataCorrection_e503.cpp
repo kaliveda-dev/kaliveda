@@ -729,7 +729,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    Double_t EbfVAMOSnew;
    CalibrateFromDetList(nuc, KEnew, EbfVAMOSnew);
 
-   if (EbfVAMOSnew >= 0. && KEnew >= 0.) {
+   if ((EbfVAMOSnew >= 0.) && (KEnew >= 0.)) {
       Double_t AE  = KEnew / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
       nuc->SetCorrectedRealAE(AE);
       nuc->SetCorrectedEnergyBeforeVAMOS(EbfVAMOSnew);
@@ -1457,7 +1457,9 @@ void KVVAMOSDataCorrection_e503::CalibrateFromDetList(KVVAMOSReconNuc* nuc, Doub
 
    //-----Final corrections to the energy for the strip foil and the target-----
    //strip foil
-   absorber_eloss = gVamos->GetStripFoilEnergyLossCorrection(nuc);
+   KVMaterial strip_foil(20.*KVUnits::ug, "C");
+
+   absorber_eloss = strip_foil.GetDeltaEFromERes(sim_nucleus.GetZ(), sim_nucleus.GetA(), total_energy);
    total_energy += absorber_eloss;
    if (fkverbose) Info("CalibrateFromDetList", "... strip foil correction: absorber_eloss=%lf, etot=%lf ...", absorber_eloss, total_energy);
 
