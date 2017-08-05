@@ -706,8 +706,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    nuc->SetCorrectedToF(nuc->GetBasicToF());
    nuc->SetCorrectedPath(nuc->GetBasicPath());
    nuc->SetCorrectedRealAE(nuc->GetBasicRealAE());
-   Float_t aq = nuc->GetBasicRealAoverQ();
-   nuc->SetCorrectedRealAoverQ(aq);
+   nuc->SetCorrectedRealAoverQ(nuc->GetBasicRealAoverQ());
 
    if (fkverbose) {
       printf("\n\n_________________________________________________________________\n");
@@ -997,6 +996,13 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyICSiHFCorrections(KVVAMOSReconNuc* nuc, 
                //in any case the ToF must be set to CalibT for IDCode==11
                //as it will be not modified if not inside a cut...
                nuc->SetCorrectedToF(tof);
+
+               Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
+               Double_t AE  = nuc->GetCorrectedEnergy() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
+
+               nuc->SetCorrectedRealAoverQ(AoQ);
+               nuc->SetCorrectedRealAE(AE);
+               nuc->SetCorrected(kTRUE);
             }
 
             if (fkverbose) Info("ApplyICSiHFCorrection_e503", "IDCode=%d, CalibT=%lf", idc, tof);
