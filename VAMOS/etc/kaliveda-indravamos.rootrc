@@ -283,10 +283,16 @@ INDRA_e503.KVVAMOSDataCorrection_e503.HFCutListICSi:  VAMOSHFCutListICSi.list
 INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationCutListSiCsI:  VAMOSDuplicationCutSiCsI.list
 
 # Time of flight correction to apply to correct ToF duplication (in ns)
-INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset: 1.01
+INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffsetSiCsI: 1.01
+INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffsetICSi: 0.
+
+# Global time of flight correction to apply to correct data of AoQ=2 misalignements (in ns)
+INDRA_e503.KVVAMOSDataCorrection_e503.GlobalToFOffsetSiCsI: 0.
+INDRA_e503.KVVAMOSDataCorrection_e503.GlobalToFOffsetICSi: -1.80
 
 #File with list of files containing TEnv to build pol2 function to correct ToF for AoQ=2 misalignments 
 INDRA_e503.KVVAMOSDataCorrection_e503.ToFOffsetZFunctionSiCsI: VAMOSToFZFuncSiCsI.list
+INDRA_e503.KVVAMOSDataCorrection_e503.ToFOffsetZFunctionICSi: VAMOSToFZFuncICSi.list
 
 # Data of multidetectors (INDRA/VAMOS) to be used in the recon->ident analysis using the user class "KVIVReconIdent".
 KVIVReconIdent.DataToAnalyse: INDRA VAMOS

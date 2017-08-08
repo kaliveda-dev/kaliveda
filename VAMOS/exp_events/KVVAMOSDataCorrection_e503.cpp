@@ -61,7 +61,7 @@ KVVAMOSDataCorrection_e503::KVVAMOSDataCorrection_e503(Int_t run_number = -1) : 
    ffunc_ztof_sicsi->SetParameters(0., 0., 0.);
 
    fkfunc_ztof_icsi_init = kFALSE;
-   ffunc_ztof_icsi  = new TF1("func_ztof_icsi", "pol2", 0, 25);
+   ffunc_ztof_icsi  = new TF1("func_ztof_icsi", "pol4", 0, 25);
    ffunc_ztof_icsi->SetParameters(0., 0., 0.);
 }
 
@@ -129,6 +129,9 @@ void KVVAMOSDataCorrection_e503::Init()
    else {
       if (fRunNumber != -1) {
          Info("Init", "... starting initiliasing correction class for run %d ...", fRunNumber);
+
+         //Global ToFF offset
+         ReadGlobalToFOffsetsInDataSet();
 
          //HF frequency corrections
          fvec_nHF_sicsi.clear();
@@ -535,11 +538,23 @@ void KVVAMOSDataCorrection_e503::ReadDuplicationToFOffsetsInDataSet()
    //
    //NOTE: these corrections are applied AFTER HF corrections
    //
-   //By default this offset is equal to 1.05 ns (value found from 40Ca+40Ca elastic
-   //duplicated pics).
+   //By default this offset is equal to 1.05 ns for Si-CsI telescopes
+   //(value found from 40Ca+40Ca elastic duplicated pics).
 
-   ftof_corr_sicsi = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset", 1.05);  // in ns
-   ftof_corr_icsi  = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffset", 1.05);  //in ns
+   ftof_corr_sicsi = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffsetSiCsI", 1.05);  // in ns
+   ftof_corr_icsi  = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.DuplicationToFOffsetICCsI", 0.);  //in ns
+}
+
+//____________________________________________________________________________//
+void KVVAMOSDataCorrection_e503::ReadGlobalToFOffsetsInDataSet()
+{
+   //Find in '$KVROOT/KVFiles/VAMOS/etc/.kvrootrc' the values of the ToF offsets
+   //to apply to correct a possible global A/Q=2 misalignment
+   //
+   //NOTE: these corrections are applied BEFORE any other corrections
+
+   ftof_corr_sicsi_global = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.GlobalToFOffsetSiCsI", 0.);  // in ns
+   ftof_corr_icsi_global  = gDataSet->GetDataSetEnv("INDRA_e503.KVVAMOSDataCorrection_e503.GlobalToFOffsetICCsI", -1.80);  //in ns
 }
 
 //____________________________________________________________________________//
@@ -616,6 +631,12 @@ void KVVAMOSDataCorrection_e503::ReadToFOffsetZFunctionFileList(std::ifstream& f
    //- read the TEnv in the file to access to the run range of the file
    //- if 'fRunNumber' is in the run range we create in 'ffunc_ztof_sicsi'
    //  the pol2 function with the parameters set in the TEnv and stop the research.
+   //
+   //UPDATE: a pol4 function is needed to correct IC-Si telescopes ToF, even when
+   //        we separate punch-through by TCutG and IDCode...
+   //        I guess it is because all the ToF calibrations were done using
+   //        Si-CsI experimental points, so the values are not as good as expected for
+   //        IC-Si telescopes... nonetheless a correction of less than 4.5 ns is usually needed...
 
    Bool_t found = kFALSE; //flag set to kTRUE as soon as we have found the good file
 
@@ -658,23 +679,30 @@ void KVVAMOSDataCorrection_e503::ReadToFOffsetZFunctionFileList(std::ifstream& f
                   Info("ReadToFOffsetZFunctionFileList", "... Run %d is in the runlist '%s' of the file '%s' ...",
                        fRunNumber, runlist, file->GetName());
 
-
-                  //exctract pol2 coefficients from TEnv
-                  Double_t xmin = env->GetValue("xmin", 0.);
-                  Double_t xmax = env->GetValue("xmax", 25.);
-                  Double_t p0   = env->GetValue("p0", 0.);
-                  Double_t p1   = env->GetValue("p1", 0.);
-                  Double_t p2   = env->GetValue("p2", 0.);
-
                   if (type == 0) {
+                     //exctract pol2 coefficients from TEnv
+                     Double_t xmin = env->GetValue("xmin", 0.);
+                     Double_t xmax = env->GetValue("xmax", 25.);
+                     Double_t p0   = env->GetValue("p0", 0.);
+                     Double_t p1   = env->GetValue("p1", 0.);
+                     Double_t p2   = env->GetValue("p2", 0.);
+
                      ffunc_ztof_sicsi->SetRange(xmin, xmax);
                      ffunc_ztof_sicsi->SetParameters(p0, p1, p2);
                      fkfunc_ztof_sicsi_init = kTRUE;
                   }
 
                   else if (type == 1) {
+                     //exctract pol4 coefficients from TEnv
+                     Double_t xmin = env->GetValue("xmin", 0.);
+                     Double_t xmax = env->GetValue("xmax", 25.);
+                     Double_t p0   = env->GetValue("p0", 0.);
+                     Double_t p1   = env->GetValue("p1", 0.);
+                     Double_t p2   = env->GetValue("p2", 0.);
+                     Double_t p3   = env->GetValue("p3", 0.);
+                     Double_t p4   = env->GetValue("p4", 0.);
                      ffunc_ztof_icsi->SetRange(xmin, xmax);
-                     ffunc_ztof_sicsi->SetParameters(p0, p1, p2);
+                     ffunc_ztof_sicsi->SetParameters(p0, p1, p2, p3, p4);
                      fkfunc_ztof_icsi_init = kTRUE;
                   }
 
@@ -748,27 +776,31 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
    //corrected AoQ obervable, as it is only dependant of ToF
    //(considering path and brho are OK, which is more or less sure...)
    //Si-CsI telescopes corrections
+   Bool_t kCsI_Global_corr = kFALSE;
    Bool_t kCsI_HFcorr   = kFALSE;
    Bool_t kCsI_DUcorr   = kFALSE;
    Bool_t kCsI_ZToFfunc = kFALSE;
    if (IDCode == 3) {
+      kCsI_Global_corr = ApplyGlobalToFCorrection(nuc, ftof_corr_sicsi_global);
       kCsI_HFcorr = ApplySiCsIHFCorrections(nuc, flist_HFcuts_sicsi, fvec_nHF_sicsi);
       kCsI_DUcorr = ApplyToFDuplicationCorrections(nuc, flist_aoq_cut_sicsi, ftof_corr_sicsi);
       if (fkfunc_ztof_sicsi_init) kCsI_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_sicsi);
    }
 
    //IC-Si telescopes corrections
+   Bool_t kSi_Global_corr = kFALSE;
    Bool_t kSi_HFcorr   = kFALSE;
    Bool_t kSi_DUcorr   = kFALSE;
    Bool_t kSi_ZToFfunc = kFALSE;
    if (IDCode == 4 || IDCode == 11) {
+      kSi_Global_corr = ApplyGlobalToFCorrection(nuc, ftof_corr_icsi_global);
       kSi_HFcorr = ApplyICSiHFCorrections(nuc, flist_HFcuts_icsi, fvec_nHF_icsi);
       kSi_DUcorr = ApplyToFDuplicationCorrections(nuc, flist_aoq_cut_icsi, ftof_corr_icsi);
       if (fkfunc_ztof_icsi_init) kSi_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_icsi);
    }
 
    //Save corrections status
-   if (kCsI_HFcorr || kCsI_DUcorr || kCsI_ZToFfunc || kSi_HFcorr || kSi_DUcorr || kSi_ZToFfunc) nuc->SetCorrected(kTRUE);
+   if (kCsI_Global_corr || kCsI_HFcorr || kCsI_DUcorr || kCsI_ZToFfunc || kSi_Global_corr || kSi_HFcorr || kSi_DUcorr || kSi_ZToFfunc) nuc->SetCorrected(kTRUE);
 
    //-----Identification with grids-----
    //Use KVIDQA grids on previously corrected
@@ -824,6 +856,44 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
                 nuc->GetRealZ(), nuc->GetZ(), nuc->GetRealQ(), nuc->GetQ(), nuc->GetRealA(), nuc->GetA(),
                 nuc->GetKE(), nuc->GetCorrectedEnergyBeforeVAMOS());
       }
+   }
+
+   return kTRUE;
+}
+
+//____________________________________________________________________________//
+Bool_t KVVAMOSDataCorrection_e503::ApplyGlobalToFCorrection(KVVAMOSReconNuc* nuc, Float_t tof_offset)
+{
+   //Apply a global ToF correction over the data to correct AoQ=2 possible misalignments due to
+   //a bad calibration of the ToF (for example wrong ToF offset 'T_0')
+
+   if (tof_offset == 0.) {
+      if (fkverbose) Info("ApplyGlobalToFCorrection", "... ToF global correction is null, will do nothing");
+      return kFALSE;
+   }
+
+   //debug
+   if (fkverbose) {
+      Info("ApplyGlobalToFCorrection", "... before ToF global corrections ...\nIDCode=%d \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+           nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
+           nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
+   }
+
+   Float_t corr_tof = nuc->GetCorrectedToF();
+   nuc->SetCorrectedToF(corr_tof + tof_offset);
+
+   Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
+   Double_t AE  = nuc->GetCorrectedEnergy() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
+
+   nuc->SetCorrectedRealAoverQ(AoQ);
+   nuc->SetCorrectedRealAE(AE);
+   nuc->SetCorrected(kTRUE);
+
+   //debug
+   if (fkverbose) {
+      Info("ApplyGlobalToFCorrection", "... after ToF global corrections ...\nIDCode=%d \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+           nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
+           nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
    }
 
    return kTRUE;
@@ -1580,6 +1650,13 @@ Bool_t KVVAMOSDataCorrection_e503::IdentifyCorrectedNucleus(KVVAMOSReconNuc* nuc
 //____________________________________________________________________________//
 void KVVAMOSDataCorrection_e503::PrintInitInfos()
 {
+   //--------Global ToF corrections--------
+   printf("###### Global ToF corrections ######\n");
+   printf("-> Si-CsI:\n");
+   printf("tof_corr=%lf ns\n", ftof_corr_sicsi_global);
+   printf("-> IC-Si:\n");
+   printf("tof_corr=%lf ns\n", ftof_corr_icsi_global);
+
    //--------HF frequency corrections--------
    printf("###### HF frequency corrections ######\n");
    printf("->Si-CsI:\n");
@@ -1623,7 +1700,7 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    //-------ToF duplication corrections--------
    printf("###### ToF duplication corrections ######\n");
    printf("-> Si-CsI:\n");
-   printf("tof_corr=%lf\n", ftof_corr_sicsi);
+   printf("tof_corr=%lf ns\n", ftof_corr_sicsi);
    printf("%d cuts set\n", flist_aoq_cut_sicsi->GetEntries());
    if (fkverbose) {
       flist_aoq_cut_sicsi->ls();
@@ -1638,7 +1715,7 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    }
 
    printf("\n-> IC-Si:\n");
-   printf("tof_corr=%lf\n", ftof_corr_icsi);
+   printf("tof_corr=%lf ns\n", ftof_corr_icsi);
    printf("%d cuts set\n", flist_aoq_cut_icsi->GetEntries());
    if (fkverbose) {
       flist_aoq_cut_icsi->ls();

@@ -19,9 +19,10 @@ protected:
 
    KVHashList* flist_aoq_cut_sicsi;    //list of RealZ:BasicAoQ TCutG* for AoQ duplication corrections
    Float_t ftof_corr_sicsi;            //correction of ToF (in ns) for AoQ duplication corrections
+   Float_t ftof_corr_sicsi_global;     //a global ToF correction (in ns) to correct AoQ=2 misalignments
 
    Bool_t fkfunc_ztof_sicsi_init; //=kTRUE if the pol2 function was correctly init
-   TF1*   ffunc_ztof_sicsi; //pol2 function for AoQ=2 misalignments corrections
+   TF1*   ffunc_ztof_sicsi; //pol2 function for AoQ=2 misalignments corrections for Si-CsI telescopes
 
    //-----IC-Si-----
    KVHashList* flist_HFcuts_icsi;
@@ -29,11 +30,14 @@ protected:
 
    KVHashList* flist_aoq_cut_icsi;
    Float_t ftof_corr_icsi;
+   Float_t ftof_corr_icsi_global;
 
    Bool_t fkfunc_ztof_icsi_init;
-   TF1*   ffunc_ztof_icsi;
+   TF1*   ffunc_ztof_icsi; //pol4 function for AoQ=2 misalignments corrections for IC-Si telescopes
+
 
    //Readers in DataSet
+   void ReadGlobalToFOffsetsInDataSet();
    void ReadHFCutFilesListInDataSet();
    void ReadHFCutFileList(std::ifstream& file, Int_t type);
    void ReadDuplicationCutFilesListInDataSet();
@@ -43,6 +47,7 @@ protected:
    void ReadToFOffsetZFunctionFileList(std::ifstream& file, Int_t type);
 
    //Corrections
+   Bool_t ApplyGlobalToFCorrection(KVVAMOSReconNuc*, Float_t);
    Bool_t ApplySiCsIHFCorrections(KVVAMOSReconNuc*, KVHashList*, std::vector<Int_t>);
    Bool_t ApplyICSiHFCorrections(KVVAMOSReconNuc*, KVHashList*, std::vector< std::vector<Int_t> >);
    Bool_t ApplyToFDuplicationCorrections(KVVAMOSReconNuc*, KVHashList*, Float_t);
