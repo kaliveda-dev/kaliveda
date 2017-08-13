@@ -27,7 +27,7 @@ ClassImp(KVVAMOSDataCorrection_e503)
 KVVAMOSDataCorrection_e503::KVVAMOSDataCorrection_e503(Int_t run_number = -1) : KVVAMOSDataCorrection(run_number)
 {
    // Default constructor
-   fkverbose   = kTRUE;
+   fkverbose   = kFALSE;
    fkIsInit    = kFALSE;
 
    // HF frequency correction
@@ -352,9 +352,18 @@ void KVVAMOSDataCorrection_e503::ReadHFCutFileList(std::ifstream& file, Int_t ty
                         //has a name of the form: "Cut%d_IDCode%d_nHF%f",ncut, idc, nHF
                         TString ss        = cutg->GetName();
                         TObjArray* obj_ar = ss.Tokenize("_");
-                        Int_t nn          = (((TObjString*) obj_ar->At(0))->String()).Atoi();
-                        Int_t idc         = (((TObjString*) obj_ar->At(1))->String()).Atoi();
-                        Float_t nhf       = (((TObjString*) obj_ar->At(2))->String()).Atof();
+
+                        TString str_nn    = (((TObjString*) obj_ar->At(0))->String());
+                        TObjArray* obj_nn = str_nn.Tokenize("Cut");
+                        Int_t nn          = (((TObjString*) obj_nn->At(0))->String()).Atoi();
+
+                        TString str_idc    = (((TObjString*) obj_ar->At(1))->String());
+                        TObjArray* obj_idc = str_idc.Tokenize("IDCode");
+                        Int_t idc          = (((TObjString*) obj_idc->At(0))->String()).Atoi();
+
+                        TString str_nhf    = (((TObjString*) obj_ar->At(2))->String());
+                        TObjArray* obj_nhf = str_nhf.Tokenize("nHF");
+                        Float_t    nhf     = (((TObjString*) obj_nhf->At(0))->String()).Atof();
 
                         vec->push_back(nhf);
 
@@ -1004,7 +1013,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsDeltaE_ToF(KVVAMOSReconNuc*
 
    //find DeltaE and ToF
    Float_t tof    = nuc->GetCorrectedToF(); //tof already re-defined before applying correction
-   Float_t deltae = -666.;
+   Float_t deltae = 0.;
    KVIDTelescope* idt = nuc->GetIdentifyingTelescope();
    assert(idt);
 
@@ -1015,8 +1024,8 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsDeltaE_ToF(KVVAMOSReconNuc*
       //iteration over detector list in REVERSE order
       TIter next_det(det_list);
       KVVAMOSDetector* det = NULL;
-      Float_t ice = -666.;
-      Float_t sie = -666.;
+      Float_t ice = 0.;
+      Float_t sie = 0.;
       while ((det = static_cast<KVVAMOSDetector*>(next_det()))) {
          //ChIo energy
          if (det->InheritsFrom("KVHarpeeIC")) {
@@ -1029,9 +1038,9 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsDeltaE_ToF(KVVAMOSReconNuc*
             sie = det->GetCalibE();
             deltae += sie;
          }
-
-         if (fkverbose) Info("ApplyHFCorrections_DeltaE_ToF", "... ICE=%lf MeV, SiE=%lf MeV, DeltaE=%lf MeV ...", ice, sie, deltae);
       }
+
+      if (fkverbose) Info("ApplyHFCorrections_DeltaE_ToF", "... ICE=%lf MeV, SiE=%lf MeV, DeltaE=%lf MeV ...", ice, sie, deltae);
    }
 
    //check if inside a defined cut
