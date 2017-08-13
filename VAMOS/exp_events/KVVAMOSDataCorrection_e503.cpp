@@ -764,7 +764,8 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
             if (det->IsStartForT(t_type)) {
                if ((det->IsStartForT(t_type) && (calibT = det->GetCalibT(t_type)) > 0)) {
                   nuc->SetCorrectedToF(calibT);
-                  if (fkverbose) Info("ApplyCorrections", "... initialisation: idc=%d, initialisation of corrected observables done by changing ToF to CalibT(=%lf) ...", IDCode, calibT);
+                  nuc->SetCorrectedPath(nuc->GetBasicPath());
+                  if (fkverbose) Info("ApplyCorrections", "... initialisation: idc=%d, initialisation of corrected observables done by changing ToF(=%lf) to CalibT(=%lf) ...", IDCode, nuc->GetBasicToF(), calibT);
 
                   Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
                   Double_t AE  = nuc->GetCorrectedEnergy() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
@@ -1055,6 +1056,13 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsDeltaE_ToF(KVVAMOSReconNuc*
       Int_t IDCode          = (((TObjString*) obj_idc->At(0))->String()).Atoi();
 
       if (cut->IsInside(tof, deltae) && IDCode == idc) { //inside an associated cut, apply corrections
+         //debug
+         if (fkverbose) {
+            Info("ApplyHFCorrectionsDeltaE_ToF", "... before ToF HF corrections ...\nIDCode=%d \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+                 nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
+                 nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
+         }
+
          Int_t nHF = vec->at(nn);
          nuc->SetCorrectedToF(tof + nHF * gVamos->GetBeamPeriod());
 
@@ -1066,7 +1074,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsDeltaE_ToF(KVVAMOSReconNuc*
          nuc->SetCorrected(kTRUE);
 
          if (fkverbose) {
-            Info("ApplyHFCorrections_DeltaE_ToF", "... HF corrections applied with cut '%s' ... CorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+            Info("ApplyHFCorrections_DeltaE_ToF", "... after HF ToF corrections applied with cut '%s' ... CorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
                  cut->GetName(), nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
          }
 
@@ -1134,6 +1142,14 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsAE_AoverQ(KVVAMOSReconNuc* 
 
       if (cut->IsInside(aoq, ae) && IDCode == idc) { //inside an associated cut, apply corrections
          Int_t nHF = vec->at(nn);
+
+         //debug
+         if (fkverbose) {
+            Info("ApplyHFCorrectionsAE_AoverQ", "... before ToF HF corrections ...\nIDCode=%d \nBasicTof=%lf, BasicPath=%lf, BasicAE=%lf, BasicAoQ=%lf\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+                 nuc->GetIDCode(), nuc->GetBasicToF(), nuc->GetBasicPath(), nuc->GetBasicRealAE(), nuc->GetBasicRealAoverQ(),
+                 nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
+         }
+
          nuc->SetCorrectedToF(tof + nHF * gVamos->GetBeamPeriod());
 
          Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
@@ -1144,7 +1160,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsAE_AoverQ(KVVAMOSReconNuc* 
          nuc->SetCorrected(kTRUE);
 
          if (fkverbose) {
-            Info("ApplyHFCorrectionsAE_AoverQ", "... HF corrections applied with cut '%s' ... CorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+            Info("ApplyHFCorrectionsAE_AoverQ", "... after ToF HF corrections applied with cut '%s' ... CorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
                  cut->GetName(), nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
          }
 
