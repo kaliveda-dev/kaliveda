@@ -27,7 +27,7 @@ ClassImp(KVVAMOSDataCorrection_e503)
 KVVAMOSDataCorrection_e503::KVVAMOSDataCorrection_e503(Int_t run_number = -1) : KVVAMOSDataCorrection(run_number)
 {
    // Default constructor
-   fkverbose   = kFALSE;
+   fkverbose   = kTRUE;
    fkIsInit    = kFALSE;
 
    // HF frequency correction
@@ -1039,11 +1039,11 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsDeltaE_ToF(KVVAMOSReconNuc*
    TIter next_cut(ll);
    TCutG* cut = NULL;
    while ((cut = dynamic_cast<TCutG*>(next_cut.Next()))) {
-      TString ss        = cutg->GetName();
+      TString ss        = cut->GetName();
       TObjArray* obj_ar = ss.Tokenize("_");
       Int_t IDCode      = (((TObjString*) obj_ar->At(1))->String()).Atoi();
 
-      if (cut->IsInside(tof, deltae) && IDC == idc) { //inside an associated cut, apply corrections
+      if (cut->IsInside(tof, deltae) && IDCode == idc) { //inside an associated cut, apply corrections
          Int_t nHF = vec->at(nn);
          nuc->SetCorrectedToF(tof + nHF * gVamos->GetBeamPeriod());
 
@@ -1115,11 +1115,11 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsAE_AoverQ(KVVAMOSReconNuc* 
    TIter next_cut(ll);
    TCutG* cut = NULL;
    while ((cut = dynamic_cast<TCutG*>(next_cut.Next()))) {
-      TString ss        = cutg->GetName();
+      TString ss        = cut->GetName();
       TObjArray* obj_ar = ss.Tokenize("_");
       Int_t IDCode      = (((TObjString*) obj_ar->At(1))->String()).Atoi();
 
-      if (cut->IsInside(aoq, ae) && IDC == idc) { //inside an associated cut, apply corrections
+      if (cut->IsInside(aoq, ae) && IDCode == idc) { //inside an associated cut, apply corrections
          Int_t nHF = vec->at(nn);
          nuc->SetCorrectedToF(tof + nHF * gVamos->GetBeamPeriod());
 
