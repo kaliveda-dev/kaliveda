@@ -1050,7 +1050,9 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsDeltaE_ToF(KVVAMOSReconNuc*
    while ((cut = dynamic_cast<TCutG*>(next_cut.Next()))) {
       TString ss        = cut->GetName();
       TObjArray* obj_ar = ss.Tokenize("_");
-      Int_t IDCode      = (((TObjString*) obj_ar->At(1))->String()).Atoi();
+      TString str_idc    = (((TObjString*) obj_ar->At(1))->String());
+      TObjArray* obj_idc = str_idc.Tokenize("IDCode");
+      Int_t IDCode          = (((TObjString*) obj_idc->At(0))->String()).Atoi();
 
       if (cut->IsInside(tof, deltae) && IDCode == idc) { //inside an associated cut, apply corrections
          Int_t nHF = vec->at(nn);
@@ -1071,7 +1073,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsDeltaE_ToF(KVVAMOSReconNuc*
          return kTRUE;
       }
 
-      else if (fkverbose) Info("ApplyHFCorrections_DeltaE_ToF", "... HF corrections not applied with cut '%s' ...", cut->GetName());
+      else if (fkverbose) Info("ApplyHFCorrections_DeltaE_ToF", "... HF corrections not applied with cut '%s' (idc=%d) ...", cut->GetName(), IDCode);
       nn++;
    }
 
@@ -1126,7 +1128,9 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsAE_AoverQ(KVVAMOSReconNuc* 
    while ((cut = dynamic_cast<TCutG*>(next_cut.Next()))) {
       TString ss        = cut->GetName();
       TObjArray* obj_ar = ss.Tokenize("_");
-      Int_t IDCode      = (((TObjString*) obj_ar->At(1))->String()).Atoi();
+      TString str_idc    = (((TObjString*) obj_ar->At(1))->String());
+      TObjArray* obj_idc = str_idc.Tokenize("IDCode");
+      Int_t IDCode          = (((TObjString*) obj_idc->At(0))->String()).Atoi();
 
       if (cut->IsInside(aoq, ae) && IDCode == idc) { //inside an associated cut, apply corrections
          Int_t nHF = vec->at(nn);
@@ -1147,7 +1151,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsAE_AoverQ(KVVAMOSReconNuc* 
          return kTRUE;
       }
 
-      else if (fkverbose) Info("ApplyHFCorrectionsAE_AoverQ", "... HF corrections not applied with cut '%s' ...", cut->GetName());
+      else if (fkverbose) Info("ApplyHFCorrectionsAE_AoverQ", "... HF corrections not applied with cut '%s' (idc=%d)...", cut->GetName(), IDCode);
       nn++;
    }
 
