@@ -762,18 +762,18 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
             Double_t calibT = 0.;
             const Char_t* t_type = tof_name + 1;
             if (det->IsStartForT(t_type)) {
-               if ((det->IsStartForT(t_type) && (calibT = det->GetCalibT(t_type)) > 0))
+               if ((det->IsStartForT(t_type) && (calibT = det->GetCalibT(t_type)) > 0)) {
                   nuc->SetCorrectedToF(calibT);
+                  if (fkverbose) Info("ApplyCorrections", "... initialisation: idc=%d, initialisation of corrected observables done by changing ToF to CalibT(=%lf) ...", IDCode, calibT);
 
-               Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
-               Double_t AE  = nuc->GetCorrectedEnergy() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
+                  Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
+                  Double_t AE  = nuc->GetCorrectedEnergy() / ((nuc->GetCorrectedGamma() - 1.) * KVNucleus::u());
 
-               nuc->SetCorrectedRealAoverQ(AoQ);
-               nuc->SetCorrectedRealAE(AE);
-               nuc->SetCorrected(kTRUE);
+                  nuc->SetCorrectedRealAoverQ(AoQ);
+                  nuc->SetCorrectedRealAE(AE);
+                  nuc->SetCorrected(kTRUE);
+               }
             }
-
-            if (fkverbose) Info("ApplyCorrections", "... initialisation: idc=%d, initialisation of corrected observables done by changing ToF to CalibT(=%lf) ...", IDCode, calibT);
          }
       }
    }
