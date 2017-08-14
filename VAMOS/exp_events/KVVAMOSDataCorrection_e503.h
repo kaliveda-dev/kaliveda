@@ -35,8 +35,8 @@ protected:
    Float_t ftof_corr_icsi_global;
 
    Bool_t fkfunc_ztof_icsi_init;
-   TF1*   ffunc_ztof_icsi; //pol4 function for AoQ=2 misalignments corrections for IC-Si telescopes
-
+   TF1*   ffunc_ztof_icsi_11; //IDCode 11
+   TF1*   ffunc_ztof_icsi_4; //IDCode 4
 
    //Readers in DataSet
    //global offset on ToF before any corrections

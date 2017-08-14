@@ -61,12 +61,14 @@ KVVAMOSDataCorrection_e503::KVVAMOSDataCorrection_e503(Int_t run_number = -1) : 
    }
 
    fkfunc_ztof_sicsi_init = kFALSE;
-   ffunc_ztof_sicsi = new TF1("func_ztof_sicsi", "pol2", 0, 25);
+   ffunc_ztof_sicsi = new TF1("func_ztof_sicsi_IDCode3", "pol2", 0, 25);
    ffunc_ztof_sicsi->SetParameters(0., 0., 0.);
 
    fkfunc_ztof_icsi_init = kFALSE;
-   ffunc_ztof_icsi  = new TF1("func_ztof_icsi", "pol4", 0, 25);
-   ffunc_ztof_icsi->SetParameters(0., 0., 0.);
+   ffunc_ztof_icsi_11  = new TF1("func_ztof_icsi_IDCode11", "pol2", 0, 25);
+   ffunc_ztof_icsi_11->SetParameters(0., 0., 0.);
+   ffunc_ztof_icsi_4  = new TF1("func_ztof_icsi_IDCode4", "pol2", 0, 25);
+   ffunc_ztof_icsi_4->SetParameters(0., 0., 0.);
 }
 
 //____________________________________________________________________________//
@@ -98,9 +100,14 @@ KVVAMOSDataCorrection_e503::~KVVAMOSDataCorrection_e503()
       ffunc_ztof_sicsi = NULL;
    }
 
-   if (ffunc_ztof_icsi) {
-      delete ffunc_ztof_icsi;
-      ffunc_ztof_icsi = NULL;
+   if (ffunc_ztof_icsi_11) {
+      delete ffunc_ztof_icsi_11;
+      ffunc_ztof_icsi_11 = NULL;
+   }
+
+   if (ffunc_ztof_icsi_4) {
+      delete ffunc_ztof_icsi_4;
+      ffunc_ztof_icsi_4 = NULL;
    }
 #endif
 }
@@ -687,16 +694,22 @@ void KVVAMOSDataCorrection_e503::ReadToFOffsetZFunctionFileList(std::ifstream& f
                   }
 
                   else if (type == 1) {
-                     //exctract pol4 coefficients from TEnv
-                     Double_t xmin = env->GetValue("xmin", 0.);
-                     Double_t xmax = env->GetValue("xmax", 25.);
-                     Double_t p0   = env->GetValue("p0", 0.);
-                     Double_t p1   = env->GetValue("p1", 0.);
-                     Double_t p2   = env->GetValue("p2", 0.);
-                     Double_t p3   = env->GetValue("p3", 0.);
-                     Double_t p4   = env->GetValue("p4", 0.);
-                     ffunc_ztof_icsi->SetRange(xmin, xmax);
-                     ffunc_ztof_sicsi->SetParameters(p0, p1, p2, p3, p4);
+                     //exctract pol2 coefficients from TEnv
+                     Double_t xmin    = env->GetValue("xmin", 0.);
+                     Double_t xmax    = env->GetValue("xmax", 25.);
+                     Double_t p0_11   = env->GetValue("p0_11", 0.);
+                     Double_t p1_11   = env->GetValue("p1_11", 0.);
+                     Double_t p2_11   = env->GetValue("p2_11", 0.);
+                     Double_t p0_4    = env->GetValue("p0_4", 0.);
+                     Double_t p1_4    = env->GetValue("p1_4", 0.);
+                     Double_t p2_4    = env->GetValue("p2_4", 0.);
+
+                     ffunc_ztof_icsi_11->SetRange(xmin, xmax);
+                     ffunc_ztof_icsi_11->SetParameters(p0_11, p1_11, p2_11);
+
+                     ffunc_ztof_icsi_4->SetRange(xmin, xmax);
+                     ffunc_ztof_icsi_4->SetParameters(p0_4, p1_4, p2_4);
+
                      fkfunc_ztof_icsi_init = kTRUE;
                   }
 
@@ -832,7 +845,10 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyCorrections(KVVAMOSReconNuc* nuc)
       kSi_Global_corr = ApplyGlobalToFCorrection(nuc, ftof_corr_icsi_global);
       kSi_HFcorr = ApplyHFCorrections(nuc);
       kSi_DUcorr = ApplyToFDuplicationCorrections(nuc, flist_aoq_cut_icsi, ftof_corr_icsi);
-      if (fkfunc_ztof_icsi_init) kSi_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_icsi);
+      if (fkfunc_ztof_icsi_init) {
+         if (IDCode == 4) kSi_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_icsi_4);
+         else kSi_ZToFfunc = ApplyToFOffsetZFunctionCorrections(nuc, ffunc_ztof_icsi_11);
+      }
    }
 
    //Save corrections status
@@ -1802,6 +1818,8 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    printf("-> IC-Si:\n");
 
    printf("Initialised = %d\n", (int) fkfunc_ztof_icsi_init);
-   ffunc_ztof_icsi->Print();
-   printf("p0=%lf \np1=%f \np2=%f\n", ffunc_ztof_icsi->GetParameter(0), ffunc_ztof_icsi->GetParameter(1), ffunc_ztof_icsi->GetParameter(2));
+   ffunc_ztof_icsi_11->Print();
+   printf("p0=%lf \np1=%f \np2=%f\n", ffunc_ztof_icsi_11->GetParameter(0), ffunc_ztof_icsi_11->GetParameter(1), ffunc_ztof_icsi_11->GetParameter(2));
+   ffunc_ztof_icsi_4->Print();
+   printf("p0=%lf \np1=%f \np2=%f\n", ffunc_ztof_icsi_4->GetParameter(0), ffunc_ztof_icsi_4->GetParameter(1), ffunc_ztof_icsi_4->GetParameter(2));
 }
