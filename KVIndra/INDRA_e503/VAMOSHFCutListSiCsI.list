@@ -1,2 +1,6 @@
 # List of *.root files containing cuts for beam pulse corrections on ToF
 HFCutFile_DeltaE_ToF_SiCsI_all.root
+HFCutFile_AE_AoQ_SiCsI_4848.root
+HFCutFile_AE_AoQ_SiCsI_4840.root
+HFCutFile_AE_AoQ_SiCsI_4048.root
+HFCutFile_AE_AoQ_SiCsI_4040.root
