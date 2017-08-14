@@ -157,10 +157,8 @@ void KVVAMOSDataCorrection_e503::Init()
          fkIsInit = kTRUE;
 
          //debug
-         //if (fkverbose) {
          Info("Init", "... printing informations from initialisation ...\n");
          PrintInitInfos();
-         //}
       }
 
       else Error("Init", "... no run number set , will do nothing ...");
@@ -997,7 +995,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsDeltaE_ToF(KVVAMOSReconNuc*
       }
 
       else {
-         if (fkverbose) Info("ApplyHFCorrections_DeltaE_ToF", "... IDCode=%d, not corrections will be applied ...", idc);
+         if (fkverbose) Info("ApplyHFCorrections_DeltaE_ToF", "... IDCode=%d, no corrections will be applied ...", idc);
          return kFALSE;
       }
    }
@@ -1063,7 +1061,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsDeltaE_ToF(KVVAMOSReconNuc*
                  nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
          }
 
-         Int_t nHF = vec->at(nn);
+         Float_t nHF = vec->at(nn);
          nuc->SetCorrectedToF(tof + nHF * gVamos->GetBeamPeriod());
 
          Double_t AoQ = nuc->GetBrho() * KVParticle::C() * 10. / nuc->GetCorrectedBeta() / nuc->GetCorrectedGamma() / KVNucleus::u();
@@ -1074,7 +1072,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsDeltaE_ToF(KVVAMOSReconNuc*
          nuc->SetCorrected(kTRUE);
 
          if (fkverbose) {
-            Info("ApplyHFCorrections_DeltaE_ToF", "... after HF ToF corrections applied with cut '%s' ... CorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+            Info("ApplyHFCorrections_DeltaE_ToF", "... after HF ToF corrections applied with cut '%s' ...\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
                  cut->GetName(), nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
          }
 
@@ -1109,7 +1107,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsAE_AoverQ(KVVAMOSReconNuc* 
       }
 
       else {
-         if (fkverbose) Info("ApplyHFCorrectionsAE_AoverQ", "... IDCode=%d, not corrections will be applied ...", idc);
+         if (fkverbose) Info("ApplyHFCorrectionsAE_AoverQ", "... IDCode=%d, no corrections will be applied ...", idc);
          return kFALSE;
       }
    }
@@ -1141,7 +1139,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsAE_AoverQ(KVVAMOSReconNuc* 
       Int_t IDCode          = (((TObjString*) obj_idc->At(0))->String()).Atoi();
 
       if (cut->IsInside(aoq, ae) && IDCode == idc) { //inside an associated cut, apply corrections
-         Int_t nHF = vec->at(nn);
+         Float_t nHF = vec->at(nn);
 
          //debug
          if (fkverbose) {
@@ -1160,7 +1158,7 @@ Bool_t KVVAMOSDataCorrection_e503::ApplyHFCorrectionsAE_AoverQ(KVVAMOSReconNuc* 
          nuc->SetCorrected(kTRUE);
 
          if (fkverbose) {
-            Info("ApplyHFCorrectionsAE_AoverQ", "... after ToF HF corrections applied with cut '%s' ... CorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
+            Info("ApplyHFCorrectionsAE_AoverQ", "... after ToF HF corrections applied with cut '%s' ...\nCorrToF=%lf, CorrPath=%lf, CorrAE=%lf, CorrAoQ=%lf",
                  cut->GetName(), nuc->GetCorrectedToF(), nuc->GetCorrectedPath(), nuc->GetCorrectedRealAE(), nuc->GetCorrectedRealAoverQ());
          }
 
@@ -1697,14 +1695,14 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    printf("%d DeltaE-ToF cuts set\n", GetNCutHFSiCsI_DeltaE_ToF());
    if (fkverbose) {
       KVHashList* ll = (KVHashList*) flist_HFcuts_sicsi->At(0);
-      printf("list of cuts follow:\n");
+      printf("list of cuts follow:\n\n");
       Int_t ii = 0;
       TCutG* cut = NULL;
       for (std::vector<Float_t>::iterator it = fvec_nHF_DE_ToF_sicsi.begin(); it != fvec_nHF_DE_ToF_sicsi.end(); ++it) {
-         Int_t nHF = *it;
+         Float_t nHF = *it;
          cut       = (TCutG*) ll->At(ii);
          assert(cut);
-         printf("nHF=%d\n", nHF);
+         printf("cut_name='%s' -> nHF=%lf\n", cut->GetName(), nHF);
          cut->Print();
          printf("\n");
          ii++;
@@ -1713,15 +1711,15 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
 
    printf("%d AE-AoQ cuts set\n", GetNCutHFSiCsI_AE_AoverQ());
    if (fkverbose) {
-      KVHashList* ll = (KVHashList*) flist_HFcuts_sicsi->At(0);
-      printf("list of cuts follow:\n");
+      KVHashList* ll = (KVHashList*) flist_HFcuts_sicsi->At(1);
+      printf("list of cuts follow:\n\n");
       Int_t ii = 0;
       TCutG* cut = NULL;
       for (std::vector<Float_t>::iterator it = fvec_nHF_AE_AoQ_sicsi.begin(); it != fvec_nHF_AE_AoQ_sicsi.end(); ++it) {
-         Int_t nHF = *it;
+         Float_t nHF = *it;
          cut       = (TCutG*) ll->At(ii);
          assert(cut);
-         printf("nHF=%d\n", nHF);
+         printf("cut_name='%s' -> nHF=%lf\n", cut->GetName(), nHF);
          cut->Print();
          printf("\n");
          ii++;
@@ -1731,15 +1729,15 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    printf("\n->IC-Si:\n");
    printf("%d DeltaE-ToF cuts set\n", GetNCutHFICSi_DeltaE_ToF());
    if (fkverbose) {
-      KVHashList* ll = (KVHashList*) flist_HFcuts_sicsi->At(1);
-      printf("list of cuts follow:\n");
+      KVHashList* ll = (KVHashList*) flist_HFcuts_icsi->At(0);
+      printf("list of cuts follow:\n\n");
       Int_t ii = 0;
       TCutG* cut = NULL;
       for (std::vector<Float_t>::iterator it = fvec_nHF_DE_ToF_icsi.begin(); it != fvec_nHF_DE_ToF_icsi.end(); ++it) {
-         Int_t nHF = *it;
+         Float_t nHF = *it;
          cut       = (TCutG*) ll->At(ii);
          assert(cut);
-         printf("nHF=%d\n", nHF);
+         printf("cut_name='%s' -> nHF=%lf\n", cut->GetName(), nHF);
          cut->Print();
          printf("\n");
          ii++;
@@ -1748,15 +1746,15 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
 
    printf("%d AE-AoQ cuts set\n", GetNCutHFICSi_AE_AoverQ());
    if (fkverbose) {
-      KVHashList* ll = (KVHashList*) flist_HFcuts_sicsi->At(1);
-      printf("list of cuts follow:\n");
+      KVHashList* ll = (KVHashList*) flist_HFcuts_icsi->At(1);
+      printf("list of cuts follow:\n\n");
       Int_t ii = 0;
       TCutG* cut = NULL;
       for (std::vector<Float_t>::iterator it = fvec_nHF_AE_AoQ_icsi.begin(); it != fvec_nHF_AE_AoQ_icsi.end(); ++it) {
-         Int_t nHF = *it;
+         Float_t nHF = *it;
          cut       = (TCutG*) ll->At(ii);
          assert(cut);
-         printf("nHF=%d\n", nHF);
+         printf("cut_name='%s' -> nHF=%lf\n", cut->GetName(), nHF);
          cut->Print();
          printf("\n");
          ii++;
@@ -1770,8 +1768,7 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    printf("tof_corr=%lf ns\n", ftof_corr_icsi);
    printf("%d cuts set\n", flist_aoq_cut_icsi->GetEntries());
    if (fkverbose) {
-      flist_aoq_cut_sicsi->ls();
-      printf("list of cuts follows:\n");
+      printf("list of cuts follows:\n\n");
 
       KVHashList* ll0 = NULL;
       TIter it0(flist_aoq_cut_sicsi);
@@ -1785,8 +1782,7 @@ void KVVAMOSDataCorrection_e503::PrintInitInfos()
    printf("tof_corr=%lf ns\n", ftof_corr_icsi);
    printf("%d cuts set\n", flist_aoq_cut_icsi->GetEntries());
    if (fkverbose) {
-      flist_aoq_cut_icsi->ls();
-      printf("list of cuts follows:\n");
+      printf("list of cuts follows:\n\n");
 
       KVHashList* ll1 = NULL;
       TIter it1(flist_aoq_cut_icsi);
