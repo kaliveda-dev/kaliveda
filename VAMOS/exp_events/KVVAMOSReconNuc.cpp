@@ -1084,10 +1084,10 @@ void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
    //
    //Here we only modify the mass of the nucleus from the corrected
    //values...
-
-   //Since changing mass is done by leaving momentum unchanged, the kinetic
+   //Also, since changing mass is done by leaving momentum unchanged, the kinetic
    //energy is changed too.
    //Keep its value and set it again at the end.
+
    Double_t KE = GetCorrectedEnergy();
    SetRealA(GetCorrectedRealA());
    SetA(GetCorrectedA());

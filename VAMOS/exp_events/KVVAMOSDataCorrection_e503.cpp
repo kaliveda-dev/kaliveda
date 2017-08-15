@@ -1678,9 +1678,8 @@ Bool_t KVVAMOSDataCorrection_e503::IdentifyCorrectedNucleus(KVVAMOSReconNuc* nuc
                      nuc->SetCorrectedRealA(aa);
                      ok = kTRUE;
                      if (fkverbose) {
-                        printf("AFTER: CorrRealAoQ=%lf \nCorrRealQ=%lf, CorrQ=%d, CorrRealA=%lf, CorrA=%d\n",
-                               nuc->GetCorrectedRealAoverQ(),
-                               nuc->GetCorrectedRealQ(), nuc->GetCorrectedQ(), nuc->GetCorrectedRealA(), nuc->GetCorrectedA());
+                        printf("AFTER: CorrRealAoQ=%lf, CorrRealQ=%lf, CorrQ=%d, CorrRealA=%lf, CorrA=%d\n",
+                               nuc->GetCorrectedRealAoverQ(), nuc->GetCorrectedRealQ(), nuc->GetCorrectedQ(), nuc->GetCorrectedRealA(), nuc->GetCorrectedA());
                      }
                   }
                }
