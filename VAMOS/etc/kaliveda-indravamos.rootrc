@@ -175,7 +175,7 @@ INDRA_e494s.IdentificationParameterFile.VAMOS.CHI-SI:  grilles_VAMOS_IC_Si.dat
 INDRA_e494s.IdentificationParameterFile.VAMOS.QA.SI:   grilles_VAMOS_QA.dat
 ###############################################
 # pour FocalPlanVamos
-INDRA_e503.ActiveIdentifications:       CSI SI-CSI CI-SI CI-CSI VAMOS.CHI-SI VAMOS.SI-CSI VAMOS.QA.CSI 
+INDRA_e503.ActiveIdentifications:       CSI SI-CSI CI-SI CI-CSI VAMOS.CHI-SI VAMOS.SI-CSI VAMOS.QA.CSI VAMOS.QA.SI
 INDRA_e494s.ActiveIdentifications:      CI-SI CI-CSI SI-CSI CSI CI-SI75 SI75-SILI SILI-CSI VAMOS.CHI-SI VAMOS.QA.SI
 
 #================================ Plugins for detectors

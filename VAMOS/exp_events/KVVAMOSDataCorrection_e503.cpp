@@ -1640,7 +1640,7 @@ Bool_t KVVAMOSDataCorrection_e503::IdentifyCorrectedNucleus(KVVAMOSReconNuc* nuc
             Bool_t idt_ok = kFALSE;
 
             if ((nuc->GetIDCode() == 3) && (name.Contains("VID_QA_CSI"))) idt_ok = kTRUE;
-            else if (((nuc->GetIDCode() == 4) || (nuc->GetIDCode() == 11)) && (name.Contains("VID_QA_CSI"))) idt_ok = kTRUE;
+            else if (((nuc->GetIDCode() == 4) || (nuc->GetIDCode() == 11)) && (name.Contains("VID_QA_SI"))) idt_ok = kTRUE;
 
             //Corresponding KVIDQA found
             if (idt_ok) {
