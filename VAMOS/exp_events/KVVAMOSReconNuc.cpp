@@ -1272,7 +1272,8 @@ Int_t  KVVAMOSReconNuc::CalculateNBeamPeriod(Double_t tof, Double_t dist) const
    //Returns the number of time we add/remove the beam pulse period to
    //the time of flight obtained from beam pulse HF
 
-   Double_t alpha = 1. / (GetEnergy() / GetMass() + 1.);
+   //Double_t alpha = 1. / (GetEnergy() / GetMass() + 1.);
+   Double_t alpha = (GetEnergy() / GetMass() + 1.);
    Double_t delta_t = (dist / (C() * TMath::Sqrt(1. - alpha * alpha))) - tof;
    Int_t nn = TMath::Nint(delta_t / gVamos->GetBeamPeriod());
 
