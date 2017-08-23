@@ -1,4 +1,4 @@
 # Transmission coefficients (normalised over 2 Pi in phi lab. ref. frame) *.root files for e503
-# VamosAngle file_name
-0.0 TransCoef_0p0.root
-4.5 TransCoef_4p5.root
+# VamosAngle IDCode file_name
+4.5 4 TransCoef_4p5deg_Interpolated1_SiHarpee.root
+4.5 3 TransCoef_4p5deg_Interpolated1_CsIHarpee.root

@@ -254,7 +254,7 @@ KVDriftChamber.DriftVelocity: 4.84
 KVVAMOS.DetectorGroupFile: VAMOSDetectorGroups.dat
 
 # List of ACQParameter associated to VAMOS
-KVVAMOS.ACQParameterList: TSED1_HF TSED2_HF TSED1_SED2 TSED1_INDRA TSED1_MCP TSI_HF TSI_SED1 TINDRA_SI TINDRA_HF TSI_MCP TMCP_HF
+KVVAMOS.ACQParameterList: TSED1_HF TSED2_HF TSED1_SED2 TSED1_INDRA TSED1_MCP TSI_HF TSI_SED1 TINDRA_SI TINDRA_HF TSI_MCP TMCP_HF SI_IND_61 CSI_IND_1224
 
 # List of Detectors used in the reconstruction of the nucleus focal plan position (Xf,Yf) in VAMOS
 KVVAMOSCodes.FocalPlanReconDetList: SED1 SED2 SI
