@@ -22,7 +22,8 @@ protected:
 
    Int_t fRunNumber; //run number of the VAMOS events analysed (used to access to DT_corr in weight computation)
 
-   KVNumberList fRunList; //runs to use for the weight computation
+   KVNumberList fInputRunList; //full list of runs asked by the user
+   KVNumberList fRunList; //runs OK to use for the weight computation
    KVNumberList fCompRunList; //complementary list of the given run list, based on experimental run list file
    std::vector< std::vector<Float_t> > fvec_infos; //vector of 'run BrhoRef AngleVamos DT scaler' for the runs in fRunList
    std::vector< std::vector<TString> > fvec_TCfiles; //vector of info <VamosAngle, IDCode, path> for each VamosAngle used in weight computation
@@ -86,6 +87,16 @@ public:
    }
 
    Float_t GetWeight(Float_t brho_exp, Float_t thetaI_exp, Int_t idcode);
+
+   KVNumberList* GetInputNumberList() {
+      return &fInputRunList;   //return input run list
+   }
+   KVNumberList* GetNumberList() {
+      return &fRunList;   //return list of runs OK (i.e runs defined in the run file of the data set)
+   }
+   KVNumberList* GetComplementaryNumberList() {
+      return &fCompRunList;   //return complementary run list of the input list (i.e runs not defined in the run file of the data set)
+   }
 
 
    ClassDef(KVVAMOSWeightFinder, 1) //Class used to compute normalisation weights for VAMOS events

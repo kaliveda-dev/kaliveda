@@ -81,6 +81,7 @@ void KVVAMOSWeightFinder::cd()
 void KVVAMOSWeightFinder::SetRunList(KVNumberList& nl)
 {
    fRunList.Clear();
+   fInputRunList = nl;
    fRunList = nl;
    fCompRunList = nl;
 }
@@ -97,6 +98,7 @@ void KVVAMOSWeightFinder::Init()
       SortInfoVector();
       ReadTransCoefFileListInDataSet();
       if (CheckTransCoefSteps()) fkIsInit = kTRUE;
+      gVAMOSWeightFinder = this;
    } else fkIsInit = kFALSE;
 
    if (!fkIsInit) Warning("Init", "... problem in initialisation: runlist is empty OR/AND current run number<0 OR/AND run list doesn't contain the current run ...");
@@ -150,7 +152,9 @@ void KVVAMOSWeightFinder::ReadInformations(std::ifstream& file)
       if (newline.compare(0, 1, "#") != 0) {
          sscanf(newline.c_str(), "%f %f %f %f %f", &run, &brho, &vamos_angle, &dt, &scalers);
 
-         if (fRunList.Contains((Int_t) run)) {
+         //run is in the run file of KaliVeda, we can use it
+         //We remove the OK run from the complementary list
+         if (fInputRunList.Contains((Int_t) run)) {
             std::vector<Float_t> line;
             line.push_back(run);
             line.push_back(brho);
@@ -160,6 +164,11 @@ void KVVAMOSWeightFinder::ReadInformations(std::ifstream& file)
             fvec_infos.push_back(line);
 
             fCompRunList.Remove((Int_t) run);
+         }
+
+         //run is not in the run file, it must be ignored
+         else {
+            fRunList.Remove((Int_t) run);
          }
       }
    }
@@ -410,7 +419,7 @@ std::pair<Float_t, Float_t> KVVAMOSWeightFinder::GetTransCoef(Float_t VamosAngle
    //
    //Return a pair of <trans. coef., trans. coef. variance>
 
-   //Find VamosAngle position in fvec_TCfiles
+   //Find (VamosAngle, IDCode) position in fvec_TCfiles
    Int_t pos = 0;
    Int_t nn  = 0;
    for (std::vector< std::vector<TString> >::iterator it = fvec_TCfiles.begin(); it != fvec_TCfiles.end(); ++it) {
@@ -603,14 +612,14 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
    //    Scaler_i   = value of INDRA scalers for the run i
    //    theta_V    = rotation angle of VAMOS in theta around beam trajectory
 
-   if (fkverbose) Info("GetWeight", "... starting weight computation for VAMOS event with (delta=%f, thetaI=%f, run=%d) ...", brho, thetaI, fRunNumber);
+   if (fkverbose) Info("GetWeight", "... starting weight computation for VAMOS event with (delta=%f, thetaI=%f, IDCode=%d, run=%d) ...", brho, thetaI, idcode, fRunNumber);
 
    Float_t num     = 0.;
    Float_t denum   = 0.;
    Float_t dt_run  = GetDeadTime(fRunNumber); //default '-666.' value will be returned if not found
    Float_t dt_corr = 1. / (1. - dt_run);
 
-   if (dt_run >= 0.) {//DT found from the event run_number
+   if (dt_run >= 0) {//DT found from the event run_number
       //Compute W(Brho, ThetaI) from runlist
       fRunList.Begin();
       while (!fRunList.End()) {
