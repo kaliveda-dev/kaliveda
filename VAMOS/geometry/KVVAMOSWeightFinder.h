@@ -88,13 +88,13 @@ public:
 
    Float_t GetWeight(Float_t brho_exp, Float_t thetaI_exp, Int_t idcode);
 
-   KVNumberList* GetInputNumberList() {
+   KVNumberList* GetInputRunList() {
       return &fInputRunList;   //return input run list
    }
-   KVNumberList* GetNumberList() {
+   KVNumberList* GetRunList() {
       return &fRunList;   //return list of runs OK (i.e runs defined in the run file of the data set)
    }
-   KVNumberList* GetComplementaryNumberList() {
+   KVNumberList* GetComplementaryRunList() {
       return &fCompRunList;   //return complementary run list of the input list (i.e runs not defined in the run file of the data set)
    }
 

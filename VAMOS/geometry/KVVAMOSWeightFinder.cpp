@@ -165,13 +165,11 @@ void KVVAMOSWeightFinder::ReadInformations(std::ifstream& file)
 
             fCompRunList.Remove((Int_t) run);
          }
-
-         //run is not in the run file, it must be ignored
-         else {
-            fRunList.Remove((Int_t) run);
-         }
       }
    }
+
+   //now remove the not ok run to fRunList
+   fRunList.Remove(fCompRunList);
 
    //look at complementary list:
    //any run in this list doesn't exist in the
