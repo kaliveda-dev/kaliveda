@@ -1106,12 +1106,16 @@ void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
    SetRealQ(GetCorrectedRealQ());
    SetQ(GetCorrectedQ());
    //then set momentum from velocity in cartesian coordinates
+   Double_t gamma_new = 1. / KVParticle::C() *  GetCorrectedGamma();
    Double_t vx = GetCorrectedVelocity() * TMath::Sin(GetPhiI() * TMath::DegToRad()) * TMath::Cos(GetThetaI() * TMath::DegToRad());
    Double_t vy = GetCorrectedVelocity() * TMath::Sin(GetPhiI() * TMath::DegToRad()) * TMath::Sin(GetThetaI() * TMath::DegToRad());
    Double_t vz = GetCorrectedVelocity() * TMath::Cos(GetPhiI() * TMath::DegToRad());
    TVector3 vvec(vx, vy, vz);
-   TVector3 pvec = GetMass() * GetCorrectedGamma() * vvec;
+   TVector3 pvec = GetMass() * gamma_new * vvec;
    SetMomentum(pvec);
+
+   //debug
+   //Info("SetCorrectedQandAidentification", "Velocity=%lf, KE=%lf, new_Velocity=%lf, newKE=%lf", GetCorrectedVelocity(), GetCorrectedEnergy(), GetVelocity().Mag(), GetEnergy());
 
    SetIsCorrectedQandAidentified();
 }
