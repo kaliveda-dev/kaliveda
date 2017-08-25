@@ -479,7 +479,7 @@ std::pair<Float_t, Float_t> KVVAMOSWeightFinder::GetTransCoef(Float_t VamosAngle
 
       //debug
       if (fkverbose) {
-         Info("GetTransCoef", "... input: (VamosAngle=%f, IDCode=%d, delta=%f, thetaI=%f) | closest: (delta=%f, thetaI=%f) | chain_entry: (delta=%f, thetaI%f) ...",
+         Info("GetTransCoef", "... input: (VamosAngle=%f, IDCode=%d, delta=%f, thetaI=%f) | closest: (delta=%f, thetaI=%f) | chain_entry: (delta=%f, thetaI=%f) ...",
               VamosAngle_deg, idc, delta, thetaI_rad, GetClosestValue(delta, line.at(3)), GetClosestValue(thetaI_rad, line.at(7)), dd, tt);
       }
 
@@ -572,10 +572,10 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
 {
    //Compute the weight for a given experimental VAMOS event,
    //using the identified VAMOS nucleus informations, which means:
-   //(bro_exp, thetaI_rad) where 'brho' is the magnetic rigidity of the nucleus (in T.m),
-   //and 'thetaI' is the experimental theta angle in rad and in lab. ref. frame (in
-   //INDRA convention) of the nucleus (and also the current run number this events
-   //belongs to, set as an argument of the class constructor).
+   //(bro_exp, thetaI_rad) where 'brho' is the reconstructed magnetic rigidity of
+   //the nucleus (in T.m), and 'thetaI' is the experimental theta angle (in rad)
+   //in lab. ref. frame (in INDRA convention) of the nucleus (and also the current
+   //run number this events belongs to, set as an argument of the class constructor).
    //
    //The weight will be computed from:
    //- the chosen run list (see SetRunList() method) and the associated experimental
@@ -610,7 +610,7 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
    //    Scaler_i   = value of INDRA scalers for the run i
    //    theta_V    = rotation angle of VAMOS in theta around beam trajectory
 
-   if (fkverbose) Info("GetWeight", "... starting weight computation for VAMOS event with (delta=%f, thetaI=%f, IDCode=%d, run=%d) ...", brho, thetaI, idcode, fRunNumber);
+   if (fkverbose) Info("GetWeight", "... starting weight computation for VAMOS event with (brho=%f [T.m], thetaI=%f [rad], IDCode=%d, run=%d) ...", brho, thetaI, idcode, fRunNumber);
 
    Float_t num     = 0.;
    Float_t denum   = 0.;
@@ -622,7 +622,6 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
       fRunList.Begin();
       while (!fRunList.End()) {
          Int_t next_run = fRunList.Next();
-
          Float_t brho_ref = GetBrhoRef(next_run);
          Float_t scaler   = GetScalerINDRA(next_run);
          Float_t thetav   = GetThetaVamos(next_run);
@@ -630,20 +629,19 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
          Float_t tc  = pair_tc.first; // trans. coef.
          Float_t dtc = pair_tc.second; //variance of trans. coef.
 
-         if ((brho_ref > 0) && (scaler > 0)) {//(brho_ref, scaler) is OK for the given run
-            if ((tc >= 0.)) { //trans. coef. exists for the given (ThetaVamos, delta, thetaI)
-               denum += scaler * tc;
-            }
-
+         if (scaler > 0) {
             //if trans. coef. doesn't exist for the given (ThetaVamos, delta, thetaI),
             //we still consider the scaler in the numerator (i.e tc=0.)
             num += scaler;
+
+            //if (brho_ref, scaler) is OK for the given run and trans. coef. exists for the given (ThetaVamos, delta, thetaI, IDCode)
+            if ((brho_ref > 0) && (tc >= 0.)) denum += scaler * tc;
          }
 
          if (fkverbose) {
             Info("GetWeight", "... (next_run=%d, brho=%lf, thetaI=%lf) -> (brho_ref=%lf, thetav=%lf, scaler=%lf, tc=%lf, var_tc=%lf) ...",
                  next_run, brho, thetaI, brho_ref, thetav, scaler, tc, dtc);
-            Info("GetWeight", "... numerator=%lf, denumerator=%lf", num, denum);
+            Info("GetWeight", "... numerator=%lf, denumerator=%lf\n", num, denum);
          }
       }
 

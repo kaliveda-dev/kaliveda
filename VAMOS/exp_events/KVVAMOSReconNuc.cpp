@@ -1082,20 +1082,36 @@ void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
    //Corrected observables must be set in the KVVAMOSDataCorrection inherited
    //class set to 'fDataCorr' pointer.
    //
-   //Here we only modify the mass of the nucleus from the corrected
-   //values...
-   //Also, since changing mass is done by leaving momentum unchanged, the kinetic
-   //energy is changed too.
-   //Keep its value and set it again at the end.
+   //To do so we can either: 1) use energy losses and identified mass
+   //                        2) use velocity from ToF and identified mass (better resolution)
 
-   Double_t KE = GetCorrectedEnergy();
+
+//   //1)-----Set energy from energy losses (deprecated)-----
+//   //Since changing mass is done by leaving momentum unchanged, the kinetic
+//   //energy is changed too.
+//   //Keep its value and set it again at the end.
+//    Double_t KE = GetCorrectedEnergy();
+//    SetRealA(GetCorrectedRealA());
+//    SetA(GetCorrectedA());
+//    SetEnergy(KE);
+//    SetTheta(GetThetaI());
+//    SetPhi(GetPhiI());
+//    SetRealQ(GetCorrectedRealQ());
+//    SetQ(GetCorrectedQ());
+
+   //2)-----Set energy from velocity (ToF measurement)-----
+   //first set mass (so GetMass() returns the expected mass)
    SetRealA(GetCorrectedRealA());
    SetA(GetCorrectedA());
-   SetEnergy(KE);
-   SetTheta(GetThetaI());
-   SetPhi(GetPhiI());
    SetRealQ(GetCorrectedRealQ());
    SetQ(GetCorrectedQ());
+   //then set momentum from velocity in cartesian coordinates
+   Double_t vx = GetCorrectedVelocity() * TMath::Sin(GetPhiI() * TMath::DegToRad()) * TMath::Cos(GetThetaI() * TMath::DegToRad());
+   Double_t vy = GetCorrectedVelocity() * TMath::Sin(GetPhiI() * TMath::DegToRad()) * TMath::Sin(GetThetaI() * TMath::DegToRad());
+   Double_t vz = GetCorrectedVelocity() * TMath::Cos(GetPhiI() * TMath::DegToRad());
+   TVector3 vvec(vx, vy, vz);
+   TVector3 pvec = GetMass() * GetCorrectedGamma() * vvec;
+   SetMomentum(pvec);
 
    SetIsCorrectedQandAidentified();
 }
