@@ -1104,6 +1104,7 @@ void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
    SetAMeasured(kTRUE);
    SetRealA(GetCorrectedRealA());
    SetA(GetCorrectedA());
+   SetQMeasured(kTRUE);
    SetRealQ(GetCorrectedRealQ());
    SetQ(GetCorrectedQ());
    //then set momentum from velocity in cartesian coordinates
