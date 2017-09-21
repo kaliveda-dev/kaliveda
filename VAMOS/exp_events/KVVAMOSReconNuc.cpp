@@ -1101,6 +1101,7 @@ void KVVAMOSReconNuc::SetCorrectedQandAIdentification()
 
    //2)-----Set energy from velocity (ToF measurement)-----
    //first set mass (so GetMass() returns the expected mass)
+   SetAMeasured(kTRUE);
    SetRealA(GetCorrectedRealA());
    SetA(GetCorrectedA());
    SetRealQ(GetCorrectedRealQ());

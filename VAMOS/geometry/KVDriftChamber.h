@@ -22,7 +22,7 @@ private:
 
 protected:
 
-   TH1F***   fQ;  //! array of TH1F for calibrated charge [raw, calibrated, clean][Chamber 1, Chamber 2]
+   TH1F***    fQ; //! array of TH1F for calibrated charge [raw, calibrated, clean][Chamber 1, Chamber 2]
    Double_t   fRawPosX[3]; //! Measured X raw position for both Chambers
    Double_t   fERawPosX[3]; //! Error of measured X raw position for both Chambers
    Double_t   fRawPosY; //!  Measured Y raw position
