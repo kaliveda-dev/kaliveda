@@ -615,7 +615,6 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
    Float_t num     = 0.;
    Float_t denum   = 0.;
    Float_t dt_run  = GetDeadTime(fRunNumber); //default '-666.' value will be returned if not found
-   Float_t dt_corr = 1. / (1. - dt_run);
 
    if (dt_run >= 0) {//DT found from the event run_number
       //Compute W(Brho, ThetaI) from runlist
@@ -635,7 +634,7 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
             num += scaler;
 
             //if (brho_ref, scaler) is OK for the given run and trans. coef. exists for the given (ThetaVamos, delta, thetaI, IDCode)
-            if ((brho_ref > 0) && (tc >= 0.)) denum += scaler * tc;
+            if ((brho_ref > 0) && (tc >= 0.)) denum += scaler * tc * dt_run;
          }
 
          if (fkverbose) {
@@ -646,7 +645,7 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
       }
 
       //return Weight
-      Float_t weight = (denum > 0 ? num / denum * dt_corr : -666.);
+      Float_t weight = (denum > 0 ? num / denum : -666.);
       return weight;
    }
 
