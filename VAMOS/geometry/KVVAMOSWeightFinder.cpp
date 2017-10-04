@@ -27,6 +27,22 @@ KVVAMOSWeightFinder::KVVAMOSWeightFinder(Int_t run_number = -1) : KVBase("VAMOSW
    fkIsInit   = kFALSE;
    fkverbose  = kFALSE;
 
+   fktc_lim_set = kFALSE;
+   ftc_min = -666.;
+   ftc_max = -666.;
+
+   fchain = new TChain("tree");
+}
+//____________________________________________________________________________//
+
+KVVAMOSWeightFinder::KVVAMOSWeightFinder(Int_t run_number, Float_t tc_min, Float_t tc_max) : KVBase("VAMOSWeightFinder", "Normalisation weight estimator of VAMOS events")
+{
+   fRunNumber = run_number;
+   fkIsInit   = kFALSE;
+   fkverbose  = kFALSE;
+
+   SetTransCoefLimits(tc_min, tc_max);
+
    fchain = new TChain("tree");
 }
 //____________________________________________________________________________//
@@ -204,7 +220,8 @@ Bool_t KVVAMOSWeightFinder::SortVectors(const std::vector<Float_t>& vector1, con
       else return kFALSE;
    }
 
-   return kTRUE;
+   else return kFALSE;
+   return kFALSE;
 }
 //____________________________________________________________________________//
 
@@ -634,7 +651,14 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
             num += scaler;
 
             //if (brho_ref, scaler) is OK for the given run and trans. coef. exists for the given (ThetaVamos, delta, thetaI, IDCode)
-            if ((brho_ref > 0) && (tc >= 0.)) denum += scaler * tc * dt_run;
+            if ((brho_ref > 0) && (tc > 0.) && (dtc > 0.)) {
+               //if limits on trans.coef. were set by the user
+               if (AreTransCoefLimitsSet()) {
+                  if ((tc > ftc_min) && (tc < ftc_max)) denum += scaler * tc * dt_run;
+               }
+               //no limits set
+               else  denum += scaler * tc * dt_run;
+            }
          }
 
          if (fkverbose) {
@@ -645,7 +669,7 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
       }
 
       //return Weight
-      Float_t weight = (denum > 0 ? num / denum : -666.);
+      Float_t weight = (denum > 0. ? num / denum : -666.);
       return weight;
    }
 
@@ -658,4 +682,13 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
 
       return -666.;
    }
+}
+
+//____________________________________________________________________________//
+void KVVAMOSWeightFinder::SetTransCoefLimits(Float_t tc_min, Float_t tc_max)
+{
+   //can be used by the user for setting limits on trans. coef. values
+   fktc_lim_set = kTRUE;
+   ftc_min = tc_min;
+   ftc_max = tc_max;
 }

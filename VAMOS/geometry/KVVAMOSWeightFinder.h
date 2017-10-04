@@ -30,6 +30,10 @@ protected:
    std::vector< std::vector<Float_t> > fvec_TCsteps; //vector of steps associated to each trans. coef. file
    TChain* fchain; //chain of trans. coef. TTrees
 
+   Bool_t  fktc_lim_set;//=kTRUE if tc limits are set by the user
+   Float_t ftc_min;    //(set by the user) minimum value accepted for the transmission coef in weight computation
+   Float_t ftc_max;    //(set by the user) maximum value accepted for the transmission coef in weight computation
+
    //Experimental infos research
    void                 ReadRunListInDataSet();
    void                 ReadInformations(std::ifstream& file);
@@ -47,6 +51,16 @@ protected:
       return val_step * TMath::Nint(val_exp / val_step);
    }
    Bool_t  CheckTransCoefSteps();
+   void SetTransCoefLimits(Float_t tc_min, Float_t tc_max); //can be used by the user to set limits on trans. coef. in weight computation
+   Float_t GetTransCoefLimitMin() {
+      return ftc_min;
+   }
+   Float_t GetTransCoefLimitMax() {
+      return ftc_max;
+   }
+   Bool_t  AreTransCoefLimitsSet() {
+      return fktc_lim_set;
+   }
 
    //Internal sorting
    void   SortInfoVector();
@@ -54,6 +68,7 @@ protected:
 
 public:
    KVVAMOSWeightFinder(Int_t run_number);
+   KVVAMOSWeightFinder(Int_t run_number, Float_t tc_min, Float_t tc_max);
    KVVAMOSWeightFinder(const KVVAMOSWeightFinder&);
    virtual ~KVVAMOSWeightFinder();
    virtual void Copy(TObject&) const;
