@@ -161,12 +161,13 @@ void KVVAMOSWeightFinder::ReadInformations(std::ifstream& file)
    Float_t vamos_angle;
    Float_t dt;
    Float_t scalers;
+   Float_t target_density;
 
    std::string newline;
    while (std::getline(file, newline)) {
       //Ignore comments in the file
       if (newline.compare(0, 1, "#") != 0) {
-         sscanf(newline.c_str(), "%f %f %f %f %f", &run, &brho, &vamos_angle, &dt, &scalers);
+         sscanf(newline.c_str(), "%f %f %f %f %f %f", &run, &brho, &vamos_angle, &dt, &scalers, &target_density);
 
          //run is in the run file of KaliVeda, we can use it
          //We remove the OK run from the complementary list
@@ -177,6 +178,7 @@ void KVVAMOSWeightFinder::ReadInformations(std::ifstream& file)
             line.push_back(vamos_angle);
             line.push_back(dt);
             line.push_back(scalers);
+            line.push_back(target_density);
             fvec_infos.push_back(line);
 
             fCompRunList.Remove((Int_t) run);
@@ -539,12 +541,12 @@ void KVVAMOSWeightFinder::PrintRunInfoVector()
    //'Run   BrhoRef   ThetaVamos   DeadTime   Scalers_INDRA' for each run,
    //and used for weight computation.
 
-   Info("PrintRunInfoVector", "... printing list of available run infos ...\n(Run, BrhoRef ThetaVamos DeadTime Scalers_INDRA)\n\n");
+   Info("PrintRunInfoVector", "... printing list of available run infos ...\n(Run, BrhoRef ThetaVamos DeadTime Scalers_INDRA TargetDensity)\n\n");
 
    Int_t num = 0;
    for (std::vector< std::vector<Float_t> >::iterator it = fvec_infos.begin(); it != fvec_infos.end(); ++it) {
       std::vector<Float_t> line = *it;
-      printf("[%d] %d %f %f %f %d\n", num, (int) line.at(0), line.at(1), line.at(2), line.at(3), (int) line.at(4));
+      printf("[%d] %d %f %f %f %d %f\n", num, (int) line.at(0), line.at(1), line.at(2), line.at(3), (int) line.at(4), line.at(5));
       num++;
    }
 }
@@ -641,6 +643,7 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
          Float_t brho_ref = GetBrhoRef(next_run);
          Float_t scaler   = GetScalerINDRA(next_run);
          Float_t thetav   = GetThetaVamos(next_run);
+         Float_t density  = GetTargetDensity(next_run);
          std::pair<Float_t, Float_t> pair_tc = GetTransCoef(thetav, idcode, brho / brho_ref, thetaI);
          Float_t tc  = pair_tc.first; // trans. coef.
          Float_t dtc = pair_tc.second; //variance of trans. coef.
@@ -651,13 +654,13 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
             num += scaler;
 
             //if (brho_ref, scaler) is OK for the given run and trans. coef. exists for the given (ThetaVamos, delta, thetaI, IDCode)
-            if ((brho_ref > 0) && (tc > 0.) && (dtc > 0.)) {
+            if ((brho_ref > 0) && (tc > 0.) && (dtc > 0.) && (density > 0.)) {
                //if limits on trans.coef. were set by the user
                if (AreTransCoefLimitsSet()) {
                   if ((tc > ftc_min) && (tc < ftc_max)) denum += scaler * tc * dt_run;
                }
                //no limits set
-               else  denum += scaler * tc * dt_run;
+               else  denum += scaler * tc * dt_run / density;
             }
          }
 

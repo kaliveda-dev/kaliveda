@@ -90,6 +90,9 @@ public:
    Float_t GetBrhoRef(Int_t run_number) {
       return GetInfoValue(run_number, 1);
    }
+   Float_t GetTargetDensity(Int_t run_number) {
+      return GetInfoValue(run_number, 5);
+   }
 
    std::pair<Float_t, Float_t> GetTransCoef(Float_t VamosAngle_deg, Int_t idcode, Float_t delta, Float_t thetaI_rad);
 
