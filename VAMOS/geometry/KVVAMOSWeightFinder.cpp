@@ -660,7 +660,7 @@ Float_t KVVAMOSWeightFinder::GetWeight(Float_t brho, Float_t thetaI, Int_t idcod
                   if ((tc > ftc_min) && (tc < ftc_max)) denum += scaler * tc * dt_run;
                }
                //no limits set
-               else  denum += scaler * tc * dt_run / density;
+               else  denum += scaler * tc * dt_run;
             }
          }
 
