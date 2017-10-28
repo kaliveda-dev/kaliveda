@@ -116,6 +116,14 @@ INDRA_e494s_woVAMOS.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_e494s_woVAMOS.HasCalibIdentInfos:   no
 INDRA_e494s_woVAMOS.DataSet.RunFile.DoNotDelete: raw
 
++DataSet:    INDRA_e503_woVAMOS
+INDRA_e503_woVAMOS.DataSet.Title:   Symmetry energy of nuclear EOS (E503) (2007)
+INDRA_e503_woVAMOS.DataSet.RepositoryDir:   e503
+INDRA_e503_woVAMOS.DataSet.RunFileName.raw:    run_%04d.dat%*
+INDRA_e503_woVAMOS.ReconstructedEventClassName:   KVINDRAReconEvent
+INDRA_e503_woVAMOS.HasCalibIdentInfos:   no
+INDRA_e503_woVAMOS.DataSet.RunFile.DoNotDelete: raw
+
 # INDRA analyser for Reconstruction DataAnalysisTask
 Reconstruction.DataAnalysisTask.Analyser:     INDRARawDataRecon
 
@@ -453,6 +461,7 @@ Plugin.KVMultiDetArray:    INDRA_camp1    KVINDRA     KVIndraexp_events    "KVIN
 +Plugin.KVMultiDetArray:    t10_02    KVINDRA4     KVIndraexp_events    "KVINDRA4()"
 +Plugin.KVMultiDetArray:    INDRA_e613    KVINDRA     KVIndraexp_events    "KVINDRA()"
 +Plugin.KVMultiDetArray:    INDRA_e494s_woVAMOS    KVINDRA     KVIndraexp_events  "KVINDRA()"
++Plugin.KVMultiDetArray:    INDRA_e503_woVAMOS    KVINDRA     KVIndraexp_events  "KVINDRA()"
 
 # Acceptable identification & energy codes for INDRA reconstructed particles
 # Dataset-dependent values can be set with [Dataset].INDRA.ReconstructedNuclei.Accept[ID/E]Codes
@@ -476,6 +485,7 @@ Plugin.KVDataBase:    INDRA_camp1    KVINDRADB1     KVIndradb    "KVINDRADB1(con
 +Plugin.KVDataBase:    INDRA_camp5    KVINDRADB     KVIndradb    "KVINDRADB(const Char_t*)"
 +Plugin.KVDataBase:    t10_02   KVINDRADB     KVIndradb    "KVINDRADB(const Char_t*)"
 +Plugin.KVDataBase:    INDRA_e494s_woVAMOS    KVINDRADB     KVIndradb  "KVINDRADB(const Char_t*)"
++Plugin.KVDataBase:    INDRA_e503_woVAMOS    KVINDRADB     KVIndradb  "KVINDRADB(const Char_t*)"
 
 #================================ Plugins for different datasets
 # Each multidetector array has an associated 'KVUpDater' object used to set run parameters.
@@ -488,6 +498,7 @@ Plugin.KVUpDater:    INDRA_e416a    KVINDRAUpDater_e416a     KVIndradb    "KVIND
 +Plugin.KVUpDater:    INDRA_camp*    KVINDRAUpDater     KVIndradb    "KVINDRAUpDater()"
 +Plugin.KVUpDater:    t10_02    KVINDRAUpDater     KVIndradb    "KVINDRAUpDater()"
 +Plugin.KVUpDater:    INDRA_e494s_woVAMOS    KVINDRAUpDater     KVIndradb  "KVINDRAUpDater()"
++Plugin.KVUpDater:    INDRA_e503_woVAMOS    KVINDRAUpDater     KVIndradb  "KVINDRAUpDater()"
 
 #============================== Plugins for identification telescopes
 # The KVMultiDetArray::GetIDTelescopes(KVDetector*de, KVDetector*e) method uses these plugins to
@@ -608,6 +619,7 @@ INDRA_camp4.ActiveIdentifications:      CSI SI-CSI CI-SI CI-CSI CI-SI75 SI75-SIL
 INDRA_camp5.ActiveIdentifications:      CSI SI-CSI SI150-CSI CI-SI CI-CSI CI-SI75 SI75-SILI SILI-CSI
 INDRA_e475s.ActiveIdentifications:      CSI CI-CSI SI-CSI CI-SI
 INDRA_e494s_woVAMOS.ActiveIdentifications:      CSI SI-CSI CI-SI CI-CSI CI-SI75 SI75-SILI SILI-CSI
+INDRA_e503_woVAMOS.ActiveIdentifications:      CSI SI-CSI CI-SI CI-CSI CI-SI75 SI75-SILI SILI-CSI
 INDRA_e613.ActiveIdentifications:   CI-SI CSI SI-CSI
 
 #================================ Plugins for detectors

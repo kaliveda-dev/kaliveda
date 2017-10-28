@@ -1,0 +1,49 @@
+####################################################################
+# Pression des Chio pour la campagne e503 (Paola 0/07/2012)
+# Premiere version, essentiellement les plages de runs ou les ChIo sont :
+# presentes/absentes gonflées/dégonflées
+# format du fichier :                                              #
+#  Run Range : first-last domaine de validité des paramètres       #
+#   suivants                                                       #
+# detector name  pressure 
+#####################################################################
+RunRange  :	30 319 
+4_5	50.0
+6_7	50.0
+8_12	30.0
+13_17	30.0
+RunRange	320 320
+4_5	48.6
+6_7	48.6
+8_12	10.8
+13_17	26.3
+RunRange  :	379 559 
+4_5	50.0
+6_7	50.0
+8_12	30.0
+13_17	30.0
+RunRange  :	560 561
+4_5	25
+6_7	50.0
+8_12	30.0
+13_17	30.0
+RunRange  :	562 562
+4_5	16.0
+6_7	50.0
+8_12	30.0
+13_17	30.0
+RunRange  :	 593 594 
+4_5	50.0
+6_7	50.0
+8_12	30.0
+13_17	30.0
+RunRange  :	595 606
+4_5	46.9
+6_7	49.9
+8_12	25.5
+13_17	27.3
+RunRange  :	 607 636
+4_5	50.0
+6_7	50.0
+8_12	30.0
+13_17	30.0
