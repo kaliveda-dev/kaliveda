@@ -44,7 +44,7 @@ foreach(t ${build_targets})
 endforeach()
 
 #---install built executables
-install(TARGETS ${build_targets} EXPORT ${CMAKE_PROJECT_NAME}Exports RUNTIME DESTINATION bin) 
+install(TARGETS ${build_targets} EXPORT ${CMAKE_PROJECT_NAME}Exports RUNTIME DESTINATION bin)
 
 #---install shell scripts
 set(scripts KVA KaliVeda)

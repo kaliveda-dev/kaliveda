@@ -5,6 +5,11 @@ project(KaliVeda)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}  ${PROJECT_SOURCE_DIR}/cmake)
 
+#-- Fixing warning on Mac OSX due to CMake version
+if(CMAKE_MAJOR_VERSION GREATER 2)
+   set(CMAKE_MACOSX_RPATH 1)
+endif()
+
 #--look for ROOT & all essential libraries
 find_package(ROOT
    REQUIRED Rint Graf Geom Spectrum Proof ProofPlayer Physics Hist

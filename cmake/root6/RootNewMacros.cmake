@@ -4,8 +4,11 @@
 cmake_policy(SET CMP0003 NEW) # See "cmake --help-policy CMP0003" for more details
 cmake_policy(SET CMP0011 NEW) # See "cmake --help-policy CMP0011" for more details
 cmake_policy(SET CMP0009 NEW) # See "cmake --help-policy CMP0009" for more details
+
 if(CMAKE_VERSION VERSION_GREATER 2.8.12)
-  cmake_policy(SET CMP0022 OLD) # See "cmake --help-policy CMP0022" for more details
+  if(NOT APPLE) #-- Avoid warning of OLD policy on Mac OSX
+    cmake_policy(SET CMP0022 OLD) # See "cmake --help-policy CMP0022" for more details
+  endif()
 endif()
 
 set(lib lib)
@@ -46,17 +49,18 @@ else()
       IMPORT_PREFIX ${libprefix} )
 endif()
 
-if(APPLE)
-  if(gnuinstall)
-    set(ROOT_LIBRARY_PROPERTIES ${ROOT_LIBRARY_PROPERTIES}
-         INSTALL_NAME_DIR "${CMAKE_INSTALL_FULL_LIBDIR}"
-         BUILD_WITH_INSTALL_RPATH ON)
-  else()
-    set(ROOT_LIBRARY_PROPERTIES ${ROOT_LIBRARY_PROPERTIES}
-         INSTALL_NAME_DIR "@rpath"
-         BUILD_WITH_INSTALL_RPATH ON)
-  endif()
-endif()
+#-- No more needed on Mac OSX
+#if(APPLE)
+#  if(gnuinstall)
+#    set(ROOT_LIBRARY_PROPERTIES ${ROOT_LIBRARY_PROPERTIES}
+#         INSTALL_NAME_DIR "${CMAKE_INSTALL_FULL_LIBDIR}"
+#         BUILD_WITH_INSTALL_RPATH ON)
+#else()
+#    set(ROOT_LIBRARY_PROPERTIES ${ROOT_LIBRARY_PROPERTIES}
+#         INSTALL_NAME_DIR "@rpath"
+#         BUILD_WITH_INSTALL_RPATH ON)
+#  endif()
+#endif()
 
 #---Modify the behaviour for local and non-local builds--------------------------------------------
 
