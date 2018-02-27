@@ -3,11 +3,14 @@
 #
 # for info: Target List used in experiment
 #   Number     Target      Thickness [mg/cm2]
-#
-#  tu be filled...
-#
-#
-#
+#      2       [empty]           0
+#      3        197Au          328
+#      5         12C           209
+#      6         12C           239
+#      7         40Ca          500
+#      8	 12C	       490
+#     12         CH2           346
+#     14	 27Al	       216
 #
 # Exact Cyclotron beam energies, charge state, Frequency, Rigidity
 # (from machine):
@@ -17,7 +20,7 @@
 #   40Ca@25 MeV/A : 24.7544 MeV/u, 11+, 25.29000 MHz, 0.033707 TM
 #   40Ca@40 MeV/A : 40.2682 MeV/u, 12+, 31.87071 MHz, 0.038938 TM
 #   48Ca@25 MeV/A : 24.7544 MeV/u, 11+, 25.29000 MHz, 0.040446 TM
-#   48Ca@50 MeV/A : ????
+#   48Ca@40 MeV/A : 40.2682 MeV/u, 13+, 31,87070 MHz, 0.043129 TM
 #
 ##################################################
 
