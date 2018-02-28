@@ -16,12 +16,12 @@
 /*The value ERRCON equals (5/SAFETY) raised to the power (1/PGROW), see use below.*/
 
 class KVRungeKutta : public KVBase {
-   static Double_t a2 , a3 , a4 , a5 , a6, b21;
-   static Double_t b31 , b32 , b41, b42 , b43;
-   static Double_t b51, b52 , b53, b54;
+   static Double_t a2, a3, a4, a5, a6, b21;
+   static Double_t b31, b32, b41, b42, b43;
+   static Double_t b51, b52, b53, b54;
    static Double_t b61, b62, b63;
-   static Double_t b64 , b65 , c1 ;
-   static Double_t c3, c4 , c6;
+   static Double_t b64, b65, c1 ;
+   static Double_t c3, c4, c6;
    static Double_t dc5;
 protected:
    Int_t nvar; // number of independent variables/equations

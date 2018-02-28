@@ -29,7 +29,7 @@ KVDataPatch_CorrectEtalonModuleIDCode::~KVDataPatch_CorrectEtalonModuleIDCode()
    // Destructor
 }
 
-Bool_t KVDataPatch_CorrectEtalonModuleIDCode::IsRequired(TString dataset, TString datatype, Int_t , TString dataseries, Int_t datareleasenumber, const TList*)
+Bool_t KVDataPatch_CorrectEtalonModuleIDCode::IsRequired(TString dataset, TString datatype, Int_t, TString dataseries, Int_t datareleasenumber, const TList*)
 {
    // Patch is applied to all runs of INDRA 5th campaign 'root' or 'ident' data
    // written with KaliVeda version 1.8.11

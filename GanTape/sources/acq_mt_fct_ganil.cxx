@@ -111,7 +111,7 @@ int acq_mt_ini_run_c(int Lun, in2p3_buffer_struct* Buff, int Size,
 
       Bloc_number++;
       Size_tempo = Size;
-      Status = acq_mt_read_c(Lun , Buff->Buffer , &Size_tempo);
+      Status = acq_mt_read_c(Lun, Buff->Buffer, &Size_tempo);
       if (Status != ACQ_OK) {
          printf("\n>>> Erreur de lecture du bloc no %d",
                 Bloc_number);
@@ -121,9 +121,9 @@ int acq_mt_ini_run_c(int Lun, in2p3_buffer_struct* Buff, int Size,
          Header[8] = '\0';     /* Pour delimiter la 'string' */
       }
 
-      if (strcmp(Header , FILEH_Id) == 0)
+      if (strcmp(Header, FILEH_Id) == 0)
          Continue = true;
-      else if (strcmp(Header , EVENTH_Id) == 0)
+      else if (strcmp(Header, EVENTH_Id) == 0)
          Continue = false;
       else if (Bloc_number == 2) {
          Status = ACQ_BADFILESTRUCT;
@@ -186,7 +186,7 @@ int acq_mt_ini_run_c(int Lun, in2p3_buffer_struct* Buff, int Size,
       /* Recuperation de la taille de la structure.      */
       strncpy(Header, Buff->les_donnees.cas.Buf_ascii, 4);
       Header[4] = '\0';
-      if (strcmp(Header , "****") == 0) {
+      if (strcmp(Header, "****") == 0) {
          Status = ACQ_BADEVTSTRUCT;  /* Structure illisible.*/
          libere_fichier(Lun_tempo);
          return (Status);
@@ -204,7 +204,7 @@ int acq_mt_ini_run_c(int Lun, in2p3_buffer_struct* Buff, int Size,
          }
       }
       /* On ecrit tout en une seule fois */
-      Status = write(Lun_tempo , &Buff->les_donnees.cas.
+      Status = write(Lun_tempo, &Buff->les_donnees.cas.
                      Buf_ascii[Debut], Valeur);
 
       if (Status == -1) {
@@ -254,7 +254,7 @@ int acq_mt_ini_run_c(int Lun, in2p3_buffer_struct* Buff, int Size,
  *****************************************************************************/
 
 int get_next_event(in2p3_buffer_struct* Buff, int Size,
-                   short int* Event , int SizeEvent , int* NumeroEvent)
+                   short int* Event, int SizeEvent, int* NumeroEvent)
 {
 
    /* Variables reutilisees a chaque appel en reutilisant leur valeur

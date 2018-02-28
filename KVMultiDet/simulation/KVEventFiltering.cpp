@@ -203,7 +203,7 @@ void KVEventFiltering::InitAnalysis()
    TString system = GetOpt("System").Data();
    KVDBSystem* sys = (gDataBase ?
                       (gDataBase->GetTable("Systems") ? (KVDBSystem*)gDataBase->GetTable("Systems")->GetRecord(system) : nullptr)
-                         : nullptr);
+                      : nullptr);
    KV2Body* tb = 0;
 
    Bool_t justcreated = kFALSE;

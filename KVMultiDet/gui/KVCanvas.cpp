@@ -740,7 +740,7 @@ void KVCanvas::DynamicZoom(Int_t Sign, Int_t px, Int_t py)
 }
 
 //________________________________________________________________
-Bool_t KVCanvas::HandleKey(Int_t , Int_t py)
+Bool_t KVCanvas::HandleKey(Int_t, Int_t py)
 {
    // Handle keys
 

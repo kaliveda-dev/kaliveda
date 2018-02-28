@@ -132,7 +132,7 @@ void KVINDRAOnlineDataAnalyser::ProcessRun()
    // Perform treatment of a given run
 
    //Open data file
-   fRunFile = (KVRawDataReader*)gDataSet->OpenRunfile(GetDataType().Data() , fRunNumber);
+   fRunFile = (KVRawDataReader*)gDataSet->OpenRunfile(GetDataType().Data(), fRunNumber);
    if (fRunFile->GetStatus() == KVGRUNetClientGanilReader::kSTATUS_NOHOST) {
       // cannot connect to ACQ host
       Error("ProcessRun", "Cannot connect to acquisition host machine. Check KVGRUNetClientGanilReader.AcqHostName");

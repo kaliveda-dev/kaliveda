@@ -306,7 +306,7 @@ TTree* KVPartitionList::GenereTree(const Char_t* treename, Bool_t Compress)
 }
 
 //_______________________________________________________
-void KVPartitionList::SaveAsTree(const Char_t* filename, const Char_t* treename, Bool_t , Option_t* option)
+void KVPartitionList::SaveAsTree(const Char_t* filename, const Char_t* treename, Bool_t, Option_t* option)
 {
    //Open a file, save all the registered partitions in a tree format, and close the file
    //filename -> name of the root file where the tree is stored

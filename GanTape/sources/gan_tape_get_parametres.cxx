@@ -46,7 +46,7 @@
  *                                                                           *
  *****************************************************************************/
 
-int acq_get_param_env(param_id Type_param , val_ret* Retour , int Nb_lc ,
+int acq_get_param_env(param_id Type_param, val_ret* Retour, int Nb_lc,
                       char** Chaine_lc)
 {
 
@@ -81,7 +81,7 @@ int acq_get_param_env(param_id Type_param , val_ret* Retour , int Nb_lc ,
 
       sprintf(Chaine, "%s", Chaine_lc[Index]);
       /* On cherche maintenant la chaine du param voulu */
-      if (strncmp(Chaine , Struct_parametre -> Nom_param ,
+      if (strncmp(Chaine, Struct_parametre -> Nom_param,
                   Taille_chaine) == 0) {
          strcpy(Chaine, (Chaine + Taille_chaine + 1));
          Suite = false;
@@ -132,7 +132,7 @@ int acq_get_param_env(param_id Type_param , val_ret* Retour , int Nb_lc ,
          Logic_ret = Struct_parametre->Val_defaut;
          Status = -1;
       } else {
-         if (strcmp(Chaine , "true") == 0)
+         if (strcmp(Chaine, "true") == 0)
             Logic_ret = true;
          else Logic_ret = false;
          Status = ACQ_OK;
@@ -141,7 +141,7 @@ int acq_get_param_env(param_id Type_param , val_ret* Retour , int Nb_lc ,
    }
 
    else {
-      strcpy(Retour->Val_CAR , Chaine);
+      strcpy(Retour->Val_CAR, Chaine);
       Status = ACQ_OK;
    }
 

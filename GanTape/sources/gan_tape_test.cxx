@@ -107,14 +107,14 @@ int acq_dev_is_tape_c(gan_tape_desc DeviceName)
 #ifdef __osf__  /* differences entre OSF et SUN */
    struct devget Devget;
 
-   Status = ioctl(DeviceName.Lun , DEVIOCGET , &Devget);
+   Status = ioctl(DeviceName.Lun, DEVIOCGET, &Devget);
    if (Status != -1)
       if (Devget.category  == DEV_TAPE)
 
 #elif defined ( __sun__ ) || defined ( __sun ) || defined ( __hpux ) || defined ( __linux )
 
    struct mtget Mtget;
-   Status = ioctl(DeviceName.Lun , MTIOCGET , &Mtget);
+   Status = ioctl(DeviceName.Lun, MTIOCGET, &Mtget);
    if (Status != -1)
       if (Mtget.mt_type != 0)
 
@@ -149,7 +149,7 @@ int acq_dev_is_tape_c(gan_tape_desc DeviceName)
  *****************************************************************************/
 
 
-int acq_get_tape_type_c(gan_tape_desc DeviceName , char* ChaineRetour)
+int acq_get_tape_type_c(gan_tape_desc DeviceName, char* ChaineRetour)
 {
 
 
@@ -183,9 +183,9 @@ int acq_get_tape_type_c(gan_tape_desc DeviceName , char* ChaineRetour)
 
       struct devget Devget;
 
-      Status = ioctl(DeviceName.Lun , DEVIOCGET , &Devget);
+      Status = ioctl(DeviceName.Lun, DEVIOCGET, &Devget);
       if (Status != -1) {
-         strcpy(ChaineRetour , Devget.device);
+         strcpy(ChaineRetour, Devget.device);
          Status = ACQ_OK;
       } else Status = ACQ_ERRPARAM;
    } else Status = ACQ_ISNOTATAPE;
@@ -221,7 +221,7 @@ int acq_get_tape_type_c(gan_tape_desc DeviceName , char* ChaineRetour)
  *****************************************************************************/
 
 
-int acq_real_dev_name_c(gan_tape_desc DeviceName , char* ChaineRetour)
+int acq_real_dev_name_c(gan_tape_desc DeviceName, char* ChaineRetour)
 {
 
 
@@ -260,7 +260,7 @@ int acq_real_dev_name_c(gan_tape_desc DeviceName , char* ChaineRetour)
 
 #else
 
-   strcpy(ChaineRetour , DeviceName.DevName);
+   strcpy(ChaineRetour, DeviceName.DevName);
    Status = ACQ_OK;
 
 #endif
@@ -423,7 +423,7 @@ int acq_dev_is_wr_protect_c(gan_tape_desc DeviceName)
    struct devget Devget;
 
    if (acq_dev_is_tape_c(DeviceName) == ACQ_OK) {
-      Status = ioctl(DeviceName.Lun , DEVIOCGET , &Devget);
+      Status = ioctl(DeviceName.Lun, DEVIOCGET, &Devget);
       if (Status != -1)
          if ((Devget.stat) & WR_PROTECT  == WR_PROTECT)
             Status = ACQ_DEVWRITLOCK;

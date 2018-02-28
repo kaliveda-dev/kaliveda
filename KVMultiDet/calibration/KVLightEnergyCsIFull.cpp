@@ -29,7 +29,7 @@ Double_t KVLightEnergyCsIFull::GetDeltaFraction(Double_t beta, Double_t beta_del
 }
 
 //________________________________________________________________
-Double_t KVLightEnergyCsIFull::dLightIntegralApprox(double* x , double* par)
+Double_t KVLightEnergyCsIFull::dLightIntegralApprox(double* x, double* par)
 {
    double e = x[0];
 
@@ -76,7 +76,7 @@ Double_t KVLightEnergyCsIFull::dLightIntegralApprox(double* x , double* par)
 }
 
 //________________________________________________________________
-Double_t KVLightEnergyCsIFull::dLightIntegral(double* x , double* par)
+Double_t KVLightEnergyCsIFull::dLightIntegral(double* x, double* par)
 {
    double e = x[0];
    double zfit = par[0];
@@ -427,24 +427,24 @@ void KVLightEnergyCsIFull::init()
    switch (fLightFormula) {
       case kExact :
          fDlight = new TF1("fDlight_CsI", this, &KVLightEnergyCsIFull::dLightIntegral, 0., 10000., 6, "KVLightEnergyCsIFull", "dLightIntegral");
-         fLight  = new TF1("fLight_CsI" , this, &KVLightEnergyCsIFull::GetLight, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLight");
+         fLight  = new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLight, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLight");
          break;
 
       case kApproxIntegral :
          fDlight = new TF1("fDlight_CsI", this, &KVLightEnergyCsIFull::dLightIntegralApprox, 0., 10000., 6, "KVLightEnergyCsIFull", "dLightIntegralApprox");
-         fLight  = new TF1("fLight_CsI" , this, &KVLightEnergyCsIFull::GetLight, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightIntegral");
+         fLight  = new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLight, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightIntegral");
          break;
 
       case kApprox :
-         fLight  = new TF1("fLight_CsI" , this, &KVLightEnergyCsIFull::GetLightApprox, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightApprox");
+         fLight  = new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLightApprox, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightApprox");
          break;
 
       case kApproxSilicon :
-         fLight  = new TF1("fLight_CsI" , this, &KVLightEnergyCsIFull::GetLightApproxSilicon, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightApproxSilicon");
+         fLight  = new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLightApproxSilicon, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightApproxSilicon");
          break;
 
       default :
-         fLight  = new TF1("fLight_CsI" , this, &KVLightEnergyCsIFull::GetLightApprox, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightApprox");
+         fLight  = new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLightApprox, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightApprox");
          break;
    }
 }

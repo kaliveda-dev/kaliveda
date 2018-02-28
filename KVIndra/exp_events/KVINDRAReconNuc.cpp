@@ -740,7 +740,7 @@ Bool_t KVINDRAReconNuc::CoherencyEtalons(KVIdentificationResult& theID)
 {
    // Called by Identify() for particles stopping in etalon modules of Rings 10-17.
 
-   KVIdentificationResult* IDcsi , *IDsilicsi , *IDsi75sili , *IDcisi75 , *IDcicsi;
+   KVIdentificationResult* IDcsi, *IDsilicsi, *IDsi75sili, *IDcisi75, *IDcicsi;
    IDcsi = IDsilicsi = IDsi75sili = IDcisi75 = IDcicsi = 0;
    if (StoppedInCsI()) {
       IDcsi = GetIdentificationResult("CSI_R_L");

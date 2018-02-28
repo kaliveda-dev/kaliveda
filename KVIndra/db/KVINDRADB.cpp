@@ -1450,7 +1450,7 @@ void KVINDRADB::ReadLightEnergyCsI(const Char_t* zrange, KVDBTable* table)
    ifstream fin;
    TString filename;
    filename.Form("CalibCsI.%s", zrange);
-   if (!OpenCalibFile(filename.Data() , fin)) {
+   if (!OpenCalibFile(filename.Data(), fin)) {
       Error("ReadLightEnergyCsI()", "Could not open file %s",
             GetCalibFileName(filename.Data()));
       return;

@@ -84,7 +84,7 @@ c     **************************************************
 void FC_GLOBAL(miniuser, MINIUSER)(int* ip, double* x, double* ecart, double* grd, int* iwf)
 {
    static   double   rmn, rmn1, rmns1, g, eta;
-   double   z, a, alg, zlg, z2a, z2amu, zal , zalm, rho, xx, yy;
+   double   z, a, alg, zlg, z2a, z2amu, zal, zalm, rho, xx, yy;
    static   double   xt[MXNN];
    int      i;
    double xxc, re, rea, enu, penu, bra, rac, vv, vv0, v1, rle;

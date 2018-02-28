@@ -102,7 +102,7 @@ KVTrieur::KVTrieur(Int_t nbcases, Char_t* nom)
       for (Int_t i = 0; i < nbcases; i++) {
          sprintf(nomc, "%s_C%d", this->GetName(), i + 1);
          sprintf(nomt, "Case numero %d", i + 1);
-         new((*noms_cases)[i]) TNamed(nomc, nomt);
+         new ((*noms_cases)[i]) TNamed(nomc, nomt);
       }
    }
 #ifdef DEBUG_KVTrieur
@@ -180,7 +180,7 @@ void KVTrieur::Copy(TObject& a)
       for (Int_t i = 0; i < this->nb_cases; i++) {
          TNamed* c = (TNamed*) this->noms_cases->At(i);
          sprintf(nomc, "%s_C%d", this->GetName(), i + 1);
-         new((*tca)[i]) TNamed(nomc, c->GetTitle());
+         new ((*tca)[i]) TNamed(nomc, c->GetTitle());
       }
    } else {
       ((KVTrieur&) a).noms_cases = 0;
@@ -274,7 +274,7 @@ void KVTrieur::SetNbCases(Int_t n)
       for (Int_t i = 0; i < nb_cases; i++) {
          sprintf(nomc, "%s_C%d", this->GetName(), i + 1);
          sprintf(nomt, "Case numero %d", i + 1);
-         new((*noms_cases)[i]) TNamed(nomc, nomt);
+         new ((*noms_cases)[i]) TNamed(nomc, nomt);
       }
    }
 }

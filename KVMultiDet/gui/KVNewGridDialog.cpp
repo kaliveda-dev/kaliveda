@@ -375,7 +375,7 @@ void KVNewGridDialog::layout_grid_editor()
                          new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 5,
                                            2, 2));
    fLineClass = new TGComboBox(fLineButGrp);
-   fLineClass->AddEntry("KVIDZALine" , 1);
+   fLineClass->AddEntry("KVIDZALine", 1);
 
    fLineClass->Resize(120, 20);
    fLineClass->Connect("Selected(const char*)", "KVNewGridDialog", this,
@@ -555,10 +555,10 @@ void KVNewGridDialog::HandleButtons(Int_t id)
          fRadOK->SetState(kButtonUp);
          fLineClass->RemoveAll();
          if (fGridClass == "KVIDGCsI") {
-            fLineClass->AddEntry("KVIDCsIRLLine" , 1);
+            fLineClass->AddEntry("KVIDCsIRLLine", 1);
             fLineClassName = "KVIDCsIRLLine";
          } else {
-            fLineClass->AddEntry("KVIDZALine" , 1);
+            fLineClass->AddEntry("KVIDZALine", 1);
             fLineClassName = "KVIDZALine";
          }
          fLineClass->Resize(120, 20);
@@ -570,7 +570,7 @@ void KVNewGridDialog::HandleButtons(Int_t id)
          //class is KVIDCutLine
          fRadID->SetState(kButtonUp);
          fLineClass->RemoveAll();
-         fLineClass->AddEntry("KVIDCutLine" , 1);
+         fLineClass->AddEntry("KVIDCutLine", 1);
          fLineClassName = "KVIDCutLine";
          fLineClass->Resize(120, 20);
          fLineClass->Select(1);

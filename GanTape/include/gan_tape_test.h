@@ -35,11 +35,11 @@ DESC create_descriptor(char*);
 
 
 int acq_dev_is_tape_c(gan_tape_desc);
-int acq_get_tape_type_c(gan_tape_desc , char*);
+int acq_get_tape_type_c(gan_tape_desc, char*);
 int acq_dev_is_alloc_c(gan_tape_desc);
 int acq_dev_is_mount_c(gan_tape_desc);
 int acq_dev_is_wr_protect_c(gan_tape_desc);
-int acq_real_dev_name_c(gan_tape_desc , char*);
+int acq_real_dev_name_c(gan_tape_desc, char*);
 #ifdef __cplusplus
 }
 #endif

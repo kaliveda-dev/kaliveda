@@ -52,11 +52,13 @@ public:
    virtual Bool_t  SetIDCorrectionParameters(const KVRList* const records);
    virtual const KVList* GetIDCorrectionParameters() const;
 
-   KVIDLine* GetPunchThroughLine() {
+   KVIDLine* GetPunchThroughLine()
+   {
       return fPunchThrough;
    }
 
-   void SetVerbose(Bool_t verb) {
+   void SetVerbose(Bool_t verb)
+   {
       fverbose = verb;
    }
 

@@ -167,7 +167,7 @@ int contour_data_size(T_ENTETE_CTR_ACQ*  ContourEntete);
 
 int contour_data_size_(T_ENTETE_CTR_ACQ*  ContourEntete);
 
-int swap_contour_data(T_ENTETE_CTR_ACQ*  ContourEntetetete_spec , unsigned char* Table);
+int swap_contour_data(T_ENTETE_CTR_ACQ*  ContourEntetetete_spec, unsigned char* Table);
 
 int swap_contour_entete(T_ENTETE_CTR_ACQ*  ContourEntete);
 

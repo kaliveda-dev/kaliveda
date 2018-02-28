@@ -40,7 +40,7 @@ public:
    TF1* GetDeltaEFunction(Double_t e, Int_t Z, Int_t A, Double_t isoAmat = 0);
    TF1* GetRangeFunction(Int_t Z, Int_t A, Double_t isoAmat = 0);
    TF1* GetEResFunction(Double_t e, Int_t Z, Int_t A, Double_t isoAmat = 0);
-   TF1* GetStoppingFunction(Int_t , Int_t , Double_t = 0)
+   TF1* GetStoppingFunction(Int_t, Int_t, Double_t = 0)
    {
       Warning("GetStoppingFunction", "Not available for Yanez Range tables");
       return 0;

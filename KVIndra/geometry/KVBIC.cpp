@@ -161,7 +161,7 @@ Float_t KVBIC::GetEffectiveEntryThickness() const
 
 //__________________________________________________________________________________________________________________________
 
-Double_t KVBIC::GetELossMylar(UInt_t , UInt_t , Double_t)
+Double_t KVBIC::GetELossMylar(UInt_t, UInt_t, Double_t)
 {
    //This returns zero.
    //It is so that the KVChIo method doesn't get used by accident

@@ -64,7 +64,7 @@ int acq_mt_alloc_c(gan_tape_desc DeviceName)
    Descr_In = create_descriptor(DeviceName.DevName);
 
    if (acq_dev_is_tape_c(DeviceName) == ACQ_OK) {
-      Status = sys$alloc(&Descr_In , 0, 0, 0, 0);
+      Status = sys$alloc(&Descr_In, 0, 0, 0, 0);
 
       if (Status == SS$_NORMAL ||
             Status == SS$_BUFFEROVF ||
@@ -123,7 +123,7 @@ int acq_mt_dealloc_c(gan_tape_desc DeviceName)
    Descr_In = create_descriptor(DeviceName.DevName);
 
    if (acq_dev_is_tape_c(DeviceName) == ACQ_OK) {
-      Status = sys$dalloc(&Descr_In , 0, 0, 0, 0);
+      Status = sys$dalloc(&Descr_In, 0, 0, 0, 0);
 
       if (Status == SS$_NORMAL)
          Status = ACQ_OK;

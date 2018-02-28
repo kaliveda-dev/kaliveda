@@ -41,7 +41,7 @@ public:
    Double_t GetCalibratedEnergy();
    Double_t GetEnergy();
 
-   Double_t GetLightFromEnergy(UInt_t , UInt_t , Double_t  = -1.)
+   Double_t GetLightFromEnergy(UInt_t, UInt_t, Double_t  = -1.)
    {
       return -1;
    };

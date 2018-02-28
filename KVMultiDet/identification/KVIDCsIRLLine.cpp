@@ -109,5 +109,5 @@ void KVIDCsIRLLine::SetAsymWidth(Double_t d_l, Double_t d_r)
    //
    //For lines in a CsI R-L grid, this is the minimum of
    //three times the asymptotic distance a gauche & the asymptotic distance a droite.
-   SetWidth(TMath::Min(3.*d_l , d_r));
+   SetWidth(TMath::Min(3.*d_l, d_r));
 }

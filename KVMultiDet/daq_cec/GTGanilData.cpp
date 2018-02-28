@@ -240,7 +240,7 @@ void GTGanilData::Open(void)
                               fStructEvent, structEvent_size);
 
    if (fStatus != ACQ_OK) {
-      gan_tape_erreur(fStatus , "Init Run");
+      gan_tape_erreur(fStatus, "Init Run");
       return;
    }
    cout << "Run " << fRunNumber << " opened" << endl;
@@ -341,7 +341,7 @@ bool GTGanilData::Next(void)
       //we have reached the end of the file
       return (false);
    }
-   if (strcmp(fHeader , SCALER_Id) == 0) {
+   if (strcmp(fHeader, SCALER_Id) == 0) {
       switch (fWhatScaler) {
          case kSkipScaler:
             return (Next()); // Skip
@@ -366,17 +366,17 @@ bool GTGanilData::Next(void)
             cout << "GTGanilData::Next: unexpected value for fWhatScaler" << endl;
       }
    }
-   if (strcmp(fHeader , EVENTDB_Id) == 0)  {
+   if (strcmp(fHeader, EVENTDB_Id) == 0)  {
       fIsScalerBuffer = false;
       fIsCtrl = false;
       fEventCount++;
       return (ReadNextEvent());
-   } else if (strcmp(fHeader , EVENTCT_Id) == 0) {
+   } else if (strcmp(fHeader, EVENTCT_Id) == 0) {
       fIsScalerBuffer = false;
       fIsCtrl = true;
       fEventCount++;
       return (ReadNextEvent());
-   } else if (strcmp(fHeader , EBYEDAT_Id) == 0) {
+   } else if (strcmp(fHeader, EBYEDAT_Id) == 0) {
       fIsScalerBuffer = false;
       fIsCtrl = false;
       fEventCount++;

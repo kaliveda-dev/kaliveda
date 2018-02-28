@@ -414,7 +414,7 @@ static int SwapScalerToHost(in2p3_buffer_struct* Buff, int Size)
       SwapInt32(&Buff->les_donnees.Count, (Size - IN2P3_HEADER_LEN - 26));
 
       /* swappe Byte/Byte du checksum et du nombre d'evts */
-      SwapInt16(((UNSINT16*)Buff + ((Size - 30) / 2)) , 6);
+      SwapInt16(((UNSINT16*)Buff + ((Size - 30) / 2)), 6);
    }
 
    return (ACQ_OK);

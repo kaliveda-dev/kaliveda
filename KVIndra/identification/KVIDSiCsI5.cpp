@@ -112,7 +112,7 @@ Double_t KVIDSiCsI5::IdentifyZ(Double_t& funLTG)
 }
 
 //______________________________________________________________________________
-Bool_t KVIDSiCsI5::Identify(KVIdentificationResult* IDR, Double_t , Double_t)
+Bool_t KVIDSiCsI5::Identify(KVIdentificationResult* IDR, Double_t, Double_t)
 {
    //Identification of particles using Si(300)-CsI matrices for 5th campaign.
    //First of all, Z identification is attempted with KVIDSiCsI5::IdentZ.

@@ -37,7 +37,8 @@ protected:
    //Experimental infos research
    void                 ReadRunListInDataSet();
    void                 ReadInformations(std::ifstream& file);
-   std::vector<Float_t> GetInfoLine(Int_t line_number) {
+   std::vector<Float_t> GetInfoLine(Int_t line_number)
+   {
       return fvec_infos.at(line_number);
    }
    Float_t              GetInfoValue(Int_t run_number, Int_t num_value);
@@ -47,18 +48,22 @@ protected:
    void    ReadTransCoefListFile(std::ifstream& file);
    void    ReadTransCoefEnv();
    Int_t   GetNValue(Float_t val_exp, Float_t val_min, Float_t val_max, Float_t val_step);
-   Float_t GetClosestValue(Float_t val_exp, Float_t val_step) {
+   Float_t GetClosestValue(Float_t val_exp, Float_t val_step)
+   {
       return val_step * TMath::Nint(val_exp / val_step);
    }
    Bool_t  CheckTransCoefSteps();
    void SetTransCoefLimits(Float_t tc_min, Float_t tc_max); //can be used by the user to set limits on trans. coef. in weight computation
-   Float_t GetTransCoefLimitMin() {
+   Float_t GetTransCoefLimitMin()
+   {
       return ftc_min;
    }
-   Float_t GetTransCoefLimitMax() {
+   Float_t GetTransCoefLimitMax()
+   {
       return ftc_max;
    }
-   Bool_t  AreTransCoefLimitsSet() {
+   Bool_t  AreTransCoefLimitsSet()
+   {
       return fktc_lim_set;
    }
 
@@ -78,19 +83,24 @@ public:
    void Init();
 
    Int_t   GetRunPosition(Int_t run_number);
-   Float_t GetScalerINDRA(Int_t run_number) {
+   Float_t GetScalerINDRA(Int_t run_number)
+   {
       return GetInfoValue(run_number, 4);
    }
-   Float_t GetDeadTime(Int_t run_number) {
+   Float_t GetDeadTime(Int_t run_number)
+   {
       return GetInfoValue(run_number, 3);
    }
-   Float_t GetThetaVamos(Int_t run_number) {
+   Float_t GetThetaVamos(Int_t run_number)
+   {
       return GetInfoValue(run_number, 2);
    }
-   Float_t GetBrhoRef(Int_t run_number) {
+   Float_t GetBrhoRef(Int_t run_number)
+   {
       return GetInfoValue(run_number, 1);
    }
-   Float_t GetTargetDensity(Int_t run_number) {
+   Float_t GetTargetDensity(Int_t run_number)
+   {
       return GetInfoValue(run_number, 5);
    }
 
@@ -100,19 +110,23 @@ public:
    void PrintTransCoefInfoVector();
    void PrintTransCoefStepVector();
 
-   void SetVerbose(Bool_t verbose) {
+   void SetVerbose(Bool_t verbose)
+   {
       fkverbose = verbose;
    }
 
    Float_t GetWeight(Float_t brho_exp, Float_t thetaI_exp, Int_t idcode);
 
-   KVNumberList* GetInputRunList() {
+   KVNumberList* GetInputRunList()
+   {
       return &fInputRunList;   //return input run list
    }
-   KVNumberList* GetRunList() {
+   KVNumberList* GetRunList()
+   {
       return &fRunList;   //return list of runs OK (i.e runs defined in the run file of the data set)
    }
-   KVNumberList* GetComplementaryRunList() {
+   KVNumberList* GetComplementaryRunList()
+   {
       return &fCompRunList;   //return complementary run list of the input list (i.e runs not defined in the run file of the data set)
    }
 

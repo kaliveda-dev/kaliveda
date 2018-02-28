@@ -117,7 +117,7 @@ public:
    }
    Double_t TotalEnergy() const;
 
-   virtual void CalcDerivs(Double_t /*X*/ , Double_t* /*Y*/, Double_t* /*DY/DX*/);
+   virtual void CalcDerivs(Double_t /*X*/, Double_t* /*Y*/, Double_t* /*DY/DX*/);
    void Run(Double_t tmin, Double_t tmax, Double_t dt);
    void Reset()
    {

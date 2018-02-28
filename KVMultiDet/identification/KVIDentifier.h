@@ -154,20 +154,20 @@ public:
       TGraph::DrawPanel();
    };
 #if ROOT_VERSION_CODE > ROOT_VERSION(5,25,4)
-   virtual TFitResultPtr Fit(const char* formula , Option_t* option = "" , Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
+   virtual TFitResultPtr Fit(const char* formula, Option_t* option = "", Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
    {
       return TGraph::Fit(formula, option, goption, xmin, xmax);
    };
-   virtual TFitResultPtr Fit(TF1* f1 , Option_t* option = "" , Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
+   virtual TFitResultPtr Fit(TF1* f1, Option_t* option = "", Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
    {
       return TGraph::Fit(f1, option, goption, xmin, xmax);
    };
 #else
-   virtual Int_t     Fit(const char* formula , Option_t* option = "" , Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
+   virtual Int_t     Fit(const char* formula, Option_t* option = "", Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
    {
       return TGraph::Fit(formula, option, goption, xmin, xmax);
    };
-   virtual Int_t     Fit(TF1* f1 , Option_t* option = "" , Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
+   virtual Int_t     Fit(TF1* f1, Option_t* option = "", Option_t* goption = "", Axis_t xmin = 0, Axis_t xmax = 0)
    {
       return TGraph::Fit(f1, option, goption, xmin, xmax);
    };

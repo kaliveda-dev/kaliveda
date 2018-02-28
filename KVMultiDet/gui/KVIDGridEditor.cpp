@@ -2071,7 +2071,7 @@ void KVIDGridEditor::ForceUpdate()
 }
 
 //________________________________________________________________
-Bool_t KVIDGridEditor::HandleKey(Int_t , Int_t py)
+Bool_t KVIDGridEditor::HandleKey(Int_t, Int_t py)
 {
    // Handle keys
 

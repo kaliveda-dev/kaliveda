@@ -101,7 +101,7 @@ extern int sys$qiow();
  *                              *
  *****************************************************************************/
 
-int acq_mt_open_c(gan_tape_desc* DeviceName , mode_r_w RWMode , int* Lun)
+int acq_mt_open_c(gan_tape_desc* DeviceName, mode_r_w RWMode, int* Lun)
 {
 
 
@@ -133,7 +133,7 @@ int acq_mt_open_c(gan_tape_desc* DeviceName , mode_r_w RWMode , int* Lun)
 
          /* Les parametres d'ouverture d'un fichier ne sont pas portables depuis VMS */
 #if defined ( __VMS ) || defined ( VMS )
-         Status = acq_real_dev_name_c(*DeviceName , ChaineRet);
+         Status = acq_real_dev_name_c(*DeviceName, ChaineRet);
          if (Status == ACQ_OK)
             /* B. Raine le 22/9/98  remplace fop=rwo (option rewind)
                par fop=pos pour ouvrir la bande en position courante */
@@ -145,7 +145,7 @@ int acq_mt_open_c(gan_tape_desc* DeviceName , mode_r_w RWMode , int* Lun)
          else return (Status);
 
 #elif defined ( __unix__ ) || ( __unix )
-         Status = open(DeviceName->DevName , Mode);
+         Status = open(DeviceName->DevName, Mode);
 
 
 #else    /****************************************************************/
@@ -229,7 +229,7 @@ int acq_mt_close_c(gan_tape_desc DeviceName)
  *                                                                           *
  *****************************************************************************/
 
-int acq_mt_read_c(int Lun , char* Buffer , int* Taille)
+int acq_mt_read_c(int Lun, char* Buffer, int* Taille)
 {
 
    int Status;
@@ -321,7 +321,7 @@ int acq_mt_rewind_c(gan_tape_desc DeviceName)
    if (acq_dev_is_tape_c(DeviceName) == ACQ_OK) {
 
       /* Assignation d'un canal de communication      */
-      Ass_Status = sys$assign(&Descr_In , &Channel , 0, 0, 0);
+      Ass_Status = sys$assign(&Descr_In, &Channel, 0, 0, 0);
       if (Ass_Status == SS$_NORMAL) {
          /* Appel de REWIND   */
          Status = sys$qiow(0, Channel, IO$_REWIND, Iosb,
@@ -346,7 +346,7 @@ int acq_mt_rewind_c(gan_tape_desc DeviceName)
 
       Control.mt_op    = MTREW;
       Control.mt_count = 1; /* Nombre d'actions a effectuer */
-      Status = ioctl(DeviceName.Lun , MTIOCTOP , &Control);
+      Status = ioctl(DeviceName.Lun, MTIOCTOP, &Control);
       if (Status != -1)
          Status = ACQ_OK;
    } else Status = ACQ_ISNOTATAPE;
@@ -388,7 +388,7 @@ int acq_mt_rewind_c(gan_tape_desc DeviceName)
  *                                                                           *
  *****************************************************************************/
 
-int acq_mt_skip_file_c(gan_tape_desc DeviceName , int NombreSkip)
+int acq_mt_skip_file_c(gan_tape_desc DeviceName, int NombreSkip)
 {
 
    int Status;
@@ -407,7 +407,7 @@ int acq_mt_skip_file_c(gan_tape_desc DeviceName , int NombreSkip)
       if (NombreSkip < 0) NombreSkip--;   /* Pour faire un skip de */
       /* n fichiers vers le BOT, il faut passer n+1 Tape_Mark.     */
 
-      Ass_Status = sys$assign(&Descr_In , &Channel , 0, 0, 0);
+      Ass_Status = sys$assign(&Descr_In, &Channel, 0, 0, 0);
 
       if (Ass_Status == SS$_NORMAL) {
          printf("\n>>>Skipping %d files on disk %s ...", NombreSkip,
@@ -457,7 +457,7 @@ int acq_mt_skip_file_c(gan_tape_desc DeviceName , int NombreSkip)
          Control.mt_count = NombreSkip;
          Control.mt_op     = MTFSF;
       }
-      Status = ioctl(DeviceName.Lun , MTIOCTOP , &Control);
+      Status = ioctl(DeviceName.Lun, MTIOCTOP, &Control);
       if (Status != -1)
          Status = ACQ_OK;
       else Status = ACQ_ENDOFTAPE;
@@ -491,7 +491,7 @@ int acq_mt_skip_file_c(gan_tape_desc DeviceName , int NombreSkip)
  *                                                                           *
  *****************************************************************************/
 
-int acq_mt_skip_block_c(gan_tape_desc DeviceName , int NombreSkip)
+int acq_mt_skip_block_c(gan_tape_desc DeviceName, int NombreSkip)
 {
 
    int Status;
@@ -509,7 +509,7 @@ int acq_mt_skip_block_c(gan_tape_desc DeviceName , int NombreSkip)
 
    if (acq_dev_is_tape_c(DeviceName) == ACQ_OK) {
 
-      Ass_Status = sys$assign(&Descr_In , &Channel , 0, 0, 0);
+      Ass_Status = sys$assign(&Descr_In, &Channel, 0, 0, 0);
       if (Ass_Status == SS$_NORMAL) {
 
          int Loc_Skip = NombreSkip ;
@@ -572,7 +572,7 @@ int acq_mt_skip_block_c(gan_tape_desc DeviceName , int NombreSkip)
          Control.mt_count = NombreSkip;
          Control.mt_op     = MTFSR;
       }
-      Status = ioctl(DeviceName.Lun , MTIOCTOP , &Control);
+      Status = ioctl(DeviceName.Lun, MTIOCTOP, &Control);
       if (Status != -1)
          Status = ACQ_OK;
       else Status = ACQ_ENDOFFILE;
@@ -613,7 +613,7 @@ int acq_mt_skip_block_c(gan_tape_desc DeviceName , int NombreSkip)
  *                                                                           *
  *****************************************************************************/
 
-int acq_mt_skip_to_eot_c(gan_tape_desc DeviceName , int* NombreSkip)
+int acq_mt_skip_to_eot_c(gan_tape_desc DeviceName, int* NombreSkip)
 {
 
    int Status = 0;
@@ -628,7 +628,7 @@ int acq_mt_skip_to_eot_c(gan_tape_desc DeviceName , int* NombreSkip)
 
    if (acq_dev_is_tape_c(DeviceName) == ACQ_OK) {
 
-      Ass_Status = sys$assign(&Descr_In , &Channel , 0, 0, 0);
+      Ass_Status = sys$assign(&Descr_In, &Channel, 0, 0, 0);
       if (Ass_Status == SS$_NORMAL) {
 
          Status = ACQ_OK;
@@ -643,8 +643,7 @@ int acq_mt_skip_to_eot_c(gan_tape_desc DeviceName , int* NombreSkip)
             } else {
                Status = Iosb[0];
                *NombreSkip = -1;
-            }
-         else *NombreSkip = -1;
+            } else *NombreSkip = -1;
 
          Ass_Status = sys$dassgn(Channel);
          if (Ass_Status != SS$_NORMAL)
@@ -667,7 +666,7 @@ int acq_mt_skip_to_eot_c(gan_tape_desc DeviceName , int* NombreSkip)
       Control.mt_count = 1;
       Control.mt_op    = MTFSF;
       while (Status != - 1) {   /* Atteint la fin de bande    */
-         Status = ioctl(DeviceName.Lun , MTIOCTOP , &Control);
+         Status = ioctl(DeviceName.Lun, MTIOCTOP, &Control);
          if (Status != -1)
             NbrTempo++;
       }

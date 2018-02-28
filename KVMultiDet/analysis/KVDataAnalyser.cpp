@@ -986,7 +986,7 @@ void KVDataAnalyser::ScanWorkingDirectory(TList** ls)
 {
    //Fill TList with list of files in current working directory.
    //If ls!=0 it is deleted beforehand
-   if (*ls) delete(*ls);
+   if (*ls) delete (*ls);
    TSystemDirectory dir("LocDir", gSystem->WorkingDirectory());
    (*ls) = dir.GetListOfFiles();
 }

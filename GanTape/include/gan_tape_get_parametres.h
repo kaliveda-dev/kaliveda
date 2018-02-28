@@ -58,7 +58,7 @@ typedef union VAL_RET {
 
 /* Prototype de fonction locale pour la recuperation des arguments de la
  ligne de commande. */
-int acq_get_param_env(param_id , val_ret*, int , char**);
+int acq_get_param_env(param_id, val_ret*, int, char**);
 
 
 #ifdef __cplusplus

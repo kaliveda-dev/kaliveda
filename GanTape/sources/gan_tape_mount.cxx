@@ -70,7 +70,7 @@ extern int sys$dismou();
  *****************************************************************************/
 
 
-int acq_mt_mount_c(gan_tape_desc DeviceName , int Densit , int BlocSize)
+int acq_mt_mount_c(gan_tape_desc DeviceName, int Densit, int BlocSize)
 {
 
    int Status;
@@ -104,11 +104,11 @@ int acq_mt_mount_c(gan_tape_desc DeviceName , int Densit , int BlocSize)
       Status = ACQ_ERRPARAM;
 
    else {
-      Status = acq_get_tape_type_c(DeviceName , Nom);
+      Status = acq_get_tape_type_c(DeviceName, Nom);
 
       if (Status == ACQ_OK) {
          /* On test tous les TZ8x en meme temps (B. Raine 28/01/98) */
-         Un_TZ = strncmp(Nom , "TZ8" , 3);     /* Test si TZ8x  */
+         Un_TZ = strncmp(Nom, "TZ8", 3);       /* Test si TZ8x  */
          if (Un_TZ != 0) Un_TZ = false;
          else Un_TZ = true;
 
@@ -201,7 +201,7 @@ int acq_mt_dismount_c(gan_tape_desc DeviceName, int Option)
    if (Option != 1 && Option != 2) Status = ACQ_ERRPARAM;
    else if (acq_dev_is_tape_c(DeviceName) == ACQ_OK) {
 
-      Status = sys$dismou(&Descri_In , Flag);
+      Status = sys$dismou(&Descri_In, Flag);
       if (Status == SS$_NORMAL) Status = ACQ_OK;
       else if (Status == SS$_DEVNOTMOUNT) Status = ACQ_NOTMOUNT;
    } else Status = ACQ_ISNOTATAPE;

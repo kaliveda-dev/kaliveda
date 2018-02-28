@@ -100,8 +100,12 @@ execute_process(
   OUTPUT_STRIP_TRAILING_WHITESPACE)
   separate_arguments(_root_options)
 foreach(_opt ${_root_options})
-  set(ROOT_${_opt}_FOUND TRUE)
-  set(${_opt} TRUE)
+#--ignore 'gnuinstall' otherwise it will affect the KaliVeda build even
+#--if cmake is invoked with gnuinstall=off
+   if(NOT ${_opt} STREQUAL "gnuinstall")
+      set(ROOT_${_opt}_FOUND TRUE)
+      set(${_opt} TRUE)
+   endif(NOT ${_opt} STREQUAL "gnuinstall")
 endforeach()
 #--unset 'soversion' if enabled - it will cause problems
 set(soversion FALSE)

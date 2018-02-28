@@ -626,7 +626,7 @@ void KVVAMOSReconNuc::IdentifyQandA()
 
                   if (fdebug) {
                      Info("IdentifyQandA", "ToF=%lf, nHF=%d, Path=%lf, Beta=%lf, RealAE=%lf, RealAoQ=%lf, RealQ=%lf, RealA=%lf, Q=%d, A=%d",
-                          GetBasicToF(), GetBasicNHF() , GetBasicPath(), GetBasicBeta(), GetBasicRealAE(),
+                          GetBasicToF(), GetBasicNHF(), GetBasicPath(), GetBasicBeta(), GetBasicRealAE(),
                           GetBasicRealAoverQ(), GetBasicRealQ(), GetBasicRealA(), GetBasicQ(), GetBasicA());
                   }
 
@@ -659,7 +659,7 @@ void KVVAMOSReconNuc::IdentifyQandA()
 
                   if (fdebug) {
                      Info("IdentifyQandA", "ToF=%lf, nHF=%d, Path=%lf, Beta=%lf, RealAE=%lf, RealAoQ=%lf, RealQ=%lf, RealZ=%lf, RealA=%lf, Q=%d, Z=%d, A=%d",
-                          GetBasicToF(), GetBasicNHF() , GetBasicPath(), GetBasicBeta(), GetBasicRealAE(),
+                          GetBasicToF(), GetBasicNHF(), GetBasicPath(), GetBasicBeta(), GetBasicRealAE(),
                           GetBasicRealAoverQ(), GetBasicRealQ(), GetRealZ(), GetBasicRealA(), GetBasicQ(), GetZ(), GetBasicA());
                   }
 

@@ -35,8 +35,8 @@ typedef struct ITEM_LIST {   /* Structure de passage de parametres pour la */
 #endif
 
 
-int acq_mt_mount_c(gan_tape_desc , int, int);
-int acq_mt_dismount_c(gan_tape_desc , int);
+int acq_mt_mount_c(gan_tape_desc, int, int);
+int acq_mt_dismount_c(gan_tape_desc, int);
 
 #ifdef __cplusplus
 }

@@ -61,7 +61,7 @@ extern "C" {
 #define ACQ_NOIMPLEMENTED -107 /* functionnality non implemented for this OS */
 #define ACQ_INVSCALERBUF  -108 /* This buffer is not a scaler block */
 
-void gan_tape_erreur(int , const char*);
+void gan_tape_erreur(int, const char*);
 
 #ifdef __cplusplus
 }

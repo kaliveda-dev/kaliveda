@@ -162,7 +162,7 @@ void KVIonRangeTable::SetTemperatureAndPressure(const Char_t* material, Double_t
 //________________________________________________________________________________//
 
 Double_t KVIonRangeTable::GetRangeOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t E,
-                                        Double_t Amat, Double_t , Double_t)
+                                        Double_t Amat, Double_t, Double_t)
 {
    // Returns range (in g/cm**2) of ion (Z,A) with energy E (MeV) in material.
    // Give Amat to change default (isotopic) mass of material,
@@ -184,7 +184,7 @@ Double_t KVIonRangeTable::GetLinearRangeOfIon(const Char_t* mat, Int_t Z, Int_t 
 //________________________________________________________________________________//
 
 Double_t KVIonRangeTable::GetDeltaEOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t E, Double_t r,
-      Double_t Amat, Double_t , Double_t)
+      Double_t Amat, Double_t, Double_t)
 {
    // Returns energy lost (in MeV) by ion (Z,A) with energy E (MeV) after thickness r (in g/cm**2).
    // Give Amat to change default (isotopic) mass of material,
@@ -206,7 +206,7 @@ Double_t KVIonRangeTable::GetLinearDeltaEOfIon(const Char_t* mat, Int_t Z, Int_t
 //________________________________________________________________________________//
 
 Double_t KVIonRangeTable::GetEResOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t E, Double_t r,
-                                       Double_t Amat, Double_t , Double_t)
+                                       Double_t Amat, Double_t, Double_t)
 {
    // Returns residual energy (in MeV) of ion (Z,A) with incident energy E (MeV) after thickness r (in g/cm**2).
    // Give Amat to change default (isotopic) mass of material,
@@ -227,7 +227,7 @@ Double_t KVIonRangeTable::GetLinearEResOfIon(const Char_t* mat, Int_t Z, Int_t A
 }
 //________________________________________________________________________________//
 
-Double_t KVIonRangeTable::GetEIncFromEResOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t Eres, Double_t e, Double_t isoAmat, Double_t , Double_t)
+Double_t KVIonRangeTable::GetEIncFromEResOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t Eres, Double_t e, Double_t isoAmat, Double_t, Double_t)
 {
    // Calculates incident energy (in MeV) of an ion (Z,A) with residual energy Eres (MeV) after thickness e (in g/cm**2).
    // Give Amat to change default (isotopic) mass of material,
@@ -245,7 +245,7 @@ Double_t KVIonRangeTable::GetLinearEIncFromEResOfIon(const Char_t* mat, Int_t Z,
 }
 //________________________________________________________________________________//
 
-Double_t KVIonRangeTable::GetEIncFromDeltaEOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t DeltaE, Double_t e, enum KVIonRangeTable::SolType type, Double_t isoAmat, Double_t , Double_t)
+Double_t KVIonRangeTable::GetEIncFromDeltaEOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t DeltaE, Double_t e, enum KVIonRangeTable::SolType type, Double_t isoAmat, Double_t, Double_t)
 {
    // Calculates incident energy (in MeV) of an ion (Z,A) from energy loss DeltaE (MeV) in thickness e (in g/cm**2).
    // Give Amat to change default (isotopic) mass of material,
@@ -263,7 +263,7 @@ Double_t KVIonRangeTable::GetLinearEIncFromDeltaEOfIon(const Char_t* mat, Int_t 
 }
 //________________________________________________________________________________//
 
-Double_t KVIonRangeTable::GetDeltaEFromEResOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t Eres, Double_t e, Double_t isoAmat, Double_t , Double_t)
+Double_t KVIonRangeTable::GetDeltaEFromEResOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t Eres, Double_t e, Double_t isoAmat, Double_t, Double_t)
 {
    // Calculates incident energy (in MeV) of an ion (Z,A) from energy loss DeltaE (MeV) in thickness e (in g/cm**2).
    // Give Amat to change default (isotopic) mass of material,
@@ -280,7 +280,7 @@ Double_t KVIonRangeTable::GetLinearDeltaEFromEResOfIon(const Char_t* mat, Int_t 
 }
 //________________________________________________________________________________//
 
-Double_t KVIonRangeTable::GetPunchThroughEnergy(const Char_t* mat, Int_t Z, Int_t A, Double_t e, Double_t isoAmat, Double_t , Double_t)
+Double_t KVIonRangeTable::GetPunchThroughEnergy(const Char_t* mat, Int_t Z, Int_t A, Double_t e, Double_t isoAmat, Double_t, Double_t)
 {
    // Calculate incident energy (in MeV) for ion (Z,A) for which the range is equal to the
    // given thickness e (in g/cm**2). At this energy the residual energy of the ion is (just) zero,
@@ -302,14 +302,14 @@ Double_t KVIonRangeTable::GetLinearPunchThroughEnergy(const Char_t* mat, Int_t Z
 }
 //________________________________________________________________________________//
 
-Double_t KVIonRangeTable::GetMaxDeltaEOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t e, Double_t isoAmat, Double_t , Double_t)
+Double_t KVIonRangeTable::GetMaxDeltaEOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t e, Double_t isoAmat, Double_t, Double_t)
 {
    // Calculate maximum energy loss (in MeV) of ion (Z,A) in given thickness e (in g/cm**2).
    // Give Amat to change default (isotopic) mass of material.
    CHECK_ION_FIND_MAT_AND_EXEC(GetMaxDeltaEOfIon(Z, A, e, isoAmat), 0.0);
 }
 
-Double_t KVIonRangeTable::GetEIncOfMaxDeltaEOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t e, Double_t isoAmat, Double_t , Double_t)
+Double_t KVIonRangeTable::GetEIncOfMaxDeltaEOfIon(const Char_t* mat, Int_t Z, Int_t A, Double_t e, Double_t isoAmat, Double_t, Double_t)
 {
    // Calculate incident energy (in MeV) corresponding to maximum energy loss of ion (Z,A)
    // in given thickness e (in g/cm**2).

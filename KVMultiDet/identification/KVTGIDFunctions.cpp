@@ -373,7 +373,7 @@ Double_t KVTGIDFunctions::pichon_Z(Double_t* x, Double_t* par)
    Double_t one_over_gamma = 1. / gamma;
    Double_t Delta_E = gE_to_the_gamma + TMath::Power(lambda_Z_alpha_A_beta, gamma)
                       + zeta_Z2_A_mu * gE_to_the_nu;
-   Delta_E = TMath::Power(Delta_E , one_over_gamma) - gE;
+   Delta_E = TMath::Power(Delta_E, one_over_gamma) - gE;
    return (Delta_E - de);
 }
 
@@ -459,7 +459,7 @@ Double_t KVTGIDFunctions::pawlowski_Z(Double_t* x, Double_t* par)
    Double_t one_over_gamma = 1. / gamma;
    Double_t Delta_E = gE_to_the_gamma + TMath::Power(lambda_Z_alpha_A_beta, gamma)
                       + zeta_Z2_A_mu * gE_to_the_nu;
-   Delta_E = TMath::Power(Delta_E , one_over_gamma) - gE;
+   Delta_E = TMath::Power(Delta_E, one_over_gamma) - gE;
    return (Delta_E - de);
 }
 

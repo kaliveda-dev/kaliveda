@@ -56,7 +56,7 @@ KVGumbelDistribution::KVGumbelDistribution()
 
 KVGumbelDistribution::KVGumbelDistribution(const Char_t* name, Int_t k, Bool_t norm,
       Double_t xmin, Double_t xmax)
-   : TF1(name, this, &KVGumbelDistribution::GDk, xmin, xmax, 3-(int)norm,
+   : TF1(name, this, &KVGumbelDistribution::GDk, xmin, xmax, 3 - (int)norm,
          "KVGumbelDistribution", "GDk")
 {
    // Gumbel distribution of k-th rank

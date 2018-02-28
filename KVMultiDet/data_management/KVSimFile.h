@@ -33,55 +33,68 @@ public:
    virtual ~KVSimFile();
    void Copy(TObject&) const;
 
-   Bool_t IsFiltered() const {
+   Bool_t IsFiltered() const
+   {
       return fFiltered;
    }
-   Bool_t IsGemini() const {
+   Bool_t IsGemini() const
+   {
       return fGemini;
    }
-   void SetGemini(Bool_t yes = kTRUE) {
+   void SetGemini(Bool_t yes = kTRUE)
+   {
       fGemini = yes;
    }
 
-   KVSimDir* GetSimDir() const {
+   KVSimDir* GetSimDir() const
+   {
       // return pointer to KVSimDir dataset to which this file belongs
       return fSimDir;
    };
-   Long64_t GetEvents() const {
+   Long64_t GetEvents() const
+   {
       // return number of events in file
       return fEvents;
    };
-   const Char_t* GetDataSet() const {
+   const Char_t* GetDataSet() const
+   {
       // return name of dataset used to filter data
       return fDataSet;
    };
-   const Char_t* GetSystem() const {
+   const Char_t* GetSystem() const
+   {
       // return name of experimental system used to filter data
       return fSystem;
    };
-   const Char_t* GetFilterType() const {
+   const Char_t* GetFilterType() const
+   {
       // return type of filter used to filter data
       return fFiltType;
    };
-   Int_t GetRun() const {
+   Int_t GetRun() const
+   {
       // return run number used to define experimental conditions for filtering data
       return fRunNumber;
    };
-   const Char_t* GetGeometry() const {
+   const Char_t* GetGeometry() const
+   {
       // return type of geometry used to filter simulation:
       // 'KV' = KaliVeda geometry and particle transport
       // 'ROOT' = TGeometry description of detector geometry and particle transport
       return fGeoType;
    };
-   const Char_t* GetTreeName() const {
+   const Char_t* GetTreeName() const
+   {
       // name of TTree containing data
       return fTreeName;
    };
-   const Char_t* GetBranchName() const {
+   const Char_t* GetBranchName() const
+   {
       // name of TBranch containing data
       return fBranchName;
    };
-   const Char_t* GetOriginalFile() const {
+   const Char_t* GetOriginalFile() const
+   {
       // name of simulation file which was filtered to produce this filtered data file
       return fOrigFile;
    };

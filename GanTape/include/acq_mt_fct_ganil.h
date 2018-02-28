@@ -32,14 +32,14 @@ int acq_mt_ini_run_c(int, in2p3_buffer_struct*, int, int*, char*, int);
 /*    Prototype de get_next_event (..) , fonction permettant d'obtenir le
  * parametre suivant dans un buffer.
  */
-int get_next_event(in2p3_buffer_struct*, int , short int*, int ,
+int get_next_event(in2p3_buffer_struct*, int, short int*, int,
                    int*);
 
 
 /*    Prototype de get_next_event (..) , fonction permettant d'obtenir le
  * parametre suivant dans un buffer.
  */
-int get_next_param(int , char*, int , int , int);
+int get_next_param(int, char*, int, int, int);
 
 
 

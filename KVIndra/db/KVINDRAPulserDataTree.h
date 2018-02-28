@@ -37,8 +37,8 @@ protected:
    void ReadData();
    UChar_t ReadData(Int_t);
    void ReadFile(std::ifstream&);
-   Bool_t OpenGeneData(Int_t , std::ifstream&);
-   Bool_t OpenPinData(Int_t , std::ifstream&);
+   Bool_t OpenGeneData(Int_t, std::ifstream&);
+   Bool_t OpenPinData(Int_t, std::ifstream&);
 
 public:
    KVINDRAPulserDataTree();

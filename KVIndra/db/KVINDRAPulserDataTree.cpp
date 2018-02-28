@@ -229,17 +229,17 @@ void KVINDRAPulserDataTree::CreateTree()
          iob = new KVBase(ap_name.Data());
          iob->SetNumber(ap_num);
          fIndex->Add(iob);
-         fArb->Branch(ap_name.Data(), &fVal[ap_num++] , Form("%s/F", ap_name.Data()));
+         fArb->Branch(ap_name.Data(), &fVal[ap_num++], Form("%s/F", ap_name.Data()));
          ap_name.Form("%s%s", ap->GetName(), "_gene");
          iob = new KVBase(ap_name.Data());
          iob->SetNumber(ap_num);
          fIndex->Add(iob);
-         fArb->Branch(ap_name.Data(), &fVal[ap_num++] , Form("%s/F", ap_name.Data()));
+         fArb->Branch(ap_name.Data(), &fVal[ap_num++], Form("%s/F", ap_name.Data()));
       } else if (ap_type != "T") {
          iob = new KVBase(ap_name.Data());
          iob->SetNumber(ap_num);
          fIndex->Add(iob);
-         fArb->Branch(ap_name.Data(), &fVal[ap_num++] , Form("%s/F", ap_name.Data()));
+         fArb->Branch(ap_name.Data(), &fVal[ap_num++], Form("%s/F", ap_name.Data()));
       }
       if (ap_num > fTab_siz - 2) {
          Error("CreateTree",

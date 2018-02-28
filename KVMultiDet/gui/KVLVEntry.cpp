@@ -349,7 +349,7 @@ void KVLVEntry::DrawCopy(Handle_t id, Int_t x, Int_t y)
             if (fActive) {
                //if (fSelPic) fSelPic->Draw(id, fNormGC, x + ix, y + iy);
                gVirtualX->SetForeground(fNormGC, fgDefaultSelectedBackground);
-               gVirtualX->FillRectangle(id, fNormGC, x + fCpos[i] , y + ly, fCpos[i + 1] - fCpos[i], fTHeight + 1);
+               gVirtualX->FillRectangle(id, fNormGC, x + fCpos[i], y + ly, fCpos[i + 1] - fCpos[i], fTHeight + 1);
                gVirtualX->SetForeground(fNormGC, fClient->GetResourcePool()->GetSelectedFgndColor());
             } else {
                // inactive list items are drawn with alternating background colours: white, grey, white, grey, ...

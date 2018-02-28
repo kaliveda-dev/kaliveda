@@ -77,21 +77,26 @@ public:
    virtual void CalibrateFromDetList(KVVAMOSReconNuc*, Double_t& ke, Double_t& eBeforeVAMOS);
 
    void PrintInitInfos();
-   virtual void SetVerbose(Bool_t status = kTRUE) {
+   virtual void SetVerbose(Bool_t status = kTRUE)
+   {
       fkverbose = status;
    }
 
-   Int_t GetNCutHFSiCsI_DeltaE_ToF() {
+   Int_t GetNCutHFSiCsI_DeltaE_ToF()
+   {
       return static_cast<int>(fvec_nHF_DE_ToF_sicsi.size());
    }
-   Int_t GetNCutHFICSi_DeltaE_ToF() {
+   Int_t GetNCutHFICSi_DeltaE_ToF()
+   {
       return static_cast<int>(fvec_nHF_DE_ToF_icsi.size());
    }
 
-   Int_t GetNCutHFSiCsI_AE_AoverQ() {
+   Int_t GetNCutHFSiCsI_AE_AoverQ()
+   {
       return static_cast<int>(fvec_nHF_AE_AoQ_sicsi.size());
    }
-   Int_t GetNCutHFICSi_AE_AoverQ() {
+   Int_t GetNCutHFICSi_AE_AoverQ()
+   {
       return static_cast<int>(fvec_nHF_AE_AoQ_icsi.size());
    }
 

@@ -58,8 +58,8 @@ public:
       return fLightFormula;
    }
 
-   Double_t dLightIntegral(double* x , double* par);
-   Double_t dLightIntegralApprox(double* x , double* par);
+   Double_t dLightIntegral(double* x, double* par);
+   Double_t dLightIntegralApprox(double* x, double* par);
 
    Double_t GetDeltaFraction(Double_t beta, Double_t beta_delta);
    Double_t GetLight(double* x, double* par);

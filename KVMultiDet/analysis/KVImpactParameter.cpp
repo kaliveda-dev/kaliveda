@@ -100,7 +100,7 @@ void KVImpactParameter::MakeScale(Int_t npoints, Double_t bmax)
 
 void KVImpactParameter::make_scale(Int_t npoints)
 {
-   TH1* cumul = HM.CumulatedHisto(fData, fEvol.Data() , -1, -1, "max");
+   TH1* cumul = HM.CumulatedHisto(fData, fEvol.Data(), -1, -1, "max");
    Int_t nbins = cumul->GetNbinsX();
    Int_t first_bin = 1;
    Int_t last_bin = nbins;

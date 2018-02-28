@@ -860,11 +860,11 @@ void KVGaxis::PaintAxis(Double_t xmin, Double_t ymin, Double_t xmax, Double_t ym
             if (optionGrid) {
                if (ltick == 0) {
                   if (optionNoopt && !optionInt) {
-                     Rotate(xtick, 0, cosphi, sinphi, x0, y0 , xpl2, ypl2);
-                     Rotate(xtick, grid_side * gridlength , cosphi, sinphi, x0, y0 , xpl1, ypl1);
+                     Rotate(xtick, 0, cosphi, sinphi, x0, y0, xpl2, ypl2);
+                     Rotate(xtick, grid_side * gridlength, cosphi, sinphi, x0, y0, xpl1, ypl1);
                   } else {
-                     Rotate(xtick, 0, cosphi , sinphi, xx0, yy0 , xpl2, ypl2);
-                     Rotate(xtick, grid_side * gridlength , cosphi, sinphi, xx0, yy0 , xpl1, ypl1);
+                     Rotate(xtick, 0, cosphi, sinphi, xx0, yy0, xpl2, ypl2);
+                     Rotate(xtick, grid_side * gridlength, cosphi, sinphi, xx0, yy0, xpl1, ypl1);
                   }
                   linegrid->PaintLineNDC(xpl1, ypl1, xpl2, ypl2);
                }
@@ -887,8 +887,8 @@ void KVGaxis::PaintAxis(Double_t xmin, Double_t ymin, Double_t xmax, Double_t ym
                   xtick0 = (fFunction->Eval(binLow - Double_t(k) * dxtick) - rwmi)
                            * axis_length / TMath::Abs(rwma - rwmi);
                }
-               Rotate(xtick0, ytick0, cosphi, sinphi, xx0, yy0 , xpl2, ypl2);
-               Rotate(xtick0, atick[ltick], cosphi, sinphi, xx0, yy0 , xpl1, ypl1);
+               Rotate(xtick0, ytick0, cosphi, sinphi, xx0, yy0, xpl2, ypl2);
+               Rotate(xtick0, atick[ltick], cosphi, sinphi, xx0, yy0, xpl1, ypl1);
                if (optionVert) {
                   if ((x0 != x1) && (y0 != y1)) {
                      if (mside) {
@@ -908,7 +908,7 @@ void KVGaxis::PaintAxis(Double_t xmin, Double_t ymin, Double_t xmax, Double_t ym
                if (optionGrid) {
                   if (ltick == 0) {
                      Rotate(xtick0, 0, cosphi, sinphi, xx0, yy0, xpl2, ypl2);
-                     Rotate(xtick0, grid_side * gridlength , cosphi, sinphi, xx0, yy0 , xpl1, ypl1);
+                     Rotate(xtick0, grid_side * gridlength, cosphi, sinphi, xx0, yy0, xpl1, ypl1);
                      linegrid->PaintLineNDC(xpl1, ypl1, xpl2, ypl2);
                   }
                }
@@ -930,8 +930,8 @@ void KVGaxis::PaintAxis(Double_t xmin, Double_t ymin, Double_t xmax, Double_t ym
                   xtick1 = (fFunction->Eval(binHigh + Double_t(k) * dxtick) - rwmi)
                            * axis_length / TMath::Abs(rwma - rwmi);
                }
-               Rotate(xtick1, ytick1, cosphi, sinphi, xx0, yy0 , xpl2, ypl2);
-               Rotate(xtick1, atick[ltick], cosphi, sinphi, xx0, yy0 , xpl1, ypl1);
+               Rotate(xtick1, ytick1, cosphi, sinphi, xx0, yy0, xpl2, ypl2);
+               Rotate(xtick1, atick[ltick], cosphi, sinphi, xx0, yy0, xpl1, ypl1);
                if (optionVert) {
                   if ((x0 != x1) && (y0 != y1)) {
                      if (mside) {
@@ -949,7 +949,7 @@ void KVGaxis::PaintAxis(Double_t xmin, Double_t ymin, Double_t xmax, Double_t ym
                if (!drawGridOnly) PaintLineNDC(xpl1, ypl1, xpl2, ypl2);
                if (optionGrid) {
                   if (ltick == 0) {
-                     Rotate(xtick1, 0, cosphi, sinphi, xx0, yy0 , xpl2, ypl2);
+                     Rotate(xtick1, 0, cosphi, sinphi, xx0, yy0, xpl2, ypl2);
                      Rotate(xtick1, grid_side * gridlength, cosphi, sinphi, xx0, yy0, xpl1, ypl1);
                      linegrid->PaintLineNDC(xpl1, ypl1, xpl2, ypl2);
                   }

@@ -130,7 +130,7 @@ Double_t  KVCsI_e475s::GetCalibratedEnergy()
 }
 
 //------------------------------
-Double_t KVCsI_e475s::GetCorrectedEnergy(KVNucleus*, Double_t , Bool_t)
+Double_t KVCsI_e475s::GetCorrectedEnergy(KVNucleus*, Double_t, Bool_t)
 //------------------------------
 {
    //Do nothing more

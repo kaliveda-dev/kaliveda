@@ -67,7 +67,7 @@ Double_t KVIDSi75SiLi_e494s::GetIDMapX(Option_t* opt)
    // gain pedestal correction (see KVINDRADetector::GetPGfromGG()).
 
 
-   return GetIDMapXY(fSiLi , opt);
+   return GetIDMapXY(fSiLi, opt);
 }
 
 //__________________________________________________________________________//
@@ -82,7 +82,7 @@ Double_t KVIDSi75SiLi_e494s::GetIDMapY(Option_t* opt)
    // is calculated from the current high gain coder data minus the high
    // gain pedestal correction (see KVINDRADetector::GetPGfromGG()).
 
-   return GetIDMapXY(fSi75 , opt);
+   return GetIDMapXY(fSi75, opt);
 }
 
 //__________________________________________________________________________//

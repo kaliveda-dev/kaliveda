@@ -138,12 +138,12 @@ public:
       }
       return PROXFACTOR * Phi;
    }
-   Double_t Potential(Double_t* r , Double_t*)
+   Double_t Potential(Double_t* r, Double_t*)
    {
       // Total heavy-ion potential (nuclear proximity+coulomb) at distance r
       return ProxPot(r, 0) + VC(r, 0);
    }
-   Double_t CentrifugalPotential(Double_t* x , Double_t* l)
+   Double_t CentrifugalPotential(Double_t* x, Double_t* l)
    {
       // Total heavy-ion potential (nuclear proximity+coulomb+centrifugal) at distance r
       // x[0] = r
@@ -278,7 +278,7 @@ public:
       return AP * e * (AP * AP + 2.*AP * AT * cos(QuarterPointAngle(&e, 0)) + AT * AT) / (1.*AC * AC);
    }
 
-   Double_t Lmax(Double_t* x , Double_t*) const
+   Double_t Lmax(Double_t* x, Double_t*) const
    {
       return Eta(*x) / tan(QuarterPointAngle(x, 0) / 2.);
    }

@@ -68,7 +68,7 @@ public:
    void            PrintDataParameters(void) const;
    void            DumpEvent(void) const;
    void            DumpParameterName(void) const;
-   void            Connect(const Int_t index    , UShort_t** p) const;
+   void            Connect(const Int_t index, UShort_t** p) const;
    Bool_t          Connect(const TString parName, UShort_t** p) const;
    bool            Next(void);
    void            MakeTree(const TString filename = "", UInt_t nEvents = kMaxUInt);

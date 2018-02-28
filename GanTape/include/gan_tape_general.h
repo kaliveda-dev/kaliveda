@@ -60,7 +60,7 @@ typedef enum BOOLEEN { false, true } bool;
 typedef int BOOL;
 
 
-typedef enum MODE_R_W { o_read , o_write } mode_r_w;
+typedef enum MODE_R_W { o_read, o_write } mode_r_w;
 
 /* Definition du descripteur fourni aux fonctions  */
 

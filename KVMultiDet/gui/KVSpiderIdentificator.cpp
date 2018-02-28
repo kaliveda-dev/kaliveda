@@ -326,7 +326,7 @@ TList* KVSpiderIdentificator::CreateHistograms(double thmin_, double thmax_, int
 }
 
 
-bool KVSpiderIdentificator::SearchPeack(TH1F* h1_, double theta_, int create_, double sigma_, double peakmin_, int , int smooth_, TString opt_)
+bool KVSpiderIdentificator::SearchPeack(TH1F* h1_, double theta_, int create_, double sigma_, double peakmin_, int, int smooth_, TString opt_)
 {
    if (!TestHistogram(h1_)) {
       Warning("SearchPeack", "Bad histo...");

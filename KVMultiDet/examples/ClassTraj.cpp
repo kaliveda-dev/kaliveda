@@ -136,7 +136,7 @@ void ClassTraj::InitTrajectory(Double_t b, Double_t e, Double_t fric)
    }
 }
 
-void ClassTraj::CalcDerivs(Double_t t , Double_t* Y, Double_t* DYDX)
+void ClassTraj::CalcDerivs(Double_t t, Double_t* Y, Double_t* DYDX)
 {
    Double_t* rp = Y;
    Double_t* rt = Y + 2;
