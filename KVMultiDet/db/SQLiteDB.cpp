@@ -13,6 +13,8 @@
 #include <iomanip>
 
 ClassImp(KVSQLite::database)
+ClassImp(KVSQLite::table)
+ClassImp(KVSQLite::column)
 
 ////////////////////////////////////////////////////////////////////////////////
 // BEGIN_HTML <!--
@@ -23,40 +25,48 @@ ClassImp(KVSQLite::database)
 // --> END_HTML
 // Opening a database file
 // =======================
-//    KVSQLite::database db("my_database.sqlite");
 //
-// WARNING: opens in read/write mode. there is no protection against modifying
+//     KVSQLite::database db("my_database.sqlite");
+//
+// *WARNING*: opens in read/write mode. there is no protection against modifying
 //          an existing database.
 //
 // Looking at data
 // ===============
-//    db.show_tables();   => print names of tables in database
-// Example output:
-// Tables in database:
-//   SCdaq_reader
-//   SCdaq_writer
-//   SCdetectors
-//   SCelectronics
 //
-//    db["SCdetectors"].show_columns();  => print names of columns in table "SCdetectors"
+//     db.show_tables();   => print names of tables in database
+//
 // Example output:
-// Columns in table:
-// id [INTEGER]
-// block [INTEGER]
-// quartet [INTEGER]
-// telescope [INTEGER]
-// detector [TEXT]
-// frontEnd [INTEGER]
-// module [TEXT]
-// parameter [TEXT]
-// alias [TEXT]
-// channel [TEXT]
-// value [TEXT]
-// units [TEXT]
-// time [TEXT]
+//
+//     Tables in database:
+//       SCdaq_reader
+//       SCdaq_writer
+//       SCdetectors
+//       SCelectronics
+//
+//     db["SCdetectors"].show_columns();  => print names of columns in table "SCdetectors"
+//
+// Example output:
+//
+//     Columns in table:
+//     id [INTEGER]
+//     block [INTEGER]
+//     quartet [INTEGER]
+//     telescope [INTEGER]
+//     detector [TEXT]
+//     frontEnd [INTEGER]
+//     module [TEXT]
+//     parameter [TEXT]
+//     alias [TEXT]
+//     channel [TEXT]
+//     value [TEXT]
+//     units [TEXT]
+//     time [TEXT]
 //
 //   db.print_selection("SCelectronics","time,value,units","module='FETemp' AND block=2 AND card='FE3'");
+//
 // Example output:
+//
 //     #|                time|               value|               units
 //     0| 2017-03-11 13:45:31|                  37|             Celsius
 //     1| 2017-03-11 13:45:31|                  41|             Celsius
@@ -70,10 +80,6 @@ ClassImp(KVSQLite::database)
 //
 // For more details on use (also for inserting data), see example db_sqlite_examples.C
 ////////////////////////////////////////////////////////////////////////////////
-
-ClassImp(KVSQLite::table)
-
-
 
 namespace KVSQLite {
 

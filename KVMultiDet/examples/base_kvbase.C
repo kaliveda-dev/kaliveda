@@ -1,22 +1,3 @@
-//# Example of use of the KVBase class
-//
-// This is the base class of most classes in the KaliVeda framework.
-// It provides information on the version & installation layout of
-// KaliVeda, plus various general "utility" methods.
-//
-// To execute this function, either do
-//
-// $ kaliveda
-// root[0] .L base_kvbase.C+
-// root[1] kvbase_example()
-//
-// or
-//
-// $ root
-// root[0] KVBase::InitEnvironment()
-// root[1] .L base_kvbase.C+
-// root[2] kvbase_example()
-
 #include "KVBase.h"
 #include "TList.h"
 #include <iostream>

@@ -58,83 +58,108 @@ ClassImp(KVBase)
 <h2>KVBase</h2>
 <h4>Base class for KaliVeda framework</h4>
 This is the base class for many classes in the KaliVeda framework. Each
-KVBase object has<br>
-<ul>
-<li>a name - Get/SetName()</li>
-<li>a type - Get/SetType()</li>
-<li>a number - Get/SetNumber()</li>
-<li>a label - Get/SetLabel()<br>
-</li>
-</ul>
+KVBase object has:
+
+ - a name - Get/SetName()
+ - a type - Get/SetType()
+ - a number - Get/SetNumber()
+ - a label - Get/SetLabel()
+
 When objects are accessed through a TObject/TNamed base pointer, it is possible
-to test whether an object is derived from KVBase, using the bit KVBase::kIsKaliVedaObject:
-<code>
-TObject* ob = (address of some object)
-if( ob->TestBit( KVBase::kIsKaliVedaObject ) ){
-</code>
+to test whether an object is derived from KVBase, using the bit
+`KVBase::kIsKaliVedaObject`:
+
+    TObject* ob = (address of some object)
+    if( ob->TestBit( KVBase::kIsKaliVedaObject ) ){
+
 This class also provides a number of general utilities, often as static
-(stand-alone) methods.<br>
+(stand-alone) methods.
+      
 <h3>KaliVeda build/installation information</h3>
-The static methods<br>
-<pre>KVBase::GetKVSourceDir()<br>KVBase::GetKVBuildDate()<br>KVBase::GetKVBuildUser()<br></pre>
-give info on the sources, when and where they were built, and by whom.<br>
-The static methods<br>
-<pre>KVBase::GetKVVersion()<br>KVBase::GetKVRoot()<br>KVBase::GetKVRootDir()<br>KVBase::GetKVBinDir()<br>KVBase::GetKVFilesDir()<br></pre>
-give info on the version of KaliVeda, the environment variable $KVROOT,
-and the paths to the installation directories.<br>
+
+The static methods
+
+    KVBase::GetKVSourceDir()
+    KVBase::GetKVBuildDate()
+    KVBase::GetKVBuildType()
+    KVBase::GetKVBuildUser()
+    KVBase::GetKVVersion()
+    
+give info on the sources, when and where they were built, and by whom.
+
 <h3>Initialisation</h3>
-The entire KaliVeda framework is initialised by the static method<br>
-<pre>KVBase::InitEnvironment()<br></pre>
+
+The entire KaliVeda framework is initialised by the static method KVBase::InitEnvironment()
+ 
+    
 <h3>Finding/opening files</h3>
+
 Static methods for easily locating and/or opening files within the
-KaliVeda installation tree (under $KVROOT) are given:<br>
-<pre>KVBase::SearchKVFile(...)<br>KVBase::SearchAndOpenKVFile(...)<br></pre>
+KaliVeda installation tree are given:
+
+    KVBase::SearchKVFile(...)
+    KVBase::SearchAndOpenKVFile(...)
+    
 Note that in the second case, two methods exist: one for reading, the
 other for writing the (ascii) files. A global function for searching
-files is also defined:<br>
-<pre>Bool_t SearchFile(const Char_t* name, TString&amp; fullpath, int ndirs, ...)<br></pre>
+files is also defined:
+
+    Bool_t SearchFile(const Char_t* name, TString&amp; fullpath, int ndirs, ...)
+    
 This will search for a
 file in an arbitrary number of locations, return kTRUE if file is found
-and put full path to file in 'fullpath':<br>
-<ul>
-<li> 'name' is a filename (not an absolute pathname) i.e. "toto.dat"</li>
-<li> 'fullpath' will contain the full path to the
-file if it is found (if file not found, fullpath="")</li>
-<li> 'ndirs' is the number of directories to
-search in<br>
-</li>
-</ul>
+and put full path to file in 'fullpath':
+
+ - 'name' is a filename (not an absolute pathname) i.e. "toto.dat"
+ - 'fullpath' will contain the full path to the file if it is found (if file not found, fullpath="")
+ - 'ndirs' is the number of directories to search in
+
 The remaining arguments are the names of 'ndirs' paths to search in,
-i.e.<br>
-<pre>SearchFile("toto.dat", fullpath, 2, gSystem-&gt;pwd(), gSystem-&gt;HomeDirectory());</pre>
-means: search for a file 'toto.dat' in current working directory, then
-user's home directory.<br>
-<pre>SearchFile("toto.dat", fullpath, 3, KVBase::GetKVFilesDir(), KVBase::GetKVRootDir(), gRootDir);</pre>
-means: search for a file 'toto.dat' in $KVROOT/KVFiles, in $KVROOT, and
-finally in $ROOTSYS.<br>
+
 <h3>Finding class source files</h3>
-Source files for a class can be found using static method<br>
-<pre>KVBase::FindClassSourceFiles(...)<br></pre>
+
+Source files for a class can be found using static method
+
+    KVBase::FindClassSourceFiles(...)
+    
 It will look for appropriately-named files corresponding to the header
-&amp; implementation file of a class, testing several popular suffixes
-in each case.<br>
+and implementation file of a class, testing several popular suffixes
+in each case.
+
 <h3>Finding executables</h3>
+
 To find an executable in the current user's 'PATH' (or elsewhere), use
-static method<br>
-<pre>KVBase::FindExecutable(...)<br></pre>
+static method
+
+    KVBase::FindExecutable(...)
+    
 <h3>Temporary files</h3>
-The static methods<br>
-<pre>KVBase::GetTempFileName(...)<br>KVBase::OpenTempFile(...)<br></pre>
-can generate and handle uniquely-named temporary (ascii) files.<br>
+
+The static methods
+
+    KVBase::GetTempFileName(...)
+    KVBase::OpenTempFile(...)
+    
+can generate and handle uniquely-named temporary (ascii) files.
+
 <h3>Backing-up files</h3>
-The static method<br>
-<pre>KVBase::BackupFileWithDate(...)<br></pre>
+
+The static method
+
+    KVBase::BackupFileWithDate(...)
+    
 can be used to create a dated backup of an existing file before it is
-replaced with a new version.<br>
+replaced with a new version.
+
 <h3>Handling plugins</h3>
+
 As plugins are extensively used in the KaliVeda framework, a few
-utilities for handling them are defined. They are static methods<br>
-<pre>KVBase::LoadPlugin(...)<br>KVBase::GetPluginURI(...)<br></pre>
+utilities for handling them are defined. They are static methods
+
+
+    KVBase::LoadPlugin(...)
+    KVBase::GetPluginURI(...)
+    
 <!-- */
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
@@ -200,25 +225,35 @@ void KVBase::init()
 void KVBase::InitEnvironment()
 {
    // STATIC method to Initialise KaliVeda environment
-   // Reads config files in $(pkgdatadir)/etc and sets up environment
-   // (data repositories, datasets, etc. etc.)
+   // Reads config files in <code>\$(pkgdatadir)/etc</code> and sets up environment
+   // (data repositories, datasets, etc. etc.).
    // Adds directory where kaliveda shared libs are installed to the dynamic
-   // path - for finding and loading plugins (even those which are in libkaliveda.so)
-   // Resets the gRandom random number sequence using a clock-based seed
+   // path - for finding and loading plugins.
+   // Resets the `gRandom` random number sequence using a clock-based seed
    // (i.e. random sequences do not repeat).
-#ifdef WITH_GNU_INSTALL
-   // Sets location of user's working directory which is by default
-   //    $(HOME)/.kaliveda
-   // but can be changed with variable
-   //    KaliVeda.WorkingDirectory:   [directory]
-   // in configuration file. [directory] must be an absolute pathname,
-   // can use shell variables like $(HOME).
    //
-#endif
    // Normally, the first object created which inherits from KVBase will
    // perform this initialisation; if you need to set up the environment before
    // creating a KVBase object, or if you just want to be absolutely sure that
    // the environment has been initialised, you can call this method.
+   //
+   // #### Note for GNU-style installations
+   // If KaliVeda is built with the cmake option `-Dgnuinstall=yes` then each
+   // user will have a working directory which will be used to store any files
+   // generated by KaliVeda at runtime.
+   //
+   // By default the location of user's working directory is set to
+   //~~~~~~~~~
+   //    $(HOME)/.kaliveda
+   //~~~~~~~~~
+   // but can be changed with variable
+   //~~~~~~~~~
+   //    KaliVeda.WorkingDirectory:   [directory]
+   //~~~~~~~~~
+   // in configuration file `.kvrootrc`.
+   //`[directory]` must be an absolute pathname, but can use shell variables like <code>\$(HOME)</code>.
+
+#endif
 
    if (!fEnvIsInit) {//test if environment already initialised
 
@@ -349,8 +384,7 @@ void KVBase::Copy(TObject& obj) const
 void KVBase::Copy(TObject& obj)
 #endif
 {
-   //Copy this to obj
-   //Redefinition of TObject::Copy
+   //Make a copy of this object
 
    TNamed::Copy(obj);
    ((KVBase&) obj).SetNumber(fNumber);
@@ -557,17 +591,19 @@ Bool_t KVBase::SearchAndOpenKVFile(const Char_t* name, ofstream& file, const Cha
 
 void KVBase::BackupFileWithDate(const Char_t* path)
 {
-   //'path' gives the full path (can include environment variables, special symbols)
+   //`path` gives the full path (can include environment variables, special symbols)
    //to a file which will be renamed with an extension containing the current date and time
    //(in SQL format).
+   //
    //Example:
-   //   KVBase::BackupFileWithDate("$(HOME)/toto.txt")
-   //The file toto.txt will be renamed toto.txt.2007-05-02_16:22:37
-
-   //does the file exist ?
+   //
+   //    KVBase::BackupFileWithDate("$(HOME)/toto.txt")
+   //
+   //The file `toto.txt` will be renamed `toto.txt.2007-05-02_16:22:37`
+  
    KVString fullpath = path;
    gSystem->ExpandPathName(fullpath);
-   if (!gSystem->AccessPathName(fullpath.Data())) {
+   if (!gSystem->AccessPathName(fullpath.Data())) {//does the file exist ?
       //backup file
       TDatime now;
       KVString date(now.AsSQLString());
@@ -765,19 +801,19 @@ Int_t KVBase::bzrRevisionNumber()
 
 Bool_t KVBase::FindExecutable(TString& exec, const Char_t* path)
 {
-   //By default, FindExecutable(exec) will look for the executable named by 'exec'
-   //in the directories contained in the environment variable PATH. You can override
-   //this by giving your own search 'path' as second argument (remember to write
-   //environment variables as $(PATH), for cross-platform compatibility).
+   //By default, `FindExecutable(exec)` will look for the executable named by `exec`
+   //in the directories contained in the environment variable `PATH`. You can override
+   //this by giving your own search `path` as second argument (remember to write
+   //environment variables as <code>\$(PATH)</code>, for cross-platform compatibility).
    //
-   //If 'exec' is not found, and if it does not end with '.exe', we look for 'exec.exe'
+   //If `exec` is not found, and if it does not end with `.exe`, we look for `exec.exe`
    //This is for compatibility with Windows/cygwin environments.
    //
-   //If the executable is found, returns kTRUE and 'exec' then holds full path to executable.
-   //Returns kFALSE if exec not found in path.
+   //If the executable is found, returns `kTRUE` and `exec` then holds full path to executable.
+   //Returns `kFALSE` if `exec` not found in paths.
    //
-   //If 'exec' is an absolute pathname, we return kTRUE if the file exists
-   //(we do not use 'path').
+   //If `exec` is an absolute pathname, we return `kTRUE` if the file exists
+   //(we do not use `path`).
 
    TString spath(path), backup(exec), backup2(exec), expandexec(exec);
    gSystem->ExpandPathName(expandexec);
@@ -818,8 +854,8 @@ Bool_t KVBase::FindExecutable(TString& exec, const Char_t* path)
 
 const Char_t* KVBase::FindFile(const Char_t* search, TString& wfil)
 {
-   //Backwards compatible fix for TSystem::FindFile which only exists from 5.12/00 onwards
-   //Use this method as a replacement for gSystem->FindFile (same arguments)
+   //Backwards compatible fix for `TSystem::FindFile` which only exists from ROOT version 5.12/00 onwards.
+   //Use this method as a replacement for `gSystem->FindFile` (same arguments)
 #ifdef __WITHOUT_TSYSTEM_FINDFILE
    Char_t* result = gSystem->Which(search, wfil.Data());
    if (result) {
@@ -838,13 +874,24 @@ const Char_t* KVBase::FindFile(const Char_t* search, TString& wfil)
 
 Bool_t KVBase::FindClassSourceFiles(const Char_t* class_name, KVString& imp_file, KVString& dec_file, const Char_t* dir_name)
 {
-   //Look for the source files corresponding to "class_name"
+   //Look for the source files corresponding to `class_name`
    //i.e. taking class_name as a base, we look for one of
-   //  [class_name.C,class_name.cpp,class_name.cxx]
+   //
+   //~~~~~~~
+   //class_name.C,class_name.cpp,class_name.cxx
+   //~~~~~~~
+   //
    //and one of
-   //  [class_name.h,class_name.hh,class_name.H]
-   //By default we look in the current working directory, unless argument 'dir_name' is given
-   //If found, the names of the two files are written in 'imp_file' and 'dec_file'
+   //
+   //~~~~~~~
+   //class_name.h,class_name.hh,class_name.H
+   //~~~~~~~
+   //
+   //By default we look in the current working directory, unless argument `dir_name`
+   //is given
+   //
+   //If found, the names of the two files are written in `imp_file` and
+   //`dec_file`
 
    KVNameValueList impl_alt;
    int i = 0;
@@ -885,17 +932,20 @@ Bool_t KVBase::FindClassSourceFiles(const Char_t* class_name, KVString& imp_file
 
 const Char_t* KVBase::GetPluginURI(const Char_t* base, const Char_t* derived)
 {
-   //Inverse of gPluginMgr->FindHandler(const Char_t* base, const Char_t* uri).
-   //Given a base class "base" and a derived class "derived", we search gEnv to find the
+   //Inverse of `gPluginMgr->FindHandler(const Char_t* base, const Char_t* uri)`
+   //
+   //Given a base class `base` and a derived class `derived`, we search `gEnv` to find the
    //URI corresponding to this plugin.
    //
    //Example: given a plugin such as
    //
+   //~~~~~~~~
    //Plugin.KVIDTelescope:      ^PHOS$           KVIDPhoswich         KVIndra         "KVIDPhoswich()"
+   //~~~~~~~~
    //
-   //then calling KVBase::GetPluginURI("KVIDTelescope", "KVIDPhoswich") will return "PHOS".
+   //then calling `KVBase::GetPluginURI("KVIDTelescope", "KVIDPhoswich")` will return `"PHOS"`.
    //
-   //Most of the code is copied from TPluginManager::LoadHandlersFromEnv
+   //Most of the code is copied from `TPluginManager::LoadHandlersFromEnv`
 
    TIter next(gEnv->GetTable());
    TEnvRec* er;
@@ -954,7 +1004,7 @@ const Char_t* KVBase::GetListOfPlugins(const Char_t* base)
    // Return whitespace-separated list of all plugin classes defined for
    // the given base class.
    //
-   // Most of the code is copied from TPluginManager::LoadHandlersFromEnv
+   // Most of the code is copied from `TPluginManager::LoadHandlersFromEnv`
 
    TIter next(gEnv->GetTable());
    TEnvRec* er;
@@ -1001,13 +1051,15 @@ const Char_t* KVBase::GetListOfPlugins(const Char_t* base)
 
 void KVBase::ReadGUIMimeTypes()
 {
-   // Add to standard ROOT mime types some new ones defined in .kvrootrc
+   // Add to standard ROOT mime types some new ones defined in `.kvrootrc`
    // for icons associated with graphs, runs, etc. by lines such as:
    //
+   //~~~~~~~~~
    //  KaliVeda.GUI.MimeTypes :   KVIDMap
    //  KaliVeda.GUI.MimeTypes.KVIDMap.Icon :   rootdb_t.xpm
    //  +KaliVeda.GUI.MimeTypes :   KVIDZAGrid
    //  KaliVeda.GUI.MimeTypes.KVIDZAGrid.Icon :   draw_t.xpm
+   //~~~~~~~~~
    //
    // etc.
 
@@ -1055,14 +1107,14 @@ Int_t KVBase::TestPorts(Int_t port)
 
 Bool_t KVBase::AreEqual(Double_t A, Double_t B, Long64_t maxdif)
 {
-   // Comparison between two 64-bit floating-point values
-   // Returns kTRUE if the integer representations of the two values are within
-   // maxdif of each other.
-   // By default maxdif=1, which means that we consider that x==y if the
-   // difference between them is no greater than the precision of Double_t
-   // variables, i.e. 4.94065645841246544e-324
+   // \brief Comparison between two 64-bit floating-point values
    //
-   // Based on the function AlmostEqual2sComplement(float, float, int)
+   // Returns `kTRUE` if the integer representations of the two values are within
+   // `maxdif` of each other. By default `maxdif=1`, which means that we consider that `x==y` if the
+   // difference between them is no greater than the precision of `Double_t`
+   // variables, i.e. `4.94065645841246544e-324`
+   //
+   // Based on the function `AlmostEqual2sComplement(float, float, int)`
    // by Bruce Dawson http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
 
    union converter {
@@ -1224,9 +1276,9 @@ void KVBase::PrintSplashScreen()
 #endif
    cout << "*                                                         *" <<
         endl;
-   cout << "*               For help, read the doc on :               *" <<
+   cout << "*               For help, see the website :               *" <<
         endl;
-   cout << "*           http://indra.in2p3.fr/KaliVedaDoc             *" <<
+   cout << "*             http://indra.in2p3.fr/kaliveda              *" <<
         endl;
    cout << "*                                                         *" <<
         endl;
@@ -1236,3 +1288,17 @@ void KVBase::PrintSplashScreen()
         endl << endl;
 }
 
+/** \example base_kvbase.C
+# Example of use of the KVBase class
+
+This is the base class of most classes in the KaliVeda framework.
+It provides information on the version & installation layout of
+KaliVeda, plus various general "utility" methods.
+
+To execute this function, do:
+
+    $ kaliveda
+    kaliveda[0] .L base_kvbase.C+
+    kaliveda[1] kvbase_example()
+
+*/

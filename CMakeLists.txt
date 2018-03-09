@@ -14,7 +14,7 @@ endif()
 find_package(ROOT
    REQUIRED Rint Graf Geom Spectrum Proof ProofPlayer Physics Hist
    RIO Tree MathCore Matrix Gpad Gui Net Graf3d
-   OPTIONAL_COMPONENTS RGL RooFit RooFitCore Html Minuit RSQLite SQLite)
+   OPTIONAL_COMPONENTS RGL RooFit RooFitCore Minuit RSQLite SQLite)
 
 #--optional support for OpenGL
 if(ROOT_opengl_FOUND)
@@ -23,11 +23,6 @@ if(ROOT_opengl_FOUND)
 else()
 	message(STATUS "ROOT with no OpenGL support: KVEventViewer disabled")
 endif()
-
-#--check if HTML class reference can be made
-if(ROOT_Html_LIBRARY)
-   set(CAN_DO_HTMLDOC true)
-endif(ROOT_Html_LIBRARY)
 
 include(${ROOT_USE_FILE})
 
@@ -396,37 +391,3 @@ endif()
 
 #---install man pages for KaliVeda
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/man/ DESTINATION ${CMAKE_INSTALL_MANDIR})
-
-#------------------------HTML CLASS REFERENCE & EXAMPLES GENERATION
-if(CAN_DO_HTMLDOC)
-
-   CONVERT_ALL_EXAMPLE_FUNCTIONS()
-
-   get_property(KALIVEDA_EXFUNCS GLOBAL PROPERTY KALIVEDA_EXFUNCS)
-   get_property(KALIVEDA_EXCLASS GLOBAL PROPERTY KALIVEDA_EXCLASS)
-
-   #---add a 'html' target to generate ROOT class reference
-   file(WRITE ${CMAKE_BINARY_DIR}/makehtml.C "{\nmakedoc(\"${CMAKE_BINARY_DIR}/htmldoc\");\n}")
-   add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/htmldoc/index.html
-      COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tools/html ${CMAKE_BINARY_DIR}
-      COMMAND ${ROOT_EXECUTABLE} -q -l makehtml.C
-      DEPENDS ${KALIVEDA_LIB_LIST}
-      )
-   add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/htmldoc/examples
-      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/htmldoc/examples
-      )
-   get_property(EXAMPLE_INDEX_TARGETS GLOBAL PROPERTY EXAMPLE_INDEX_TARGETS)
-   get_property(EXAMPLE_SUBPROJ_TARGETS GLOBAL PROPERTY EXAMPLE_SUBPROJ_TARGETS)
-   get_property(CLEAN_EXAMPLE_SUBPROJ_TARGETS GLOBAL PROPERTY CLEAN_EXAMPLE_SUBPROJ_TARGETS)
-   add_custom_target(classref DEPENDS ${CMAKE_BINARY_DIR}/htmldoc/index.html)
-   add_custom_target(exampledir DEPENDS ${CMAKE_BINARY_DIR}/htmldoc/examples)
-   foreach(Exa ${KALIVEDA_EXFUNCS} ${KALIVEDA_EXCLASS})
-      add_dependencies(${Exa} ${EXAMPLE_INDEX_TARGETS} exampledir)
-   endforeach()
-   add_custom_target(examples)
-   add_dependencies(examples ${EXAMPLE_SUBPROJ_TARGETS})
-   add_custom_target(html)
-   add_dependencies(classref examples)
-   add_dependencies(html ${CLEAN_EXAMPLE_SUBPROJ_TARGETS} classref examples)
-
-endif(CAN_DO_HTMLDOC)

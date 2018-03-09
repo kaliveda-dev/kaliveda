@@ -30,7 +30,7 @@ Double_t KVParticle::kSpeedOfLight = TMath::C() * 1.e-07;
 
 using namespace std;
 
-ClassImp(KVParticle);
+ClassImp(KVParticle)
 
 ////////////////////////////////////////////////////////////////////////////
 //KVParticle

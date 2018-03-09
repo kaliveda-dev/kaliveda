@@ -31,23 +31,6 @@ function(CHANGE_LIST_TO_STRING mystring)
 endfunction()
 
 #---------------------------------------------------------------------------------------------------
-#---EXTRACT_EXAMPLE_DESCRIPTION(description SOURCE sourcefile)
-# Look for first line starting with "//# " in sourcefile
-# Put string found after "//# " into description
-#---------------------------------------------------------------------------------------------------
-function(EXTRACT_EXAMPLE_DESCRIPTION description)
-
-	CMAKE_PARSE_ARGUMENTS(ARG "" "SOURCE" "" ${ARGN})
-    
-	file(STRINGS ${ARG_SOURCE} desc REGEX "^//# ")
-   if(desc)
-      string(SUBSTRING ${desc} 4 -1 descrip)
-   endif()
-	set(${description} "${descrip}" PARENT_SCOPE)
-
-endfunction()
-
-#---------------------------------------------------------------------------------------------------
 #---KALIVEDA_SET_MODULE_DEPS(<variable> library MODULES mod1 mod2 ...)
 #---------------------------------------------------------------------------------------------------
 function(KALIVEDA_SET_MODULE_DEPS variable)
@@ -180,108 +163,14 @@ function(ADD_KALIVEDA_EXAMPLE_FUNCTION source)
     get_filename_component(sourcename ${source} NAME_WE)
     get_filename_component(sourcefile ${source} NAME)
     
-    #--get description for example
-    EXTRACT_EXAMPLE_DESCRIPTION(desc SOURCE ${source})
-    message(STATUS "         ${sourcefile} - ${desc}")
+    message(STATUS "         ${sourcefile} - [example]")
     set_property(GLOBAL APPEND PROPERTY KALIVEDA_EXFUNCS ${sourcename})
     set_property(GLOBAL APPEND PROPERTY ${KVSUBPROJECT}_EXFUNCS ${sourcename})
     set_property(GLOBAL PROPERTY ${KVSUBPROJECT}_EXFUNC_${sourcename}_FILE ${sourcefile})
     set_property(GLOBAL PROPERTY ${KVSUBPROJECT}_EXFUNC_${sourcename}_SRC ${source})
-    set_property(GLOBAL PROPERTY ${KVSUBPROJECT}_EXFUNC_${sourcename}_DESC ${desc})
 
     add_library(${KVSUBPROJECT}${sourcename} SHARED ${source})
     target_link_libraries(${KVSUBPROJECT}${sourcename} ${KALIVEDA_LIB_LIST} ${ROOT_LIBRARIES})
-
-endfunction()
-
-#---------------------------------------------------------------------------------------------------
-#---WRITE_EXAMPLES_INDEX(subproject)
-#
-# Write a HTML file in subproject build dir with list of examples for subproject
-#
-function(WRITE_EXAMPLES_INDEX subproject)
-
-    get_property(EXFUNCS GLOBAL PROPERTY ${subproject}_EXFUNCS)
-    set(html_filename ${CMAKE_BINARY_DIR}/${subproject}/index.html)
-    file(WRITE ${html_filename} "<h2>Examples of use of ${subproject} classes</h2>\n")
-    file(APPEND ${html_filename} "<ol>\n")
-    foreach(example ${EXFUNCS})
-      get_property(ex_file GLOBAL PROPERTY ${subproject}_EXFUNC_${example}_FILE)
-      get_property(ex_desc GLOBAL PROPERTY ${subproject}_EXFUNC_${example}_DESC)
-      file(APPEND ${html_filename} "<li><a href=\"examples/${ex_file}.html\">${ex_file}</a> - ${ex_desc}</li>\n")
-    endforeach(example)
-
-endfunction()
-
-#---------------------------------------------------------------------------------------------------
-#---CONVERT_ALL_EXAMPLE_FUNCTIONS()
-#
-# Make HTML versions of all examples
-#
-function(CONVERT_ALL_EXAMPLE_FUNCTIONS)
-
-   KALIVEDA_SET_INCLUDE_DIRS(KVMultiDet MODULES base)
-   add_executable(${KV_HTML_CONVERTER} EXCLUDE_FROM_ALL tools/html/html_convert.cxx)
-   target_link_libraries(${KV_HTML_CONVERTER} KVMultiDetbase)
-   target_link_libraries(${KV_HTML_CONVERTER} ${ROOT_LIBRARIES})
-
-    get_property(KALIVEDA_SUBPROJ_LIST GLOBAL PROPERTY KALIVEDA_SUBPROJ_LIST)
-    foreach(subproject ${KALIVEDA_SUBPROJ_LIST})
-	
-     if(EXISTS ${CMAKE_SOURCE_DIR}/${subproject}/examples)
-    
-      # targets to write examples index
-      add_custom_command(
-         OUTPUT ${CMAKE_BINARY_DIR}/${subproject}/index.html
-         COMMAND ${CMAKE_COMMAND} -Dsubproject=${subproject} -P ${CMAKE_SOURCE_DIR}/cmake/WriteExampleIndex.cmake
-      )
-      add_custom_target(${subproject}ExampleIndex DEPENDS ${CMAKE_BINARY_DIR}/${subproject}/index.html)
-      set_property(GLOBAL APPEND PROPERTY EXAMPLE_INDEX_TARGETS ${subproject}ExampleIndex)
-      
-      add_custom_target(${subproject}Examples)
-      
-      get_property(EXFUNCS GLOBAL PROPERTY ${subproject}_EXFUNCS)
-      foreach(example ${EXFUNCS})
-         get_property(ex_file GLOBAL PROPERTY ${subproject}_EXFUNC_${example}_FILE)
-         get_property(ex_desc GLOBAL PROPERTY ${subproject}_EXFUNC_${example}_DESC)
-         get_property(ex_src GLOBAL PROPERTY ${subproject}_EXFUNC_${example}_SRC)
-         
-         add_custom_command(
-            OUTPUT ${CMAKE_BINARY_DIR}/htmldoc/examples/${ex_file}.html
-            COMMAND ${KV_HTML_CONVERTER} -i ${CMAKE_BINARY_DIR}/${subproject}/index.html -o ${CMAKE_BINARY_DIR}/htmldoc -t "${ex_desc}" ${ex_src}
-            VERBATIM
-            DEPENDS ${KV_HTML_CONVERTER} ${ex_src}
-         )
-         add_custom_target(
-            ${example} DEPENDS ${CMAKE_BINARY_DIR}/htmldoc/examples/${ex_file}.html
-         )
-         add_dependencies(${subproject}Examples ${example})
-      endforeach(example)
-      get_property(EXCLASS GLOBAL PROPERTY ${subproject}_EXCLASS)
-      foreach(class ${EXCLASS})
-         get_property(cl_src GLOBAL PROPERTY ${subproject}_EXCLASS_${class}_SRC)
-         
-         add_custom_command(
-            OUTPUT ${CMAKE_BINARY_DIR}/htmldoc/${class}.html
-            COMMAND ${KV_HTML_CONVERTER} -c -i ${CMAKE_BINARY_DIR}/${subproject}/index.html -o ${CMAKE_BINARY_DIR}/htmldoc -t ${class} ${cl_src}
-            VERBATIM
-            DEPENDS ${KV_HTML_CONVERTER} ${cl_src}
-         )
-         add_custom_target(
-            ${class} DEPENDS ${CMAKE_BINARY_DIR}/htmldoc/${class}.html
-         )
-         add_dependencies(${subproject}Examples ${class})
-      endforeach(class)
-      add_custom_command(TARGET ${subproject}Examples POST_BUILD
-         COMMAND ${CMAKE_COMMAND} -Dsubproject=${subproject} -P ${CMAKE_SOURCE_DIR}/cmake/EndExamplesIndex.cmake
-      )
-      add_custom_target(${subproject}CleanExampleIndex
-         COMMAND ${CMAKE_COMMAND} -E remove -f ${CMAKE_BINARY_DIR}/${subproject}/index.html
-      )
-      set_property(GLOBAL APPEND PROPERTY EXAMPLE_SUBPROJ_TARGETS ${subproject}Examples)
-      set_property(GLOBAL APPEND PROPERTY CLEAN_EXAMPLE_SUBPROJ_TARGETS ${subproject}CleanExampleIndex)
-     endif(EXISTS ${CMAKE_SOURCE_DIR}/${subproject}/examples)
-    endforeach(subproject)
 
 endfunction()
 
