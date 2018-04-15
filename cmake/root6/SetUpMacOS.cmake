@@ -93,8 +93,8 @@ if (CMAKE_SYSTEM_NAME MATCHES Darwin)
      set(EXEEXT "")
      set(SOEXT "so")
 
-  elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
-
+  elseif(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+     # Change on 15/04/2018 STREQUAL in MATCHES to take into account that on MacOSX CMAKE_CXX_COMPILER_ID is now AppleClang and no more Clang
      message(STATUS "Found LLVM compiler collection")
 
      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pipe -W -Wall -Woverloaded-virtual -fsigned-char -fno-common -Qunused-arguments")
