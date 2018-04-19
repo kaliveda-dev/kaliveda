@@ -314,11 +314,11 @@ ISOFAZIA.IdentificationParameterFile.Si-CsI:       IDGrids_SI2_CSI.dat
 ISOFAZIA.IdentificationParameterFile.Si:       IDGrids_SI1_ImaxE.dat
 ISOFAZIA.ActiveIdentifications:        CsI Si-Si Si-CsI Si
 
-FAZIASYM.IdentificationParameterFile.Si-Si:       IDGrids_SI1_SI2_light.dat
-#FAZIASYM.IdentificationParameterFile.Si-Si:       IDGrids_SI1_SI2.dat
-FAZIASYM.IdentificationParameterFile.CsI:       IDGrids_CSI.dat
-FAZIASYM.IdentificationParameterFile.Si-CsI:       IDGrids_SI2_CSI.dat
-FAZIASYM.ActiveIdentifications:        CsI Si-CsI Si-Si Si
+FAZIASYM.IdentificationParameterFile.Si:      ID_SI1_Alberto.dat
+FAZIASYM.IdentificationParameterFile.Si-Si:   ID_SI1_SI2_Alberto.dat
+FAZIASYM.IdentificationParameterFile.CsI:     IDGrids_CSI.dat
+FAZIASYM.IdentificationParameterFile.Si-CsI:  ID_SI2_CSI_Alberto.dat   
+FAZIASYM.ActiveIdentifications:       CsI Si-Si Si-CsI Si 
 
 LNS_2016.IdentificationParameterFile.Si-Si:       SI-SI-Grids.dat
 #LNS_2016.IdentificationParameterFile.CsI:      .dat
