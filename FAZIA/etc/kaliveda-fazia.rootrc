@@ -318,7 +318,7 @@ FAZIASYM.IdentificationParameterFile.Si-Si:       IDGrids_SI1_SI2_light.dat
 #FAZIASYM.IdentificationParameterFile.Si-Si:       IDGrids_SI1_SI2.dat
 FAZIASYM.IdentificationParameterFile.CsI:       IDGrids_CSI.dat
 FAZIASYM.IdentificationParameterFile.Si-CsI:       IDGrids_SI2_CSI.dat
-FAZIASYM.ActiveIdentifications:        CsI Si-CsI Si-Si
+FAZIASYM.ActiveIdentifications:        CsI Si-CsI Si-Si Si
 
 LNS_2016.IdentificationParameterFile.Si-Si:       SI-SI-Grids.dat
 #LNS_2016.IdentificationParameterFile.CsI:      .dat
