@@ -1,0 +1,160 @@
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 4200-25000
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-11: 0.705065,0.402945,0.0
+SI1-14: 0.293058,0.263779,0.0
+SI1-21: 0.077480,0.311169,0.0
+SI1-22: 0.394462,0.256217,0.0
+SI1-23: 0.536379,0.259273,0.0
+SI1-24: 0.383703,0.262245,0.0
+SI1-31: 0.619342,0.255073,0.0
+SI1-34: 0.383777,0.370539,0.0
+SI1-42: 0.416897,0.258435,0.0
+SI1-44: 0.402826,0.276513,0.0
+SI1-111: 0.450097,0.259811,0.0
+SI1-112: 0.142404,0.259720,0.0
+SI1-113: 0.127420,0.269715,0.0
+SI1-114: 0.038781,0.257206,0.0
+SI1-123: 0.446138,0.254829,0.0
+SI1-124: 0.293008,0.260285,0.0
+SI1-131: -0.329658,0.260258,0.0
+SI1-133: -0.119867,0.262197,0.0
+SI1-134: 0.144621,0.259829,0.0
+SI1-141: 0.282599,0.258045,0.0
+SI1-142: -0.020251,0.259535,0.0
+SI1-143: 0.194027,0.260965,0.0
+SI1-211: 0.225154,0.261422,0.0
+SI1-213: 0.456086,0.261190,0.0
+SI1-221: 0.207952,0.261981,0.0
+SI1-224: -0.376344,0.256166,0.0
+SI1-242: 0.395600,0.263597,0.0
+SI1-244: 0.458190,0.269243,0.0
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 4200-4410
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-233: 0.439918,0.629123,0.0
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 4410-5020
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-13: 0.321519,0.262339,0.0
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 4200-5800
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-12: 0.150443,0.261425,0.0
+SI1-32: 0.098529,0.260703,0.0
+SI1-33: 0.258404,0.341765,0.0
+SI1-41: 0.066284,0.264338,0.0
+SI1-43: 0.202811,0.270469,0.0
+SI1-132: 0.098226,0.257464,0.0
+SI1-212: 0.921037,0.252629,0.0
+SI1-222: -0.478854,0.257594,0.0
+SI1-234: 0.557955,0.577032,0.0
+SI1-311: 0.326199,0.258119,0.0
+SI1-314: 0.025018,0.257231,0.0
+SI1-321: 0.585639,0.394297,0.0
+SI1-323: 0.539832,0.261939,0.0
+SI1-331: 0.374011,0.262878,0.0
+SI1-333: 0.436745,0.262926,0.0
+SI1-334: 0.720422,0.267575,0.0
+SI1-341: 0.580063,0.264443,0.0
+SI1-342: 0.370887,0.264323,0.0
+SI1-343: 0.484884,0.268548,0.0
+SI1-344: 1.025865,0.601148,0.0
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 4200-8080
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-223: 0.435009,0.259226,0.0
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 4411-5800
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-233: 0.635397,0.602183,0.0
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 5021-5800
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-13: 0.378625,0.262285,0.0
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 7500-10200
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-32: 0.287393,0.260623,0.0
+SI1-43: -0.944890,0.259906,0.0
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 7500-12220
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-41: 0.445224,0.263430,0.0
+
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 10201-12700
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-32: 0.656925,0.259767,0.0
+SI1-43: 0.215887,0.257377,0.0
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 12221-12700
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-41: 0.268079,0.262110,0.0
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 7500-12700
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-12: 0.570982,0.263663,0.0
+SI1-13: 0.545019,0.262229,0.0
+SI1-33: 0.714165,0.352450,0.0
+SI1-212: 0.038032,0.254601,0.0
+SI1-222: 0.459129,0.263167,0.0
+SI1-233: 0.653700,0.617994,0.0
+SI1-234: 0.557955,0.577032,0.0
+#
+#  E(MeV) = a0 + a1*channel + a2*channel*channel
+#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
+#
+RunList:                                 8081-12700
+Signal:                                  QH1
+CalibType:                               Channel-Energy
+SI1-223: 0.473271,0.261605,0.0
+
