@@ -316,7 +316,7 @@ ISOFAZIA.ActiveIdentifications:        CsI Si-Si Si-CsI Si
 
 FAZIASYM.IdentificationParameterFile.Si:      ID_SI1_Alberto.dat
 FAZIASYM.IdentificationParameterFile.Si-Si:   ID_SI1_SI2_Alberto.dat
-FAZIASYM.IdentificationParameterFile.CsI:     IDGrids_CSI.dat
+FAZIASYM.IdentificationParameterFile.CsI:     ID_CSI_Alberto.dat
 FAZIASYM.IdentificationParameterFile.Si-CsI:  ID_SI2_CSI_Alberto.dat   
 FAZIASYM.ActiveIdentifications:       CsI Si-Si Si-CsI Si 
 
