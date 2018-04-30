@@ -2579,7 +2579,10 @@ void KVMultiDetArray::FillListOfIDTelescopes(KVIDGraph* gr) const
       while (!tel_list.End()) {
          TString tel_name = tel_list.Next();
          KVIDTelescope* idt = GetIDTelescope(tel_name.Data()) ;
-         if (idt) gr->AddIDTelescope(idt);
+         if (idt) {
+            gr->AddIDTelescope(idt);
+            cout << "Filled " << tel_name.Data() << endl;
+         }
       }
    }
 }
