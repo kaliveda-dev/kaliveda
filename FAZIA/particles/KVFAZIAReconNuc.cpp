@@ -211,6 +211,7 @@ void KVFAZIAReconNuc::Identify()
    // This continues until a successful identification is achieved or there are no more ID telescopes to try.
    // The identification code corresponding to the identifying telescope is set as the identification code of the particle.
 
+   //cout << "Dentro il mio Identify" << endl;
 
    KVList* idt_list = GetStoppingDetector()->GetIDTelescopes();
    KVIdentificationResult* IDR = 0;
@@ -219,9 +220,14 @@ void KVFAZIAReconNuc::Identify()
 
       KVIDTelescope* idt;
       TIter next(idt_list);
+
       while ((idt = (KVIDTelescope*) next())) { // && !IsIdentified()) {
+
          if (StoppedInSI1() && !strcmp(idt->GetType(), "Si-Si")) continue; // why ?
          if (StoppedInSI2() && !strcmp(idt->GetType(), "Si-CsI")) continue; // why ?
+
+
+
          IDR = GetIdentificationResult(idnumber);
          IDR->SetName(idt->GetName());
          IDR->SetType(idt->GetType());
@@ -246,6 +252,7 @@ void KVFAZIAReconNuc::Identify()
             IDR->IDattempted = kFALSE;
          }
          idnumber += 1;
+
       }
 
       KVIdentificationResult partID;
@@ -270,6 +277,8 @@ void KVFAZIAReconNuc::Identify()
          SetIdentification(&partID);
       }
 
+
+
    }
 
 }
@@ -279,6 +288,7 @@ Bool_t KVFAZIAReconNuc::CoherencySi(KVIdentificationResult& theID)
    KVIdentificationResult* IDsi = GetIdentificationResult("SiPSA");
    if (IDsi && IDsi->IDOK) {
       theID = *IDsi;
+      //cout << "PSA IDCode" << theID.IDcode << endl;
       return kTRUE;
    } else return kFALSE;
 }
@@ -289,9 +299,11 @@ Bool_t KVFAZIAReconNuc::CoherencySiSi(KVIdentificationResult& theID)
    KVIdentificationResult* IDsi = GetIdentificationResult("SiPSA");
    if (IDsisi && IDsisi->IDOK)    {
       theID = *IDsisi;
+      //cout << "SiSi IDCode" << theID.IDcode << endl;
       return kTRUE;
    } else if (IDsi && IDsi->IDOK) {
       theID = *IDsi;
+      // cout << "Si (daSiSi) IDCode" << theID.IDcode << endl;
       return kTRUE;
    } else return kFALSE;
 }
@@ -308,17 +320,30 @@ Bool_t KVFAZIAReconNuc::CoherencySiCsI(KVIdentificationResult& theID)
    // Unsuccessful/no CsI id attempt with successful Si-CsI id
    // Then use Si-CsI identification result
 
+   /* if (IDsicsi && IDsicsi->IDOK)    {
+       theID = *IDsicsi;
+       return kTRUE;
+    } else if (IDcsi && IDcsi->IDOK) {
+       theID = *IDcsi;
+       return kTRUE;
+    } else return kFALSE;*/
 
-
-
-   if (IDsicsi && IDsicsi->IDOK)    {
+   //Alberto - 27/04:tentativo di prendere Z=1,2 da Csi e Z>=3 da SiCsi
+   if (IDsicsi && IDsicsi->IDOK && IDsicsi->Z >= 3)    {
       theID = *IDsicsi;
+      //if(theID.Z<3) {
+      //cout << theID.Z << endl;
+      //cout << "SiCsi (daCsi) IDCode" << theID.IDcode << endl;
+      //}
       return kTRUE;
-   } else if (IDcsi && IDcsi->IDOK) {
+   } else if (IDcsi && IDcsi->IDOK && IDcsi->Z < 3) {
       theID = *IDcsi;
+      //if(theID.Z<3 && theID.IDcode <33) {
+      //cout << theID.Z << endl;
+      //cout << "Csi IDCode" << theID.IDcode << endl;
+      //}
       return kTRUE;
    } else return kFALSE;
-
 
 
    /*    if (IDsicsi->IDOK && !IDcsi->IDOK) {
