@@ -45,5 +45,9 @@ endforeach()
 install(TARGETS ${build_targets} EXPORT ${CMAKE_PROJECT_NAME}Exports RUNTIME DESTINATION bin)
 
 #---install shell scripts
-set(scripts KVA KaliVeda)
-install(PROGRAMS ${scripts} DESTINATION bin)
+if(APPLE)
+    message(STATUS "You're on a MAC? - Skipping install shell scripts... sorry !")
+else()
+    set(scripts KVA KaliVeda)
+    install(PROGRAMS ${scripts} DESTINATION bin)
+endif()
