@@ -57,7 +57,10 @@ main_site:
 	@cd LyXGenDoc && $(MAKE) clean
 	@cd LyXGenDoc && $(MAKE)
 	@cd LyXGenDoc && $(MAKE) install PREFIX=$(prefix)/KaliVedaDoc
-	@cp html/appli.html html/build.html html/download.html html/index.html $(prefix)/KaliVedaDoc/
+	@cat html/header.html html/appli.html html/tail.html > $(prefix)/KaliVedaDoc/appli.html
+	@cat html/header.html html/build.html html/tail.html > $(prefix)/KaliVedaDoc/build.html
+	@cat html/header.html html/download.html html/tail.html > $(prefix)/KaliVedaDoc/download.html
+	@cat html/header.html html/index.html html/tail.html > $(prefix)/KaliVedaDoc/index.html
 	@cp -r css $(prefix)/KaliVedaDoc/
 	@cp -r js $(prefix)/KaliVedaDoc/
 	@cp -r images $(prefix)/KaliVedaDoc/
@@ -83,7 +86,7 @@ update_users_guide:
 users_guide:
 	@echo "Updating users guide"
 	@cd usersguide && $(MAKE) && $(MAKE) install PREFIX=$(prefix)/KaliVedaDoc
-	@cat html/ClassRefIndex_head.html userguide_TOC.html html/ClassRefIndex_tail.html > $(prefix)/KaliVedaDoc/usersguide.html
+	@cat html/header.html html/usersguide_head.html userguide_TOC.html html/tail.html > $(prefix)/KaliVedaDoc/usersguide.html
 
 update_all: main_site users_guide
 upload_all: update_main_site update_users_guide

@@ -3,11 +3,15 @@
 # Data Analysis #
 
 Here are some guidelines for analysing data. Data can either be raw experimental
-data, reconstructed experimental data (of
-types `recon`, `ident` or `root`), or simulated data, either filtered with a
+data, reconstructed experimental data, or simulated data, either filtered with a
 given experimental setup (in which case it is again reconstructed data) or not.
 
-Two graphical interfaces are provided for analysing such data: [KaliVedaGUI] and
+Each data analysis requires a user analysis class to define the tasks to be performed,
+histograms/trees to fill etc. The user's analysis class is piloted by a class derived from
+`KVDataAnalyser` which handles opening the data files requested by the user and setting
+up the necessary environment for the analysis to proceed.
+
+Two graphical interfaces are provided for analysing data: [KaliVedaGUI] and
 [kaliveda-sim]. Both interfaces are capable of generating example analysis classes for the
 data you want to analyse. This is the recommended method for creating a new analysis class, which you can then modify according to your needs.
 
@@ -28,26 +32,107 @@ data you want to analyse. This is the recommended method for creating a new anal
 Whatever kind of data you wish to analyse, you will now have a more-or-less complete example of an analysis class contained in the files `MyClass.h` and `MyClass.cpp` (assuming you replied `MyClass` when asked for a name for the class). The exact heritage of this class will depend on the kind of data being analysed, but in all cases it will have the following 5 methods:
 
 ~~~~~~~{.cpp}
-   void InitAnalysis();
-   void InitRun();
-   Bool_t Analysis();
-   void EndRun();
-   void EndAnalysis();
+   void MyClass::InitAnalysis();
+   void MyClass::InitRun();
+   Bool_t MyClass::Analysis();
+   void MyClass::EndRun();
+   void MyClass::EndAnalysis();
 ~~~~~~~
 
 `InitAnalysis()` and `EndAnalysis()` are executed once only at the beginning and end, respectively, of the analysis. `InitRun()` and `EndRun()` are called at the beginning and end, respectively, of each data file which is being analysed. `Analysis()` is called for each and every event read from the files. Each of these methods in your `MyClass.cpp` file should contain useful comments and/or examples of use.
 
 It should be noted that for all except `raw` data analysis (i.e. for all data stored in ROOT trees), the analysis classes inherit from [KVEventSelector] which allows them to be used with PROOF on multi-core machines. It is important to read the guidelines given in the [KVEventSelector] class reference for this to work.
 
+The user's analysis class can acces the `KVDataAnalyser` object which is running the analysis through the `gDataAnalyser` global pointer
+(see below).
+
 ### `InitAnalysis()`
 
 This is the place to create/open any ROOT files, histograms, trees etc. you require in order to store the output of your analysis. Also the place to define any global variables needed for the analysis.
+See the examples given and comments in the example analysis classes.
 
 If you are analysing reconstructed experimental/simulated data, do **not** try to access the experimental set-up (`gMultiDetArray`, etc.) associated with the data you want to analyse here - it will not be defined until `InitRun()`.
 
 ### `InitRun()`
 
-Called once at the beginning of each new data file. In case of reconstructed data you can access the experimental set-up (`gMultiDetArray`, system being analysed, run number, etc.) associated with the data here if you need to.
+Called once at the beginning of each new data file. 
+In case of analysing *experimental* reconstructed data you can access the experimental set-up (`gMultiDetArray`, system being analysed, run number, etc.)
+associated with the data here if you need to:
+
+~~~~~~{.cpp}
+   GetCurrentRun()->GetNumber(); // the number of the run analysed
+   GetCurrentRun()->GetSystem(); // returns KVDBSystem* pointer to collision system being analysed
+~~~~~~
+
+For reconstructed data of either experimental or filtered simulated type, you can access the kinematics of the collision system
+being analysed like so:
+
+~~~~~~{.cpp}
+   gDataAnalyser->GetKinematics(); // returns KV2Body* pointer to collision kinematics
+~~~~~~
+
+#### Reconstructed particle selection
+
+When analysing reconstructed data, `InitRun()` is the place to modify or fine-tune if you require the selections which will be
+applied to the particles of each event in order to include them in or exclude them from the analysis.
+These are the particles which will be used for the calculation of any global variables
+declared in `InitAnalysis()`, and those which will be labelled as "OK" (for example
+when iterating over the event).
+
+##### Identification & calibration codes
+
+The first selection applied is to consider "OK" only those particles which have
+acceptable identification codes (`KVReconstructedNucles::GetIDCode()`) and calibration
+codes (`KVReconstructedNucleus::GetECode()`). For each multidetector array,
+the default values of the acceptable codes can be defined using the configuration
+variables
+
+~~~~~~~~~~~
+[dataset].[name].ReconstructedNuclei.AcceptIDCodes: 2-4,6
+[dataset].[name].ReconstructedNuclei.AcceptECodes:  1-2
+~~~~~~~~~~~
+
+where `[name]` is the name of the array and optionally the values can be dataset
+dependent.
+
+To change the default acceptable codes for particles reconstructed by a given array,
+use
+
+~~~~~~~~~{.cpp}
+   gMultiDetArray->AcceptIDCodes(const TString&)
+   gMultiDetArray->AcceptECodes(const TString&)
+~~~~~~~~~
+
+using the same format for the lists of codes as in the configuration variable
+example given above. If analysing data for a set-up consisting of several
+different detector arrays, you should use
+
+~~~~~~~~~{.cpp}
+   gMultiDetArray->GetArray("[name]")->AcceptIDCodes(const TString&)
+   gMultiDetArray->GetArray("[name]")->AcceptECodes(const TString&)
+~~~~~~~~~
+
+replacing `[name]` by the appropriate array name.
+
+##### Customised selections with `KVParticleCondition`
+
+For any other selections which need to be applied to exclude 'bad' particles
+from the analysis, you can use the `KVParticleCondition` class to define any
+number of selections based on particle properties which will be applied to
+all particles which passed the identification/calibration code selections.
+
+> Note that you cannot 'retrieve' a particle which has been excluded due to bad
+> identification or calibration codes using a `KVParticleCondition` selection
+
+These selections are then added to the analysis using the `SetParticleConditions()` method:
+
+~~~~~~~~~{.cpp}
+   KVParticleCondition pc("_NUC_->GetZ()>0");
+   SetParticleConditions(pc);
+~~~~~~~~~
+
+See the example analysis classes for more examples. See the class reference for
+`KVParticleCondition` for usage.
 
 [KaliVedaGUI]: ../KaliVedaGUIDoc/KaliVedaGUI.html
 [kaliveda-sim]: ../KVSimDirGUIDoc/KVSimDirGUI.html

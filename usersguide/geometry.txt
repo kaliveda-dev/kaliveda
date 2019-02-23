@@ -254,12 +254,14 @@ you can change the default range and angular step size if you wish when you call
 
 ~~~~~~~~{.cpp}
 Info in <KVGeoImport::ImportGeometry>: Imported 3 detectors into array
-Info in <KVMultiDetArray::CalculateTrajectories>: Calculating all possible trajectories:
- -- calculated 1 trajectories
+Info in <KVMultiDetArray::AssociateTrajectoriesAndNodes>: Removed 2 duplicated sub-trajectories
+Info in <KVMultiDetArray::AssociateTrajectoriesAndNodes>: Calculated 1 particle trajectories
+Info in <KVMultiDetArray::DeduceGroupsFromTrajectories>: Deducing groups of detectors from trajectories
+Info in <KVMultiDetArray::DeduceGroupsFromTrajectories>: Filling group trajectory lists
 Info in <KVMultiDetArray::DeduceIdentificationTelescopesFromGeometry>: Calculating...
  -- created 2 telescopes
-Info in <KVMultiDetArray::CalculateReconstructionTrajectories>: Calculating...
- -- calculated 3 trajectories
+Info in <KVMultiDetArray::CalculateReconstructionTrajectories>: Calculating trajectories for particle reconstruction:
+ -- calculated 3 reconstruction trajectories
 ~~~~~~~~
 
 These are the results of the scan: 3 detectors were correctly identified and imported. You can see the list

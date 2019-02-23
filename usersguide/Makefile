@@ -1,5 +1,5 @@
 MKDWN_EXT = .txt
-GLOBAL_PANDOC_OPTIONS = --mathjax --number-sections --latex-engine=pdflatex -S -s --toc --toc-depth=4 -c css/rootdoc.css --section-divs
+GLOBAL_PANDOC_OPTIONS = --mathjax --number-sections --latex-engine=pdflatex -S -s --toc --toc-depth=5 -c css/rootdoc.css --section-divs
 MKDWN_SOURCES := $(wildcard *$(MKDWN_EXT))
 
 HTML_OUTPUT := $(patsubst %$(MKDWN_EXT),html/%.html,$(MKDWN_SOURCES))

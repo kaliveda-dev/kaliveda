@@ -1,36 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-  <head>
-    <title>Build and Install</title>
-    <link rel="stylesheet" href="css/site.css" type="text/css">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta content="J.D. Frankland, GANIL (France)" name="author">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="images/favicon.ico"
-      type="image/x-icon">
-  </head>
-  <body>
     <h1>Build & Install</h1>
-    <div class="leftSide">
 
-      <script language="javascript" src="js/nav.js"></script> <br>
-      <!-- SiteSearch Google -->
-      <form method="get" action="http://www.google.com/search"><input
-          name="ie" value="UTF-8" type="hidden"> <input name="oe"
-          value="UTF-8" type="hidden"><input name="q" style="margin-top:
-          5px;" size="13" maxlength="255" value="" type="text"> <input
-          name="btnG" style="margin-top: 5px;" value="Search site"
-          onclick="send_data(this.form)" type="submit"></form>
-      <!-- SiteSearch Google --> </div>
-    <div class="page"> <br>
-      <div class="news">
-        <p class="newsText">
+        <p>
         If you downloaded KaliVeda source code, you will need to build & install the
         toolkit. Here are some instructions (you will also find them in the file INSTALL in
         the top directory of the source tree).
         </p>
-        <h3 class="newsTitle">Prerequisites</h3>
-        <p class="newsText">
+        <h3>Prerequisites</h3>
+        <p>
         <dl>
         <dt>ROOT</dt>
         <dd>At least v5.32 is required, ROOT6 is fully supported.<br>
@@ -44,18 +20,21 @@
         </dd>
         </dl>
         </p>
-        <h3 class="newsTitle">Quick Start</h3>
-        <p class="newsText">
+        
+        <h3>Quick Start</h3>
+        <p>
         Here is a quick & simple build & installation, using only default settings.
         For a detailed explanation of the build system,
         see <a href="https://github.com/kaliveda-dev/kaliveda/wiki/Build-System">here</a>.
         </p>
-        <p class="newsText">
+        
+        <p>
         In the following, <b>S</b> is the top directory of your source tree, <b>B</b> is
         where you want to build the toolkit, and <b>I</b> is where you want to install
         the toolkit. Please note that all three of <b>S</b>, <b>B</b>, and <b>I</b> <em>must</em>
         be different directories.
         </p>
+        
         <ol>
         <li>Configure the build
 <div class="code">[do the following anywhere except in S or I]
@@ -72,14 +51,18 @@ build options which can be passed to CMake.
 $ make [-j[number of CPUs on multicore machine]] install</div></li>
 </ol>
 On a single-core machine, just type 'make install'. On a quad-core machine, type 'make -j4 install' etc.</p>
-<p class="newsText">
-If you are using a source tree under git version control (see <a href="download.html#git">here</a>), from time
+
+<p>
+If you are using a source tree under git version control, from time
 to time you will want to update your source tree to the latest versions and rebuild the toolkit. It is usually
 sufficient, in this case, to just repeat step 2 above.</p> 
-<h3 class="newsTitle">Setup</h3>
-<p class="newsText">
+
+<h3>Setup</h3>
+
+<p>
 After installing, you can use one of the following scripts to set up the necessary paths on your system
 to find the executables and run-time libraries:
+
 <div class="code">$ source I/bin/thiskaliveda.csh   [(t)csh shell]
 $ . I/bin/thiskaliveda.sh         [(ba)sh shell] </div>
 where <b>I</b> is your installation directory. On (t)csh machines, you will probably need to follow this
@@ -105,13 +88,10 @@ $ kaliveda
 kaliveda [0]
 </div>    
         </p>
-<p class="newsText">
+        
+<p>
 To setup the KaliVeda paths every time you login to your system, place the call to thiskaliveda.(c)sh
 at the end of whatever login script is appropriate for your shell,
 a slight modification is required for (t)csh shells:
 <div class="code">source I/bin/thiskaliveda.csh I   [(t)csh shell] </div>
 </p>
-      </div>
-    </div>
-  </body>
-</html>
