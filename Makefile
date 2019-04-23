@@ -25,8 +25,6 @@ upload_main_site:
 	@echo "put html/download.html" >> upload.batch
 	@echo "mkdir css" >> upload.batch
 	@echo "put css/* css/" >> upload.batch
-	@echo "mkdir js" >> upload.batch
-	@echo "put js/* js/" >> upload.batch
 	@echo "mkdir images" >> upload.batch
 	@echo "put images/* images/" >> upload.batch
 	for docdir in $(lyxdocdirs); do \
@@ -43,7 +41,6 @@ update_main_site:
 	@echo "put html/index.html" >> upload.batch
 	@echo "put html/download.html" >> upload.batch
 	@echo "put css/* css/" >> upload.batch
-	@echo "put js/* js/" >> upload.batch
 	@echo "put images/* images/" >> upload.batch
 	for docdir in $(lyxdocdirs); do \
 	  echo "put $(prefix)/KaliVedaDoc/$$docdir/* $$docdir/" >> upload.batch ; \
