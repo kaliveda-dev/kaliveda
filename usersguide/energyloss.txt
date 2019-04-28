@@ -1,0 +1,137 @@
+% KaliVeda User's Guide
+
+# Energy loss & range calculations #
+
+Energy losses and ranges of charged particles in matter can be calculated for
+a wide range of materials and ions, principally through the classes
+[KVMaterial], [KVDetector] and [KVTarget]:
+
+~~~~~~~~~~~~~{.cpp}
+KVMaterial mat("CsI", 10*KVUnits::cm);
+
+mat.GetRange(2,4,20)      // range of alpha with KE 20 MeV
+9.83723725162513885e-02   // in g/cm**2
+
+mat.GetLinearRange(2,4,20)
+2.18120548833410678e-02   // in cm
+
+KVNucleus a("4He", 5.0);                // alpha particle with KE 5 MeV/u
+KVDetector det("Si",150*KVUnits::um);   // silicon detector 150um thick
+
+det.GetELostByParticle(&a)    // dE of 20-MeV alpha in 150um of silicon
+1.02854420719389914e+01   // in MeV
+~~~~~~~~~~~~~
+
+In actual fact, these classes do not contain the code required to calculate
+the range or energy loss of particles in matter. They are just an interface to
+a class derived from [KVIonRangeTable], of which two exist in KaliVeda:
+[KVedaLoss] (`VEDALOSS`) and [KVRangeYanez] (`RANGE`). By default the range table is `VEDALOSS`.
+
+  + `VEDALOSS` uses a 6-parameter fit to the range for each Z from 1 to 100 in any of the 29 materials for which
+  fits are available.
+    The fitted ranges were calculated using Northcliffe-Shilling stopping powers (electronic + nuclear)
+    up to 2.5 MeV/nucleon, and Hubert-Bimbot-Gauvin tables from 2.5 MeV/nucleon upwards.
+    
+  + `RANGE` can calculate ranges for any ion/material using either the Northcliffe-Schilling or the
+    Hubert-Bimbot-Gauvin tables, or a mix of the two. By default the switch from NS to HBG occurs at
+    2.5 MeV/nucleon without interpolation. Only 9 predefined compounds are available by default (any elemental material
+    can be initialised automatically on the fly), but the user can easily add new compounds or mixtures
+    as required.
+
+## Changing the default range table
+
+The default range table used can be defined/changed in your `.kvrootrc` file:
+
+~~~~~~~~~~~~~~~
+# Ion range table used by KVMaterial. You can change this to use a different plugin defined as above.
+KVMaterial.IonRangeTable:   VEDALOSS
+~~~~~~~~~~~~~~~
+
+To know which range table is the current default:
+
+~~~~~~~~~~~~~~{.cpp}
+KVMaterial::GetRangeTable()->GetName()
+"RANGE"          // KVRangeYanez table is default
+~~~~~~~~~~~~~~
+
+To change the default range table at any time:
+
+~~~~~~~~~~~~~~{.cpp}
+KVMaterial::ChageRangeTable("RANGE")
+
+Info in <KVRangeYanez::ReadPredefinedMaterials>: Reading materials in file : rangeyanez_compounds.data
+Material : Mylar (Myl)   State : solid
+Material : Kapton (Kap)   State : solid
+Material : Octofluoropropane (C3F8)   State : gas
+Material : Cesium Iodide (CsI)   State : solid
+Material : Potassium Chloride (KCl)   State : solid
+Material : Tetrafluoromethane (CF4)   State : gas
+Material : Isobutane  (C4H10)   State : gas
+Material : NE102/NE110 Scintillator (NE102)   State : solid
+Material : Air (Air)   State : gas
+~~~~~~~~~~~~~~
+ 
+## Adding new materials to `VEDALOSS`
+Adding a new material to the `VEDALOSS` range tables means generating the range of ions Z=1-100 in the
+material and fitting them with the `VEDALOSS` parameterisation. The [KVedaLossRangeFitter] class is provided
+for this purpose. First you need to generate the range tables for your new material, using the `RANGE` package:
+
+~~~~~~~~~~~~{.cpp}
+KVRangeYanez ryan;
+
+int z[]={6,8};      // arrays to describe CO2
+int a[]={12,16};
+int natoms[]={1,2};
+
+ryan.AddCompoundMaterial("CarbonDioxide","CO2",2,z,a,natoms); // WARNING! No spaces in name/symbol!!
+
+Material : CarbonDioxide (CO2)   State : gas
+~~~~~~~~~~~~
+
+Next instantiate the fitter class, and set the material to be fitted:
+
+~~~~~~~~~~~~{.cpp}
+KVedaLossRangeFitter Rfit
+
+Rfit.SetMaterial(ryan.GetMaterial("CO2")) // use the new CO2 material we defined
+
+Info in <KVedaLossRangeFitter::SetMaterial>: Initial fit parameters will be taken from:
+Material : Air (Air)   State : gas
+	Effective Z=7.220000, A=14.440000   Molar Weight = 28.882557 g.
+	Mixed material:
+		Element: 14N   Ar=14.003074 g.   Natoms=2   Proportion=0.780000
+		Element: 16O   Ar=15.994915 g.   Natoms=2   Proportion=0.220000
+
+~~~~~~~~~~~~
+
+Note that for initial fit parameters we look for the closest existing material (in charge & mass)
+in the `VEDALOSS` table. Next the fit will be performed Z by Z:
+
+~~~~~~~~~~~~{.cpp}
+Rfit.DoFits("co2.dat")  // give name of file where fit results will be written
+~~~~~~~~~~~~
+
+Each fit is drawn in a canvas (the blue points correspond to the reference material used to initialize the
+fit; the open circles are the ranges of the new material).
+
+Assuming that all went well, you can now import this new material into the default `VEDALOSS`
+range table:
+
+~~~~~~~~~~~~{.cpp}
+KVMaterial::GetRangeTable()->ReadMaterials("co2.dat")
+~~~~~~~~~~~~
+
+And you can use it like any other material:
+
+~~~~~~~~~~~~{.cpp}
+KVDetector det("CO2",5*KVUnits::cm);
+det.DrawPunchThroughEsurAVsZ()->Draw("al");
+~~~~~~~~~~~~
+
+[KVMaterial]: http://indra.in2p3.fr/kaliveda/doc/master/classKVMaterial.html
+[KVDetector]: http://indra.in2p3.fr/kaliveda/doc/master/classKVDetector.html
+[KVTarget]: http://indra.in2p3.fr/kaliveda/doc/master/classKVTarget.html
+[KVIonRangeTable]: http://indra.in2p3.fr/kaliveda/doc/master/classKVIonRangeTable.html
+[KVedaLoss]: http://indra.in2p3.fr/kaliveda/doc/master/classKVedaLoss.html
+[KVedaLossRangeFitter]: http://indra.in2p3.fr/kaliveda/doc/master/classKVedaLossRangeFitter.html
+[KVRangeYanez]: http://indra.in2p3.fr/kaliveda/doc/master/classKVRangeYanez.html
