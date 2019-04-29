@@ -79,7 +79,7 @@ int acq_mt_alloc_c(gan_tape_desc DeviceName)
    else Status = ACQ_ISNOTATAPE;
 
 
-#elif defined ( __unix__ ) || ( __unix )
+#elif defined ( __unix__ ) || ( __unix ) || (__APPLE__) || (__MACH__)
 
    Status = ACQ_OK;
 
@@ -135,7 +135,7 @@ int acq_mt_dealloc_c(gan_tape_desc DeviceName)
    }
    else Status = ACQ_ISNOTATAPE;
 
-#elif defined ( __unix__ ) || ( __unix )
+#elif defined ( __unix__ ) || ( __unix ) || (__APPLE__) || (__MACH__)
 
    Status = ACQ_OK;
 

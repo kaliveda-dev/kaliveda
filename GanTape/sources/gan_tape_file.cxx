@@ -56,12 +56,21 @@ extern int sys$dassgn();
 extern int sys$qiow();
 
 
-#elif defined ( __unix__ ) || ( __unix )               /***** Cas de UNIX *****/
+#elif defined ( __unix__ ) || ( __unix )              /***** Cas de UNIX *****/
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/ioctl.h>
 #include <sys/mtio.h>
+#include <fcntl.h>
+
+
+#elif defined (__APPLE__) || (__MACH__)               /***** Cas de UNIX *****/
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
+#include <AppleInclude/mtio.h>
 #include <fcntl.h>
 
 
@@ -147,7 +156,7 @@ int acq_mt_open_c(gan_tape_desc* DeviceName, mode_r_w RWMode, int* Lun)
                           "fop=rwo", "mrs=32764");
          else return (Status);
 
-#elif defined ( __unix__ ) || ( __unix )
+#elif defined ( __unix__ ) || ( __unix ) || (__APPLE__) || (__MACH__)
          Status = open(DeviceName->DevName, Mode);
 
 
@@ -344,7 +353,7 @@ int acq_mt_rewind_c(gan_tape_desc DeviceName)
    }
    else Status = ACQ_ISNOTATAPE;
 
-#elif defined ( __unix__ ) || ( __unix ) /* Coherence a verifier entre les differents UniX  */
+#elif defined ( __unix__ ) || ( __unix ) || (__APPLE__) || (__MACH__) /* Coherence a verifier entre les differents UniX  */
 
    struct mtop Control;
 
@@ -453,7 +462,7 @@ int acq_mt_skip_file_c(gan_tape_desc DeviceName, int NombreSkip)
    else Status = ACQ_ISNOTATAPE;
 
 
-#elif defined ( __unix__ ) || ( __unix )
+#elif defined ( __unix__ ) || ( __unix ) || (__APPLE__) || (__MACH__)
 
    struct mtop Control;
 
@@ -571,7 +580,7 @@ int acq_mt_skip_block_c(gan_tape_desc DeviceName, int NombreSkip)
    else Status = ACQ_ISNOTATAPE; /* C'est un disque */
 
 
-#elif defined ( __unix__ ) || ( __unix )
+#elif defined ( __unix__ ) || ( __unix ) || (__APPLE__) || (__MACH__)
 
    struct mtop Control;
 
@@ -672,7 +681,7 @@ int acq_mt_skip_to_eot_c(gan_tape_desc DeviceName, int* NombreSkip)
    else Status = ACQ_ISNOTATAPE;
 
 
-#elif defined ( __unix__ ) || ( __unix )
+#elif defined ( __unix__ ) || ( __unix ) || (__APPLE__) || (__MACH__)
 
    struct mtop Control;
    int NbrTempo = 0;

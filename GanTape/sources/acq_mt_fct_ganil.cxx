@@ -36,7 +36,7 @@
 #include <file.h> /* Pour la gestion du fichier temporaire. */
 
 
-#elif defined ( __unix__ ) || (__unix)  /***********************************/
+#elif defined ( __unix__ ) || (__unix) || (__APPLE__) || (__MACH__)/***********************************/
 
 #include <sys/types.h>
 #include <sys/stat.h>

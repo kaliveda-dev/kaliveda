@@ -22,7 +22,7 @@ extern "C" {
 
 #include "acq_codes_erreur.h"
 
-#elif defined ( __unix__ ) || ( __unix )
+#elif defined ( __unix__ ) || ( __unix ) || (__APPLE__) || (__MACH__)
 
 #define ACQ_OK             0
 #define ACQ_ERRPARAM      -1

@@ -36,6 +36,16 @@
 #include <fcntl.h>
 #include <sys/mtio.h>
 
+
+#elif defined ( __APPLE__ ) || defined ( __MACH__ )  /***** Cas de UNIX *****/
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <AppleInclude/mtio.h>
+
+
 /* Pour tests CC sous solaris B. Raine le 21/4/04
 //extern int ioctl (int __fildes, int __cmd, struct mtget *);
 //extern int close(int);

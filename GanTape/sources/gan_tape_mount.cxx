@@ -148,7 +148,7 @@ int acq_mt_mount_c(gan_tape_desc DeviceName, int Densit, int BlocSize)
       }
    }
 
-#elif defined ( __unix__ ) || ( __unix )
+#elif defined ( __unix__ ) || ( __unix ) || (__APPLE__) || (__MACH__)
 
    Status = ACQ_OK;
 
@@ -211,7 +211,7 @@ int acq_mt_dismount_c(gan_tape_desc DeviceName, int Option)
 
 #endif
 
-#if defined ( __unix__ ) || ( __unix )
+#if defined ( __unix__ ) || ( __unix ) || (__APPLE__) || (__MACH__)
 
    Status = ACQ_OK;
 

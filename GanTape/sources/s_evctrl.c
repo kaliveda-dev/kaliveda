@@ -101,7 +101,7 @@ example : Call from a C program :
 #else
 #include <stdio.h>
 #include "GanTape/GEN_TYPE.H"   /* general typedef definitions */
-#if defined ( __unix ) || ( __unix__)
+#if defined ( __unix ) || ( __unix__) || (__APPLE__) || (__MACH__)
 #include "ERR_GAN.H" /* GANIL errors definitions */
 #else
 /*#include "ERR$GAN.H" GANIL errors definitions */
