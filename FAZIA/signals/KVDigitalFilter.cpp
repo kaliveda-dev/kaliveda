@@ -381,7 +381,7 @@ void KVDigitalFilter::ApplyTo(double* datax, const int NSamples, int reverse) co
    // Copiato +- da KVSignal.cxx
    // Diversa la convenzione per a0 b0!
 
-   vector<long double> datay(NSamples);
+   std::vector<long double> datay(NSamples);
    int i = 0, k = 0;
    switch (reverse) {
       case 0:// direct
@@ -430,7 +430,7 @@ void KVDigitalFilter::ApplyTo(float* datax, const int NSamples, int reverse) con
    // Copiato +- da KVSignal.cxx
    // Diversa la convenzione per a0 b0!
 
-   vector<long double> datay(NSamples);
+   std::vector<long double> datay(NSamples);
    int i = 0, k = 0;
    switch (reverse) {
       case 0:// direct
@@ -477,7 +477,7 @@ void KVDigitalFilter::ApplyTo(int* datax, const int NSamples, int reverse) const
    // Copiato +- da KVSignal.cxx
    // Diversa la convenzione per a0 b0!
 
-   vector<long double> datay(NSamples);
+   std::vector<long double> datay(NSamples);
    int i = 0, k = 0;
    switch (reverse) {
       case 0:// direct
@@ -964,7 +964,7 @@ void KVDigitalFilter::FIRApplyTo(float* datax, const int NSamples, int reverse) 
    // Copiato +- da KVSignal.cxx
    // Diversa la convenzione per a0 b0!
 
-   vector<long double> datay(NSamples);
+   std::vector<long double> datay(NSamples);
    int i = 0, k = 0;
    switch (reverse) {
       case 0:// direct
@@ -1009,7 +1009,7 @@ void KVDigitalFilter::FIRApplyTo(double* datax, const int NSamples, int reverse)
    // Copiato +- da KVSignal.cxx
    // Diversa la convenzione per a0 b0!
 
-   vector<long double> datay(NSamples);
+   std::vector<long double> datay(NSamples);
    int i = 0, k = 0;
    switch (reverse) {
       case 0:// direct

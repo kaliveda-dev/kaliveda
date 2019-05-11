@@ -35,7 +35,7 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
    Bool_t check_error = kFALSE;
 
    double error_si1 = 0, error_si2 = 0; // error_csi=0;
-   vector<Double_t> eloss(ntot);
+   std::vector<Double_t> eloss(ntot);
    for (Int_t ii = 0; ii < ntot; ii += 1) eloss[ii] = 0;
 
    KVFAZIADetector* det = 0;
