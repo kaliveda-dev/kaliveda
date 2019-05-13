@@ -40,4 +40,5 @@
 #pragma link C++ class KVRandomizor;
 #pragma link C++ class KVRandomizorInd;
 #pragma link C++ class KVRandomizorCor;
+#pragma link C++ class KVAlphaCalibration+;
 #endif
