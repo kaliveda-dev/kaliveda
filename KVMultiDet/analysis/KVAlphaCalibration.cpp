@@ -192,7 +192,7 @@ void KVAlphaCalibration::FitLinear(bool debug_)
    TCanvas* cc = new TCanvas();
    if (debug_) std::cerr << "DEBUG IN FitLinear : Searching for peaks in histogram" << std::endl;
    spec->Search(histo, sigma, "", threshold);
-   Float_t* xpos = spec->GetPositionX();
+   Double_t* xpos = spec->GetPositionX();
    pos1 = xpos[0];
 
    if (debug_) std::cerr << "DEBUG IN FitLinear : Number of peaks found is " << spec->GetNPeaks() << std::endl;
