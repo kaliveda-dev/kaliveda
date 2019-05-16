@@ -20,6 +20,8 @@ $Author: lemarie $
 #include "TStyle.h"
 #include "TROOT.h"
 #include <vector>
+#include <cstdlibr>
+#include <iostream>
 #include <limits>
 
 class KVAlphaCalibration {
