@@ -5,8 +5,8 @@
 #include "KVMultiDetArray.h"
 #include "KVClassFactory.h"
 #include "KVDataSet.h"
-#include "TH1.h"
 #include "TSystem.h"
+#include "TROOT.h"
 
 using namespace std;
 
@@ -26,6 +26,7 @@ KVRawDataAnalyser::KVRawDataAnalyser()
    // Default constructor
    fRunFile = 0;
    TotalEntriesToRead = 0;
+   fTreeFile = nullptr;
 }
 
 KVRawDataAnalyser::~KVRawDataAnalyser()
@@ -147,6 +148,36 @@ void KVRawDataAnalyser::SubmitTask()
       ProcessRun();
    }
 
+   if (fCombinedOutputFile != "") {
+      Info("Terminate", "combine = %s", fCombinedOutputFile.Data());
+      // combine histograms and trees from analysis into one file
+      TString file1, file2;
+      file1.Form("HistoFileFrom%s.root", ClassName());
+      file2.Form("TreeFileFrom%s.root", ClassName());
+      if (fHistoList.GetEntries()) {
+         if (fTreeFile) {
+            Info("Terminate", "both");
+            SaveHistos();
+            fTreeFile->Write();
+            delete fTreeFile;
+            KVBase::CombineFiles(file1, file2, fCombinedOutputFile, kFALSE);
+         }
+         else {
+            // no trees - just rename histo file
+            Info("Terminate", "histo");
+            SaveHistos(fCombinedOutputFile);
+         }
+      }
+      else if (fTreeFile) {
+         // no histos - just rename tree file
+         Info("Terminate", "tree");
+         fTreeFile->Write();
+         delete fTreeFile;
+         gSystem->Rename(file2, fCombinedOutputFile);
+      }
+      else  Info("Terminate", "none");
+   }
+
    preEndAnalysis();
    //call user's end of analysis
    EndAnalysis();
@@ -163,6 +194,151 @@ void KVRawDataAnalyser::CalculateTotalEventsToRead()
       Int_t r = GetRunList().Next();
       TotalEntriesToRead += gExpDB->GetDBRun(r)->GetEvents();
    }
+}
+
+void KVRawDataAnalyser::AddTree(TTree* tree)
+{
+   // Add a user analysis results TTree to list which will be automatically
+   // written to disk at end of analysis.
+   // User must call CreateTreeFile(const Char_t*) before calling this method
+
+   if (!fTreeFile) {
+      Error("AddTree", "You must call CreateTreeFile(const Char_t*) before using this method!");
+      return;
+   }
+   tree->SetDirectory(fTreeFile);
+   tree->AutoSave();
+   fTreeList.Add(tree);
+}
+
+void KVRawDataAnalyser::FillHisto(const Char_t* histo_name, Double_t one, Double_t two, Double_t three, Double_t four)
+{
+   //Find in the list, if there is an histogram named "histo_name"
+   //If not print an error message
+   //If yes redirect to the right method according to its closest mother class
+   //to fill it
+
+   TH1* h1 = 0;
+   if ((h1 = GetHisto(histo_name))) {
+      if (h1->InheritsFrom("TH3"))
+         FillTH3((TH3*)h1, one, two, three, four);
+      else if (h1->InheritsFrom("TProfile2D"))
+         FillTProfile2D((TProfile2D*)h1, one, two, three, four);
+      else if (h1->InheritsFrom("TH2"))
+         FillTH2((TH2*)h1, one, two, three);
+      else if (h1->InheritsFrom("TProfile"))
+         FillTProfile((TProfile*)h1, one, two, three);
+      else if (h1->InheritsFrom("TH1"))
+         FillTH1(h1, one, two);
+      else
+         Warning("FillHisto", "%s -> Classe non prevue ...", fHistoList.FindObject(histo_name)->ClassName());
+   }
+   else {
+      Warning("FillHisto", "%s introuvable", histo_name);
+   }
+}
+
+void KVRawDataAnalyser::FillHisto(const Char_t* histo_name, const Char_t* label, Double_t weight)
+{
+   // Fill 1D histogram with named bins
+   TH1* h1 = 0;
+   if ((h1 = GetHisto(histo_name))) {
+      h1->Fill(label, weight);
+   }
+   else {
+      Warning("FillHisto", "%s introuvable", histo_name);
+   }
+}
+
+void KVRawDataAnalyser::FillTree(const Char_t* tree_name)
+{
+   //Filltree method, the tree named tree_name
+   //has to be declared with AddTTree(TTree*) method
+   //
+   //if no sname="", all trees in the list is filled
+   //
+   if (!strcmp(tree_name, "")) {
+      fTreeList.Execute("Fill", "");
+   }
+   else {
+      TTree* tt = 0;
+      if ((tt = GetTree(tree_name))) {
+         tt->Fill();
+      }
+      else {
+         Warning("FillTree", "%s introuvable", tree_name);
+      }
+   }
+}
+
+void KVRawDataAnalyser::SaveHistos(const Char_t* filename, Option_t* option, Bool_t onlyfilled)
+{
+   // Write in file all histograms declared with AddHisto(TH1*)
+   //
+   // If no filename is specified, set default name : HistoFileFrom[name_of_class].root
+   //
+   // If a filename is specified, search in gROOT->GetListOfFiles() if
+   // this file has been already opened
+   //  - if yes write in it
+   //  - if not, create it with the corresponding option, write in it
+   // and close it just after
+   //
+   // onlyfilled flag allow to write all (onlyfilled=kFALSE, default)
+   // or only histograms (onlyfilled=kTRUE) those have been filled
+
+   TString histo_file_name = "";
+   if (!strcmp(filename, ""))
+      histo_file_name.Form("HistoFileFrom%s.root", ClassName());
+   else
+      histo_file_name = filename;
+
+   Bool_t justopened = kFALSE;
+
+   TFile* file = 0;
+   TDirectory* pwd = gDirectory;
+   //if filename correspond to an already opened file, write in it
+   //if not open/create it, depending on the option ("recreate" by default)
+   //and write in it
+   if (!(file = (TFile*)gROOT->GetListOfFiles()->FindObject(histo_file_name.Data()))) {
+      file = new TFile(histo_file_name.Data(), option);
+      justopened = kTRUE;
+   }
+   file->cd();
+   TIter next(GetHistoList());
+   TObject* obj = 0;
+   while ((obj = next())) {
+      if (obj->InheritsFrom("TH1")) {
+         if (onlyfilled) {
+            if (((TH1*)obj)->GetEntries() > 0) {
+               obj->Write();
+            }
+         }
+         else {
+            obj->Write();
+         }
+      }
+   }
+   if (justopened)
+      file->Close();
+   pwd->cd();
+}
+
+Bool_t KVRawDataAnalyser::CreateTreeFile(const Char_t* filename)
+{
+   // This method must be called before creating any user TTree in InitAnalysis().
+   // If no filename is given, default name="TreeFileFrom[name of analysis class].root"
+
+   TString tree_file_name;
+   if (!strcmp(filename, ""))
+      tree_file_name.Form("TreeFileFrom%s.root", ClassName());
+   else
+      tree_file_name = filename;
+
+   TDirectory* savedir = gDirectory;
+   fTreeFile = new TFile(tree_file_name, "RECREATE");
+   savedir->cd();
+
+   return kTRUE;
 }
 
 //_______________________________________________________________________//
@@ -200,86 +376,8 @@ void KVRawDataAnalyser::Make(const Char_t* kvsname)
    //endanalysis
    body = "   //Method called at end of analysis: save/display histograms etc.";
    cf.AddMethodBody("EndAnalysis", body);
+   cf.AddImplIncludeFile("KVMultiDetArray.h");
    cf.GenerateCode();
-}
-
-//_______________________________________________________________________//
-
-void KVRawDataAnalyser::AddHisto(TH1* h, const Char_t* family)
-{
-   // Add user histo to internal list of spectra.
-   // "family" can be used to arrange histograms into a directory structure,
-   // e.g.
-   //   toto->AddHisto(h1, "CSI_R_L/Ring_10")
-   // will create (if they don't exist) sublists "CSI_R_L" and "Ring_10"
-   // and store the histogram referenced by pointer h1 in the second one.
-   //
-   // All spectra can be saved at any time by calling SaveSpectra method.
-
-   KVString dir_struc(family);
-   if (dir_struc == "") {
-      fHistoList.Add(h);
-      return;
-   }
-   dir_struc.Begin("/");
-   int level = 0;
-   KVHashList* sublist = 0;
-   while (!dir_struc.End()) {
-      KVString dir = dir_struc.Next();
-      if (!level) {
-         // use top-level directory name as name of fHistoList
-         fHistoList.SetName(dir.Data());
-         sublist = &fHistoList;
-      }
-      else {
-         KVHashList* sublist2 = (KVHashList*)sublist->FindObject(dir.Data());
-         if (!sublist2) {
-            sublist2 = new KVHashList;
-            sublist2->SetName(dir.Data());
-            sublist->Add(sublist2);
-         }
-         sublist = sublist2;
-      }
-      level++;
-   }
-   sublist->Add(h);
-}
-
-void KVRawDataAnalyser::SaveSpectra(const Char_t* filename)
-{
-   // Save all histograms added via AddHisto in the file
-   // "filename". Any previously existing file will be overwritten.
-   // If 'directory' names were used in AddHisto, this structure
-   // will be preserved in the file.
-
-   Info("SaveSpectra", "Saving all histograms in file %s", filename);
-   TFile* savegard =  new TFile(filename, "recreate");
-   if (strcmp(fHistoList.GetName(), "KVHashList")) {
-      // list has been given a name => have directory structure
-      fHistoList.Write(fHistoList.GetName(), TObject::kSingleKey);
-   }
-   else {
-      fHistoList.Write();
-   }
-   savegard->Write();
-   savegard->Close();
-}
-
-void KVRawDataAnalyser::ClearAllHistos()
-{
-   // RAZ de tous les histos
-   clearallhistos(&fHistoList);
-}
-
-void KVRawDataAnalyser::clearallhistos(TCollection* list)
-{
-   // RAZ de tous les histos in list
-   TIter next(list);
-   TObject* obj;
-   while ((obj = next())) {
-      if (obj->InheritsFrom("TCollection")) clearallhistos((TCollection*)obj);
-      else if (obj->InheritsFrom("TH1"))((TH1*)obj)->Reset();
-   }
 }
 
 void KVRawDataAnalyser::AbortDuringRunProcessing()
@@ -287,38 +385,3 @@ void KVRawDataAnalyser::AbortDuringRunProcessing()
    // Method called to abort analysis during processing of a run
 }
 
-TH1* KVRawDataAnalyser::FindHisto(const Char_t* path)
-{
-   // return address of histogram using its full path
-   // i.e. using
-   //    FindHisto("BidimChIoSi/ring6/CI_SI_0604_PG")
-
-   KVString Path(path);
-   if (Path.Contains("/")) {
-      // path given. parse it to find names of sublists and histo.
-      Path.Begin("/");
-      KVHashList* sublist = 0;
-      KVString subpath = Path.Next();
-      if (subpath != fHistoList.GetName()) {
-         sublist = (KVHashList*)fHistoList.FindObject(subpath.Data());
-         if (!sublist) {
-            Error("FindHisto", "path=%s. Cannot find %s in top-level.", path, subpath.Data());
-            return 0;
-         }
-      }
-      else sublist = (KVHashList*)&fHistoList;
-      subpath = Path.Next();
-      while (!Path.End()) {
-         KVHashList* sublist2 = (KVHashList*)sublist->FindObject(subpath.Data());
-         if (!sublist2) {
-            Error("FindHisto", "path=%s. Cannot find %s in subdir %s", path, subpath.Data(), sublist->GetName());
-            return 0;
-         }
-         sublist = sublist2;
-         subpath = Path.Next();
-      }
-      TH1* histo = (TH1*)sublist->FindObject(subpath.Data());
-      return histo;
-   }
-   return 0;
-}

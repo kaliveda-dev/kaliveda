@@ -77,7 +77,6 @@ protected :
 public:
    TFile* writeFile;//!
    TProofOutputFile* mergeFile;//! for merging with PROOF
-   TString tree_file_name;
    Bool_t CreateTreeFile(const Char_t* filename = "");
 
    virtual void ParseOptions();
@@ -246,8 +245,8 @@ public:
    void FillHisto(const Char_t* sname, const Char_t* label, Double_t weight = 1);
    void FillTree(const Char_t* sname = "");
 
-   KVHashList* GetHistoList() const;
-   KVHashList* GetTreeList() const;
+   const KVHashList* GetHistoList() const;
+   const KVHashList* GetTreeList() const;
 
    TH1* GetHisto(const Char_t* name) const;
    TTree* GetTree(const Char_t* name) const;

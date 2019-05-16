@@ -34,7 +34,7 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
    Bool_t pileup = kFALSE;
    Bool_t check_error = kFALSE;
 
-   double error_si1 = 0, error_si2 = 0; // error_csi=0;
+//   double error_si1(0), error_si2(0); // error_csi=0;
    std::vector<Double_t> eloss(ntot);
    for (Int_t ii = 0; ii < ntot; ii += 1) eloss[ii] = 0;
 
@@ -89,8 +89,8 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
             etot_avatar += temp;
             chi2 += TMath::Power((eloss[ntot - 1 - nn] - temp) / eloss[ntot - 1 - nn], 2.);
             avatar.SetKE(avatar.GetKE() - temp);
-            if (det->GetIdentifier() == KVFAZIADetector::kSI1)      error_si1 = (fESI1 - temp) / fESI1;
-            else if (det->GetIdentifier() == KVFAZIADetector::kSI2) error_si2 = (fESI2 - temp) / fESI2;
+//            if (det->GetIdentifier() == KVFAZIADetector::kSI1)      error_si1 = (fESI1 - temp) / fESI1;
+//            else if (det->GetIdentifier() == KVFAZIADetector::kSI2) error_si2 = (fESI2 - temp) / fESI2;
 //                else if (det->GetIdentifier() == KVFAZIADetector::kCSI) error_csi = (fECSI-temp)/fECSI;
          }
 

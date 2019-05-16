@@ -273,6 +273,7 @@ Bool_t KVEventSelector::CreateTreeFile(const Char_t* filename)
 
    if (fDisableCreateTreeFile) return kTRUE;
 
+   TString tree_file_name;
    if (!strcmp(filename, ""))
       tree_file_name.Form("TreeFileFrom%s.root", ClassName());
    else
@@ -566,7 +567,7 @@ void KVEventSelector::SetParticleConditions(const KVParticleCondition& cond, con
 
 //____________________________________________________________________________
 
-KVHashList* KVEventSelector::GetHistoList() const
+const KVHashList* KVEventSelector::GetHistoList() const
 {
 
    //return the list of created trees
@@ -778,7 +779,7 @@ void KVEventSelector::SaveHistos(const Char_t* filename, Option_t* option, Bool_
 
 //____________________________________________________________________________
 
-KVHashList* KVEventSelector::GetTreeList() const
+const KVHashList* KVEventSelector::GetTreeList() const
 {
    //return the list of created trees
    return ltree;
