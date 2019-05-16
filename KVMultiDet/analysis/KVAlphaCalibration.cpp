@@ -405,7 +405,9 @@ void KVAlphaCalibration::FitPeak(bool debug_)
 
 
    PeakFitResults.push_back(1 / PeakFitResultsTemp[0]);
+
    PeakFitResults.push_back(-PeakFitResultsTemp[1] / PeakFitResultsTemp[0]);
+
    PeakFitResults.push_back(PeakFitResultsTemp[2] / PeakFitResultsTemp[0]);
 
    PeakFitResultsError.push_back(PeakFitResultsErrorTemp[0] / PeakFitResultsTemp[0]);
