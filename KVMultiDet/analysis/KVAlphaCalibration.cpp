@@ -347,8 +347,8 @@ void KVAlphaCalibration::FitLinear(bool debug_)
 
       for (int i = 0; i < NPeak; i++) {
 
-         if (debug_) std::cerr << "DEBUG IN FitLinear : Peak position number " << i << " = " << xpos[i] << std::endl;
-         factorGraph->SetPoint(i, PeakMean[i], xpos[i]);
+         if (debug_) std::cerr << "DEBUG IN FitLinear : Peak position number " << i << " = " << PeakSpectrum[i] << std::endl;
+         factorGraph->SetPoint(i, PeakMean[i], PeakSpectrum[i]);
 
       }
 
