@@ -292,9 +292,22 @@ void KVTestIDGridDialog::TestGrid()
 
    Int_t hnmin = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->First())->GetA() - ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->First())->GetZ() - 1.0;
    Int_t hnmax = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->Last())->GetA() - ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->Last())->GetZ() + 1.0;
-   if (fSelectedGrid->InheritsFrom("KVIDZAFromZGrid") && (!fSelectedGrid->IsOnlyZId())) {
+   Int_t hamin = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->First())->GetA();
+   Int_t hamax = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->Last())->GetA();
+   Int_t hzmin = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->First())->GetZ();
+   Int_t hzmax = ((KVIDentifier*)fSelectedGrid->GetIdentifiers()->Last())->GetZ();
+   if (fSelectedGrid->InheritsFrom("KVIDZAFromZGrid")) {
       interval* itv = (interval*)((interval_set*)((KVIDZAFromZGrid*)fSelectedGrid)->GetIntervalSets()->Last())->GetIntervals()->Last();
-      if (itv) hnmax = itv->GetA() - itv->GetZ();
+      if (itv) {
+         hnmax = itv->GetA() - itv->GetZ();
+         hamax = itv->GetA();
+         hzmax = itv->GetZ();
+      }
+      itv = (interval*)((interval_set*)((KVIDZAFromZGrid*)fSelectedGrid)->GetIntervalSets()->First())->GetIntervals()->First();
+      if (itv) {
+         hamin = itv->GetA();
+         hzmin = itv->GetZ();
+      }
    }
 
    TH2F* hdata = (TH2F*) gROOT->FindObject(fNameData.Data());
@@ -315,6 +328,12 @@ void KVTestIDGridDialog::TestGrid()
       new TH1F(fNameZreal.Data(), "PID distribution", hzrealbins,
                hzrealxmin, hzrealxmax);
 
+   KVNameValueList histo_names;
+   KVHashList histos;
+
+   histo_names.SetValue("ID_REAL", fNameZreal.Data());
+   histos.Add(hzreal);
+
    TH2F* hzvse = (TH2F*) gROOT->FindObject(fNameZvsE.Data());
    if (hzvse) {
       delete hzvse;
@@ -324,10 +343,110 @@ void KVTestIDGridDialog::TestGrid()
       new TH2F(fNameZvsE.Data(), "PID vs. E_{res}", hzvsexbins, hzvsexmin,
                hzvsexmax, hzvseybins, hzvseymin, hzvseymax);
 
+   histo_names.SetValue("ID_REAL_VS_ERES", fNameZvsE.Data());
+   histos.Add(hzvse);
+
+   // maps to show where different quality codes are assigned
+   TH1* icodemap = (TH1*)hdata->Clone("ZIDENT_ICODE0");
+   icodemap->SetMarkerColor(kBlack);
+   icodemap->SetFillColor(kBlack);
+   icodemap->SetStats(kFALSE);
+   icodemap->SetTitle("ICODE=0");
+   histos.Add(icodemap);
+   histo_names.SetValue("ZIDENT_ICODE0", "ZIDENT_ICODE0");
+   icodemap = (TH1*)hdata->Clone("ZIDENT_ICODE123");
+   icodemap->SetMarkerColor(kBlue);
+   icodemap->SetFillColor(kBlue);
+   icodemap->SetStats(kFALSE);
+   icodemap->SetTitle("ICODE=1,2,3");
+   histos.Add(icodemap);
+   histo_names.SetValue("ZIDENT_ICODE123", "ZIDENT_ICODE123");
+   icodemap = (TH1*)hdata->Clone("ZIDENT_ICODE4");
+   icodemap->SetMarkerColor(kRed);
+   icodemap->SetFillColor(kRed);
+   icodemap->SetStats(kFALSE);
+   icodemap->SetTitle("ICODE=4");
+   histos.Add(icodemap);
+   histo_names.SetValue("ZIDENT_ICODE4", "ZIDENT_ICODE4");
+   icodemap = (TH1*)hdata->Clone("ZIDENT_ICODE5");
+   icodemap->SetMarkerColor(kGreen);
+   icodemap->SetFillColor(kGreen);
+   icodemap->SetStats(kFALSE);
+   icodemap->SetTitle("ICODE=5");
+   histos.Add(icodemap);
+   histo_names.SetValue("ZIDENT_ICODE5", "ZIDENT_ICODE5");
+   icodemap = (TH1*)hdata->Clone("ZIDENT_ICODE6");
+   icodemap->SetMarkerColor(kCyan);
+   icodemap->SetFillColor(kCyan);
+   icodemap->SetStats(kFALSE);
+   icodemap->SetTitle("ICODE=6");
+   histos.Add(icodemap);
+   histo_names.SetValue("ZIDENT_ICODE6", "ZIDENT_ICODE6");
+   icodemap = (TH1*)hdata->Clone("ZIDENT_ICODE7");
+   icodemap->SetMarkerColor(kMagenta);
+   icodemap->SetFillColor(kMagenta);
+   icodemap->SetStats(kFALSE);
+   icodemap->SetTitle("ICODE=7");
+   histos.Add(icodemap);
+   histo_names.SetValue("ZIDENT_ICODE7", "ZIDENT_ICODE7");
+
    // A vs Z map in case of mass identification
+   // A dist for isotopically identified particles
    TH2F* hazreal = 0;
-   if (!fSelectedGrid->IsOnlyZId() || fSelectedGrid->InheritsFrom("KVIDZAFromZGrid")) // WARNING: KLUDGE!!!
+   TH2F* adist_aident = 0;
+   if (!fSelectedGrid->IsOnlyZId() || fSelectedGrid->InheritsFrom("KVIDZAFromZGrid")) {// WARNING: KLUDGE!!!
       hazreal = new TH2F("AZMap", "Z vs. A", 30 * (hnmax - hnmin + 0.5), hnmin - 0.5, hnmax + 1, 30 * (hzrealxmax - hzrealxmin + 1), hzrealxmin - 1, hzrealxmax + 1);
+
+      histo_names.SetValue("Z_A_REAL", "AZMap");
+      histos.Add(hazreal);
+
+      adist_aident = new TH2F("ZADIST_AIDENT", "Z-A distribution [isotopic ID OK]", hzmax - hzmin + 1, hzmin - .5, hzmax + .5, hamax - hamin + 1, hamin - .5, hamax + .5);
+      histo_names.SetValue("ZADIST_AIDENT", "ZADIST_AIDENT");
+      histos.Add(adist_aident);
+
+      icodemap = (TH1*)hdata->Clone("AIDENT_ICODE0");
+      icodemap->SetMarkerColor(kBlack);
+      icodemap->SetFillColor(kBlack);
+      icodemap->SetStats(kFALSE);
+      icodemap->SetTitle("ICODE=0");
+      histos.Add(icodemap);
+      histo_names.SetValue("AIDENT_ICODE0", "AIDENT_ICODE0");
+      icodemap = (TH1*)hdata->Clone("AIDENT_ICODE123");
+      icodemap->SetMarkerColor(kBlue);
+      icodemap->SetFillColor(kBlue);
+      icodemap->SetStats(kFALSE);
+      icodemap->SetTitle("ICODE=1,2,3");
+      histos.Add(icodemap);
+      histo_names.SetValue("AIDENT_ICODE123", "AIDENT_ICODE123");
+      icodemap = (TH1*)hdata->Clone("AIDENT_ICODE4");
+      icodemap->SetMarkerColor(kRed);
+      icodemap->SetFillColor(kRed);
+      icodemap->SetStats(kFALSE);
+      icodemap->SetTitle("ICODE=4");
+      histos.Add(icodemap);
+      histo_names.SetValue("AIDENT_ICODE4", "AIDENT_ICODE4");
+      icodemap = (TH1*)hdata->Clone("AIDENT_ICODE5");
+      icodemap->SetMarkerColor(kGreen);
+      icodemap->SetFillColor(kGreen);
+      icodemap->SetStats(kFALSE);
+      icodemap->SetTitle("ICODE=5");
+      histos.Add(icodemap);
+      histo_names.SetValue("AIDENT_ICODE5", "AIDENT_ICODE5");
+      icodemap = (TH1*)hdata->Clone("AIDENT_ICODE6");
+      icodemap->SetMarkerColor(kCyan);
+      icodemap->SetFillColor(kCyan);
+      icodemap->SetStats(kFALSE);
+      icodemap->SetTitle("ICODE=6");
+      histos.Add(icodemap);
+      histo_names.SetValue("AIDENT_ICODE6", "AIDENT_ICODE6");
+      icodemap = (TH1*)hdata->Clone("AIDENT_ICODE7");
+      icodemap->SetMarkerColor(kMagenta);
+      icodemap->SetFillColor(kMagenta);
+      icodemap->SetStats(kFALSE);
+      icodemap->SetTitle("ICODE=7");
+      histos.Add(icodemap);
+      histo_names.SetValue("AIDENT_ICODE7", "AIDENT_ICODE7");
+   }
 
    //progress bar set up
    fProgressBar->SetRange(0, hdata->GetSum());
@@ -340,7 +459,7 @@ void KVTestIDGridDialog::TestGrid()
 #endif
    fTestButton->SetEnabled(kFALSE);
    fCloseButton->SetEnabled(kFALSE);
-   fSelectedGrid->TestIdentification(hdata, hzreal, hzvse, hazreal);
+   fSelectedGrid->TestIdentification(hdata, histos, histo_names);
    fTestButton->SetEnabled(kTRUE);
    fCloseButton->SetEnabled(kTRUE);
 #ifdef __WITHOUT_TGBUTTON_SETENABLED
@@ -352,8 +471,9 @@ void KVTestIDGridDialog::TestGrid()
 
    if (hazreal) {
       KVCanvas* cc = new KVCanvas;
+      cc->SetTitle(Form("Z vs N map for %s", fSelectedGrid->GetName()));
       cc->cd();
-      ((TPad*)gPad)->SetLogz();
+      cc->SetLogz();
       hazreal->Draw("col");
 
       if (!strcmp(hazreal->GetTitle(), "Z vs. A")) {
@@ -370,6 +490,31 @@ void KVTestIDGridDialog::TestGrid()
          hazreal->SetMinimum(1);
          DrawChart(cc, (Int_t)hzrealxmin, (Int_t)hzrealxmax, (Int_t)hnmin, (Int_t)hnmax);
       }
+
+      cc = new KVCanvas;
+      cc->SetTitle(Form("ZA identification for %s", fSelectedGrid->GetName()));
+      cc->cd();
+      cc->SetLogz();
+      adist_aident->Draw("col");
+
+      gStyle->SetOptTitle(1);
+      // show results in canvas
+      cc = new KVCanvas;
+      cc->SetTitle("AIDENT Quality Code Maps");
+      //cc->Divide(2,3);
+      //cc->cd(1);
+      histos.FindObject("AIDENT_ICODE0")->Draw();
+      //cc->cd(2);
+      histos.FindObject("AIDENT_ICODE123")->Draw("same");
+      //cc->cd(3);
+      histos.FindObject("AIDENT_ICODE4")->Draw("same");
+      //cc->cd(4);
+      histos.FindObject("AIDENT_ICODE5")->Draw("same");
+      //cc->cd(5);
+      histos.FindObject("AIDENT_ICODE6")->Draw("same");
+      //cc->cd(6);
+      histos.FindObject("AIDENT_ICODE7")->Draw("same");
+      cc->BuildLegend();
    }
 
 
@@ -391,21 +536,24 @@ void KVTestIDGridDialog::TestGrid()
    hzvse->SetStats(kFALSE);
    hzvse->Draw("zcol");
 
-//   // show results in canvas
-//   TCanvas *C = new TCanvas;
-//   C->SetTitle(Form("ID test : grid %s : histo %s", fSelectedGrid->GetName(), hdata->GetName()));
-//   C->Divide(1,2);
-//   C->cd(1);
-//   gPad->SetGridx();
-//   gPad->SetGridy();
-//   hzreal->SetStats(kFALSE);
-//   hzreal->Draw();
-//   C->cd(2)->SetLogz(kTRUE);
-//   gPad->SetGridx();
-//   gPad->SetGridy();
-//   gStyle->SetPalette(1);
-//   hzvse->SetStats(kFALSE);
-//   hzvse->Draw("zcol");
+   gStyle->SetOptTitle(1);
+   // show results in canvas
+   TCanvas* cc = new TCanvas;
+   cc->SetTitle("ZIDENT Quality Code Maps");
+   //cc->Divide(2,1);
+   //cc->cd(1);
+   histos.FindObject("ZIDENT_ICODE0")->Draw();
+   //cc->cd(2);
+   histos.FindObject("ZIDENT_ICODE123")->Draw("same");
+   //cc->cd(3);
+   histos.FindObject("ZIDENT_ICODE4")->Draw("same");
+   //cc->cd(4);
+   histos.FindObject("ZIDENT_ICODE5")->Draw("same");
+   //cc->cd(5);
+   histos.FindObject("ZIDENT_ICODE6")->Draw("same");
+   //cc->cd(6);
+   histos.FindObject("ZIDENT_ICODE7")->Draw("same");
+   cc->BuildLegend();
 
    // close dialog
    DoClose();

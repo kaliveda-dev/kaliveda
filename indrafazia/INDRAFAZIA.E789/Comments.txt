@@ -6,5 +6,5 @@ run=11000 | PG ramp
 run=12000 | GG ramp
 run=13000 | new alpha source 150 Hz FAZIA (Only Si1) 1800Hz INDRA (Si ring 6-7 and 8-9)
 run=51000 | INDRA trigger M>=1 & FAZIA trigger M>=1
-run=65000 | Gain on INDRA Silicons rings 6-7 are now goods, before the gains were to big, the heavier Z were outside the Si-CsI range... 
+run=65000 | Gain on INDRA Silicons rings 6-7 are now good, before the gains were to big, the heavier Z were outside the Si-CsI range... 
 run=77000 | Bullshit, Fazia still in physics trigger while on gold target

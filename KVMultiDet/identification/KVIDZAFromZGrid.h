@@ -13,8 +13,8 @@ class interval;
 class interval_set;
 
 class KVIDZAFromZGrid : public KVIDZAGrid {
-protected:
-   int is_inside(double pid);
+public:
+   int is_inside(double pid) const;
 public:
    enum PIDType {
       kNone,
@@ -29,7 +29,7 @@ public:
    Int_t  fZmaxInt;
    Bool_t fPIDRange;
    Int_t  fZminInt;
-//   Bool_t fHasMassCut;
+   KVIDentifier* fMassCut;//!
    KVList fTables;
 
 public:
@@ -41,10 +41,10 @@ public:
 //   virtual void ReadAsciiFile(const Char_t* filename);
    virtual void ReadFromAsciiFile(std::ifstream& gridfile);
    virtual void Identify(Double_t x, Double_t y, KVIdentificationResult*) const;
-   virtual double DeduceAfromPID(KVIdentificationResult* idr);
+   virtual double DeduceAfromPID(KVIdentificationResult* idr) const;
    void LoadPIDRanges();
    void ReloadPIDRanges();
-   interval_set* GetIntervalSet(int zint);
+   interval_set* GetIntervalSet(int zint) const;
    KVList* GetIntervalSets()
    {
       return &fTables;
@@ -81,8 +81,19 @@ public:
    }
    bool is_inside(double pid)
    {
+      // return true if pid lies inside this interval
       if (pid > fPIDMin && pid < fPIDmax) return kTRUE;
       return kFALSE;
+   }
+   bool is_left_of(double pid)
+   {
+      // return true if interval lies to the left of pid
+      return (fPIDmax < pid);
+   }
+   bool is_right_of(double pid)
+   {
+      // return true if interval lies to the right of pid
+      return (fPIDMin > pid);
    }
 
    int    GetA()

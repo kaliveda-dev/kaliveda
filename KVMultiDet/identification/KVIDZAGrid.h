@@ -65,17 +65,6 @@ public:
       kICODE10
    };
 
-protected:
-   Bool_t AcceptIDForTest()
-   {
-      // Used by TestIdentification.
-      // The result of the identification may be excluded from the histograms of PID
-      // and PID vs. Eres, depending on the quality code of the identification algorithm.
-      // (given by GetQualityCode()).
-      // For a general (Z,A) grid we only include particles with GetQualityCode() < 4 as being "well-identified"
-      return (fICode < kICODE4);
-   }
-
 public:
    KVIDZAGrid();
    KVIDZAGrid(const KVIDZAGrid&);

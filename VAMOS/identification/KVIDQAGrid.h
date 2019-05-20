@@ -36,15 +36,6 @@ protected:
 
 
    void init();
-   Bool_t AcceptIDForTest()
-   {
-      // Used by TestIdentification.
-      // The result of the identification may be excluded from the histograms of PID
-      // and PID vs. Eres, depending on the quality code of the identification algorithm.
-      // (given by GetQualityCode()).
-      // For a general (Q,A) grid we only include particles with GetQualityCode() < 4 as being "well-identified"
-      return (fICode < kICODE4);
-   };
 
    virtual void MakeYvsAoQGrid(const Char_t* Y, Int_t Qmin, Int_t Qmax, Int_t Amin, Int_t Amax);
 
@@ -126,8 +117,8 @@ public:
       Modified();
    }// *MENU={Hierarchy="Set.../Time of Flight"}*
 
-   void TestIdentification(TH2F* data, TH1F* h1_q,
-                           TH2F* h2_q_qxaoq, TH2F* h2_q_a = 0);
+//   void TestIdentification(TH2F* data, TH1F* h1_q,
+//                           TH2F* h2_q_qxaoq, TH2F* h2_q_a = 0);
 
    void GetLimitsOf_A_Q_AoQ(Int_t& Amin, Int_t& Amax, Int_t& Qmin, Int_t& Qmax, Double_t& AoQmin, Double_t& AoQmax);
 

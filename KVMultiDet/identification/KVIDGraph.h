@@ -15,6 +15,7 @@ $Date: 2009/04/28 09:07:47 $
 #include "KVIDentifier.h"
 #include <RQ_OBJECT.h>
 #include <TH2.h>
+#include "KVIdentificationResult.h"
 #include "KVNumberList.h"
 #include "RVersion.h"
 
@@ -55,13 +56,15 @@ protected:
    virtual void BackwardsCompatibilityFix();
 
 public:
-   virtual Bool_t AcceptIDForTest()
+   virtual Bool_t AcceptIDForTest(const KVIdentificationResult& idr)
    {
-      // Used by TestIdentification.
+      // Used by TestIdentification method
+      //
       // The result of the identification may be excluded from the histograms of PID
       // and PID vs. Eres, depending on e.g. some status code of the identification algorithm.
-      // By default, this returns kTRUE (accept all), but may be overridden in child classes.
-      return kTRUE;
+      // By default, this returns the value of idr.IDOK, but may be overridden in child classes.
+
+      return idr.IDOK;
    }
 
    KVIDGraph();
@@ -372,7 +375,7 @@ public:
       // Returns 0x0 if graph is not drawn.
       return fPad;
    }
-   virtual void TestIdentification(TH2F* data, TH1F* id_real, TH2F* id_real_vs_e_res, TH2F* z_a_real);
+   virtual void TestIdentification(TH2F* data, KVHashList& histos, KVNameValueList& histo_names);
 
    TString GetNamesOfIDTelescopes();
 

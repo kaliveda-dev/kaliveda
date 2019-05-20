@@ -780,114 +780,114 @@ Int_t KVIDQAGrid::GetNumberOfMasses() const
 }
 //________________________________________________________________
 
-void KVIDQAGrid::TestIdentification(TH2F* data, TH1F* h1_q,
-                                    TH2F* h2_q_qxaoq, TH2F* h2_q_a)
-{
-   //This method allows to test the identification capabilities of the grid using data in a TH2F.
-   //We assume that 'data' contains an identification map, whose 'x' and 'y' coordinates correspond
-   //to this grid. Then we loop over every bin of the histogram, perform the identification (if
-   //IsIdentifiable() returns kTRUE) and fill the two histograms with the resulting identification
-   //and its dependence on the 'x'-coordinate of the 'data' histogram,
-   //each identification weighted by the contents of the original data bin.
-   //
-   // Returned histograms:
-   //   h1_q       -- 1D histogram with distribution of identified charge states (Qreal).
-   //   h2_q_qxaoq -- 2D map showing the distibrution on Qreal vs Qint*X plot.
-   //                 where Qint is the integer value of Qreal and X the
-   //                 X-coordinate of the initial data plot.
-   //   h2_q_a     -- 2D map showing the distribution on Qreal vs Areal plot
-   //                 where Areal is the mass identified with the markers.
-   //                 This map is filled only if the grid has OnlyQId()=false.
+//void KVIDQAGrid::TestIdentification(TH2F* data, TH1F* h1_q,
+//                                    TH2F* h2_q_qxaoq, TH2F* h2_q_a)
+//{
+//   //This method allows to test the identification capabilities of the grid using data in a TH2F.
+//   //We assume that 'data' contains an identification map, whose 'x' and 'y' coordinates correspond
+//   //to this grid. Then we loop over every bin of the histogram, perform the identification (if
+//   //IsIdentifiable() returns kTRUE) and fill the two histograms with the resulting identification
+//   //and its dependence on the 'x'-coordinate of the 'data' histogram,
+//   //each identification weighted by the contents of the original data bin.
+//   //
+//   // Returned histograms:
+//   //   h1_q       -- 1D histogram with distribution of identified charge states (Qreal).
+//   //   h2_q_qxaoq -- 2D map showing the distibrution on Qreal vs Qint*X plot.
+//   //                 where Qint is the integer value of Qreal and X the
+//   //                 X-coordinate of the initial data plot.
+//   //   h2_q_a     -- 2D map showing the distribution on Qreal vs Areal plot
+//   //                 where Areal is the mass identified with the markers.
+//   //                 This map is filled only if the grid has OnlyQId()=false.
 
 
-   //Initialize the grid: calculate line widths etc.
-   Initialize();
+//   //Initialize the grid: calculate line widths etc.
+//   Initialize();
 
-   KVIdentificationResult* idr = new KVIdentificationResult;
+//   KVIdentificationResult* idr = new KVIdentificationResult;
 
-   h1_q->Reset();
-   h2_q_qxaoq->Reset();
-   Int_t tot_events = (Int_t) data->GetSum();
-   Int_t events_read = 0;
-   Float_t percent = 0., cumul = 10.;
-   Bool_t qaMap = (!IsOnlyQId()) && (h2_q_a);
+//   h1_q->Reset();
+//   h2_q_qxaoq->Reset();
+//   Int_t tot_events = (Int_t) data->GetSum();
+//   Int_t events_read = 0;
+//   Float_t percent = 0., cumul = 10.;
+//   Bool_t qaMap = (!IsOnlyQId()) && (h2_q_a);
 
-   Int_t Amin, Amax, Qmin, Qmax;
-   Double_t AoQmin, AoQmax;
-   GetLimitsOf_A_Q_AoQ(Amin, Amax, Qmin, Qmax, AoQmin, AoQmax);
-   Amin = AoQmin * Qmin;
-   Amax = AoQmax * Qmax;
-   Info("TestIdentification", "Amin %d, Amax %d, Qmin %d, Qmax %d, AoQmin %f, AoQmax %f", Amin, Amax, Qmin, Qmax, AoQmin, AoQmax);
+//   Int_t Amin, Amax, Qmin, Qmax;
+//   Double_t AoQmin, AoQmax;
+//   GetLimitsOf_A_Q_AoQ(Amin, Amax, Qmin, Qmax, AoQmin, AoQmax);
+//   Amin = AoQmin * Qmin;
+//   Amax = AoQmax * Qmax;
+//   Info("TestIdentification", "Amin %d, Amax %d, Qmin %d, Qmax %d, AoQmin %f, AoQmax %f", Amin, Amax, Qmin, Qmax, AoQmin, AoQmax);
 
-   // change ranges and titles of histograms
-   TString title;
-   title = "Q_{real} distribution;Q_{real}";
-   h1_q->SetTitle(title.Data());
-   h1_q->SetBins(data->GetNbinsY(), Float_t(Qmin - 1), Float_t(Qmax + 1));
+//   // change ranges and titles of histograms
+//   TString title;
+//   title = "Q_{real} distribution;Q_{real}";
+//   h1_q->SetTitle(title.Data());
+//   h1_q->SetBins(data->GetNbinsY(), Float_t(Qmin - 1), Float_t(Qmax + 1));
 
-   title.Form("A vs. Q_{real};Q_{int}#times(%s);Q_{real}", data->GetXaxis()->GetTitle());
-   h2_q_qxaoq->SetTitle(title.Data());
-   h2_q_qxaoq->SetBins(data->GetNbinsX(), Float_t(Amin - 1), Float_t(Amax + 1), data->GetNbinsY(), Float_t(Qmin - 1), Float_t(Qmax + 1));
+//   title.Form("A vs. Q_{real};Q_{int}#times(%s);Q_{real}", data->GetXaxis()->GetTitle());
+//   h2_q_qxaoq->SetTitle(title.Data());
+//   h2_q_qxaoq->SetBins(data->GetNbinsX(), Float_t(Amin - 1), Float_t(Amax + 1), data->GetNbinsY(), Float_t(Qmin - 1), Float_t(Qmax + 1));
 
-   if (qaMap) {
-      title = "A vs. Q_{real};A_{real};Q_{real}";
-      h2_q_a->SetTitle(title.Data());
-      h2_q_a->SetBins(data->GetNbinsX(), Float_t(Amin - 1), Float_t(Amax + 1), data->GetNbinsY(), Float_t(Qmin - 1), Float_t(Qmax + 1));
-   }
+//   if (qaMap) {
+//      title = "A vs. Q_{real};A_{real};Q_{real}";
+//      h2_q_a->SetTitle(title.Data());
+//      h2_q_a->SetBins(data->GetNbinsX(), Float_t(Amin - 1), Float_t(Amax + 1), data->GetNbinsY(), Float_t(Qmin - 1), Float_t(Qmax + 1));
+//   }
 
-   //loop over data in histo
-   for (int i = 1; i <= data->GetNbinsX(); i++) {
-      for (int j = 1; j <= data->GetNbinsY(); j++) {
+//   //loop over data in histo
+//   for (int i = 1; i <= data->GetNbinsX(); i++) {
+//      for (int j = 1; j <= data->GetNbinsY(); j++) {
 
-         Stat_t poids = data->GetBinContent(i, j);
-         if (poids == 0)
-            continue;
+//         Stat_t poids = data->GetBinContent(i, j);
+//         if (poids == 0)
+//            continue;
 
-         Axis_t x0 = data->GetXaxis()->GetBinCenter(i);
-         Axis_t y0 = data->GetYaxis()->GetBinCenter(j);
-         Axis_t wx = data->GetXaxis()->GetBinWidth(i);
-         Axis_t wy = data->GetYaxis()->GetBinWidth(j);
-         //If bin content ('poids') is <=20, we perform the identification 'poids' times, each time with
-         //randomly-drawn x and y coordinates inside this bin
-         //If 'poids'>20, we perform the identification 20 times and we fill the histograms with
-         //a weight poids/20
-         Double_t x, y;
-         Int_t kmax = (Int_t) TMath::Min(20., poids);
-         Double_t weight = (kmax == 20 ? poids / 20. : 1.);
-         for (int k = 0; k < kmax; k++) {
+//         Axis_t x0 = data->GetXaxis()->GetBinCenter(i);
+//         Axis_t y0 = data->GetYaxis()->GetBinCenter(j);
+//         Axis_t wx = data->GetXaxis()->GetBinWidth(i);
+//         Axis_t wy = data->GetYaxis()->GetBinWidth(j);
+//         //If bin content ('poids') is <=20, we perform the identification 'poids' times, each time with
+//         //randomly-drawn x and y coordinates inside this bin
+//         //If 'poids'>20, we perform the identification 20 times and we fill the histograms with
+//         //a weight poids/20
+//         Double_t x, y;
+//         Int_t kmax = (Int_t) TMath::Min(20., poids);
+//         Double_t weight = (kmax == 20 ? poids / 20. : 1.);
+//         for (int k = 0; k < kmax; k++) {
 
-            x = gRandom->Uniform(x0 - .5 * wx, x0 + .5 * wx);
-            y = gRandom->Uniform(y0 - .5 * wy, y0 + .5 * wy);
-            if (IsIdentifiable(x, y)) {
-               Identify(x, y, idr);
-               if (AcceptIDForTest()) {
-                  Double_t realQ = 0.;
-                  Double_t realA = 0.;
+//            x = gRandom->Uniform(x0 - .5 * wx, x0 + .5 * wx);
+//            y = gRandom->Uniform(y0 - .5 * wy, y0 + .5 * wy);
+//            if (IsIdentifiable(x, y)) {
+//               Identify(x, y, idr);
+//               if (AcceptIDForTest()) {
+//                  Double_t realQ = 0.;
+//                  Double_t realA = 0.;
 
-                  if (idr->Aident) {
-                     realQ = fRealQ;
-                     realA = idr->PID;
-                  }
-                  else if (idr->Zident) realQ = idr->PID;
-                  h1_q->Fill(realQ, weight);
-                  h2_q_qxaoq->Fill(x * idr->Z, realQ, weight);
-                  if (qaMap) h2_q_a->Fill(realA, realQ, weight);
-               }
-            }
-         }
-         events_read += (Int_t) poids;
-         percent = (1. * events_read / tot_events) * 100.;
-         if (events_read % (tot_events / 10) == 0) Increment((Float_t) events_read); //sends signal to GUI progress bar
-         if (percent >= cumul) {
-            //std::cout << (Int_t) percent << "\% processed" << std::endl;
-            cumul += 10;
-         }
-         gSystem->ProcessEvents();
-      }
-   }
+//                  if (idr->Aident) {
+//                     realQ = fRealQ;
+//                     realA = idr->PID;
+//                  }
+//                  else if (idr->Zident) realQ = idr->PID;
+//                  h1_q->Fill(realQ, weight);
+//                  h2_q_qxaoq->Fill(x * idr->Z, realQ, weight);
+//                  if (qaMap) h2_q_a->Fill(realA, realQ, weight);
+//               }
+//            }
+//         }
+//         events_read += (Int_t) poids;
+//         percent = (1. * events_read / tot_events) * 100.;
+//         if (events_read % (tot_events / 10) == 0) Increment((Float_t) events_read); //sends signal to GUI progress bar
+//         if (percent >= cumul) {
+//            //std::cout << (Int_t) percent << "\% processed" << std::endl;
+//            cumul += 10;
+//         }
+//         gSystem->ProcessEvents();
+//      }
+//   }
 
-   delete idr;
-}
+//   delete idr;
+//}
 //________________________________________________________________
 
 void KVIDQAGrid::GetLimitsOf_A_Q_AoQ(Int_t& Amin, Int_t& Amax, Int_t& Qmin, Int_t& Qmax, Double_t& AoQmin, Double_t& AoQmax)

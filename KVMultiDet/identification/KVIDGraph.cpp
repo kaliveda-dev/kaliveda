@@ -1222,28 +1222,55 @@ void KVIDGraph::Streamer(TBuffer& R__b)
    }
 }
 
-void KVIDGraph::TestIdentification(TH2F* data, TH1F* id_real,
-                                   TH2F* id_real_vs_e_res, TH2F* z_a_real)
+struct kvidgraph_idresult_filler {
+   KVHashList& histos;
+   KVNameValueList& histo_names;
+
+   kvidgraph_idresult_filler(KVHashList& h, KVNameValueList& n)
+      : histos(h), histo_names(n)
+   {}
+   void fill(const char* name, double x, double y = 0., double w = 0.)
+   {
+      TH1* h = (TH1*)histos.get_object<TH1>(histo_names.GetStringValue(name));
+      if (h) {
+         if (w > 0)((TH2*)h)->Fill(x, y, w);
+         else h->Fill(x, y);
+      }
+   }
+};
+
+void KVIDGraph::TestIdentification(TH2F* data, KVHashList& histos, KVNameValueList& histo_names)
 {
    //This method allows to test the identification capabilities of the grid using data in a TH2F.
    //We assume that 'data' contains an identification map, whose 'x' and 'y' coordinates correspond
    //to this grid. Then we loop over every bin of the histogram, perform the identification (if
-   //IsIdentifiable() returns kTRUE) and fill the two histograms with the resulting identification
-   //and its dependence on the 'residual energy' i.e. the 'x'-coordinate of the 'data' histogram,
-   //each identification weighted by the contents of the original data bin.
+   //IsIdentifiable() returns kTRUE) and fill the histograms with the results of the identification
    //
    //The "identification" or PID we represent is the result of the KVReconstructedNucleus::GetPID()
    //method for the identified nucleus.
+   //
+   // The KVHashList contains histograms to be filled with results
+   // The KVNameValueList histo_names contains the name of each histogram passed in the KVHashList
+   //  i.e. it may have any of the following parameters
+   //
+   //        "ID_REAL"="[name of histo to fill with PID spectrum]"
+   //        "ID_REAL_VS_ERES" - PID vs. Eres histo
+   //        "Z_A_REAL" - 2D map (nuclear chart)
+   //        "ZADIST_AIDENT" - integer A  vs. integer Z distribution for isotopically-identified particles
+   //        "ZIDENT_ICODE0" - map of points leading to Z-only identification with quality code 0
+   //        "ZIDENT_ICODES_1_2" - map of points leading to Z-only identification with quality codes 1 or 2
 
    //Initialize the grid: calculate line widths etc.
    Initialize();
 
-   id_real->Reset();
-   id_real_vs_e_res->Reset();
+   kvidgraph_idresult_filler idresults(histos, histo_names);
+
+   // reset contents of all histos
+   histos.Execute("Reset", "");
+
    Int_t tot_events = (Int_t) data->GetSum();
    Int_t events_read = 0;
    Int_t percent = 0, cumul = 0;
-   Bool_t zaMap = /*(!IsOnlyZId()) &&*/ (z_a_real);
 
    //loop over data in histo
    for (int i = 1; i <= data->GetNbinsX(); i++) {
@@ -1269,15 +1296,83 @@ void KVIDGraph::TestIdentification(TH2F* data, TH1F* id_real,
             if (IsIdentifiable(x, y)) {
                KVIdentificationResult idr;
                Identify(x, y, &idr);
-               if (AcceptIDForTest()) {
+               if (AcceptIDForTest(idr)) {
                   Float_t PID = idr.PID;
                   if (idr.Aident) PID = (idr.Z + 0.1 * (idr.PID - 2. * idr.Z));
                   Float_t RealA, RealZ;
                   RealA = (idr.Aident ? idr.PID : (Float_t)idr.A);
                   RealZ = (idr.Aident ? (Float_t)idr.Z : idr.PID);
-                  id_real->Fill(PID, weight);
-                  id_real_vs_e_res->Fill(x, PID, weight);
-                  if (zaMap && (idr.IDquality == 0) && idr.Aident) z_a_real->Fill(RealA - RealZ, gRandom->Gaus(RealZ, 0.15), weight);
+                  idresults.fill("ID_REAL", PID, weight);
+                  idresults.fill("ID_REAL_VS_ERES", x, PID, weight);
+                  if (idr.Aident) {
+                     idresults.fill("Z_A_REAL", RealA - RealZ, gRandom->Gaus(RealZ, 0.15), weight);
+                     idresults.fill("ZADIST_AIDENT", idr.Z, idr.A, weight);
+                     switch (idr.IDquality) {
+                        case 0:
+                           idresults.fill("AIDENT_ICODE0", x, y, weight);
+                           break;
+                        case 1:
+                        case 2:
+                        case 3:
+                           idresults.fill("AIDENT_ICODE123", x, y, weight);
+                           break;
+                        default:
+                           break;
+                     }
+                  }
+                  else if (idr.Zident) {
+                     switch (idr.IDquality) {
+                        case 0:
+                           idresults.fill("ZIDENT_ICODE0", x, y, weight);
+                           break;
+                        case 1:
+                        case 2:
+                        case 3:
+                           idresults.fill("ZIDENT_ICODE123", x, y, weight);
+                           break;
+                        default:
+                           break;
+                     }
+                  }
+               }
+               else {
+                  if (idr.Aident) {
+                     switch (idr.IDquality) {
+                        case 4:
+                           idresults.fill("AIDENT_ICODE4", x, y, weight);
+                           break;
+                        case 5:
+                           idresults.fill("AIDENT_ICODE5", x, y, weight);
+                           break;
+                        case 6:
+                           idresults.fill("AIDENT_ICODE6", x, y, weight);
+                           break;
+                        case 7:
+                           idresults.fill("AIDENT_ICODE7", x, y, weight);
+                           break;
+                        default:
+                           break;
+                     }
+                  }
+                  else if (idr.Zident) {
+                     switch (idr.IDquality) {
+                        case 4:
+                           idresults.fill("ZIDENT_ICODE4", x, y, weight);
+                           break;
+                        case 5:
+                           idresults.fill("ZIDENT_ICODE5", x, y, weight);
+                           break;
+                        case 6:
+                           idresults.fill("ZIDENT_ICODE6", x, y, weight);
+                           break;
+                        case 7:
+                           idresults.fill("ZIDENT_ICODE7", x, y, weight);
+                           break;
+                        default:
+                           break;
+                     }
+                  }
+
                }
             }
          }

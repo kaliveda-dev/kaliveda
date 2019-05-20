@@ -16,14 +16,13 @@ private:
 
 protected:
 
-   virtual Bool_t AcceptIDForTest()
+   virtual Bool_t AcceptIDForTest(const KVIdentificationResult& idr)
    {
       // Used by test Identification.
-      // For a general (Z,A) grid we only include particles with
-      // GetQualityCode()<4 (i.e. well identified) or equal to kICODE9
+      // we only include particles with GetQualityCode()<4 (i.e. well identified) or equal to kICODE9
       // (i.e. well identified from extrapolated ID lines).
-      return (KVIDGChIoSi::AcceptIDForTest() || (fICode == kICODE9));
-   };
+      return (idr.IDOK || (fICode == kICODE9));
+   }
 
 public:
 

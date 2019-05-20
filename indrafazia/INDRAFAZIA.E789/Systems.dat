@@ -52,8 +52,12 @@ Target : 1 0.0
 64Ni 0.32
 Runs : 64000-76999
 
-+58Ni + 197Au[660] 52 MeV/A
++58Ni + 197Au[660] 32 MeV/A
 58 28 197 79 0.66 31.74
 Target : 1 0.0
 197Au 0.66
 Runs : 78000-78999
+
++Alpha Source [INDRA solo]
+Runs : 80000-81999
+

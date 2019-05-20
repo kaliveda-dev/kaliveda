@@ -214,8 +214,9 @@ INDRAFAZIA.E789.SI-CSI.MassID.Validity:  Z<=6
 +Plugin.KVIDTelescope:    ^INDRAFAZIA.E789.CSI$          KVIDINDRACsI         KVIndraidentification         "KVIDINDRACsI()"
 +Plugin.KVIDTelescope:    ^INDRAFAZIA.E789.SI-CSI$       KVIDSiCsI            KVIndraidentification           "KVIDSiCsI()"
 
-INDRAFAZIA.E789.IdentificationParameterFile.Si-CsI:       IDGrids_SI_CSI.dat
-INDRAFAZIA.E789.IdentificationParameterFile.CSI:          CSI_R_L_e789.dat
+INDRAFAZIA.E789.IdentificationParameterFile.Si-CsI:       IDGridsFAZIA_Si_CsI.dat
+INDRAFAZIA.E789.IdentificationParameterFile.Si-Si:        IDGridsFAZIA_Si_Si_QL1.dat
+INDRAFAZIA.E789.IdentificationParameterFile.CSI:          IDGridsINDRA_CSI_R_L.dat
 
 INDRAFAZIA.E789.QL1.BaseLineLength:            100
 INDRAFAZIA.E789.QL1.TauRC:                     250

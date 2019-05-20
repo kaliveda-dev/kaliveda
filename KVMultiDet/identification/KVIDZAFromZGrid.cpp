@@ -81,7 +81,7 @@ KVIDZAFromZGrid::KVIDZAFromZGrid()
    init();
    fTables.SetOwner(kTRUE);
    SetOnlyZId();
-//   fHasMassCut = kFALSE;
+   fMassCut = nullptr;
 }
 
 KVIDZAFromZGrid::~KVIDZAFromZGrid()
@@ -185,7 +185,7 @@ void KVIDZAFromZGrid::ReloadPIDRanges()
    LoadPIDRanges();
 }
 
-interval_set* KVIDZAFromZGrid::GetIntervalSet(int zint)
+interval_set* KVIDZAFromZGrid::GetIntervalSet(int zint) const
 {
    interval_set* itv = 0;
    TIter it(&fTables);
@@ -211,8 +211,14 @@ void KVIDZAFromZGrid::ClearPIDIntervals()
    }
 }
 
-int KVIDZAFromZGrid::is_inside(double pid)
+int KVIDZAFromZGrid::is_inside(double pid) const
 {
+   // Look for a set of mass-interval definitions in which the given PID
+   // falls (PID from linearisation of Z identification).
+   // In principle this should be the set corresponding to Z=nint(PID),
+   // but if not Z+/-1 are also tried.
+   // Returns the value of Z for the set found (or 0 if no set found)
+
    int zint = TMath::Nint(pid);
    interval_set* it = GetIntervalSet(zint);
    if (it) {
@@ -240,6 +246,7 @@ void KVIDZAFromZGrid::Initialize()
    // The natural line widths of all ID lines are calculated.
    // The line with the largest Z (Zmax line) is found.
 
+   SetOnlyZId();
    KVIDGrid::Initialize();
    // Zmax should be Z of last line in sorted list
 
@@ -253,6 +260,7 @@ void KVIDZAFromZGrid::Initialize()
       if (zz > fZMax) fZMax = zz;
    }
 
+   fMassCut = GetIdentifier("MassID");
 }
 
 void KVIDZAFromZGrid::Identify(Double_t x, Double_t y, KVIdentificationResult* idr) const
@@ -260,109 +268,87 @@ void KVIDZAFromZGrid::Identify(Double_t x, Double_t y, KVIdentificationResult* i
    // Fill the KVIdentificationResult object with the results of identification for point (x,y)
    // corresponding to some physically measured quantities related to a reconstructed nucleus.
    //
-   // By default (OnlyZId()=kFALSE) this means identifying the Z & A of the nucleus.
-   // In this case, we consider that the nucleus' Z & A have been correctly measured
-   // if the 'quality code' returned by IdentZA() is < kICODE4:
-   //   we set idr->Zident and idr->Aident to kTRUE if fICode<kICODE4
+   // If identification is successful, idr->IDOK = true.
+   // In this case, idr->Aident and idr->Zident indicate whether isotopic or only Z identification
+   // was acheived.
    //
-   // If OnlyZId()=kTRUE, only the Z of the nucleus is established.
-   // In this case, we consider that the nucleus' Z has been correctly measured
-   // if the 'quality code' returned by IdentZ() is < kICODE4, thus:
-   //   we set idr->Zident to kTRUE if fICode<kICODE4
-   // The mass idr->A is set to the mass of the nearest line.
-   //
-   // Real & integer masses for isotopically identified particles
-   // ===================================================
-   // For points lying between two lines of same Z and different A (fICode<kIDCode4)
-   // the "real" mass is given by interpolation between the two masses.
-   // The integer mass is the A of the line closest to the point.
-   // This means that the integer A is not always = nint("real" A),
-   // as for example if a grid is drawn with lines for 7Be & 9Be but not 8Be
-   // (usual case), then particles between the two lines can have "real" masses
-   // between 7.5 and 8.5, but their integer A will be =7 or =9, never 8.
-   //
+   // In case of unsuccessful identification, idr->IDOK = false,
+   // BUT idr->Zident and/or idr->Aident may be true: this is to indicate which kind of
+   // identification was attempted but failed (this changes the meaning of the quality code)
 
-   idr->IDOK = kFALSE;
-   if (!const_cast<KVIDZAFromZGrid*>(this)->FindFourEmbracingLines(x, y, "above")) {
-      const_cast < KVIDZAFromZGrid* >(this)->fICode = kICODE8;         // Z indetermine ou (x,y) hors limites
-      idr->IDquality = kICODE8;
-      idr->SetComment("no identification: (x,y) out of range covered by grid");
-      return;
-   }
+   idr->Aident = idr->Zident = kFALSE;
 
-   Double_t Z;
-   const_cast < KVIDZAFromZGrid* >(this)->IdentZ(x, y, Z);
-   idr->IDquality = fICode;
-   if (fICode < kICODE4 || fICode == kICODE7) {
-      idr->Zident = kTRUE;
-   }
-   if (fICode < kICODE4) {
-      idr->IDOK = kTRUE;
-   }
-   idr->Z = Zint;
-   idr->PID = Z;
-   idr->Aident = kFALSE;
-   //Info("Identify","quality=%d z=%d is_inside=%d",fICode,idr->Z,const_cast < KVIDZAFromZGrid* >(this)->is_inside(Z));
+   KVIDZAGrid::Identify(x, y, idr);
+   idr->Zident = kTRUE; // meaning Z identification was attempted, even if it failed
+   if (!idr->IDOK) return;
 
    bool have_pid_range_for_Z = fPIDRange && (idr->Z <= fZmaxInt) && (idr->Z > fZminInt - 1);
-   bool outside_pid_range_for_Z = have_pid_range_for_Z && !(const_cast < KVIDZAFromZGrid* >(this)->is_inside(Z));
-   bool isotopic_identification_possible = have_pid_range_for_Z && !outside_pid_range_for_Z;
-   bool isotopic_identification_failure = have_pid_range_for_Z && outside_pid_range_for_Z;
+   bool mass_id_success = false;
 
-   if (((idr->IDOK) && isotopic_identification_possible)
-         && ((!GetIdentifier("MassID")) || (GetIdentifier("MassID") && GetIdentifier("MassID")->IsInside(x, y)))) {
-      //Info("Identify","Z=%d try mass ID..",idr->Z);
-      const_cast < KVIDZAFromZGrid* >(this)->DeduceAfromPID(idr); // IDQuality and comments assigned here
-      //Info("Identify","idr->IDquality=%d",idr->IDquality);
-      if (idr->IDquality < kICODE4) { // should always be true: to be verified...
-         if (const_cast < KVIDZAFromZGrid* >(this)->GetIntervalSet(idr->Z)->GetNPID() > 1) idr->Aident = kTRUE;
-         idr->IDOK = kTRUE;
+   if (have_pid_range_for_Z && (!fMassCut || fMassCut->IsInside(x, y))) {
+      // try mass identification
+      mass_id_success = (DeduceAfromPID(idr) > 0);
+      if (mass_id_success) {
+         // mass identification was at least attempted
+         // make sure grid's quality code is consistent with KVIdentificationResult
+         const_cast<KVIDZAFromZGrid*>(this)->fICode = idr->IDquality;
+         idr->Aident = kTRUE; // meaning A identification was attempted, even if it failed
       }
-      else if (idr->IDquality == kICODE4) idr->IDquality = kICODE3;
-   }
-   else {
-      if (isotopic_identification_failure) {
-         // failed isotopic identification - change code
+      else {
+         // the pid falls outside of any mass ranges for a Z which has assigned isotopes
+         // therefore although the Z identification was good, we cannot consider this
+         // particle to be identified
          const_cast<KVIDZAFromZGrid*>(this)->fICode = kICODE4;
-         idr->IDOK = false;
-         idr->IDquality = fICode;
       }
-      switch (fICode) {
-         case kICODE0:
-            idr->SetComment("ok");
-            break;
-         case kICODE1:
-            idr->SetComment("slight ambiguity of Z, which could be larger");
-            break;
-         case kICODE2:
-            idr->SetComment("slight ambiguity of Z, which could be smaller");
-            break;
-         case kICODE3:
-            idr->SetComment("slight ambiguity of Z, which could be larger or smaller");
-            break;
-         case kICODE4:
-            idr->SetComment("point is in between two lines of different Z, too far from either to be considered well-identified");
-            break;
-         case kICODE5:
-            idr->SetComment("point is in between two lines of different Z, too far from either to be considered well-identified");
-            break;
-         case kICODE6:
-            idr->SetComment("(x,y) is below first line in grid");
-            break;
-         case kICODE7:
-            idr->SetComment("(x,y) is above last line in grid");
-            break;
-         default:
-            idr->SetComment("no identification: (x,y) out of range covered by grid");
-      }
+      idr->IDOK = (fICode < kICODE4);
+   }
+
+   // set comments in identification result
+   switch (fICode) {
+      case kICODE0:
+         idr->SetComment("ok");
+         break;
+      case kICODE1:
+         if (mass_id_success) idr->SetComment("slight ambiguity of A, which could be larger");
+         else idr->SetComment("slight ambiguity of Z, which could be larger");
+         break;
+      case kICODE2:
+         if (mass_id_success) idr->SetComment("slight ambiguity of A, which could be smaller");
+         else idr->SetComment("slight ambiguity of Z, which could be smaller");
+         break;
+      case kICODE3:
+         if (mass_id_success) idr->SetComment("slight ambiguity of A, which could be larger or smaller");
+         else idr->SetComment("slight ambiguity of Z, which could be larger or smaller");
+         break;
+      case kICODE4:
+         if (mass_id_success) idr->SetComment("point is outside of mass identification range");
+         else idr->SetComment("point is in between two lines of different Z, too far from either to be considered well-identified");
+         break;
+      case kICODE5:
+         if (mass_id_success) idr->SetComment("point is in between two isotopes A & A+2 (e.g. 5He, 8Be, 9B)");
+         else idr->SetComment("point is in between two lines of different Z, too far from either to be considered well-identified");
+         break;
+      case kICODE6:
+         idr->SetComment("(x,y) is below first line in grid");
+         break;
+      case kICODE7:
+         idr->SetComment("(x,y) is above last line in grid");
+         break;
+      default:
+         idr->SetComment("no identification: (x,y) out of range covered by grid");
    }
 }
 
 
-double KVIDZAFromZGrid::DeduceAfromPID(KVIdentificationResult* idr)
+double KVIDZAFromZGrid::DeduceAfromPID(KVIdentificationResult* idr) const
 {
+   // First look for a set of mass intervals in which the PID of the identification result falls,
+   // if there is one (see KVIDZAFromZGrid::is_inside).
+   // If an interval set is found for a Z different to the original identification, idr->Z is changed.
+   // Then call interval_set::eval for the mass interval for this Z.
+
    int zint = is_inside(idr->PID);
-   //Info("DeduceAfromPID","zint=%d",zint);
+   if (!zint) return -1;
    if (zint != idr->Z) idr->Z = zint;
 
    double res = 0.;
@@ -377,55 +363,68 @@ double interval_set::eval(KVIdentificationResult* idr)
 {
    double pid = idr->PID;
    if (pid < 0.5) return 0.;
+   // calculate interpolated mass from PID
    double res = fPIDs.Eval(pid);
    int ares = 0;
 
    if (fType == KVIDZAFromZGrid::kIntType) {
-      //Info("eval","IntType");
-      for (int ii = 0; ii < fNPIDs; ii++) {
-         if (((interval*)fIntervals.At(ii))->is_inside(pid)) {
-            ares = ((interval*)fIntervals.At(ii))->GetA();
+
+      // look for mass interval PID is in
+      // in case it falls between two intervals remember also the interval
+      // immediately to the left & right of the PID
+      interval* left_int(nullptr), *right_int(nullptr);
+      interval* inter;
+      TIter it(&fIntervals);
+      while ((inter = (interval*)it())) {
+         if (inter->is_inside(pid)) {
+            ares = inter->GetA();
             break;
          }
+         else if (inter->is_left_of(pid)) {
+            left_int = inter;
+         }
+         else if (!right_int && inter->is_right_of(pid)) {
+            right_int = inter;
+         }
       }
-      //Info("eval","ares=%d",ares);
       if (ares != 0) {
+         // the PID is inside a defined mass interval
          idr->A = ares;
          idr->PID = res;
          idr->IDquality = KVIDZAGrid::kICODE0;
-         idr->SetComment("ok");
-         //Info("eval","quality=0");
       }
       else {
-         ares = TMath::Nint(res);
-         idr->A = ares;
-         idr->PID = res;
-         if (pid > ((interval*)fIntervals.At(0))->GetPIDmin() && pid < ((interval*)fIntervals.At(fNPIDs - 1))->GetPIDmax()) {
+         // the PID is not inside a defined mass interval
+         //
+         // * if it is in between two consecutive masses i.e. A and A+1 then it is
+         //   Z- and A-identified with a slight ambiguity of A
+         // * if it is in between two non-consecutive masses i.e. A and A+2 then it
+         //   is not identified (e.g. 5He, 8Be, 9B)
+         int dA = right_int->GetA() - left_int->GetA();
+         if (dA == 1) {
+            // OK, slight ambiguity of A
+            ares = TMath::Nint(res);
+            idr->A = ares;
+            idr->PID = res;
             idr->IDquality = KVIDZAGrid::kICODE3;
-            //Info("eval","quality=3");
-            idr->SetComment("slight ambiguity of A, which could be larger or smaller");
          }
          else {
-            idr->IDquality = KVIDZAGrid::kICODE4;
-            idr->SetComment("point out of mass identification intervals, strong ambiguity of A");
-            //Info("eval","quality=4");
+            // in a hole where no isotopes should be (e.g. 5He, 8Be, 9B)
+            idr->A = ares;
+            idr->PID = res;
+            idr->IDquality = KVIDZAGrid::kICODE5;
          }
       }
    }
    else {
-      //Info("eval","fType=%d",fType);
       ares = TMath::Nint(res);
       idr->A = ares;
       idr->PID = res;
       if (ares > fPIDs.GetX()[0] && ares < fPIDs.GetX()[fNPIDs - 1]) {
          idr->IDquality = KVIDZAGrid::kICODE0;
-         Info("eval", "quality=0");
-         idr->SetComment("ok");
       }
       else {
-         //Info("eval","quality=4");
          idr->IDquality = KVIDZAGrid::kICODE4;
-         idr->SetComment("point out of mass identification intervals, strong ambiguity of A");
       }
    }
    return res;

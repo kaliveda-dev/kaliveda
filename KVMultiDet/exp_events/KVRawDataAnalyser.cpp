@@ -177,6 +177,13 @@ void KVRawDataAnalyser::SubmitTask()
       }
       else  Info("Terminate", "none");
    }
+   else {
+      SaveHistos();
+      if (fTreeFile) {
+         fTreeFile->Write();
+         delete fTreeFile;
+      }
+   }
 
    preEndAnalysis();
    //call user's end of analysis
@@ -285,6 +292,8 @@ void KVRawDataAnalyser::SaveHistos(const Char_t* filename, Option_t* option, Boo
    //
    // onlyfilled flag allow to write all (onlyfilled=kFALSE, default)
    // or only histograms (onlyfilled=kTRUE) those have been filled
+
+   if (fHistoList.GetEntries()) return;
 
    TString histo_file_name = "";
    if (!strcmp(filename, ""))
