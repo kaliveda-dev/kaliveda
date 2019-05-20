@@ -327,6 +327,17 @@ void KVAlphaCalibration::FitLinear(bool debug_)
    Float_t* xpos = spec->GetPositionX();
 #endif
 
+   PeakSpectrum.clear();
+   for (unsigned int i = 0; i < sizeof(xpos) / sizeof(xpos[0]); i++) {
+
+      PeakSpectrum.push_back(xpos[i]);
+
+   }
+
+   std::sort(PeakSpectrum.begin(), PeakSpectrum.end());
+   std::sort(PeakMean.begin(), PeakMean.end());
+   std::sort(PeakNorm.begin(), PeakNorm.end());
+
    if (debug_) std::cerr << "DEBUG IN FitLinear : Number of peaks found is " << spec->GetNPeaks() << std::endl;
    if (debug_) if (spec->GetNPeaks() != NPeak) std::cerr << "DEBUG IN FitLinear : Number of peaks different from the one you asked"
                << "-> Ignoring histogram" << std::endl
@@ -405,9 +416,7 @@ void KVAlphaCalibration::FitPeak(bool debug_)
 
 
    PeakFitResults.push_back(1 / PeakFitResultsTemp[0]);
-
    PeakFitResults.push_back(-PeakFitResultsTemp[1] / PeakFitResultsTemp[0]);
-
    PeakFitResults.push_back(PeakFitResultsTemp[2] / PeakFitResultsTemp[0]);
 
    PeakFitResultsError.push_back(PeakFitResultsErrorTemp[0] / PeakFitResultsTemp[0]);
