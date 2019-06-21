@@ -183,6 +183,6 @@ See the example analysis classes for more examples. See the class reference for
 [KVRawDataReconstructor]: http://indra.in2p3.fr/kaliveda/doc/master/classKVRawDataReconstructor.html
 [KVReconRawDataAnalyser]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconRawDataAnalyser.html
 [KVNameValueList]: http://indra.in2p3.fr/kaliveda/doc/master/classKVNameValueList.html
-[Using Detector Array Geometries]: ../geometry.html
+[Using Detector Array Geometries]: geometry.html
 [KVReconstructedEvent]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconstructedEvent.html
 [KVReconstructedNucleus]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconstructedNucleus.html
