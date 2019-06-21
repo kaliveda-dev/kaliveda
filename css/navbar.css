@@ -1,0 +1,141 @@
+ /* Navbar container */
+.navbar {
+/*  overflow: hidden;*/
+  background-color: #666;
+  font-family: Arial;
+  font-weight: bold;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 4;
+}
+
+/* Links inside the navbar */
+.navbar a {
+  float: left;
+  display: block;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* The dropdown container */
+.dropdown {
+  float: left;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  font-weight: inherit;
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: #83f;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 4;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+} 
+
+/* Page content */
+.content {
+  font-family: Arial;
+  font-size: 14px;
+  padding-left: 50px;
+  padding-right: 50px;
+  z-index: -1;
+}
+
+.content h1 {
+  font-size: 20px;
+  text-align: center;
+}
+
+/* The sticky class is added to the navbar with JS when it reaches its scroll position */
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+/* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
+.sticky + .content {
+  padding-top: 60px;
+}
+
+.header {
+  background-color: #f1f1f1;
+  padding: 0px;
+  text-align: center;
+  z-index: -1;
+}
+
+dl {
+   margin-left: 50px;
+   }
+dt {
+   margin-top:0.5em;
+    font-weight: bold;
+   }
+dd {
+    margin-left:0;
+    margin-right:20%;
+   }
+li {
+    margin-left:0;
+    margin-right:20%;
+    margin-top: 0.5em;
+    font-weight: bold;
+    text-decoration: none;
+   }
+li a {
+    text-decoration: none;
+   }
+   .code {
+   white-space: pre;
+      padding-top: 0.5em;
+      padding-left: 0.5em;
+      padding-bottom: 0.5em;
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+       font-family: "Ubuntu Mono", "Lucida Console", "Courier New", Courier, monospace;
+       width: auto;
+       background-color: #eeeeee;
+   }
