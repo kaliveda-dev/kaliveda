@@ -1,3 +1,0 @@
-# List of *.root files containing TEnv with infos to build a ToF offset in function of Z,
-# to correct AoQ=2 misalignments for IC-Si telescopes
-ToFOffsetZFunctionFile_all_ICSi.root

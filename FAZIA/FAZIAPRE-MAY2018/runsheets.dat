@@ -1,1 +1,0 @@
-run=1 | aqcuisition status=Running | starting date=Wed Mar  8 19:22:19 2017 | stopping date=Wed Mar  8 20:46:05 2017 | read events=23578 | good events=23528 | store events=23528 | wrong number of blocks=165 | block errors=50 | fNfiles=10 | frequency=4.29 | duration=5585.6 | trig info=23578 | mtrigger=2 | deadtime=-144288.536822 | triggertime=0.000000 | triggerrate=inf

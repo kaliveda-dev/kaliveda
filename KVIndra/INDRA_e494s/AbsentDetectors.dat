@@ -1,7 +1,0 @@
-# Detecteurs absents physiquement par rapport à la definition donnée dans la
-# classe INDRAe494s
-# [nom_du_detecteur]: [plage de run associee]
-# si plusieurs detecteurs, separes leur nom par une virgule
-# [nom1,nom2,...,nomN]: [plage de run associee]
-# Lecture via un TEnv
-#

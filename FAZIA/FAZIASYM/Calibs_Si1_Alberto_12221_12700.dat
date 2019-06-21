@@ -1,8 +1,0 @@
-#
-#  E(MeV) = a0 + a1*channel + a2*channel*channel
-#  <signal>-<block_number><quartet_number><telescope_number>: <a0>,<a1>,<a2>
-#
-RunList:                                 12221-12700
-Signal:                                  QH1
-CalibType:                               Channel-Energy
-SI1-41: 0.268079,0.262110,0.0

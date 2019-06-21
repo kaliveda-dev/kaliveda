@@ -1,4 +1,0 @@
-BUILD_KALIVEDA_MODULE(signals
-	PARENT ${KVSUBPROJECT}
-	EXTRA_LIBS KVMultiDetdb KVMultiDetdata_management
-)

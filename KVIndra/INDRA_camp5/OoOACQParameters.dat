@@ -1,9 +1,0 @@
-# Not working Acquisition parameters
-# 
-# 
-#  [nom_du_ACQpar]: [plage de run associee]
-#  si plusieurs parametres, separes leur nom par une virgule
-#  [nom1,nom2,...,nomN]: [plage de run associee]
-#  Lecture via un TEnv
-# 
-CSI_0714_T: 6019-6064 6066-6205 6214-6469 6471-6497 6500-6526 6528-6650 6652-6758 6777-6814 6856-7641 7647-7784 7786-7982 7984-8189 8193-8439 8614-8620 8672-8768 8770-8784 8787-8839

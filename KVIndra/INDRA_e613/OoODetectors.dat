@@ -1,8 +1,0 @@
-#Out of order detectors list
-#
-# Detecteurs montés et présents mais ne marchant pas ou éteints
-# [nom_du_detecteur]: [plage de run associee]
-# si plusieurs detecteurs, separes leur nom par une virgule
-# [nom1,nom2,...,nomN]: [plage de run associee]
-# Lecture via un TEnv
-#

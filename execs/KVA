@@ -1,5 +1,0 @@
-#!/bin/csh -f
-#
-#KaliVedaAnalysis batch script for BQS
-$KVROOT/bin/KaliVedaAnalysis -b -n
-exit

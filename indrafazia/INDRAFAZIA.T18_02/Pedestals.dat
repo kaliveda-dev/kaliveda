@@ -1,9 +1,0 @@
-######################################################################
-#Pedestals.dat																			#
-#                                                                    #
-#Defines which pedestal files should be used for which run.          #
-#In this first version, the pedestals are only set for the				#
-#the run which give the values													#
-######################################################################
-pied_SI.dat
-pied_CSI.dat

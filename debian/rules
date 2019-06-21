@@ -1,6 +1,0 @@
-#!/usr/bin/make -f
-%:
-	dh $@
-
-override_dh_auto_configure:
-	dh_auto_configure -- -DUSE_ALL=yes -DUSE_SQLITE=no -DUSE_MICROSTAT=yes -DUSE_GEMINI=no -Dgnuinstall=yes -DCMAKE_BUILD_TYPE=RelWithDebInfo

@@ -1,5 +1,0 @@
-void example()
-{
-   // A small example
-   printf("Hello!\n");
-}
