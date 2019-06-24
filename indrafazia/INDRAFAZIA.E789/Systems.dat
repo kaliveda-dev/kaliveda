@@ -10,13 +10,13 @@ Target : 1 0.0
 197Au 1.7
 Runs : 15000-15999 34000-34999 45000-45999
 
-+58Ni + natNi 52 MeV/A
++58Ni + 58Ni[300] 52 MeV/A
 58 28 58 28 0.3 52.20573
 Target : 1 0.0
 natNi 0.3
 Runs : 16000-30999
 
-+58Ni + natNi 52 MeV/A [INDRA]
++58Ni + 58Ni[300] 52 MeV/A [INDRA]
 58 28 58 28 0.3 52.20573
 Target : 1 0.0
 natNi 0.3
@@ -40,7 +40,7 @@ Runs : 47000-47999
 +NotGood
 Runs : 46000-46999
 
-+58Ni + 58Ni 32 MeV/A
++58Ni + 58Ni[300] 32 MeV/A
 58 28 58 28 0.3 31.74763
 Target : 1 0.0
 58Ni 0.30
