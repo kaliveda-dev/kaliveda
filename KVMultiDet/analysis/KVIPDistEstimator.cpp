@@ -14,21 +14,22 @@ ClassImp(KVIPDistEstimator)
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-KVIPDistEstimator::KVIPDistEstimator(int J)
+KVIPDistEstimator::KVIPDistEstimator()
    : KVBase(),
-     params(J),
+     params(),
      p_X_cb_integrator("p_X_cb_integrator", this, &KVIPDistEstimator::P_X_cb_for_integral, 0, 1, 1),
-     P_X_fit_function("P_X_fit_function", this, &KVIPDistEstimator::cb_integrated_P_X, 0, 1, 2 + J),
+     P_X_fit_function("P_X_fit_function", this, &KVIPDistEstimator::cb_integrated_P_X, 0, 1, 5),
      mean_X_vs_cb_function("mean_X_vs_cb", this, &KVIPDistEstimator::mean_X_vs_cb, 0, 1, 0),
      mean_X_vs_b_function("mean_X_vs_b", this, &KVIPDistEstimator::mean_X_vs_b, 0, 20, 0),
      mean_b_vs_X_integrator("mean_b_vs_X_integrator", this, &KVIPDistEstimator::mean_b_vs_X_integrand, 0, 1, 1),
-     mean_b_vs_X_function("mean_b_vs_X", this, &KVIPDistEstimator::mean_b_vs_X, 0, 1, 0)
+     mean_b_vs_X_function("mean_b_vs_X", this, &KVIPDistEstimator::mean_b_vs_X, 0, 1, 0),
+     p_X_X_integrator("p_X_X_integrator", this, &KVIPDistEstimator::P_X_cb_for_X_integral, 0, 1000, 1),
+     fitted_P_X("fitted_P_X", this, &KVIPDistEstimator::P_X_from_fit, 0, 1000, 0),
+     Cb_dist_for_X_select("Cb_dist_for_X_select", this, &KVIPDistEstimator::cb_dist_for_X_selection, 0, 1, 2),
+     B_dist_for_X_select("b_dist_for_X_select", this, &KVIPDistEstimator::b_dist_for_X_selection, 0, 20, 2)
 {
-   // J is the order of the polynomial used in the parametrisation of k(cb)
-
    p_X_cb_integrator.SetParNames("X");
-   P_X_fit_function.SetParNames("#theta", "X_{max}");
-   for (int j = 0; j < J; ++j) P_X_fit_function.SetParName(2 + j, Form("a_{%d}", j + 1));
+   P_X_fit_function.SetParNames("#theta", "X_{max}", "X_{min}", "#alpha", "#gamma");
 }
 
 //____________________________________________________________________________//
@@ -52,10 +53,12 @@ void KVIPDistEstimator::FitHisto(TH1* h)
    P_X_fit_function.SetParLimits(0, 0.1, 100.);
    P_X_fit_function.SetParameter(1, params.Xmax.value = 2.5 * h->GetMean());
    P_X_fit_function.SetParLimits(1, 0.1, 10 * params.Xmax.value);
-   for (int j = 0; j < params.J; ++j) {
-      P_X_fit_function.SetParameter(2 + j, params.aj[j].value = pow(10., -j) * 1.5);
-      P_X_fit_function.SetParLimits(2 + j, 0., 100.);
-   }
+   P_X_fit_function.SetParameter(2, params.k0.value = 0);
+   P_X_fit_function.SetParLimits(2, 0, 1000);
+   P_X_fit_function.SetParameter(3, params.alpha.value = 1);
+   P_X_fit_function.SetParLimits(3, 1, 10);
+   P_X_fit_function.SetParameter(4, params.gamma.value = 1);
+   P_X_fit_function.SetParLimits(4, 0, 10);
    h->Fit(&P_X_fit_function);
 
    mean_b_vs_X_function.SetRange(h->GetXaxis()->GetBinLowEdge(1), h->GetXaxis()->GetBinUpEdge(h->GetNbinsX()));
@@ -65,12 +68,26 @@ void KVIPDistEstimator::update_fit_params()
 {
    // get latest values of parameters from histogram fit
 
-   params.theta.value = P_X_fit_function.GetParameter(0);
-   params.Xmax.value = P_X_fit_function.GetParameter(1);
-   params.kmax.value = params.Xmax.value / params.theta.value;
-   for (int j = 0; j < params.J; ++j) {
-      params.aj[j].value = P_X_fit_function.GetParameter(2 + j);
+   if (!histo) {
+      Warning("update_fit_params", "no histogram set with FitHisto(TH1*)");
+      return;
    }
+   TF1* fit = (TF1*)histo->FindObject("P_X_fit_function");
+   if (!fit) {
+      Warning("update_fit_params", "no fit function found in histogram");
+      return;
+   }
+   double theta = fit->GetParameter(0);
+   double Xmax = fit->GetParameter(1);
+   double Xmin = fit->GetParameter(2);
+   double alpha = fit->GetParameter(3);
+   double gamma = fit->GetParameter(4);
+   params.theta.value = theta;
+   params.Xmax.value = Xmax;
+   params.kmax.value = (Xmax - Xmin) / theta;
+   params.k0.value = Xmin / theta;
+   params.alpha.value = alpha;
+   params.gamma.value = gamma;
 }
 
 //____________________________________________________________________________//

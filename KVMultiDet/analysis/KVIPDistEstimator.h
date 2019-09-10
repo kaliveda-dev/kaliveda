@@ -36,15 +36,16 @@ struct fit_parameter {
 
 class bce_fit_results : public TNamed {
 public:
-   int J; // degree of polynomial k(cb) Eq(8)
-   std::vector<fit_parameter> aj; // polynomial coefficients Eq(8)
+   fit_parameter k0; // minimum of k at c=1
+   fit_parameter alpha; // power of centrality
+   fit_parameter gamma; // power of (1-pow(c,alpha))
    fit_parameter theta; // the (b-independent) fluctuation width Eqs(1),(2)
    fit_parameter kmax; // value of k at b=0 Eq(8)
    fit_parameter Xmax; // value of X at b=0
    double chisquare;
    double ndf;
 
-   bce_fit_results(int j) : J(j), aj(j) {}
+   bce_fit_results() {}
    virtual ~bce_fit_results() {}
 
    void Print(Option_t* = "") const
@@ -52,14 +53,16 @@ public:
       cout << "Chi-2 = " << chisquare << " NDF = " << ndf << " (" << chisquare / ndf << ")" << endl;
       cout << "   kmax = ";
       kmax.print();
+      cout << "   k0 = ";
+      k0.print();
+      cout << "   alpha = ";
+      alpha.print();
+      cout << "   gamma = ";
+      gamma.print();
       cout << "   theta = ";
       theta.print();
       cout << endl;
-      for (int i = 0; i < J; ++i) {
-         cout << "\t a" << i << " = ";
-         aj[i].print();
-         cout << endl;
-      }
+
    }
 
    ClassDef(bce_fit_results, 1)
@@ -74,22 +77,25 @@ class KVIPDistEstimator : public KVBase {
    TF1 mean_X_vs_b_function;
    TF1 mean_b_vs_X_integrator;
    TF1 mean_b_vs_X_function;
+   TF1 p_X_X_integrator;
+   TF1 fitted_P_X;
+   TF1 Cb_dist_for_X_select;
+   TF1 B_dist_for_X_select;
 
    KVSmoothIPDist fIPDist;// used to convert centrality to impact parameter
 
    double k_cb(double cb)
    {
       // k as a function of centrality cb
-      double arg = 0;
-      for (int j = 0; j < params.J; ++j) arg += params.aj[j].value * TMath::Power(cb, j + 1);
-      return params.kmax.value * TMath::Exp(-arg);
+
+      return params.kmax.value * TMath::Power(1. - TMath::Power(cb, params.alpha.value), params.gamma.value)
+             + params.k0.value;
    }
    double mean_X_vs_cb(double* x, double*)
    {
       // function used to draw fitted <X> vs. cb
       // x[0] = cb
 
-      update_fit_params();
       return k_cb(x[0]) * params.theta.value;
    }
    double mean_X_vs_b(double* x, double*)
@@ -98,7 +104,6 @@ class KVIPDistEstimator : public KVBase {
       // x[0] = b
       // before using, call SetIPDistParams(sigmaR,deltab)
 
-      update_fit_params();
       return k_cb(fIPDist.GetCentrality().Eval(x[0])) * params.theta.value;
    }
    double P_X_cb(double X, double cb)
@@ -117,6 +122,13 @@ class KVIPDistEstimator : public KVBase {
       // par[0] = X
       return P_X_cb(par[0], x[0]);
    }
+   double P_X_cb_for_X_integral(double* x, double* par)
+   {
+      // used to integrate P(X|cb) wrt X
+      // x[0] = X
+      // p[0] = cb
+      return P_X_cb(x[0], par[0]);
+   }
    double cb_integrated_P_X(double* x, double* p)
    {
       // integral used in function to fit experimental P(X) distribution
@@ -124,20 +136,25 @@ class KVIPDistEstimator : public KVBase {
       // x[0] = X
       // p[0] = theta
       // p[1] = Xmax
-      // p[2, 3, ]... = aj
-      // in total, (2+J) parameters
+      // p[2] = Xmin
+      // p[3] = alpha
+      // p[4] = gamma
+      // in total, 5 parameters
 
       params.theta.value = p[0];
-      params.Xmax.value = p[1];
+      params.Xmax.value = p[1] - p[2];
       params.kmax.value = params.Xmax.value / params.theta.value;
-      for (int j = 0; j < params.J; ++j) params.aj[j].value = p[2 + j];
+      params.k0.value = p[2] / params.theta.value;
+      params.alpha.value = p[3];
+      params.gamma.value = p[4];
       p_X_cb_integrator.SetParameter(0, x[0]); // set value of X in integrand
       return p_X_cb_integrator.Integral(0, 1);
    }
-   double P_X_from_fit(double X)
+   double P_X_from_fit(double* x, double*)
    {
       // same as previous function, but just using current values of parameters
-      p_X_cb_integrator.SetParameter(0, X); // set value of X in integrand
+      // x[0] = X
+      p_X_cb_integrator.SetParameter(0, x[0]); // set value of X in integrand
       return p_X_cb_integrator.Integral(0, 1);
    }
    double mean_b_vs_X_integrand(double* x, double* p)
@@ -154,16 +171,42 @@ class KVIPDistEstimator : public KVBase {
       // function returning mean value of b given X
       // x[0] = X
 
-      double px = P_X_from_fit(x[0]);
+      double px = P_X_from_fit(x, 0);
       if (px) {
          mean_b_vs_X_integrator.SetParameter(0, x[0]);
          return mean_b_vs_X_integrator.Integral(0, 1) / px;
       }
       return 0;
    }
+   double cb_dist_for_X_selection(double* x, double* p)
+   {
+      // return P(cb|X1<X<X2) calculated from fit
+      // x[0] = cb
+      // p[0] = X1
+      // p[1] = X2
+
+      p_X_X_integrator.SetParameter(0, x[0]);
+      double num =  p_X_X_integrator.Integral(p[0], p[1]);
+      double den = fitted_P_X.Integral(p[0], p[1]);
+      if (den > 0) return num / den;
+      return 0;
+   }
+   double b_dist_for_X_selection(double* x, double* p)
+   {
+      // return P(b|X1<X<X2) calculated from fit
+      // x[0] = b
+      // p[0] = X1
+      // p[1] = X2
+
+      p_X_X_integrator.SetParameter(0, fIPDist.GetCentrality().Eval(x[0]));
+      double num =  p_X_X_integrator.Integral(p[0], p[1]);
+      double den = fitted_P_X.Integral(p[0], p[1]);
+      if (den > 0) return fIPDist.GetIPDist().Eval(x[0]) * num / den;
+      return 0;
+   }
 
 public:
-   KVIPDistEstimator(int J);
+   KVIPDistEstimator();
    virtual ~KVIPDistEstimator();
 
    const bce_fit_results& GetFitResults() const
@@ -205,6 +248,18 @@ public:
       return g;
    }
    void update_fit_params();
+   void DrawCbDistForXSelection(double X1, double X2, Option_t* opt = "")
+   {
+      Cb_dist_for_X_select.SetParameters(X1, X2);
+      Cb_dist_for_X_select.Draw(opt);
+   }
+   void DrawBDistForXSelection(double X1, double X2, Option_t* opt = "")
+   {
+      fIPDist.NormalizeIPDistToCrossSection();
+      B_dist_for_X_select.SetParameters(X1, X2);
+      B_dist_for_X_select.Draw(opt);
+      std::cout << B_dist_for_X_select.Mean(0, 20) << "+/-" << B_dist_for_X_select.Variance(0, 20) << std::endl;
+   }
 
    ClassDef(KVIPDistEstimator, 1) //Estimate impact parameter distribution by fits to data
 };
