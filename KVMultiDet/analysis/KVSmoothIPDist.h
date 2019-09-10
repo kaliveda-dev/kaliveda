@@ -56,6 +56,14 @@ public:
    }
    Double_t Calculate_b(Double_t centrality) const;
 
+   void NormalizeIPDistToCrossSection()
+   {
+      // Normalizing to total cross section,
+      // IP distribution will be probability distribution
+
+      fIPdist.SetParameter(0, 1. / GetCrossSection());
+   }
+
    ClassDef(KVSmoothIPDist, 1) //Triangular IP distribution with smooth fall-off
 };
 
