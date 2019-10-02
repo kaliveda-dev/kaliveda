@@ -17,9 +17,9 @@ OBJ: KVUniqueNameList	KVSeqCollection_6210	Optimised list in which objects with 
 kaliveda [1] gMultiDetArray->GetDetector("CSI-1111")->GetListOfDetectorSignals().ls()
 
 OBJ: KVUniqueNameList	KVSeqCollection_28018	Optimised list in which objects with the same name can only be placed once : 0
- OBJ: KVFAZIADetectorSignal	Q3FPGAEnergy	Signal Q3FPGAEnergy of detector CSI-1111 : 0 at: 0x55fb35997490
- OBJ: KVFAZIADetectorSignal	Q3FastFPGAEnergy	Signal Q3FastFPGAEnergy of detector CSI-1111 : 0 at: 0x55fb35997640
- OBJ: KVDetectorSignalExpression	ID_CSI-1111-VARX	Signal calculated as Q3FastFPGAEnergy/Q3FPGAEnergy for detector CSI-1111 : 0 at: 0x55fb3c042070
+ OBJ: KVFAZIADetectorSignal	Q3.FPGAEnergy	Signal Q3FPGAEnergy of detector CSI-1111 : 0 at: 0x55fb35997490
+ OBJ: KVFAZIADetectorSignal	Q3.FPGAFastEnergy	Signal Q3FastFPGAEnergy of detector CSI-1111 : 0 at: 0x55fb35997640
+ OBJ: KVDetectorSignalExpression	ID_CSI-1111-VARX	Signal calculated as Q3.FPGAFastEnergy/Q3.FPGAEnergy for detector CSI-1111 : 0 at: 0x55fb3c042070
 ~~~~~~~~~~
 
 The value of any signal can be retrieved using its name:
@@ -34,7 +34,7 @@ If the signal in question is not defined, this method returns 0. You can test if
 a given signal is defined for a detector using:
 
 ~~~~~~~~~~{.cpp}
-kaliveda [3] gMultiDetArray->GetDetector("SI1-111")->HasDetectorSignalValue("Q3FPGAEnergy")
+kaliveda [3] gMultiDetArray->GetDetector("SI1-111")->HasDetectorSignalValue("Q3.FPGAEnergy")
 
 (bool) false
 ~~~~~~~~~~
@@ -55,7 +55,7 @@ involving known signals. For example, in order to define the `ID_CSI-1111-VARX`
 signal shown in the previous example above, you would go about it this way:
 
 ~~~~~~~~~~{.cpp}
-kaliveda [4] gMultiDetArray->GetDetector("CSI-1111")->AddDetectorSignalExpression("ID_CSI-1111-VARX","Q3FastFPGAEnergy/Q3FPGAEnergy");
+kaliveda [4] gMultiDetArray->GetDetector("CSI-1111")->AddDetectorSignalExpression("ID_CSI-1111-VARX","Q3.FastFPGAEnergy/Q3.FPGAEnergy");
 
 (bool) true
 ~~~~~~~~~~

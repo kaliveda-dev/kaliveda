@@ -1,0 +1,492 @@
+% Guide for analysis of E789 data
+
+# KaliVeda version
+The E789 data can only be analysed with KV built from the `master` branch on [github][github-master].
+Current version returned by `kaliveda-config --version` for this version is `1.11/00`. Class reference
+for `1.11 (master)` version is available [here][classdoc-master] or from the menu on the [website][kvweb].
+
+Note that for the moment compatibility of this version with previous data is not guaranteed,
+and its sole aim for the moment is the reduction and analysis of E789 data.
+
+## CCIN2P3
+On Computing Centre (Lyon) machines, you need to be logged in as a member of the `fazia` group,
+and your login shell must be *bash* (typing `echo $SHELL` should print `/bin/bash`).
+You need to change the default version of KaliVeda by editing your `$HOME/.profile`
+login script. Open the file and locate the following lines:
+
+~~~~~~~~~{.bash}
+if [ -n "$THRONG_DIR" ];then
+   if [ -r $THRONG_DIR/group_profile ];then
+      . $THRONG_DIR/group_profile
+   fi
+fi
+~~~~~~~~~
+
+You should add the following line just before this part, like so:
+
+~~~~~~~~~{.bash}
+# comment the next line to go back to default KV version
+export KV_GIT_BRANCH=master
+
+if [ -n "$THRONG_DIR" ];then
+   if [ -r $THRONG_DIR/group_profile ];then
+      . $THRONG_DIR/group_profile
+   fi
+fi
+~~~~~~~~~
+
+The next time you log in, you will have the correct version of KV.
+
+# Notes on reconstructed (`recon`) data
+Reconstructed data means events containing nuclei. Each 'nucleus' in an event is reconstructed
+from the hits in the detectors according to the geometry. At the very least,
+a reconstructed nucleus is defined by a trajectory through the array geometry
+(i.e. a series of hit detectors). Depending on the state of the data
+reduction when the reconstructed data was generated, some or all nuclei in the events
+might also be identified (i.e. have an attributed atomic number, possibly also
+mass), and possibly also calibrated (i.e. have an attributed kinetic energy/momentum
+vector).
+
+It should be noted that the event class used for this data is [`KVReconstructedEvent`][KVReconstructedEvent],
+a generic non-multidetector-specific container for nuclei reconstructed from experimental data. The
+array-specific classes used for previous (uncoupled) INDRA and FAZIA data would obviously be unsuitable here.
+Similarly, the objects representing the nuclei in each event are generic [`KVReconstructedNucleus`][KVReconstructedNucleus]
+objects. The only methods which are valid for these objects are those which are defined by the
+[`KVReconstructedNucleus`][KVReconstructedNucleus] class or any of its parent classes; array-specific methods
+defined by child classes are invalid in this context, **even if you try to upcast a pointer to the particle to the desired class**,
+i.e. do not try to do this:
+
+~~~~~~~~~~{.cpp}
+KVReconstructedNucleus* nuc = ... // points to some particle in event (e.g. in a loop)
+
+// assume that I know that this particular particle was detected by INDRA,
+// I want the ring number of the detector it stopped in...
+
+int ring = ((KVINDRAReconNuc*)nuc)->GetRingNumber(); // NO! NO! NO!
+
+// wait for segmentation violation...
+~~~~~~~~~~
+
+See how to overcome this 'problem' [below](#info-on-hit-detectors).
+
+## Parameters associated with each event
+Each event has an associated list of parameters (a [`KVNameValueList`][KVNameValueList])
+storing different useful information from both INDRA and FAZIA.
+In a reconstructed data analysis class this list can be accessed using `GetEvent()->GetParameters()`.
+Typical contents look something like this:
+
+~~~~~~~~~~~~
+ <INDRA_GAMMA_MULT=5>
+ <INDRA_GAMMA_DETS=CSI_0715,CSI_0621,CSI_1017,CSI_1402,CSI_1402>
+ <FAZIA.TS_hi=1363>
+ <FAZIA.TS_lo=-1949460226>
+ <FAZIA.TRIGPAT=2>
+ <FAZIA.EC_hi=10>
+ <FAZIA.EC_lo=2113195852>
+ <INDRA.TS_hi=1363>
+ <INDRA.TS_lo=-1949460255>
+ <INDRA.EN_hi=0>
+ <INDRA.EN_lo=38065707>
+ <ACQPAR.INDRA.CONFIG=-8191>
+ <ACQPAR.INDRA.R_DEC=-511>
+ <ACQPAR.INDRA.STAT_EVE=-40>
+ <ACQPAR.INDRA.SI_0710_T=37>
+ <ACQPAR.INDRA.SI_0714_T=38>
+ <ACQPAR.INDRA.SI_0715_T=36>
+ ...
+~~~~~~~~~~~~
+
+Things to note here:
+
+  * 'gamma' particles identified in INDRA CsI detectors are no longer included
+     in the reconstructed event. Their multiplicity and the list of hit detectors
+     are stored in parameters `INDRA_GAMMA_MULT` and `INDRA_GAMMA_DETS`. The multiplicity
+     of the reconstructed event (i.e. `GetEvent()->GetMult()`) does not include these
+     particles.
+     
+  * the timestamps for the two detectors are stored in 64-bit unsigned parameters
+    (see doc for [`KVNameValueList`][KVNameValueList] class) called `INDRA.TS` and `FAZIA.TS`.
+    These values are the raw timestamps from the Centrum module i.e. in number of 10ns ticks.
+    Beware when subtracting one from the other: as they are unsigned, any negative result
+    will lead to a very large positive value unless care is taken:
+    
+          root [0] ULong64_t a = 10;
+          root [1] ULong64_t b = 11;
+          root [2] a-b
+          (ULong64_t)18446744073709551615
+          root [3] (Long64_t)(a-b)
+          (Long64_t)(-1)
+          root [4] Double_t timestamp_difference_in_nanoseconds = (Long64_t)(a-b)*10
+          root [5] timestamp_difference_in_nanoseconds
+          (Double_t)(-1.00000000000000000e+01)
+          
+  * `FAZIA.TRIGPAT` is the FAZIA trigger pattern satisfied by the event. The values are:
+     + `FAZIA.TRIGPAT==2`: trigger $M\geq 2$;
+     + `FAZIA.TRIGPAT==4`: trigger $M\geq 1$ downscaled 100;
+     + `FAZIA.TRIGPAT==6 (=2+4)`: event satisfied both of the previous conditions
+
+  * `FAZIA.EC` and `INDRA.EN` are the FAZIA and INDRA event numbers from their respective acquisitions.
+  
+  * `ACQPAR.INDRA.*` are the values of every acquisition parameter of INDRA for the event.
+    These parameters are used to 'put back' the raw data in the INDRA detectors as each event
+    is read.
+
+## Parameters associated with each particle
+In addition, each nucleus of the event also has a list of associated parameters, again 
+this is a [`KVNameValueList`][KVNameValueList], and can be accessed with the `KVReconstructedNucleus::GetParameters()`
+method. Here is a typical example for a particle detected by FAZIA:
+
+~~~~~~~~~~~~
+ <ARRAY=FAZIA>
+ <SI2-332.Q2.FPGAEnergy=1098.44>
+ <SI2-332.I2.BaseLine=-5554.23>
+ <SI2-332.I2.SigmaBaseLine=11.9602>
+ <SI2-332.I2.Amplitude=4019.9>
+ <SI2-332.I2.RawAmplitude=5129>
+ <DetTag=11364>
+ <GTTag=11443>
+ ...
+~~~~~~~~~~~~
+
+and here for a particle detected by INDRA:
+
+~~~~~~~~~~~~
+ <ARRAY=INDRA>
+ <IDCODE=2>
+ <Coherent=true>
+ <Pileup=false>
+ <UseFullChIoEnergyForCalib=true>
+ <ECODE=0>
+ <INDRA.ECHIO=0>
+ <INDRA.ESI=0>
+ <INDRA.ECSI=0>
+~~~~~~~~~~~~
+
+(the energy losses in the different detectors are zero because no calibration is available yet).
+
+The `ARRAY` parameter is used by the two following methods of the [`KVReconstructedNucleus`][KVReconstructedNucleus]
+class:
+
+~~~~~~~~~~~{.cpp}
+KVReconstructedNucleus* nuc = ... // points to some particle in an event (e.g. in a loop)
+
+// nuc is pointing to a particle detected by FAZIA
+nuc->GetArrayName();
+
+"FAZIA"
+
+nuc->InArray("INDRA");
+(bool)false
+
+// nuc is pointing to a particle detected by INDRA
+nuc->InArray("INDRA");
+(bool)true
+~~~~~~~~~~~
+
+# Analysing reconstructed data
+To analyse reconstructed data, you first need to generate a new example analysis
+class with KaliVedaGUI (see [here][KaliVedaGUI] how to do this, and
+[here][recon-anal-ex] to see a resulting example class). However, this example is
+intended for physics analysis of fully identified and calibrated data.
+If the data being analysed is only partially identified/calibrated,
+the example needs 'tweaking' in order to be useful. These changes are detailed
+below.
+
+Don't forget the [Data Analysis][usersguide-analysis] chapter in the Users Guide.
+
+## Changes to `InitAnalysis()` method
+This is where global variables, histograms and trees to be used in the analysis are defined,
+as well as the name of the resulting ROOT file. There is nothing here which should prevent
+the analysis from working, however you don't need to keep anything that you don't use:
+the point was to try to show some examples of what is possible.
+
+If you don't use any global variables, remove the following line from the part setting up
+a tree for analysis results:
+
+~~~~~~~~~~~~{.cpp}
+GetGVList()->MakeBranches(t); // store global variable values in branches
+~~~~~~~~~~~~
+
+The part dealing with naming the results file should be left as it is: this will for example
+correctly handle the automatic naming of files produced by batch jobs performed on many runs.
+
+## Changes needed in `InitRun()` method
+This is where decisions are made concerning which particles are included in the
+analysis. Concerning identification and calibration quality codes, see the next
+subsection.
+
+Beware also the use of `KVParticleCondition` and the `SetParticleConditions` method
+here: in the default [example class][recon-anal-ex] there are two conditions which are applied:
+
+~~~~~~~~~~~{.cpp}
+   KVParticleCondition pc_z("_NUC_->GetZ()>0&&_NUC_->GetZ()<=92");  // remove any strange Z identifications
+   KVParticleCondition pc_e("_NUC_->GetE()>0.");                    // remove any immobile nuclei
+   SetParticleConditions(pc_z && pc_e);
+~~~~~~~~~~~
+
+When dealing with uncalibrated data, the second condition will remove all
+particles from the analysis, as none of them will have a non-zero kinetic
+energy. It is probably best to remove these lines if data being analysed is not fully identified/calibrated.
+
+See also in the chapter on Data Analysis of the [Users Guide][usersguide-analysis-initrun].
+
+### Default identification and calibration codes
+By default
+only particles with standard identification *and* calibration quality codes for
+each array are labelled as `"OK"` for analysis.
+Therefore if in your analysis you perform
+a loop over `"OK"` particles you risk being disappointed by the result.
+
+For INDRA, the defaults for 'good' particles are:
+
+
+   | IDCODE | Meaning |
+   | --- | --- |
+   |    2   |  CsI Fast-Slow ID |
+   |    3   |  Si-CsI ID |
+   |    4   |  ChIo-Si/ChIo-CsI ID |
+   |    6   |  ID by coherency analysis |
+
+   | ECODE | Meaning |
+   | --- | --- |
+   |    1   |  All OK |
+   |    2   |  Calibration OK, some contributions calculated |
+
+For FAZIA, the defaults for 'good' particles are:
+
+
+   | IDCODE | Meaning |
+   | --- | --- |
+   |    11   |  PSA in Si1 ID |
+   |    12   |  Si1-Si2 ID |
+   |    22   |  PSA in Si2 ID |
+   |    23   |  Si2-CsI or (Si1+Si2)-CsI ID |
+   |    33   |  PSA in CsI ID |
+   |    6   |  ID by coherency analysis |
+
+   | ECODE | Meaning |
+   | --- | --- |
+   |    0   |  All OK |
+   |    1   |  Calibration OK, some contributions calculated |
+
+### Changing the default selection of identification/calibration codes
+This can be done in the `InitRun()` method of your analysis class, using the
+following methods:
+
+~~~~~~~~~~~{.cpp}
+// set acceptable identification/calibration codes for particles detected in INDRA
+gMultiDetArray->GetArray("INDRA")->AcceptIDCodes(...);
+gMultiDetArray->GetArray("INDRA")->AcceptECodes(...);
+
+// set acceptable identification/calibration codes for particles detected in FAZIA
+gMultiDetArray->GetArray("FAZIA")->AcceptIDCodes(...);
+gMultiDetArray->GetArray("FAZIA")->AcceptECodes(...);
+~~~~~~~~~~~
+
+Note that the code selection has to be defined for each array separately. 
+The codes you want to accept are given as argument to these methods, in the
+form of a comma-separated string, e.g. `"12,23"`. In order to accept any code,
+i.e. not make any selection, just use the empty string:
+
+~~~~~~~~~~~{.cpp}
+// accept all calibration codes for INDRA
+// in this case uncalibrated (but identified) particles can be "OK" too
+gMultiDetArray->GetArray("INDRA")->AcceptECodes("");
+~~~~~~~~~~~
+
+#### Note on access to detector arrays
+The global pointer `gMultiDetArray` is a pointer to the overall array
+constituted of both INDRA and FAZIA (handled by [KVExpSetUp][KVExpSetUp] class)
+The individual pointers `gIndra` and `gFazia` can also be used, but in this case
+you need to add the relevant header files where these pointers are defined:
+
+~~~~~~~~~~~{.cpp}
+// set acceptable identification/calibration codes for particles detected in INDRA
+#include "KVINDRA.h"
+
+gIndra->AcceptIDCodes(...);
+
+// set acceptable identification/calibration codes for particles detected in FAZIA
+#include "KVFAZIA.h"
+
+gFazia->AcceptECodes(...);
+~~~~~~~~~~~
+
+## Changes needed in `Analysis()` method
+This is where the analysis of each event is implemented.
+The first line of this method (see [example class][recon-anal-ex]) should be removed
+(not obvious, as in the comments is written "Do not remove the following line"):
+
+~~~~~~~~~~~{.cpp}
+if (!GetEvent()->IsOK()) return kTRUE;
+~~~~~~~~~~~
+
+This condition only makes sense for analysis of fully calibrated data, and in addition
+it is not at all adapted to the case of the INDRA-FAZIA coupling for the time being.
+
+The following line,
+
+~~~~~~~~~~~{.cpp}
+GetGVList()->FillBranches();
+~~~~~~~~~~~
+
+can be removed if you did not define any global variables in `InitAnalysis()`.
+
+After this is an example loop over all `"OK"` particles in the event (i.e. those selected according to
+the conditions defined in `InitRun()`):
+
+~~~~~~~~~~~{.cpp}
+for (KVEvent::Iterator it = OKEventIterator(*GetEvent()).begin(); it != GetEvent()->end(); ++it)
+{
+   KVReconstructedNucleus& n = it.reference<KVReconstructedNucleus>();
+~~~~~~~~~~~
+
+You can if you wish, replace this with the simpler (but deprecated) old way of doing:
+
+~~~~~~~~~~~{.cpp}
+KVReconstructedNucleus* n;
+while( (n = GetEvent()->GetNextParticle("ok")) )
+{
+~~~~~~~~~~~
+
+as long as you take into account the fact that in the first example `n` is a reference while
+in the second it is a pointer, therefore method calls such as `n.GetZ()` with the first example
+have to be changed to `n->GetZ()`.
+
+You do not have to loop over only `"OK"` particles: you can simply loop over all reconstructed
+particles in the event without taking into account any preselections:
+
+~~~~~~~~~~~{.cpp}
+// 'new' (preferred) style loop over all particles
+for (KVEvent::Iterator it = GetEvent()->begin(); it != GetEvent()->end(); ++it)
+
+// 'old' (deprecated) style loop over all particles
+while( (n = GetEvent()->GetNextParticle()) )
+~~~~~~~~~~~
+
+See [here][event-iterator-examples] for lots of examples of how to loop over the particles in events.
+
+### Some hints for analysis of data
+#### Timestamps
+You can access the parameters associated with each event (see above) using `GetEvent()->GetParameters()`. For
+example, to retrieve the CENTRUM timestamps for each array:
+
+~~~~~~~~~~~{.cpp}
+ULong64_t indra_ts = GetEvent()->GetParameters()->GetValue64bit("INDRA.TS");
+ULong64_t fazia_ts = GetEvent()->GetParameters()->GetValue64bit("FAZIA.TS");
+~~~~~~~~~~~
+
+#### Info on hit detectors
+By definition, each reconstructed nucleus in the event is associated with at least one detector which
+fired and is taken as the starting point for the reconstruction:
+
+~~~~~~~~~~~{.cpp}
+// detector in which reconstructed particle assumed to have stopped
+KVDetector* stopd = n.GetStoppingDetector();
+~~~~~~~~~~~
+
+Depending on which array detected the particle, the object referred to by this pointer will
+derive either from [KVINDRADetector] or [KVFAZIADetector]. You can therefore in this case upcast
+in order to use specific methods in each case:
+
+~~~~~~~~~~~{.cpp}
+if(n.InArray("INDRA"))
+{
+   cout << "INDRA Ring number = " << ((KVINDRADetector*)n.GetStoppingDetector())->GetRingNumber() << endl;
+}
+else if(n.InArray("FAZIA"))
+{
+   cout << "FAZIA Block number = " << ((KVFAZIADetector*)n.GetStoppingDetector())->GetBlockNumber() << endl;
+}
+~~~~~~~~~~~
+
+#### Particle direction/angles
+For uncalibrated particles, the direction is undefined (because with no kinetic energy, their momentum vector
+is null), therefore you cannot obtain angular distribution information directly from the particle:
+
+~~~~~~~~~~~{.cpp}
+n.GetTheta(); // => KE=0, theta=0
+n.GetPhi();   // => KE=0, phi=0
+~~~~~~~~~~~
+
+However, we know in which detector the particle stopped, thus we can use
+
+~~~~~~~~~~~{.cpp}
+n.GetStoppingDetector()->GetTheta(); // => position of centre of detector
+n.GetStoppingDetector()->GetPhi();   // => position of centre of detector
+~~~~~~~~~~~
+
+You can also randomize over the surface of the stopping detector, in the same way as is used to assign
+directions to particles once they are calibrated:
+
+~~~~~~~~~~~{.cpp}
+double theta,phi;
+n.GetStoppingDetector()->GetRandomAngles(theta,phi);
+~~~~~~~~~~~
+
+#### Access to identification telescope & associated detectors
+Any particle which has been identified is associated with an identification telescope:
+
+~~~~~~~~~~~{.cpp}
+KVIDTelescope* idt = n.GetIdentifyingTelescope();
+~~~~~~~~~~~
+
+Depending on the type of identification, this telescope associates either 1 or 2 detectors:
+
+~~~~~~~~~~~{.cpp}
+if(idt->GetSize()==2)  // DE-E telescope
+{
+   KVDetector* DE = idt->GetDetector(1);
+   KVDetector* E  = idt->GetDetector(2);
+}
+~~~~~~~~~~~
+
+For PSA identification (single detector, Si or CsI) `idt->GetDetector(2)` will produce an error.
+
+#### Access to raw & calibrated data from detectors
+The different data associated with each detector are available through a base `KVDetector*` pointer
+(such as returned by `KVReconstructedNucleus::GetStoppingDetector` - no need to upcast) with the following methods:
+
+~~~~~~~~~~~{.cpp}
+// Example: particle stopped in FAZIA CsI detector
+n.GetStoppingDetector()->GetDetectorSignalValue("Q3.FPGAFastEnergy");
+
+// Example: particle identified in INDRA Si-CsI telescope
+n.GetIdentifyingTelescope()->GetDetector(1)->GetDetectorSignalValue("PG");
+~~~~~~~~~~~
+
+For calibrated data, when available, although some classes provide specific methods for specific data
+(e.g. `KVSilicon::GetVolts()`), it is strongly recommended to also use `GetDetectorSignalValue`
+in this case:
+
+~~~~~~~~~~~{.cpp}
+// Example: calibrated output in Volts for INDRA Si detector
+n.GetStoppingDetector()->GetDetectorSignalValue("Volt");
+
+// Example: calibrated output in MeV for INDRA Si detector
+n.GetIdentifyingTelescope()->GetDetector(1)->GetDetectorSignalValue("Energy");
+~~~~~~~~~~~
+
+See the Users Guide chapter [Detector signals and calibrations][usersguide-signals].
+
+[recon-anal-ex]: http://indra.in2p3.fr/kaliveda/doc/master/ExampleReconAnalysis_8cpp-example.html
+[kvweb]: http://indra.in2p3.fr/kaliveda/
+[classdoc-master]: http://indra.in2p3.fr/kaliveda/doc/master/
+[github-master]: https://github.com/kaliveda-dev/kaliveda/tree/master
+[KaliVedaGUI]: http://indra.in2p3.fr/kaliveda/KaliVedaGUIDoc/KaliVedaGUI.html
+[kaliveda-sim]: ../KVSimDirGUIDoc/KVSimDirGUI.html
+[KVEventSelector]: http://indra.in2p3.fr/kaliveda/doc/master/classKVEventSelector.html
+[KVExpSetUp]: http://indra.in2p3.fr/kaliveda/doc/master/classKVExpSetUp.html
+[KVRawDataAnalyser]: http://indra.in2p3.fr/kaliveda/doc/master/classKVRawDataAnalyser.html
+[KVRawDataReconstructor]: http://indra.in2p3.fr/kaliveda/doc/master/classKVRawDataReconstructor.html
+[KVReconRawDataAnalyser]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconRawDataAnalyser.html
+[KVNameValueList]: http://indra.in2p3.fr/kaliveda/doc/master/classKVNameValueList.html
+[Using Detector Array Geometries]: geometry.html
+[KVReconstructedEvent]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconstructedEvent.html
+[KVReconstructedNucleus]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconstructedNucleus.html
+[usersguide-analysis-initrun]: http://indra.in2p3.fr/kaliveda/UsersGuide/analyis.html#initrun
+[usersguide-analysis]: http://indra.in2p3.fr/kaliveda/UsersGuide/analyis.html
+[event-iterator-examples]: http://indra.in2p3.fr/kaliveda/doc/master/KVEvent_iterator_example_8C-example.html
+[KVINDRADetector]: http://indra.in2p3.fr/kaliveda/doc/master/classKVINDRADetector.html
+[KVFAZIADetector]: http://indra.in2p3.fr/kaliveda/doc/master/classKVFAZIADetector.html
+[usersguide-signals]: http://indra.in2p3.fr/kaliveda/UsersGuide/calibrations.html

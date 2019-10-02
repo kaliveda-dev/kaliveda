@@ -9,7 +9,8 @@ to perform the following tasks:
   * simulate reconstruction & identification of charged particles detected by the array;
   * reconstruct & identify charged particles detected by the array from experimental data.
   
-In this chapter we describe how to go about it.
+The base class for handling detector array geometries is [KVMultiDetArray].
+In this chapter we describe how to set up and use multidetector arrays.
 
 ## Creating a valid geometry ##
 The detector array geometry has first to be implemented using the [ROOT geometry package][ROOTgeom]
@@ -37,7 +38,8 @@ myGeo->SetTopVolume(top);
 ~~~~~~~~
 
 In this case, our `WORLD` is a vacuum-filled box with sides whose half-lengths are 50cm, i.e. it is
-a cube of side 1m. Note that any `KVMaterial` object can be used to obtain the "Vacuum" medium.
+a cube of side 1m. The [KVMaterial] class is an interface to the energy loss calculator
+(see [Energy loss & range calculations]). Note that any [KVMaterial] object can be used to obtain the "Vacuum" medium.
 
 Now we can build our silicon wafers, which are to be 5cm square and 300$\mu$m thick:
 
@@ -203,7 +205,7 @@ to the origin, do the following:
 
 TGeoRotation rot1,rot2;
 rot2.SetAngles(phi+90, theta, 0);
-rot1.SetAngles(-90, 0., 0.);
+rot1.SetAngles(-phi, 0., 0.);
 TGeoTranslation trans(0,0,D+0.5*detector_thickness);
 TGeoHMatrix h = rot2 * trans * rot1;
 top->AddNode(det, node_number, new TGeoHMatrix(h));
@@ -453,5 +455,12 @@ gMultiDetArray->GetListOfIDTelescopes()->ls()
  OBJ: KVIDTelescope	ID_DE-01_E-01	 : 0 at: 0x4eeb2d0
 ~~~~~~
 
+## Using the geometry ##
+
+Once you have a detector array geometry described by [KVMultiDetArray] or a derived class,
+
 
 [ROOTgeom]: https://root.cern.ch/root/htmldoc/guides/users-guide/ROOTUsersGuide.html#the-geometry-package
+[KVMultiDetArray]: http://indra.in2p3.fr/kaliveda/doc/master/classKVMultiDetArray.html
+[KVMaterial]: http://indra.in2p3.fr/kaliveda/doc/master/classKVMaterial.html
+[Energy loss & range calculations]: energyloss.html
