@@ -18,17 +18,6 @@ public:
    KVFAZIAIDSiSi_e789();
    virtual ~KVFAZIAIDSiSi_e789() {}
 
-   Double_t GetIDMapX(Option_t* /*opt*/ = "")
-   {
-      //X-coordinate is SI2 Q2 amplitude from FPGA
-      return fSi2->GetQ2FPGAEnergy();
-   }
-   Double_t GetIDMapY(Option_t* opt = "")
-   {
-      //Y-coordinate is SI1 QH1 amplitude from FPGA
-      if (!strcmp(opt, "QL1")) return fSi1->GetQL1Amplitude();
-      else                   return fSi1->GetQH1FPGAEnergy();
-   }
    void Initialize();
    Bool_t Identify(KVIdentificationResult* idr, Double_t /*x*/ = -1., Double_t /*y*/ = -1.);
 

@@ -3,8 +3,8 @@
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_11
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -530,8 +530,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_12
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -1057,8 +1057,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_13
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -1600,8 +1600,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_14
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -2127,8 +2127,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_21
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -2654,8 +2654,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_22
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -3182,8 +3182,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_23
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -3709,8 +3709,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_24
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -4238,8 +4238,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_31
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -4765,8 +4765,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_32
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -5294,8 +5294,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_33
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -5828,8 +5828,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_34
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -6355,8 +6355,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_41
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -6885,8 +6885,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_42
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -7412,8 +7412,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_43
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -7939,8 +7939,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_44
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -8466,8 +8466,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_111
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -8993,8 +8993,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_112
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -9520,8 +9520,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_113
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -10047,8 +10047,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_114
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -10574,8 +10574,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_121
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -11101,8 +11101,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_122
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -11628,8 +11628,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_123
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -12155,8 +12155,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_124
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -12682,8 +12682,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_131
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -13209,8 +13209,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_132
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -13736,8 +13736,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_133
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -14263,8 +14263,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_134
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -14790,8 +14790,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_141
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -15317,8 +15317,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_142
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -15844,8 +15844,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_143
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -16371,8 +16371,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_144
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -16898,8 +16898,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_211
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -17425,8 +17425,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_212
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -17952,8 +17952,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_213
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -18479,8 +18479,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_214
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -19006,8 +19006,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_221
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -19533,8 +19533,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_222
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -20060,8 +20060,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_223
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -20587,8 +20587,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_224
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -21114,8 +21114,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_231
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -21641,8 +21641,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_232
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -22168,8 +22168,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_233
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -22695,8 +22695,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_234
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -23246,8 +23246,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_241
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -23773,8 +23773,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_242
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -24300,8 +24300,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_243
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -24827,8 +24827,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_244
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -25354,8 +25354,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_311
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -25881,8 +25881,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_312
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -26408,8 +26408,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_313
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -26935,8 +26935,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_314
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -27462,8 +27462,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_321
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -27989,8 +27989,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_322
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -28516,8 +28516,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_323
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -29043,8 +29043,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_324
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -29570,8 +29570,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_331
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -30097,8 +30097,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_332
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -30624,8 +30624,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_333
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -31151,8 +31151,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_334
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -31678,8 +31678,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_341
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -32205,8 +32205,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_342
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -32732,8 +32732,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_343
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -33259,8 +33259,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_344
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -33786,8 +33786,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_411
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -34313,8 +34313,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_412
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -34840,8 +34840,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_413
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -35367,8 +35367,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_414
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -35894,8 +35894,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_421
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -36421,8 +36421,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_422
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -36948,8 +36948,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_423
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -37475,8 +37475,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_424
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -38002,8 +38002,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_431
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -38529,8 +38529,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_432
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -39056,8 +39056,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_433
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -39583,8 +39583,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_434
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -40110,8 +40110,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_441
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -40637,8 +40637,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_442
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -41164,8 +41164,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_443
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -41691,8 +41691,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_444
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -42218,8 +42218,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_511
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -42745,8 +42745,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_512
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -43272,8 +43272,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_513
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -43799,8 +43799,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_514
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -44326,8 +44326,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_521
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -44853,8 +44853,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_522
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -45380,8 +45380,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_523
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -45907,8 +45907,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_524
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -46434,8 +46434,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_531
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -46961,8 +46961,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_532
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -47488,8 +47488,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_533
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -48015,8 +48015,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_534
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -48542,8 +48542,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_541
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -49069,8 +49069,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_542
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -49596,8 +49596,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_543
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -50123,8 +50123,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_544
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -50650,8 +50650,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_611
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -51177,8 +51177,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_612
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -51704,8 +51704,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_613
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -52231,8 +52231,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_614
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -52758,8 +52758,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_621
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -53285,8 +53285,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_622
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -53812,8 +53812,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_623
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -54391,8 +54391,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_624
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -54918,8 +54918,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_631
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -55445,8 +55445,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_632
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -55972,8 +55972,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_633
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -56499,8 +56499,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_634
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -57026,8 +57026,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_641
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -57553,8 +57553,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_642
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -58080,8 +58080,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_643
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -58607,8 +58607,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_644
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -59134,8 +59134,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_711
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -59661,8 +59661,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_712
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -60188,8 +60188,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_713
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -60715,8 +60715,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_714
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -61242,8 +61242,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_721
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -61769,8 +61769,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_722
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -62296,8 +62296,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_723
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -62823,8 +62823,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_724
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -63350,8 +63350,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_731
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -63877,8 +63877,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_732
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -64404,8 +64404,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_733
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -64931,8 +64931,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_734
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -65458,8 +65458,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_741
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -65985,8 +65985,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_742
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -66512,8 +66512,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_743
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -67039,8 +67039,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_744
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -67566,8 +67566,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_811
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -68093,8 +68093,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_812
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -68620,8 +68620,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_813
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -69147,8 +69147,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_814
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -69674,8 +69674,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_821
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -70201,8 +70201,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_822
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -70728,8 +70728,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_823
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -71255,8 +71255,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_824
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -71782,8 +71782,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_831
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -72138,8 +72138,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_832
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -72665,8 +72665,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_833
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -73192,8 +73192,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_834
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -73719,8 +73719,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_841
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -74246,8 +74246,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_842
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -74773,8 +74773,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_843
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -75300,8 +75300,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_844
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -75827,8 +75827,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_911
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -76354,8 +76354,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_912
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -76881,8 +76881,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_913
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -77408,8 +77408,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_914
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -77935,8 +77935,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_921
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -78462,8 +78462,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_922
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -78989,8 +78989,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_923
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -79538,8 +79538,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_924
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -80065,8 +80065,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_931
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -80592,8 +80592,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_932
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -81119,8 +81119,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_933
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -81646,8 +81646,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_934
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -82173,8 +82173,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_941
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -82700,8 +82700,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_942
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -83227,8 +83227,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_943
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -83754,8 +83754,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_944
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -84281,8 +84281,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1011
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -84808,8 +84808,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1012
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -85335,8 +85335,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1013
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -85862,8 +85862,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1014
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -86389,8 +86389,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1021
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -86916,8 +86916,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1022
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -87443,8 +87443,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1023
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -87970,8 +87970,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1024
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -88497,8 +88497,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1031
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -89024,8 +89024,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1032
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -89551,8 +89551,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1033
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -90078,8 +90078,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1034
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -90605,8 +90605,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1041
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -91132,8 +91132,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1042
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -91659,8 +91659,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1043
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -92186,8 +92186,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1044
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -92713,8 +92713,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1111
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -93240,8 +93240,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1112
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -93768,8 +93768,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1113
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -94295,8 +94295,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1114
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -94822,8 +94822,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1121
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -95349,8 +95349,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1122
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -95876,8 +95876,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1123
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -96403,8 +96403,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1124
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -96930,8 +96930,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1131
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -97457,8 +97457,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1132
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -97984,8 +97984,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1133
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -98511,8 +98511,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1134
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -99038,8 +99038,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1141
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -99565,8 +99565,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1142
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -100092,8 +100092,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1143
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18
@@ -100619,8 +100619,8 @@ above
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> Q3FPGAEnergy
-<VARY> Q2FPGAEnergy
+<VARX> Q3.FPGAEnergy
+<VARY> Q2.FPGAEnergy
 <PARAMETER> IDTelescopes=ID_SI2_CSI_1144
 <PARAMETER> Runlist=1000-150000
 <PARAMETER> PIDRANGE=1-18

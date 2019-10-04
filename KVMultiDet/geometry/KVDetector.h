@@ -352,6 +352,14 @@ public:
       KVDetectorSignal* s = GetDetectorSignal(type);
       return (s ? s->GetValue() : 0);
    }
+   void SetDetectorSignalValue(const TString& type, Double_t val) const
+   {
+      // Set value of signal of given type associated with detector
+      // Only to be used with raw detector signals (i.e. not expressions, not calibrated signals)
+
+      KVDetectorSignal* s = GetDetectorSignal(type);
+      if (s) s->SetValue(val);
+   }
    Double_t GetInverseDetectorSignalValue(const TString& output, Double_t value, const TString& input) const
    {
       // Calculate the value of the input signal for a given value of the output signal.

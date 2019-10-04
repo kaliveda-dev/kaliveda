@@ -112,7 +112,7 @@ void KVReconstructedNucleus::Streamer(TBuffer& R__b)
       // if the multidetector object exists, update some informations
       // concerning the detectors etc. hit by this particle
       if (gMultiDetArray) {
-         MakeDetectorList();//leave for KVVAMOSReconNuc - for now
+         MakeDetectorList();
          fReconTraj = nullptr;
          RebuildReconTraj();
          fIDTelescope = nullptr;

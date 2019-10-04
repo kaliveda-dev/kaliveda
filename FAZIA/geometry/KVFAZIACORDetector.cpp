@@ -6,7 +6,6 @@
 #include "KVIDTelescope.h"
 #include "KVFAZIA.h"
 #include "KVSignal.h"
-#include "KVPSAResult.h"
 #include "TClass.h"
 #include "KVLightEnergyCsI.h"
 

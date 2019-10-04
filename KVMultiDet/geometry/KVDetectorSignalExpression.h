@@ -15,6 +15,7 @@ class KVDetectorSignalExpression : public KVDetectorSignal {
 #endif
    std::vector<KVDetectorSignal*> fSignals;
    Bool_t fValid;
+   Bool_t fRaw;
 
 public:
    KVDetectorSignalExpression(const Char_t* type, const KVString& _expr, KVDetector* det);
@@ -29,6 +30,21 @@ public:
    Bool_t IsValid() const
    {
       return fValid;
+   }
+   Bool_t IsRaw() const
+   {
+      // Return kTRUE if expression only uses raw data i.e. does not
+      // depend on any calibrated signals
+      return fRaw;
+   }
+   Bool_t IsExpression() const
+   {
+      // Returns kTRUE, obvs.
+      return kTRUE;
+   }
+   void SetValue(Double_t)
+   {
+      Warning("SetValue", "[%s] : Calling SetValue for a signal expression has no effect", GetName());
    }
 
    ClassDef(KVDetectorSignalExpression, 1) //Mathematical expression involving one or more detector signals

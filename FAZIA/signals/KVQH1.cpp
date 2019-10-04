@@ -2,7 +2,8 @@
 //Author: ,,,
 
 #include "KVQH1.h"
-#include "KVPSAResult.h"
+
+#include <KVDetector.h>
 
 ClassImp(KVQH1)
 
@@ -107,16 +108,15 @@ void KVQH1::TreateSignal()
 
 }
 
-KVPSAResult* KVQH1::GetPSAResult() const
+void KVQH1::GetPSAResult(KVDetector* d) const
 {
-   if (!fPSAIsDone) return 0;
+   // store results of PSA in detector signals
 
-   KVPSAResult* psa = new KVPSAResult();
-   psa->SetValue(Form("%s.%s.BaseLine", fDetName.Data(), fType.Data()), fBaseLine);
-   psa->SetValue(Form("%s.%s.SigmaBaseLine", fDetName.Data(), fType.Data()), fSigmaBase);
-   psa->SetValue(Form("%s.%s.Amplitude", fDetName.Data(), fType.Data()), fAmplitude);
-   psa->SetValue(Form("%s.%s.RiseTime", fDetName.Data(), fType.Data()), fRiseTime);
-   psa->SetValue(Form("%s.%s.RawAmplitude", fDetName.Data(), fType.Data()), GetRawAmplitude());
-   return psa;
+   if (!fPSAIsDone) return;
 
+   d->SetDetectorSignalValue(Form("%s.BaseLine", fType.Data()), fBaseLine);
+   d->SetDetectorSignalValue(Form("%s.SigmaBaseLine", fType.Data()), fSigmaBase);
+   d->SetDetectorSignalValue(Form("%s.Amplitude", fType.Data()), fAmplitude);
+   d->SetDetectorSignalValue(Form("%s.RiseTime", fType.Data()), fRiseTime);
+   d->SetDetectorSignalValue(Form("%s.RawAmplitude", fType.Data()), GetRawAmplitude());
 }

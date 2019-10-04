@@ -8,6 +8,18 @@
 class KVFAZIACalibrator;
 class KVSignal;
 
+#define __KVFD_methname(X, Y)  Get ## X ## Y
+#define __KVFD_dotcat(X, Y)  X.Y
+#define __KVFD_str(s) #s
+#define __KVFD_xstr(s) __KVFD_str(s)
+#define __KVFD_dcs(X, Y) __KVFD_xstr(__KVFD_dotcat(X,Y))
+
+#define __KVFAZIADETECTOR_GETSIGNAL(sig,type) \
+   Double_t __KVFD_methname(sig,type)() const \
+   { \
+      return GetDetectorSignalValue(__KVFD_dcs(sig,type)); \
+   }
+
 class KVFAZIADetector : public KVDetector {
 protected:
    KVUniqueNameList fSignals;         //list of electronics signal (current, charge, etc... )
@@ -19,60 +31,12 @@ protected:
    Int_t fIndex;   //!100*block+10*quartet+telescope
    Bool_t fIsRutherford;   //!
 
-   Double_t fChannel;
-   Double_t fVolt;
-
-   //values defined for SI1 detectors
-
-   Double_t fAmplitudeQL1;
-   Double_t fRawAmplitudeQL1;
-   Double_t fBaseLineQL1;
-   Double_t fSigmaBaseLineQL1;
-   Double_t fRiseTimeQL1;
-
-   Double_t fFPGAEnergyQH1;   //from FPGA
-   Double_t fAmplitudeQH1;
-   Double_t fRawAmplitudeQH1;
-   Double_t fBaseLineQH1;
-   Double_t fSigmaBaseLineQH1;
-   Double_t fRiseTimeQH1;
-
-   Double_t fAmplitudeI1;
-   Double_t fRawAmplitudeI1;
-   Double_t fBaseLineI1;
-   Double_t fSigmaBaseLineI1;
-
-   //values defined for SI2 detectors
-   Double_t fFPGAEnergyQ2; //from FPGA
-   Double_t fAmplitudeQ2;
-   Double_t fRawAmplitudeQ2;
-   Double_t fBaseLineQ2;
-   Double_t fSigmaBaseLineQ2;
-   Double_t fRiseTimeQ2;
-
-   Double_t fAmplitudeI2;
-   Double_t fRawAmplitudeI2;
-   Double_t fBaseLineI2;
-   Double_t fSigmaBaseLineI2;
-
-   //values defined for CSI detectors
-   Double_t fFPGAEnergyQ3; //from FPGA
-   Double_t fFastFPGAEnergyQ3;   //from FPGA
-   Double_t fAmplitudeQ3;
-   Double_t fRawAmplitudeQ3;
-   Double_t fFastAmplitudeQ3;
-   Double_t fBaseLineQ3;
-   Double_t fSigmaBaseLineQ3;
-   Double_t fRiseTimeQ3;
-
    //thresholds defined for this detector
    Double_t fQH1Threshold;
    Double_t fQ2Threshold;
    Double_t fQ3Threshold;
 
    Bool_t fIsFiredFromSignals;
-
-   Int_t fDetTag, fGTTag;
 
    void init();   //initialisation method called by the constructors
    Bool_t SetProperties();
@@ -106,7 +70,6 @@ public:
    void ComputePSA();
 
    void SetFPGAEnergy(int sigid, Int_t idx /* Si: alway 0, CsI: 0=max 1=fast */, Double_t energy);
-   KVNameValueList* GetFPGAEnergyList();
 
    Int_t GetIdentifier() const
    {
@@ -144,312 +107,58 @@ public:
       return fTelescope;
    }
 
-   void SetQL1Amplitude(Double_t value)
-   {
-      fAmplitudeQL1 = value;
-   }
-   Double_t GetQL1Amplitude() const
-   {
-      return fAmplitudeQL1;
-   }
-   void SetQL1RawAmplitude(Double_t value)
-   {
-      fRawAmplitudeQL1 = value;
-   }
-   Double_t GetQL1RawAmplitude() const
-   {
-      return fRawAmplitudeQL1;
-   }
-   void SetQL1BaseLine(Double_t value)
-   {
-      fBaseLineQL1 = value;
-   }
-   Double_t GetQL1BaseLine() const
-   {
-      return fBaseLineQL1;
-   }
-   void SetQL1SigmaBaseLine(Double_t value)
-   {
-      fSigmaBaseLineQL1 = value;
-   }
-   Double_t GetQL1SigmaBaseLine() const
-   {
-      return fSigmaBaseLineQL1;
-   }
-   void SetQL1RiseTime(Double_t value)
-   {
-      fRiseTimeQL1 = value;
-   }
-   Double_t GetQL1RiseTime() const
-   {
-      return fRiseTimeQL1;
-   }
-
-   void SetQH1Amplitude(Double_t value)
-   {
-      fAmplitudeQH1 = value;
-      if (fIdentifier == kSI1)
-         fChannel = value;
-   }
-   Double_t GetQH1Amplitude() const
-   {
-      return fAmplitudeQH1;
-   }
-   void SetQH1RawAmplitude(Double_t value)
-   {
-      fRawAmplitudeQH1 = value;
-   }
-   Double_t GetQH1RawAmplitude() const
-   {
-      return fRawAmplitudeQH1;
-   }
-   void SetQH1BaseLine(Double_t value)
-   {
-      fBaseLineQH1 = value;
-   }
-   Double_t GetQH1BaseLine() const
-   {
-      return fBaseLineQH1;
-   }
-   void SetQH1SigmaBaseLine(Double_t value)
-   {
-      fSigmaBaseLineQH1 = value;
-   }
-   Double_t GetQH1SigmaBaseLine() const
-   {
-      return fSigmaBaseLineQH1;
-   }
-   void SetQH1RiseTime(Double_t value)
-   {
-      fRiseTimeQH1 = value;
-   }
-   Double_t GetQH1RiseTime() const
-   {
-      return fRiseTimeQH1;
-   }
-
-   void SetI1Amplitude(Double_t value)
-   {
-      fAmplitudeI1 = value;
-   }
-   Double_t GetI1Amplitude() const
-   {
-      return fAmplitudeI1;
-   }
-   void SetI1RawAmplitude(Double_t value)
-   {
-      fRawAmplitudeI1 = value;
-   }
-   Double_t GetI1RawAmplitude() const
-   {
-      return fRawAmplitudeI1;
-   }
-   void SetI1BaseLine(Double_t value)
-   {
-      fBaseLineI1 = value;
-   }
-   Double_t GetI1BaseLine() const
-   {
-      return fBaseLineI1;
-   }
-   void SetI1SigmaBaseLine(Double_t value)
-   {
-      fSigmaBaseLineI1 = value;
-   }
-   Double_t GetI1SigmaBaseLine() const
-   {
-      return fSigmaBaseLineI1;
-   }
-
-   void SetQ2Amplitude(Double_t value)
-   {
-      fAmplitudeQ2 = value;
-      if (fIdentifier == kSI2)
-         fChannel = value;
-   }
-   Double_t GetQ2Amplitude() const
-   {
-      return fAmplitudeQ2;
-   }
-   void SetQ2RawAmplitude(Double_t value)
-   {
-      fRawAmplitudeQ2 = value;
-   }
-   Double_t GetQ2RawAmplitude() const
-   {
-      return fRawAmplitudeQ2;
-   }
-   void SetQ2BaseLine(Double_t value)
-   {
-      fBaseLineQ2 = value;
-   }
-   Double_t GetQ2BaseLine() const
-   {
-      return fBaseLineQ2;
-   }
-   void SetQ2SigmaBaseLine(Double_t value)
-   {
-      fSigmaBaseLineQ2 = value;
-   }
-   Double_t GetQ2SigmaBaseLine() const
-   {
-      return fSigmaBaseLineQ2;
-   }
-   void SetQ2RiseTime(Double_t value)
-   {
-      fRiseTimeQ2 = value;
-   }
-   Double_t GetQ2RiseTime() const
-   {
-      return fRiseTimeQ2;
-   }
-
-   void SetI2Amplitude(Double_t value)
-   {
-      fAmplitudeI2 = value;
-   }
-   Double_t GetI2Amplitude() const
-   {
-      return fAmplitudeI2;
-   }
-   void SetI2RawAmplitude(Double_t value)
-   {
-      fRawAmplitudeI2 = value;
-   }
-   Double_t GetI2RawAmplitude() const
-   {
-      return fRawAmplitudeI2;
-   }
-   void SetI2BaseLine(Double_t value)
-   {
-      fBaseLineI2 = value;
-   }
-   Double_t GetI2BaseLine() const
-   {
-      return fBaseLineI2;
-   }
-   void SetI2SigmaBaseLine(Double_t value)
-   {
-      fSigmaBaseLineI2 = value;
-   }
-   Double_t GetI2SigmaBaseLine() const
-   {
-      return fSigmaBaseLineI2;
-   }
-
-   void SetQ3Amplitude(Double_t value)
-   {
-      fAmplitudeQ3 = value;
-      if (fIdentifier == kCSI)
-         fChannel = value;
-   }
-   Double_t GetQ3Amplitude() const
-   {
-      return fAmplitudeQ3;
-   }
-   void SetQ3RawAmplitude(Double_t value)
-   {
-      fRawAmplitudeQ3 = value;
-   }
-   Double_t GetQ3RawAmplitude() const
-   {
-      return fRawAmplitudeQ3;
-   }
-   void SetQ3FastAmplitude(Double_t value)
-   {
-      fFastAmplitudeQ3 = value;
-   }
-   Double_t GetQ3FastAmplitude() const
-   {
-      return fFastAmplitudeQ3;
-   }
-   Double_t GetQ3SlowAmplitude() const
-   {
-      return GetQ3Amplitude() - 0.8 * GetQ3FastAmplitude();
-   }
-   void SetQ3BaseLine(Double_t value)
-   {
-      fBaseLineQ3 = value;
-   }
-   Double_t GetQ3BaseLine() const
-   {
-      return fBaseLineQ3;
-   }
-   void SetQ3SigmaBaseLine(Double_t value)
-   {
-      fSigmaBaseLineQ3 = value;
-   }
-   Double_t GetQ3SigmaBaseLine() const
-   {
-      return fSigmaBaseLineQ3;
-   }
-   void SetQ3RiseTime(Double_t value)
-   {
-      fRiseTimeQ3 = value;
-   }
-   Double_t GetQ3RiseTime() const
-   {
-      return fRiseTimeQ3;
-   }
-
-   //coming from FPGA
-   void SetQH1FPGAEnergy(Double_t value)
-   {
-      fFPGAEnergyQH1 = value;
-   }
-   Double_t GetQH1FPGAEnergy() const
-   {
-      return fFPGAEnergyQH1;
-   }
-
-   void SetQ2FPGAEnergy(Double_t value)
-   {
-      fFPGAEnergyQ2 = value;
-   }
-   Double_t GetQ2FPGAEnergy() const
-   {
-      return fFPGAEnergyQ2;
-   }
-
-   void SetQ3FPGAEnergy(Double_t value)
-   {
-      fFPGAEnergyQ3 = value;
-   }
-   Double_t GetQ3FPGAEnergy() const
-   {
-      return fFPGAEnergyQ3;
-   }
-
-   void SetQ3FastFPGAEnergy(Double_t value)
-   {
-      fFastFPGAEnergyQ3 = value;
-   }
-   Double_t GetQ3FastFPGAEnergy() const
-   {
-      return fFastFPGAEnergyQ3;
-   }
-
-   Int_t GetDetTag()
-   {
-      return fDetTag;
-   }
-   void SetDetTag(Int_t dettag)
-   {
-      fDetTag = dettag;
-   }
-
-   Int_t GetGTTag()
-   {
-      return fGTTag;
-   }
-   void SetGTTag(Int_t gttag)
-   {
-      fGTTag = gttag;
-   }
-
    Double_t GetSetupParameter(const Char_t* parname);
 
    void RefreshCalibratorPointers();
+
+   __KVFAZIADETECTOR_GETSIGNAL(I1, Amplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(I1, BaseLine)
+   __KVFAZIADETECTOR_GETSIGNAL(I1, RawAmplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(I1, SigmaBaseLine)
+
+   __KVFAZIADETECTOR_GETSIGNAL(I2, Amplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(I2, BaseLine)
+   __KVFAZIADETECTOR_GETSIGNAL(I2, RawAmplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(I2, SigmaBaseLine)
+
+   __KVFAZIADETECTOR_GETSIGNAL(Q2, Amplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(Q2, BaseLine)
+   __KVFAZIADETECTOR_GETSIGNAL(Q2, FPGAEnergy)
+   __KVFAZIADETECTOR_GETSIGNAL(Q2, RawAmplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(Q2, RiseTime)
+   __KVFAZIADETECTOR_GETSIGNAL(Q2, SigmaBaseLine)
+
+   __KVFAZIADETECTOR_GETSIGNAL(Q3, Amplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(Q3, BaseLine)
+   __KVFAZIADETECTOR_GETSIGNAL(Q3, FastAmplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(Q3, FastFPGAEnergy)
+   __KVFAZIADETECTOR_GETSIGNAL(Q3, FPGAEnergy)
+   __KVFAZIADETECTOR_GETSIGNAL(Q3, RawAmplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(Q3, RiseTime)
+   __KVFAZIADETECTOR_GETSIGNAL(Q3, SigmaBaseLine)
+   __KVFAZIADETECTOR_GETSIGNAL(Q3, SlowAmplitude)
+
+   __KVFAZIADETECTOR_GETSIGNAL(QH1, Amplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(QH1, BaseLine)
+   __KVFAZIADETECTOR_GETSIGNAL(QH1, FPGAEnergy)
+   __KVFAZIADETECTOR_GETSIGNAL(QH1, RawAmplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(QH1, RiseTime)
+   __KVFAZIADETECTOR_GETSIGNAL(QH1, SigmaBaseLine)
+
+   __KVFAZIADETECTOR_GETSIGNAL(QL1, Amplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(QL1, BaseLine)
+   __KVFAZIADETECTOR_GETSIGNAL(QL1, RawAmplitude)
+   __KVFAZIADETECTOR_GETSIGNAL(QL1, RiseTime)
+   __KVFAZIADETECTOR_GETSIGNAL(QL1, SigmaBaseLine)
+
+   Int_t GetDetTag() const
+   {
+      return GetDetectorSignalValue("DetTag");
+   }
+   Int_t GetGTTag() const
+   {
+      return GetDetectorSignalValue("GTTag");
+   }
 
    ClassDef(KVFAZIADetector, 1) //Base class for FAZIA detector
 };

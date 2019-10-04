@@ -11,7 +11,6 @@
 #include "KVFAZIADetector.h"
 #include "KVFAZIA.h"
 #include "KVSignal.h"
-#include "KVPSAResult.h"
 #include "TSystem.h"
 
 ClassImp(KVFAZIARawDataReconstructor)
@@ -146,11 +145,10 @@ void KVFAZIARawDataReconstructor::ExtraProcessing()
                sig->TreateSignal();
             }
 
-            KVNameValueList* psa = sig->GetPSAResult();
-            if (psa) {
-               *(recnuc->GetParameters()) += *psa;
-               delete psa;
-            }
+            sig->GetPSAResult(det);
+//            if (psa.GetNpar()) {
+//               *(recnuc->GetParameters()) += psa;
+//            }
          }
       }
    }

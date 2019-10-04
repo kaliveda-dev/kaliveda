@@ -56,7 +56,7 @@ public:
    }
 
    virtual void TreateSignal();
-   virtual KVPSAResult* GetPSAResult() const;
+   virtual void GetPSAResult(KVDetector*) const;
    virtual void UpdatePSAParameter(KVDBParameterList* par);
 
    ClassDef(KVQ3, 1) //Q3 channel of CSI

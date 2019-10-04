@@ -26,7 +26,7 @@ public:
    }
 
    virtual void TreateSignal();
-   virtual KVPSAResult* GetPSAResult() const;
+   virtual void GetPSAResult(KVDetector*) const;
    virtual Double_t ComputeBaseLine();
 
    ClassDef(KVI2, 1) //I2 channel of SI2

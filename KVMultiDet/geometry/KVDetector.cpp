@@ -578,17 +578,24 @@ void KVDetector::SetPedestal(const Char_t* name, Float_t ped)
 void KVDetector::Clear(Option_t* opt)
 {
    //Set energy loss(es) etc. to zero
-   //If opt="N" we do not reset acquisition parameters
+   //If opt="N" we do not reset acquisition parameters/raw detector signals
 
    SetAnalysed(kFALSE);
    fIdentP = fUnidentP = 0;
    ResetBit(kIdentifiedParticle);
    ResetBit(kUnidentifiedParticle);
-   if (strncmp(opt, "N", 1) && fACQParams) {
-      TIter next(fACQParams);
-      KVACQParam* par;
-      while ((par = (KVACQParam*) next())) {
-         par->Clear();
+   if (strncmp(opt, "N", 1)) {
+      if (fACQParams) {
+         TIter next(fACQParams);
+         KVACQParam* par;
+         while ((par = (KVACQParam*) next())) {
+            par->Clear();
+         }
+      }
+      TIter it(&GetListOfDetectorSignals());
+      KVDetectorSignal* ds;
+      while ((ds = (KVDetectorSignal*)it())) {
+         if (ds->IsRaw() && !ds->IsExpression()) ds->Reset();
       }
    }
    ClearHits();

@@ -16,9 +16,14 @@ ClassImp(KVDetectorSignal)
 ////////////////////////////////////////////////////////////////////////////////
 
 KVDetectorSignal::KVDetectorSignal(const Char_t* type, KVDetector* det)
-   : KVBase(type), fDetector(det)
+   : KVBase(type), fDetector(det), fValue(0)
 {
    if (det) SetTitle(Form("Signal %s of detector %s", type, det->GetName()));
    else SetTitle(Form("Detector signal %s", type));
+}
+
+void KVDetectorSignal::ls(Option_t*) const
+{
+   printf(" %s 	%s	  %s   [%lf]\n", ClassName(), GetName(), GetType(), GetValue());
 }
 

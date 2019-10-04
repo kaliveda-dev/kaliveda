@@ -25,13 +25,13 @@ public:
    {
       return fParam->GetData();
    }
-   Double_t GetInverseValue(Double_t out_val, const TString& in_sig) const
+   void SetValue(Double_t x)
    {
-      // Returns the value of the input signal for a given value of the output,
-      // using the inverse calibration function
-
-      if (in_sig == GetName()) return out_val;
-      return 0.;
+      fParam->SetData(x);
+   }
+   void Reset()
+   {
+      fParam->Clear();
    }
    ClassDef(KVACQParamSignal, 1) //Wrapper signal for KVACQParam objects
 };

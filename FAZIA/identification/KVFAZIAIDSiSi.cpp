@@ -78,20 +78,3 @@ Bool_t KVFAZIAIDSiSi::Identify(KVIdentificationResult* idr, Double_t x, Double_t
    return kTRUE;
 
 }
-//____________________________________________________________________________________
-
-Double_t KVFAZIAIDSiSi::GetIDMapX(Option_t*)
-{
-   //X-coordinate for CsI identification map is raw "L" coder value
-   //Info("GetIDMapX","%lf",fSi2->GetQ2Amplitude());
-   return fSi2->GetQ2Amplitude();
-}
-
-//____________________________________________________________________________________
-
-Double_t KVFAZIAIDSiSi::GetIDMapY(Option_t*)
-{
-   //Y-coordinate for CsI identification map is raw "R" coder value
-   //Info("GetIDMapY","%lf",fSi1->GetQH1Amplitude());
-   return fSi1->GetQH1Amplitude();
-}

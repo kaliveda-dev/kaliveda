@@ -1,4 +1,4 @@
-SignalIn:                                QH1FPGAEnergy
+SignalIn:                                QH1.FPGAEnergy
 SignalOut:                               Energy
 CalibType:                               Channel-Energy QH1
 CalibClass:                              FunctionCal

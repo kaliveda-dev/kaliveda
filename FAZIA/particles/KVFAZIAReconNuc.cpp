@@ -991,7 +991,7 @@ void KVFAZIAReconNuc::CalibrateCsI_Light()
                KVLightEnergyCsIFull* calib = (KVLightEnergyCsIFull*)det->GetCalibrator("Channel-Energy");
                calib->SetZ(GetZ());
                calib->SetA(GetA());
-               eloss[ntot - ndet - 1] = calib->Compute(det->GetQ3Amplitude());
+               eloss[ntot - ndet - 1] = calib->Compute(det->GetDetectorSignalValue("Q3.Amplitude"));
                //cout << detname << " " << calib->GetParameter(0) << endl;
 
             }
@@ -1000,7 +1000,7 @@ void KVFAZIAReconNuc::CalibrateCsI_Light()
                calib->SetZ(GetZ());
                calib->SetA(GetA());
                //cout << detname << " " << calib->GetParameter(0) << endl;
-               eloss[ntot - ndet - 1] = calib->Compute(det->GetQ3Amplitude());
+               eloss[ntot - ndet - 1] = calib->Compute(det->GetDetectorSignalValue("Q3.Amplitude"));
             }
          }
          else eloss[ntot - ndet - 1] = det->GetEnergy();

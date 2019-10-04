@@ -78,22 +78,3 @@ Bool_t KVFAZIAIDSiSi_FAZIACOR::Identify(KVIdentificationResult* idr, Double_t x,
    return kTRUE;
 
 }
-//____________________________________________________________________________________
-
-Double_t KVFAZIAIDSiSi_FAZIACOR::GetIDMapX(Option_t*)
-{
-   //X-coordinate for Si-Si identification map
-   //Use FPGA output for FAZIACOR experiment
-
-   return fSi2->GetQ2FPGAEnergy();
-}
-
-//____________________________________________________________________________________
-
-Double_t KVFAZIAIDSiSi_FAZIACOR::GetIDMapY(Option_t*)
-{
-   //Y-coordinate for Si-Si identification map
-   //Use FPGA output for FAZIACOR experiment
-
-   return fSi1->GetQH1FPGAEnergy();
-}

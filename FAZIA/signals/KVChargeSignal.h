@@ -7,8 +7,6 @@
 #include "KVSignal.h"
 #include "TF1.h"
 
-class KVPSAResult;
-
 class KVChargeSignal : public KVSignal {
 
 protected:

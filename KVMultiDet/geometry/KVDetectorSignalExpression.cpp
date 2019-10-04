@@ -29,9 +29,11 @@ KVDetectorSignalExpression::KVDetectorSignalExpression(const Char_t* type, const
    KVString expr = _expr;
    TIter it_sig(&det->GetListOfDetectorSignals());
    KVDetectorSignal* ds;
+   fRaw = kTRUE;
    while ((ds = (KVDetectorSignal*)it_sig())) {
       if (expr.Contains(ds->GetName())) {
          fSignals.push_back(ds);
+         if (!ds->IsRaw()) fRaw = kFALSE;
          expr.ReplaceAll(ds->GetName(), Form("[%d]", nsigs));
          ++nsigs;
       }

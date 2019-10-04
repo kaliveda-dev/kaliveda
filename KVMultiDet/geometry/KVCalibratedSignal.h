@@ -30,6 +30,11 @@ public:
    {
       return fCalibrator;
    }
+   Bool_t IsRaw() const
+   {
+      // Return kFALSE: this is not raw data, it is produced by a calibration procedure
+      return kFALSE;
+   }
 
    ClassDef(KVCalibratedSignal, 1) //Detector signal produced by a calibrator
 };

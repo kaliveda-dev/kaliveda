@@ -2,8 +2,9 @@
 //Author: ,,,
 
 #include "KVI2.h"
-#include "KVPSAResult.h"
 #include "TMath.h"
+
+#include <KVDetector.h>
 
 ClassImp(KVI2)
 
@@ -119,15 +120,12 @@ void KVI2::TreateSignal()
    fPSAIsDone = kTRUE;
 }
 
-KVPSAResult* KVI2::GetPSAResult() const
+void KVI2::GetPSAResult(KVDetector* d) const
 {
-   if (!fPSAIsDone) return 0;
+   if (!fPSAIsDone) return;
 
-   KVPSAResult* psa = new KVPSAResult();
-   psa->SetValue(Form("%s.%s.BaseLine", fDetName.Data(), fType.Data()), fBaseLine);
-   psa->SetValue(Form("%s.%s.SigmaBaseLine", fDetName.Data(), fType.Data()), fSigmaBase);
-   psa->SetValue(Form("%s.%s.Amplitude", fDetName.Data(), fType.Data()), fAmplitude);
-   psa->SetValue(Form("%s.%s.RawAmplitude", fDetName.Data(), fType.Data()), GetRawAmplitude());
-   return psa;
-
+   d->SetDetectorSignalValue(Form("%s.BaseLine", fType.Data()), fBaseLine);
+   d->SetDetectorSignalValue(Form("%s.SigmaBaseLine", fType.Data()), fSigmaBase);
+   d->SetDetectorSignalValue(Form("%s.Amplitude", fType.Data()), fAmplitude);
+   d->SetDetectorSignalValue(Form("%s.RawAmplitude", fType.Data()), GetRawAmplitude());
 }

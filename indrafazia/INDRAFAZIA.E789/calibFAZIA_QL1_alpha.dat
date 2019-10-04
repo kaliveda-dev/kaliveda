@@ -1,5 +1,5 @@
-SignalIn:                                QL1FPGAEnergy
-SignalOut:                               Energy
+SignalIn:                                QL1.Amplitude
+SignalOut:                               Energy-QL1
 CalibType:                               Channel-Energy QL1
 CalibClass:                              FunctionCal
 CalibOptions:                            func=pol1,min=0,max=10000,inverse=false

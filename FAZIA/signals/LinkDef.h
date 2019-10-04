@@ -5,7 +5,6 @@
 #pragma link C++ class KVSignal+;
 #pragma link C++ class KVChargeSignal+;
 #pragma link C++ class KVCurrentSignal+;
-#pragma link C++ class KVPSAResult+;
 #pragma link C++ class KVDigitalFilter+;
 #pragma link C++ class KVQH1+;
 #pragma link C++ class KVQL1+;

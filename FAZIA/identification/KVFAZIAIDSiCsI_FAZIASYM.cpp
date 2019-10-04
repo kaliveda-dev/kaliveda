@@ -33,26 +33,6 @@ KVFAZIAIDSiCsI_FAZIASYM::~KVFAZIAIDSiCsI_FAZIASYM()
 
 //____________________________________________________________________________________
 
-Double_t KVFAZIAIDSiCsI_FAZIASYM::GetIDMapX(Option_t*)
-{
-   //X-coordinate for Si2-CsI identification map :
-   // computed fast componment
-   // of the charge signal of CsI detector
-   return fCsI->GetQ3Amplitude();
-}
-
-//____________________________________________________________________________________
-
-Double_t KVFAZIAIDSiCsI_FAZIASYM::GetIDMapY(Option_t*)
-{
-   //Y-coordinate for Si2-CsI identification map :
-   // computed amlpitude
-   // of the charge signal od Si2 detector
-   return fSi2->GetQ2Amplitude();
-}
-
-//____________________________________________________________________________________
-
 Bool_t KVFAZIAIDSiCsI_FAZIASYM::Identify(KVIdentificationResult* idr, Double_t x, Double_t y)
 {
    //Particle identification and code setting using identification grid (class KVIDZAGrid).

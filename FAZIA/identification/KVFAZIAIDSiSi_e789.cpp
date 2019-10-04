@@ -81,11 +81,6 @@ Bool_t KVFAZIAIDSiSi_e789::Identify(KVIdentificationResult* idr, Double_t x, Dou
       idr->IDquality = KVIDZAGrid::kICODE8;
    }
 
-
-   //if there is a QL1 grid available, it has the priority (better resolution)
-//   si1 = GetIDMapY("QL1");
-//   if (fSiSiGridQL1 && fSiSiGridQL1->IsIdentifiable(si2, si1))  fSiSiGridQL1->Identify(si2, si1, idr);
-
    idr->IDcode = GetIDCode();
 
    return kTRUE;

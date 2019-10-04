@@ -6,11 +6,9 @@
 #include "KVIDTelescope.h"
 #include "KVFAZIA.h"
 #include "KVSignal.h"
-#include "KVPSAResult.h"
 #include "TClass.h"
 #include "KVLightEnergyCsIFull.h"
 #include "KVDataSet.h"
-#include "KVFAZIADetectorSignal.h"
 
 ClassImp(KVFAZIADetector)
 
@@ -45,11 +43,7 @@ void KVFAZIADetector::init()
    fTelescope = -1;
    fIndex = -1;
    fIsRutherford = kFALSE;
-
    fLabel = -1;
-   fChannel = 0;
-   fVolt = 0;
-
 }
 
 //________________________________________________________________
@@ -259,36 +253,38 @@ Bool_t KVFAZIADetector::SetProperties()
    //"QH1", "I1", "QL1", "Q2", "I2", "Q3
    fSignals.Clear();
    KVString lsignals = "";
+   KVString dsigs = "DetTag,GTTag";
    if (!strcmp(GetLabel(), "SI1")) {
       lsignals = "QH1,I1,QL1";
-
-      AddDetectorSignal(new KVFAZIADetectorSignal("QH1FPGAEnergy", this, &KVFAZIADetector::GetQH1FPGAEnergy));
-      AddDetectorSignal(new KVFAZIADetectorSignal("QH1RiseTime", this, &KVFAZIADetector::GetQH1RiseTime));
-      AddDetectorSignal(new KVFAZIADetectorSignal("QH1Amplitude", this, &KVFAZIADetector::GetQH1Amplitude));
-      AddDetectorSignal(new KVFAZIADetectorSignal("QL1Amplitude", this, &KVFAZIADetector::GetQL1Amplitude));
-      AddDetectorSignal(new KVFAZIADetectorSignal("QL1RiseTime", this, &KVFAZIADetector::GetQL1RiseTime));
-      AddDetectorSignal(new KVFAZIADetectorSignal("I1Amplitude", this, &KVFAZIADetector::GetI1Amplitude));
    }
    else if (!strcmp(GetLabel(), "SI2")) {
       lsignals = "Q2,I2";
-      AddDetectorSignal(new KVFAZIADetectorSignal("Q2FPGAEnergy", this, &KVFAZIADetector::GetQ2FPGAEnergy));
-      AddDetectorSignal(new KVFAZIADetectorSignal("Q2RiseTime", this, &KVFAZIADetector::GetQ2RiseTime));
-      AddDetectorSignal(new KVFAZIADetectorSignal("Q2Amplitude", this, &KVFAZIADetector::GetQ2Amplitude));
-      AddDetectorSignal(new KVFAZIADetectorSignal("I2Amplitude", this, &KVFAZIADetector::GetI2Amplitude));
    }
    else if (!strcmp(GetLabel(), "CSI")) {
       lsignals = "Q3";
-      AddDetectorSignal(new KVFAZIADetectorSignal("Q3FPGAEnergy", this, &KVFAZIADetector::GetQ3FPGAEnergy));
-      AddDetectorSignal(new KVFAZIADetectorSignal("Q3FastFPGAEnergy", this, &KVFAZIADetector::GetQ3FastFPGAEnergy));
-      AddDetectorSignal(new KVFAZIADetectorSignal("Q3Amplitude", this, &KVFAZIADetector::GetQ3Amplitude));
-      AddDetectorSignal(new KVFAZIADetectorSignal("Q3FastAmplitude", this, &KVFAZIADetector::GetQ3FastAmplitude));
-      AddDetectorSignal(new KVFAZIADetectorSignal("Q3SlowAmplitude", this, &KVFAZIADetector::GetQ3SlowAmplitude));
-      AddDetectorSignal(new KVFAZIADetectorSignal("Q3RiseTime", this, &KVFAZIADetector::GetQ3RiseTime));
+      dsigs += ",Q3.FastAmplitude,Q3.FastFPGAEnergy";
    }
    else {
       Warning("SetProperties", "Unknown label \"%s\" for this detector : %s\n", GetLabel(), GetName());
       lsignals = "";
+      dsigs = "";
    }
+   KVString sigtypes = "Amplitude,RawAmplitude,FPGAEnergy,RiseTime,BaseLine,SigmaBaseLine";
+   lsignals.Begin(",");
+   while (!lsignals.End()) {
+      sigtypes.Begin(",");
+      KVString sig = lsignals.Next();
+      while (!sigtypes.End()) {
+         KVString stype = sigtypes.Next();
+         if (sig.BeginsWith("I") && (stype == "FPGAEnergy" || stype == "RiseTime")) continue;
+         if (sig == "QL1" && stype == "FPGAEnergy") continue;
+         dsigs += Form(",%s.%s", sig.Data(), stype.Data());
+      }
+   }
+   dsigs.Begin(",");
+   while (!dsigs.End()) AddDetectorSignal(new KVDetectorSignal(dsigs.Next(), this));
+   if (lsignals == "Q3") AddDetectorSignalExpression("Q3.SlowAmplitude", "Q3.Amplitude - 0.8*Q3.FastAmplitude");
+
    lsignals.Begin(",");
    while (!lsignals.End()) {
 
@@ -363,15 +359,15 @@ Bool_t KVFAZIADetector::Fired(Option_t*) const
    if (!fIsFiredFromSignals) {
       switch (GetIdentifier()) {
          case kSI1:
-            if (fFPGAEnergyQH1 > fQH1Threshold) return kTRUE;
+            if (GetDetectorSignalValue("QH1.FPGAEnergy") > fQH1Threshold) return kTRUE;
             else return kFALSE;
             break;
          case kSI2:
-            if (fFPGAEnergyQ2 > fQ2Threshold) return kTRUE;
+            if (GetDetectorSignalValue("Q2.FPGAEnergy") > fQ2Threshold) return kTRUE;
             else return kFALSE;
             break;
          case kCSI:
-            if (fFPGAEnergyQ3 > fQ3Threshold) return kTRUE;
+            if (GetDetectorSignalValue("Q3.FPGAEnergy") > fQ3Threshold) return kTRUE;
             else return kFALSE;
             break;
          default:
@@ -482,39 +478,20 @@ void KVFAZIADetector::SetFPGAEnergy(int sigid, Int_t idx, Double_t energy)
 {
    switch (sigid) {
       case KVSignal::kQH1:
-         if (idx == 0) SetQH1FPGAEnergy(energy);
+         if (idx == 0) GetDetectorSignal("QH1.FPGAEnergy")->SetValue(energy);
          break;
       case KVSignal::kI1:
          break;
       case KVSignal::kQL1:
          break;
       case KVSignal::kQ2:
-         if (idx == 0) SetQ2FPGAEnergy(energy);
+         if (idx == 0) GetDetectorSignal("Q2.FPGAEnergy")->SetValue(energy);
          break;
       case KVSignal::kI2:
          break;
       case KVSignal::kQ3:
-         if (idx == 0) SetQ3FPGAEnergy(energy);
-         if (idx == 1) SetQ3FastFPGAEnergy(energy);
+         if (idx == 0) GetDetectorSignal("Q3.FPGAEnergy")->SetValue(energy);
+         if (idx == 1) GetDetectorSignal("Q3.FPGAFastEnergy")->SetValue(energy);
          break;
    }
-}
-
-KVNameValueList* KVFAZIADetector::GetFPGAEnergyList()
-{
-   KVNameValueList* fpga = new KVNameValueList();
-
-   switch (GetIdentifier()) {
-      case kSI1:
-         fpga->SetValue(Form("%s.%s.%s", GetName(), "QH1", "FPGAEnergy"), GetQH1FPGAEnergy());
-         break;
-      case kSI2:
-         fpga->SetValue(Form("%s.%s.%s", GetName(), "Q2", "FPGAEnergy"), GetQ2FPGAEnergy());
-         break;
-      case kCSI:
-         fpga->SetValue(Form("%s.%s.%s", GetName(), "Q3", "FPGAEnergy"), GetQ3FPGAEnergy());
-         fpga->SetValue(Form("%s.%s.%s", GetName(), "Q3", "FastFPGAEnergy"), GetQ3FastFPGAEnergy());
-         break;
-   }
-   return fpga;
 }

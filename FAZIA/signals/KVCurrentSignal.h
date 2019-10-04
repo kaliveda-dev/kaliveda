@@ -5,7 +5,6 @@
 #define __KVCURRENTSIGNAL_H
 
 #include "KVSignal.h"
-#include "KVPSAResult.h"
 
 class KVCurrentSignal : public KVSignal {
 

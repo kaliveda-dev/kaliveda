@@ -8,7 +8,7 @@
 #include "TArrayF.h"
 #include "TH1F.h"
 
-class KVPSAResult;
+class KVDetector;
 class KVDBParameterList;
 
 class KVSignal : public TGraph {
@@ -151,7 +151,11 @@ public:
    //routines to launch and control PSA
    //
    virtual void TreateSignal();
-   virtual KVPSAResult* GetPSAResult() const;
+#define KVSIGNAL_GETPSARESULT_KVDETECTOR 1
+   virtual void GetPSAResult(KVDetector*) const
+   {
+      // store results of PSA in detector signals
+   }
    Bool_t PSAHasBeenComputed() const
    {
       return fPSAIsDone;

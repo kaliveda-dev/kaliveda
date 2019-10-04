@@ -265,7 +265,7 @@ void KVFAZIA::FillDetectorList(KVReconstructedNucleus* rnuc, KVHashList* DetList
    // Also set all raw data values in the detectors.
 
    KVFAZIADetector* det = 0;
-   Double_t val = -1;
+
    DetList->Clear();
    DetNames.Begin("/");
    while (!DetNames.End()) {
@@ -277,85 +277,26 @@ void KVFAZIA::FillDetectorList(KVReconstructedNucleus* rnuc, KVHashList* DetList
 
       if (det) {
          DetList->Add(det);
-         if (!strcmp(det->GetLabel(), "SI1")) {
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QL1.Amplitude", sdet.Data()));
-            det->SetQL1Amplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QL1.RawAmplitude", sdet.Data()));
-            det->SetQL1RawAmplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QL1.BaseLine", sdet.Data()));
-            det->SetQL1BaseLine(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QL1.SigmaBaseLine", sdet.Data()));
-            det->SetQL1SigmaBaseLine(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QL1.RiseTime", sdet.Data()));
-            det->SetQL1RiseTime(val);
+         // read and set from the particle's parameter list any relevant detector signal values
+         // each signal is stored with a name "[detname].[signal name]"
+         // except GTTag and DetTag which have the same value for all detectors of the same telescope
+         // and so are only stored once with name "DetTag" or "GTTag".
 
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.FPGAEnergy", sdet.Data()));
-            det->SetQH1FPGAEnergy(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.Amplitude", sdet.Data()));
-            det->SetQH1Amplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.RawAmplitude", sdet.Data()));
-            det->SetQH1RawAmplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.BaseLine", sdet.Data()));
-            det->SetQH1BaseLine(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.SigmaBaseLine", sdet.Data()));
-            det->SetQH1SigmaBaseLine(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.QH1.RiseTime", sdet.Data()));
-            det->SetQH1RiseTime(val);
-
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I1.Amplitude", sdet.Data()));
-            det->SetI1Amplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I1.RawAmplitude", sdet.Data()));
-            det->SetI1RawAmplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I1.BaseLine", sdet.Data()));
-            det->SetI1BaseLine(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I1.SigmaBaseLine", sdet.Data()));
-            det->SetI1SigmaBaseLine(val);
-
+         TIter it(&det->GetListOfDetectorSignals());
+         KVDetectorSignal* ds;
+         while ((ds = (KVDetectorSignal*)it())) {
+            if (ds->IsRaw() && !ds->IsExpression())
+               // only look for raw data, excluding any expressions based only on raw data
+            {
+               TString pname = Form("%s.%s", det->GetName(), ds->GetName());
+               if (rnuc->GetParameters()->HasParameter(pname))
+                  ds->SetValue(rnuc->GetParameters()->GetDoubleValue(pname));
+            }
          }
-         else if (!strcmp(det->GetLabel(), "SI2")) {
-
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.FPGAEnergy", sdet.Data()));
-            det->SetQ2FPGAEnergy(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.Amplitude", sdet.Data()));
-            det->SetQ2Amplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.RawAmplitude", sdet.Data()));
-            det->SetQ2RawAmplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.BaseLine", sdet.Data()));
-            det->SetQ2BaseLine(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.SigmaBaseLine", sdet.Data()));
-            det->SetQ2SigmaBaseLine(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q2.RiseTime", sdet.Data()));
-            det->SetQ2RiseTime(val);
-
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I2.Amplitude", sdet.Data()));
-            det->SetI2Amplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I2.RawAmplitude", sdet.Data()));
-            det->SetI2RawAmplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I2.BaseLine", sdet.Data()));
-            det->SetI2BaseLine(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.I2.SigmaBaseLine", sdet.Data()));
-            det->SetI2SigmaBaseLine(val);
-         }
-         else if (!strcmp(det->GetLabel(), "CSI")) {
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.FPGAEnergy", sdet.Data()));
-            det->SetQ3FPGAEnergy(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.FPGAFastEnergy", sdet.Data()));
-            det->SetQ3FastFPGAEnergy(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.Amplitude", sdet.Data()));
-            det->SetQ3Amplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.RawAmplitude", sdet.Data()));
-            det->SetQ3RawAmplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.FastAmplitude", sdet.Data()));
-            det->SetQ3FastAmplitude(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.BaseLine", sdet.Data()));
-            det->SetQ3BaseLine(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.SigmaBaseLine", sdet.Data()));
-            det->SetQ3SigmaBaseLine(val);
-            val = rnuc->GetParameters()->GetDoubleValue(Form("%s.Q3.RiseTime", sdet.Data()));
-            det->SetQ3RiseTime(val);
-
-         }
-
+         if (rnuc->GetParameters()->HasParameter("GTTag"))
+            det->SetDetectorSignalValue("GTTag", rnuc->GetParameters()->GetDoubleValue("GTTag"));
+         if (rnuc->GetParameters()->HasParameter("DetTag"))
+            det->SetDetectorSignalValue("DetTag", rnuc->GetParameters()->GetDoubleValue("DetTag"));
       }
    }
 }
@@ -510,8 +451,8 @@ Bool_t KVFAZIA::treat_event(const DAQ::FzEvent& e)
                   Error("treat_event", "No detector %s-%d found in FAZIA geometry...", FzDetector_str[fIdSignal], 100 * fIdBlk + 10 * fIdQuartet + fIdTelescope);
                   continue;
                }
-               det->SetDetTag(DetTag);
-               det->SetGTTag(GTTag);
+               det->GetDetectorSignal("DetTag")->SetValue(DetTag);
+               det->GetDetectorSignal("GTTag")->SetValue(GTTag);
 
                if (!rdata.has_energy() && !rdata.has_waveform()) {
                   Warning("treat_event", "[NO DATA] [%s %s]", det->GetName(), FzDataType_str[fIdSignal]);

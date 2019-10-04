@@ -26,7 +26,7 @@ public:
    }
 
    virtual void TreateSignal();
-   virtual KVPSAResult* GetPSAResult() const;
+   virtual void GetPSAResult(KVDetector*) const;
 
    ClassDef(KVQ2, 1) //charge Q2 channel of SI2
 };

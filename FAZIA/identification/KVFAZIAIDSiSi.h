@@ -27,9 +27,6 @@ public:
    virtual void   Initialize();
    Bool_t Identify(KVIdentificationResult*, Double_t x = -1., Double_t y = -1.);
 
-   Double_t GetIDMapX(Option_t* opt = "");
-   Double_t GetIDMapY(Option_t* opt = "");
-
    ClassDef(KVFAZIAIDSiSi, 1) //identification telescope for FAZIA Si-Si idcards
 };
 

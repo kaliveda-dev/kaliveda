@@ -2,8 +2,9 @@
 //Author: ,,,
 
 #include "KVQ3.h"
-#include "KVPSAResult.h"
 #include "KVDBParameterList.h"
+
+#include <KVDetector.h>
 
 ClassImp(KVQ3)
 
@@ -146,21 +147,18 @@ void KVQ3::TreateSignal()
 }
 
 
-KVPSAResult* KVQ3::GetPSAResult() const
+void KVQ3::GetPSAResult(KVDetector* d) const
 {
-   if (!fPSAIsDone) return 0;
+   if (!fPSAIsDone) return;
 
-   KVPSAResult* psa = new KVPSAResult();
-   psa->SetValue(Form("%s.%s.TrapRiseTime", fDetName.Data(), fType.Data()), fTrapRiseTime);
-   psa->SetValue(Form("%s.%s.TrapFlatTop", fDetName.Data(), fType.Data()), fTrapFlatTop);
-   psa->SetValue(Form("%s.%s.FastTrapRiseTime", fDetName.Data(), fType.Data()), fFastTrapRiseTime);
-   psa->SetValue(Form("%s.%s.FastTrapFlatTop", fDetName.Data(), fType.Data()), fFastTrapFlatTop);
-   psa->SetValue(Form("%s.%s.BaseLine", fDetName.Data(), fType.Data()), fBaseLine);
-   psa->SetValue(Form("%s.%s.SigmaBaseLine", fDetName.Data(), fType.Data()), fSigmaBase);
-   psa->SetValue(Form("%s.%s.Amplitude", fDetName.Data(), fType.Data()), fAmplitude);
-   psa->SetValue(Form("%s.%s.FastAmplitude", fDetName.Data(), fType.Data()), fFastAmplitude);
-   psa->SetValue(Form("%s.%s.RiseTime", fDetName.Data(), fType.Data()), fRiseTime);
-   psa->SetValue(Form("%s.%s.RawAmplitude", fDetName.Data(), fType.Data()), GetRawAmplitude());
-   return psa;
-
+//   d->SetDetectorSignalValue(Form("%s.TrapRiseTime", fType.Data()), fTrapRiseTime);
+//   d->SetDetectorSignalValue(Form("%s.TrapFlatTop", fType.Data()), fTrapFlatTop);
+//   d->SetDetectorSignalValue(Form("%s.FastTrapRiseTime", fType.Data()), fFastTrapRiseTime);
+//   d->SetDetectorSignalValue(Form("%s.FastTrapFlatTop", fType.Data()), fFastTrapFlatTop);
+   d->SetDetectorSignalValue(Form("%s.BaseLine", fType.Data()), fBaseLine);
+   d->SetDetectorSignalValue(Form("%s.SigmaBaseLine", fType.Data()), fSigmaBase);
+   d->SetDetectorSignalValue(Form("%s.Amplitude", fType.Data()), fAmplitude);
+   d->SetDetectorSignalValue(Form("%s.FastAmplitude", fType.Data()), fFastAmplitude);
+   d->SetDetectorSignalValue(Form("%s.RiseTime", fType.Data()), fRiseTime);
+   d->SetDetectorSignalValue(Form("%s.RawAmplitude", fType.Data()), GetRawAmplitude());
 }

@@ -2,7 +2,6 @@
 //Author: ,,,
 
 #include "KVChargeSignal.h"
-#include "KVPSAResult.h"
 #include "TMath.h"
 #include "TH1F.h"
 #include "TEnv.h"

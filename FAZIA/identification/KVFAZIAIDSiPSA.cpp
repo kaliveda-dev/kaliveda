@@ -77,23 +77,6 @@ Bool_t KVFAZIAIDSiPSA::Identify(KVIdentificationResult* idr, Double_t x, Double_
    return kTRUE;
 }
 
-Double_t KVFAZIAIDSiPSA::GetIDMapX(Option_t*)
-{
-   //X-coordinate for Si PSA identification map :
-   //Amplitude of QH1 signal
-//    if (!strcmp(opt, "I")) return fSi->GetI1Amplitude();
-//    else if (!strcmp(opt, "Q")) return fSi->GetQH1RiseTime();
-//    else return -1;
-   return fSi->GetI1Amplitude();
-}
-
-Double_t KVFAZIAIDSiPSA::GetIDMapY(Option_t*)
-{
-   //Y-coordinate for Si PSA identification map :
-   //Amplitude of I1 signal
-   return fSi->GetQH1Amplitude();
-}
-
 void KVFAZIAIDSiPSA::Initialize()
 {
    // Initialisation of telescope before identification.

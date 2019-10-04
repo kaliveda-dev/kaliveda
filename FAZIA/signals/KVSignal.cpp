@@ -325,14 +325,6 @@ void KVSignal::TreateSignal()
 }
 
 //________________________________________________________________
-KVPSAResult* KVSignal::GetPSAResult() const
-{
-   Info("GetPSAResult", "To be defined in child class");
-   return 0;
-}
-
-
-//________________________________________________________________
 void KVSignal::Print(Option_t*) const
 {
    Info("Print", "\nName: %s - Title: %s", GetName(), GetTitle());

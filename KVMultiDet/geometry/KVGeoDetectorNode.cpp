@@ -9,39 +9,6 @@
 
 ClassImp(KVGeoDetectorNode)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGeoDetectorNode</h2>
-<h4>Information on relative positions of detectors & particle trajectories</h4>
-<!-- */
-// --> END_HTML
-// Each detector of the multidetector geometry has an associated node which can
-// be accessed using
-//
-//    KVDetector* det;                           // pointer to a detector
-//    KVGeoDetectorNode* node = det->GetNode();  // access detector's node
-//
-// Note that the relation is reciprocal, i.e. one can retrieve the detector
-// associated to a node:
-//
-//    KVDetector* d = node->GetDetector();       // in this case, d==det !
-//
-// The nodes are set up when the multidetector geometry is imported from a ROOT
-// geometry using KVGeoImport. All possible trajectories from the target through
-// the detectors of the array are explored. As each detector/node is traversed,
-// we store information on the detectors which are immediately in front of or
-// behind it, and which trajectories (see KVGeoDNTrajectory class) pass through
-// which node. This information can then be obtained from the KVGeoDetectorNode
-// associated to each detector.
-//
-// FORWARDS/BACKWARDS, IN FRONT/BEHIND
-// The convention is that movement towards the target is FORWARDS;
-//     a detector D1 is IN FRONT of detector D2 if D1 is closer to the target.
-// Conversely, movement away from the target is BACKWARDS;
-//     a detector D1 is BEHIND detector D2 if D1 is further from the target.
-////////////////////////////////////////////////////////////////////////////////
-
 void KVGeoDetectorNode::init()
 {
    fInFront = nullptr;

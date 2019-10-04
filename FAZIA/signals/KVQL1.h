@@ -26,7 +26,7 @@ public:
    }
 
    virtual void TreateSignal();
-   virtual KVPSAResult* GetPSAResult() const;
+   virtual void GetPSAResult(KVDetector*) const;
 
    ClassDef(KVQL1, 1) //QL1 channel of SI1
 };
