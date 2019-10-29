@@ -5,8 +5,16 @@ The E789 data can only be analysed with KV built from the `master` branch on [gi
 Current version returned by `kaliveda-config --version` for this version is `1.11/00`. Class reference
 for `1.11 (master)` version is available [here][classdoc-master] or from the menu on the [website][kvweb].
 
+This is the only version which contains the `INDRAFAZIA.E789` dataset which defines the set-up
+INDRA-FAZIA as used in the experiment.
+
 Note that for the moment compatibility of this version with previous data is not guaranteed,
 and its sole aim for the moment is the reduction and analysis of E789 data.
+
+## ROOT version
+Although both `master` and `1.10` versions of KaliVeda can be compiled with ROOT version 6,
+a memory leak occurs when reading/analysing reconstructed data which has yet to be understood.
+Therefore we do not use ROOT 6 at CCIN2P3 (see below).
 
 ## CCIN2P3
 On Computing Centre (Lyon) machines, you need to be logged in as a member of the `fazia` group,
@@ -36,6 +44,9 @@ fi
 ~~~~~~~~~
 
 The next time you log in, you will have the correct version of KV.
+
+Do not change the default version of ROOT (5.34/38) (see previous subsection): in other words,
+make sure that the variable `USER_ROOT_VERSION` is not defined in your `$HOME/.profile`.
 
 # Notes on reconstructed (`recon`) data
 Reconstructed data means events containing nuclei. Each 'nucleus' in an event is reconstructed
@@ -120,10 +131,12 @@ Things to note here:
           root [5] timestamp_difference_in_nanoseconds
           (Double_t)(-1.00000000000000000e+01)
           
-  * `FAZIA.TRIGPAT` is the FAZIA trigger pattern satisfied by the event. The values are:
+  * `FAZIA.TRIGPAT` is the FAZIA trigger pattern satisfied by the event. The different trigger patterns used in the experiment are:
+     + `FAZIA.TRIGPAT==1`: trigger $M\geq 1$;
      + `FAZIA.TRIGPAT==2`: trigger $M\geq 2$;
      + `FAZIA.TRIGPAT==4`: trigger $M\geq 1$ downscaled 100;
-     + `FAZIA.TRIGPAT==6 (=2+4)`: event satisfied both of the previous conditions
+    
+    Other values are possible such as `FAZIA.TRIGPAT==6 (=2+4)`, meaning an event which satisfies both trigger conditions.
 
   * `FAZIA.EC` and `INDRA.EN` are the FAZIA and INDRA event numbers from their respective acquisitions.
   
@@ -449,7 +462,7 @@ The different data associated with each detector are available through a base `K
 
 ~~~~~~~~~~~{.cpp}
 // Example: particle stopped in FAZIA CsI detector
-n.GetStoppingDetector()->GetDetectorSignalValue("Q3.FPGAFastEnergy");
+n.GetStoppingDetector()->GetDetectorSignalValue("Q3.FastFPGAEnergy");
 
 // Example: particle identified in INDRA Si-CsI telescope
 n.GetIdentifyingTelescope()->GetDetector(1)->GetDetectorSignalValue("PG");
@@ -468,6 +481,39 @@ n.GetIdentifyingTelescope()->GetDetector(1)->GetDetectorSignalValue("Energy");
 ~~~~~~~~~~~
 
 See the Users Guide chapter [Detector signals and calibrations][usersguide-signals].
+
+#### Access to all detectors in particle reconstruction trajectory
+Particles stopping in e.g. CsI detectors may have crossed several other detectors before stopping.
+These are easily accessible using the particle's reconstruction trajectory. For example,
+given an event with a particle stopped in FAZIA detector CSI-112:
+
+~~~~~~~~~~~{.cpp}
+n.GetReconstructionTrajectory()->GetDetector("SI2")->GetName()
+"SI2-112"
+
+n.GetReconstructionTrajectory()->GetDetector("SI1")->GetName()
+"SI1-112"
+~~~~~~~~~~~
+
+You can also perform a loop over all detectors on the particle's trajectory:
+
+~~~~~~~~~~~{.cpp}
+// initialise new iteration
+n.GetReconstructionTrajectory()->IterateFrom();
+
+KVGeoDetectorNode* node;
+while( (node = n.GetReconstructionTrajectory()->GetNextNode()) )
+{
+   cout << node->GetDetector()->GetName() << endl;
+}
+
+// output:
+"CSI-112"
+"SI2-112"
+"SI1-112"
+~~~~~~~~~~~
+
+See class [KVGeoDNTrajectory] for more details, including how to change the direction of iteration.
 
 [recon-anal-ex]: http://indra.in2p3.fr/kaliveda/doc/master/ExampleReconAnalysis_8cpp-example.html
 [kvweb]: http://indra.in2p3.fr/kaliveda/
@@ -490,3 +536,4 @@ See the Users Guide chapter [Detector signals and calibrations][usersguide-signa
 [KVINDRADetector]: http://indra.in2p3.fr/kaliveda/doc/master/classKVINDRADetector.html
 [KVFAZIADetector]: http://indra.in2p3.fr/kaliveda/doc/master/classKVFAZIADetector.html
 [usersguide-signals]: http://indra.in2p3.fr/kaliveda/UsersGuide/calibrations.html
+[KVGeoDNTrajectory]: http://indra.in2p3.fr/kaliveda/doc/master/classKVGeoDNTrajectory.html

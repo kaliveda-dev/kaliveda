@@ -1,6 +1,8 @@
 MKDWN_EXT = .txt
 GLOBAL_PANDOC_OPTIONS = --mathjax --number-sections --latex-engine=pdflatex -S -s --toc --toc-depth=5 -c css/rootdoc.css --section-divs
 MKDWN_SOURCES := $(wildcard *$(MKDWN_EXT))
+#GLOBAL_PANDOC_OPTIONS = --mathjax --number-sections --latex-engine=pdflatex -S -s --toc --toc-depth=5 -c rootdoc.css --section-divs
+#MKDWN_SOURCES := indrafazia-e789.txt
 
 HTML_OUTPUT := $(patsubst %$(MKDWN_EXT),html/%.html,$(MKDWN_SOURCES))
 PDF_OUTPUT  := $(patsubst %$(MKDWN_EXT),pdf/%.pdf,$(MKDWN_SOURCES))
