@@ -9,17 +9,17 @@ combination of existing parameters:
 ~~~~~~~~~~{.cpp}
 kaliveda [0] gMultiDetArray->GetDetector("SI_0801")->GetListOfDetectorSignals().ls()
 
-OBJ: KVUniqueNameList	KVSeqCollection_6210	Optimised list in which objects with the same name can only be placed once : 0
- OBJ: KVACQParamSignal	PG	Signal PG of detector SI_0801 : 0 at: 0x55b8862a41f0
- OBJ: KVCalibratedSignal	Volt	Signal Volt calculated from signal PG of detector SI_0801 : 0 at: 0x55b88de4e540
- OBJ: KVCalibratedSignal	Energy	Signal Energy calculated from signal Volt of detector SI_0801 : 0 at: 0x55b88df48370
+OBJ: KVUniqueNameList	KVSeqCollection_6276	Optimised list in which objects with the same name can only be placed once : 0
+ KVACQParamSignal 		 PG 		 Signal PG of detector SI_0801 		 [150.368108]
+ KVCalibratedSignal 		 Volts 	 Signal Volts calculated from signal PG of detector SI_0801 		 [0.019724]
+ KVCalibratedSignal 		 Energy 	 Signal Energy calculated from signal Volts of detector SI_0801 		 [8.311131]
 
 kaliveda [1] gMultiDetArray->GetDetector("CSI-1111")->GetListOfDetectorSignals().ls()
 
-OBJ: KVUniqueNameList	KVSeqCollection_28018	Optimised list in which objects with the same name can only be placed once : 0
- OBJ: KVFAZIADetectorSignal	Q3.FPGAEnergy	Signal Q3FPGAEnergy of detector CSI-1111 : 0 at: 0x55fb35997490
- OBJ: KVFAZIADetectorSignal	Q3.FPGAFastEnergy	Signal Q3FastFPGAEnergy of detector CSI-1111 : 0 at: 0x55fb35997640
- OBJ: KVDetectorSignalExpression	ID_CSI-1111-VARX	Signal calculated as Q3.FPGAFastEnergy/Q3.FPGAEnergy for detector CSI-1111 : 0 at: 0x55fb3c042070
+OBJ: KVUniqueNameList	KVSeqCollection_33634	Optimised list in which objects with the same name can only be placed once : 0
+ KVDetectorSignal 		 Q3.FastFPGAEnergy 		 Signal Q3.FastFPGAEnergy of detector CSI-1111 		 [0.000000]
+ KVDetectorSignal 		 Q3.FPGAEnergy 		 Signal Q3.FPGAEnergy of detector CSI-1111 		 [0.000000]
+ KVDetectorSignalExpression 		 ID_CSI-1111-VARX 		 Signal calculated as Q3.FastFPGAEnergy/Q3.FPGAEnergy for detector CSI-1111 		 [0.000000]
 ~~~~~~~~~~
 
 The value of any signal can be retrieved using its name:
@@ -72,6 +72,8 @@ Detector signal expressions are handled by the [KVDetectorSignalExpression] clas
 
 ## Detector calibration ##
 
+### Adding calibrated signals
+
 Calibrated signals (handled by the [KVCalibratedSignal] class) are added to detectors when a calibration
 is available for a given run of a dataset (experiment). In order to add calibrations to a dataset,
 it needs to have a file `[array_name].CalibrationFiles.dat` which contains the names of files containing
@@ -84,17 +86,17 @@ Each of these files should have the same basic structure:
 # Remember that comments are always useful
 # You will remember nothing about this calibration in 3 months' time...
 SignalIn:                                PG
-SignalOut:                               Volt
-CalibType:                               Channel-Volt PG
-CalibClass:                              FunctionCal
+SignalOut:                               Volts
+CalibType:                               ChannelVolt
 CalibOptions:                            func=pol3,min=0,max=1,inverse=true
 SI_0801:                                 71.9228,3979.44,32.1727,-27.9312
 SI_0802:                                 70.9138,3978.88,31.5155,-27.9611
 [etc. etc.]
 ~~~~~~~~~~
 
+This file defines how to transform the `PG` signal of the listed detectors into a new `Volts` signal.
 A calibration basically defines how a new calibrated signal is generated from an existing input signal
-using a class derived from [KVCalibrator]:
+using a [KVCalibrator] or derived class:
 
 ~~~~~~~~~~~~
 
@@ -103,28 +105,30 @@ using a class derived from [KVCalibrator]:
        
 ~~~~~~~~~~~~
 
+The "transfer function" of [KVCalibrator] (defined by the `func` parameter in `CalibOptions` above: see below)
+can be any function which can be written as a string in the format understood by [TF1]/[TFormula].
 The 'input signal' can of course itself be the result of a calibration procedure, i.e. it can be a
 [KVCalibratedSignal], or indeed any other signal derived from [KVDetectorSignal]
 (see diagram [above](#KVDetectorSignal_family)).
 
 The file must define _at least_ the input and output signals using their names (`SignalIn` and `SignalOut`
-parameters above) and the [KVCalibrator]-derived class to be used in order to perform the calibration
-(parameter `CalibClass` above), i.e. one of the classes which appear in the following diagram:
+parameters above) and the type of the calibration (used for naming objects). If a specific [KVCalibrator]-derived class
+is to be used in order to perform the calibration i.e. one of the classes which appear in the following diagram:
 
 ![](http://indra.in2p3.fr/kaliveda/doc/master/classKVCalibrator__inherit__graph.png)
 
-The value of the `CalibClass` parameter is not, however, the name of a class: it is a name of one of the
+then a `CalibClass` parameter can be used to specify which one. However, this is not the name of a class: it is a name of one of the
 plugins defined in order to extend the [KVCalibrator] base class. In order to know which plugin name corresponds
 to which class, you can use the following two methods:
 
 ~~~~~~~~~~{.cpp}
 kaliveda [0] KVBase::GetListOfPlugins("KVCalibrator")
 
-(const Char_t *) "KVLinCal KVLightEnergyCsI KVLightEnergyCsIFull KVPulseHeightDefect KVRecombination KVChannelVolt KVChannelEnergyAlpha KVFunctionCal KVVoltEnergy KVFAZIACalibrator"
+(const Char_t *) "KVLightEnergyCsI KVLightEnergyCsIFull KVPulseHeightDefect KVRecombination"
 
 kaliveda [1] KVBase::GetListOfPluginURIs("KVCalibrator")
 
-(const Char_t *) "LinCal LightEnergyCsI LightEnergyCsIFull PulseHeightDefect Recombination ChannelVolt ChannelEnergyAlpha FunctionCal VoltEnergy FAZIA"
+(const Char_t *) "LightEnergyCsI LightEnergyCsIFull PulseHeightDefect Recombination"
 ~~~~~~~~~~
 
 The order of the class/plugin names in the two lists is the same. In general, the plugin name is just the class name minus the `KV` prefix.
@@ -133,19 +137,49 @@ The `CalibOptions` parameter may be used if required to supply any additional in
 calibrator object as you wish. If and how to use this parameter depends on which class you are using: look at
 the class reference guide to see if the
 class has a specialised version of the [KVCalibrator::SetOptions] method
-(see for example the [KVFunctionCal::SetOptions] method for the calibrator used in the example above). 
+(see for example the [KVCalibrator::SetOptions] method for the calibrator used in the example above). 
+
+### Obtaining calibrated signal values
 
 Once defined, the calibrated signal values are obtained in the same way as any other,
-using the `KVDetector::GetDetectorSignalValue` method:
+using the [KVDetector::GetDetectorSignalValue] method:
 
 ~~~~~~~~~~{.cpp}
-kaliveda [2] gMultiDetArray->GetDetector("SI_0801")->GetDetectorSignalValue("Volt")
+kaliveda [2] gMultiDetArray->GetDetector("SI_0801")->GetDetectorSignalValue("Volts")
 
 (double) 0.040703783
 
 kaliveda [3] gMultiDetArray->GetDetector("SI_0801")->GetDetectorSignalValue("Energy")
 
 (double) 9.7544453
+~~~~~~~~~~
+
+#### Supplying extra parameters
+
+If a calibration requires further parameters in order to be used correctly, they can be passed
+to this method as a string containing `name=value` pairs. An example is the Light-Energy calibration for
+CsI detectors, which depends on the identification of the particle for which the energy is to be
+calculated:
+
+~~~~~~~~~~{.cpp}
+// calculate CsI energy from TotLight signal for a Lithium-6
+
+gMultiDetArray->GetDetector("CSI_0801")->GetDetectorSignalValue("Energy", "Z=3,A=6");
+~~~~~~~~~~
+
+Any such required extra parameters will be defined in the `Compute` method of the calibrator
+(for example, see [KVLightEnergyCsI::Compute]).
+
+#### Changing input value
+
+Another use for the parameter list is to change the value of the input signal used by the calibration:
+if a parameter `INPUT` is given in the list, its value will be used instead of the current value of the
+input signal:
+
+~~~~~~~~~~{.cpp}
+// calculate Volts signal for SI_0801 when input signal (PG) = 1024
+
+gMultiDetArray->GetDetector("SI_0801")->GetDetectorSignalValue("Volts", "INPUT=1024");
 ~~~~~~~~~~
 
 ### When is a detector considered 'calibrated' ? ###
@@ -161,7 +195,7 @@ or other final output values and calculate what would be the input, _i.e._ the
 calibration can be inverted, either partially or entirely:
 
 ~~~~~~~~~~{.cpp}
-kaliveda [4] gMultiDetArray->GetDetector("SI_0801")->GetInverseDetectorSignalValue("Energy", 9.7544453, "Volt")
+kaliveda [4] gMultiDetArray->GetDetector("SI_0801")->GetInverseDetectorSignalValue("Energy", 9.7544453, "Volts")
 
 (double) 0.040735500
 
@@ -169,15 +203,15 @@ kaliveda [5] gMultiDetArray->GetDetector("SI_0801")->GetInverseDetectorSignalVal
 
 (double) 234.07877
 
-kaliveda [6] gMultiDetArray->GetDetector("SI_0801")->GetInverseDetectorSignalValue("Volt", 0.040735, "PG")
+kaliveda [6] gMultiDetArray->GetDetector("SI_0801")->GetInverseDetectorSignalValue("Volts", 0.040735, "PG")
 
 (double) 234.07678
 ~~~~~~~~~~
 
-*N.B.* The small differences between input and output values here are due to the
-fact that the input signal `PG` is a [KVACQParamSignal] for which the `GetValue()`
-method returns a randomized value in the interval [-0.5,+0.5] around the actual
-integer value of the acquisition parameter.
+> N.B. The small differences between input and output values here are due to the
+> fact that the input signal `PG` is a [KVACQParamSignal] for which the `GetValue()`
+> method returns a randomized value in the interval [-0.5,+0.5] around the actual
+> integer value of the acquisition parameter.
 
 [KVFunctionCal]: http://indra.in2p3.fr/kaliveda/doc/master/classKVFunctionCal.html
 [KVDetectorSignal]: http://indra.in2p3.fr/kaliveda/doc/master/classKVDetectorSignal.html
@@ -185,9 +219,13 @@ integer value of the acquisition parameter.
 [KVCalibratedSignal]: http://indra.in2p3.fr/kaliveda/doc/master/classKVCalibratedSignal.html
 [KVDetectorSignalExpression]: http://indra.in2p3.fr/kaliveda/doc/master/classKVDetectorSignalExpression.html
 [KVDetector]: http://indra.in2p3.fr/kaliveda/doc/master/classKVDetector.html
-[KVDetector::AddDetectorSignalExpression]: http://indra.in2p3.fr/kaliveda/doc/master/classKVDetector.html#a3883ef6f4531f5e701b2d5ebb356ce23
+[KVDetector::AddDetectorSignalExpression]: http://indra.in2p3.fr/kaliveda/doc/master/classKVDetector.html#a163e8a64458b25e3564fa774f0027a62
 [KVCalibrator]: http://indra.in2p3.fr/kaliveda/doc/master/classKVCalibrator.html
 [Particle identification]: identification.html
 [KVCalibrator::SetOptions]: http://indra.in2p3.fr/kaliveda/doc/master/classKVCalibrator.html#a6f15ce751ceee980fcf15f5a51fd73e3
 [KVFunctionCal::SetOptions]: http://indra.in2p3.fr/kaliveda/doc/master/classKVFunctionCal.html#a64841324c9df264765acc8a56a85b3ed
 [KVDetector::IsCalibrated]: http://indra.in2p3.fr/kaliveda/doc/master/classKVDetector.html#a738b6b9c9c7949c9e806abfc676b730a
+[KVLightEnergyCsI::Compute]: http://indra.in2p3.fr/kaliveda/doc/master/classKVLightEnergyCsI.html#ab4a3205876d7cf8708df31c086e82f1e
+[KVDetector::GetDetectorSignalValue]: http://indra.in2p3.fr/kaliveda/doc/master/classKVDetector.html#a55ec621060f94a2d06a5f7a39b41d764
+[TF1]: https://root.cern/doc/master/classTF1.html
+[TFormula]: https://root.cern/doc/master/classTFormula.html
