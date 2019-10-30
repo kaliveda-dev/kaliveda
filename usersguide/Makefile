@@ -1,5 +1,6 @@
 MKDWN_EXT = .txt
-GLOBAL_PANDOC_OPTIONS = --mathjax --number-sections --pdf-engine=pdflatex -s --toc --toc-depth=5 -c css/rootdoc.css --section-divs
+#GLOBAL_PANDOC_OPTIONS = --mathjax --number-sections --pdf-engine=pdflatex -s --toc --toc-depth=5 -c css/rootdoc.css --section-divs
+GLOBAL_PANDOC_OPTIONS = --number-sections --pdf-engine=pdflatex -s --toc --toc-depth=5 -c css/rootdoc.css --section-divs
 MKDWN_SOURCES := $(wildcard *$(MKDWN_EXT))
 #GLOBAL_PANDOC_OPTIONS = --mathjax --number-sections --pdf-engine=pdflatex -s --toc --toc-depth=5 -c rootdoc.css --section-divs
 #MKDWN_SOURCES := indrafazia-e789.txt
@@ -26,7 +27,7 @@ clean:
 html/%.html: %$(MKDWN_EXT)
 	@echo "Generating $@ ..."
 	@mkdir -p html
-	@pandoc $(GLOBAL_PANDOC_OPTIONS) -f markdown+smart -t html -s -o $@ $< 
+	@pandoc $(GLOBAL_PANDOC_OPTIONS) -f markdown+tex_math_dollars -t html4 -s -o $@ $< 
 
 pdf/%.pdf: %$(MKDWN_EXT)
 	@echo "Generating $@ ..."
