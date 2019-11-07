@@ -24,12 +24,14 @@ As the `x` and `y` arguments have default values, this method can be called with
 values, and indeed this is how it is used most of the time. In this case the methods
 
 ~~~~~~~~~{.cpp}
-KVIDTelescope::GetIDMapX(Option_t* = "")
-KVIDTelescope::GetIDMapY(Option_t* = "")
+KVIDTelescope::GetIDGridCoords(Double_t& X, Double_t& Y, KVIDGraph* grid)
+KVIDTelescope::GetIDGridXCoord(KVIDGraph* grid)
+KVIDTelescope::GetIDGridYCoord(KVIDGraph* grid)
 ~~~~~~~~~
 
-are used to provide the coordinates in the identification map. As will be seen below, the values to
-be used for the coordinates can be automatically deduced if a single identification grid is used.
+are used to provide the coordinates for the identification map. As will be seen below, the values to
+be used for the coordinates are automatically computed even if several identification grids are assigned
+to the same telescope.
 
 ## Identification grids ##
 
@@ -61,10 +63,10 @@ One is therefore more likely to use some 'raw' data signal for each detector, or
 example is just to illustrate the possibilities, not a serious suggestion):
 
 ~~~~~~~~~{.cpp}
-double X = idt->GetDetector(2)->GetDetectorSignalValue("Q3Amplitude")
-              /idt->GetDetector(2)->GetDetectorSignalValue("Q3RiseTime");
-double Y = idt->GetDetector(1)->GetDetectorSignalValue("Q2FPGAEnergy")
-              +idt->GetDetector(1)->GetDetectorSignalValue("I2Amplitude");
+double X = idt->GetDetector(2)->GetDetectorSignalValue("Q3.Amplitude")
+              /idt->GetDetector(2)->GetDetectorSignalValue("Q3.RiseTime");
+double Y = idt->GetDetector(1)->GetDetectorSignalValue("Q2.FPGAEnergy")
+              +idt->GetDetector(1)->GetDetectorSignalValue("I2.Amplitude");
 myhisto->Fill(X,Y);
 ~~~~~~~~~
 
@@ -74,8 +76,8 @@ Next you draw your grid(s), and as long as you define the `VARX`, `VARY` paramet
 [KVIDGridEditor]) to be
 
 ~~~~~~~~~~
-VARX : Q3Amplitude/Q3RiseTime
-VARY : Q2FPGAEnergy+I2Amplitude
+VARX : Q3.Amplitude/Q3.RiseTime
+VARY : Q2.FPGAEnergy+I2.Amplitude
 ~~~~~~~~~~
 
 then when the grid will be loaded by the identification telescope using
@@ -88,6 +90,21 @@ idt->SetGrid(mygrid);
 the default `GetIDMapX/Y` methods of [KVIDTelescope] will automatically return the
 correct values for your grid, according to the expressions in `VARX` and `VARY`.
 
+### Multiple grids for the same telescope ###
+Some identifications require several grids for them to be correctly handled: for example, when
+high gain and low gain signals are available for one or both of the detectors concerned.
+This can be handled by [KVIDTelescope], you just need to give the order in which the grids
+should be tried in an environment variable (`.kvrootrc` file):
+
+~~~~~~~~~~
+[dataset].[array name].[ID type].GridOrder:    [VARY1]_[VARX1],[VARY2]_[VARX2],[VARY3]_[VARX3],...
+
+#Example:
+INDRAFAZIA.E789.FAZIA.Si-Si.GridOrder:   QL1.Amplitude_Q2.FPGAEnergy,QH1.FPGAEnergy_Q2.FPGAEnergy
+~~~~~~~~~~
+
+Identification with each grid will be attempted in the order given; the first successful identification
+(with quality code < 4; see [KVIDZAGrid]) will be accepted.
 
 [KVIDTelescope]: http://indra.in2p3.fr/kaliveda/doc/master/classKVIDTelescope.html
 [KVGeoDNTrajectory]: http://indra.in2p3.fr/kaliveda/doc/master/classKVGeoDNTrajectory.html
@@ -96,3 +113,4 @@ correct values for your grid, according to the expressions in `VARX` and `VARY`.
 [KVIdentificationResult]: http://indra.in2p3.fr/kaliveda/doc/master/classKVIdentificationResult.html
 [Detector signals and calibrations]: calibrations.html
 [KVIDGridEditor]: http://indra.in2p3.fr/kaliveda/doc/master/classKVIDGridEditor.html
+[KVIDZAGrid]: http://indra.in2p3.fr/kaliveda/doc/master/classKVIDZAGrid.html
