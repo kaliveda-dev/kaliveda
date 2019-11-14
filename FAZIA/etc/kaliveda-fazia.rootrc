@@ -289,7 +289,6 @@ FAZIA.ReconstructedNuclei.AcceptECodes: 0-1
 
 # DATASET-SPECIFIC IDTELESCOPE PLUGINS FOR FAZIA
 +Plugin.KVIDTelescope:    ^FAZIASYM.FAZIA.Si-CsI$      KVFAZIAIDSiCsI_FAZIASYM      FAZIAidentification        "KVFAZIAIDSiCsI_FAZIASYM()"
-+Plugin.KVIDTelescope:    ^FAZIACOR.FAZIA.Si-Si$       KVFAZIAIDSiSi_FAZIACOR       FAZIAidentification        "KVFAZIAIDSiSi_FAZIACOR()"
 +Plugin.KVIDTelescope:    ^FAZIAPRE.FAZIA.Si-CsI$      KVFAZIAIDSiCsI_FAZIASYM      FAZIAidentification        "KVFAZIAIDSiCsI_FAZIASYM()"
 
 ############
@@ -405,10 +404,6 @@ FAZIACOR.FAZIADB.Comments:            Comment.txt
 FAZIAPRE.FAZIADB.CalibrationFiles:    CalibrationFiles.dat
 #FAZIAPRE.FAZIADB.Comments:            Comment.txt
 
-# definition of the calibration function for detectors
-FAZIADetector.Calib.Channel-Volt: pol2
-FAZIADetector.Calib.Volt-Energy: pol2
-FAZIADetector.Calib.Channel-Energy: pol2
 
 SI1.IsFiredFromSignal:  1
 SI2.IsFiredFromSignal:  1

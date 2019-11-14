@@ -6,7 +6,6 @@ RunList:                                 286-668
 SignalIn:                                Q2
 SignalOut:                               Energy
 CalibType:                               ChannelEnergyQ2
-CalibClass:                              FunctionCal
 CalibOptions:                            func=pol2,min=0,max=10000,inverse=false
 SI2-11: -0.501667,0.257216,0.0
 SI2-21: -0.0674247,0.248652,0.0

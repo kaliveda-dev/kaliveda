@@ -2,7 +2,6 @@ SignalIn:                                Q3.FPGAEnergy
 SignalOut:                               Energy
 CalibType:                               ChannelEnergyQ3
 CalibClass:                              LightEnergyCsI
-CalibOptions:                            formula=2
 CSI-11: 				4.610254,0.279127,0.000000,0.277972
 CSI-21: 				4.724735,0.258233,0.000000,0.182277
 CSI-22: 				4.168662,0.266858,1.001658,0.323264
