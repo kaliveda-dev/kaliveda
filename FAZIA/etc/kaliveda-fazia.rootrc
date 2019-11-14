@@ -398,6 +398,9 @@ FAZIADB.RutherfordCrossSection:			crosssection_rutherford.env
 FAZIADB.OoODet:    OoODetectors.env
 
 # specific values for datasets
+FAZIACOR.FAZIADB.CalibrationFiles:    CalibrationFiles.dat
+FAZIACOR.FAZIADB.Comments:            Comment.txt
+
 FAZIAPRE.FAZIADB.CalibrationFiles:    CalibrationFiles.dat
 #FAZIAPRE.FAZIADB.Comments:            Comment.txt
 
