@@ -3,8 +3,8 @@
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> IDTelescopes=ID_CSI_11
 <PARAMETER> Runlist=1-25000
 +KVIDCsIRLLine
@@ -406,8 +406,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_13
 +KVIDCsIRLLine
@@ -830,8 +830,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_14
 +KVIDCsIRLLine
@@ -1233,8 +1233,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_22
 +KVIDCsIRLLine
@@ -1639,8 +1639,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_23
 +KVIDCsIRLLine
@@ -2055,8 +2055,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_24
 +KVIDCsIRLLine
@@ -2512,8 +2512,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_32
 +KVIDCsIRLLine
@@ -3024,8 +3024,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_33
 +KVIDCsIRLLine
@@ -3506,8 +3506,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> IDTelescopes=ID_CSI_41
 <PARAMETER> Runlist=1-25000
 +KVIDCsIRLLine
@@ -3952,8 +3952,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_42
 +KVIDCsIRLLine
@@ -4471,8 +4471,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_43
 +KVIDCsIRLLine
@@ -4985,8 +4985,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_44
 +KVIDCsIRLLine
@@ -5436,8 +5436,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_21
 +KVIDCsIRLLine
@@ -5857,8 +5857,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> IDTelescopes=ID_CSI_31
 <PARAMETER> Runlist=1-25000
 +KVIDCsIRLLine
@@ -6366,8 +6366,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_111
 +KVIDCsIRLLine
@@ -6874,8 +6874,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_112
 +KVIDCsIRLLine
@@ -7387,8 +7387,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_113
 +KVIDCsIRLLine
@@ -7791,8 +7791,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_121
 +KVIDCsIRLLine
@@ -8280,8 +8280,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_122
 +KVIDCsIRLLine
@@ -8630,8 +8630,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_123
 +KVIDCsIRLLine
@@ -9045,8 +9045,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_124
 +KVIDCsIRLLine
@@ -9492,8 +9492,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_131
 +KVIDCsIRLLine
@@ -10078,8 +10078,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_132
 +KVIDCsIRLLine
@@ -10591,8 +10591,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_133
 +KVIDCsIRLLine
@@ -11094,8 +11094,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_134
 +KVIDCsIRLLine
@@ -11604,8 +11604,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_141
 +KVIDCsIRLLine
@@ -12172,8 +12172,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_143
 +KVIDCsIRLLine
@@ -12790,8 +12790,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_144
 +KVIDCsIRLLine
@@ -13328,8 +13328,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_114
 +KVIDCsIRLLine
@@ -13798,8 +13798,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_211
 +KVIDCsIRLLine
@@ -14310,8 +14310,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_212
 +KVIDCsIRLLine
@@ -14800,8 +14800,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_213
 +KVIDCsIRLLine
@@ -15315,8 +15315,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_214
 +KVIDCsIRLLine
@@ -15720,8 +15720,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_221
 +KVIDCsIRLLine
@@ -16214,8 +16214,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_222
 +KVIDCsIRLLine
@@ -16640,8 +16640,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_223
 +KVIDCsIRLLine
@@ -17187,8 +17187,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_224
 +KVIDCsIRLLine
@@ -17701,8 +17701,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_231
 +KVIDCsIRLLine
@@ -18204,8 +18204,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_233
 +KVIDCsIRLLine
@@ -18605,8 +18605,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_234
 +KVIDCsIRLLine
@@ -19069,8 +19069,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_241
 +KVIDCsIRLLine
@@ -19482,8 +19482,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_242
 +KVIDCsIRLLine
@@ -19945,8 +19945,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_243
 +KVIDCsIRLLine
@@ -20414,8 +20414,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_244
 +KVIDCsIRLLine
@@ -20843,8 +20843,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_311
 +KVIDCsIRLLine
@@ -21244,8 +21244,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> IDTelescopes=ID_CSI_312
 <PARAMETER> Runlist=1-25000
 +KVIDCsIRLLine
@@ -21720,8 +21720,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_313
 +KVIDCsIRLLine
@@ -22150,8 +22150,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_314
 +KVIDCsIRLLine
@@ -22656,8 +22656,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_321
 +KVIDCsIRLLine
@@ -23172,8 +23172,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_322
 +KVIDCsIRLLine
@@ -23576,8 +23576,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_323
 +KVIDCsIRLLine
@@ -24058,8 +24058,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_324
 +KVIDCsIRLLine
@@ -24533,8 +24533,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_331
 +KVIDCsIRLLine
@@ -25052,8 +25052,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_334
 +KVIDCsIRLLine
@@ -25579,8 +25579,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_341
 +KVIDCsIRLLine
@@ -26131,8 +26131,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_344
 +KVIDCsIRLLine
@@ -26699,8 +26699,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_332
 +KVIDCsIRLLine
@@ -27207,8 +27207,8 @@ below
 # This file can be read using KVIDGCsI::ReadFromAsciiFile
 # 
 ++KVIDGCsI
-<VARX> Q3SlowAmplitude
-<VARY> Q3FastAmplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q3.FastAmplitude
 <PARAMETER> Runlist=1-25000
 <PARAMETER> IDTelescopes=ID_CSI_333
 +KVIDCsIRLLine

@@ -3,10 +3,11 @@
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_11
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -441,10 +442,11 @@ right
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_12
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -839,10 +841,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_13
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -1237,10 +1240,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_14
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=17 A=34
@@ -1585,10 +1589,11 @@ ID:Z=16 A=32
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_21
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -1993,10 +1998,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_23
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -2460,10 +2466,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_24
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -2968,10 +2975,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_33
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -3450,10 +3458,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_34
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -3921,10 +3930,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_41
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -4416,10 +4426,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_42
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -4855,10 +4866,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_43
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -5318,10 +5330,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_44
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -5748,10 +5761,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_111
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -6148,10 +6162,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_112
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -6548,10 +6563,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_113
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -6948,10 +6964,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_114
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -7348,10 +7365,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_121
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -7815,10 +7833,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_123
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -8254,10 +8273,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_124
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -8698,10 +8718,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_131
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -9176,10 +9197,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_132
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -9613,10 +9635,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_133
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -10044,10 +10067,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_134
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -10446,10 +10470,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_141
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -10861,10 +10886,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_142
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=2 A=4
@@ -11294,10 +11320,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_144
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -11710,10 +11737,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_211
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -12116,10 +12144,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_213
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -12553,10 +12582,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_214
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -12986,10 +13016,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_221
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -13443,10 +13474,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_222
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -13855,10 +13887,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_223
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -14272,10 +14305,11 @@ ID:Z=4 A=9
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_231
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -14680,10 +14714,11 @@ ID:Z=16 A=32
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_232
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -15083,10 +15118,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_233
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -15475,10 +15511,11 @@ ID:Z=16 A=32
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_234
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -15859,10 +15896,11 @@ ID:Z=16 A=32
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_241
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -16271,10 +16309,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_242
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -16657,10 +16696,11 @@ ID:Z=16 A=32
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_243
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -17043,10 +17083,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_244
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -17427,10 +17468,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_311
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -17830,10 +17872,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_312
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -18216,10 +18259,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_313
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -18625,10 +18669,11 @@ ID:Z=18 A=37
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_314
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=18 A=37
@@ -18994,10 +19039,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_321
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -19274,10 +19320,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_322
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -19673,10 +19720,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_323
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -20067,10 +20115,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_343
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1
@@ -20507,10 +20556,11 @@ ID:Z=17 A=34
 # This file can be read using KVIDZAFromZGrid::ReadFromAsciiFile
 # 
 ++KVIDZAFromZGrid
-<VARX> I1Amplitude
-<VARY> QH1Amplitude
+<VARX> I1.Amplitude
+<VARY> QH1.Amplitude
 <PARAMETER> IDTelescopes=ID_SI1_344
 <PARAMETER> Runlist=1-25000
+<PARAMETER> PIDRANGE=
 OnlyZId 0
 +KVIDZALine
 ID:Z=1 A=1

@@ -1,6 +1,6 @@
-SignalIn:                                Q2FPGAEnergy
+SignalIn:                                Q2.FPGAEnergy
 SignalOut:                               Energy
-CalibType:                               Channel-Energy Q2
+CalibType:                               ChannelEnergyQ2
 CalibClass:                              FunctionCal
 CalibOptions:                            func=pol1,min=0,max=10000,inverse=false
 SI2-11:0.0,0.265728
