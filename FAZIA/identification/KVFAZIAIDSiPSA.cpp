@@ -58,24 +58,9 @@ Bool_t KVFAZIAIDSiPSA::Identify(KVIdentificationResult* idr, Double_t x, Double_
 {
    //Particle identification and code setting using identification grid (class KVIDZAFromZGrid).
 
-   idr->SetIDType(GetType());
-   idr->IDattempted = kTRUE;
+   Bool_t ok = KVFAZIAIDTelescope::Identify(idr, x, y);
 
-   //perform identification
-   Double_t esi = (y < 0. ? GetIDMapY() : y);
-   Double_t ima = (x < 0. ? GetIDMapX() : x);
-
-   if (IGrid->IsIdentifiable(ima, esi)) {
-      IGrid->Identify(ima, esi, idr);
-   }
-   else {
-      idr->IDOK = kFALSE;
-      idr->IDquality = KVIDZAGrid::kICODE8;
-   }
-
-   // set general ID code
-   idr->IDcode = GetIDCode();
-   return kTRUE;
+   return ok;
 }
 
 void KVFAZIAIDSiPSA::Initialize()
