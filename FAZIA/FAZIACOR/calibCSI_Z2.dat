@@ -5,6 +5,7 @@ SignalIn:                               Q3.FPGAEnergy
 SignalOut:                              Energy
 CalibType:                              ChannelEnergyQ3
 CalibClass:                             LightEnergyCsI
+ZRange:                                 2
 CSI-11: 				4.990224,0.510017,0.903393,0.863398
 CSI-21: 				5.104444,0.381886,0.000000,0.555526
 CSI-23: 				4.548264,0.156327,10.004745,0.011357
