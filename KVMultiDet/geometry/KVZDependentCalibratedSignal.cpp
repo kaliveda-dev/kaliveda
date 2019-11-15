@@ -17,13 +17,13 @@ void KVZDependentCalibratedSignal::AddSignal(KVCalibratedSignal* sig, const KVNu
 Double_t KVZDependentCalibratedSignal::GetValue(const KVNameValueList& params) const
 {
    KVCalibratedSignal* sig = GetSignal(params);
-   return (sig ? sig->GetValue(params) : 0);
+   return (sig ? sig->GetValue(params) : -1);
 }
 
 Double_t KVZDependentCalibratedSignal::GetInverseValue(Double_t out_val, const TString& in_sig, const KVNameValueList& params) const
 {
    KVCalibratedSignal* sig = GetSignal(params);
-   return (sig ? sig->GetInverseValue(out_val, in_sig, params) : 0);
+   return (sig ? sig->GetInverseValue(out_val, in_sig, params) : -1);
 }
 
 KVCalibratedSignal* KVZDependentCalibratedSignal::GetSignal(const KVNameValueList& params) const
@@ -37,7 +37,7 @@ KVCalibratedSignal* KVZDependentCalibratedSignal::GetSignal(const KVNameValueLis
    }
    KVCalibratedSignal* sig = fSignalMap[params.GetIntValue("Z")];
    if (!sig) {
-      Error("GetSignal", "No calibration for Z=%d", params.GetIntValue("Z"));
+      //Error("GetSignal", "No calibration for Z=%d for detector %s", params.GetIntValue("Z"), GetDetector()->GetName());
    }
    return sig;
 }

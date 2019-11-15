@@ -297,7 +297,7 @@ Bool_t KVFAZIADetector::Fired(Option_t*) const
             }
          }
          else {
-            Warning("Fired", "%s has empty signal %s", GetName(), sig->GetName());
+            //Warning("Fired", "%s has empty signal %s", GetName(), sig->GetName());
          }
       }
    }
