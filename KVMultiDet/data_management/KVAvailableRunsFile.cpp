@@ -1143,10 +1143,18 @@ void KVAvailableRunsFile::ReadFile()
       // nfields = 5: run number, date, filename, KaliVeda version, username
       Int_t nfields = toks->GetEntries();
       KVString kvs(((TObjString*) toks->At(0))->GetString());
+      if (kvs.Contains("/")) {
+         Warning("ReadFile", "Strange '/' symbol in run number (line:%d)!!!", line_number);
+         toks->ls();
+         fLine.ReadLine(fRunlist);
+         continue;
+      }
+
       fRunNumber = kvs.Atoi();
       if (nfields < 2) {
          Warning("ReadFile", "Less than 2 fields in entry for run %d (line:%d)???", fRunNumber, line_number);
          toks->ls();
+         fLine.ReadLine(fRunlist);
          continue;
       }
       //get date string
