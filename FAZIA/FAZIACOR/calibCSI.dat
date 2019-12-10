@@ -1,4 +1,4 @@
-SignalIn:                               Q3.FPGAEnergy
+SignalIn:                               Q3.Amplitude
 SignalOut:                              Energy
 CalibType:                              ChannelEnergyQ3
 CalibClass:                             LightEnergyCsI

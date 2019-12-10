@@ -1,7 +1,7 @@
 #
 # Calibration parameters for the CsI valid for Z=2
 #
-SignalIn:                               Q3.FPGAEnergy
+SignalIn:                               Q3.Amplitude
 SignalOut:                              Energy
 CalibType:                              ChannelEnergyQ3
 CalibClass:                             LightEnergyCsI
