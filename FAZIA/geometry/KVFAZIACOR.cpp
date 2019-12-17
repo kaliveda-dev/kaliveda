@@ -150,7 +150,7 @@ void KVFAZIACOR::BuildFAZIA()
    ph = new TGeoHMatrix(h) ;
    top->AddNode(block, 0, ph) ;
 
-   printf("BLK #%d => theta=%1.2lf - phi=%1.2lf\n", 0, theta_block0, phi_block0) ;
+   printf("BLK #%d => theta=%1.2lf - phi=%1.2lf - DistToTarget=%1.2lf\n", 0, theta_block0, phi_block0, dist_target_block0) ;
    //
    // Block 1
    rot1.SetAngles((-1. * phi_block1), 0., 0.) ;
@@ -161,7 +161,7 @@ void KVFAZIACOR::BuildFAZIA()
    ph = new TGeoHMatrix(h) ;
    top->AddNode(block, 1, ph) ;
 
-   printf("BLK #%d => theta=%1.2lf - phi=%1.2lf\n", 1, theta_block1, phi_block1) ;
+   printf("BLK #%d => theta=%1.2lf - phi=%1.2lf - DistToTarget=%1.2lf\n", 1, theta_block1, phi_block1, dist_target_block1) ;
    //
    // Block 2
    rot1.SetAngles((-1. * phi_block2), 0., 0.) ;
@@ -172,7 +172,7 @@ void KVFAZIACOR::BuildFAZIA()
    ph = new TGeoHMatrix(h) ;
    top->AddNode(block, 2, ph) ;
 
-   printf("BLK #%d => theta=%1.2lf - phi=%1.2lf\n", 2, theta_block2, phi_block2) ;
+   printf("BLK #%d => theta=%1.2lf - phi=%1.2lf - DistToTarget=%1.2lf\n", 2, theta_block2, phi_block2, dist_target_block2) ;
    //
    // Block 3
    rot1.SetAngles((-1. * phi_block3), 0., 0.) ;
@@ -183,7 +183,7 @@ void KVFAZIACOR::BuildFAZIA()
    ph = new TGeoHMatrix(h) ;
    top->AddNode(block, 3, ph) ;
 
-   printf("BLK #%d => theta=%1.2lf - phi=%1.2lf\n", 3, theta_block3, phi_block3) ;
+   printf("BLK #%d => theta=%1.2lf - phi=%1.2lf - DistToTarget=%1.2lf\n", 3, theta_block3, phi_block3, dist_target_block3) ;
    //
    //
    // add telescope for elastic scattering monitoring
