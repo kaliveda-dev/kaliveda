@@ -576,6 +576,7 @@ FAZIACOR.QH1.ChannelWidth: 		  10
 FAZIACOR.QH1.ShaperRiseTime:  	  2
 FAZIACOR.QH1.ShaperFlatTop:	  1
 FAZIACOR.QH1.PZCorrection: 		  0
+FAZIACOR.QH1.FPGARiseTime:        2
 
 FAZIACOR.I1.BaseLineLength:	  50
 FAZIACOR.I1.ChannelWidth:  		  4
@@ -588,6 +589,7 @@ FAZIACOR.Q2.ChannelWidth:  		  10
 FAZIACOR.Q2.ShaperRiseTime:	  2
 FAZIACOR.Q2.ShaperFlatTop: 		  1
 FAZIACOR.Q2.PZCorrection:  		  0
+FAZIACOR.Q2.FPGARiseTime:          2
 
 FAZIACOR.I2.BaseLineLength:	  50
 FAZIACOR.I2.ChannelWidth:  		  4
