@@ -174,13 +174,3 @@ void KVINDRADetector::SetThickness(Double_t thick)
    }
    KVMaterial::SetThickness(thick);
 }
-
-Double_t KVINDRADetector::GetCalibratedEnergy() const
-{
-   // Calculate energy in MeV from coder values.
-   // Returns 0 if calibration not ready or detector not fired
-   // (we require that at least one acquisition parameter have a value
-   // greater than the current pedestal value)
-
-   return Fired("Pany") ? GetDetectorSignalValue("Energy") : 0.0;
-}

@@ -26,7 +26,7 @@ public:
 #endif
    }
 
-   Double_t GetValue() const;
+   Double_t GetValue(const KVNameValueList& params = "") const;
    Bool_t IsValid() const
    {
       return fValid;

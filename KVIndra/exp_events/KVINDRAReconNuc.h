@@ -54,11 +54,6 @@ class KVINDRAReconNuc: public KVReconstructedNucleus {
 
    void CheckCsIEnergy();
 
-   //************** obsolete methods
-   Int_t GetIDSubCode(const Char_t* id_tel_type, KVIDSubCode& code) const;
-   const Char_t* GetIDSubCodeString(const Char_t* id_tel_type, KVIDSubCode& code) const;
-   //************** obsolete methods
-
    void SetBadCalibrationStatus()
    {
       SetECode(kECode15);

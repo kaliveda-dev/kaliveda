@@ -471,6 +471,8 @@ void KVIDGridEditor::RecurseFileStructureFindHistos(TString& hist_names, TDirect
 {
    // Recursively scan folders in a file looking for all TH2-derived objects.
    // Their names are added to the TString.
+
+   if (!the_directory) return;
    TIter next_key(the_directory->GetListOfKeys());
    TKey* key;
    while ((key = (TKey*)next_key())) {

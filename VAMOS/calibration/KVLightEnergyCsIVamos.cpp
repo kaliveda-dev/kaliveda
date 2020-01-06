@@ -64,7 +64,7 @@ KVLightEnergyCsIVamos::~KVLightEnergyCsIVamos()
    // Destructor
 }
 //___________________________________________________________________________
-Double_t KVLightEnergyCsIVamos::Compute(Double_t light) const
+Double_t KVLightEnergyCsIVamos::Compute(Double_t light, const KVNameValueList&) const
 {
    // Calculate the calibrated energy (in MeV) for a given total light output.
    // The Z and A of the particle should be given first using SetZ, SetA.
@@ -107,51 +107,51 @@ Double_t KVLightEnergyCsIVamos::Compute(Double_t light) const
    return energy;
 }
 
-Double_t KVLightEnergyCsIVamos::Compute(Double_t Z, Double_t A, Double_t light) const
-{
-   // Calculate the calibrated energy (in MeV) for a given total light output.
-   // The Z and A of the particle should be given first using SetZ, SetA.
-   // By default, Z=A=1 (proton).
-   //
-   // This is done by inversion of the light-energy function using TF1::GetX.
+//Double_t KVLightEnergyCsIVamos::Compute(Double_t Z, Double_t A, Double_t light) const
+//{
+//   // Calculate the calibrated energy (in MeV) for a given total light output.
+//   // The Z and A of the particle should be given first using SetZ, SetA.
+//   // By default, Z=A=1 (proton).
+//   //
+//   // This is done by inversion of the light-energy function using TF1::GetX.
 
-   //set parameters of light-energy function
-   Double_t par[5];
-   for (int i = 0; i < 3; i++)
-      par[i] = GetParameter(i);
-   par[3] =  Z;
-   par[4] =  A;
+//   //set parameters of light-energy function
+//   Double_t par[5];
+//   for (int i = 0; i < 3; i++)
+//      par[i] = GetParameter(i);
+//   par[3] =  Z;
+//   par[4] =  A;
 
-   /*cout<<"In Compute : "<<endl;
-   cout<<"par[0] : "<<par[0]<<endl;
-   cout<<"par[1] : "<<par[1]<<endl;
-   cout<<"par[2] : "<<par[2]<<endl;
-   cout<<"par[3] : "<<par[3]<<endl;
-   cout<<"par[4] : "<<par[4]<<endl;*/
+//   /*cout<<"In Compute : "<<endl;
+//   cout<<"par[0] : "<<par[0]<<endl;
+//   cout<<"par[1] : "<<par[1]<<endl;
+//   cout<<"par[2] : "<<par[2]<<endl;
+//   cout<<"par[3] : "<<par[3]<<endl;
+//   cout<<"par[4] : "<<par[4]<<endl;*/
 
 
-   //const_cast<KVLightEnergyCsIVamos*>(this)->fLightVamos.SetParameters(par);
-   fLightVamos.SetParameters(par);
+//   //const_cast<KVLightEnergyCsIVamos*>(this)->fLightVamos.SetParameters(par);
+//   fLightVamos.SetParameters(par);
 
-   /*
-   cout<<"==== This  ===="<<endl;
-   this->Print();
-   cout<<"==== Vamos ===="<<endl;*/
-   //fLightVamos.Print();
+//   /*
+//   cout<<"==== This  ===="<<endl;
+//   this->Print();
+//   cout<<"==== Vamos ===="<<endl;*/
+//   //fLightVamos.Print();
 
-   //invert light vs. energy function to find energy
-   Double_t xmin, xmax;
-   fLightVamos.GetRange(xmin, xmax);
-   /*cout<<"xmin : "<<xmin<<endl;
-   cout<<"xmax : "<<xmax<<endl;
-   cout<<"Light before inverting : "<<light<<endl; */
-   Double_t energy = fLightVamos.GetX(light, xmin, xmax);
+//   //invert light vs. energy function to find energy
+//   Double_t xmin, xmax;
+//   fLightVamos.GetRange(xmin, xmax);
+//   /*cout<<"xmin : "<<xmin<<endl;
+//   cout<<"xmax : "<<xmax<<endl;
+//   cout<<"Light before inverting : "<<light<<endl; */
+//   Double_t energy = fLightVamos.GetX(light, xmin, xmax);
 
-   return energy;
-}
+//   return energy;
+//}
 
 //___________________________________________________________________________
-Double_t KVLightEnergyCsIVamos::Invert(Double_t energy)
+Double_t KVLightEnergyCsIVamos::Invert(Double_t energy, const KVNameValueList&) const
 {
    //Given the calibrated (or simulated) energy in MeV,
    //calculate the corresponding total light output according to the
@@ -177,29 +177,29 @@ Double_t KVLightEnergyCsIVamos::Invert(Double_t energy)
    return fLightVamos.Eval(energy);
 }
 
-Double_t KVLightEnergyCsIVamos::Invert(Double_t Z, Double_t A, Double_t energy)
-{
-   //Given the calibrated (or simulated) energy in MeV,
-   //calculate the corresponding total light output according to the
-   //calibration parameters (useful for filtering simulations).
+//Double_t KVLightEnergyCsIVamos::Invert(Double_t Z, Double_t A, Double_t energy)
+//{
+//   //Given the calibrated (or simulated) energy in MeV,
+//   //calculate the corresponding total light output according to the
+//   //calibration parameters (useful for filtering simulations).
 
-   //set parameters of light-energy function
-   Double_t par[5];
-   for (int i = 0; i < 3; i++)
-      par[i] = GetParameter(i);
-   par[3] =  Z;         //(Double_t)fZ;
-   par[4] =  A;         //(Double_t)fA;
-   //cout<<"Z : "<<fZ<<endl;
-   //cout<<"A : "<<fA<<endl;
-   fLightVamos.SetParameters(par);
+//   //set parameters of light-energy function
+//   Double_t par[5];
+//   for (int i = 0; i < 3; i++)
+//      par[i] = GetParameter(i);
+//   par[3] =  Z;         //(Double_t)fZ;
+//   par[4] =  A;         //(Double_t)fA;
+//   //cout<<"Z : "<<fZ<<endl;
+//   //cout<<"A : "<<fA<<endl;
+//   fLightVamos.SetParameters(par);
 
-   /*cout<<"==="<<endl;
-   cout<<"In Invert : "<<endl;
-   cout<<"par[0] : "<<par[0]<<endl;
-   cout<<"par[1] : "<<par[1]<<endl;
-   cout<<"par[2] : "<<par[2]<<endl;
-   cout<<"==="<<endl;*/
+//   /*cout<<"==="<<endl;
+//   cout<<"In Invert : "<<endl;
+//   cout<<"par[0] : "<<par[0]<<endl;
+//   cout<<"par[1] : "<<par[1]<<endl;
+//   cout<<"par[2] : "<<par[2]<<endl;
+//   cout<<"==="<<endl;*/
 
-   return fLightVamos.Eval(energy);
-}
+//   return fLightVamos.Eval(energy);
+//}
 

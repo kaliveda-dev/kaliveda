@@ -17,12 +17,10 @@ class KVSimReader_HIPSE_asym : public KVSimReader_HIPSE {
       Info("init", "passe");
       tree_name = "HIPSE_asym";
       Info("init", "%s", branch_name.Data());
-      h1 = 0;
       fPhiPlan = 0.;
    }
 
 protected:
-   TH1F* h1;
    Double_t fPhiPlan;
    TRotation rr;
 

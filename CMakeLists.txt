@@ -103,6 +103,13 @@ if(USE_SQLITE)
 endif(USE_SQLITE)
 add_feature_info(sqlite USE_SQLITE "Enable sqlite database interface KVSQLite")
 
+#--set up build environment for CCIN2P3
+option(CCIN2P3_BUILD "Configure build for CCIN2P3 environment" OFF)
+if(CCIN2P3_BUILD)
+    message(STATUS "Configuring build for CCIN2P3 environment")
+endif(CCIN2P3_BUILD)
+add_feature_info(ccin2p3 CCIN2P3_BUILD "Configure build for CCIN2P3 environment")
+
 #---Built-in package for reading GANIL acquisition data
 option(USE_BUILTIN_GRU
 		"Use built-in package for reading GANIL acquisition data (not MFM format)"
@@ -110,14 +117,13 @@ option(USE_BUILTIN_GRU
 add_feature_info(builtin_gru USE_BUILTIN_GRU "Use built-in package for reading GANIL acquisition data (not MFM format)")
 if(USE_BUILTIN_GRU)
 	set(WITH_BUILTIN_GRU yes)
-	if(DEFINED ENV{SITE})
-   	if($ENV{SITE} STREQUAL "CCIN2P3")	#-at IN2P3 Computing Centre, build with support for xrootd
-			find_package(XROOTD)
-			if(XROOTD_FOUND)
-				set(CCIN2P3_XRD yes)
-			endif()
-		endif()
-	endif()
+        if(CCIN2P3_BUILD)
+            #-at IN2P3 Computing Centre, build with support for xrootd
+            find_package(XROOTD)
+            if(XROOTD_FOUND)
+                set(CCIN2P3_XRD yes)
+            endif(XROOTD_FOUND)
+        endif(CCIN2P3_BUILD)
 	add_subdirectory(GanTape)
 	include_directories(${BUILTIN_GRU_INC_DIR})
 endif()
@@ -126,7 +132,7 @@ endif()
 #---sources available from: https://gitlab.in2p3.fr/jdfcode/mfmlib.git
 option(USE_MFM
                 "Enable support for reading GANIL MFM format data"
-		OFF)
+                ON)
 add_feature_info(mfm USE_MFM "Enable support for reading GANIL MFM format data")
 if(USE_MFM)
     find_package(mfmlib QUIET)
@@ -291,14 +297,6 @@ set(ROOT_LIBRARY_PROPERTIES ${ROOT_LIBRARY_PROPERTIES}
 include(CreateKaliVedaVersionHeader)
 create_kaliveda_version_header()
 
-#---are we building on CCIN2P3 machines?
-set(CCIN2P3_BUILD)
-if(DEFINED ENV{SITE})
-   if($ENV{SITE} STREQUAL "CCIN2P3")
-      set(CCIN2P3_BUILD yes)
-   endif()
-endif()
-
 #---configure the KVConfig.h file
 include(CreateConfigHeader)
 create_config_header()
@@ -338,8 +336,8 @@ get_property(KALIVEDA_CONF_FILES GLOBAL PROPERTY KALIVEDA_CONF_FILES)
 #-to the batch system & data repositories
 if(CCIN2P3_BUILD)
    if($ENV{GROUP} STREQUAL "indra")
-      list(APPEND KALIVEDA_CONF_FILES ccali.rootrc)
-      install(FILES etc/ccali.rootrc DESTINATION ${CMAKE_INSTALL_SYSCONFDIR})
+      list(APPEND KALIVEDA_CONF_FILES ccali-indra.rootrc)
+      install(FILES etc/ccali-indra.rootrc DESTINATION ${CMAKE_INSTALL_SYSCONFDIR})
    elseif($ENV{GROUP} STREQUAL "fazia")
       list(APPEND KALIVEDA_CONF_FILES ccali-fazia.rootrc)
       install(FILES etc/ccali-fazia.rootrc DESTINATION ${CMAKE_INSTALL_SYSCONFDIR})

@@ -126,7 +126,7 @@ void KVFAZIARawDataReconstructor::ExtraProcessing()
                for (Int_t ii = 0; ii < sig->GetNFPGAValues(); ii += 1) {
                   //SI2-T3-Q1-B003.Q2.RawAmplitude=14
                   if (ii == 0) label = "FPGAEnergy";
-                  if (ii == 1) label = "FPGAFastEnergy"; //only for CsI Q3
+                  if (ii == 1) label = "FastFPGAEnergy"; //only for CsI Q3
                   TString ene = GetEvent()->GetFPGAEnergy(
                                    det->GetBlockNumber(),
                                    det->GetQuartetNumber(),

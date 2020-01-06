@@ -11,33 +11,24 @@ using namespace std;
 ClassImp(KVReconstructedNucleus);
 
 //////////////////////////////////////////////////////////////////////////////////////////
-//KVReconstructedNucleus
-//
-//Particles reconstructed from data measured in multidetector arrays using identification
-//telescopes (see KVIDTelescope class).
-//
-//If the particle has been identified (IsIdentified()=kTRUE) and calibrated (IsCalibrated()=kTRUE)
-//then information on its nature and kinematics can be obtained using the methods of parent
-//classes KVNucleus and KVParticle (GetZ(), GetVelocity(), etc.).
-//
-//Information specific to the detection and identification of the particle:
-//
-//   GetDetectorList()         -  list of detectors passed through, in reverse order
-//   GetNumDet()               -  number of detectors in list = number of detectors passed through
-//   GetDetector(Int_t i)      -  ith detector in list (i=0 is stopping detector)
-//   GetStoppingDetector()     -  detector in which particle stopped (first in list)
-//
-//   GetGroup()                -  group in which particle detected/stopped (see KVGroup)
-//   GetTelescope()            -  telescope to which stopping detector belongs (see KVTelescope)
-//
-//   GetIdentifyingTelescope() -  ID telescope which identified this particle (see KVIDTelescope)
-//      IsIdentified()               - =kTRUE if particle identification has been completed
-//      IsCalibrated()             - =kTRUE if particle's energy has been set
-//      GetIDTelescopes()     - list of ID telescopes through which particle passed.
-//                                   this list is used to find an ID telescope which can identify the particle.
-//    GetRealZ(), GetRealA()  -  return the Z and A determined with floating-point precision by the
-//                               identification of the particle.
-//
+/*
+Particles reconstructed from data measured in multidetector arrays.
+
+If the particle has been identified (IsIdentified()=kTRUE) and calibrated (IsCalibrated()=kTRUE)
+then information on its nature and kinematics can be obtained using the methods of parent
+classes KVNucleus and KVParticle (GetZ(), GetVelocity(), etc.).
+
+Information specific to the detection and identification of the particle:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
+   GetReconstructionTrajectory()  -  list of detectors passed through, in reverse order
+   GetStoppingDetector()          -  detector in which particle stopped
+   GetIdentifyingTelescope()     -  ID telescope which identified this particle (if IsIdentified())
+   IsIdentified()               - =kTRUE if particle identification attempted
+   IsCalibrated()               - =kTRUE if particle's energy has been set
+   GetPID()                     - result of linearisation procedure (particle identification)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
 void KVReconstructedNucleus::init()
 {

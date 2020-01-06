@@ -1,25 +1,8 @@
-/***************************************************************************
-$Id: KVLightEnergyCsI.cpp,v 1.10 2008/10/07 15:55:20 franklan Exp $
-                          KVLightEnergyCsI.cpp  -  description
-                             -------------------
-    begin                : 18/5/2004
-    copyright            : (C) 2004 by J.D. Frankland
-    email                : frankland@ganil.fr
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 #include "KVLightEnergyCsI.h"
 #include "TMath.h"
 //#include "KVCsI.h"
 
-ClassImp(KVLightEnergyCsI);
+ClassImp(KVLightEnergyCsI)
 
 ////////////////////////////////////////////////////////////////////////////
 //Light-energy calibration for INDRA CsI detectors.
@@ -27,27 +10,30 @@ ClassImp(KVLightEnergyCsI);
 //The function Double_t CalculLumiere(Double_t * x, Double_t * par) (in the source file KVLightEnergyCsI.cpp)
 //is used to parameterize the total light output as a function of deposited energy (in MeV).
 //
-//This function has 3 parameters, a1, a2 & a3. In order to correctly reproduce the light-energy
-//relationship for all ions, two parameterizations have to be used: one for Z=1 and another for Z>1.
+// See M. Parlog et al., Nuclear Instruments and Methods in Physics Research A 482 (2002) 693–706
+//
+//This function has 4 parameters, a1, a2, a3 & a4. In order to correctly reproduce the light-energy
+//relationship for all ions, two parameterizations should be used: one for Z=1 and another for Z>1.
+//The main difference is the gain parameter, a1, which compensates the understimation of total
+//light output for high energy protons.
+//
 //The parameter a3 normally has a fixed value (a3=6), but this is not "hard-coded" : it should be fixed
 //when fitting data.
 
 //___________________________________________________________________________
 
-Double_t CalculLumiere(Double_t* x, Double_t* par)
+Double_t KVLightEnergyCsI::CalculLumiere(Double_t* x, Double_t* par)
 {
    //Calcul de la lumiere totale a partir de Z, A d'une particule et son energie
    //
+   //~~~~~~~~~~~~~~~~~~
    // x[0] = energie (MeV)
-   // par[0] = a1
-   // par[1] = a2
-   // par[2] = a3
-   // par[3] = a4
-   // par[4] = Z
-   // par[5] = A
-
-   Double_t Z = par[4];
-   Double_t A = par[5];
+   // par[0] = a1 : gain factor
+   // par[1] = a2 : nuclear & recombination quenching term
+   // par[2] = a3 : threshold (MeV/u) for delta-ray production
+   // par[3] = a4 : fractional energy loss removed by delta rays
+   //~~~~~~~~~~~~~~~~~~
+   //
 
    Double_t energie = x[0];
    Double_t c1 = par[0];
@@ -67,91 +53,45 @@ Double_t CalculLumiere(Double_t* x, Double_t* par)
    return lumcalc;
 }
 
-TF1 KVLightEnergyCsI::fLight("fLight_CsI", CalculLumiere, 0., 10000., 6);
-
-//__________________________________________________________________________
-
-void KVLightEnergyCsI::init()
+KVLightEnergyCsI::KVLightEnergyCsI(): KVCalibrator()
 {
    //default initialisations
-   SetType("Light-Energy CsI");
-   SetA(1);
-   SetZ(1);
-}
-
-KVLightEnergyCsI::KVLightEnergyCsI(): KVCalibrator(4)
-{
-   init();
+   SetType("LightEnergyCsI");
+   SetCalibFunction(new TF1("fLight_CsI", this, &KVLightEnergyCsI::CalculLumiere, 0., 10000., 4));
+   SetUseInverseFunction();
 }
 
 //___________________________________________________________________________
-KVLightEnergyCsI::KVLightEnergyCsI(KVDetector* kvd): KVCalibrator(4)
-{
-   //Create an electronic calibration object for a specific detector (*kvd)
-   init();
-   SetDetector(kvd);
-}
-
-//___________________________________________________________________________
-Double_t KVLightEnergyCsI::Compute(Double_t light) const
+Double_t KVLightEnergyCsI::Compute(Double_t light, const KVNameValueList& z_and_a) const
 {
    // Calculate the calibrated energy (in MeV) for a given total light output.
-   // The Z and A of the particle should be given first using SetZ, SetA.
-   // By default, Z=A=1 (proton).
    //
-   // This is done by inversion of the light-energy function using TF1::GetX.
+   // The Z and A of the particle should be given as extra parameters:
+   //
+   //~~~~~~~~~~~~~~~{.cpp}
+   //   Compute(light, "Z=3,A=7");
+   //~~~~~~~~~~~~~~~
+   //
 
-   SetParametersOfLightEnergyFunction();
-
-   //invert light vs. energy function to find energy
-   Double_t xmin, xmax;
-   fLight.GetRange(xmin, xmax);
-   Double_t energy = fLight.GetX(light, xmin, xmax);
-
-   return energy;
+   Z = z_and_a.GetIntValue("Z");
+   A = z_and_a.GetIntValue("A");
+   return KVCalibrator::Compute(light, z_and_a);
 }
 
-void KVLightEnergyCsI::SetParametersOfLightEnergyFunction() const
+Double_t KVLightEnergyCsI::Invert(Double_t energy, const KVNameValueList& z_and_a) const
 {
-   //set parameters of light-energy function
-   Double_t par[6];
-   for (int i = 0; i < 4; i++)
-      par[i] = GetParameter(i);
-   par[4] = (Double_t) fZ;
-   par[5] = (Double_t) fA;
-   fLight.SetParameters(par);
-}
+   // Given the calibrated (or simulated) energy in MeV,
+   // calculate the corresponding total light output according to the
+   // calibration parameters (useful for filtering simulations).
+   //
+   // The Z and A of the particle should be given as extra parameters:
+   //
+   //~~~~~~~~~~~~~~~{.cpp}
+   //   Invert(light, "Z=3,A=7");
+   //~~~~~~~~~~~~~~~
+   //
 
-//___________________________________________________________________________
-Double_t KVLightEnergyCsI::operator()(Double_t light)
-{
-   //Same as Compute()
-
-   return Compute(light);
-}
-
-//___________________________________________________________________________
-Double_t KVLightEnergyCsI::Invert(Double_t energy)
-{
-   //Given the calibrated (or simulated) energy in MeV,
-   //calculate the corresponding total light output according to the
-   //calibration parameters (useful for filtering simulations).
-
-   SetParametersOfLightEnergyFunction();
-
-   return fLight.Eval(energy);
-}
-
-//___________________________________________________________________________
-
-TF1* KVLightEnergyCsI::GetLightEnergyFunction(UInt_t Z, UInt_t A)
-{
-   // Return pointer to TF1 used to calculate light-energy relationship
-   // for this detector, for given Z & A.
-   // WARNING: the same STATIC TF1 object is used by ALL CsI detectors
-
-   SetZ(Z);
-   SetA(A);
-   SetParametersOfLightEnergyFunction();
-   return &fLight;
+   Z = z_and_a.GetIntValue("Z");
+   A = z_and_a.GetIntValue("A");
+   return KVCalibrator::Invert(energy, z_and_a);
 }

@@ -138,7 +138,6 @@ KVElasticCountRates::KVElasticCountRates(Double_t theta_min, Double_t theta_max,
    fEnergy = 0;
    fKinematics = 0;
    fTarget = 0;
-   fProj = fTarg = 0;
    fIntLayer =  0;
    fMultiLayer = kFALSE;
    fVolume = (theta_max - theta_min) * (phi_max - phi_min) * TMath::DegToRad() * TMath::DegToRad();
@@ -166,10 +165,6 @@ KVElasticCountRates::~KVElasticCountRates()
       delete fTheta;
    if (fKinematics)
       delete fKinematics;
-   if (fProj)
-      delete fProj;
-   if (fTarg)
-      delete fTarg;
 }
 
 //__________________________________________________________________//
@@ -190,8 +185,8 @@ void KVElasticCountRates::SetRun(Int_t run)
 void KVElasticCountRates::SetProjectile(const Char_t* nuc, Double_t e_sur_a)
 {
    // Set projectile and beam energy [MeV/nucleon]
-   if (!fProj) fProj = new KVNucleus(nuc, e_sur_a);
-   fEnergy = fProj->GetE();
+   fProj = KVNucleus(nuc, e_sur_a);
+   fEnergy = fProj.GetE();
 }
 
 //__________________________________________________________________//
@@ -236,7 +231,7 @@ void KVElasticCountRates::CalculateScattering(Int_t N)
    fHistos.Delete();
    fRates.clear();
 
-   if (!fProj) {
+   if (!fProj.IsDefined()) {
       cout <<
            "<KVElasticCountRates::CalculateScattering> : Set projectile properties first"
            << endl;
@@ -275,8 +270,8 @@ void KVElasticCountRates::CalculateScattering(Int_t N)
    //set up kinematics
    if (!fKinematics)
       fKinematics = new KV2Body;
-   fProj->SetEnergy(fEnergy);
-   fProj->SetTheta(0);
+   fProj.SetEnergy(fEnergy);
+   fProj.SetTheta(0);
 
    /* -------------------------------------------------------------------------------------------------------------------------- */
 
@@ -285,7 +280,7 @@ void KVElasticCountRates::CalculateScattering(Int_t N)
       fTarget->SetInteractionLayer(fIntLayer, fBeamDirection);
    }
    else {
-      fTarget->GetInteractionPoint(fProj);
+      fTarget->GetInteractionPoint(&fProj);
    }
 
    /* -------------------------------------------------------------------------------------------------------------------------- */
@@ -293,10 +288,9 @@ void KVElasticCountRates::CalculateScattering(Int_t N)
    //get target nucleus properties from scattering layer
    TVector3 IP = fTarget->GetInteractionPoint();
    KVMaterial* targ_mat = fTarget->GetLayer(IP);
-   if (!fTarg) fTarg = new KVNucleus;
-   fTarg->SetZ((Int_t) targ_mat->GetZ());
-   fTarg->SetA((Int_t) targ_mat->GetMass());
-   fKinematics->SetTarget(fTarg);
+   KVNucleus t;
+   t.SetZandA((Int_t) targ_mat->GetZ(), (Int_t) targ_mat->GetMass());
+   fKinematics->SetTarget(t);
 
    /* -------------------------------------------------------------------------------------------------------------------------- */
 
@@ -309,7 +303,7 @@ void KVElasticCountRates::CalculateScattering(Int_t N)
    for (int i = 0; i < N; i++) {
       //calculate slowing of incoming projectile
       fTarget->SetIncoming();
-      fTarget->DetectParticle(fProj);
+      fTarget->DetectParticle(&fProj);
       fKinematics->SetProjectile(fProj);
       fKinematics->SetOutgoing(fProj);
       fKinematics->CalculateKinematics();
@@ -322,35 +316,34 @@ void KVElasticCountRates::CalculateScattering(Int_t N)
       //We only use the highest energy corresponding to the most forward CM angle.
       Double_t e1, e2;
       fKinematics->GetELab(3, theta, 3, e1, e2);
-      fProj->SetEnergy(TMath::Max(e1, e2));
-      fProj->SetTheta(theta);
-      fProj->SetPhi(phi);
+      fProj.SetEnergy(TMath::Max(e1, e2));
+      fProj.SetTheta(theta);
+      fProj.SetPhi(phi);
       fTheta->Fill(theta, xsec);
       //slowing of outgoing projectile in target
       fTarget->SetOutgoing();
-      fTarget->DetectParticle(fProj);
+      fTarget->DetectParticle(&fProj);
       //now detect particle in array
-      KVNameValueList* detectors = gMultiDetArray->DetectParticle(fProj);
+      KVNameValueList* detectors = gMultiDetArray->DetectParticle(&fProj);
       //fill histograms
       fDepth->Fill(IP.z());
       FillHistograms(detectors);
-      fProj->GetParameters()->Clear();
-      fProj->SetEnergy(fEnergy);
-      fProj->SetTheta(0);
+      fProj.GetParameters()->Clear();
+      fProj.SetEnergy(fEnergy);
+      fProj.SetTheta(0);
       //set random interaction point for scattering
       if (fIntLayer) {
          fTarget->SetInteractionLayer(fIntLayer, fBeamDirection);
       }
       else {
-         fTarget->GetInteractionPoint(fProj);
+         fTarget->GetInteractionPoint(&fProj);
          //if target is multilayer and the interaction layer is not fixed,
          //the layer & hence the target nucleus may change
          if (fMultiLayer) {
             targ_mat = fTarget->GetLayer(fTarget->GetInteractionPoint());
-            fTarg->SetZ((Int_t) targ_mat->GetZ());
-            fTarg->SetA((Int_t) targ_mat->GetMass());
-            fKinematics->SetTarget(fTarg);
-            fKinematics->SetOutgoing(fProj);
+            KVNucleus t;
+            t.SetZandA((Int_t) targ_mat->GetZ(), (Int_t) targ_mat->GetMass());
+            fKinematics->SetTarget(t);
          }
       }
       IP = fTarget->GetInteractionPoint();

@@ -18,7 +18,6 @@ $Id: KVSilicon.cpp,v 1.55 2009/04/15 09:49:19 ebonnet Exp $
 #include "Riostream.h"
 #include "KVSilicon.h"
 #include "TClass.h"
-#define MAX_CANAL_GG 4000
 
 ClassImp(KVSilicon)
 
@@ -33,12 +32,6 @@ ClassImp(KVSilicon)
 
 void KVSilicon::init()
 {
-   //initialise non-persistent pointers
-   fChIo = 0;
-   fChVoltGG = 0;
-   fChVoltPG = 0;
-   fVoltE = 0;
-   fPHD = 0;
    fSegment = 1;
 }
 
@@ -70,61 +63,6 @@ KVSilicon::~KVSilicon()
 {
 }
 
-//____________________________________________________________________________________________
-Int_t KVSilicon::GetCanalPGFromVolts(Float_t volts)
-{
-   //Return raw PG channel number corresponding to a given detector signal in volts
-   //
-   //Any change in the coder pedestal between the current run and the effective pedestal
-   //of the channel-volt calibration (GetCanal(V=0)) is automatically corrected for.
-   //
-   //Returns -1 if PG <-> Volts calibration is not available
-
-
-   if (!fChVoltPG || !fChVoltPG->GetStatus())
-      return -1;
-   Int_t chan = TMath::Nint(fChVoltPG->Invert(volts) + GetPedestal("PG") - fChVoltPG->Invert(0));
-   return chan;
-
-}
-
-//____________________________________________________________________________________________
-Int_t KVSilicon::GetCanalGGFromVolts(Float_t volts)
-{
-   //Return raw GG channel number corresponding to a given detector signal in volts
-   //
-   //Any change in the coder pedestal between the current run and the effective pedestal
-   //of the channel-volt calibration (GetCanal(V=0)) is automatically corrected for.
-   //
-   //Returns GG calculated from PG if GG <-> Volts calibration is not available
-
-   if (!fChVoltGG || !fChVoltGG->GetStatus()) {
-//          Info("GetCanalGGFromVolts","%s no calibrator ready for GG...",GetName());
-      return GetGGfromPG(GetCanalPGFromVolts(volts));
-   }
-   Int_t chan = TMath::Nint(fChVoltGG->Invert(volts) + GetPedestal("GG") - fChVoltGG->Invert(0));
-   return chan;
-}
-
-//____________________________________________________________________________________________
-Double_t KVSilicon::GetCanalPGFromVoltsDouble(Float_t volts)
-{
-   if (!fChVoltPG || !fChVoltPG->GetStatus())
-      return -1;
-   return fChVoltPG->InvertDouble(volts) + GetPedestal("PG") - fChVoltPG->InvertDouble(0);
-}
-
-//____________________________________________________________________________________________
-Double_t KVSilicon::GetCanalGGFromVoltsDouble(Float_t volts)
-{
-   if (!fChVoltGG || !fChVoltGG->GetStatus()) {
-      return GetGGfromPG(GetCanalPGFromVoltsDouble(volts));
-   }
-   return fChVoltGG->InvertDouble(volts) + GetPedestal("GG") - fChVoltGG->InvertDouble(0);
-}
-
-//____________________________________________________________________________________________
-
 void KVSilicon::SetACQParams()
 {
    //Setup acquistion parameters for this Silicon.
@@ -136,22 +74,6 @@ void KVSilicon::SetACQParams()
 
 }
 
-//____________________________________________________________________________________________
-
-void KVSilicon::SetCalibrators()
-{
-   //Set up calibrators for this detector. Call once name has been set.
-   KVCalibrator* c = new KVChannelVolt("GG", this);
-   if (!AddCalibrator(c)) delete c;
-   c = new KVChannelVolt("PG", this);
-   if (!AddCalibrator(c)) delete c;
-   c = new KVVoltEnergy(this);
-   if (!AddCalibrator(c)) delete c;
-   c = new KVPulseHeightDefect(this);
-   if (!AddCalibrator(c)) delete c;
-   RefreshCalibratorPointers();
-}
-
 //__________________________________________________________________________________________
 
 Double_t KVSilicon::GetPHD(Double_t dE, UInt_t Z)
@@ -161,128 +83,10 @@ Double_t KVSilicon::GetPHD(Double_t dE, UInt_t Z)
    //
    //Returns 0 if PHD is not defined.
 
-   if (!fPHD || !fPHD->GetStatus()) return 0;
-   fPHD->SetZ(Z);
-   return fPHD->Compute(dE);
-}
-
-//____________________________________________________________________________________________
-
-Double_t KVSilicon::GetVoltsFromCanalPG(Double_t chan)
-{
-   //Return calibrated detector signal in Volts calculated from PG channel number.
-   //If "chan" is not given, the value of the "PG" acquisition parameter read from
-   //data for this detector is used to calculate the signal.
-   //If the PG parameter is not present (=-1) or no calib we return 0.
-   //Any change in the coder pedestal between the current run and the effective pedestal
-   //of the channel-volt calibration (GetCanal(V=0)) is automatically corrected for.
-
-   if (!fChVoltPG || !fChVoltPG->GetStatus())
-      return 0;
-
-   if (!chan) {
-      chan = GetPG();
-   }
-   if (chan < -0.5)
-      return 0.;          //PG parameter absent
-   //correct for pedestal drift
-   chan = chan - (Double_t) GetPedestal("PG") + fChVoltPG->Invert(0.);
-   return (fChVoltPG->Compute(chan));
-}
-
-//____________________________________________________________________________________________
-Double_t KVSilicon::GetVoltsFromCanalGG(Double_t chan)
-{
-   //Return calibrated detector signal in Volts calculated from GG channel number.
-   //If "chan" is not given, the value of the "GG" acquisition parameter read from
-   //data for this detector is used to calculate the signal.
-   //If the GG parameter is not present (=-1) or no calib we return 0.
-   //Any change in the coder pedestal between the current run and the effective pedestal
-   //of the channel-volt calibration (GetCanal(V=0)) is automatically corrected for.
-
-   if (!fChVoltGG || !fChVoltGG->GetStatus())
-      return 0;
-
-   if (!chan) {
-      chan = GetGG();
-   }
-   if (chan < -0.5)
-      return 0.;          //GG parameter absent
-   //correct for pedestal drift
-   chan = chan - (Double_t) GetPedestal("GG") + fChVoltGG->Invert(0);
-   return (fChVoltGG->Compute(chan));
-
-}
-
-//____________________________________________________________________________________________
-
-Double_t KVSilicon::GetVolts()
-{
-   //Returns Volts for this detector calculated from current PG coder values.
-   //We only use PG, as the two channel-volt calibrations do not coincide and so the passage
-   //from GG to PG produces a discontinuity (unless only GG calibration is available, then
-   //we convert PG to GG and use the GG calibration)
-   //Returns 0 if no calibration available
-
-   return GetDetectorSignalValue("Volt");
-
-   if (fChVoltPG && fChVoltPG->GetStatus()) {
-      return GetVoltsFromCanalPG();
-   }
-   else if (fChVoltGG && fChVoltGG->GetStatus()) {
-      return GetVoltsFromCanalGG(GetGGfromPG());
-   }
-
+   AbstractMethod("GetPHD");
    return 0;
 }
 
-//_______________________________________________________________________________
-
-Double_t KVSilicon::GetVoltsFromEnergy(Double_t e)
-{
-   //Inverts calibration, i.e. calculates volts for a given energy loss (in MeV)
-
-   if (fVoltE->GetStatus()) {
-      return (fVoltE->Invert(e));
-   }
-   return 0;
-}
-
-//____________________________________________________________________________________________
-
-Double_t KVSilicon::GetEnergyFromVolts(Double_t volts)
-{
-   //Calculate energy in MeV from calibrated detector signal in
-   //Volts. If 'volts' is not given, the value in volt returned
-   //by GetVolts().
-
-   if (fVoltE && fVoltE->GetStatus()) {
-      if (!volts) volts = GetVolts();
-      return fVoltE->Compute(volts);
-   }
-   return 0.;
-}
-
-//____________________________________________________________________________________________
-
-void KVSilicon::Streamer(TBuffer& R__b)
-{
-   // Stream an object of class KVSilicon.
-   // We set the pointers to the calibrator objects
-
-   if (R__b.IsReading()) {
-      KVSilicon::Class()->ReadBuffer(R__b, this);
-      fVoltE = (KVVoltEnergy*) GetCalibrator("Volt-Energy");
-      fChVoltPG  = (KVChannelVolt*) GetCalibrator("Channel-Volt PG");
-      fChVoltGG  = (KVChannelVolt*) GetCalibrator("Channel-Volt GG");
-      fPHD  = (KVPulseHeightDefect*) GetCalibrator("Pulse Height Defect");
-   }
-   else {
-      KVSilicon::Class()->WriteBuffer(R__b, this);
-   }
-}
-
-//______________________________________________________________________________
 
 void KVSilicon::SetMoultonPHDParameters(Double_t a_1, Double_t a_2, Double_t b_1, Double_t b_2)
 {
@@ -297,10 +101,7 @@ void KVSilicon::SetMoultonPHDParameters(Double_t a_1, Double_t a_2, Double_t b_1
    //
    //See class KVPulseHeightDefect
 
-   if (fPHD) {
-      fPHD->SetParameters(a_1, a_2, b_1, b_2);
-      fPHD->SetStatus(kTRUE);
-   }
+   AbstractMethod("SetMoultonPHDParameters");
 }
 
 //______________________________________________________________________________
@@ -311,10 +112,7 @@ Short_t KVSilicon::GetCalcACQParam(KVACQParam* ACQ, Double_t ECalc) const
    // given calculated energy loss in the detector
    // Returns -1 if detector is not calibrated
 
-   if (!IsCalibrated()) return -1;
-   Double_t volts = const_cast<KVSilicon*>(this)->GetVoltsFromEnergy(ECalc);
-   if (ACQ->IsType("PG")) return (Short_t)const_cast<KVSilicon*>(this)->GetCanalPGFromVolts(volts);
-   else if (ACQ->IsType("GG")) return (Short_t)const_cast<KVSilicon*>(this)->GetCanalGGFromVolts(volts);
+   AbstractMethod("GetCalcACQParam");
    return -1;
 }
 
@@ -332,7 +130,7 @@ TF1* KVSilicon::GetELossFunction(Int_t Z, Int_t A)
    // If no PHD is set, we return the usual KVDetector::GetELossFunction
    // which calculates dE(E,Z,A)
 
-   if (fPHD && fPHD->GetStatus()) return fPHD->GetELossFunction(Z, A);
+   //if (fPHD && fPHD->GetStatus()) return fPHD->GetELossFunction(Z, A);
 
    return KVDetector::GetELossFunction(Z, A);
 }
@@ -340,13 +138,14 @@ TF1* KVSilicon::GetELossFunction(Int_t Z, Int_t A)
 void KVSilicon::DeduceACQParameters(KVEvent*, KVNumberList&)
 {
 
-   Double_t volts = GetVoltsFromEnergy(GetEnergy());
-   Int_t cipg = (Int_t)GetCanalPGFromVolts(volts);
-   Int_t cigg = (Int_t)GetCanalGGFromVolts(volts);
-   //cout << "chio: pg = " << cipg << " gg = " << cigg << endl;
-   GetACQParam("PG")->SetData((UShort_t)TMath::Min(4095, cipg));
-   GetACQParam("GG")->SetData((UShort_t)TMath::Min(4095, cigg));
-   GetACQParam("T")->SetData(110);
+   AbstractMethod("DeduceACQParameters");
+//   Double_t volts = GetVoltsFromEnergy(GetEnergy());
+//   Int_t cipg = (Int_t)GetCanalPGFromVolts(volts);
+//   Int_t cigg = (Int_t)GetCanalGGFromVolts(volts);
+//   //cout << "chio: pg = " << cipg << " gg = " << cigg << endl;
+//   GetACQParam("PG")->SetData((UShort_t)TMath::Min(4095, cipg));
+//   GetACQParam("GG")->SetData((UShort_t)TMath::Min(4095, cigg));
+//   GetACQParam("T")->SetData(110);
 }
 
 Double_t KVSilicon::GetDeltaE(Int_t Z, Int_t A, Double_t Einc)
@@ -354,17 +153,9 @@ Double_t KVSilicon::GetDeltaE(Int_t Z, Int_t A, Double_t Einc)
    // Overrides KVDetector::GetDeltaE
    // If no PHD is set, we use the optimized KVMaterial::GetDeltaE
 
-   if (fPHD && fPHD->GetStatus()) return fPHD->GetELossFunction(Z, A)->Eval(Einc);
+   //if (fPHD && fPHD->GetStatus()) return fPHD->GetELossFunction(Z, A)->Eval(Einc);
 
    return KVDetector::GetDeltaE(Z, A, Einc);
-}
-
-void KVSilicon::RefreshCalibratorPointers()
-{
-   fVoltE = GetCalibrator("Volt-Energy");
-   fChVoltPG  = GetCalibrator("Channel-Volt PG");
-   fChVoltGG  = GetCalibrator("Channel-Volt GG");
-   fPHD  = (KVPulseHeightDefect*) GetCalibrator("Pulse Height Defect");
 }
 
 

@@ -1,34 +1,10 @@
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-
 #ifndef KVSILICON_H
 #define KVSILICON_H
 
 #include "KVINDRADetector.h"
-#include "TF1.h"
-#include "KVACQParam.h"
-#include "KVChannelVolt.h"
-#include "KVPulseHeightDefect.h"
-#include "KVVoltEnergy.h"
 #include "KVUnits.h"
 
-class KVChIo;
-class KVDBParameterSet;
-
 class KVSilicon: public KVINDRADetector {
-
-protected:
-
-   KVPulseHeightDefect* fPHD;//!pulse height defect
-   KVCalibrator* fChVoltGG;//!channel-volt conversion (GG)
-   KVCalibrator* fChVoltPG;//!channel-volt conversion (PG)
-   KVCalibrator* fVoltE;//!volt-energy conversion
 
    void init();
 
@@ -38,25 +14,11 @@ public:
    KVSilicon(Float_t thick /* um */);
    virtual ~ KVSilicon();
 
-   virtual Double_t GetVoltsFromCanalPG(Double_t chan = 0.0);
-   Double_t GetVoltsFromCanalGG(Double_t chan = 0.0);
-   Double_t GetVolts();
-   Double_t GetVoltsFromEnergy(Double_t);
-
-   virtual Int_t GetCanalPGFromVolts(Float_t volts);
-   Int_t GetCanalGGFromVolts(Float_t volts);
-
-   virtual Double_t GetCanalPGFromVoltsDouble(Float_t volts);
-   Double_t GetCanalGGFromVoltsDouble(Float_t volts);
-
-   Double_t GetEnergyFromVolts(Double_t volts = 0.0);
-
    void SetACQParams();
-   void SetCalibrators();
 
    Double_t GetPHD(Double_t dE, UInt_t Z);
 
-   virtual void SetMoultonPHDParameters(Double_t a1, Double_t a2, Double_t b1, Double_t b2);
+   void SetMoultonPHDParameters(Double_t a1, Double_t a2, Double_t b1, Double_t b2);
 
    virtual Short_t GetCalcACQParam(KVACQParam*, Double_t) const;
    virtual TF1* GetELossFunction(Int_t Z, Int_t A);
@@ -74,8 +36,6 @@ public:
    }
    void DeduceACQParameters(KVEvent*, KVNumberList&);
    Double_t GetDeltaE(Int_t Z, Int_t A, Double_t Einc);
-
-   void RefreshCalibratorPointers();
 
    ClassDef(KVSilicon, 9)       //INDRA forward-rings silicon detector
 };

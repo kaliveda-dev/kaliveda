@@ -19,11 +19,10 @@
 #define KVIDINDRACsI_H
 
 #include "KVINDRAIDTelescope.h"
-#include "KVIDGCsI.h"
 
 class KVIDINDRACsI: public KVINDRAIDTelescope {
 
-   KVIDGCsI* CsIGrid;//! telescope's grid
+   KVIDGraph* CsIGrid;//! telescope's grid
 
    Int_t fThresMin[2][4];// min ID thresholds (smooth step)
    Int_t fThresMax[2][4];// max ID thresholds (smooth step)
@@ -35,13 +34,17 @@ protected:
 public:
 
    KVIDINDRACsI();
-   virtual ~ KVIDINDRACsI();
+   virtual ~ KVIDINDRACsI() {}
 
    const Char_t* GetArrayName();
 
+   void Initialize()
+   {
+      KVINDRAIDTelescope::Initialize();
+      CsIGrid = GetIDGrid();
+   }
    virtual Bool_t Identify(KVIdentificationResult*, Double_t x = -1., Double_t y = -1.);
 
-   virtual void Initialize();
    virtual Bool_t CanIdentify(Int_t Z, Int_t /*A*/)
    {
       // Used for filtering simulations

@@ -33,6 +33,16 @@
 #endif
 #endif
 
+// will be defined for all ROOT versions before 6.00
+// Note that we may well be using ROOT5 (thus with cint/rootcint) and
+// at the same time have C++11 compatibility, therefore WITH_CPP11
+// does not always mean that we can liberally pepper our class declarations
+// with exotic members - rootcint doesn't like it
+#cmakedefine USING_ROOT5
+
+// will be defined for all ROOT versions from 6.00 onwards
+#cmakedefine USING_ROOT6
+
 // allow use of unique_ptr with C++98
 #include <memory>
 #ifndef WITH_CPP11

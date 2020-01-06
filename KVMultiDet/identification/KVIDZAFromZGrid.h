@@ -28,6 +28,8 @@ protected:
    KVIDentifier* fMassCut;//!
    KVList fTables;
 
+   Bool_t fIgnoreMassID;
+
    int is_inside(double pid) const;
 
 public:
@@ -59,12 +61,13 @@ public:
    {
       // Overrides KVIDGraph::HasMassIDCapability
       //
-      // Returns true if at least one mass interval (PID range) is defined.
+      // Returns true if at least one mass interval (PID range) is defined,
+      // UNLESS fIgnoreMassID=true (set by putting <PARAMETER> IgnoreMassID=1 in grid file)
       //
       // Note that IsOnlyZId() returns kTRUE for KVIDZAFromZGrid
       // and thus should not be used to know if a grid can identify masses
 
-      return (fPIDRange || fTables.GetEntries());
+      return (fPIDRange || fTables.GetEntries()) && !fIgnoreMassID;
    }
    void SetOnlyZId(Bool_t /*yes*/ = kTRUE)
    {

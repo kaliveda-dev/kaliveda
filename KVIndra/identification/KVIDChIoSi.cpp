@@ -26,17 +26,13 @@ ClassImp(KVIDChIoSi)
 //
 //Identification in ChIo-Si matrices of INDRA
 //
-//Identification subcodes are written in bits 12-15 of KVIDSubCodeManager
-//(see KVINDRACodes). They correspond to the subcodes of the KVIDGChIoSi
-//identification grid class (see corresponding class description).
 /////////////////////////////////////////////////////////////////////////////
 
 KVIDChIoSi::KVIDChIoSi()
 {
-   fIDCode = kIDCode_ChIoSi;
+   set_id_code(kIDCode_ChIoSi);
    fZminCode = kIDCode_ArretChIo;
    fECode = kECode1;
-   SetSubCodeManager(4, 15);
    ChIoSiGrid = 0;
    fchio = fsi = 0;
 }

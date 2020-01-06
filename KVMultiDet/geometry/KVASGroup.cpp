@@ -273,11 +273,11 @@ TList* KVASGroup::GetDetectorsInLayer(UInt_t lay)
    UInt_t imin = GetLayerNearestTarget();
    UInt_t imax = GetLayerFurthestTarget();
    for (UInt_t i = imin; i <= imax; i++) {
-      TList* tlist = GetTelescopesInLayer(i);
-      if (tlist) {
+      unique_ptr<TList> tlist(GetTelescopesInLayer(i));
+      if (tlist.get()) {
          //note we take the max number of detectors in telescopes of layer i
          Int_t max = 0;
-         TIter it(tlist);
+         TIter it(tlist.get());
          KVTelescope* tel = 0;
          while ((tel = (KVTelescope*)it.Next()))
             if (max < tel->GetDetectors()->GetSize())
@@ -292,7 +292,7 @@ TList* KVASGroup::GetDetectorsInLayer(UInt_t lay)
 
             //calculate rank of detectors in telescopes
             UInt_t rank = max - ndl + lay;
-            TIter next(tlist);
+            TIter next(tlist.get());
             KVTelescope* tel;
             TList* list = new TList;
             while ((tel = (KVTelescope*) next())) {
@@ -304,10 +304,8 @@ TList* KVASGroup::GetDetectorsInLayer(UInt_t lay)
                      Warning("GetDetectorsInLayer", "pb d index pour GetDetector");
                }
             }
-            delete tlist;
             return list;
          }
-         delete tlist;
       }
    }
    return 0;

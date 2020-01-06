@@ -139,7 +139,7 @@ void KVFAZIA::SetNameOfDetectors(KVEnv& env)
    }
 }
 
-void KVFAZIA::PerformClosedROOTGeometryOperations(Int_t run)
+void KVFAZIA::PerformClosedROOTGeometryOperations()
 {
    // Finalise description of array performing all operations which require ROOT
    // geometry to be closed
@@ -159,21 +159,16 @@ void KVFAZIA::PerformClosedROOTGeometryOperations(Int_t run)
    // make sure that the expected number of detectors get imported!
    imp.ImportGeometry(fImport_dTheta, fImport_dPhi, fImport_ThetaMin, fImport_PhiMin, fImport_ThetaMax, fImport_PhiMax);
 
-   //SetCalibrators();
-   SetIdentifications();
-
    SetDetectorThicknesses();
-   SetBit(kIsBuilt);
 
-   if (run != -1) {
-      SetParameters(run);
-   }
+   SetIdentifications();
+   SetBit(kIsBuilt);
 }
 
 void KVFAZIA::GetGeometryParameters()
 {
    //Called by the Build method
-   Info("GetGeometryParameters", "to be defined in child class ...");
+   AbstractMethod("GetGeometryParameters");
 }
 
 void KVFAZIA::BuildFAZIA()
@@ -201,7 +196,7 @@ void KVFAZIA::BuildTarget()
    }
 }
 
-void KVFAZIA::Build(Int_t run)
+void KVFAZIA::Build(Int_t)
 {
    // Build the FAZIA array
    GetGeometryParameters();
@@ -217,7 +212,7 @@ void KVFAZIA::Build(Int_t run)
    if (fCloseGeometryNow) {
       gGeoManager->DefaultColors();
       gGeoManager->CloseGeometry();
-      PerformClosedROOTGeometryOperations(run);
+      PerformClosedROOTGeometryOperations();
    }
 }
 
@@ -294,9 +289,9 @@ void KVFAZIA::FillDetectorList(KVReconstructedNucleus* rnuc, KVHashList* DetList
             }
          }
          if (rnuc->GetParameters()->HasParameter("GTTag"))
-            det->SetDetectorSignalValue("GTTag", rnuc->GetParameters()->GetDoubleValue("GTTag"));
+            det->SetGTTag(rnuc->GetParameters()->GetIntValue("GTTag"));
          if (rnuc->GetParameters()->HasParameter("DetTag"))
-            det->SetDetectorSignalValue("DetTag", rnuc->GetParameters()->GetDoubleValue("DetTag"));
+            det->SetDetTag(rnuc->GetParameters()->GetIntValue("DetTag"));
       }
    }
 }
@@ -451,8 +446,8 @@ Bool_t KVFAZIA::treat_event(const DAQ::FzEvent& e)
                   Error("treat_event", "No detector %s-%d found in FAZIA geometry...", FzDetector_str[fIdSignal], 100 * fIdBlk + 10 * fIdQuartet + fIdTelescope);
                   continue;
                }
-               det->GetDetectorSignal("DetTag")->SetValue(DetTag);
-               det->GetDetectorSignal("GTTag")->SetValue(GTTag);
+               det->SetDetTag(DetTag);
+               det->SetGTTag(GTTag);
 
                if (!rdata.has_energy() && !rdata.has_waveform()) {
                   Warning("treat_event", "[NO DATA] [%s %s]", det->GetName(), FzDataType_str[fIdSignal]);

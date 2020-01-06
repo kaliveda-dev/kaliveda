@@ -47,7 +47,7 @@ void KVINDRAForwardGroupReconstructor::DoCalibration(KVReconstructedNucleus* PAR
 {
    // Special calibration for particles in rings 1 to 9
    // We set the energy calibration code for the particle here
-   //    kECode0 = no calibration (e.g. gammas)
+   //    kECode0 = no calibration
    //    kECode1 = everything OK
    //    kECode2 = small warning, for example if energy loss in a detector is calculated
    //    kECode15 = bad, calibration is no good

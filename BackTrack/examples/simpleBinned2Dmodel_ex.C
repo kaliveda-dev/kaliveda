@@ -25,6 +25,8 @@
 #include "TH1.h"
 #include "TH2.h"
 
+#if ROOT_VERSION_CODE < ROOT_VERSION(6,18,0)
+
 #include "Simple2DModel_Binned.h"
 #include "NewRooGlobalFunc.h"     // To add new RooCmd
 
@@ -205,3 +207,4 @@ void simple2Dmodel_ex(Int_t statexp, Int_t statmod)
    new TCanvas("Plot_result_par2", "Plot PAR2");
    pl->Draw();
 }
+#endif

@@ -1,9 +1,6 @@
 # Specific environment configuration file for KaliVeda on CCIN2P3 machines (FAZIA)
 
-DataRepository: fazia_sps
-fazia_sps.DataRepository.RootDir: /sps/hep/fazia/data
-
-+DataRepository: fazia_irods
+DataRepository: fazia_irods
 fazia_irods.DataRepository.Type: irods
 fazia_irods.DataRepository.RootDir:       /fazia
 fazia_irods.DataRepository.ReadProtocol:     root

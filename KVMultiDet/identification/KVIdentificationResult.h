@@ -27,13 +27,13 @@ public:
       IDattempted(0), IDOK(0), IDcode(-1),
       Zident(0), Aident(0), IDquality(-1), Z(-1), A(-1), PID(-1.0), deltaEpedestal(deltaEpedestal_UNKNOWN)
    {};
-   virtual ~KVIdentificationResult() {};
+   virtual ~KVIdentificationResult() {}
 
    KVIdentificationResult(const KVIdentificationResult& id) : KVBase()
    {
       // copy constructor
       id.Copy(*this);
-   };
+   }
    void Clear(Option_t* opt = "");
    void Copy(TObject&) const;
    void Print(Option_t* opt = "") const;
@@ -41,28 +41,39 @@ public:
    {
       i.Copy(*this);
       return *this;
-   };
+   }
 
    void SetIDType(const Char_t* t)
    {
       // Set type of identification (= type of KVIDTelescope)
       SetType(t);
-   };
+   }
    const Char_t* GetIDType() const
    {
       // Gives type of identification (= type of KVIDTelescope)
       return GetType();
-   };
+   }
    void SetComment(const Char_t* c)
    {
       // Set an explanatory comment for the identification procedure quality code
       SetLabel(c);
-   };
+   }
    const Char_t* GetComment() const
    {
       // Give an explanatory comment for the identification procedure quality code
       return GetLabel();
-   };
+   }
+   void SetGridName(const Char_t* n)
+   {
+      // Set name of grid (VARY_VARX) used for identification
+      SetName(n);
+   }
+   const Char_t* GetGridName() const
+   {
+      // Give name of grid (VARY_VARX) used for identification
+      return GetName();
+   }
+
    ClassDef(KVIdentificationResult, 2) //Full result of one attempted particle identification
 };
 

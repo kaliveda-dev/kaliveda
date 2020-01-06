@@ -24,12 +24,10 @@ ClassImp(KVIDChIoSi75)
 //
 //Identification in ChIo-Si75 matrices of INDRA
 //
-//Identification subcodes are written in bits 12-15 of KVIDSubCodeManager
-//(see KVINDRACodes)
+
 KVIDChIoSi75::KVIDChIoSi75()
 {
    fECode = kECode1;
-   SetSubCodeManager(4, 15);
 }
 
 KVIDChIoSi75::~KVIDChIoSi75()

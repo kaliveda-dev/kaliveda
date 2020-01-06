@@ -322,8 +322,8 @@ void KVINDRA::Build(Int_t run)
 {
    // Overrides KVASMultiDetArray::Build
    // Correspondance between CsI detectors and pin lasers is set up if known.
-   // GG to PG conversion factors for Si and ChIo are set if known.
    //Correspondance between Si and ChIo detectors and nunmber of the QDC is made
+
    if (run != -1) {
       fCurrentRun = run;
    }
@@ -335,23 +335,16 @@ void KVINDRA::Build(Int_t run)
 
    SetACQParams();
 
-   //SetCalibrators();
+   SetDetectorThicknesses();
 
    SetIdentifications();
-
-   SetDetectorThicknesses();
 
    //set flag to say Build() was called
    SetBit(kIsBuilt);
 
    SetPinLasersForCsI();
-   SetGGtoPGConversionFactors();
+
    LinkToCodeurs();
-
-   if (run != -1) {
-      gIndra->SetParameters(run);
-   }
-
 }
 
 void KVINDRA::SetArrayACQParams()
@@ -456,22 +449,6 @@ void KVINDRA::FillListsOfDetectorsByType()
       }
    }
 }
-
-//_______________________________________________________________________________________
-void KVINDRA::UpdateArray()
-{
-   //must be called if modifications are made to array structure after initial construction...
-   //can be redefined by specific (derived) detector array classes
-   // Updates pointer to chio layer if necessary (it may have been removed),
-
-   MakeListOfDetectors();
-   SetGroupsAndIDTelescopes();
-   SetACQParams();
-   SetCalibrators();
-   SetIdentifications();
-   SetDetectorThicknesses();
-}
-
 
 //_________________________________________________________________________________________
 
@@ -603,7 +580,7 @@ Int_t KVINDRA::GetIDTelescopes(KVDetector* de, KVDetector* e, TCollection* idtel
    return n;
 }
 
-void KVINDRA::PerformClosedROOTGeometryOperations(Int_t)
+void KVINDRA::PerformClosedROOTGeometryOperations()
 {
    // Finalise the ROOT geometry description by performing operations which can
    // only be done once the geometry is closed

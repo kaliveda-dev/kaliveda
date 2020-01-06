@@ -1,28 +1,38 @@
 //Created by KVClassFactory on Wed Jun  5 17:00:08 2019
 //Author: John Frankland,,,
 
+/***
+  \class KVDetectorSignal
+  \ingroup Geometry
+  \brief Data produced by a detector
+
+
+*/
+
 #ifndef __KVDETECTORSIGNAL_H
 #define __KVDETECTORSIGNAL_H
 
 #include "KVBase.h"
+#include "KVNameValueList.h"
 
 class KVDetector;
+class KVNumberList;
 
 class KVDetectorSignal : public KVBase {
 
-   KVDetector* fDetector;//! associated detector
+   const KVDetector* fDetector;//! associated detector
    Double_t    fValue;// signal value
 
 public:
    KVDetectorSignal()
       : KVBase(), fDetector(nullptr), fValue(0)
    {}
-   KVDetectorSignal(const Char_t* type, KVDetector* det = nullptr);
+   KVDetectorSignal(const Char_t* type, const KVDetector* det = nullptr);
 
    virtual ~KVDetectorSignal()
    {}
 
-   virtual Double_t GetValue() const
+   virtual Double_t GetValue(const KVNameValueList& = "") const
    {
       return fValue;
    }
@@ -37,7 +47,7 @@ public:
       // Only affects signals whose value can be 'Set' (see SetValue)
       SetValue(0);
    }
-   virtual Double_t GetInverseValue(Double_t out_val, const TString& in_sig) const
+   virtual Double_t GetInverseValue(Double_t out_val, const TString& in_sig, const KVNameValueList& = "") const
    {
       // Returns the value of the input signal for a given value of the output,
       // using the inverse calibration function
@@ -46,12 +56,12 @@ public:
       return 0.;
    }
 
-   void SetDetector(KVDetector* d)
+   void SetDetector(const KVDetector* d)
    {
       fDetector = d;
    }
 
-   KVDetector* GetDetector() const
+   const KVDetector* GetDetector() const
    {
       return fDetector;
    }
@@ -76,7 +86,9 @@ public:
 
    void ls(Option_t* = "") const;
 
-   ClassDef(KVDetectorSignal, 1) //Signal associated with detector
+   virtual Int_t GetStatus(const TString&) const;
+
+   ClassDef(KVDetectorSignal, 1) //Data produced by a detector
 };
 
 #endif

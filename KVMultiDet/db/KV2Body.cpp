@@ -25,68 +25,140 @@ using namespace std;
 
 ClassImp(KV2Body)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//KV2Body
-//
-//This class calculates various useful characteristics of binary nuclear reactions.
-//It is based on a Fortran programme by Jean-Luc Charvet (cibi.for).
-//It allows to calculate:
-//      - centre of mass recoil velocity and available energy
-//      - laboratory grazing angle of projectile and target
-//      - maximum laboratory scattering angles
-//      - Q-values
-//      - CM and laboratory Rutherford cross-sections for elastic scattering
-//      - CM and laboratory angles of ejectiles after elastic or inelastic scattering
-//The values are calculated using relativistic kinematics.
-//
-//
-//1. Defining the entrance channel.
-//
-//Either use the constructor with arguments to specify projectile and target:
-//      KV2Body kin( proj, targ );//'proj' and 'targ' are pointers to KVNucleus objects
-//or declare them afterwards:
-//      KV2Body kin;
-//      kin.SetProjectile( proj ); kin.SetTarget( targ );
-//One can also specify the projectile & target using their Z and A:
-//      kin.SetProjectile( z1, a1 );
-//      kin.SetTarget( z2, a2 );
-//(In each case a KVNucleus is created which will be deleted with the KV2Body object).
-//If you need to further define the properties of these nuclei, you can get a pointer to
-//them using GetNucleus(int i):
-//      kin.GetNucleus(1)->SetMomentum(...);//set momentum of projectile
-//
-//2. Defining the exit channel
-//
-//If no exit channel is defined, it is assumed to be identical to the entrance channel,
-//i.e. elastic scattering.
-//You can define a different exit channel, either using the constructor:
-//      KV2Body kin( proj, targ, QP );// QP is a KVNucleus
-//      KV2Body kin( proj, targ, QP, Ediss );// Ediss = energy dissipated in inelastic reaction
-//or using the methods:
-//      kin.SetOutgoing( QP );
-//      kin.SetEDiss( Ediss );  OR  kin.SetExcitEnergy( Ediss );
-//
-//3. Calculating and obtaining reaction information
-//
-//Once the entrance channel (and, if necessary, the exit channel) is(are) defined,
-//the kinematical calculation is carried out by:
-//      kin.CalculateKinematics();
-//For a general print-out of the reaction characteristics:
-//      kin.Print();
-//      kin.Print("lab");//laboratory scattering angles and energies
-//      kin.Print("ruth");//Rutherford scattering angles, energies and cross-sections
-//
-//4. Extracting information on Quasi-Projectile and/or target
-//
-//Several methods are defined and calculate energy/velocity/angle in CM or lab frame
-//for projectile (3) and/or target (4)
-//The two arguments are : the angle and the angular range of which nucleus you are interested in
-//
-//For example : the Double_t GetThetaCMTarget(Double_t ThetaLab,Int_t OfNucleus=3)
-//give the polar angle in the CM of reaction of the target
-//    depending on the polar angle in the lab of the projectile (OfNucleus=3) or of the target (OfNucleus=4)
-//
-//
-//_____________________________________________________________________________________________________________
+/*
+# Binary Kinematics Calculator
+This class calculates various useful characteristics of binary nuclear reactions.
+It is based on a Fortran programme by Jean-Luc Charvet (`cibi.for`).
+
+It allows to calculate:
+      - centre of mass recoil velocity and available energy
+      - laboratory grazing angle of projectile and target
+      - maximum laboratory scattering angles
+      - Q-values
+      - CM and laboratory Rutherford cross-sections for elastic scattering
+      - CM and laboratory angles of ejectiles after elastic or inelastic scattering
+      - reaction cross-sections from systematics
+      - equilibrium charge states from systematics
+
+The values are calculated using relativistic kinematics.
+
+## Setting up the calculation
+There are 3 ways in which KV2Body can be used.
+
+> Note on use of KV2Body constructors.
+>
+> The arguments used to define the different nuclei are of type `(const KVNucleus&)`. This means
+> that you can use either
+>
+> (1) a normal KVNucleus object instantiated before calling the constructor:
+>
+>             KVNucleus xe("129Xe", 50.); // 129Xe nucleus with 50MeV/A kinetic energy
+>             KVNucleus sn(50,119);       // 119Sn nucleus at rest
+>
+>             KV2Body kin(xe, sn);        // define kinematics of 129Xe+119Sn@50AMeV collision
+>
+> (2) a temporary KVNucleus object instantiated in the argument list:
+>
+>             KV2Body kin(KVNucleus("129Xe", 50.), KVNucleus(50,119));        // define kinematics of 129Xe+119Sn@50AMeV collision
+>
+> (3) a string giving the symbol and mass of the nucleus.
+>
+>             KV2Body kin(KVNucleus("129Xe", 50.), "119Sn");        // define kinematics of 129Xe+119Sn@50AMeV collision
+>
+> (4) [ONLY WITH C++11/ROOT6]: any KVNucleus constructor through uniform initialization:
+>
+>             KV2Body kin({"129Xe", 50.}, {50,119});        // define kinematics of 129Xe+119Sn@50AMeV collision
+>
+
+### a. Collision kinematics
+
+Calculate kinematics for either elastic or inelastic `A + B -> A + B` collisions.
+
+Either use the constructor with arguments to specify projectile and target,
+and optionally the dissipated/excitation energy, or the constructor which takes as single
+argument a formatted name for the colliding system defining projectile, target and beam
+energy:
+
+~~~~~~~~~~~~~{.cpp}
+      KV2Body(const KVNucleus& proj, const KVNucleus& targ, double Ediss = 0);
+
+      // format systemname like: "129Xe+119Sn@50.0MeV/A"
+      KV2Body(const Char_t* systemname);
+~~~~~~~~~~~~~
+
+or use specific methods to define the entrance channel after using the default
+constructor (without arguments):
+
+~~~~~~~~~~~~~{.cpp}
+      SetProjectile(const KVNucleus&);
+      SetProjectile(int Z, int A = 0);
+      SetTarget(const KVNucleus&);
+      SetTarget(int Z, int A = 0);
+
+      SetEDiss(double);         // dissipated/excitation energy
+      SetExcitEnergy(double);   // same as SetEDiss
+~~~~~~~~~~~~~
+
+### b. Binary reaction kinematics
+
+Calculate kinematics for `A + B -> C + D` reactions.
+
+Either use one of the constructors shown above to define the entrance channel then use the method
+below to define the outgoing fragment,
+or use the specific constructor with arguments to specify projectile, target,
+outgoing fragment, and optionally the dissipated/excitation energy:
+
+~~~~~~~~~~~~~{.cpp}
+      KV2Body(const KVNucleus& proj, const KVNucleus& targ, const KVNucleus& outgoing, double Ediss = 0);
+~~~~~~~~~~~~~
+
+or use specific methods as above to define the entrance channel after using the default
+constructor (without arguments):
+
+~~~~~~~~~~~~~{.cpp}
+      // see above for projectile, target etc.
+      SetOutgoing(const KVNucleus&);
+~~~~~~~~~~~~~
+
+Note that the partner of the outgoing fragment in the exit channel is deduced from conservation laws.
+
+### c. Binary decay kinematics
+
+Calculate kinematics for `A -> C + D` decays.
+
+Define the compound nucleus and its excitation energy with the constructor
+
+~~~~~~~~~~~~~{.cpp}
+      KV2Body(const KVNucleus& compound, double Exx = 0);
+~~~~~~~~~~~~~
+
+(if `Exx` is not given, the excitation energy of `compound` is used) and then define
+the decay channel with
+
+~~~~~~~~~~~~~{.cpp}
+      SetOutgoing(const KVNucleus&);
+~~~~~~~~~~~~~
+
+## Calculating and obtaining reaction information
+
+Once the entrance channel (and, if necessary, the exit channel) is(are) defined,
+the kinematical calculation is carried out by:
+
+~~~~~~~~~~~~~{.cpp}
+      CalculateKinematics();
+~~~~~~~~~~~~~
+
+For a general print-out of the reaction characteristics:
+
+~~~~~~~~~~~~~{.cpp}
+      Print();
+      Print("lab");//laboratory scattering angles and energies
+      Print("ruth");//Rutherford scattering angles, energies and cross-sections
+~~~~~~~~~~~~~
+
+*/
+
+
 void KV2Body::init()
 {
    //Default initialisations
@@ -102,10 +174,6 @@ void KV2Body::init()
       fELabVsThetaCM[i] = 0;
       fELabVsThetaLab[i] = 0;
    }
-   fEDiss = 0.0;
-   fDeleteTarget = kFALSE;
-   fDeleteProj = kFALSE;
-   fDeleteN4 = kFALSE;
    fKoxReactionXSec = 0;
    fEqbmChargeState = 0;
    fEqbmChargeStateShSol = 0;
@@ -115,13 +183,13 @@ void KV2Body::init()
    SetIntegralPrecision(1e-10);
 }
 
-KV2Body::KV2Body(): fNuclei(4, 1)
+KV2Body::KV2Body(): fNuclei(5), fEDiss(0)
 {
    //default ctor
    init();
 }
 
-KV2Body::KV2Body(const Char_t* systemname) : fNuclei(4, 1)
+KV2Body::KV2Body(const Char_t* systemname) : fNuclei(5), fEDiss(0)
 {
    //Set up calculation defining entrance channel following
    //this prescription  :
@@ -147,73 +215,121 @@ KV2Body::KV2Body(const Char_t* systemname) : fNuclei(4, 1)
       ee = sener.Atof();
    }
    scouple.Begin("+");
-   fNuclei[1] = new KVNucleus(scouple.Next(), ee);
-   fNuclei[2] = new KVNucleus(scouple.Next());
+   fNuclei[1] = KVNucleus(scouple.Next(), ee);
+   fNuclei[2] = KVNucleus(scouple.Next());
 }
 
-KV2Body::KV2Body(KVNucleus* proj, KVNucleus* cib, KVNucleus* proj_out, Double_t Ediss): fNuclei(4, 1)
+KV2Body::KV2Body(KVNucleus*, KVNucleus* cib, KVNucleus* proj_out, Double_t): fNuclei(5), fEDiss(0)
 {
-   //Set up calculation defining entrance channel (projectile & target nuclei or
-   //single decaying nucleus), exit channel (if necessary, the remaining nucleus of the
-   //exit channel is deduced by conservation of mass, charge, momentum) and energy dissipated in reaction.
+   // Deprecated. Do not use.
+
+   Obsolete("KV2Body(KVNucleus*, KVNucleus*, KVNucleus*, Double_t)", "1.11", "1.12");
+
+   if (!cib) {
+      Info("KV2Body", "Use constructor KV2Body(const KVNucleus& compound) to simulate binary decay of compound");
+   }
+   else if (!proj_out) {
+      Info("KV2Body", "Use constructor KV2Body(const KVNucleus& proj, const KVNucleus& targ) to define entrance channel");
+   }
+   else {
+      Info("KV2Body", "Use constructor KV2Body(const KVNucleus& proj, const KVNucleus& targ, const KVNucleus& outgoing) to define entrance & exit channels");
+   }
+   init();
+}
+
+KV2Body::KV2Body(const KVNucleus& compound, double Exx)
+   : fNuclei(5), fEDiss(0)
+{
+   // Set up kinematics of binary decay of compound.
+   //
+   // By default (Exx=0) we use the excitation energy of compound as `-Ediss`
+   //
+   //Usage:
+   //~~~~~~~~~~{.cpp}
+   //   KVNucleus CN("204Pb");
+   //   CN.SetExcitEnergy(1.5*CN.GetA());
+   //   KV2Body CNdecay(CN);
+   //
+   //   // calculate decay
+   //   KVNucleus alpha("4He", 67.351/4.);
+   //   CNdecay.SetOutgoing(alpha);
+   //~~~~~~~~~~
+
+   init();
+   fNuclei[1] = compound;
+   if (Exx == 0.0) fEDiss = -compound.GetExcitEnergy();
+}
+
+KV2Body::KV2Body(const KVNucleus& proj, const KVNucleus& targ, double Ediss):
+   fNuclei(5), fEDiss(0)
+{
+   //Set up calculation of basic binary reaction for given projectile and target.
    //
    //By default the dissipated energy is zero (elastic reaction).
-   //If only nucleus 'proj' is defined and Ediss=0, we use the excitation energy of 'proj' as -Ediss
+   //
+   //Usage:
+   //~~~~~~~~~~{.cpp}
+   //   KV2Body reaction(KVNucleus("129Xe",50), "natSn");
+   //
+   //   // or with C++11 (ROOT6):
+   //   KV2Body reaction({"129Xe",50}, "natSn");
+   //~~~~~~~~~~
 
    init();
    fNuclei[1] = proj;
-   fNuclei[2] = cib;
+   fNuclei[2] = targ;
    fEDiss = Ediss;
-   if (!cib) {
-      // break-up kinematics
-      if (Ediss == 0.0) {
-         fEDiss = -proj->GetExcitEnergy();
-      }
-   }
-
-   if (proj_out) {
-      SetOutgoing(proj_out);
-   }
 }
 
-void KV2Body::SetTarget(KVNucleus* targ)
+KV2Body::KV2Body(const KVNucleus& proj, const KVNucleus& targ, const KVNucleus& proj_out, double Ediss):
+   fNuclei(5), fEDiss(Ediss)
 {
-   //Set target for reaction. The KVNucleus will not be deleted by ~KV2Body.
+   //Set up calculation of basic binary reaction for given projectile and target with definition
+   //of exit channel (outgoing projectile fragment).
+   //
+   //By default the dissipated energy is zero (elastic reaction).
+   //
+   //Usage:
+   //~~~~~~~~~~{.cpp}
+   //   KV2Body reaction(KVNucleus("129Xe",50), "natSn", KVNucleus("24Mg",35));
+   //
+   //   // or with C++11 (ROOT6):
+   //   KV2Body reaction({"129Xe",50}, "natSn", {"24Mg",35});
+   //~~~~~~~~~~
+
+   init();
+   fNuclei[1] = proj;
+   fNuclei[2] = targ;
+   SetOutgoing(proj_out);
+}
+
+void KV2Body::SetTarget(const KVNucleus& targ)
+{
+   //Set target for reaction.
    fNuclei[2] = targ;
 }
 
 void KV2Body::SetTarget(Int_t z, Int_t a)
 {
    //Set target for reaction
-   //Creates a new KVNucleus which will be deleted by ~KV2Body.
-   fNuclei[2] = new KVNucleus(z, a);
-   fDeleteTarget = kTRUE;
+
+   fNuclei[2].SetZandA(z, a);
 }
 
-void KV2Body::SetProjectile(KVNucleus* proj)
+void KV2Body::SetProjectile(const KVNucleus& proj)
 {
-   //Set projectile for reaction. The KVNucleus will not be deleted by ~KV2Body.
+   //Set projectile for reaction.
    fNuclei[1] = proj;
 }
 
 void KV2Body::SetProjectile(Int_t z, Int_t a)
 {
    //Set projectile for reaction
-   //Creates a new KVNucleus which will be deleted by ~KV2Body.
-   fNuclei[1] = new KVNucleus(z, a);
-   fDeleteProj = kTRUE;
+   fNuclei[1].SetZandA(z, a);
 }
 
 KV2Body::~KV2Body()
 {
-   //Any nuclei created by the object are deleted
-   if (fDeleteN4)
-      delete GetNucleus(4);
-   if (fDeleteTarget)
-      delete GetNucleus(2);
-   if (fDeleteProj)
-      delete GetNucleus(1);
-   fNuclei.Clear();
    if (fKoxReactionXSec) delete fKoxReactionXSec;
    if (fEqbmChargeState) delete fEqbmChargeState;
    for (int i = 0; i < 5; i++) {
@@ -236,12 +352,11 @@ Double_t KV2Body::GetVelocity(Double_t mass, Double_t E)
 
 //_____________________________________________________________________________
 
-void KV2Body::SetOutgoing(KVNucleus* proj_out)
+void KV2Body::SetOutgoing(const KVNucleus& proj_out)
 {
-   // Set outgoing projectile-like nucleus' properties.
-   // The properties of the outgoing target-like nucleus
-   // will be deduced from mass, charge and momentum/energy conservation.
-   // The KVNucleus will not be deleted by ~KV2Body.
+   // Set outgoing projectile-like nucleus properties.
+   //
+   // The properties of the outgoing target-like nucleus will be deduced from mass, charge and momentum/energy conservation.
 
    fSetOutgoing = kTRUE;
    fNuclei[3] = proj_out;
@@ -255,27 +370,20 @@ void KV2Body::Set4thNucleus()
 {
    // Private method, used to deduce 4th nucleus (target-like) from projectile, target
    // and outgoing projectile using conservation of mass, momentum and energy.
-   // This nucleus will be deleted with the object.
    //
    // if the exit channel is a the compund nucleus, there is no 4th nucleus defined
    // and the excitation energy of the fusion reaction is set in the fEdiss variable
-   // see GetExcitEnergy() methode
-   //
+   // see GetExcitEnergy() method
 
-   KVNucleus sum = *GetNucleus(1);
-   if (GetNucleus(2)) sum += *GetNucleus(2);
-   if (GetNucleus(4))
-      delete GetNucleus(4);
-   KVNucleus* tmp4 = new KVNucleus(sum - *GetNucleus(3));
-   fDeleteN4 = kTRUE;
-   if (!tmp4->GetZ() && !tmp4->GetA()) {
+   KVNucleus sum;
+   if (GetNucleus(2)) sum = *GetNucleus(1) + *GetNucleus(2);
+   else sum = *GetNucleus(1);
+   KVNucleus tmp4 = sum - *GetNucleus(3);
+   if (!tmp4.IsDefined()) {
       SetExcitEnergy(sum.GetExcitEnergy());
-      delete tmp4;
-      tmp4 = 0;
-      fDeleteN4 = kFALSE;
    }
    fNuclei[4] = tmp4;
-   if (tmp4) tmp4->SetExcitEnergy(0.); // no mass modification due to E*
+   if (tmp4.IsDefined()) tmp4.SetExcitEnergy(0.); // no mass modification due to E*
 }
 
 //_____________________________________________________________________________
@@ -283,13 +391,19 @@ void KV2Body::Set4thNucleus()
 KVNucleus* KV2Body::GetNucleus(Int_t i) const
 {
    //Return pointer to nucleus i (1 <= i <= 4)
+   //
    // Entrance channel nuclei .....  i=1 : projectile  i=2 : target
+   //
    // Exit channel nuclei .....  i=3 : projectile-like  i=4 : target-like
+   //
+   // Will return `nullptr` if any nucleus is undefined
 
-   if (i > 0 && i < 5)
-      return (KVNucleus*) fNuclei[i];
+   if (i > 0 && i < 5) {
+      if (fNuclei[i].IsDefined()) return (KVNucleus*) &fNuclei[i];
+      return nullptr;
+   }
    Warning("GetNucleus(Int_t i)", "Index i out of bounds, i=%d", i);
-   return 0;
+   return nullptr;
 }
 
 //_____________________________________________________________________________
@@ -298,7 +412,7 @@ Double_t KV2Body::GetQReaction() const
 {
    //Calculate Q-value for reaction, including dissipated (excitation) energy
 
-   if (!GetNucleus(3)) {
+   if (!fSetOutgoing) {
       Warning("GetQReaction", "Parameters for outgoing nuclei not set");
       return 0.0;
    }
@@ -313,7 +427,7 @@ Double_t KV2Body::GetQGroundStates() const
 {
    //Calculate Q-value for reaction, assuming all nuclei in ground state
 
-   if (!GetNucleus(3)) {
+   if (!fSetOutgoing) {
       Warning("GetQGroundStates",
               "Parameters for outgoing nuclei not set");
       return 0.0;
@@ -450,19 +564,28 @@ void KV2Body::CalculateKinematics()
 {
    // Called to make kinematics calculation for all nuclei, use once properties of
    // entrance-channel (and, if necessary, exit-channel) nuclei have been defined.
-   // If no exit-channel nuclei are defined, we assume elastic scattering (i.e. identical
-   // outgoing nuclei)
+   //
+   // If a compound decay is to be calculated (only 1 nucleus in entrance channel),
+   // outgoing (decay) product must be defined before calling this method.
+   //
+   // For a 2-body entrance channel, if no exit-channel nuclei are defined,
+   // we assume elastic scattering (i.e. identical outgoing nuclei)
 
    KVNucleus* Nuc1 = GetNucleus(1);
    KVNucleus* Nuc2 = GetNucleus(2);
 
+   // compound decay ?
+   if (!Nuc2 && !fSetOutgoing) {
+      Error("CalculateKinematics", "Set outgoing (decay) product first");
+      return;
+   }
    // make sure E* of nuclei is zero
    // this is because the E*/Ediss is handled separately here
    Nuc1->SetExcitEnergy(0.);
    if (Nuc2) Nuc2->SetExcitEnergy(0.);
 
    // call SetOutgoing if not already done
-   if (!fSetOutgoing) SetOutgoing(Nuc1);
+   if (!fSetOutgoing) SetOutgoing(*Nuc1);
    //fSetOutgoing = kFALSE;
 
    // set everything to zero
@@ -763,14 +886,14 @@ Double_t KV2Body::ThetaLabVsThetaCM(Double_t* x, Double_t* par)
 }
 
 //______________________________________________________________________________________________
-TF1* KV2Body::GetELabVsThetaCMFunc(Int_t OfNucleus)
+TF1* KV2Body::GetELabVsThetaCMFunc(Int_t OfNucleus) const
 {
    // Return TF1 giving lab energy of nucleus as function of CM angle
    // OfNucleus = 1 or 2 (entrance channel) or 3 or 4 (exit channel)
 
    if (!fELabVsThetaCM[OfNucleus]) {
       fELabVsThetaCM[OfNucleus] = new TF1(Form("KV2Body:ELabVsThetaCM:%d", OfNucleus),
-                                          this, &KV2Body::ELabVsThetaCM, 0, 180, 1, "KV2Body", "ELabVsThetaCM");
+                                          const_cast<KV2Body*>(this), &KV2Body::ELabVsThetaCM, 0, 180, 1, "KV2Body", "ELabVsThetaCM");
       fELabVsThetaCM[OfNucleus]->SetNpx(1000);
       fELabVsThetaCM[OfNucleus]->SetParameter(0, OfNucleus);
    }
@@ -778,14 +901,14 @@ TF1* KV2Body::GetELabVsThetaCMFunc(Int_t OfNucleus)
 }
 
 //______________________________________________________________________________________________
-TF1* KV2Body::GetELabVsThetaLabFunc(Int_t OfNucleus)
+TF1* KV2Body::GetELabVsThetaLabFunc(Int_t OfNucleus) const
 {
    // Return TF1 giving lab energy of nucleus as function of its lab angle
    // OfNucleus = 1 or 2 (entrance channel) or 3 or 4 (exit channel)
 
    if (!fELabVsThetaLab[OfNucleus]) {
       fELabVsThetaLab[OfNucleus] = new TF1(Form("KV2Body:ELabVsThetaLab:%d", OfNucleus),
-                                           this, &KV2Body::ELabVsThetaLab, 0, 180, 1, "KV2Body", "ELabVsThetaLab");
+                                           const_cast<KV2Body*>(this), &KV2Body::ELabVsThetaLab, 0, 180, 1, "KV2Body", "ELabVsThetaLab");
       fELabVsThetaLab[OfNucleus]->SetNpx(1000);
       fELabVsThetaLab[OfNucleus]->SetParameter(0, OfNucleus);
    }
@@ -842,14 +965,14 @@ Int_t KV2Body::GetThetaLab(Int_t OfNucleus, Double_t ThetaLab, Int_t AngleNucleu
 }
 
 //______________________________________________________________________________________________
-TF1* KV2Body::GetThetaLabVsThetaCMFunc(Int_t OfNucleus)
+TF1* KV2Body::GetThetaLabVsThetaCMFunc(Int_t OfNucleus) const
 {
    // Return TF1 giving lab angle of nucleus as function of CM angle
    // OfNucleus = 1 or 2 (entrance channel) or 3 or 4 (exit channel)
 
    if (!fThetaLabVsThetaCM[OfNucleus]) {
       fThetaLabVsThetaCM[OfNucleus] = new TF1(Form("KV2Body:ThetaLabVsThetaCM:%d", OfNucleus),
-                                              this, &KV2Body::ThetaLabVsThetaCM, 0, 180, 1, "KV2Body", "ThetaLabVsThetaCM");
+                                              const_cast<KV2Body*>(this), &KV2Body::ThetaLabVsThetaCM, 0, 180, 1, "KV2Body", "ThetaLabVsThetaCM");
       fThetaLabVsThetaCM[OfNucleus]->SetNpx(1000);
       fThetaLabVsThetaCM[OfNucleus]->SetParameter(0, OfNucleus);
    }
@@ -1050,6 +1173,7 @@ Double_t KV2Body::GetIntegratedXSecRuthLab(Float_t th1, Float_t th2, Float_t phi
 Double_t KV2Body::BassIntBarrier()
 {
    // calculate Bass interaction barrier B_int
+   //
    // r0 = 1.07 fm
 
    const Double_t r0 = 1.07;
@@ -1070,9 +1194,12 @@ Double_t KV2Body::KoxReactionXSec(Double_t* eproj, Double_t*)
 {
    // calculate Kox reaction X-section (in barns) for a given lab energy of projectile (in MeV/nucleon)
    //
+   //~~~~~~~~~~~~~~~~~~~~
    // r0 = 1.05 fm
    // c = 0.6 @ 30MeV/A, 1.4 @ 83 MeV/A => linear interpolation:
    //   c = 0.8/53*eproj + 0.6 - 30*0.8/53
+   //~~~~~~~~~~~~~~~~~~~~
+   //
    // uses Bass interaction barrier Bint in the (1 - B/Ecm) term
 
    const Double_t r0 = 1.05;
@@ -1080,7 +1207,7 @@ Double_t KV2Body::KoxReactionXSec(Double_t* eproj, Double_t*)
    const Double_t c0 = 0.8 / 53.;
    const Double_t c1 = 0.6 - 30 * c0;
 
-   KVNucleus* proj = (KVNucleus*)fNuclei[1];
+   KVNucleus* proj = GetNucleus(1);
    proj->SetEnergy(eproj[0]*proj->GetA());
    CalculateKinematics();
    Double_t ECM = GetCMEnergy();
@@ -1093,7 +1220,7 @@ Double_t KV2Body::KoxReactionXSec(Double_t* eproj, Double_t*)
    Double_t c = TMath::Max(0., c0 * eproj[0] + c1);
    //printf("Kox c-factor = %f\n", c);
    Double_t A1third = pow(proj->GetA(), 1. / 3.);
-   Double_t A2third = pow(((KVNucleus*)fNuclei[2])->GetA(), 1. / 3.);
+   Double_t A2third = pow(GetNucleus(2)->GetA(), 1. / 3.);
 
    Double_t Xsec = TMath::Pi() * pow(r0, 2) *
                    pow((A1third + A2third + a * A1third * A2third / (A1third + A2third) - c), 2) *
@@ -1109,8 +1236,8 @@ Double_t KV2Body::GetSphereDureReactionXSec(Double_t r0)
    // calculate Reaction Cross Section with the "Sphere Dure"
    // approximation
 
-   Double_t A1third = pow(((KVNucleus*)fNuclei[1])->GetA(), 1. / 3.);
-   Double_t A2third = pow(((KVNucleus*)fNuclei[2])->GetA(), 1. / 3.);
+   Double_t A1third = pow(GetNucleus(1)->GetA(), 1. / 3.);
+   Double_t A2third = pow(GetNucleus(2)->GetA(), 1. / 3.);
 
    Double_t Xsec = TMath::Pi() * pow(r0, 2) *
                    pow(A1third + A2third, 2);
@@ -1146,7 +1273,7 @@ Double_t KV2Body::GetIntegratedXsec(Double_t b1, Double_t b2)
 
 //__________________________________________________________________________________________________
 
-TF1* KV2Body::GetKoxReactionXSecFunc()
+TF1* KV2Body::GetKoxReactionXSecFunc() const
 {
    // Return pointer to TF1 with Kox reaction X-section in barns as a
    // function of projectile lab energy (in Mev/nucleon) for this reaction.
@@ -1158,7 +1285,7 @@ TF1* KV2Body::GetKoxReactionXSecFunc()
       name += " + ";
       name += GetNucleus(2)->GetSymbol();
       fKoxReactionXSec = new TF1(name.Data(),
-                                 this, &KV2Body::KoxReactionXSec, 20, 100, 0, "KV2Body", "KoxReactionXSec");
+                                 const_cast<KV2Body*>(this), &KV2Body::KoxReactionXSec, 20, 100, 0, "KV2Body", "KoxReactionXSec");
       fKoxReactionXSec->SetNpx(1000);
    }
    return fKoxReactionXSec;
@@ -1194,12 +1321,12 @@ Double_t KV2Body::EqbmChargeState(Double_t* t, Double_t*)
    // It should be noted that, according to the data published in this and other papers, the equilibrium thickness
    // decreases with increasing atomic number of the target, and increases with increasing energy of the projectile.
 
-   KVNucleus* proj = (KVNucleus*)fNuclei[1];
+   KVNucleus* proj = GetNucleus(1);
    Double_t Zp = proj->GetZ();
    proj->SetEnergy(t[0]*proj->GetA());
    Double_t beta = proj->Beta();
    Double_t vp = beta * KVParticle::C();
-   Double_t Zt = ((KVNucleus*)fNuclei[2])->GetZ();
+   Double_t Zt = GetNucleus(2)->GetZ();
 
    Double_t q = Zp * (1. - TMath::Exp(-83.275 * beta / pow(Zp, 0.477)));
 
@@ -1218,7 +1345,7 @@ Double_t KV2Body::EqbmChargeState(Double_t* t, Double_t*)
 
 //__________________________________________________________________________________________________
 
-TF1* KV2Body::GetEqbmChargeStateFunc()
+TF1* KV2Body::GetEqbmChargeStateFunc() const
 {
    // Return pointer to TF1 giving mean charge state of the projectile after passage through the target,
    // assuming that the equilibrium charge state distribution is achieved, as a function of projectile
@@ -1235,7 +1362,7 @@ TF1* KV2Body::GetEqbmChargeStateFunc()
       name += GetNucleus(2)->GetSymbol();
       name += " LEON";
       fEqbmChargeState = new TF1(name.Data(),
-                                 this, &KV2Body::EqbmChargeState, 5, 100, 0, "KV2Body", "EqbmChargeState");
+                                 const_cast<KV2Body*>(this), &KV2Body::EqbmChargeState, 5, 100, 0, "KV2Body", "EqbmChargeState");
       fEqbmChargeState->SetNpx(1000);
    }
    return fEqbmChargeState;
@@ -1246,10 +1373,10 @@ Double_t KV2Body::eqbm_charge_state_shiwietz_solid(Double_t* t, Double_t*)
    // G. Shiwietz et al Nucl. Instr. and Meth. in Phys. Res. B 175-177 (2001) 125-131
    // for solid targets
 
-   KVNucleus* proj = (KVNucleus*)fNuclei[1];
+   KVNucleus* proj = GetNucleus(1);
    Double_t Zp = proj->GetZ();
    proj->SetEnergy(t[0]*proj->GetA());
-   KVNucleus* targ = (KVNucleus*)fNuclei[2];
+   KVNucleus* targ = GetNucleus(2);
    Double_t Zt = targ->GetZ();
    Double_t Vp = proj->Beta();
    const Double_t V0 = 2.19e+06 / TMath::C();
@@ -1260,7 +1387,7 @@ Double_t KV2Body::eqbm_charge_state_shiwietz_solid(Double_t* t, Double_t*)
    q = (Zp * (12 * x + pow(x, 4.))) / q;
    return q;
 }
-TF1* KV2Body::GetShiwietzEqbmChargeStateFuncForSolidTargets()
+TF1* KV2Body::GetShiwietzEqbmChargeStateFuncForSolidTargets() const
 {
    // Return pointer to TF1 giving mean charge state of the projectile after passage through the target,
    // assuming that the equilibrium charge state distribution is achieved, as a function of projectile
@@ -1277,7 +1404,7 @@ TF1* KV2Body::GetShiwietzEqbmChargeStateFuncForSolidTargets()
       name += GetNucleus(2)->GetSymbol();
       name += " SHIWIETZ-SOLID";
       fEqbmChargeStateShSol = new TF1(name.Data(),
-                                      this, &KV2Body::eqbm_charge_state_shiwietz_solid, 5, 100, 0, "KV2Body", "eqbm_charge_state_shiwietz_solid");
+                                      const_cast<KV2Body*>(this), &KV2Body::eqbm_charge_state_shiwietz_solid, 5, 100, 0, "KV2Body", "eqbm_charge_state_shiwietz_solid");
       fEqbmChargeStateShSol->SetNpx(1000);
    }
    return fEqbmChargeStateShSol;
@@ -1288,10 +1415,10 @@ Double_t KV2Body::eqbm_charge_state_shiwietz_gas(Double_t* t, Double_t*)
    // G. Shiwietz et al Nucl. Instr. and Meth. in Phys. Res. B 175-177 (2001) 125-131
    // for gas targets
 
-   KVNucleus* proj = (KVNucleus*)fNuclei[1];
+   KVNucleus* proj = GetNucleus(1);
    Double_t Zp = proj->GetZ();
    proj->SetEnergy(t[0]*proj->GetA());
-   KVNucleus* targ = (KVNucleus*)fNuclei[2];
+   KVNucleus* targ = GetNucleus(2);
    Double_t Zt = targ->GetZ();
    Double_t Vp = proj->Beta();
    const Double_t V0 = 2.19e+06 / TMath::C();
@@ -1303,7 +1430,7 @@ Double_t KV2Body::eqbm_charge_state_shiwietz_gas(Double_t* t, Double_t*)
    return q;
 }
 
-TF1* KV2Body::GetShiwietzEqbmChargeStateFuncForGasTargets()
+TF1* KV2Body::GetShiwietzEqbmChargeStateFuncForGasTargets() const
 {
    // Return pointer to TF1 giving mean charge state of the projectile after passage through the target,
    // assuming that the equilibrium charge state distribution is achieved, as a function of projectile
@@ -1320,7 +1447,7 @@ TF1* KV2Body::GetShiwietzEqbmChargeStateFuncForGasTargets()
       name += GetNucleus(2)->GetSymbol();
       name += " SHIWIETZ-GAS";
       fEqbmChargeStateShGas = new TF1(name.Data(),
-                                      this, &KV2Body::eqbm_charge_state_shiwietz_gas, 5, 100, 0, "KV2Body", "eqbm_charge_state_shiwietz_gas");
+                                      const_cast<KV2Body*>(this), &KV2Body::eqbm_charge_state_shiwietz_gas, 5, 100, 0, "KV2Body", "eqbm_charge_state_shiwietz_gas");
       fEqbmChargeStateShGas->SetNpx(1000);
    }
    return fEqbmChargeStateShGas;
@@ -1328,7 +1455,7 @@ TF1* KV2Body::GetShiwietzEqbmChargeStateFuncForGasTargets()
 
 //__________________________________________________________________________________________________
 
-TF1* KV2Body::GetXSecRuthLabFunc(Int_t OfNucleus, Double_t theta_min, Double_t theta_max)
+TF1* KV2Body::GetXSecRuthLabFunc(Int_t OfNucleus, Double_t theta_min, Double_t theta_max) const
 {
    // Return pointer to TF1 giving Rutherford cross-section (b/sr) in the Lab as a
    // function of projectile (OfNucleus=3) or target (OfNucleus=4) lab scattering angle
@@ -1346,7 +1473,7 @@ TF1* KV2Body::GetXSecRuthLabFunc(Int_t OfNucleus, Double_t theta_min, Double_t t
    TF1* fXSecRuthLab = (TF1*)gROOT->GetListOfFunctions()->FindObject(name.Data());
    if (!fXSecRuthLab) {
       fXSecRuthLab = new TF1(name.Data(),
-                             this, &KV2Body::XSecRuthLab, theta_min, theta_max, 1, "KV2Body", "XSecRuthLab");
+                             const_cast<KV2Body*>(this), &KV2Body::XSecRuthLab, theta_min, theta_max, 1, "KV2Body", "XSecRuthLab");
       fXSecRuthLab->SetParameter(0, OfNucleus);
       fXSecRuthLab->SetNpx(1000);
    }
@@ -1355,7 +1482,7 @@ TF1* KV2Body::GetXSecRuthLabFunc(Int_t OfNucleus, Double_t theta_min, Double_t t
 }
 //__________________________________________________________________________________________________
 
-TF1* KV2Body::GetXSecRuthLabIntegralFunc(Int_t OfNucleus, Double_t theta_min, Double_t theta_max)
+TF1* KV2Body::GetXSecRuthLabIntegralFunc(Int_t OfNucleus, Double_t theta_min, Double_t theta_max) const
 {
    // Return pointer to TF1 giving Rutherford cross-section (b/sr) in the Lab as a
    // function of projectile (OfNucleus=3) or target (OfNucleus=4) lab scattering angle
@@ -1382,7 +1509,7 @@ TF1* KV2Body::GetXSecRuthLabIntegralFunc(Int_t OfNucleus, Double_t theta_min, Do
    TF1* fXSecRuthLab = (TF1*)gROOT->GetListOfFunctions()->FindObject(name.Data());
    if (!fXSecRuthLab) {
       fXSecRuthLab = new TF1(name.Data(),
-                             this, &KV2Body::XSecRuthLabInt, theta_min, theta_max, 1, "KV2Body", "XSecRuthLabInt");
+                             const_cast<KV2Body*>(this), &KV2Body::XSecRuthLabInt, theta_min, theta_max, 1, "KV2Body", "XSecRuthLabInt");
       fXSecRuthLab->SetParameter(0, OfNucleus);
       fXSecRuthLab->SetNpx(1000);
    }

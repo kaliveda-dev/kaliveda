@@ -2,12 +2,10 @@
 //Author: ,,,
 
 #include "KVFAZIADetector.h"
-#include "KVFAZIACalibrator.h"
 #include "KVIDTelescope.h"
 #include "KVFAZIA.h"
 #include "KVSignal.h"
 #include "TClass.h"
-#include "KVLightEnergyCsIFull.h"
 #include "KVDataSet.h"
 
 ClassImp(KVFAZIADetector)
@@ -57,10 +55,6 @@ Double_t KVFAZIADetector::GetSetupParameter(const Char_t* parname)
 
 }
 
-void KVFAZIADetector::RefreshCalibratorPointers()
-{
-}
-
 //________________________________________________________________
 KVFAZIADetector::KVFAZIADetector()
 {
@@ -79,97 +73,6 @@ KVFAZIADetector::KVFAZIADetector(const Char_t* type, const Float_t thick) : KVDe
 KVFAZIADetector::~KVFAZIADetector()
 {
    // Destructor
-}
-
-//________________________________________________________________
-//KVList* KVFAZIADetector::PrepareIDTelescopeList()
-//{
-
-//   KVList* lsub = new KVList();
-//   lsub->SetOwner(kFALSE);
-
-//   KVList* ltel = GetAlignedIDTelescopes();
-//   TList* ldet = GetAlignedDetectors();
-//   KVNumberList nl;
-//   nl.SetMinMax(0, ltel->GetEntries() - 1);
-//   for (Int_t ii = 0; ii < ldet->GetEntries(); ii += 1) {
-//      KVDetector* det = (KVDetector*)ldet->At(ii);
-//      for (Int_t jj = 0; jj < ltel->GetEntries(); jj += 1) {
-//         KVIDTelescope* tel = (KVIDTelescope*)ltel->At(jj);
-//         if (tel->GetDetector(1) == det || (tel->GetSize() == 2 && tel->GetDetector(2) == det)) {
-//            if (nl.Contains(jj)) {
-//               lsub->Add(tel);
-//               nl.Remove(jj);
-//            }
-//         }
-//      }
-//   }
-//   return lsub;
-
-//}
-
-////________________________________________________________________
-//void KVFAZIADetector::SortIDTelescopes()
-//{
-
-//   KVList* lsub = PrepareIDTelescopeList();
-//   KVList* ltel = GetAlignedIDTelescopes();
-//   Int_t nn = ltel->GetEntries();
-//   for (Int_t ii = 0; ii < nn; ii += 1)
-//      ltel->RemoveAt(0);
-//   for (Int_t ii = 0; ii < nn; ii += 1)
-//      ltel->Add(lsub->At(ii));
-//   delete lsub;
-
-//}
-
-//________________________________________________________________
-void KVFAZIADetector::SetCalibrators()
-{
-   //Set up calibrators for this detector. Call once name has been set.
-   //test to check that there is not already defined calibrators
-   //
-   if (GetListOfCalibrators())
-      return;
-
-   TString sf = "";
-   KVCalibrator* fzcal;
-
-   if (fIdentifier == kCSI) {
-      fzcal = new KVLightEnergyCsIFull(GetName(), "Channel-Energy", this, KVLightEnergyCsIFull::kExact);
-   }
-   else {
-      fzcal = new KVFAZIACalibrator(GetName(), "Channel-Energy");
-      sf = gEnv->GetValue("FAZIADetector.Calib.Channel-Energy", "");
-      if (sf == "") {
-         Warning("SetCalibrators", "No formula defined for Calibration Channel-Energy");
-      }
-      else {
-         ((KVFAZIACalibrator*)fzcal)->SetFunction(sf.Data());
-      }
-   }
-   if (!AddCalibrator(fzcal)) delete fzcal;
-
-   fzcal = new KVFAZIACalibrator(GetName(), "Channel-Volt");
-   sf = gEnv->GetValue("FAZIADetector.Calib.Channel-Volt", "");
-   if (sf == "") {
-      Warning("SetCalibrators", "No formula defined for Calibration Channel-Volt");
-   }
-   else {
-      ((KVFAZIACalibrator*)fzcal)->SetFunction(sf.Data());
-   }
-   if (!AddCalibrator(fzcal)) delete fzcal;
-
-   fzcal = new KVFAZIACalibrator(GetName(), "Volt-Energy");
-   sf = gEnv->GetValue("FAZIADetector.Calib.Volt-Energy", "");
-   if (sf == "") {
-      Warning("SetCalibrators", "No formula defined for Calibration Volt-Energy");
-   }
-   else {
-      ((KVFAZIACalibrator*)fzcal)->SetFunction(sf.Data());
-   }
-
-   if (!AddCalibrator(fzcal)) delete fzcal;
 }
 
 //________________________________________________________________
@@ -394,7 +297,7 @@ Bool_t KVFAZIADetector::Fired(Option_t*) const
             }
          }
          else {
-            Warning("Fired", "%s has empty signal %s", GetName(), sig->GetName());
+            //Warning("Fired", "%s has empty signal %s", GetName(), sig->GetName());
          }
       }
    }
@@ -478,20 +381,20 @@ void KVFAZIADetector::SetFPGAEnergy(int sigid, Int_t idx, Double_t energy)
 {
    switch (sigid) {
       case KVSignal::kQH1:
-         if (idx == 0) GetDetectorSignal("QH1.FPGAEnergy")->SetValue(energy);
+         if (idx == 0) SetQH1FPGAEnergy(energy);
          break;
       case KVSignal::kI1:
          break;
       case KVSignal::kQL1:
          break;
       case KVSignal::kQ2:
-         if (idx == 0) GetDetectorSignal("Q2.FPGAEnergy")->SetValue(energy);
+         if (idx == 0) SetQ2FPGAEnergy(energy);
          break;
       case KVSignal::kI2:
          break;
       case KVSignal::kQ3:
-         if (idx == 0) GetDetectorSignal("Q3.FPGAEnergy")->SetValue(energy);
-         if (idx == 1) GetDetectorSignal("Q3.FPGAFastEnergy")->SetValue(energy);
+         if (idx == 0) SetQ3FPGAEnergy(energy);
+         if (idx == 1) SetQ3FastFPGAEnergy(energy);
          break;
    }
 }

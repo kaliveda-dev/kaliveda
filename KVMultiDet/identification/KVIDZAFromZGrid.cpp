@@ -82,6 +82,7 @@ KVIDZAFromZGrid::KVIDZAFromZGrid()
    fTables.SetOwner(kTRUE);
    SetOnlyZId();
    fMassCut = nullptr;
+   fIgnoreMassID = false;
 }
 
 KVIDZAFromZGrid::~KVIDZAFromZGrid()
@@ -136,6 +137,12 @@ void KVIDZAFromZGrid::ReadFromAsciiFile(std::ifstream& gridfile)
       }
       LoadPIDRanges();
    }
+   // if <PARAMETER> IgnoreMassID=1 appears in file, we are only using the PID intervals to clean
+   // up a messy de-e plot, not to give mass identification. particles will only be identified in Z.
+   if (GetParameters()->HasParameter("IgnoreMassID") && GetParameters()->GetIntValue("IgnoreMassID") == 1)
+      fIgnoreMassID = true;
+   else
+      fIgnoreMassID = false;
 }
 
 void KVIDZAFromZGrid::WriteToAsciiFile(std::ofstream& gridfile)
@@ -307,6 +314,9 @@ void KVIDZAFromZGrid::Identify(Double_t x, Double_t y, KVIdentificationResult* i
       }
       idr->IDOK = (fICode < kICODE4);
    }
+
+   // ignore isotopic successful isotopic identification if fIgnoreMassID=true
+   if (fIgnoreMassID && idr->IDOK && idr->Aident) idr->Aident = false;
 
    // set comments in identification result
    switch (fICode) {

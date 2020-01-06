@@ -404,12 +404,7 @@ void KVGroupReconstructor::Identify()
 
 void KVGroupReconstructor::Calibrate()
 {
-   // Calculate and set energies of all identified particles in event.
-   //
-   // This will call the KVReconstructedNucleus::Calibrate() method of each
-   // uncalibrated particle (those for which KVReconstructedNucleus::IsCalibrated()
-   // returns kFALSE).
-
+   // Calculate and set energies of all identified but uncalibrated particles in event.
 
    KVReconstructedNucleus* d;
 

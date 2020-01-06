@@ -1,7 +1,6 @@
 SignalIn:                                QH1.FPGAEnergy
 SignalOut:                               Energy
-CalibType:                               Channel-Energy QH1
-CalibClass:                              FunctionCal
+CalibType:                               ChannelEnergyQH1
 CalibOptions:                            func=pol1,min=0,max=10000,inverse=false
 Si1-12: -0,0.279423
 Si1-13: -0,0.258867

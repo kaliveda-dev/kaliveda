@@ -28,8 +28,6 @@ public:
    KVIDSiLiCsI();
    virtual ~ KVIDSiLiCsI();
 
-   void Calibrate(KVReconstructedNucleus* part);
-
    ClassDef(KVIDSiLiCsI, 1)    //INDRA identification using SiLi-CsI matrices
 };
 

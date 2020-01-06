@@ -73,6 +73,10 @@ void KVExpSetUp::Build(Int_t run)
    lmultidetarrayclasses =
       gDataSetManager->GetDataSet(fDataSet)->GetDataSetEnv("DataSet.ExpSetUp.ClassList", IsA()->GetName());
    lmultidetarrayclasses.Begin(" ");
+
+   // VERY IMPORTANT: deactivate 'SetParameters(run)' being called by MakeMultiDetector for sub-arrays!
+   fMakeMultiDetectorSetParameters = kFALSE;
+
    while (!lmultidetarrayclasses.End()) {
       KVString sname = lmultidetarrayclasses.Next();
       Info("Build", "Build %s %s\n", gDataSet->GetName(), sname.Data());
@@ -88,12 +92,16 @@ void KVExpSetUp::Build(Int_t run)
       }
    }
 
+   // VERY IMPORTANT: reactivate 'SetParameters(run)' so it is called for us when we return
+   // to the MakeMultiDetector method which called us
+   fMakeMultiDetectorSetParameters = kTRUE;
+
    gGeoManager->DefaultColors();
    gGeoManager->CloseGeometry();
 
    TIter nxt_mda(&fMDAList);
    while ((tmp = (KVMultiDetArray*)nxt_mda())) {
-      tmp->PerformClosedROOTGeometryOperations(run);
+      tmp->PerformClosedROOTGeometryOperations();
       unique_ptr<KVSeqCollection> groups(tmp->GetStructureTypeList("GROUP"));
       if (group_offset) {
          // renumber all groups to keep unique names/numbers
@@ -118,9 +126,6 @@ void KVExpSetUp::Build(Int_t run)
    SetGeometry(gGeoManager);
 
    gMultiDetArray = this;
-   fCurrentRun = 0;
-   // calibration parameters may not have been correctly retrieved during construction
-   if (run > 0) SetParameters(run);
    SetBit(kIsBuilt);
    SetName(myname);
 }
@@ -250,16 +255,6 @@ void KVExpSetUp::SetCalibratorParameters(KVDBRun* r, const TString&)
    KVMultiDetArray* mda;
    while ((mda = (KVMultiDetArray*)next_array())) {
       mda->SetCalibratorParameters(r, mda->GetName());
-   }
-}
-
-void KVExpSetUp::SetPedestalParameters(KVDBRun* r, const TString&)
-{
-   // Set pedestals for all detectors for the run
-   TIter next_array(&fMDAList);
-   KVMultiDetArray* mda;
-   while ((mda = (KVMultiDetArray*)next_array())) {
-      mda->SetPedestalParameters(r, mda->GetName());
    }
 }
 

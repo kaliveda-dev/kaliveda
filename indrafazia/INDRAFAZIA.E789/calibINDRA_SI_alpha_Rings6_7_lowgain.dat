@@ -1,11 +1,12 @@
 # alpha calibration for INDRA silicons rings 6/7
 # for silicons of rings 6 & 7 with gain (4*sqrt(2))
 RunList:                                 65000-199999
-SignalIn:                                Volt
+SignalIn:                                Volts
 SignalOut:                               Energy
-CalibType:                               Volt-Energy
-CalibClass:                              VoltEnergy
+CalibType:                               VoltEnergy
+CalibOptions:                            func=pol1,min=0,max=10
 SI_0601: 0.210498     ,198.356 
+SI_0603: -0.0372395  ,194.975 
 SI_0604: 0.357725     ,190.285 
 SI_0605: 0.200678     ,194.613 
 SI_0606: 0.255167     ,194.613 
@@ -23,7 +24,6 @@ SI_0618: 0.437645     ,190.285
 SI_0619: 0.129099     ,202.857  
 SI_0620: 0.178702     ,198.681  
 SI_0621: 0.242236     ,194.418  
-SI_0622: -0.316169    ,219.198  
 SI_0623: 0.0813514    ,198.681  
 SI_0624: 0.301023     ,190.575  
 SI_0701: -0.0270979   ,202.857 

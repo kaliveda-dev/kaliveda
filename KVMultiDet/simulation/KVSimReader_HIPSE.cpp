@@ -28,17 +28,13 @@ KVSimReader_HIPSE::KVSimReader_HIPSE(KVString filename)
 
 KVSimReader_HIPSE::~KVSimReader_HIPSE()
 {
-   // Destructor
-   //if (h1) delete h1; h1 = 0;
-   h1 = 0;
 }
 
 
 void KVSimReader_HIPSE::ReadFile()
 {
 
-   AddObject(new TH1F("impact_parameter", "distri", 200, 0, 20));
-   h1 = (TH1F*)GetLinkedObjects()->Last();
+   AddObject(h1 = new TH1F("impact_parameter", "distri", 200, 0, 20));
 
    if (!ReadHeader()) return;
 
@@ -269,7 +265,7 @@ Bool_t KVSimReader_HIPSE::ReadNucleus()
          return kFALSE;
 
       case 1:
-         //On effectue la meme rotation que les impulsions ... à vérifier
+         //On effectue la meme rotation que les impulsions ... Ã  vÃ©rifier
          nuc->SetAngMom(GetDoubleReadPar(1), GetDoubleReadPar(2), GetDoubleReadPar(0));
          return kTRUE;
 

@@ -40,7 +40,7 @@ protected:
    TVirtualPad*    fPad;            //!pad in which graph is drawn
    KVNumberList   fRunList;         //runs for which grid is valid
    TList          fTelescopes;      //!ID telescopes for which grid is valid
-   TString        fDyName;          //!dynamically generated name
+   mutable TString fDyName;          //!dynamically generated name
    TString        fPattern;         //pattern of filenames used to write or read grid
    Int_t          fMassFormula;     // *OPTION={GetMethod="GetMassFormula";SetMethod="SetMassFormula";Items=(0="Beta-stability", 1="VEDA mass", 2="EAL mass", 3="EAL residues", 99="2Z+1")}*
    KVIDGraph*     fLastSavedVersion;//!copy of last save version of grid, used for 'undo'
@@ -385,7 +385,7 @@ public:
    }
    virtual void TestIdentification(TH2F* data, KVHashList& histos, KVNameValueList& histo_names);
 
-   TString GetNamesOfIDTelescopes();
+   const Char_t* GetNamesOfIDTelescopes() const;
 
    //---- The following redeclarations are here just to remove the *MENU* tag which
    //---- is present in TGraph.h, to stop these methods appearing in the ID line context menus

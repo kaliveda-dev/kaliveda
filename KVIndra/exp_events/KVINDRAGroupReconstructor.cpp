@@ -2,6 +2,7 @@
 //Author: John Frankland,,,
 
 #include "KVINDRAGroupReconstructor.h"
+#include <KVIDGCsI.h>
 #include <KVIDINDRACsI.h>
 #include <KVINDRADetector.h>
 #include "KVINDRACodeMask.h"
@@ -190,7 +191,7 @@ double KVINDRAGroupReconstructor::DoBeryllium8Calibration(KVReconstructedNucleus
    // Note: fECsI is -ve, because energy is calculated not measured
 
    KVCsI* csi = GetCsI(n);
-   Double_t half_light = csi->GetLumiereTotale() * 0.5;
+   Double_t half_light = csi->GetDetectorSignalValue("TotLight") * 0.5;
    KVNucleus tmp(2, 4);
    double ecsi = -2.*csi->GetCorrectedEnergy(&tmp, half_light, kFALSE);
    SETINDRAECODE(n, 2);

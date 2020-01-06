@@ -27,14 +27,12 @@ ClassImp(KVIDPhoswich)
 //
 //Identification in Phoswich R-L matrices of INDRA
 //
-//Identification subcodes are written in bits 0-3 of KVIDSubCodeManager
-//(see KVINDRACodes)
+
 KVIDPhoswich::KVIDPhoswich()
 {
-   fIDCode = kIDCode_Phoswich;
+   set_id_code(kIDCode_Phoswich);
    fZminCode = kIDCode_ZminCsI;
    fECode = kECode1;
-   SetSubCodeManager(4, 3);
 }
 
 KVIDPhoswich::~KVIDPhoswich()

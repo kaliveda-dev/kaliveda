@@ -5,8 +5,9 @@ endif()
 
 BUILD_KALIVEDA_MODULE(analysis
 	PARENT ${KVSUBPROJECT}
-	KVMOD_DEPENDS exp_events daq_cec geometry identification calibration db
-	LIB_EXCLUDE ${excluded_classes}
+#        KVMOD_DEPENDS exp_events daq_cec geometry identification calibration db
+        KVMOD_DEPENDS exp_events daq_cec geometry identification db
+        LIB_EXCLUDE ${excluded_classes}
    DICT_EXCLUDE KVSelector.h
 	EXTRA_LIBS KVMultiDetgui
 )

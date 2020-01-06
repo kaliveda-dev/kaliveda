@@ -55,11 +55,9 @@ void ReconDataSelectorTemplate::InitAnalysis(void)
    t->Branch("Vz", Vz, "Vz[Mult]/D");
 
    /*** DEFINE WHERE TO SAVE THE RESULTS ***/
-   // When running in batch/PROOF mode, we use the job name
-   if (gDataAnalyser->GetBatchSystem())
-      SetCombinedOutputFile(Form("%s.root", gDataAnalyser->GetBatchSystem()->GetJobName()));
-   else
-      SetCombinedOutputFile(Form("ReconDataSelectorTemplate_results.root"));
+   // This filename will be used for interactive and PROOFlite jobs.
+   // When running in batch mode, this will automatically use the job name.
+   SetJobOutputFileName("ReconDataSelectorTemplate_results.root");
 }
 
 //_____________________________________

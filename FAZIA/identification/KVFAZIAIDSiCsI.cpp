@@ -19,6 +19,7 @@ KVFAZIAIDSiCsI::KVFAZIAIDSiCsI()
 {
    // Default constructor
    SetType("Si-CsI");
+   set_id_code(kSi2CsI);
    fBelowProton = 0;
    fSiThreshold = 0;
 
@@ -35,22 +36,10 @@ Bool_t KVFAZIAIDSiCsI::Identify(KVIdentificationResult* idr, Double_t x, Double_
 {
    //Particle identification and code setting using identification grid (class KVIDZAGrid).
 
-   idr->SetIDType(GetType());
-   idr->IDattempted = kTRUE;
+   Bool_t ok = KVFAZIAIDTelescope::Identify(idr, x, y);
 
-   //perform identification
-   Double_t si2 = (y < 0. ? GetIDMapY() : y);
-   Double_t csi = (x < 0. ? GetIDMapX() : x);
-   // std::cout << "Inside KVFAZIAIDSiCsI::IDentify csi=" << csi << " si2=" << si2 << "\n";
-
-   //test if line below proton and si threshold are there
-   //if yes test the position of the point respect to
-   //these lines
-   //Bool_t OKproton = ((fBelowProton && fBelowProton->TestPoint(csi, si2)) || !fBelowProton);
-   //Bool_t OKthreshold = ((fSiThreshold && fSiThreshold->TestPoint(csi, si2)) || !fSiThreshold);
-   //if (OKproton && OKthreshold){
-
-
+   Double_t csi, si2;
+   GetIDGridCoords(csi, si2, TheGrid, x, y);
    if (fBelowProton) {
       if (fBelowProton->TestPoint(csi, si2)) idr->deltaEpedestal = KVIdentificationResult::deltaEpedestal_NO;
       else idr->deltaEpedestal = KVIdentificationResult::deltaEpedestal_YES;
@@ -59,19 +48,7 @@ Bool_t KVFAZIAIDSiCsI::Identify(KVIdentificationResult* idr, Double_t x, Double_
       idr->deltaEpedestal = KVIdentificationResult::deltaEpedestal_UNKNOWN;
    }
 
-   if (TheGrid->IsIdentifiable(csi, si2)) {
-      TheGrid->Identify(csi, si2, idr);
-   }
-   else {
-      idr->IDOK = kFALSE;
-      idr->IDquality = KVIDZAGrid::kICODE8;
-   }
-
-   // set general ID code
-   idr->IDcode = GetIDCode();
-
-   return kTRUE;
-
+   return ok;
 }
 
 //____________________________________________________________________________________
@@ -82,7 +59,8 @@ void KVFAZIAIDSiCsI::Initialize()
    // This method MUST be called once before any identification is attempted.
    // Initialisation of grid is performed here.
    // IsReadyForID() will return kTRUE if a grid is associated to this telescope for the current run.
-//  printf("in KVFAZIAIDSiCsI::Initialize()\n");
+
+   ResetBit(kReadyForID);
    TheGrid = (KVIDZAGrid*) GetIDGrid();
    if (TheGrid) {
       //printf("Grid Found\n");
@@ -90,7 +68,14 @@ void KVFAZIAIDSiCsI::Initialize()
       TheGrid->Initialize();
       fBelowProton = (KVIDCutLine*)TheGrid->GetCut("PIEDESTAL");
       fSiThreshold = (KVIDCutLine*)TheGrid->GetCut("threshold");
-      SetBit(kReadyForID);
+      // make sure both x & y axes' signals are well set up
+      if (!fGraphCoords[TheGrid].fVarX || !fGraphCoords[TheGrid].fVarY) {
+         Warning("Initialize",
+                 "ID tel. %s: grid %s has undefined VarX(%s:%p) or VarY(%s:%p) - WILL NOT USE",
+                 GetName(), TheGrid->GetName(), TheGrid->GetVarX(), fGraphCoords[TheGrid].fVarX, TheGrid->GetVarY(), fGraphCoords[TheGrid].fVarY);
+      }
+      else
+         SetBit(kReadyForID);
    }
    else {
       ResetBit(kReadyForID);

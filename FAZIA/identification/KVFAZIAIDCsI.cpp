@@ -22,6 +22,7 @@ KVFAZIAIDCsI::KVFAZIAIDCsI()
 {
    // Default constructor
    SetType("CsI");
+   set_id_code(kCsI);
    CsIGrid = 0;
    fCsI = 0;
    /* in principle all CsI R-L telescopes can identify mass & charge */
@@ -37,23 +38,13 @@ Bool_t KVFAZIAIDCsI::Identify(KVIdentificationResult* IDR, Double_t x, Double_t 
 {
    //Particle identification and code setting using identification grid KVIDGCsI* fGrid.
 
-   IDR->SetIDType(GetType());
-   IDR->IDattempted = kTRUE;
-
-   //perform identification
-   Double_t csir = (y < 0. ? GetIDMapY() : y);
-   Double_t csil = (x < 0. ? GetIDMapX() : x);
-
-   CsIGrid->Identify(csil, csir, IDR);
-
-   // set general ID code
-   IDR->IDcode = GetIDCode();
+   Bool_t ok = KVFAZIAIDTelescope::Identify(IDR, x, y);
 
    // general ID code for gammas
    if (IDR->IDquality == KVIDGCsI::kICODE10)
       IDR->IDcode = 0;
 
-   return kTRUE;
+   return ok;
 
 }
 

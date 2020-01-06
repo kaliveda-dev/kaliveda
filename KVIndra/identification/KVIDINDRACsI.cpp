@@ -16,12 +16,12 @@
  ***************************************************************************/
 
 #include "KVIDINDRACsI.h"
-#include "KVCsI.h"
-#include "KVReconstructedNucleus.h"
 #include "KVINDRACodeMask.h"
 #include "TMath.h"
 #include "KVIdentificationResult.h"
-#include "KVDataSet.h"
+#include <KVIDGCsI.h>
+#include <KVINDRADetector.h>
+#include <KVReconstructedNucleus.h>
 
 ClassImp(KVIDINDRACsI)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,15 +29,13 @@ ClassImp(KVIDINDRACsI)
 //
 //Identification in CsI R-L matrices of INDRA
 //
-//Identification subcodes are written in bits 0-3 of KVIDSubCodeManager
-//(see KVINDRACodes). They correspond to the values of KVIDGCsI::GetQualityCode()
-//(see KVIDGCsI class description).
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 KVIDINDRACsI::KVIDINDRACsI()
 {
-   fIDCode = kIDCode_CsI;
+   set_id_code(kIDCode_CsI);
    fZminCode = kIDCode_ZminCsI;
    fECode = kECode1;
-   SetSubCodeManager(4, 3);
    CsIGrid = 0;
 
    fThresMin[0][0] = 1;
@@ -61,24 +59,20 @@ KVIDINDRACsI::KVIDINDRACsI()
    SetHasMassID(kTRUE);
 }
 
-KVIDINDRACsI::~KVIDINDRACsI()
-{
-}
-
 //________________________________________________________________________________________//
 
 const Char_t* KVIDINDRACsI::GetArrayName()
 {
    // Name of telescope given in the form CSI_R_L_Ring-numberTelescope-number
-   //where ring and telescope numbers are those of the smallest (in angular terms)
-   //detector of the telescope (if both are the same size, either one will do).
+   // where ring and telescope numbers are those of the smallest (in angular terms)
+   // detector of the telescope (if both are the same size, either one will do).
    // The detectors are signified by their TYPE names i.e. KVDetector::GetType
 
    //in order to access angular dimensions of detectors, we need their KVTelescopes
-   KVINDRATelescope* de_det = dynamic_cast<KVINDRADetector*>(GetDetector(1))->GetTelescope();
+   KVINDRADetector* de_det = dynamic_cast<KVINDRADetector*>(GetDetector(1));
    UInt_t ring, mod;
    ring = de_det->GetRingNumber();
-   mod = de_det->GetNumber();
+   mod = de_det->GetModuleNumber();
    TString dummy;
    dummy.Form("%s_R_L", GetDetector(1)->GetType());
    SetType(dummy.Data());
@@ -98,9 +92,10 @@ Bool_t KVIDINDRACsI::Identify(KVIdentificationResult* IDR, Double_t x, Double_t 
    IDR->IDattempted = kTRUE;
 
    //perform identification
-   Double_t csir = (y < 0. ? GetIDMapY() : y);
-   Double_t csil = (x < 0. ? GetIDMapX() : x);
+   Double_t csir, csil;
+   GetIDGridCoords(csil, csir, CsIGrid, x, y);
    CsIGrid->Identify(csil, csir, IDR);
+   IDR->SetGridName(CsIGrid->GetName());
 
    // set general ID code
    IDR->IDcode = kIDCode2;
@@ -110,26 +105,7 @@ Bool_t KVIDINDRACsI::Identify(KVIdentificationResult* IDR, Double_t x, Double_t 
       IDR->IDcode = kIDCode0;
 
    return kTRUE;
-
 }
-
-void KVIDINDRACsI::Initialize()
-{
-   // Initialisation of telescope before identification.
-   // This method MUST be called once before any identification is attempted.
-   // Initialisation of grid is performed here.
-   // IsReadyForID() will return kTRUE if a grid is associated to this telescope for the current run,
-   // or if no calibr/ident parameters are defined for the dataset
-   CsIGrid = (KVIDGCsI*) GetIDGrid();
-   if (CsIGrid) {
-      CsIGrid->Initialize();
-      SetBit(kReadyForID);
-   }
-   else
-      ResetBit(kReadyForID);
-   if (!gDataSet->HasCalibIdentInfos()) SetBit(kReadyForID);
-}
-
 
 void KVIDINDRACsI::SetIdentificationStatus(KVReconstructedNucleus* n)
 {

@@ -1,6 +1,16 @@
+INDRA.CSI_L_Pedestals.dat
+INDRA.CSI_R_Pedestals.dat
 calibINDRA_SI_ChannelVolt_Rings8_9.dat
 calibINDRA_SI_ChannelVolt_Rings6_7_lowgain.dat
 calibINDRA_SI_ChannelVolt_Rings6_7_maxgain.dat
 calibINDRA_SI_alpha_Rings8_9.dat
 calibINDRA_SI_alpha_Rings6_7_lowgain.dat
 calibINDRA_SI_alpha_Rings6_7_maxgain.dat
+calibINDRA_CSI_58-58a32.dat
+calibINDRA_CSI_58-64a32.dat
+calibINDRA_CSI_64-58a32.dat
+calibINDRA_CSI_64-64a32.dat
+calibINDRA_CSI_58-58a52.dat
+calibINDRA_CSI_58-64a52.dat
+calibINDRA_CSI_64-58a52.dat
+calibINDRA_CSI_64-64a52.dat

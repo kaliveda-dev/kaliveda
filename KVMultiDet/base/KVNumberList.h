@@ -77,7 +77,6 @@ public:
 
    /* Add numbers/lists to the list */
    void Add(Int_t);
-   void Add(const Char_t*);
    void Add(const KVNumberList&);
    void Add(Int_t, Int_t*);
    void Add(const IntArray&);

@@ -8,6 +8,8 @@
 #include "KVReconstructedNucleus.h"
 #include "TF1.h"
 
+#include <KVFAZIADetector.h>
+
 class KVFAZIAIDTelescope : public KVIDTelescope {
 
 protected:

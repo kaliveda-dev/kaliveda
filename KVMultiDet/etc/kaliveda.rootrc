@@ -404,7 +404,7 @@ Plugin.KVSimReader: ELIE  KVSimReader_ELIE KVMultiDetsimulation "KVSimReader_ELI
 +Plugin.KVSimReader: SMF_asym  KVSimReader_SMF_asym KVMultiDetsimulation "KVSimReader_SMF_asym()"
 
 # Plugins for detector calibration
-Plugin.KVCalibrator: LinCal  KVLinCal   KVMultiDetcalibration "KVLinCal()"
-+Plugin.KVCalibrator: LightEnergyCsI  KVLightEnergyCsIFull   KVMultiDetcalibration "KVLightEnergyCsIFull()"
+Plugin.KVCalibrator: ^LightEnergyCsI$  KVLightEnergyCsI   KVMultiDetcalibration "KVLightEnergyCsI()"
++Plugin.KVCalibrator: ^LightEnergyCsIFull$  KVLightEnergyCsIFull   KVMultiDetcalibration "KVLightEnergyCsIFull()"
 +Plugin.KVCalibrator: PulseHeightDefect  KVPulseHeightDefect   KVMultiDetcalibration "KVPulseHeightDefect()"
 +Plugin.KVCalibrator: Recombination  KVRecombination   KVMultiDetcalibration "KVRecombination()"

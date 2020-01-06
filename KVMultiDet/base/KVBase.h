@@ -49,6 +49,7 @@ public:
    KVBase();
    KVBase(const Char_t* name, const Char_t* title = "");
    KVBase(const KVBase&);
+   KVBase& operator=(const KVBase&);
    virtual ~ KVBase();
 
    inline void SetType(const Char_t* str)

@@ -1,106 +1,166 @@
-/***************************************************************************
-                          kvcalibrator.h  -  description
-                             -------------------
-    begin                : mer sep 18 2002
-    copyright            : (C) 2002 by Alexis Mignon
-    email                : mignon@ganil.fr
-
-$Id: KVCalibrator.h,v 1.17 2007/04/11 22:52:27 franklan Exp $
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 #ifndef __KV_CALIBRATOR__
 #define __KV_CALIBRATOR__
 
 #include "KVBase.h"
 #include "TRef.h"
 #include "KVDetector.h"
-#include "TGraph.h"
+#include "TF1.h"
+
+/**
+  \class KVCalibrator
+  \ingroup Geometry
+  \brief Base class for all detector calibrations
+
+  You can define a basic calibrator object with a mathematical formula string (TFormula) and a type name:
+
+  ~~~~~~~~~~~~~{.cpp}
+  KVCalibrator* cal = new KVCalibrator("[0]*pow((x-[1]),[2])+[3]", "SomeCalibration");
+  ~~~~~~~~~~~~~
+
+  The formula will be used by a TF1, so you can retrieve e.g. the number of parameters with:
+
+  ~~~~~~~~~~~~~{.cpp}
+  cout << cal->GetNumberParams() << endl;
+  4
+  ~~~~~~~~~~~~~
+
+  Setting and retrieving parameter values are handled by:
+
+  ~~~~~~~~~~~~~{.cpp}
+  cal->SetParameter(0, 26.7);
+
+  cout << cal->GetParameter(0) << endl;
+  26.7
+  ~~~~~~~~~~~~~
+
+  Before associating it with a detector to calibrate, you need to define the input 'signal' (see KVDetectorSignal class) which
+  must be provided by the detector, and the name of the output 'signal' resulting from this calibration which will be added
+  to the detector's list:
+
+  ~~~~~~~~~~~~~{.cpp}
+  cal->SetInputSignalType("RawDataParameter");
+  cal->SetOutputSignalType("Energy");
+  ~~~~~~~~~~~~~
+
+  The input 'signal' is of course the quantity that will be used in place of `x` in the formula given to the constructor.
+
+    > N.B. if the specified input signal is not defined for the detector the calibrator is associated with,
+    > no new output signal will be generated for the detector and the calibrator will be unused.
+
+  Associating the calibrator with a detector:
+
+  ~~~~~~~~~~~~~{.cpp}
+  // KVDetector det; // some detector or other
+  det.AddCalibrator(cal);
+
+  det.GetDetectorSignalValue("Energy"); // will use current value of "RawDataParameter" and the calibration parameters
+  ~~~~~~~~~~~~~
+
+    > N.B. the calibrator object is 'adopted' by the detector and will be deleted by the detector.
+    > Do not try to use the same calibrator object with more than one detector!
+
+  Adding to the detector will set the name of the calibrator object:
+
+  ~~~~~~~~~~~~~{.cpp}
+  cout << det.GetName() << endl;
+  Det_A14
+
+  cout << cal->GetName() << endl;
+  Det_A14_SomeCalibration
+  ~~~~~~~~~~~~~
+
+ */
 
 class KVCalibrator: public KVBase {
+
+   KVDetector* fDetector;           //! associated detector
+   TF1*        fCalibFunc;          //! calibration function
+   Bool_t      fReady;              //  = kTRUE if calibration formula & parameters have been set up
+   TString     fInputSignal;        //  type of signal used as input
+   TString     fOutputSignal;       //  type of output calibrated signal
+   Bool_t      fUseInverseFunction; //true if inverse i.e. TF1::GetX should be used for Compute()
+
 protected:
-   Int_t fParamNumber;          //number of parameters in the calibration formula
-   Double_t* fPar;              //[fParamNumber] array of parameters
-   KVDetector* fDetector;       //Detector to which this calibration corresponds
-   Bool_t fReady;               //=kTRUE if the detector is calibrated i.e. if the formula has been set up
-   TString fInputSignal;        //type of signal used as input
-   TString fOutputSignal;       //type of output calibrated signal
+   void SetCalibFunction(TF1* f)
+   {
+      // Set function for calibration. Delete any previous function.
+      SafeDelete(fCalibFunc);
+      fCalibFunc = f;
+   }
+   TF1* GetCalibFunction() const
+   {
+      return fCalibFunc;
+   }
+   Double_t do_inversion(Double_t x) const
+   {
+      Double_t xmin, xmax;
+      fCalibFunc->GetRange(xmin, xmax);
+      return fCalibFunc->GetX(x, xmin, xmax);
+   }
 
 public:
-   KVCalibrator();
-   KVCalibrator(UShort_t pnum);
-   KVCalibrator(const Char_t* name, const Char_t* type, UShort_t pnum);
-   KVCalibrator(const KVCalibrator&);
-   void init();
-   virtual ~ KVCalibrator();
+   KVCalibrator()
+      : KVBase("Calibrator", "KVCalibrator"), fDetector(nullptr), fCalibFunc(nullptr), fReady(kFALSE), fUseInverseFunction(kFALSE) {}
+   KVCalibrator(const KVString& formula, const KVString& type)
+      : KVBase("Calibrator", type), fDetector(nullptr), fCalibFunc(new TF1("KVCalibrator::fCalibFunc", formula)), fReady(kFALSE), fUseInverseFunction(kFALSE)
+   {
+      // Set up calibrator using mathematical formula
+   }
+   virtual ~KVCalibrator()
+   {
+      SafeDelete(fCalibFunc);
+   }
 
-   //Two calibrator objects are considered to be the same if they are
-   //of the same class and of the same type
-   Bool_t IsEqual(const TObject* obj) const
+   Int_t GetNumberParams() const
    {
-      return (obj->IsA() == IsA() && !strcmp(obj->GetTitle(), GetTitle()));
-   };
-
-   inline Int_t GetNumberParams() const
+      // return number of parameters in formula
+      return (fCalibFunc ? fCalibFunc->GetNpar() : 0);
+   }
+   void SetParameter(int i, Double_t par_val) const
    {
-      return fParamNumber;
-   };
-   void SetNumberParams(Int_t npar);
-   inline Double_t GetParameter(UShort_t i) const
+      if (fCalibFunc) fCalibFunc->SetParameter(i, par_val);
+   }
+   Double_t GetParameter(int i) const
    {
-      return fPar[i];
-   };
-   inline Bool_t GetStatus() const
-   {
-      return fReady;
-   };
-   virtual KVDetector* GetDetector() const
-   {
-      return fDetector;
-   };
-   virtual void SetParameter(UShort_t i, Float_t par_val)
-   {
-      fPar[i] = par_val;
-   };
-   virtual void SetDetector(KVDetector* kvd);
-   virtual void SetNameFromDetector();
-   virtual void SetStatus(Bool_t ready)
+      return (fCalibFunc ? fCalibFunc->GetParameter(i) : 0);
+   }
+   void SetStatus(Bool_t ready)
    {
       fReady = ready;
-   };
+   }
+   Bool_t GetStatus() const
+   {
+      return fReady;
+   }
    virtual void Print(Option_t* opt = "") const;
    virtual void Reset()
    {
-      for (Int_t i = 0; i < fParamNumber; i++) {
-         fPar[i] = 0;
+      for (Int_t i = 0; i < GetNumberParams(); i++) {
+         SetParameter(i, 0.0);
       }
       SetStatus(kFALSE);
    }
-   void SetParameters(Double_t val, ...);
-   virtual Double_t Compute(Double_t x) const = 0;
-   virtual Double_t operator()(Double_t x) = 0;
-   virtual Double_t Invert(Double_t x) = 0;
-   virtual Double_t InvertDouble(Double_t)
+   virtual Double_t Compute(Double_t x, const KVNameValueList&) const
    {
-      return 0;
-   }
-   virtual TGraph* MakeGraph(Double_t xmin, Double_t xmax, Int_t npoints =
-                                50) const;
+      // Compute calibrated value from input x
 
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   virtual void Copy(TObject&) const;
-#else
-   virtual void Copy(TObject&);
-#endif
+      return (fUseInverseFunction ? do_inversion(x) : fCalibFunc->Eval(x));
+   }
+   virtual Double_t Invert(Double_t x, const KVNameValueList&) const
+   {
+      // Compute value of input for given output value (inverted calibration)
+
+      return (!fUseInverseFunction ? do_inversion(x) : fCalibFunc->Eval(x));
+   }
+   Double_t operator()(Double_t x, const KVNameValueList& par = "")
+   {
+      // Same as Compute(x,par)
+      return Compute(x, par);
+   }
+   //virtual TGraph* MakeGraph(Double_t xmin, Double_t xmax, Int_t npoints = 50) const;
 
    static KVCalibrator* MakeCalibrator(const Char_t* type);
+
    virtual void SetOptions(const KVNameValueList&);
    void SetInputSignalType(const TString& type)
    {
@@ -118,8 +178,29 @@ public:
    {
       return fOutputSignal;
    }
+   void SetDetector(KVDetector* d)
+   {
+      fDetector = d;
+   }
+   KVDetector* GetDetector() const
+   {
+      return fDetector;
+   }
 
-   ClassDef(KVCalibrator, 1)    //Base class for calibration of detectors
+   void SetUseInverseFunction(Bool_t yes = kTRUE)
+   {
+      // Set true if the calibration function is actually the inverse
+      // i.e. if TF1::GetX(x) should be called in Compute() instead of TF1::Eval(x)
+      fUseInverseFunction = yes;
+   }
+   Bool_t IsUseInverseFunction() const
+   {
+      // Returns true if the calibration function is actually the inverse
+      // i.e. if TF1::GetX(x) should be called in Compute() instead of TF1::Eval(x)
+      return fUseInverseFunction;
+   }
+
+   ClassDef(KVCalibrator, 2)//Base class for calibration of detectors
 };
 
 #endif

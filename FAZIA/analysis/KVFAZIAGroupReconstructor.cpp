@@ -47,23 +47,23 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
 
    PART->GetReconstructionTrajectory()->IterateFrom();
    KVGeoDetectorNode* node;
+   KVNameValueList part_id(Form("Z=%d,A=%d", PART->GetZ(), PART->GetA()));
    while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
       det = (KVFAZIADetector*)node->GetDetector();
 
       if (det->IsCalibrated()) {
-         if (det->GetIdentifier() == KVFAZIADetector::kCSI) {
-            if (det->HasDetectorSignalValue("Energy")) {
-               KVLightEnergyCsIFull* calib = (KVLightEnergyCsIFull*)((KVCalibratedSignal*)det->GetDetectorSignal("Energy"))->GetCalibrator();
-               calib->SetZ(PART->GetZ());
-               calib->SetA(PART->GetA());
-               eloss[ntot - ndet - 1] = det->GetEnergy();
-            }
+         eloss[ntot - ndet - 1] = det->GetDetectorSignalValue("Energy", part_id);
+         if (det->GetIdentifier() == KVFAZIADetector::kSI1) {
+            fESI1 = eloss[ntot - ndet - 1];
          }
-         else eloss[ntot - ndet - 1] = det->GetEnergy();
-
-         if (det->GetIdentifier() == KVFAZIADetector::kSI1)      fESI1 = eloss[ntot - ndet - 1];
-         else if (det->GetIdentifier() == KVFAZIADetector::kSI2) fESI2 = eloss[ntot - ndet - 1];
-         else if (det->GetIdentifier() == KVFAZIADetector::kCSI) fECSI = eloss[ntot - ndet - 1];
+         else if (det->GetIdentifier() == KVFAZIADetector::kSI2) {
+            fESI2 = eloss[ntot - ndet - 1];
+         }
+         else if (det->GetIdentifier() == KVFAZIADetector::kCSI) {
+            fECSI = eloss[ntot - ndet - 1];
+         }
+         // set calibrated energy loss in detector
+         det->SetEnergyLoss(eloss[ntot - ndet - 1]);
          etot += eloss[ntot - ndet - 1];
          ndet_calib += 1;
       }
@@ -83,9 +83,6 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
             etot_avatar += temp;
             chi2 += TMath::Power((eloss[ntot - 1 - nn] - temp) / eloss[ntot - 1 - nn], 2.);
             avatar.SetKE(avatar.GetKE() - temp);
-//            if (det->GetIdentifier() == KVFAZIADetector::kSI1)      error_si1 = (fESI1 - temp) / fESI1;
-//            else if (det->GetIdentifier() == KVFAZIADetector::kSI2) error_si2 = (fESI2 - temp) / fESI2;
-//                else if (det->GetIdentifier() == KVFAZIADetector::kCSI) error_csi = (fECSI-temp)/fECSI;
          }
 
          chi2 /= ndet;
@@ -118,7 +115,8 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
       PART->SetIsCalibrated();
    }
    else {
-      if (((KVFAZIADetector*)PART->GetStoppingDetector())->GetIdentifier() == KVFAZIADetector::kCSI  && !(PART->GetStoppingDetector()->IsCalibrated()) && ndet_calib == 2) {
+      if (((KVFAZIADetector*)PART->GetStoppingDetector())->GetIdentifier() == KVFAZIADetector::kCSI
+            && !(PART->GetStoppingDetector()->IsCalibrated()) && ndet_calib == 2) {
          if (PART->GetZ() > 0) {
 //            if (!PART->IsAMeasured()) {
 //               if (GetZ() == 1)       SetA(1);
@@ -184,11 +182,14 @@ void KVFAZIAGroupReconstructor::PostReconstructionProcessing()
                // only store raw data, excluding any expressions based only on raw data
             {
                TString pname;
-               if (TString(ds->GetName()) != "DetTag" && TString(ds->GetName()) != "GTTag")
-                  pname = Form("%s.%s", det->GetName(), ds->GetName());
-               else
-                  pname = ds->GetName();
-               rnuc->GetParameters()->SetValue(pname, ds->GetValue());
+               // Only store non-zero parameters
+               if (ds->GetValue() != 0) {
+                  if (TString(ds->GetName()) != "DetTag" && TString(ds->GetName()) != "GTTag")
+                     pname = Form("%s.%s", det->GetName(), ds->GetName());
+                  else
+                     pname = ds->GetName();
+                  rnuc->GetParameters()->SetValue(pname, ds->GetValue());
+               }
             }
          }
 

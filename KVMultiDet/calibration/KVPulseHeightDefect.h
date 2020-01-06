@@ -26,9 +26,8 @@ public:
    KVPulseHeightDefect(KVDetector*);
    virtual ~KVPulseHeightDefect();
 
-   virtual Double_t Compute(Double_t E) const;
-   virtual Double_t operator()(Double_t);
-   virtual Double_t Invert(Double_t);
+   virtual Double_t Compute(Double_t, const KVNameValueList& = "") const;
+   virtual Double_t Invert(Double_t, const KVNameValueList& = "") const;
 
    void SetZ(Int_t z)
    {

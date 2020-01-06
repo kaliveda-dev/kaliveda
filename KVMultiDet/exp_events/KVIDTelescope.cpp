@@ -38,6 +38,7 @@ Author : $Author: franklan $
 #include "KVParticleCondition.h"
 
 #include <KVDetectorSignalExpression.h>
+#include <KVIDZAGrid.h>
 
 using namespace std;
 
@@ -109,6 +110,7 @@ ClassImp(KVIDTelescope)
 TEnv* KVIDTelescope::fgIdentificationBilan = nullptr;
 
 KVIDTelescope::KVIDTelescope()
+   : fDetectors(kFALSE), fGroup(nullptr), fIDGrids(kFALSE)
 {
    init();
 }
@@ -116,20 +118,16 @@ KVIDTelescope::KVIDTelescope()
 void KVIDTelescope::init()
 {
    //default init
-   fDetectors = new KVList(kFALSE);
-   fDetectors->SetCleanup(kTRUE);
-   fGroup = nullptr;
-   fIDGrids = new KVList(kFALSE);
-   fIDGrids->SetCleanup(kTRUE);
-   fVarX = fVarY = nullptr;
+   fDetectors.SetCleanup(kTRUE);
+   fIDGrids.SetCleanup(kTRUE);
    fMassIDValidity = nullptr;
 }
 
 void KVIDTelescope::Initialize(void)
 {
    // Default initialisation for ID telescopes.
-   // If telescope has two detectors (dE & E) and at least 1 grid
-   // then it is ready to identify particles after we initialise the grid (kReadyForID=true);
+   // If telescope has at least 1 grid then it is ready to identify
+   // particles after initialising the grid(s) (kReadyForID=true);
    // otherwise kReadyForID is set to kFALSE, unless the current dataset (if defined)
    // has been declared to have no associated identification/calibration parameters,
    // in which case kReadyForID is by default set to kTRUE (for filtering simulations).
@@ -150,13 +148,53 @@ void KVIDTelescope::Initialize(void)
    //
    //   [dataset].[telescope label].MassID.Validity:  (Z>3)&&(A<20)
    //
-   // To implement identification, make a class derived from KVIDTelescope
-   // and set kReadyForID to kTRUE in Initialize() method of derived class if
-   // necessary conditions for identification are met (has an ID grid etc.).
+   //For identifications using more than one grid, the default behaviour is to try identification
+   //with each grid in turn until a successful identification is obtained. The order in which
+   //the grids should be tried should be specified by a variable with the following format:
+   //
+   //~~~~~~~~~~~~~~~~
+   //[Dataset].[telescope label].GridOrder:  [Grid1],[Grid2],...
+   //~~~~~~~~~~~~~~~~
 
-   if (GetDetectors()->GetEntries() == 2 && GetIDGrid()) {
-      GetIDGrid()->Initialize();
-      SetBit(kReadyForID);
+   ResetBit(kReadyForID);
+   if (GetIDGrid()) {
+      KVIDGraph* gr;
+      TIter it(GetListOfIDGrids());
+      bool ok = kTRUE;
+      KVUniqueNameList tmp_list;// for re-ordering grids
+      bool mass_id = false;
+      while ((gr = (KVIDGraph*)it())) {
+         tmp_list.Add(gr);
+         if (gr->HasMassIDCapability()) mass_id = true;
+         gr->Initialize();
+         // make sure both x & y axes' signals are well set up
+         if (!fGraphCoords[gr].fVarX || !fGraphCoords[gr].fVarY) {
+            ok = kFALSE;
+            Warning("Initialize",
+                    "ID tel. %s: grid %s has undefined VarX(%s:%p) or VarY(%s:%p) - WILL NOT USE",
+                    GetName(), gr->GetName(), gr->GetVarX(), fGraphCoords[gr].fVarX, gr->GetVarY(), fGraphCoords[gr].fVarY);
+         }
+      }
+      // set to true if at least one grid can provide mass identification
+      SetHasMassID(mass_id);
+      // if more than one grid, need to re-order them according to [Dataset].[telescope label].GridOrder
+      if (GetListOfIDGrids()->GetEntries() > 1 && gDataSet) {
+         KVString grid_list = gDataSet->GetDataSetEnv(Form("%s.GridOrder", GetLabel()));
+         ok = kFALSE;
+         if (grid_list == "")
+            Warning("Initialize", "ID telescope %s has %d grids but no %s variable defined",
+                    GetName(), GetListOfIDGrids()->GetEntries(), Form("%s.GridOrder", GetLabel()));
+         else if (grid_list.GetNValues(",") != GetListOfIDGrids()->GetEntries())
+            Warning("Initialize", "ID telescope %s has %d grids but %d grids appear in variable %s",
+                    GetName(), GetListOfIDGrids()->GetEntries(), grid_list.GetNValues(","), Form("%s.GridOrder", GetLabel()));
+         else {
+            fIDGrids.Clear();
+            grid_list.Begin(",");
+            while (!grid_list.End()) fIDGrids.Add(tmp_list.FindObject(grid_list.Next()));
+            ok = kTRUE;
+         }
+      }
+      if (ok) SetBit(kReadyForID);
    }
    else if (gDataSet && !gDataSet->HasCalibIdentInfos()) SetBit(kReadyForID);
    else ResetBit(kReadyForID);
@@ -176,14 +214,6 @@ void KVIDTelescope::Initialize(void)
 KVIDTelescope::~KVIDTelescope()
 {
    //delete this ID telescope
-   if (fDetectors && fDetectors->TestBit(kNotDeleted)) {
-      fDetectors->Clear("nodelete");
-      delete fDetectors;
-   }
-   fDetectors = 0;
-   fGroup = 0;
-   fIDGrids->Clear("nodelete");
-   SafeDelete(fIDGrids);
    SafeDelete(fMassIDValidity);
 }
 
@@ -195,7 +225,7 @@ void KVIDTelescope::AddDetector(KVDetector* d)
    //Update name of telescope to "ID_[name of DE]_[name of E]"
 
    if (d) {
-      fDetectors->Add(d);
+      fDetectors.Add(d);
       d->AddIDTelescope(this);
       if (GetSize() > 1)
          SetName(Form("ID_%s_%s", GetDetector(1)->GetName(), GetDetector(2)->GetName()));
@@ -212,7 +242,7 @@ void KVIDTelescope::Print(Option_t* opt) const
    // print out telescope structure
    //if opt="fired" only fired detectors are printed
 
-   TIter next(fDetectors);
+   TIter next(GetDetectors());
    KVDetector* obj;
 
    if (!strcmp(opt, "fired")) {
@@ -232,8 +262,6 @@ void KVIDTelescope::Print(Option_t* opt) const
          cout << opt << "Detector: " << obj->GetName() << endl;
       }
    }
-   if (fVarY) cout << "\n\nIDMapY: Using signal " << fVarY->GetName() << " of detector " << fVarY->GetDetector()->GetName() << endl;
-   if (fVarX) cout << "IDMapX: Using signal " << fVarX->GetName() << " of detector " << fVarX->GetDetector()->GetName() << endl;
 }
 
 //____________________________________________________________________________________
@@ -242,7 +270,7 @@ KVDetector* KVIDTelescope::GetDetector(const Char_t* name) const
 {
    // Return a pointer to the detector in the telescope with the name "name".
 
-   KVDetector* tmp = (KVDetector*) fDetectors->FindObject(name);
+   KVDetector* tmp = (KVDetector*) GetDetectors()->FindObject(name);
    if (!tmp)
       Warning("GetDetector(const Char_t *name)",
               "Detector %s not found in telescope %s", name, GetName());
@@ -354,29 +382,41 @@ TGraph* KVIDTelescope::MakeIDLine(KVNucleus* nuc, Double_t Emin,
 Bool_t KVIDTelescope::Identify(KVIdentificationResult* idr, Double_t x, Double_t y)
 {
    //Default identification method.
-   //Works for dE-E id telescopes for which a single identification grid is defined.
-   //Uses GetIDMapX(),GetIDMapY() for coordinates to identify.
    //
-   //Identification of experimental data needs to be implemented
-   //in specific child classes.
+   //Works for ID telescopes for which one or more identification grids are defined, each
+   //with VARX/VARY parameters corresponding to a KVDetectorSignal or KVDetectorSignalExpression
+   //associated with one or other of the detectors constituting the telescope.
+   //
+   //For identifications using more than one grid, the default behaviour is to try identification
+   //with each grid in turn until a successful identification is obtained. The order in which
+   //the grids should be tried should be specified by a variable with the following format:
+   //
+   //~~~~~~~~~~~~~~~~
+   //[Dataset].[Array Name].[ID type].GridOrder:  [Grid1],[Grid2],...
+   //~~~~~~~~~~~~~~~~
+   //
+   //where the name of each grid is given as "VARY_VARX". If no variable defining the order is found,
+   //the grids will be tried in the order they were found in the file containing the grids for this
+   //telescope.
 
    idr->SetIDType(GetType());
-   idr->IDattempted = kFALSE;
-   KVIDGrid* grid = dynamic_cast<KVIDGrid*>(GetIDGrid());
-   if (!grid) return kFALSE;
-
    idr->IDattempted = kTRUE;
 
-   Double_t de = (y < 0. ? GetIDMapY() : y);
-   Double_t e = (x < 0. ? GetIDMapX() : x);
-
-   if (grid->IsIdentifiable(e, de)) {
-      grid->Identify(e, de, idr);
+   KVIDGraph* grid;
+   TIter it(GetListOfIDGrids());
+   while ((grid = (KVIDGraph*)it())) { //loop over grids in order given by [Dataset].[Array Name].[ID type].GridOrder:
+      Double_t de, e;
+      GetIDGridCoords(e, de, grid, x, y);
+      idr->SetGridName(grid->GetName());
+      if (grid->IsIdentifiable(e, de)) {
+         grid->Identify(e, de, idr);
+         if (idr->IDOK) break; // stop on first successful identification
+      }
+      else {
+         idr->IDOK = kFALSE;
+         idr->IDquality = KVIDZAGrid::kICODE8;
+      }
    }
-   else {
-      idr->IDOK = kFALSE;
-   }
-
    idr->IDcode = GetIDCode();
 
    return kTRUE;
@@ -389,23 +429,30 @@ void KVIDTelescope::SetIDGrid(KVIDGraph* grid)
    // Add an identification grid to the list of grids used by this telescope.
    //
    // If the grid's VARX and VARY parameters are set and contain the names of valid
-   // detector signals (see formatting rules below) they will be used to set
-   // the fVarX and fVarY member pointers which will be used by GetIDMapX/Y()
-   // in order to perform particle identification using the grid.
+   // detector signals (see formatting rules below) they will be used by
+   // GetIDGridXCoord() and GetIDGridYCoord() to return the coordinates
+   // needed to perform particle identification using the grid.
+   //
+   // The name of the grid is set to "VARY_VARX" (just the signal names, not the detector
+   // label part - see below). This value will be stored in the
+   // KVIdentificationResult corresponding to an attempted identification of a
+   // KVReconstructedNucleus by this grid.
    //
    // VARX/VARY Formatting
    //
    // To be valid, grid VARX/Y parameters should be set as follows:
    //
    //~~~~~~~~~~~~~~~~~~
-   //      [det_label]::[signal name]
+   //      [signal name]
+   //  or  [det_label]::[signal name]
    //~~~~~~~~~~~~~~~~~~
    //
    // where
    //
    //~~~~~~~~~~~~~~~~~~
-   //    [det_label]   = detector label i.e. string returned by KVDetector::GetLabel()
-   //                    method for detector
+   //    [det_label] (optional)  = detector label i.e. string returned by KVDetector::GetLabel()
+   //                    method for detector. By default, VARX is assumed to be the Eres detector
+   //                    or second detector and VARY the DE detector or first detector
    //    [signal_name] = name of a signal defined for the detector, possibly depending
    //                    on availability of calibration
    //
@@ -415,10 +462,18 @@ void KVIDTelescope::SetIDGrid(KVIDGraph* grid)
    //~~~~~~~~~~~~~~~~~~
 
    if (grid) {
-      fIDGrids->Add(grid);
-      fVarX = fVarY = nullptr;
-      fVarX = GetSignalFromGridVar(grid->GetVarX(), "X");
-      fVarY = GetSignalFromGridVar(grid->GetVarY(), "Y");
+      fIDGrids.Add(grid);
+      KVDetectorSignal* xx = GetSignalFromGridVar(grid->GetVarX(), "X");
+      KVDetectorSignal* yy = GetSignalFromGridVar(grid->GetVarY(), "Y");
+      GraphCoords gc;
+      gc.fVarX = xx;
+      gc.fVarY = yy;
+      fGraphCoords[grid] = gc;
+      TString grid_name;
+      if (xx && yy) {
+         grid_name.Form("%s_%s", yy->GetName(), xx->GetName());
+         grid->SetName(grid_name);
+      }
    }
 }
 
@@ -501,7 +556,7 @@ KVIDGraph* KVIDTelescope::GetIDGrid()
 {
    //Return the first in the list of identification grids used by this telescope
    //(this is for backwards compatibility with ID telescopes which had only one grid).
-   return GetIDGrid(1);
+   return (KVIDGraph*)GetListOfIDGrids()->First();
 }
 
 //____________________________________________________________________________________
@@ -509,7 +564,7 @@ KVIDGraph* KVIDTelescope::GetIDGrid()
 KVIDGraph* KVIDTelescope::GetIDGrid(Int_t index)
 {
    //Return pointer to grid using position in list. First grid has index = 1.
-   return (KVIDGraph*)fIDGrids->At(index - 1);
+   return (KVIDGraph*)GetListOfIDGrids()->At(index - 1);
 }
 
 //____________________________________________________________________________________
@@ -518,19 +573,14 @@ KVIDGraph* KVIDTelescope::GetIDGrid(const Char_t* label)
 {
    //Return pointer to grid using "label" to search in list of grids associated
    //to this telescope.
-   return (KVIDGraph*)fIDGrids->FindObjectByLabel(label);
+   return (KVIDGraph*)GetListOfIDGrids()->FindObjectByLabel(label);
 }
 
 //____________________________________________________________________________________
 
 Double_t KVIDTelescope::GetIDMapX(Option_t*)
 {
-   // Returns the value defined as the X-coordinate of the identification grid for this
-   // telescope via its "VARX" parameter.
-   //
-   // If no grid or no parameter is defined, this method returns -1.
-
-   if (fVarX) return fVarX->GetValue();
+   AbstractMethod("GetIDMapX");
    return -1.;
 }
 
@@ -552,16 +602,31 @@ Double_t KVIDTelescope::GetPedestalY(Option_t*)
    return 0.;
 }
 
+Double_t KVIDTelescope::GetIDGridXCoord(KVIDGraph* g) const
+{
+   // Return value of X coordinate to be used with the given ID grid
+   // This corresponds to whatever was given as parameter "VARX" for the grid
+
+   KVDetectorSignal* ds = fGraphCoords[g].fVarX;
+   if (ds) return ds->GetValue();
+   return -1;
+}
+
+Double_t KVIDTelescope::GetIDGridYCoord(KVIDGraph* g) const
+{
+   // Return value of Y coordinate to be used with the given ID grid
+   // This corresponds to whatever was given as parameter "VARY" for the grid
+
+   KVDetectorSignal* ds = fGraphCoords[g].fVarY;
+   if (ds) return ds->GetValue();
+   return -1;
+}
+
 //____________________________________________________________________________________
 
 Double_t KVIDTelescope::GetIDMapY(Option_t*)
 {
-   // Returns the value defined as the Y-coordinate of the identification grid for this
-   // telescope via its "VARY" parameter.
-   //
-   // If no grid or no parameter is defined, this method returns -1.
-
-   if (fVarY) return fVarY->GetValue();
+   AbstractMethod("GetIDMapY");
    return -1.;
 }
 
@@ -571,8 +636,8 @@ void KVIDTelescope::RemoveGrids()
 {
    //Remove all identification grids for this ID telescope
    //Grids are not deleted as this is handled by gIDGridManager
-   fIDGrids->Clear();
-   fVarX = fVarY = nullptr;
+   fIDGrids.Clear();
+   fGraphCoords.clear();
 }
 
 //____________________________________________________________________________________
@@ -672,7 +737,7 @@ void KVIDTelescope::RemoveIdentificationParameters()
    //and for each one: 1) checks if it is still in the gIDGridManager's list
    //2) if yes, delete the grid and remove it from gIDGridManager
 
-   TIter next_grid(fIDGrids);
+   TIter next_grid(GetListOfIDGrids());
    KVIDGrid* grid;
    while ((grid = (KVIDGrid*)next_grid())) {
 
@@ -683,7 +748,7 @@ void KVIDTelescope::RemoveIdentificationParameters()
       }
    }
    //clear list of grids
-   fIDGrids->Clear();
+   fIDGrids.Clear();
    SetHasMassID(kFALSE);
 }
 
@@ -716,7 +781,7 @@ void KVIDTelescope::CalculateParticleEnergy(KVReconstructedNucleus* nuc)
    if (z == 0) return;
 
    KVDetector* d1 = GetDetector(1);
-   KVDetector* d2 = (fDetectors->GetSize() > 1 ? GetDetector(2) : 0);
+   KVDetector* d2 = (GetSize() > 1 ? GetDetector(2) : 0);
    Bool_t d1_cal = d1->IsCalibrated();
    Bool_t d2_cal = (d2 ? d2->IsCalibrated() : kFALSE);
 
@@ -1246,7 +1311,7 @@ KVIDGrid* KVIDTelescope::CalculateDeltaE_EGrid(TH2* haa_zz, Bool_t Zonly, Int_t 
 Double_t KVIDTelescope::GetMeanDEFromID(Int_t& status, Int_t Z, Int_t A, Double_t Eres)
 {
    // Returns the Y-axis value in the 2D identification map containing isotope (Z,A)
-   // corresponding to either the given X-axis/Eres value or the current X-axis value given by GetIDMapX.
+   // corresponding to either the given X-axis/Eres value or the current X-axis value given by GetIDGridXCoord()
    // If no mass information is available, just give Z.
    //
    // In this (default) implementation this means scanning the ID grids associated with
@@ -1262,7 +1327,7 @@ Double_t KVIDTelescope::GetMeanDEFromID(Int_t& status, Int_t Z, Int_t A, Double_
 
    status = kMeanDE_OK;
    // loop over grids
-   TIter next(fIDGrids);
+   TIter next(GetListOfIDGrids());
    KVIDGrid* grid;
    KVIDLine* idline = 0;
    while ((grid = (KVIDGrid*)next())) {
@@ -1274,7 +1339,7 @@ Double_t KVIDTelescope::GetMeanDEFromID(Int_t& status, Int_t Z, Int_t A, Double_
       return -1.;
    }
    Double_t x, x1, y1, x2, y2;
-   x = (Eres < 0 ? GetIDMapX() : Eres);
+   x = (Eres < 0 ? GetIDGridXCoord(grid) : Eres);
    idline->GetEndPoint(x2, y2);
    if (x > x2) {
       status = kMeanDE_XtooLarge;

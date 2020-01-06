@@ -24,7 +24,12 @@ KVNameValueList::KVNameValueList(const Char_t* name, const Char_t* title)
    : TNamed(name, title), fList(), fIgnoreBool(kFALSE)
 {
    // Ctor with name & title
+   //
+   // if name contains a comma-separated list of parameter/value pairs,
+   // it will be used to initialise the list (no name set)
    fList.SetOwner(kTRUE);
+
+   if (Set(name)) SetName("");
 }
 
 //______________________________________________
@@ -46,6 +51,43 @@ KVNameValueList& KVNameValueList::operator=(const KVNameValueList& o)
 {
    if (&o != this) o.Copy(*this);
    return (*this);
+}
+
+bool KVNameValueList::Set(const KVString& list)
+{
+   // If list contains a comma-separated list of parameter/value pairs
+   //
+   //~~~~~~~~~~~~~~~~~~~
+   //list = "param1=val1,param2=val2,..."
+   //~~~~~~~~~~~~~~~~~~~
+   //
+   // then use it to initialise the parameters of the list, and return true (any existing parameters will be removed).
+   //
+   // If list does not contain at least one '=' character, do nothing and return false.
+
+   if (!list.Contains("=")) return false;
+
+   Clear();
+   list.Begin(",");
+   while (!list.End()) {
+      KVString pair = list.Next(kTRUE);
+      pair.Begin("=");
+      KVString parname = pair.Next(kTRUE);
+      KVString parval = pair.Next(kTRUE);
+      if (parval.IsDigit()) {
+         // integer number
+         SetValue(parname, parval.Atoi());
+      }
+      else if (parval.IsFloat()) {
+         // real number
+         SetValue(parname, parval.Atof());
+      }
+      else {
+         // string
+         SetValue(parname, parval);
+      }
+   }
+   return true;
 }
 
 //______________________________________________

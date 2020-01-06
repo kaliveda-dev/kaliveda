@@ -109,8 +109,6 @@ public:
       // KVDataSet::WriteDBFile) any associated objects (histograms, trees, etc.)
       // can be written using this method.
       // The pointer to the file being written is passed as argument.
-
-      AbstractMethod("WriteObjects");
    }
 
    virtual void ReadObjects(TFile*)
@@ -120,8 +118,6 @@ public:
       // KVDataSet::OpenDBFile) any associated objects (histograms, trees, etc.)
       // stored in the file can be read using this method.
       // The pointer to the file being read is passed as argument.
-
-      AbstractMethod("ReadObjects");
    }
 
    virtual void PrintRuns(KVNumberList&) const;

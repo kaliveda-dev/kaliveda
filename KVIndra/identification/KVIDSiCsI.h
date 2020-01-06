@@ -20,13 +20,20 @@ $Id: KVIDSiCsI.h,v 1.10 2006/10/19 14:32:43 franklan Exp $
 #define KVIDSICSI_H
 
 #include "KVINDRAIDTelescope.h"
+#include "KVIDCutLine.h"
 
 class KVIDSiCsI: public KVINDRAIDTelescope {
+
+protected:
+   KVIDCutLine* fPIEDESTAL;      //! Upper limit of Silicon pedestal zone (neutral particles)
 
 public:
 
    KVIDSiCsI();
    virtual ~ KVIDSiCsI() {}
+
+   void Initialize();
+   Bool_t Identify(KVIdentificationResult* idr, Double_t x = -1, Double_t y = -1);
 
    ClassDef(KVIDSiCsI, 1)       //INDRA identification using Si-CsI matrices
 };

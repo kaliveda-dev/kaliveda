@@ -1012,7 +1012,11 @@ void KVDataAnalysisLauncher::Process(void)
       }
    }
    // check batch parameters have been set
-   if (IsBatch() && !fBatchParameters.GetNpar()) {
+   if (IsBatch()
+         && (!fBatchParameters.GetNpar() // never set
+             // previously set with MultiJobsMode turned off (perhaps to read a single run), whereas we now have many runs to read
+             || (fBatchParameters.HasBoolParameter("MultiJobsMode") && !fBatchParameters.GetBoolValue("MultiJobsMode") && listOfRuns.GetNValues() > 1))
+      ) {
       if (!SetBatchParameters()) return; //abort analysis if user pressed cancel
    }
    datan->SetNbEventToRead((Long64_t)teNbToRead->GetIntNumber());

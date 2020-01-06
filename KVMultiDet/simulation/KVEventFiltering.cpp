@@ -351,6 +351,16 @@ void KVEventFiltering::InitAnalysis()
    if (fGemDecayPerEvent > 1) Info("InitAnalysis", "  -- %d decays per primary event", fGemDecayPerEvent);
 #endif
    if (!gDataSet->HasCalibIdentInfos()) {
+      // for old data without implementation of calibration/identification
+      // we set status of identifications according to experimental informations in IdentificationBilan.dat
+      // this "turns off" any telescopes which were not working during the experimental run
+
+      // beforehand we have to "turn on" all identification telescopes by initializing them
+      // as this will not have been done yet
+      gMultiDetArray->InitializeIDTelescopes();
+      // this will also set informations on (simulated) mass identification capabilities for
+      // certain telescopes
+
       TString fullpath;
       if (sys && KVBase::SearchKVFile("IdentificationBilan.dat", fullpath, gDataSet->GetName())) {
          Info("InitAnalysis", "Setting identification bilan...");

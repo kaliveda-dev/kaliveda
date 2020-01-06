@@ -5,6 +5,43 @@
 #include "zmq.hpp"
 #include "KVConfig.h"
 
+/**
+ * \class KVZMQMessage
+ * \ingroup Daq_cec
+ * \brief Allow to send/receive ROOT/KV objects between ZeroMQ sockets
+ *
+ * ## Examples of use
+ * ### Sending an object
+ *
+ * ~~~~~~~~~~~~~~{.cpp}
+ * // ZMQ socket
+ * zmq::socket_t socket;
+ *
+ * // pointer to object
+ * TObject* obj;
+ *
+ * KVZMQMessage message;
+ * message.WriteObject(obj);
+ * socket.send(message.GetMessage());
+ * ~~~~~~~~~~~~~~
+ *
+ * ### Receiving an object
+ *
+ * ~~~~~~~~~~~~~~{.cpp}
+ * // ZMQ socket
+ * zmq::socket_t socket;
+ *
+ * // ZMQ message
+ * zmq::message_t zmq_message;
+ *
+ * if(socket.recv(&zmq_message))
+ * {
+ *    KVZMQMessage message(zmq_message);
+ *    TObject* object = message.GetObject();
+ * }
+ * ~~~~~~~~~~~~~~
+ */
+
 class KVZMQMessage : public TMessage {
    unique_ptr<TObject> fObject;
    Bool_t fReadNewObject;

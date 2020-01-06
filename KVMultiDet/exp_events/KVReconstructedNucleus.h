@@ -348,17 +348,28 @@ public:
    };
    KVIdentificationResult* GetIdentificationResult(Int_t i)
    {
-      // Returns the result of the i-th (i>0) identification attempted for this nucleus.
-      // i=1 : identification telescope in which particle stopped
-      // i=2 : identification telescope immediately in front of the first
-      // etc. etc.
+      // Returns the result of the i-th (i>0) identification attempted for this nucleus:
+      //
+      //   - i=1 : identification telescope in which particle stopped
+      //   - i=2 : identification telescope immediately in front of the first
+      //   - etc. etc.
       //
       // N.B. This method will return a valid KVIdentificationResult object for any
       //      value of i (objects are created as necessary in the TClonesArray fIDresults).
+      //
       //      To test whether an identification was attempted, do
+      //
+      //~~~~~~~~~~{.cpp}
       //         if(GetIdentificationResult(i)->IDattempted){...}
+      //~~~~~~~~~~
+      //
       //      rather than
+      //
+      //~~~~~~~~~~{.cpp}
       //         if(GetIdentificationResult(i)){ // always true }
+      //~~~~~~~~~~
+      //
+
       KVIdentificationResult* id = nullptr;
       if (i) id = (KVIdentificationResult*)fIDResults.ConstructedAt(i - 1);
       id->SetNumber(i);
@@ -375,8 +386,8 @@ public:
    KVIdentificationResult* GetIdentificationResult(const Char_t* idtype)
    {
       // Return pointer to result of attempted identification of given type.
-      // This type is the type of the KVIdentificationTelescope which was used
-      // (i.e. the string returned by KVIdentificationTelescope::GetType()).
+      // This type is the type of the KVIDTelescope which was used
+      // (i.e. the string returned by KVIDTelescope::GetType()).
       // Returns nullptr if no identification of given type found/attempted
 
       Int_t n = GetNumberOfIdentificationResults();

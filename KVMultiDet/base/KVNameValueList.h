@@ -15,6 +15,19 @@ class KVEnv;
  \ingroup Base
  \brief Handles lists of named parameters with different types, a list of KVNamedParameter objects
 
+ ###Create a list from a string###
+ You can create and initialise a list of parameters with the constructor:
+
+ ~~~~~~~~~~~{.cpp}
+ KVNameValueList k("A=10,B=stripes,C=6.751");
+ k.Print();
+
+ KVNameValueList:: :  (0x5602712ae5b0)
+ <A=10>
+ <B=stripes>
+ <C=6.751>
+ ~~~~~~~~~~~
+
  ###Adding and modifying parameters###
  Parameters are dynamically added or modified by calling SetValue():
 
@@ -111,6 +124,8 @@ public:
    KVNameValueList(const KVNameValueList&);
    virtual ~KVNameValueList();
    KVNameValueList& operator=(const KVNameValueList&);
+
+   bool Set(const KVString&);
 
    KVHashList* GetList() const;
 

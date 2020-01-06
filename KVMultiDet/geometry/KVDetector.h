@@ -274,8 +274,8 @@ public:
    virtual Float_t GetPedestal(const Char_t* /*name*/) const;
    virtual void SetPedestal(const Char_t* /*name*/, Float_t);
 
-   Bool_t AddCalibrator(KVCalibrator* cal);
-   Bool_t ReplaceCalibrator(const Char_t* type, KVCalibrator* cal);
+   Bool_t AddCalibrator(KVCalibrator* cal, const KVNameValueList& opts = "");
+   Bool_t ReplaceCalibrator(const Char_t* type, KVCalibrator* cal, const KVNameValueList& opts = "");
    KVCalibrator* GetCalibrator(const Char_t* name,
                                const Char_t* type) const;
    KVCalibrator* GetCalibrator(const Char_t* type) const;
@@ -283,7 +283,6 @@ public:
    {
       return fCalibrators;
    }
-   virtual void RefreshCalibratorPointers() {}
    virtual Bool_t IsCalibrated() const
    {
       // A detector is considered to be calibrated if it has
@@ -340,17 +339,21 @@ public:
    inline virtual Bool_t FiredP(Option_t* opt = "any") const;
 
    virtual void SetACQParams();
-   virtual void SetCalibrators();
    virtual void RemoveCalibrators();
 
-   Double_t GetDetectorSignalValue(const TString& type) const
+   Double_t GetDetectorSignalValue(const TString& type, const KVNameValueList& params = "") const
    {
       // Return value of signal of given type associated with detector
+      //
       // Some signals require the necessary calibrators to be present & initialised
+      //
+      // Any additional parameters which are required can be passed as a string of
+      // "param1=value,param2=value,..." parameter/value pairs.
+      //
       // If the signal is not available, returns 0.
 
       KVDetectorSignal* s = GetDetectorSignal(type);
-      return (s ? s->GetValue() : 0);
+      return (s ? s->GetValue(params) : 0);
    }
    void SetDetectorSignalValue(const TString& type, Double_t val) const
    {
@@ -360,17 +363,22 @@ public:
       KVDetectorSignal* s = GetDetectorSignal(type);
       if (s) s->SetValue(val);
    }
-   Double_t GetInverseDetectorSignalValue(const TString& output, Double_t value, const TString& input) const
+   Double_t GetInverseDetectorSignalValue(const TString& output, Double_t value, const TString& input, const KVNameValueList& params = "") const
    {
       // Calculate the value of the input signal for a given value of the output signal.
+      //
       // This uses the inverse calibrations of all intermediate calibrators.
+      //
+      // Any additional parameters which are required can be passed as a string of
+      // "param1=value,param2=value,..." parameter/value pairs.
+      //
       // If the output signal is not defined, or if input & output are not related,
       // this returns 0.
 
       KVDetectorSignal* s = GetDetectorSignal(output);
-      return (s ? s->GetInverseValue(value, input) : 0);
+      return (s ? s->GetInverseValue(value, input, params) : 0);
    }
-   KVDetectorSignal* GetDetectorSignal(const TString& type) const
+   virtual KVDetectorSignal* GetDetectorSignal(const TString& type) const
    {
       // Return the signal with given type, if defined for this detector
       // If signal not defined, returns nullptr.

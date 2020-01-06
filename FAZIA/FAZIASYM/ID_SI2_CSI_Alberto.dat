@@ -4,8 +4,8 @@
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_11
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_11
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-20
@@ -427,8 +427,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_13
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_13
 <PARAMETER> Runlist=4200-5020
 <PARAMETER> PIDRANGE=1-20
@@ -958,8 +958,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_13
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_13
 <PARAMETER> Runlist=5020-5647
 <PARAMETER> PIDRANGE=1-20
@@ -1491,8 +1491,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_14
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_14
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-20
@@ -2040,8 +2040,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_22
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_22
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-17
@@ -2490,8 +2490,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_23
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_23
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-17
@@ -2944,8 +2944,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_24
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_24
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -3399,8 +3399,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_33
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_33
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-20
@@ -3894,8 +3894,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_34
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_34
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-20
@@ -4395,8 +4395,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_41
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_41
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-17
@@ -4893,8 +4893,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_42
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_42
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-17
@@ -5393,8 +5393,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_44
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_44
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-17
@@ -5888,8 +5888,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_111
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_111
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-15
@@ -6389,8 +6389,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_113
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_113
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-20
@@ -6897,8 +6897,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_122
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_122
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -7402,8 +7402,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_123
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_123
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-20
@@ -7911,8 +7911,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_124
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_124
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-17
@@ -8418,8 +8418,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_134
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_134
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-16
@@ -8927,8 +8927,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_141
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_141
 <PARAMETER> Runlist=4200-4410
 <PARAMETER> PIDRANGE=1-14 20
@@ -9433,8 +9433,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_141
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_141
 <PARAMETER> Runlist=4410-5647
 <PARAMETER> PIDRANGE=1-15
@@ -9939,8 +9939,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_143
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_143
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-15
@@ -10444,8 +10444,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_211
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_211
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -10956,8 +10956,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_213
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_213
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -11468,8 +11468,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_221
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_221
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -11977,8 +11977,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_232
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_232
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-16
@@ -12487,8 +12487,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_234
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_234
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-16
@@ -12997,8 +12997,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_242
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_242
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-16
@@ -13516,8 +13516,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_244
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_244
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-16
@@ -14026,8 +14026,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_311
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_311
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -14538,8 +14538,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_312
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_312
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-17
@@ -15049,8 +15049,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_313
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_313
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -15561,8 +15561,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_321
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_321
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-16
@@ -16071,8 +16071,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_322
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_322
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-16
@@ -16581,8 +16581,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_323
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_323
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-16
@@ -17091,8 +17091,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_324
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_324
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -17603,8 +17603,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_331
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_331
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-17
@@ -18114,8 +18114,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_334
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_334
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-17
@@ -18625,8 +18625,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_341
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_341
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -19137,8 +19137,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_342
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_342
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -19649,8 +19649,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_343
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_343
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -20161,8 +20161,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_344
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_344
 <PARAMETER> Runlist=4200-5647
 <PARAMETER> PIDRANGE=1-18
@@ -20673,8 +20673,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_11
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_11
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -21101,8 +21101,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_13
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_13
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -21631,8 +21631,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_14
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_14
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -22181,8 +22181,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_22
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_22
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -22634,8 +22634,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_23
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_23
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -23091,8 +23091,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_24
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_24
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -23572,8 +23572,8 @@ OK:PIEDESTAL1
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_33
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_33
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -24067,8 +24067,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_34
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_34
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -24568,8 +24568,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_41
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_41
 <PARAMETER> Runlist=7200-12220
 <PARAMETER> PIDRANGE=1-20
@@ -25079,8 +25079,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_41
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_41
 <PARAMETER> Runlist=12220-12691
 <PARAMETER> PIDRANGE=1-20
@@ -25580,8 +25580,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_42
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_42
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -26083,8 +26083,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_44
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_44
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -26581,8 +26581,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_111
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_111
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -27087,8 +27087,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_112
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_112
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -27594,8 +27594,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_113
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_113
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -28102,8 +28102,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_122
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_122
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -28609,8 +28609,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_123
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_123
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -29119,8 +29119,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_124
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_124
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -29629,8 +29629,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_134
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_134
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -30142,8 +30142,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_141
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_141
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -30653,8 +30653,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_143
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_143
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -31163,8 +31163,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_211
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_211
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -31677,8 +31677,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_213
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_213
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -32191,8 +32191,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_221
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_221
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -32702,8 +32702,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_222
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_222
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -33215,8 +33215,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_223
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_223
 <PARAMETER> Runlist=7200-8080
 <PARAMETER> PIDRANGE=1-20
@@ -33728,8 +33728,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_223
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_223
 <PARAMETER> Runlist=8080-12691
 <PARAMETER> PIDRANGE=1-20
@@ -34241,8 +34241,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_232
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_232
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -34755,8 +34755,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_233
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_233
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -35269,8 +35269,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_234
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_234
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -35783,8 +35783,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_242
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_242
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -36308,8 +36308,8 @@ OK:PIEDESTAL1
 # 
 ++KVIDZAFromZGrid
 <NAME> ID_SI2_CSI_244
-<VARX> GetQ3SlowAmplitude
-<VARY> GetQ2Amplitude
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_244
 <PARAMETER> Runlist=7141-12691
 <PARAMETER> PIDRANGE=1-20
@@ -36822,8 +36822,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_11
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_11
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -36968,8 +36968,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_13
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_13
 <PARAMETER> Runlist=4200-5020
 +KVIDZALine
@@ -37115,8 +37115,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_13
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_13
 <PARAMETER> Runlist=5021-5647
 +KVIDZALine
@@ -37262,8 +37262,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_14
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_14
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -37408,8 +37408,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_22
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_22
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -37546,8 +37546,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_23
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_23
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -37684,8 +37684,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_24
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_24
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -37824,8 +37824,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_33
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_33
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -37962,8 +37962,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_34
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_34
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -38099,8 +38099,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_41
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_41
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -38237,8 +38237,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_42
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_42
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -38375,8 +38375,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_112
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_112
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -38513,8 +38513,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_113
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_113
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -38651,8 +38651,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_122
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_122
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -38789,8 +38789,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_123
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_123
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -38927,8 +38927,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_124
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_124
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -39065,8 +39065,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_134
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_134
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -39203,8 +39203,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_141
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_141
 <PARAMETER> Runlist=4200-4410
 +KVIDZALine
@@ -39341,8 +39341,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_141
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_141
 <PARAMETER> Runlist=4410-5647
 +KVIDZALine
@@ -39479,8 +39479,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_143
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_143
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -39617,8 +39617,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_211
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_211
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -39755,8 +39755,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_213
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_213
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -39893,8 +39893,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_221
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_221
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -40031,8 +40031,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_234
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_234
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -40169,8 +40169,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_242
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_242
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -40307,8 +40307,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_244
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_244
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -40445,8 +40445,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_311
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_311
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -40583,8 +40583,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_312
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_312
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -40721,8 +40721,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_313
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_313
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -40859,8 +40859,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_322
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_322
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -40997,8 +40997,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_323
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_323
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -41135,8 +41135,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_324
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_324
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -41273,8 +41273,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_331
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_331
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -41411,8 +41411,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_334
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_334
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -41549,8 +41549,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_341
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_341
 <PARAMETER> Runlist=4200-5647
 +KVIDCutContour
@@ -41575,8 +41575,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_342
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_342
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -41713,8 +41713,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_343
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_343
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -41851,8 +41851,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_344
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_344
 <PARAMETER> Runlist=4200-5647
 +KVIDZALine
@@ -41989,8 +41989,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_11
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_11
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -42162,8 +42162,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_13
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_13
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -42336,8 +42336,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_14
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_14
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -42509,8 +42509,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_22
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_22
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -42672,8 +42672,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_23
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_23
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -42835,8 +42835,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_24
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_24
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -43000,8 +43000,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_33
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_33
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -43163,8 +43163,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_34
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_34
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -43325,8 +43325,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_41
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_41
 <PARAMETER> Runlist=7141-12220
 +KVIDZALine
@@ -43488,8 +43488,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_41
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_41
 <PARAMETER> Runlist=12220-13500
 +KVIDZALine
@@ -43651,8 +43651,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_42
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_42
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -43814,8 +43814,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_43
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_43
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -43977,8 +43977,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_44
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_44
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -44140,8 +44140,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_111
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_111
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -44303,8 +44303,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_112
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_112
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -44466,8 +44466,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_113
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_113
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -44629,8 +44629,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_122
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_122
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -44792,8 +44792,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_123
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_123
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -44955,8 +44955,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_124
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_124
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -45118,8 +45118,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_134
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_134
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -45281,8 +45281,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_141
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_141
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -45444,8 +45444,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_143
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_143
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -45607,8 +45607,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_211
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_211
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -45770,8 +45770,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_213
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_213
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -45933,8 +45933,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_221
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_221
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -46096,8 +46096,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_222
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_222
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -46259,8 +46259,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_223
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_223
 <PARAMETER> Runlist=7141-8080
 +KVIDZALine
@@ -46422,8 +46422,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_223
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_223
 <PARAMETER> Runlist=8080-12691
 +KVIDZALine
@@ -46585,8 +46585,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_232
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_232
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -46748,8 +46748,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_233
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_233
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -46911,8 +46911,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_234
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_234
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -47074,8 +47074,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_242
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_242
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine
@@ -47237,8 +47237,8 @@ OK:PIEDESTAL
 # 
 ++KVIDZAGrid
 <NAME> ID_SI2_CSI_244
-<VARX> GetQ3SlowAmplitude_pdt
-<VARY> GetQ2Amplitude_pdt
+<VARX> Q3.SlowAmplitude
+<VARY> Q2.Amplitude
 <PARAMETER> IDTelescopes=ID_SI2_CSI_244
 <PARAMETER> Runlist=7141-12691
 +KVIDZALine

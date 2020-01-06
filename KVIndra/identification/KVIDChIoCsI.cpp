@@ -25,15 +25,13 @@ ClassImp(KVIDChIoCsI)
 //
 //Identification in ChIo-CsI matrices of INDRA
 //
-//ID subcodes are written in bits 4-7 of KVIDSubCodeManager
-//(see KVINDRACodes)
+
 KVIDChIoCsI::KVIDChIoCsI()
 {
    //set ID code for telescope
-   fIDCode = kIDCode_ChIoCsI;
+   set_id_code(kIDCode_ChIoCsI);
    fZminCode = kIDCode_ArretChIo;
    fECode = kECode1;
-   SetSubCodeManager(4, 7);
 }
 
 

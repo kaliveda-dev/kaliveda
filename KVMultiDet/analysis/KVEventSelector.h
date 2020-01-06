@@ -23,6 +23,7 @@
 #include <TProfile2D.h>
 #include "KVNameValueList.h"
 #include "TProofOutputFile.h"
+#include "KVDataAnalyser.h"
 
 class KVEventSelector : public TSelector {
 
@@ -266,13 +267,39 @@ public:
    void SetCombinedOutputFile(const TString& filename)
    {
       // Call in InitAnalysis() to set the name of the single output file
-      // containing all histograms and TTrees produced by analysis.
+      // containing all histograms and TTrees produced by analysis (but see also
+      // SetJobOutputFileName).
+      //
       // This is equivalent to running the analysis with option
+      //
+      //~~~~~~~~~~~~~~~
       //    CombinedOutputFile=[filename]
+      //~~~~~~~~~~~~~~~
+      //
       // but setting this option in InitAnalysis() will not work.
+      //
       // Note that if this method is not called/the option is not given,
       // histograms and TTrees will be written in separate files.
       fCombinedOutputFile = filename;
+   }
+   void SetJobOutputFileName(const TString& filename)
+   {
+      // Call in InitAnalysis() to set the name of the single output file
+      // containing all histograms and TTrees produced by analysis.
+      //
+      // For interactive jobs or jos using PROOF, filename will be used for
+      // the ROOT file. For jobs using a batch system to execute many
+      // jobs in parallel, we use the job name with the '.root' extension.
+
+#ifdef WITH_CPP11
+      if (KVDataAnalyser::IsRunningBatchAnalysis() && (gDataAnalyser->GetProofMode() == KVDataAnalyser::EProofMode::None))
+#else
+      if (KVDataAnalyser::IsRunningBatchAnalysis() && (gDataAnalyser->GetProofMode() == KVDataAnalyser::None))
+#endif
+         SetCombinedOutputFile(Form("%s.root", gDataAnalyser->GetBatchSystem()->GetJobName()));
+
+      else
+         SetCombinedOutputFile(filename);
    }
 
    ClassDef(KVEventSelector, 0)//General purpose analysis class for TTrees containing KVEvent objects

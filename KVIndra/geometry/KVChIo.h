@@ -11,20 +11,9 @@
 #define KVCHIO_H
 
 #include "KVINDRADetector.h"
-#include "KVACQParam.h"
-#include "KVChannelVolt.h"
-#include "KVVoltEnergy.h"
 #include "KVUnits.h"
 
-class KVDBParameterSet;
-
 class KVChIo: public KVINDRADetector {
-
-protected:
-
-   KVChannelVolt* fChVoltGG;//!channel-volt conversion (GG)
-   KVChannelVolt* fChVoltPG;//!channel-volt conversion (PG)
-   KVVoltEnergy* fVoltE;//!volt-energy conversion
 
    void init();
 
@@ -34,21 +23,7 @@ public:
    KVChIo(Float_t pressure, Float_t thick = 5.0 * KVUnits::cm);
    virtual ~ KVChIo();
 
-   Double_t GetVoltsFromCanalPG(Double_t chan = 0.0);
-   Double_t GetVoltsFromCanalGG(Double_t chan = 0.0);
-   Double_t GetVolts();
-   Double_t GetVoltsFromEnergy(Double_t);
-
-   Int_t GetCanalPGFromVolts(Float_t volts);
-   Int_t GetCanalGGFromVolts(Float_t volts);
-
-   Double_t GetCanalPGFromVoltsDouble(Float_t volts);
-   Double_t GetCanalGGFromVoltsDouble(Float_t volts);
-
-   Double_t GetEnergyFromVolts(Double_t volts = 0.0);
-
    void SetACQParams();
-   void SetCalibrators();
 
    Double_t GetELossMylar(UInt_t z, UInt_t a, Double_t egas = -1.0, Bool_t stopped = kFALSE);
 
@@ -65,7 +40,7 @@ public:
       return GetActiveLayer()->GetPressure() / KVUnits::mbar;
    }
 
-   virtual void SetMylarThicknesses(Float_t thickF, Float_t thickB);
+   void SetMylarThicknesses(Float_t thickF, Float_t thickB);
 
    void DeduceACQParameters(KVEvent*, KVNumberList&);
 

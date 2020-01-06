@@ -9,7 +9,6 @@
 #include "KVSignal.h"
 #include "KVFAZIADetector.h"
 #include "KVCalibrator.h"
-#include "KVFAZIACalibrator.h"
 
 ClassImp(KVFAZIAUpDater)
 
@@ -82,34 +81,9 @@ void KVFAZIAUpDater::SetPSAParameters(KVDBRun* dbrun)
       }
    }
 }
-void KVFAZIAUpDater::SetCalibrations(KVDBRun* dbrun)
+void KVFAZIAUpDater::SetCalibrations(KVDBRun*)
 {
-   //Loop on calibrations stored in the database
-   //and update parameters for each concerned calibrators
-   KVFAZIADetector* det = 0;
-   KVCalibrator* cal = 0;
-   KVDBParameterSet* par = 0;
-   TList* list = (TList*)dbrun->GetLinks("FAZIA.Calibrations");
-   TIter next(list);
-   while ((par = (KVDBParameterSet*)next())) {
-      TString sdet(par->GetName());
-//      Info("SetCalibrations", "%s", sdet.Data());
-//      par->Print();
-      det = (KVFAZIADetector*)fArray->GetDetector(sdet.Data());
-      if (det && (cal = det->GetCalibrator(par->GetTitle()))) {
-         if (det->GetIdentifier() == KVFAZIADetector::kCSI) {
-            for (int nn = 0; nn < cal->GetNumberParams(); nn++) cal->SetParameter(nn, par->GetParameter(nn));
-         }
-         else {
-            Double_t* params = new Double_t[par->GetParamNumber()];
-            for (int y = 0; y < par->GetParamNumber(); ++y) params[y] = par->GetParameter(y);
-            ((KVFAZIACalibrator*)cal)->ChangeParameters(params);
-            delete[] params;
-         }
-         cal->SetStatus(1);
-      }
-   }
-
+   Obsolete("SetCalibrations", "1.11", "1.12");
 }
 
 void KVFAZIAUpDater::CheckStatusOfDetectors(KVDBRun* kvrun)

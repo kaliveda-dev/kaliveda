@@ -55,6 +55,7 @@ protected:
 
    static Bool_t fCloseGeometryNow;
    static Bool_t fBuildTarget;
+   static Bool_t fMakeMultiDetectorSetParameters;
 
    KVTarget* fTarget;          //target used in experiment
    enum {
@@ -116,8 +117,6 @@ protected:
    virtual void set_up_telescope(KVDetector* de, KVDetector* e, KVIDTelescope* idt, TCollection* l);
    virtual void set_up_single_stage_telescope(KVDetector* det, KVIDTelescope* idt, TCollection* l);
 
-   virtual void SetCalibrators();
-
    virtual void GetAlignedIDTelescopesForDetector(KVDetector* det, TCollection* list);
    virtual void GetIDTelescopesForGroup(KVGroup* grp, TCollection* tel_list);
    virtual void PrepareModifGroup(KVGroup* grp, KVDetector* dd);
@@ -145,7 +144,7 @@ protected:
    virtual Bool_t handle_raw_data_event_ebyedat(KVGANILDataReader&);
    virtual void prepare_to_handle_new_raw_data();
 
-   virtual void PerformClosedROOTGeometryOperations(Int_t run = -1);
+   virtual void PerformClosedROOTGeometryOperations();
 
    virtual void copy_fired_parameters_to_recon_param_list();
 
@@ -153,8 +152,6 @@ protected:
    unique_ptr<KVFileReader> GetKVFileReader(KVExpDB* db, const Char_t* meth, const Char_t* keyw);
    void ReadCalibrationFiles(KVExpDB* db);
    void ReadCalibFile(const Char_t* filename, KVExpDB* db, KVDBTable* calib_table);
-   void ReadPedestalFile(const Char_t* filename, KVExpDB* db, KVDBTable* pedestal_table);
-   void ReadPedestalFiles(KVExpDB* db);
 public:
    KVNameValueList& GetReconParameters()
    {
@@ -278,8 +275,6 @@ public:
    {
       return TestBit(kIsRemoving);
    }
-
-   virtual void SetPedestals(const Char_t*);
 
    virtual Bool_t IsBuilt() const
    {
@@ -410,17 +405,33 @@ public:
    void AcceptIDCodes(const TString& codelist)
    {
       // Set list of (numeric) identification codes which are acceptable for
-      // analysis of reconstructed particles with this array.
+      // analysis of reconstructed particles with this array. Multiple values
+      // should be separated with a comma, e.g. : "1,3,22"
+      //
       // Default list may be set with variable:
+      //
+      //~~~~~~~~~~~~~
       //   [DataSet].[name].ReconstructedNuclei.AcceptIDCodes:  [list]
+      //~~~~~~~~~~~~~
+      //
+      // If called several times, only the last list of values will be taken into account.
+
       fAcceptIDCodes.Set(codelist);
    }
    void AcceptECodes(const TString& codelist)
    {
       // Set list of (numeric) calibration codes which are acceptable for
-      // analysis of reconstructed particles with this array.
+      // analysis of reconstructed particles with this array. Multiple values
+      // should be separated with a comma, e.g. : "1,3,22"
+      //
       // Default list may be set with variable:
+      //
+      //~~~~~~~~~~~~
       //   [DataSet].[name].ReconstructedNuclei.AcceptECodes:  [list]
+      //~~~~~~~~~~~~
+      //
+      // If called several times, only the last list of values will be taken into account.
+
       fAcceptECodes.Set(codelist);
    }
 
@@ -466,7 +477,6 @@ public:
 
    virtual void MakeCalibrationTables(KVExpDB*);
    virtual void SetCalibratorParameters(KVDBRun*, const TString& = "");
-   virtual void SetPedestalParameters(KVDBRun*, const TString& = "");
 
    ClassDef(KVMultiDetArray, 7) //Base class for multidetector arrays
 };

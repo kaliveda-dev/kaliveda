@@ -28,10 +28,6 @@ public:
    KVFAZIAIDSiCsI_FAZIASYM();
    virtual ~KVFAZIAIDSiCsI_FAZIASYM();
 
-   virtual UShort_t GetIDCode()
-   {
-      return kSi2CsI;
-   };
    virtual Bool_t Identify(KVIdentificationResult*, Double_t x = -1., Double_t y = -1.);
 
    virtual void Initialize();

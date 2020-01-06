@@ -12,6 +12,7 @@ $Date: 2007/04/04 10:39:17 $
 
 #include "TVector3.h"
 #include "KVNameValueList.h"
+#include "KVNucleus.h"
 
 class TH1F;
 class TList;
@@ -20,7 +21,6 @@ class KVTelescope;
 class KVDetector;
 class KVTarget;
 class KV2Body;
-class KVNucleus;
 class TObjArray;
 
 class KVElasticScatter {
@@ -29,8 +29,7 @@ class KVElasticScatter {
    Int_t  fBinE;                //Number of bins of the Energy histogram
 
    Double_t fEnergy;            //energy of projectile
-   KVNucleus* fProj;            //scattered nucleus
-   KVNucleus* fTarg;            //target nucleus
+   KVNucleus fProj;            //scattered nucleus
 
    KV2Body* fKinematics;        //kinematics calculation
 

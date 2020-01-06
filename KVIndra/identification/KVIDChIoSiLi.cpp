@@ -14,12 +14,10 @@ ClassImp(KVIDChIoSiLi)
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
 
-//Identification subcodes are written in bits 12-15 of KVIDSubCodeManager
 KVIDChIoSiLi::KVIDChIoSiLi()
 {
    // Default constructor
    fECode = kECode1;
-   SetSubCodeManager(4, 15);
 }
 
 //________________________________________________________________

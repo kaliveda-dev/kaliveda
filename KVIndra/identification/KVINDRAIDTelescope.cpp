@@ -19,8 +19,7 @@ KVINDRAIDTelescope::KVINDRAIDTelescope()
 void KVINDRAIDTelescope::init()
 {
    //default init
-   fIDCode = 0;                 //default
-   fECode = 0;                 //default
+   fECode = 1;                 //default
    fZminCode = kIDCode_Zmin;                 //default
 }
 

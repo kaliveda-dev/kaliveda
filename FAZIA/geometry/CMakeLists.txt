@@ -1,4 +1,5 @@
-set(deps calibration signals)
+#set(deps calibration signals)
+set(deps signals)
 if(WITH_PROTOBUF)
     set(deps ${deps} daq_cec protobuf)
 endif(WITH_PROTOBUF)

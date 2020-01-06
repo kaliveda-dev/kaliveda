@@ -8,8 +8,10 @@
 #pragma link C++ nestedtypedefs;
 #pragma link C++ class BackTrack::Simple1DModel+;
 #pragma link C++ class BackTrack::Simple2DModel+;
+#if ROOT_VERSION_CODE < ROOT_VERSION(6,18,0)
 #pragma link C++ class BackTrack::Simple2DModel_Binned+;
 #ifdef WITH_GEMINI
 #pragma link C++ class BackTrack::SimpleGeminiModel_Binned+;
+#endif
 #endif
 #endif

@@ -1,9 +1,8 @@
 # Electronic calibration generated using runs 11 & 12
 # All silicons had maximum gain (8*sqrt(2))
 SignalIn:                                PG
-SignalOut:                               Volt
-CalibType:                               Channel-Volt PG
-CalibClass:                              FunctionCal
+SignalOut:                               Volts
+CalibType:                               ChannelVolt
 CalibOptions:                            func=pol3,min=0,max=1,inverse=true
 SI_0801:                                 71.9228,3979.44,32.1727,-27.9312
 SI_0802:                                 70.9138,3978.88,31.5155,-27.9611

@@ -2,9 +2,8 @@
 # for silicons of rings 6 & 7 with gain (4*sqrt(2))
 RunList:                                 65000-199999
 SignalIn:                                PG
-SignalOut:                               Volt
-CalibType:                               Channel-Volt PG
-CalibClass:                              FunctionCal
+SignalOut:                               Volts
+CalibType:                               ChannelVolt
 CalibOptions:                            func=pol3,min=0,max=1,inverse=true
 SI_0601:                                 64.1622,1916.38,22.998,-9.03679
 SI_0602:                                 60.4515,1965.22,22.1327,-8.70714

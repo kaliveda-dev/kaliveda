@@ -30,8 +30,6 @@ KVSimReader_HIPSE_asym::KVSimReader_HIPSE_asym(KVString filename) : KVSimReader_
 KVSimReader_HIPSE_asym::~KVSimReader_HIPSE_asym()
 {
    // Destructor
-   if (h1) delete h1;
-   h1 = 0;
 }
 
 Bool_t KVSimReader_HIPSE_asym::ReadEvent()

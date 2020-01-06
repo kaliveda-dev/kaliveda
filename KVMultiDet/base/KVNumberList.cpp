@@ -424,15 +424,6 @@ void KVNumberList::Remove(const KVNumberList& list)
 
 //____________________________________________________________________________________________//
 
-void KVNumberList::Add(const Char_t* list)
-{
-   //Add values in 'list' to this list
-   KVNumberList tmp(list);
-   Add(tmp);
-}
-
-//____________________________________________________________________________________________//
-
 void KVNumberList::Remove(const Char_t* list)
 {
    //Remove values in 'list' to this list

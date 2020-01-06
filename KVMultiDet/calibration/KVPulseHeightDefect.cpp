@@ -77,13 +77,13 @@ void KVPulseHeightDefect::init()
    fMoulton = fDeltaEphd = 0;
 }
 
-KVPulseHeightDefect::KVPulseHeightDefect(): KVCalibrator(4)
+KVPulseHeightDefect::KVPulseHeightDefect(): KVCalibrator()
 {
    //Default constructor
    init();
 }
 
-KVPulseHeightDefect::KVPulseHeightDefect(KVDetector* d): KVCalibrator(4)
+KVPulseHeightDefect::KVPulseHeightDefect(KVDetector* d): KVCalibrator()
 {
    //Associate PHD calculation to detector
    init();
@@ -99,7 +99,7 @@ KVPulseHeightDefect::~KVPulseHeightDefect()
 
 //___________________________________________________________________________
 
-Double_t KVPulseHeightDefect::Compute(Double_t energy) const
+Double_t KVPulseHeightDefect::Compute(Double_t energy, const KVNameValueList&) const
 {
    //Calculate the pulse height defect (in MeV) for a given energy loss in the detector
    //and a given Z (the Z  of the particle should be set first using method SetZ)
@@ -114,15 +114,6 @@ Double_t KVPulseHeightDefect::Compute(Double_t energy) const
    //            E = energy loss of particle
 
    return const_cast<KVPulseHeightDefect*>(this)->GetMoultonPHDFunction(GetZ())->Eval(energy);
-}
-
-//___________________________________________________________________________
-
-Double_t KVPulseHeightDefect::operator()(Double_t energy)
-{
-   //Same as Compute()
-
-   return Compute(energy);
 }
 
 TF1* KVPulseHeightDefect::GetELossFunction(Int_t Z, Int_t A, Bool_t Wrong)
@@ -190,7 +181,7 @@ TF1* KVPulseHeightDefect::GetMoultonPHDFunction(Int_t Z)
 
 //___________________________________________________________________________
 
-Double_t KVPulseHeightDefect::Invert(Double_t energy)
+Double_t KVPulseHeightDefect::Invert(Double_t energy, const KVNameValueList&) const
 {
    //Given the PHD (in MeV) of a particle of charge Z
    //(set using SetZ() method), this method inverts the Moulton formula

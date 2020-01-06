@@ -135,10 +135,6 @@ NewRooAddPdf::NewRooAddPdf(const char* name, const char* title, const RooArgList
                             << ") WARNING inconsistent input: recursive fractions options can only be used if Npdf=Ncoef+1, ignoring recursive fraction setting" << std::endl ;
    }
 
-
-   _pdfIter  = _pdfList.createIterator() ;
-   _coefIter = _coefList.createIterator() ;
-
    // Constructor with N PDFs and N or N-1 coefs
    TIterator* pdfIter = inPdfList.createIterator() ;
    TIterator* coefIter = inCoefList.createIterator() ;
@@ -246,10 +242,6 @@ NewRooAddPdf::NewRooAddPdf(const char* name, const char* title, const RooArgList
    _haveLastCoef = kFALSE;
    _allExtendable = kTRUE;
    _recursive = kFALSE;
-
-
-   _pdfIter  = _pdfList.createIterator() ;
-   _coefIter = _coefList.createIterator() ;
 
    // Constructor with N PDFs
    TIterator* pdfIter = inPdfList.createIterator() ;

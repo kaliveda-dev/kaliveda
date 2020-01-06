@@ -470,13 +470,18 @@ void KVTreeAnalyzer::FillLeafList()
       // there is a redundant leaf/branch corresponding to the object itself
       // more precisely there will be a TLeafElement in the list of leaves
       // and a TBranchElement in the list of branches with the same name
+      //
+      // however the same applies to a simple unsplit object (such as using a TString to store
+      // strings). as the latter is probably far more common than the former (who creates trees
+      // with split objects in them these days???), I comment out the check which stopped such
+      // leaves appearing in the GUI (they are perfectly usable).
       TIter next(clones);
       TObject* o;
       while ((o = next())) {
-         if (o->InheritsFrom("TLeafElement")
-               && fTree->GetListOfBranches()->FindObject(o->GetName())
-               && fTree->GetListOfBranches()->FindObject(o->GetName())->InheritsFrom("TBranchElement"))
-            continue;
+//         if (o->InheritsFrom("TLeafElement")
+//               && fTree->GetListOfBranches()->FindObject(o->GetName())
+//               && fTree->GetListOfBranches()->FindObject(o->GetName())->InheritsFrom("TBranchElement"))
+//            continue;
          fLeafList.Add(o);
       }
       delete clones;

@@ -1,0 +1,4 @@
+BUILD_KALIVEDA_MODULE(identification_E475S
+	PARENT ${KVSUBPROJECT}
+        KVMOD_DEPENDS identification
+)

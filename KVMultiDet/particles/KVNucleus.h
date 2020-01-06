@@ -102,8 +102,16 @@ public:
    Bool_t IsSortable() const
    {
       return kTRUE;
-   };
+   }
    Int_t Compare(const TObject* obj) const;
+   Bool_t IsDefined() const
+   {
+      // Returns kTRUE if the Z and/or A of the nucleus have been set.
+      //
+      // 'Blank' nuclei created by the default constructor have Z=A=0 until a method such as SetZ() is called.
+      // In this case IsDefined() returns kFALSE.
+      return !(fZ == 0 && fA == 0);
+   }
 
    virtual ~ KVNucleus();
    static Int_t GetAFromZ(Double_t, Char_t mt);

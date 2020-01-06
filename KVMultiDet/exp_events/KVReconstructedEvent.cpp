@@ -190,14 +190,11 @@ void KVReconstructedEvent::ls(Option_t*) const
          else printf("     ");
          if (nuc.IsAMeasured()) printf(" A=%3d  : ", nuc.GetA());
          else printf("        : ");
+         if (nuc.IsCalibrated()) printf(" E=%g MeV", nuc.GetEnergy());
          if (nuc.GetParameters()->IsValue("Coherent", false)) printf("/not coherent/");
          if (nuc.GetParameters()->IsValue("Pileup", true)) printf("/pileup/");
       }
-      if (!nuc.IsIdentified()) {
-         printf(" ");
-         nuc.PrintStatusString();
-      }
-      else printf("\n");
+      printf("\n");
       ++i;
    }
 }

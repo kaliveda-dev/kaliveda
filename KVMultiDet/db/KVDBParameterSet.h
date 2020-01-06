@@ -47,6 +47,10 @@ public:
    {
       return fParameters.HasParameter(name);
    }
+   const KVNameValueList& GetParameters() const
+   {
+      return fParameters;
+   }
    KVRList* GetRuns() const;
    void SetParameter(UShort_t i, Double_t val);
    void SetParameter(Double_t val);

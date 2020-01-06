@@ -367,6 +367,16 @@ KVBase::KVBase(const KVBase& obj) : TNamed()
 #endif
 }
 
+KVBase& KVBase::operator=(const KVBase& other)
+{
+   // copy assignment operator
+
+   if (&other != this) {
+      other.Copy(*this);
+   }
+   return (*this);
+}
+
 //_______________________________________________________________________________
 KVBase::~KVBase()
 {

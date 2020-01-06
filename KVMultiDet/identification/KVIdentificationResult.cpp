@@ -10,9 +10,9 @@ ClassImp(KVIdentificationResult)
 /* -->
 <h2>KVIdentificationResult</h2>
 <h4>Full result of one attempted particle identification</h4>
-When we attempt to identify a reconstructed charged particle (<a href="KVReconstructedNucleus.html">KVReconstructedNucleus</a>) using an identification
-telescope (<a href="KVIDTelescope.html">KVIDTelescope</a>), we call the
-KVIDTelescope::Identify(KVIdentificationResult*) method of the telescope in question, and the results of the
+When we attempt to identify a reconstructed charged particle (KVReconstructedNucleus) using an identification
+telescope (KVIDTelescope), we call the
+KVIDTelescope::Identify() method of the telescope in question, and the results of the
 identification attempt are stored in the KVIdentificationResult object.
 <br><br>
 The informations stored are:
@@ -20,6 +20,7 @@ The informations stored are:
 <li>Bool_t IDattempted : (=kTRUE if an identification attempt was made)</li>
 <li>Bool_t IDOK : general status of identification (=kTRUE if identification attempt successful)</li>
 <li>GetIDType() : returns string containing type of identification (corresponds to type of identification telescope)</li>
+<li>GetGridName() : returns the name of the grid used for identification (VARY_VARX)
 <li>Int_t IDcode : general identification quality code associated with this type of identification</li>
 <li>Int_t IDquality : specific quality code returned by identification procedure</li>
 <li>GetComment() : explanatory message regarding quality code returned by identification procedure</li>
@@ -58,6 +59,7 @@ void KVIdentificationResult::Clear(Option_t*)
    // Reset to initial values
    SetIDType("");
    SetComment("");
+   SetGridName("");
    IDattempted = kFALSE;
    IDOK = kFALSE;
    IDcode = -1;
@@ -79,26 +81,25 @@ void KVIdentificationResult::Print(Option_t*) const
    }
    if (IDOK) printf("   => SUCCESS\n");
    else printf("   => FAILURE\n");
+   printf("  Grid used: %s\n", GetGridName());
    printf("  Quality code = %d (%s)\n", IDquality, GetLabel());
    if (Zident) printf("  Z identified = %d", Z);
    else printf("  Z returned = %d", Z);
    if (Aident) printf("    A identified = %d", A);
    else printf("  A returned = %d", A);
    if (Zident || Aident) printf("    PID = %f\n", PID);
-   printf("  delta-E pedestal : ");
    switch (deltaEpedestal) {
 
       case deltaEpedestal_NO:
-         printf("NO\n");
+         printf("  delta-E pedestal : NO\n");
          break;
 
       case deltaEpedestal_YES:
-         printf("YES\n");
+         printf("  delta-E pedestal : YES\n");
          break;
 
       default:
       case deltaEpedestal_UNKNOWN:
-         printf("UNKNOWN\n");
          break;
    }
 }

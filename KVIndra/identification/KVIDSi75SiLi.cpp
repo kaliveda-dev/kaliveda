@@ -24,14 +24,12 @@ ClassImp(KVIDSi75SiLi)
 //
 //Identification in Si75-SiLI matrices of INDRA
 //
-//Identification subcodes are written in bits 4-7 of KVIDSubCodeManager
-//(see KVINDRACodes)
+
 KVIDSi75SiLi::KVIDSi75SiLi()
 {
-   fIDCode = kIDCode_Si75SiLi;
+   set_id_code(kIDCode_Si75SiLi);
    fZminCode = kIDCode_Zmin;
    fECode = kECode1;
-   SetSubCodeManager(4, 7);
 }
 
 KVIDSi75SiLi::~KVIDSi75SiLi()

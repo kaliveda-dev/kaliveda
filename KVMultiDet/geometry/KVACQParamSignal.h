@@ -21,7 +21,7 @@ public:
    virtual ~KVACQParamSignal()
    {}
 
-   Double_t GetValue() const
+   Double_t GetValue(const KVNameValueList& = "") const
    {
       return fParam->GetData();
    }

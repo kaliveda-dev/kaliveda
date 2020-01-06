@@ -20,7 +20,6 @@
 #endif
 
 #pragma link C++ class KVIdentificationResult+;
-#pragma link C++ class KVIDSubCodeManager+;
 #pragma link C++ class KVVirtualIDFitter+;
 #pragma link C++ class KVDroite+;
 #pragma link C++ class KVSpiderLine+;

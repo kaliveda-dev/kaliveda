@@ -52,13 +52,16 @@ KVDetectorSignalExpression::KVDetectorSignalExpression(const Char_t* type, const
    SetTitle(Form("Signal calculated as %s for detector %s", _expr.Data(), det->GetName()));
 }
 
-Double_t KVDetectorSignalExpression::GetValue() const
+Double_t KVDetectorSignalExpression::GetValue(const KVNameValueList& params) const
 {
    // Evaluate the expression using all current values of signals
+   //
+   // Any extra parameters required by any calibrations in the expression can be passed
+   // as a comma-separated list of "param=value" pairs
 
    int nsigs = fSignals.size();
    for (int i = 0; i < nsigs; ++i) {
-      fFormula->SetParameter(i, fSignals[i]->GetValue());
+      fFormula->SetParameter(i, fSignals[i]->GetValue(params));
    }
    return fFormula->Eval(0);
 }

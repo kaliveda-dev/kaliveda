@@ -21,14 +21,14 @@ $Id: KV2Body.h,v 1.5 2009/02/02 13:52:29 ebonnet Exp $
 #define KV2BODY_H
 
 #include "TObject.h"
-#include "TObjArray.h"
+#include <vector>
 #include "TVector3.h"
 #include "KVNucleus.h"
 #include "TF1.h"
 
 class KV2Body: public TObject {
 
-   TObjArray fNuclei;           //nuclei involved in calculation
+   std::vector<KVNucleus> fNuclei; //nuclei involved in calculation
    Double_t fEDiss;             //dissipated energy, 0 means elastic scattering
 
    TVector3 VCM;                //velocity of centre of mass
@@ -43,14 +43,10 @@ class KV2Body: public TObject {
    Double_t TETAMAX[5];          //defined only for nuclei 3 et 4
    Double_t TETAMIN[5];          //defined only for nuclei 3 et 4
 
-   Bool_t fDeleteTarget;
-   Bool_t fDeleteProj;
-   Bool_t fDeleteN4;
-
-   TF1* fKoxReactionXSec;   // function Kox reaction cross-section [barns] vs. E/A projectile
-   TF1* fEqbmChargeState;   // function equilibrium charge state of projectile vs. E/A projectile (Leon et al)
-   TF1* fEqbmChargeStateShSol;   // function equilibrium charge state of projectile vs. E/A projectile (Shiwietz et al solid)
-   TF1* fEqbmChargeStateShGas;   // function equilibrium charge state of projectile vs. E/A projectile (Shiwietz et al gas)
+   mutable TF1* fKoxReactionXSec;   // function Kox reaction cross-section [barns] vs. E/A projectile
+   mutable TF1* fEqbmChargeState;   // function equilibrium charge state of projectile vs. E/A projectile (Leon et al)
+   mutable TF1* fEqbmChargeStateShSol;   // function equilibrium charge state of projectile vs. E/A projectile (Shiwietz et al solid)
+   mutable TF1* fEqbmChargeStateShGas;   // function equilibrium charge state of projectile vs. E/A projectile (Shiwietz et al gas)
 
    void Set4thNucleus();
    Double_t ThetaLabVsThetaCM(Double_t*, Double_t*);
@@ -61,12 +57,12 @@ class KV2Body: public TObject {
    Double_t XSecRuthCM(Double_t*, Double_t*);
    Double_t XSecRuthCMVsThetaCM(Double_t*, Double_t*);
 
-   TF1* fThetaLabVsThetaCM[5];
-   TF1* fELabVsThetaCM[5];
-   TF1* fELabVsThetaLab[5];
+   mutable TF1* fThetaLabVsThetaCM[5];
+   mutable TF1* fELabVsThetaCM[5];
+   mutable TF1* fELabVsThetaLab[5];
 
-   TF1* fXSecRuthLabIntegral[5];
-   TF1* fXSecRuthLab[5];
+   mutable TF1* fXSecRuthLabIntegral[5];
+   mutable TF1* fXSecRuthLab[5];
 
    Bool_t fSetOutgoing;// = kTRUE if SetOutgoing is called before CalculateKinematics
 
@@ -78,19 +74,21 @@ public:
    void init();
    KV2Body();
    KV2Body(const Char_t* systemname);
-   KV2Body(KVNucleus* proj, KVNucleus* cib = 0, KVNucleus* proj_out =
-              0, Double_t Ediss = 0.0);
+   KV2Body(const KVNucleus& compound, double Exx = 0.0);
+   KV2Body(const KVNucleus& proj, const KVNucleus& targ, double Ediss = 0.0);
+   KV2Body(const KVNucleus& proj, const KVNucleus& targ, const KVNucleus& proj_out, double Ediss = 0.0);
+   KV2Body(KVNucleus*, KVNucleus* = nullptr, KVNucleus* = nullptr, Double_t = 0.0);
    virtual ~ KV2Body();
 
    void CalculateKinematics();
 
    static Double_t GetVelocity(Double_t mass, Double_t E);
 
-   void SetProjectile(KVNucleus*);
+   void SetProjectile(const KVNucleus&);
    void SetProjectile(Int_t z, Int_t a = 0);
-   void SetTarget(KVNucleus*);
+   void SetTarget(const KVNucleus&);
    void SetTarget(Int_t z, Int_t a = 0);
-   void SetOutgoing(KVNucleus* proj_out);
+   void SetOutgoing(const KVNucleus& proj_out);
 
    void SetExcitEnergy(Double_t ex)
    {
@@ -103,7 +101,7 @@ public:
    void SetEDiss(Double_t ex)
    {
       SetExcitEnergy(ex);
-   };
+   }
    Double_t GetEDiss() const
    {
       return GetExcitEnergy();
@@ -135,9 +133,9 @@ public:
       return gamma;
    };
 
-   TF1* GetThetaLabVsThetaCMFunc(Int_t OfNucleus);
-   TF1* GetELabVsThetaCMFunc(Int_t OfNucleus);
-   TF1* GetELabVsThetaLabFunc(Int_t OfNucleus);
+   TF1* GetThetaLabVsThetaCMFunc(Int_t OfNucleus) const;
+   TF1* GetELabVsThetaCMFunc(Int_t OfNucleus) const;
+   TF1* GetELabVsThetaLabFunc(Int_t OfNucleus) const;
 
    Double_t GetThetaLab(Double_t ThetaCM, Int_t OfNucleus) const
    {
@@ -169,25 +167,25 @@ public:
    //Double_t GetIntegratedXSecRuthLab(KVTelescope* tel, Int_t OfNucleus = 3);
    //Double_t GetIntegratedXSecRuthLab(KVDetector* det, Int_t OfNucleus = 3);
 
-   TF1* GetXSecRuthLabFunc(Int_t OfNucleus = 3, Double_t theta_min = 1., Double_t theta_max = 179.);
-   TF1* GetXSecRuthLabIntegralFunc(Int_t OfNucleus = 3, Double_t theta_min = 1., Double_t theta_max = 179.);
+   TF1* GetXSecRuthLabFunc(Int_t OfNucleus = 3, Double_t theta_min = 1., Double_t theta_max = 179.) const;
+   TF1* GetXSecRuthLabIntegralFunc(Int_t OfNucleus = 3, Double_t theta_min = 1., Double_t theta_max = 179.) const;
 
    void Print(Option_t* opt = "") const;
 
    Double_t BassIntBarrier();
    Double_t KoxReactionXSec(Double_t*, Double_t*);
-   TF1* GetKoxReactionXSecFunc();
+   TF1* GetKoxReactionXSecFunc() const;
 
    Double_t GetSphereDureReactionXSec(Double_t r0 = 1.05);
    Double_t GetBmaxFromReactionXSec(Double_t ReacXsec);
    Double_t GetIntegratedXsec(Double_t b1, Double_t b2);
 
    Double_t EqbmChargeState(Double_t* t, Double_t*);
-   TF1* GetEqbmChargeStateFunc();
+   TF1* GetEqbmChargeStateFunc() const;
    Double_t eqbm_charge_state_shiwietz_solid(Double_t* t, Double_t*);
-   TF1* GetShiwietzEqbmChargeStateFuncForSolidTargets();
+   TF1* GetShiwietzEqbmChargeStateFuncForSolidTargets() const;
    Double_t eqbm_charge_state_shiwietz_gas(Double_t* t, Double_t*);
-   TF1* GetShiwietzEqbmChargeStateFuncForGasTargets();
+   TF1* GetShiwietzEqbmChargeStateFuncForGasTargets() const;
 
    Double_t GetIntegralPrecision()
    {

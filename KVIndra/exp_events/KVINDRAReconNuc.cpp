@@ -1094,7 +1094,7 @@ void KVINDRAReconNuc::DoBeryllium8Calibration()
    // We halve the total light output of the CsI to calculate the energy of 1 alpha
    // Then multiply resulting energy by 2
    // Note: fECsI is -ve, because energy is calculated not measured
-   Double_t half_light = GetCsI()->GetLumiereTotale() * 0.5;
+   Double_t half_light = GetCsI()->GetDetectorSignalValue("TotLight") * 0.5;
    KVNucleus tmp(2, 4);
    fECsI = -2.*GetCsI()->GetCorrectedEnergy(&tmp, half_light, kFALSE);
    SetECode(kECode2);
@@ -1438,43 +1438,3 @@ void KVINDRAReconNuc::CheckCsIEnergy()
    if (csi && GetZ() > 0 && GetZ() < 3 && (csi->GetEnergy() > csi->GetMaxDeltaE(GetZ(), GetA()))) SetECode(kECode3);
 }
 
-Int_t KVINDRAReconNuc::GetIDSubCode(const Char_t* id_tel_type, KVIDSubCode&) const
-{
-   // OBSOLETE METHOD
-
-   KVINDRAIDTelescope* idtel;
-   if (strcmp(id_tel_type, ""))
-      idtel =
-         (KVINDRAIDTelescope*) GetIDTelescopes()->
-         FindObjectByType(id_tel_type);
-   else
-      idtel = (KVINDRAIDTelescope*)GetIdentifyingTelescope();
-   if (!idtel)
-      return -65535;
-//    return idtel->GetIDSubCode(code);
-   return -65535;
-}
-
-//______________________________________________________________________________________________//
-
-const Char_t* KVINDRAReconNuc::GetIDSubCodeString(const Char_t* id_tel_type, KVIDSubCode&) const
-{
-   // OBSOLETE METHOD
-
-   KVINDRAIDTelescope* idtel;
-   if (strcmp(id_tel_type, ""))
-      idtel =
-         (KVINDRAIDTelescope*) GetIDTelescopes()->
-         FindObjectByType(id_tel_type);
-   else
-      idtel = (KVINDRAIDTelescope*)GetIdentifyingTelescope();
-   if (!idtel) {
-      if (strcmp(id_tel_type, ""))
-         return Form("No identification attempted in %s", id_tel_type);
-      else
-         return
-            Form("Particle unidentified. Identifying telescope not set.");
-   }
-   //return idtel->GetIDSubCodeString(code);
-   return id_tel_type;
-}

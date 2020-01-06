@@ -33,8 +33,7 @@ class KVElasticCountRates {
    Int_t  fBinE;                //Number of bins of the Energy histogram
 
    Double_t fEnergy;            //energy of projectile
-   KVNucleus* fProj;            //scattered nucleus
-   KVNucleus* fTarg;            //target nucleus
+   KVNucleus fProj;            //scattered nucleus
 
    KVPosition fAngularRange;    //angular range in which to scatter
 

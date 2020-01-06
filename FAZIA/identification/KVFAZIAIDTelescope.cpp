@@ -38,7 +38,7 @@ void KVFAZIAIDTelescope::AddDetector(KVDetector* d)
    //Update name of telescope to "ID_[name of DE]_[name of E]"
 
    if (d) {
-      fDetectors->Add(d);
+      fDetectors.Add(d);
       d->AddIDTelescope(this);
       if (GetSize() > 1)
          SetName(Form("ID_%s_%s_%d", GetDetector(1)->GetLabel(), GetDetector(2)->GetLabel(), ((KVFAZIADetector*)GetDetector(1))->GetIndex()));

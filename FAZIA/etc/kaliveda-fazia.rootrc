@@ -281,47 +281,16 @@ FAZIA.ReconstructedNuclei.AcceptECodes: 0-1
 +Plugin.KVDetector:      KVFAZIALNS17      KVFAZIACORDetector      FAZIAgeometry      "KVFAZIACORDetector()"
 +Plugin.KVDetector:      KVFAZIAPRE      KVFAZIACORDetector      FAZIAgeometry      "KVFAZIACORDetector()"
 
-#gerer automatiquement par KVMultiDetArray::GetIDTelescopes
-+Plugin.KVIDTelescope:    ^ISOFAZIA.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^ISOFAZIA.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^ISOFAZIA.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^ISOFAZIA.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^FAZIASYM.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^FAZIASYM.Si-CsI$                KVFAZIAIDSiCsI_FAZIASYM          FAZIAidentification           "KVFAZIAIDSiCsI_FAZIASYM()"
-+Plugin.KVIDTelescope:    ^FAZIACOR.Si-Si$                 KVFAZIAIDSiSi_FAZIACOR            FAZIAidentification           "KVFAZIAIDSiSi_FAZIACOR()"
-+Plugin.KVIDTelescope:    ^FAZIAPRE.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^FAZIAZERO.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^FAZIAPRE-MAY2018.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^FAZIASYM.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^FAZIASYM.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^LNS_2014.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^LNS_2014.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^LNS_2014.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^LNS_2014.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^FAZIANFS.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^FAZIANFS.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^FAZIANFS.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^FAZIANFS.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^LNS_2016.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^LNS_2016.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^LNS_2016.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^LNS_2016.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^FAZIACOR.Si-CsI$              KVFAZIAIDSiCsI            FAZIAidentification        "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^FAZIAPRE.Si-CsI$                  KVFAZIAIDSiCsI_FAZIASYM            FAZIAidentification        "KVFAZIAIDSiCsI_FAZIASYM()"
-+Plugin.KVIDTelescope:    ^FAZIAPRE-MAY2018.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^FAZIAZERO.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^FAZIACOR.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^FAZIACOR.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^FAZIAPRE.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^FAZIAPRE.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^FAZIAPRE-MAY2018.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^FAZIAPRE-MAY2018.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^FAZIAZERO.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^FAZIAZERO.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^FAZIADEM.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^FAZIADEM.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^FAZIADEM.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^FAZIADEM.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
+# DEFAULT IDTELESCOPE PLUGINS FOR FAZIA
++Plugin.KVIDTelescope:    ^FAZIA.Si-Si$          KVFAZIAIDSiSi             FAZIAidentification           "KVFAZIAIDSiSi()"
++Plugin.KVIDTelescope:    ^FAZIA.Si-CsI$         KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
++Plugin.KVIDTelescope:    ^FAZIA.Si$             KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
++Plugin.KVIDTelescope:    ^FAZIA.CsI$            KVFAZIAIDCsI              FAZIAidentification           "KVFAZIAIDCsI()"
+
+# DATASET-SPECIFIC IDTELESCOPE PLUGINS FOR FAZIA
++Plugin.KVIDTelescope:    ^FAZIASYM.FAZIA.Si-CsI$      KVFAZIAIDSiCsI_FAZIASYM      FAZIAidentification        "KVFAZIAIDSiCsI_FAZIASYM()"
++Plugin.KVIDTelescope:    ^FAZIAPRE.FAZIA.Si-CsI$      KVFAZIAIDSiCsI_FAZIASYM      FAZIAidentification        "KVFAZIAIDSiCsI_FAZIASYM()"
+
 ############
 LNS_2014.RawAnalysis.DataAnalysisTask.Analyser:     FAZIARawDataAnalyser
 LNS_2014.RawAnalysis.DataAnalysisTask.UserClass.Base:     FAZIAReader/TSelector
@@ -406,11 +375,11 @@ LNS_2016.IdentificationParameterFile.Si-Si:       SI-SI-Grids.dat
 LNS_2016.IdentificationParameterFile.Si-CsI:       SI-CSI-Grids.dat
 LNS_2016.ActiveIdentifications:         Si-CsI Si-Si
 
-FAZIACOR.IdentificationParameterFile.Si-Si:    ID_SI1_SI2_FAZIACOR_AMI.dat
-FAZIACOR.IdentificationParameterFile.CsI:      ID_CSI_FAZIACOR.dat
-FAZIACOR.IdentificationParameterFile.Si:       ID_SI1PSA_ZandA.dat
-FAZIACOR.IdentificationParameterFile.Si-CsI:   ID_SI2_CSI_FAZIACOR_ZA8.dat
-FAZIACOR.ActiveIdentifications:                CsI Si-CsI Si-Si Si
+FAZIACOR.IdentificationParameterFile.FAZIA.Si-Si:    ID_SI1_SI2_FAZIACOR_AMI.dat
+FAZIACOR.IdentificationParameterFile.FAZIA.CsI:      ID_CSI_FAZIACOR.dat
+FAZIACOR.IdentificationParameterFile.FAZIA.Si:       ID_SI1PSA_ZandA.dat
+FAZIACOR.IdentificationParameterFile.FAZIA.Si-CsI:   ID_SI2_CSI_FAZIACOR_ZA8.dat
+FAZIACOR.ActiveIdentifications:                FAZIA.CsI FAZIA.Si-CsI FAZIA.Si-Si FAZIA.Si
 
 FAZIAPRE.IdentificationParameterFile.Si-Si:    ID_SI1_SI2_FAZIAPRE_pietro.dat
 FAZIAPRE.IdentificationParameterFile.CsI:      ID_CSI_FAZIAPRE.dat
@@ -428,17 +397,9 @@ FAZIADB.RutherfordCrossSection:			crosssection_rutherford.env
 # liste des detecteurs ne marchant pas ou eteints (out of order)
 FAZIADB.OoODet:    OoODetectors.env
 
-# specific values for datasets
-FAZIACOR.FAZIADB.CalibrationFiles:    CalibrationFiles.dat
-FAZIACOR.FAZIADB.Comments:            Comment.txt
-
 FAZIAPRE.FAZIADB.CalibrationFiles:    CalibrationFiles.dat
 #FAZIAPRE.FAZIADB.Comments:            Comment.txt
 
-# definition of the calibration function for detectors
-FAZIADetector.Calib.Channel-Volt: pol2
-FAZIADetector.Calib.Volt-Energy: pol2
-FAZIADetector.Calib.Channel-Energy: pol2
 
 SI1.IsFiredFromSignal:  1
 SI2.IsFiredFromSignal:  1
@@ -615,6 +576,7 @@ FAZIACOR.QH1.ChannelWidth: 		  10
 FAZIACOR.QH1.ShaperRiseTime:  	  2
 FAZIACOR.QH1.ShaperFlatTop:	  1
 FAZIACOR.QH1.PZCorrection: 		  0
+FAZIACOR.QH1.FPGARiseTime:        2
 
 FAZIACOR.I1.BaseLineLength:	  50
 FAZIACOR.I1.ChannelWidth:  		  4
@@ -627,6 +589,7 @@ FAZIACOR.Q2.ChannelWidth:  		  10
 FAZIACOR.Q2.ShaperRiseTime:	  2
 FAZIACOR.Q2.ShaperFlatTop: 		  1
 FAZIACOR.Q2.PZCorrection:  		  0
+FAZIACOR.Q2.FPGARiseTime:          2
 
 FAZIACOR.I2.BaseLineLength:	  50
 FAZIACOR.I2.ChannelWidth:  		  4
@@ -728,5 +691,3 @@ FAZIAPRE.Q3.PZCorrection:  		  0
 #LNS_2012.RawAnalysis.DataAnalysisTask.UserClass.Base:     INDRARawDataAnalyser
 #LNS_2012.ReconstructedEventClassName:   KVINDRAReconEvent
 #LNS_2012.DataSet.RunFileClass.raw:    TFile
-
-+Plugin.KVCalibrator: FAZIA  KVFAZIACalibrator   FAZIAcalibration "KVFAZIACalibrator()"

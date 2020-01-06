@@ -6,16 +6,7 @@
 
 ClassImp(KVDetectorSignal)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDetectorSignal</h2>
-<h4>Signal associated with detector</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
-KVDetectorSignal::KVDetectorSignal(const Char_t* type, KVDetector* det)
+KVDetectorSignal::KVDetectorSignal(const Char_t* type, const KVDetector* det)
    : KVBase(type), fDetector(det), fValue(0)
 {
    if (det) SetTitle(Form("Signal %s of detector %s", type, det->GetName()));
@@ -24,6 +15,12 @@ KVDetectorSignal::KVDetectorSignal(const Char_t* type, KVDetector* det)
 
 void KVDetectorSignal::ls(Option_t*) const
 {
-   printf(" %s 	%s	  %s   [%lf]\n", ClassName(), GetName(), GetType(), GetValue());
+   printf(" %s \t\t %s \t\t %s \t\t [%lf]\n", ClassName(), GetName(), GetType(), GetValue());
+}
+
+Int_t KVDetectorSignal::GetStatus(const TString& what) const
+{
+   // Override in child classes to report on the 'status' of the signal.
+   return -1;
 }
 

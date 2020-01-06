@@ -33,15 +33,15 @@ Double_t KVLightEnergyCsIFull::dLightIntegralApprox(double* x, double* par)
 {
    double e = x[0];
 
-   double zfit = par[0];
-   double afit = par[1];
+   double zfit = Z;
+   double afit = A;
 
-   double ag = par[2];
-   double ar = par[3];
-   double an = par[4];
-   double e_delta = par[5];
+   double ag = par[0];
+   double ar = par[1];
+   double an = par[2];
+   double e_delta = par[3];
 
-   double m = float(afit) * u;
+   double m = afit * KVNucleus::u();
    if (zfit == 2. && afit == 4.) m = 3727.4;
    if ((zfit == 1.) && (afit == 1.)) m = 938.;
 
@@ -49,7 +49,7 @@ Double_t KVLightEnergyCsIFull::dLightIntegralApprox(double* x, double* par)
    double fraction = 0.;
    double dlum = 0.;
 
-   double beta_delta = sqrt(2.*e_delta / u);
+   double beta_delta = sqrt(2.*e_delta / KVNucleus::u());
 
    beta = sqrt(1. - m * m / ((e + m) * (e + m)));
 
@@ -80,14 +80,14 @@ Double_t KVLightEnergyCsIFull::dLightIntegralApprox(double* x, double* par)
 Double_t KVLightEnergyCsIFull::dLightIntegral(double* x, double* par)
 {
    double e = x[0];
-   double zfit = par[0];
-   double afit = par[1];
-   double ag = par[2];
-   double ar = par[3];
+   double zfit = Z;
+   double afit = A;
+   double ag = par[0];
+   double ar = par[1];
    if (ar < 1.e-8) ar = 0.;
-   double an = par[4];
-   double e_delta = par[5];
-   double m = afit * u;
+   double an = par[2];
+   double e_delta = par[3];
+   double m = afit * KVNucleus::u();
    if (zfit == 1. && afit == 1.) m = 938.2;
    if (zfit == 1. && afit == 2.) m = 1876.;
    if (zfit == 1. && afit == 3.) m = 2809.4;
@@ -98,7 +98,7 @@ Double_t KVLightEnergyCsIFull::dLightIntegral(double* x, double* par)
    double beta = 0.;
    double fraction = 0.;
    double dlum = 0.;
-   double beta_delta = sqrt(2.*e_delta / u);
+   double beta_delta = sqrt(2.*e_delta / KVNucleus::u());
    beta = sqrt(1. - m * m / ((e + m) * (e + m)));
    fraction = GetDeltaFraction(beta, beta_delta);
    if (fraction > 1.) fraction = 1.;
@@ -229,7 +229,7 @@ Double_t KVLightEnergyCsIFull::gamma(double z, double a, double e)
 Double_t KVLightEnergyCsIFull::gamma_ziegler(double z, double a, double e)
 {
    double ei = e;
-   double m = a * u;
+   double m = a * KVNucleus::u();
    if (z == 2. && a == 4.) m = 3727.4;
    double v0 = 7.2983824e-3;                          // Bohr velocity for electrons
    double v = sqrt(2.*ei / m);
@@ -307,13 +307,11 @@ Double_t KVLightEnergyCsIFull::sp_n(double z, double a, double e)
 Double_t KVLightEnergyCsIFull::GetLight(double* x, double* par)
 {
    // x[0] = energie (MeV)
-   // par[0] = Z
-   // par[1] = A
-   // par[2] = a1
-   // par[3] = a2
-   // par[4] = a3
-   // par[5] = a4
-   // par[6] = pied
+   // par[0] = a1
+   // par[1] = a2
+   // par[2] = a3
+   // par[3] = a4
+   // par[4] = pied
 
    double emin    = 1.e-4; //arbitrary set to avoid divergence of de/dx
    double emax    = x[0];
@@ -322,9 +320,9 @@ Double_t KVLightEnergyCsIFull::GetLight(double* x, double* par)
 #if ROOT_VERSION_CODE > ROOT_VERSION(5,99,01)
    // for compilation with latest ROOT svn trunk version called 5.99/01
    fDlight->SetParameters(par);
-   return par[6] + fDlight->Integral(emin, emax, epsilon);
+   return par[4] + fDlight->Integral(emin, emax, epsilon);
 #else
-   return par[6] + fDlight->Integral(emin, emax, par, epsilon);
+   return par[4] + fDlight->Integral(emin, emax, par, epsilon);
 #endif
 
 }
@@ -340,13 +338,9 @@ Double_t KVLightEnergyCsIFull::GetLightApprox(double* x, double* par)
    // par[2] = a2
    // par[3] = a3
    // par[4] = a4
-   // par[5] = Z
-   // par[6] = A
 
    Double_t energie = x[0];
 
-   Double_t Z = par[5];
-   Double_t A = par[6];
    Double_t c1 = par[1];
    Double_t c2 = Z * Z * A * par[2];
    Double_t c3 = A * par[3];
@@ -375,8 +369,6 @@ Double_t KVLightEnergyCsIFull::GetLightApproxSilicon(double* x, double* par)
    // par[2] = a2
    // par[3] = a3
    // par[4] = a4
-   // par[5] = Z
-   // par[6] = A
 
    Double_t E = x[0];
 
@@ -386,149 +378,86 @@ Double_t KVLightEnergyCsIFull::GetLightApproxSilicon(double* x, double* par)
    Double_t a2   = par[3];
    Double_t a3   = par[4];
 
-   Double_t z = par[5];
-   Double_t a = par[6];
-
-   Double_t raz2 = a * z * z * a1;
-   Double_t si = a0 * (E - raz2 * log(1. + E / raz2) + raz2 * log((E + raz2) / (a3 * a + raz2)) - (1. - a2) * (1. - a2) * raz2 * log((E + (1. - a2) * raz2) / (a3 * a + (1. - a2) * raz2)));
+   Double_t raz2 = A * Z * Z * a1;
+   Double_t si = a0 * (E - raz2 * log(1. + E / raz2) + raz2 * log((E + raz2) /
+                       (a3 * A + raz2)) - (1. - a2) * (1. - a2) * raz2 * log((E + (1. - a2) * raz2) /
+                             (a3 * A + (1. - a2) * raz2)));
 
    return pied + si;
 }
 
 //________________________________________________________________
-KVLightEnergyCsIFull::KVLightEnergyCsIFull(): KVCalibrator(5)
+KVLightEnergyCsIFull::KVLightEnergyCsIFull()
+   : KVLightEnergyCsI(), fDlight(nullptr)
 {
-   // Default constructor
-   fDetector = 0;
-   //    init();
-}
-
-//________________________________________________________________
-KVLightEnergyCsIFull::KVLightEnergyCsIFull(const Char_t* name, const Char_t* type, KVDetector* kvd, Int_t lightFormula): KVCalibrator(name, type, 5) // : KVCalibrator(kvd)
-{
-   SetDetector(kvd);
-   SetLightFormula(lightFormula);
-   init();
+   SetType("LightEnergyCsIFull");
 }
 
 //________________________________________________________________
 void KVLightEnergyCsIFull::init()
 {
    //default initialisations
-//   SetType("Light-Energy CsI");
-//   if(fDetector&&(fLightFormula==kExact)) fMaterialTable = fDetector->GetRangeTable()->GetMaterial(fDetector->GetMaterialName());
-//   else Error("init", "No detector provided !");
-   SetA(1);
-   SetZ(1);
-   fZmed = 54;//fDetector->GetZ();
-   fAmed = 130;//fDetector->GetMass();
 
-   u = 931.5;
-   fDlight = 0;
+   fZmed = 54;// default CsI
+   fAmed = 130;// default CsI
 
    switch (fLightFormula) {
       case kExact :
-         fDlight = new TF1("fDlight_CsI", this, &KVLightEnergyCsIFull::dLightIntegral, 0., 10000., 6, "KVLightEnergyCsIFull", "dLightIntegral");
-         fLight  = new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLight, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLight");
+         fDlight = new TF1("fDlight_CsI", this, &KVLightEnergyCsIFull::dLightIntegral, 0., 10000., 4);
+         SetCalibFunction(new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLight, 0., 10000., 5));
+         SetType("Exact");
          break;
 
       case kApproxIntegral :
-         fDlight = new TF1("fDlight_CsI", this, &KVLightEnergyCsIFull::dLightIntegralApprox, 0., 10000., 6, "KVLightEnergyCsIFull", "dLightIntegralApprox");
-         fLight  = new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLight, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightIntegral");
+         fDlight = new TF1("fDlight_CsI", this, &KVLightEnergyCsIFull::dLightIntegralApprox, 0., 10000., 4);
+         SetCalibFunction(new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLight, 0., 10000., 5));
+         SetType("ApproxIntegral");
          break;
 
       case kApprox :
-         fLight  = new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLightApprox, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightApprox");
+         SetCalibFunction(new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLightApprox, 0., 10000., 5));
+         SetType("Approx");
          break;
 
       case kApproxSilicon :
-         fLight  = new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLightApproxSilicon, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightApproxSilicon");
+         fZmed = 14; // values for Silicon?
+         fAmed = 28; // values for Silicon?
+         SetCalibFunction(new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLightApproxSilicon, 0., 10000., 5));
+         SetType("ApproxSilicon");
          break;
 
       default :
-         fLight  = new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLightApprox, 0., 10000., 7, "KVLightEnergyCsIFull", "GetLightApprox");
+         SetCalibFunction(new TF1("fLight_CsI", this, &KVLightEnergyCsIFull::GetLightApprox, 0., 10000., 5));
+         SetType("Approx");
          break;
    }
 }
 
 void KVLightEnergyCsIFull::Print(Option_t* opt) const
 {
-   KVCalibrator::Print(opt);
-   cout << "Formula : " << fLightFormula << endl;
+   KVLightEnergyCsI::Print(opt);
+   cout << "Formula : " << fLightFormula << " Type : " << GetType() << endl;
 }
 
-KVLightEnergyCsIFull::~KVLightEnergyCsIFull()
+void KVLightEnergyCsIFull::SetLightFormula(const TString& which)
 {
-   // Destructor
-   SafeDelete(fDlight);
-   SafeDelete(fLight);
-}
-
-//________________________________________________________________
-
-void KVLightEnergyCsIFull::Copy(TObject& obj) const
-{
-   // This method copies the current state of 'this' object into 'obj'
-   // You should add here any member variables, for example:
-   //    (supposing a member variable KVLightEnergyCsIFull::fToto)
-   //    CastedObj.fToto = fToto;
-   // or
-   //    CastedObj.SetToto( GetToto() );
-
-   KVCalibrator::Copy(obj);
-   //KVLightEnergyCsIFull& CastedObj = (KVLightEnergyCsIFull&)obj;
-}
-
-//___________________________________________________________________________
-Double_t KVLightEnergyCsIFull::Compute(Double_t light) const
-{
-   // Calculate the calibrated energy (in MeV) for a given total light output.
-   // The Z and A of the particle should be given first using SetZ, SetA.
-   // By default, Z=A=1 (proton).
+   // Set type of light-energy formula. Can be one of:
    //
-   // This is done by inversion of the light-energy function using TF1::GetX.
+   //~~~~~~~~~~
+   //   Exact
+   //   ApproxIntegral
+   //   Approx (=INDRA style)
+   //   ApproxSilicon
+   //~~~~~~~~~~
 
-   //set parameters of light-energy function
-   Double_t par[7];
-   for (int i = 0; i < 5; i++)
-      par[i + 2] = GetParameter(i);
-   par[0] = (Double_t) fZ;
-   par[1] = (Double_t) fA;
-   fLight->SetParameters(par);
-//for(int i=0; i<7; i++)printf("P2  [%d]=%f  ", i, fLight->GetParameter(i)); printf("Z=%d  A=%d \n",fZ, fA);
-   //invert light vs. energy function to find energy
-   Double_t xmin, xmax;
-   fLight->GetRange(xmin, xmax);
-   Double_t energy = fLight->GetX(light, xmin, xmax);
-
-   return energy;
-}
-
-
-//___________________________________________________________________________
-Double_t KVLightEnergyCsIFull::operator()(Double_t light)
-{
-   //Same as Compute()
-
-   return Compute(light);
-}
-
-//___________________________________________________________________________
-Double_t KVLightEnergyCsIFull::Invert(Double_t energy)
-{
-   //Given the calibrated (or simulated) energy in MeV,
-   //calculate the corresponding total light output according to the
-   //calibration parameters (useful for filtering simulations).
-
-   //set parameters of light-energy function
-   Double_t par[7];
-   for (int i = 0; i < 5; i++)
-      par[i] = GetParameter(i);
-   par[5] = (Double_t) fZ;
-   par[6] = (Double_t) fA;
-   fLight->SetParameters(par);
-
-   return fLight->Eval(energy);
+   TString formula_types[] = {"Exact", "ApproxIntegral", "Approx", "ApproxSilicon"};
+   for (int i = 0; i < 4; ++i) {
+      if (formula_types[i] == which) {
+         SetLightFormula(i);
+         return;
+      }
+   }
+   Error("SetLightFormula", "Unkown light formula type : %s", which.Data());
 }
 
 void KVLightEnergyCsIFull::SetOptions(const KVNameValueList& opt)
@@ -537,63 +466,9 @@ void KVLightEnergyCsIFull::SetOptions(const KVNameValueList& opt)
    // Use an option string like this:
    //
    //~~~~~~~~~~~~~~
-   // CalibOptions:   formula=[0:kExact,1:kApproxIntegral,2:kApprox(INDRA style),3:kApproxSilicon]
+   // CalibOptions:   formula=[Exact|ApproxIntegral|Approx|ApproxSilicon]
    //~~~~~~~~~~~~~~
 
-   SetLightFormula(opt.GetIntValue("formula"));
-
+   SetLightFormula(opt.GetStringValue("formula"));
 }
 
-
-//Double_t KVLightEnergyCsIFull::dLightIntegral( double *x , double *par )
-//{
-//    double e = x[0];
-
-//    double zfit = par[4];
-//    double afit = par[5];
-
-//    double ag=par[0];
-//    double ar=par[1];
-//    double an=par[2];
-//    double e_delta=par[3];
-
-//    double u = 931.5;
-//    double m = afit*u;
-//    if((zfit==2.)&&(afit==4.)) m = 3727.4;
-//    if((zfit==1.)&&(afit==1.)) m = 938.;
-
-//    double beta = 0.;
-//    double fraction = 0.;
-//    double dlum = 0.;
-
-//    double beta_delta = sqrt(2.*e_delta/u);
-
-//    //cout << "Beta for Delta-electrons = " << beta_delta << endl;
-//    //    beta = sqrt(1.-TMath::Power(m,2)/TMath::Power(e+m,2));
-//    beta = sqrt(1.-m*m/((e+m)*(e+m)));
-//    fraction = GetDeltaFraction(beta, beta_delta);
-//    if(fraction>1.) fraction = 1.;
-//    if(fraction<0.) fraction = 0.;
-
-//    double se = sp_e(zfit,afit,e);
-//    double sn = sp_n(zfit,afit,e);
-//    double raps = 1.+sn/se;
-//    double arg  = 1.-ar*se/(1.+an*sn+ar*se);
-//    double fact = 1.+an*sn;
-//    //    if ( zmed==zcsi) fact=1.;
-//    fact=1.;
-//    if(e<=e_delta*afit)
-//    {
-//        if((arg>0.)&&(ar*se>0.)&&(raps>0.)) dlum = -fact*TMath::Log(arg)/(raps*ar*se);
-//    }
-//    else
-//    {
-//        arg = 1.-(1.-fraction)*ar*se/(1.+an*sn+(1.-fraction)*ar*se);
-//        if((arg>0.)&&(ar*se>0.)&&(raps>0.)) dlum = -fact*TMath::Log(arg)/(raps*ar*se)+fraction/raps;
-//    }
-
-////    Info("dLightIntegral","method called : e=%f  dlum=%f",e,dlum);
-
-//    dlum *= ag;
-//    return dlum;
-//}

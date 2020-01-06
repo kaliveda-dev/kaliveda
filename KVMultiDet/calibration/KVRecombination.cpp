@@ -64,14 +64,14 @@ void KVRecombination::init()
 }
 //________________________________________________________________
 
-KVRecombination::KVRecombination() : KVCalibrator(1)
+KVRecombination::KVRecombination() : KVCalibrator()
 {
    // Default constructor
    init();
 }
 //________________________________________________________________
 
-KVRecombination::KVRecombination(KVDetector* d) : KVCalibrator(1)
+KVRecombination::KVRecombination(KVDetector* d) : KVCalibrator()
 {
    //Associate PHD calculation to detector
    init();
@@ -85,7 +85,7 @@ KVRecombination::~KVRecombination()
 }
 //________________________________________________________________
 
-Double_t KVRecombination::Compute(Double_t energy) const
+Double_t KVRecombination::Compute(Double_t energy, const KVNameValueList&) const
 {
    //Calculate the pulse height defect (in MeV) for a given energy loss in the detector,
    //a given Z and a given A (Z and A  of the particle should be set first using method SetZandA)
@@ -97,15 +97,6 @@ Double_t KVRecombination::Compute(Double_t energy) const
 
    return const_cast<KVRecombination*>(this)->GetParlogPHDFunction(GetZ(), GetA())->Eval(energy);
 }
-//________________________________________________________________
-
-Double_t KVRecombination::operator()(Double_t energy)
-{
-   //Same as Compute()
-
-   return Compute(energy);
-}
-//________________________________________________________________
 
 TF1* KVRecombination::GetELossFunction(Int_t Z, Int_t A, Bool_t Wrong)
 {
@@ -174,7 +165,7 @@ TF1* KVRecombination::GetParlogPHDFunction(Int_t Z, Int_t A)
 }
 //________________________________________________________________
 
-Double_t KVRecombination::Invert(Double_t energy)
+Double_t KVRecombination::Invert(Double_t energy, const KVNameValueList&) const
 {
    //Given the PHD (in MeV) of a particle of charge Z and mass A
    //(set using SetZandA() method), this method inverts the Parlog formula

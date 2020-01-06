@@ -17,11 +17,6 @@ INDRAFAZIA.SI-CSI.MassID.Validity:  Z<=8
 +Plugin.KVFAZIA:    INDRAFAZIA    KVFAZIETO    FAZIAgeometry    "KVFAZIETO()"
 +Plugin.KVINDRA:    INDRAFAZIA    KVINDRA    KVIndraexp_events    "KVINDRA()"
 
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-
 ###############################################################################
 # Beam test T18_02 2 blocks June/July 2018
 #
@@ -51,13 +46,6 @@ INDRAFAZIA.T18_02.GeneAnalysis.DataAnalysisTask.Prereq:     xxx
 
 INDRAFAZIA.T18_02.FAZIETO.NBlocks: 2
 INDRAFAZIA.T18_02.FAZIETO.BlockPositions: 5,9
-
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.CSI$          KVIDINDRACsI         KVIndraidentification         "KVIDINDRACsI()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.T18_02.SI-CSI$       KVIDSiCsI            KVIndraidentification           "KVIDSiCsI()"
 
 INDRAFAZIA.T18_02.IdentificationParameterFile.SI-CSI:       INDRA_SICSI.dat
 INDRAFAZIA.T18_02.IdentificationParameterFile.CSI:          INDRA_CSI.dat
@@ -103,13 +91,6 @@ INDRAFAZIA.E789_test.SI-CSI.MassID.Validity:  Z<=6
 +Plugin.KVINDRA:    INDRAFAZIA.E789_test    KVINDRA    KVIndraexp_events    "KVINDRA()"
 
 +Plugin.KVDetector:      ^INDRAFAZIA.E789_test.SI$      KVSilicon_GG_Energy      KVIndrageometry      "KVSilicon_GG_Energy(Float_t)"
-
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789_test.Si-Si$                 KVFAZIAIDSiSi            FAZIAidentification           "KVFAZIAIDSiSi()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789_test.Si-CsI$                 KVFAZIAIDSiCsI            FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789_test.Si$                 KVFAZIAIDSiPSA            FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789_test.CsI$                 KVFAZIAIDCsI            FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789_test.CSI$          KVIDINDRACsI         KVIndraidentification         "KVIDINDRACsI()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789_test.SI-CSI$       KVIDSiCsI            KVIndraidentification           "KVIDSiCsI()"
 
 INDRAFAZIA.E789_test.IdentificationParameterFile.Si-Si:        ID_SI1_SI2_B0_3.dat
 INDRAFAZIA.E789_test.IdentificationParameterFile.Si-CsI:       ID_SI2_CSI_B0_3.dat
@@ -189,7 +170,7 @@ INDRAFAZIA.E789.MFM.WithEbyedat:  yes
 INDRAFAZIA.E789.MFM.EbyedatActionsExpName:  fazia
 INDRAFAZIA.E789.ReconstructedEventClassName:	KVReconstructedEvent
 INDRAFAZIA.E789.KVDataSet.DataType.Subdir.recon:  recon
-INDRAFAZIA.E789.DataSet.ExpSetUp.ClassList: KVFAZIA KVINDRA
+INDRAFAZIA.E789.DataSet.ExpSetUp.ClassList: KVINDRA KVFAZIA
 INDRAFAZIA.E789.EventReconstruction.DoCalibration: yes
 INDRAFAZIA.E789.EventReconstruction.DoIdentification: yes
 INDRAFAZIA.E789.ReconIdent.DataAnalysisTask.Prereq:     xxx
@@ -197,7 +178,7 @@ INDRAFAZIA.E789.IdentRoot.DataAnalysisTask.Prereq:     xxx
 INDRAFAZIA.E789.ReconRoot.DataAnalysisTask.Prereq:     xxx
 INDRAFAZIA.E789.GeneAnalysis.DataAnalysisTask.Prereq:     xxx
 INDRAFAZIA.E789.HasCalibIdentInfos:   yes
-INDRAFAZIA.E789.ActiveIdentifications:      CSI SI-CSI Si-Si Si-CsI Si CsI
+INDRAFAZIA.E789.ActiveIdentifications:      INDRA.CSI INDRA.SI-CSI FAZIA.Si-Si FAZIA.Si-CsI FAZIA.Si FAZIA.CsI
 INDRAFAZIA.E789.SI-CSI.MassID: yes
 INDRAFAZIA.E789.SI-CSI.MassID.Validity:  Z<=6
 
@@ -206,17 +187,12 @@ INDRAFAZIA.E789.SI-CSI.MassID.Validity:  Z<=6
 +Plugin.KVFAZIA:    INDRAFAZIA.E789    KVFAZIETO    FAZIAgeometry    "KVFAZIETO()"
 +Plugin.KVINDRA:    INDRAFAZIA.E789    KVINDRA    KVIndraexp_events    "KVINDRA()"
 
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789.Si-Si$        KVFAZIAIDSiSi_e789   FAZIAidentification           "KVFAZIAIDSiSi_e789()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789.Si-CsI$       KVFAZIAIDSiCsI       FAZIAidentification           "KVFAZIAIDSiCsI()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789.Si$           KVFAZIAIDSiPSA       FAZIAidentification           "KVFAZIAIDSiPSA()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789.CsI$          KVFAZIAIDCsI         FAZIAidentification           "KVFAZIAIDCsI()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789.CSI$          KVIDINDRACsI         KVIndraidentification         "KVIDINDRACsI()"
-+Plugin.KVIDTelescope:    ^INDRAFAZIA.E789.SI-CSI$       KVIDSiCsI            KVIndraidentification         "KVIDSiCsI()"
-
-INDRAFAZIA.E789.IdentificationParameterFile.SI-CSI:       IDGridsINDRA_SI_CSI.dat
-INDRAFAZIA.E789.IdentificationParameterFile.Si-CsI:       IDGridsFAZIA_Si_CsI.dat
-INDRAFAZIA.E789.IdentificationParameterFile.Si-Si:        IDGridsFAZIA_Si_Si.dat
-INDRAFAZIA.E789.IdentificationParameterFile.CSI:          IDGridsINDRA_CSI_R_L.dat
+INDRAFAZIA.E789.IdentificationParameterFile.INDRA.SI-CSI:       IDGridsINDRA_SI_CSI.dat
+INDRAFAZIA.E789.IdentificationParameterFile.FAZIA.Si-CsI:       IDGridsFAZIA_Si_CsI.dat
+INDRAFAZIA.E789.IdentificationParameterFile.FAZIA.Si-Si:        IDGridsFAZIA_Si_Si.dat
+# define order to use grids - first try low range (QL1), then high range (QH1)
+INDRAFAZIA.E789.FAZIA.Si-Si.GridOrder:                    QL1.Amplitude_Q2.FPGAEnergy,QH1.FPGAEnergy_Q2.FPGAEnergy
+INDRAFAZIA.E789.IdentificationParameterFile.INDRA.CSI:          IDGridsINDRA_CSI_R_L.dat
 
 INDRAFAZIA.E789.QL1.BaseLineLength:            100
 INDRAFAZIA.E789.QL1.TauRC:                     250

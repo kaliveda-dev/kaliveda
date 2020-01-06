@@ -35,6 +35,9 @@ KVBatchSystemParametersGUI::KVBatchSystemParametersGUI(const TGWindow* main, KVN
          fMJ->SetEnabled(kFALSE);
       }
       else {
+         fMJ->SetEnabled(kTRUE);
+         fMJ->SetDown();
+         fRPJ->SetNumber(1);
          fMJ->Connect("Toggled(Bool_t)", "TGNumberEntry", fRPJ, "SetState(Bool_t)");
          fRPJ->SetState(fMJ->IsDown());
       }

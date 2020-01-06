@@ -30,31 +30,31 @@ ClassImp(KVElasticScatterEvent)
 <!-- */
 // --> END_HTML
 /*
-Definition de la voie d'entrée avec les methodes suivantes :
+Definition de la voie d'entrÃ©e avec les methodes suivantes :
    - SetSystem(KVDBSystem* sys);
    - SetSystem(Int_t zp,Int_t ap,Double_t ekin,Int_t zt,Int_t at);
    - SetTargNucleus(KVNucleus *nuc);
    - SetProjNucleus(KVNucleus *nuc);
    - SetTargetMaterial(KVTarget *targ,Bool_t IsRandomized=kTRUE);
-La possibilité est donnée d'effectuer des diffusions sur un noyau différent des noyaux de la cible
+La possibilitÃ© est donnÃ©e d'effectuer des diffusions sur un noyau diffÃ©rent des noyaux de la cible
 Ex :  SetTargetNucleus(new KVNucleus("181Ta"));
       SetTargetMaterial(new KVTarget("40Ca",1.0)) //cible de Ca de 1 mg/cm2
          Diffusion sur un noyau de Ta et propagation dans une cible de Ca
-Si SetTargetMaterial est appelé et pas SetTargNucleus, le noyau cible est débuit du materiel choisi pour la cible
+Si SetTargetMaterial est appelÃ© et pas SetTargNucleus, le noyau cible est dÃ©buit du materiel choisi pour la cible
 
 Definition du domaine angulaire de diffusion et mode de tirage
-   - DefineAngularRange(TObject*) domaine angulaire deilimité par une structure geometrique (KVPosition etc ...)
+   - DefineAngularRange(TObject*) domaine angulaire deilimitÃ© par une structure geometrique (KVPosition etc ...)
    - DefineAngularRange(Double_t tmin, Double_t tmax, Double_t pmin, Double_t pmax) intervalle en theta et phi (degree)
    - SetDiffNucleus(KVString name) name="PROJ" ou "TARG" determine a quel noyau projectile ou cible
    est associe le domaine angulaire choisi
    - SetRandomOption(Option_t* opt); opt="isotropic" ou "random" permet soit un tirage en theta aleatoire ou isotropique
 
-Réalistion des diffusions
-   la méthode Process(Int_t ntimes) permet la réalisation de tous le processus :
-   - propagation du noyau projectile dans la cible jusqu'au point d'intéraction
-   - tirage d'un théta et phi pour la diffusion sur le noyau cible
-   - calcul de la cinématique pour cette direction choisie (réalisé par la classe KV2Body)
-   - si un KVMultiDetArray est défini et que la méthode SetDetectionOn(), détection des projectiles et cibles en voie de sortie
+RÃ©alistion des diffusions
+   la mÃ©thode Process(Int_t ntimes) permet la rÃ©alisation de tous le processus :
+   - propagation du noyau projectile dans la cible jusqu'au point d'intÃ©raction
+   - tirage d'un thÃ©ta et phi pour la diffusion sur le noyau cible
+   - calcul de la cinÃ©matique pour cette direction choisie (rÃ©alisÃ© par la classe KV2Body)
+   - si un KVMultiDetArray est dÃ©fini et que la mÃ©thode SetDetectionOn(), dÃ©tection des projectiles et cibles en voie de sortie
    - enregistrement des evts diffuses dans un arbre sous forme de KVEvent
 
 Exemple :
@@ -196,7 +196,7 @@ void KVElasticScatterEvent::SetTargNucleus(KVNucleus* nuc)
 //_______________________________________________________________________
 void KVElasticScatterEvent::SetDiffNucleus(KVString name)
 {
-   //Defini le noyau auquel se réfère la direction de diffusion (theta, phi)
+   //Defini le noyau auquel se rÃ©fÃ¨re la direction de diffusion (theta, phi)
    //name="PROJ" (default)    diffusion du projectile
    //name="TARG"              diffusion de la cible
 
@@ -337,7 +337,7 @@ void KVElasticScatterEvent::GenereKV2Body()
 
    Info("GenereKV2Body", "On genere le KV2Body");
    if (kb2) delete kb2;
-   kb2 = new KV2Body(new KVNucleus(*proj), new KVNucleus(*targ));
+   kb2 = new KV2Body(*proj, *targ);
    kb2->CalculateKinematics();
 
    //GetNucleus("PROJ")->SetE0();
@@ -405,7 +405,7 @@ Bool_t KVElasticScatterEvent::ValidateEntrance()
    // - one define projectile nuclei : SetProjNucleus()
    // - one define target nuclei : SetTargNucleus()
    // - one define material target : SetTargetMaterial() [Optionnel]
-   //Si pas de noyau cible défini mais une cible est definie le noyau cible est definie a partir de celle-ci
+   //Si pas de noyau cible dÃ©fini mais une cible est definie le noyau cible est definie a partir de celle-ci
    //Si la cible comporte plusieurs layers, le premier est choisi pour definir le noyau cible
    // see DefineTargetNucleusFromLayer() method
    //
@@ -691,7 +691,7 @@ void KVElasticScatterEvent::SetAnglesForDiffusion(Double_t theta, Double_t phi)
 
    kXruth_evt = kb2->GetXSecRuthLab(theta, kDiffNuc);
 
-   //On modifie l energie et les angles du projectile ou cible diffusé(e)
+   //On modifie l energie et les angles du projectile ou cible diffusÃ©(e)
    //puis par conservation, on deduit ceux du noyau complementaire
    KVNucleus* knuc = 0;
 
@@ -709,10 +709,10 @@ void KVElasticScatterEvent::SetAnglesForDiffusion(Double_t theta, Double_t phi)
    //Conservation de l energie tot
    TVector3 ptot = proj->Vect() + targ->Vect();
    Double_t etot = proj->E() + targ->E();
-   //on retire la contribution du noyau diffusé
+   //on retire la contribution du noyau diffusÃ©
    ptot -= knuc->Vect();
    etot -= knuc->E();
-   //on met a jour les pptés la cible ou projectile diffusé(e)
+   //on met a jour les pptÃ©s la cible ou projectile diffusÃ©(e)
 
    if (kDiffNuc == 3)
       knuc = sim_evt->GetParticleWithName("TARG");
@@ -756,23 +756,23 @@ void KVElasticScatterEvent::Filter()
 void KVElasticScatterEvent::TreateEvent()
 {
    //Rempli l'arbre ElasticScatter
-   //Boucle sur tous les parametres associés a l evt (KVEvent::GetParameters() et au projectiles et cible
+   //Boucle sur tous les parametres associÃ©s a l evt (KVEvent::GetParameters() et au projectiles et cible
    //qui le constituent GetParticle(1)->GetParameters()
    // Chaque parametre devient un alias de l'arbre ElasticScatter
    // pour une utilisation a posteriori plus facile.
    // -  pour les parametres de l'evt, on donne directement le nom du parametre
    // -  pour les particule :
-   //    N1_[nom_du parametre] pour les projectiles et N2_[nom_du parametre] pour les cibles diffusés
+   //    N1_[nom_du parametre] pour les projectiles et N2_[nom_du parametre] pour les cibles diffusÃ©s
    //
    // Exemple avec l'utilisation de TTree::Draw
-   // Si on veut voir le spectre en energie laissé par les projectiles diffuses dans la "CI_0601"
+   // Si on veut voir le spectre en energie laissÃ© par les projectiles diffuses dans la "CI_0601"
    // au lieu de faire
    //    GetTree("Simulated_evts")->Draw("Simulated_evts->GetParticle(1)->GetParameters()->GetValue(\"CI_0601\")")
    // on fera
    //    GetTree("Simulated_evts")->Draw("N1_CI_0601")
    //
    // Generation des correlation Energie Cinetique (Ek) vs Angle de diffusion (theta)
-   // pour tous les cas de détection
+   // pour tous les cas de dÃ©tection
 
    if (rec_evt->GetMult() > 0) {
       TTree* tt = (TTree*)ltree->FindObject("ElasticScatter");
@@ -958,8 +958,8 @@ void KVElasticScatterEvent::DefineTrees()
    //sous forme de KVEvent
    //Lors du remplissage de l arbre ( methode TreateEvent)
    //les parametres associes au KVEvent::GetParameters et au KVNucleus::GetParameters (projectile et cible)
-   //sont scannés et leur nom et le moyen d'y accéder ajouté aux alias de l arbre pour une utilisation
-   //plus aisé de celui_ci
+   //sont scannÃ©s et leur nom et le moyen d'y accÃ©der ajoutÃ© aux alias de l arbre pour une utilisation
+   //plus aisÃ© de celui_ci
    //
 
    Info("DefineTrees", "DefineTrees");

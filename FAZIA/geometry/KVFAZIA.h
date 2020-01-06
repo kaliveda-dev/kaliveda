@@ -67,7 +67,7 @@ protected:
    Bool_t handle_raw_data_event_mfmframe(const MFMCommonFrame&);
 #endif
 
-   void PerformClosedROOTGeometryOperations(Int_t run = -1);
+   void PerformClosedROOTGeometryOperations();
 
    void CreateCorrespondence();
 #ifdef WITH_PROTOBUF
@@ -84,8 +84,7 @@ public:
    virtual ~KVFAZIA();
    void AddDetectorLabel(const Char_t* label);
 
-   virtual void Build(Int_t run = -1);
-   //void SortIDTelescopes();
+   virtual void Build(Int_t = -1);
 
    void GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollection* dets);
    Int_t GetNumberOfBlocks() const

@@ -15,7 +15,6 @@ $Date: 2007/04/04 10:39:17 $
 #include "KVGroup.h"
 #include "KVTarget.h"
 #include "KV2Body.h"
-#include "KVNucleus.h"
 #include "TObjArray.h"
 
 using namespace std;
@@ -95,7 +94,6 @@ KVElasticScatter::KVElasticScatter(): fBeamDirection(0, 0, 1)
    fKinematics = 0;
    fTelescope = 0;
    fTarget = 0;
-   fProj = fTarg = 0;
    fIntLayer = fNDets = 0;
    fDetector = 0;
    fMultiLayer = kFALSE;
@@ -123,10 +121,6 @@ KVElasticScatter::~KVElasticScatter()
       delete fTheta;
    if (fKinematics)
       delete fKinematics;
-   if (fProj)
-      delete fProj;
-   if (fTarg)
-      delete fTarg;
    if (fHistos)
       delete fHistos;
    if (fDetInd)
@@ -151,10 +145,8 @@ void KVElasticScatter::SetRun(Int_t run)
 void KVElasticScatter::SetProjectile(Int_t Z, Int_t A)
 {
    //Set projectile Z and A
-   if (!fProj)
-      fProj = new KVNucleus;
-   fProj->SetZ(Z);
-   fProj->SetA(A);
+
+   fProj.SetZandA(Z, A);
 }
 
 //__________________________________________________________________//
@@ -162,8 +154,8 @@ void KVElasticScatter::SetProjectile(Int_t Z, Int_t A)
 void KVElasticScatter::SetEnergy(Double_t e)
 {
    //Set energy of projectile in MeV
-   if (fProj)
-      fProj->SetEnergy(e);
+
+   fProj.SetEnergy(e);
    fEnergy = e;
 }
 
@@ -239,7 +231,7 @@ void KVElasticScatter::CalculateScattering(Int_t N)
    //Perform scattering 'N' times for current values
    //of particle Z, A and energy, target excited state, and detector.
 
-   if (!fProj) {
+   if (!fProj.IsDefined()) {
       cout <<
            "<KVElasticScatter::CalculateScattering> : Set projectile properties first"
            << endl;
@@ -303,8 +295,8 @@ void KVElasticScatter::CalculateScattering(Int_t N)
    //set up kinematics
    if (!fKinematics)
       fKinematics = new KV2Body;
-   fProj->SetEnergy(fEnergy);
-   fProj->SetTheta(0);
+   fProj.SetEnergy(fEnergy);
+   fProj.SetTheta(0);
 
    /* -------------------------------------------------------------------------------------------------------------------------- */
 
@@ -313,7 +305,7 @@ void KVElasticScatter::CalculateScattering(Int_t N)
       fTarget->SetInteractionLayer(fIntLayer, fBeamDirection);
    }
    else {
-      fTarget->GetInteractionPoint(fProj);
+      fTarget->GetInteractionPoint(&fProj);
    }
 
    /* -------------------------------------------------------------------------------------------------------------------------- */
@@ -321,13 +313,10 @@ void KVElasticScatter::CalculateScattering(Int_t N)
    //get target nucleus properties from scattering layer
    TVector3 IP = fTarget->GetInteractionPoint();
    KVMaterial* targ_mat = fTarget->GetLayer(IP);
-   if (!fTarg)
-      fTarg = new KVNucleus;
-   fTarg->SetZ((Int_t) targ_mat->GetZ());
-   fTarg->SetA((Int_t) targ_mat->GetMass());
-   fKinematics->SetProjectile(fProj);
-   fKinematics->SetTarget(fTarg);
-   fKinematics->SetOutgoing(fProj);
+   KVNucleus t;
+   t.SetZ((Int_t) targ_mat->GetZ());
+   t.SetA((Int_t) targ_mat->GetMass());
+   fKinematics->SetTarget(t);
 
    /* -------------------------------------------------------------------------------------------------------------------------- */
 
@@ -341,36 +330,32 @@ void KVElasticScatter::CalculateScattering(Int_t N)
    for (int i = 0; i < N; i++) {
       //calculate slowing of incoming projectile
       fTarget->SetIncoming();
-      fTarget->DetectParticle(fProj);
+      fTarget->DetectParticle(&fProj);
+      fKinematics->SetProjectile(fProj);
+      fKinematics->SetOutgoing(fProj);
       fKinematics->CalculateKinematics();
       //set random direction of outgoing projectile
 
       double th, ph;
       th = ph = 0.;
       fDetector->GetRandomAngles(th, ph);
-      fProj->SetEnergy(fProj->GetEnergy());
-      fProj->SetTheta(th);
-      fProj->SetPhi(ph);
 
-//      fProj->SetRandomMomentum(fProj->GetEnergy(),
-//                               fTelescope->GetThetaMin(),
-//                               fTelescope->GetThetaMax(),
-//                               fTelescope->GetPhiMin(),
-//                               fTelescope->GetPhiMax(), "random");
       //set energy of scattered nucleus
       //WARNING: for inverse kinematics reactions, their are two energies for
       //each angle below the maximum scattering angle.
       //We only use the highest energy corresponding to the most forward CM angle.
       Double_t e1, e2;
-      fKinematics->GetELab(3, fProj->GetTheta(), 3, e1, e2);
-      fProj->SetEnergy(TMath::Max(e1, e2));
-      xsec = TMath::Abs(fKinematics->GetXSecRuthLab(fProj->GetTheta()));
-      fTheta->Fill(fProj->GetTheta(), xsec);
+      fKinematics->GetELab(3, th, 3, e1, e2);
+      fProj.SetEnergy(TMath::Max(e1, e2));
+      fProj.SetTheta(th);
+      fProj.SetPhi(ph);
+      xsec = TMath::Abs(fKinematics->GetXSecRuthLab(fProj.GetTheta()));
+      fTheta->Fill(fProj.GetTheta(), xsec);
       //slowing of outgoing projectile in target
       fTarget->SetOutgoing();
-      fTarget->DetectParticle(fProj);
+      fTarget->DetectParticle(&fProj);
       //now detect particle in detector(s)
-      fAlignedDetectors->R__FOR_EACH(KVDetector, DetectParticle)(fProj);
+      fAlignedDetectors->R__FOR_EACH(KVDetector, DetectParticle)(&fProj);
       //fill histograms
       fDepth->Fill(IP.z());
       int j = 0;
@@ -380,22 +365,22 @@ void KVElasticScatter::CalculateScattering(Int_t N)
          //prepare for next round: set energy loss to zero
          d->Clear();
       }
-      fProj->SetEnergy(fEnergy);
-      fProj->SetTheta(0);
+      fProj.SetEnergy(fEnergy);
+      fProj.SetTheta(0);
+      fProj.GetParameters()->Clear();
       //set random interaction point for scattering
       if (fIntLayer) {
          fTarget->SetInteractionLayer(fIntLayer, fBeamDirection);
       }
       else {
-         fTarget->GetInteractionPoint(fProj);
+         fTarget->GetInteractionPoint(&fProj);
          //if target is multilayer and the interaction layer is not fixed,
          //the layer & hence the target nucleus may change
          if (fMultiLayer) {
             targ_mat = fTarget->GetLayer(fTarget->GetInteractionPoint());
-            fTarg->SetZ((Int_t) targ_mat->GetZ());
-            fTarg->SetA((Int_t) targ_mat->GetMass());
-            fKinematics->SetTarget(fTarg);
-            fKinematics->SetOutgoing(fProj);
+            KVNucleus t;
+            t.SetZandA((Int_t) targ_mat->GetZ(), (Int_t) targ_mat->GetMass());
+            fKinematics->SetTarget(t);
          }
       }
       IP = fTarget->GetInteractionPoint();

@@ -4,7 +4,6 @@
 #include <TStyle.h>
 #include "TPluginManager.h"
 #include "TSystem.h"
-#include "KVDataAnalyser.h"
 #include "KVDataRepositoryManager.h"
 #include "KVDataRepository.h"
 #include "KVDataSetManager.h"

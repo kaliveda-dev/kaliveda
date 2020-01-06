@@ -2,9 +2,8 @@
 # All silicons had maximum gain (8*sqrt(2))
 RunList:                                 1000-64999
 SignalIn:                                PG
-SignalOut:                               Volt
-CalibType:                               Channel-Volt PG
-CalibClass:                              FunctionCal
+SignalOut:                               Volts
+CalibType:                               ChannelVolt
 CalibOptions:                            func=pol3,min=0,max=1,inverse=true
 SI_0601:                                 61.5946,3826.59,143.812,-104.405
 SI_0602:                                 57.7842,3910.68,140.222,-100.895
