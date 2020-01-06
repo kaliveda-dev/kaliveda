@@ -64,6 +64,14 @@ public:
       fIPdist.SetParameter(0, 1. / GetCrossSection());
    }
 
+   Double_t GetRelativeCrossSection(double b) const
+   {
+      // Return differential cross-section relative to 2*pi*b (in mb/fm)
+      if (b > 0) return fIPdist.Eval(b) / (b * fIPdist.GetParameter(0));
+      return 0;
+   }
+
+
    ClassDef(KVSmoothIPDist, 1) //Triangular IP distribution with smooth fall-off
 };
 

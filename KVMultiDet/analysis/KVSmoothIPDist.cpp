@@ -87,7 +87,7 @@ KVSmoothIPDist::KVSmoothIPDist()
    fIPdist.SetParNames("Norm", "b_{0}", "#Delta b");
    fSigmaR.SetParName(0, "#Delta b");
    fCentrality.SetParNames("b_{0}", "#Delta b");
-   fIPdist.SetParameter(0, 1.);
+   fIPdist.SetParameter(0, TMath::TwoPi() * 10.); // default normalisation for dsig/db in mb/fm
 }
 
 KVSmoothIPDist::KVSmoothIPDist(TH1* h)
