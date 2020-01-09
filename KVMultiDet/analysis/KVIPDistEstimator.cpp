@@ -24,7 +24,7 @@ KVIPDistEstimator::KVIPDistEstimator()
      mean_b_vs_X_integrator("mean_b_vs_X_integrator", this, &KVIPDistEstimator::mean_b_vs_X_integrand, 0, 1, 1),
      mean_b_vs_X_function("mean_b_vs_X", this, &KVIPDistEstimator::mean_b_vs_X, 0, 1, 0),
      p_X_X_integrator("p_X_X_integrator", this, &KVIPDistEstimator::P_X_cb_for_X_integral, 0, 1000, 2),
-     fitted_P_X("fitted_P_X", this, &KVIPDistEstimator::P_X_from_fit, 0, 1000, 0),
+     fitted_P_X("fitted_P_X", this, &KVIPDistEstimator::P_X_from_fit, 0, 1000, 1),
      Cb_dist_for_X_select("Cb_dist_for_X_select", this, &KVIPDistEstimator::cb_dist_for_X_selection, 0, 1, 2),
      B_dist_for_X_select("b_dist_for_X_select", this, &KVIPDistEstimator::b_dist_for_X_selection, 0, 20, 2)
 {
@@ -42,7 +42,7 @@ KVIPDistEstimator::KVIPDistEstimator(double ALPHA, double GAMMA, double THETA, d
      mean_b_vs_X_integrator("mean_b_vs_X_integrator", this, &KVIPDistEstimator::mean_b_vs_X_integrand, 0, 1, 1),
      mean_b_vs_X_function("mean_b_vs_X", this, &KVIPDistEstimator::mean_b_vs_X, 0, 1, 0),
      p_X_X_integrator("p_X_X_integrator", this, &KVIPDistEstimator::P_X_cb_for_X_integral, 0, 1000, 2),
-     fitted_P_X("fitted_P_X", this, &KVIPDistEstimator::P_X_from_fit, 0, 1000, 0),
+     fitted_P_X("fitted_P_X", this, &KVIPDistEstimator::P_X_from_fit, 0, 1000, 1),
      Cb_dist_for_X_select("Cb_dist_for_X_select", this, &KVIPDistEstimator::cb_dist_for_X_selection, 0, 1, 2),
      B_dist_for_X_select("b_dist_for_X_select", this, &KVIPDistEstimator::b_dist_for_X_selection, 0, 20, 2)
 {
@@ -65,6 +65,8 @@ void KVIPDistEstimator::FitHisto(TH1* h)
    if (h->Integral() != 1.0) {
       h->Sumw2();
       h->Scale(1. / h->Integral("width"));
+      h->SetMarkerStyle(24);
+      h->SetMarkerSize(1.5);
    }
 
    P_X_fit_function.SetRange(h->GetXaxis()->GetBinLowEdge(1), h->GetXaxis()->GetBinUpEdge(h->GetNbinsX()));

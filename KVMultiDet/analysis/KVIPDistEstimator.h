@@ -167,12 +167,13 @@ class KVIPDistEstimator : public KVBase {
       p_X_cb_integrator.SetParameter(0, x[0]); // set value of X in integrand
       return p_X_cb_integrator.Integral(0, 1);
    }
-   double P_X_from_fit(double* x, double*)
+   double P_X_from_fit(double* x, double* par)
    {
       // same as previous function, but just using current values of parameters
       // x[0] = X
+      // par[0] = normalisation
       p_X_cb_integrator.SetParameter(0, x[0]); // set value of X in integrand
-      return p_X_cb_integrator.Integral(0, 1);
+      return par[0] * p_X_cb_integrator.Integral(0, 1);
    }
    double mean_b_vs_X_integrand(double* x, double* p)
    {
@@ -277,9 +278,14 @@ public:
       B_dist_for_X_select.Draw(opt);
       std::cout << B_dist_for_X_select.Mean(0, 20) << "+/-" << B_dist_for_X_select.Variance(0, 20) << std::endl;
    }
-   void DrawFittedP_X()
+   void DrawFittedP_X(double norm = 1.0)
    {
-      fitted_P_X.Draw();
+      GetFittedP_X(norm)->Draw();
+   }
+   TF1* GetFittedP_X(double norm = 1.0)
+   {
+      fitted_P_X.SetParameter(0, norm);
+      return &fitted_P_X;
    }
    void DrawP_XForGivenB(double b)
    {
