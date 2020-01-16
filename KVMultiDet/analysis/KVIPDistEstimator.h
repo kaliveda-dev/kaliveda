@@ -276,7 +276,13 @@ public:
    {
       B_dist_for_X_select.SetParameters(X1, X2);
       B_dist_for_X_select.Draw(opt);
-      std::cout << B_dist_for_X_select.Mean(0, 20) << "+/-" << B_dist_for_X_select.Variance(0, 20) << std::endl;
+      std::cout << B_dist_for_X_select.Mean(0, 20) << "+/-" << TMath::Sqrt(B_dist_for_X_select.Variance(0, 20)) << std::endl;
+   }
+   void GetMeanAndSigmaBDistForXSelection(double X1, double X2, double& mean, double& sigma)
+   {
+      B_dist_for_X_select.SetParameters(X1, X2);
+      mean = B_dist_for_X_select.Mean(0, 20);
+      sigma = TMath::Sqrt(B_dist_for_X_select.Variance(0, 20));
    }
    void DrawFittedP_X(double norm = 1.0)
    {
