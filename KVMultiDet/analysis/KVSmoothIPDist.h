@@ -42,7 +42,7 @@ public:
       fCentrality.SetParameter(1, x);
    }
    void SetDeltaB_WithConstantCrossSection(Double_t deltab, Double_t sigmaR = 0);
-   const TF1& GetIPDist()
+   TF1& GetIPDist()
    {
       return fIPdist;
    }
