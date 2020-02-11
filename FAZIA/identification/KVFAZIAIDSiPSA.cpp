@@ -31,7 +31,8 @@ KVFAZIAIDSiPSA::KVFAZIAIDSiPSA()
 //      fZThreshold = new TGraphErrors(10,Z,E);
 //      for(int i=0;i<10;++i) fZThreshold->SetPointError(i,0,dE);
       fZThreshold = new TF1("FAZIAIDSiPSA-ZSEUIL", "pol2", 0, 100);
-      fZThreshold->SetParameters(12.261900, -1.767320, 0.765392);
+//      fZThreshold->SetParameters(12.261900, -1.767320, 0.765392);  // Previous implementation
+      fZThreshold->SetParameters(1.71777, -0.760697, 0.752485) ;  // New implementation after thresholds determination with FAZIACOR experiment
    }
 
    if (!fAThreshold) {
