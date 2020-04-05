@@ -93,10 +93,12 @@ void iterator_examples()
    (*found).Print();
 #endif
 
+#if !defined(__APPLE__)
    cout << "\nFind largest Z in RANDOM group using std::max_element:" << endl;
    GroupEventIterator it(Event, "RANDOM");
    KVEvent::Iterator maxZ = std::max_element(it.begin(), it.end(), compareZ);
    (*maxZ).Print();
+#endif
 
    cout << "\nLoop over all particles (0-9) [GetNextParticle]:" << endl;
    KVNucleus* n;
