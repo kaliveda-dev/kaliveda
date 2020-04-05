@@ -51,7 +51,7 @@ protected:
 #endif
 public:
 
-   class Iterator : public std::iterator<std::input_iterator_tag, KVNucleus> {
+   class Iterator : public std::iterator<std::forward_iterator_tag, KVNucleus> {
    public:
       enum Type {    // type of iterator
          Null,      // null value
