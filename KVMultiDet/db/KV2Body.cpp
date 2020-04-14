@@ -1107,10 +1107,8 @@ Double_t KV2Body::KoxReactionXSec(Double_t* eproj, Double_t*)
 {
    // calculate Kox reaction X-section (in barns) for a given lab energy of projectile (in MeV/nucleon)
    //
-   // r0 = 1.05 fm
-   // c = 0.6 @ 30MeV/A, 1.4 @ 83 MeV/A => linear interpolation:
-   //   c = 0.8/53*eproj + 0.6 - 30*0.8/53
-   // uses Bass interaction barrier Bint in the (1 - B/Ecm) term
+   // c parameter fitted with Landau function vs. Log10(E/A) (see Fig. 12 of PRC Kox 87)
+   // by imposing c=0.1 at E/A=10 MeV (goes to 0 as E/A->0)
 
    const Double_t r0 = 1.05;
    const Double_t rc = 1.3;
@@ -1123,8 +1121,6 @@ Double_t KV2Body::KoxReactionXSec(Double_t* eproj, Double_t*)
    CalculateKinematics();
    Double_t ECM = GetCMEnergy();
 
-   // c parameter fitted with Landau function vs. Log10(E/A) (see Fig. 12 of PRC Kox 87)
-   // by imposing c=0.1 at E/A=10 MeV (goes to 0 as E/A->0)
    Double_t c = 11.3315 * TMath::Landau(TMath::Log10(eproj[0]), 2.47498, 0.554937);
    Double_t A1third = pow(proj->GetA(), 1. / 3.);
    Double_t A2third = pow(targ->GetA(), 1. / 3.);
