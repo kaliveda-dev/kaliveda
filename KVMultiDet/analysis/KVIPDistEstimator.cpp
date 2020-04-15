@@ -2,6 +2,7 @@
 //Author: John Frankland,,,
 
 #include "KVIPDistEstimator.h"
+#include <cassert>
 
 ClassImp(KVIPDistEstimator)
 
