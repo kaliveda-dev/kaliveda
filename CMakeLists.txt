@@ -117,10 +117,18 @@ endif(CCIN2P3_BUILD)
 add_feature_info(ccin2p3 CCIN2P3_BUILD "Configure build for CCIN2P3 environment")
 
 #---Built-in package for reading GANIL acquisition data
-option(USE_BUILTIN_GRU
-		"Use built-in package for reading GANIL acquisition data (not MFM format)"
-		ON)
-add_feature_info(builtin_gru USE_BUILTIN_GRU "Use built-in package for reading GANIL acquisition data (not MFM format)")
+if(APPLE)
+    option(USE_BUILTIN_GRU
+        "Use built-in package for reading GANIL acquisition data (not MFM format) -- Disable by default if compiling on MacOS"
+        OFF)
+    add_feature_info(builtin_gru USE_BUILTIN_GRU "Use built-in package for reading GANIL acquisition data (not MFM format) -- Disable by default if compiling on MacOS")
+else()
+    option(USE_BUILTIN_GRU
+        "Use built-in package for reading GANIL acquisition data (not MFM format)"
+        ON)
+    add_feature_info(builtin_gru USE_BUILTIN_GRU "Use built-in package for reading GANIL acquisition data (not MFM format)")
+endif(APPLE)
+
 if(USE_BUILTIN_GRU)
 	set(WITH_BUILTIN_GRU yes)
         if(CCIN2P3_BUILD)
