@@ -12,7 +12,7 @@ ClassImp(KVSmoothIPDist)
 // BEGIN_HTML <!--
 /* -->
 <h2>KVSmoothIPDist</h2>
-<h4>Triangular IP distribution with smooth fall-off</h4>
+<h4>Realistic impact parameter distribution with smooth fall-off at large b</h4>
 <!-- */
 // --> END_HTML
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,10 +84,14 @@ KVSmoothIPDist::KVSmoothIPDist()
      fSigmaR("sigmaR", sigma_inel, 0., 20., 1),
      fCentrality("centrality", ana_centrality, 0., 20., 2)
 {
+   // By default initialize a distribution which is triangular (sharp cut-off) between b=0 and b=1
    fIPdist.SetParNames("Norm", "b_{0}", "#Delta b");
    fSigmaR.SetParName(0, "#Delta b");
    fCentrality.SetParNames("b_{0}", "#Delta b");
    fIPdist.SetParameter(0, TMath::TwoPi() * 10.); // default normalisation for dsig/db in mb/fm
+   // sharp cut-off distribution from b=0 to b=1
+   SetB0(1.0);
+   SetDeltaB(0.0);
 }
 
 KVSmoothIPDist::KVSmoothIPDist(TH1* h)

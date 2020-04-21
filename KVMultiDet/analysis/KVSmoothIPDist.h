@@ -71,8 +71,7 @@ public:
       return 0;
    }
 
-
-   ClassDef(KVSmoothIPDist, 1) //Triangular IP distribution with smooth fall-off
+   ClassDef(KVSmoothIPDist, 1) //Realistic impact parameter distribution with smooth fall-off at large b
 };
 
 #endif
