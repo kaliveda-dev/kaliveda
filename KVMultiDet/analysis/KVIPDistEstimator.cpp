@@ -20,8 +20,8 @@ KVIPDistEstimator::KVIPDistEstimator()
      params(),
      p_X_cb_integrator("p_X_cb_integrator", this, &KVIPDistEstimator::P_X_cb_for_integral, 0, 1, 1),
      P_X_fit_function("P_X_fit_function", this, &KVIPDistEstimator::cb_integrated_P_X, 0, 1, 5),
-     mean_X_vs_cb_function("mean_X_vs_cb", this, &KVIPDistEstimator::mean_X_vs_cb, 0, 1, 0),
-     mean_X_vs_b_function("mean_X_vs_b", this, &KVIPDistEstimator::mean_X_vs_b, 0, 20, 0),
+     mean_X_vs_cb_function("mean_X_vs_cb", this, &KVIPDistEstimator::mean_X_vs_cb, 0, 1, 5),
+     mean_X_vs_b_function("mean_X_vs_b", this, &KVIPDistEstimator::mean_X_vs_b, 0, 20, 5),
      mean_b_vs_X_integrator("mean_b_vs_X_integrator", this, &KVIPDistEstimator::mean_b_vs_X_integrand, 0, 1, 1),
      mean_b_vs_X_function("mean_b_vs_X", this, &KVIPDistEstimator::mean_b_vs_X, 0, 1, 0),
      p_X_X_integrator("p_X_X_integrator", this, &KVIPDistEstimator::P_X_cb_for_X_integral, 0, 1000, 1),
@@ -40,8 +40,8 @@ KVIPDistEstimator::KVIPDistEstimator(double ALPHA, double GAMMA, double THETA, d
      params(ALPHA, GAMMA, THETA, XMIN, XMAX),
      p_X_cb_integrator("p_X_cb_integrator", this, &KVIPDistEstimator::P_X_cb_for_integral, 0, 1, 1),
      P_X_fit_function("P_X_fit_function", this, &KVIPDistEstimator::cb_integrated_P_X, 0, 1, 5),
-     mean_X_vs_cb_function("mean_X_vs_cb", this, &KVIPDistEstimator::mean_X_vs_cb, 0, 1, 0),
-     mean_X_vs_b_function("mean_X_vs_b", this, &KVIPDistEstimator::mean_X_vs_b, 0, 20, 0),
+     mean_X_vs_cb_function("mean_X_vs_cb", this, &KVIPDistEstimator::mean_X_vs_cb, 0, 1, 5),
+     mean_X_vs_b_function("mean_X_vs_b", this, &KVIPDistEstimator::mean_X_vs_b, 0, 20, 5),
      mean_b_vs_X_integrator("mean_b_vs_X_integrator", this, &KVIPDistEstimator::mean_b_vs_X_integrand, 0, 1, 1),
      mean_b_vs_X_function("mean_b_vs_X", this, &KVIPDistEstimator::mean_b_vs_X, 0, 1, 0),
      p_X_X_integrator("p_X_X_integrator", this, &KVIPDistEstimator::P_X_cb_for_X_integral, 0, 1000, 1),
@@ -92,6 +92,27 @@ void KVIPDistEstimator::FitHisto(TH1* h)
    mean_b_vs_X_function.SetRange(h->GetXaxis()->GetBinLowEdge(1), h->GetXaxis()->GetBinUpEdge(h->GetNbinsX()));
 }
 
+void KVIPDistEstimator::DrawNormalisedMeanXvsb(Option_t* opt)
+{
+   // Draw mean X vs b with Xmin=0 and Xmax=1, allowing to compare shapes for different fits
+
+   // save parameters
+   double kmax = params.kmax.value;
+   double Xmax = params.Xmax.value;
+   double kmin = params.k0.value;
+   params.kmax.value = 1. / params.theta.value;
+   params.k0.value = 0;
+   params.Xmax.value = 1;
+   Double_t par[5];
+   fill_array_from_params(par);
+   mean_X_vs_b_function.SetRange(0, GetIPDist().GetB0() + 2 * GetIPDist().GetDeltaB());
+   mean_X_vs_b_function.SetParameters(par);
+   mean_X_vs_b_function.DrawCopy(opt);
+   params.Xmax.value = Xmax;
+   params.kmax.value = kmax;
+   params.k0.value = kmin;
+}
+
 void KVIPDistEstimator::update_fit_params()
 {
    // get latest values of parameters from histogram fit
@@ -105,17 +126,7 @@ void KVIPDistEstimator::update_fit_params()
       Warning("update_fit_params", "no fit function found in histogram");
       return;
    }
-   double theta = fit->GetParameter(0);
-   double Xmax = fit->GetParameter(1);
-   double Xmin = fit->GetParameter(2);
-   double alpha = fit->GetParameter(3);
-   double gamma = fit->GetParameter(4);
-   params.theta.value = theta;
-   params.Xmax.value = Xmax;
-   params.kmax.value = (Xmax - Xmin) / theta;
-   params.k0.value = Xmin / theta;
-   params.alpha.value = alpha;
-   params.gamma.value = gamma;
+   fill_params_from_array(fit->GetParameters());
 }
 
 void KVIPDistEstimator::DrawBDistForSelection(TH1* sel, TH1* incl, Option_t* opt)

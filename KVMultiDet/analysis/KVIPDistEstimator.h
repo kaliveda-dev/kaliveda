@@ -109,21 +109,32 @@ class KVIPDistEstimator : public KVBase {
       return params.kmax.value * TMath::Power(arg, params.gamma.value)
              + params.k0.value;
    }
-   double mean_X_vs_cb(double* x, double*)
+   double mean_X_vs_cb(double* x, double* par)
    {
       // function used to draw fitted <X> vs. cb
       // x[0] = cb
+      // p[0] = theta
+      // p[1] = Xmax
+      // p[2] = Xmin
+      // p[3] = alpha
+      // p[4] = gamma
 
+      fill_params_from_array(par);
       return k_cb(x[0]) * params.theta.value;
    }
-   double mean_X_vs_b(double* x, double*)
+   double mean_X_vs_b(double* x, double* par)
    {
       // function used to draw fitted <X> vs. b
       // x[0] = b
-      // before using, call SetIPDistParams(sigmaR,deltab)
-      if (!TMath::IsNaN(fIPDist.GetCentrality().Eval(x[0])))
-         return k_cb(fIPDist.GetCentrality().Eval(x[0])) * params.theta.value;
-      return 0;
+      // p[0] = theta
+      // p[1] = Xmax
+      // p[2] = Xmin
+      // p[3] = alpha
+      // p[4] = gamma
+      // for absolute impact parameter, call SetIPDistParams(sigmaR,deltab) first
+
+      fill_params_from_array(par);
+      return k_cb(fIPDist.GetCentrality().Eval(x[0])) * params.theta.value;
    }
    double P_X_cb(double X, double cb)
    {
@@ -161,6 +172,34 @@ class KVIPDistEstimator : public KVBase {
       if (bin < 1 || bin > histo->GetNbinsX()) return 0;
       return sel_rapp[bin - 1] * P_X_cb(x[0], par[0]);
    }
+   void fill_params_from_array(double* p)
+   {
+      // p[0] = theta
+      // p[1] = Xmax
+      // p[2] = Xmin
+      // p[3] = alpha
+      // p[4] = gamma
+      params.theta.value = p[0];
+      params.Xmax.value = p[1];
+      params.kmax.value = (p[1] - p[2]) / p[0];
+      params.k0.value = p[2] / p[0];
+      params.alpha.value = p[3];
+      params.gamma.value = p[4];
+   }
+   void fill_array_from_params(double* p)
+   {
+      // p[0] = theta
+      // p[1] = Xmax
+      // p[2] = Xmin
+      // p[3] = alpha
+      // p[4] = gamma
+      p[0] = params.theta.value;
+      p[1] = params.Xmax.value;
+      p[2] = params.theta.value * params.k0.value;
+      p[3] = params.alpha.value;
+      p[4] = params.gamma.value;
+   }
+
    double cb_integrated_P_X(double* x, double* p)
    {
       // integral used in function to fit experimental P(X) distribution
@@ -174,12 +213,7 @@ class KVIPDistEstimator : public KVBase {
       // in total, 5 parameters
 
       if (p[0] <= 0) return 0;
-      params.theta.value = p[0];
-      params.Xmax.value = p[1];
-      params.kmax.value = (p[1] - p[2]) / p[0];
-      params.k0.value = p[2] / p[0];
-      params.alpha.value = p[3];
-      params.gamma.value = p[4];
+      fill_params_from_array(p);
       p_X_cb_integrator.SetParameter(0, x[0]); // set value of X in integrand
       return p_X_cb_integrator.Integral(0, 1);
    }
@@ -251,7 +285,7 @@ class KVIPDistEstimator : public KVBase {
 public:
    KVIPDistEstimator();
    KVIPDistEstimator(double ALPHA, double GAMMA, double THETA, double XMIN, double XMAX,
-                     double sigmaR = 0, double deltaB = 0);
+                     double sigmaR = 31.4, double deltaB = 0);
    virtual ~KVIPDistEstimator();
 
    const bce_fit_results& GetFitResults() const
@@ -266,6 +300,9 @@ public:
       // Set parameters for KVSmoothIPDist used to convert centrality to impact parameter
       // sigmaR is total cross-section in [mb]
       // deltab is width of fall-off in [fm]
+      //
+      // By default this is a triangular distribution between b=0 & b=1 fm with cross-section 31.4 mb,
+      // which can be treated as though it were sharp cut-off distribution for b/bmax
 
       fIPDist.SetDeltaB_WithConstantCrossSection(deltab, sigmaR);
    }
@@ -276,6 +313,9 @@ public:
 
    void DrawMeanXvsCb()
    {
+      Double_t par[5];
+      fill_array_from_params(par);
+      mean_X_vs_cb_function.SetParameters(par);
       mean_X_vs_cb_function.Draw();
    }
    const TF1& GetMeanXvsCb() const
@@ -284,8 +324,13 @@ public:
    }
    void DrawMeanXvsb(Option_t* opt = "")
    {
+      Double_t par[5];
+      fill_array_from_params(par);
+      mean_X_vs_b_function.SetRange(0, GetIPDist().GetB0() + 2 * GetIPDist().GetDeltaB());
+      mean_X_vs_b_function.SetParameters(par);
       mean_X_vs_b_function.Draw(opt);
    }
+   void DrawNormalisedMeanXvsb(Option_t* opt = "");
    TGraph* GetMeanbvsX(int npoints = 101)
    {
       // generate a graph of <b> vs X
