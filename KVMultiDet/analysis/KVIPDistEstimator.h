@@ -330,7 +330,7 @@ public:
       mean_X_vs_b_function.SetParameters(par);
       mean_X_vs_b_function.Draw(opt);
    }
-   void DrawNormalisedMeanXvsb(Option_t* opt = "");
+   void DrawNormalisedMeanXvsb(const TString& title = "", Color_t color = -1, Option_t* opt = "");
    TGraph* GetMeanbvsX(int npoints = 101)
    {
       // generate a graph of <b> vs X
@@ -355,7 +355,7 @@ public:
    {
       B_dist_for_X_select.SetParameters(X1, X2);
       B_dist_for_X_select.DrawCopy(opt);
-      std::cout << B_dist_for_X_select.Mean(0, 20) << "+/-" << TMath::Sqrt(B_dist_for_X_select.Variance(0, 20)) << std::endl;
+      //std::cout << B_dist_for_X_select.Mean(0, 20) << "+/-" << TMath::Sqrt(B_dist_for_X_select.Variance(0, 20)) << std::endl;
    }
    void DrawBDistForSelection(TH1* sel, TH1* incl, Option_t* opt = "");
    void GetMeanAndSigmaBDistForSelection(TH1* sel, TH1* incl, double& mean, double& sigma);

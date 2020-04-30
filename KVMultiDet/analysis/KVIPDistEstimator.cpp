@@ -92,9 +92,13 @@ void KVIPDistEstimator::FitHisto(TH1* h)
    mean_b_vs_X_function.SetRange(h->GetXaxis()->GetBinLowEdge(1), h->GetXaxis()->GetBinUpEdge(h->GetNbinsX()));
 }
 
-void KVIPDistEstimator::DrawNormalisedMeanXvsb(Option_t* opt)
+void KVIPDistEstimator::DrawNormalisedMeanXvsb(const TString& title, Color_t color, Option_t* opt)
 {
    // Draw mean X vs b with Xmin=0 and Xmax=1, allowing to compare shapes for different fits
+   //
+   //  "title" : set title of drawn graph (for figure legend)
+   //  "color" : set color of graph
+   //  "opt"   : drawing option (i.e. "same")
 
    // save parameters
    double kmax = params.kmax.value;
@@ -107,7 +111,9 @@ void KVIPDistEstimator::DrawNormalisedMeanXvsb(Option_t* opt)
    fill_array_from_params(par);
    mean_X_vs_b_function.SetRange(0, GetIPDist().GetB0() + 2 * GetIPDist().GetDeltaB());
    mean_X_vs_b_function.SetParameters(par);
-   mean_X_vs_b_function.DrawCopy(opt);
+   TF1* copy = mean_X_vs_b_function.DrawCopy(opt);
+   if (!title.IsNull()) copy->SetTitle(title);
+   if (color >= 0) copy->SetLineColor(color);
    params.Xmax.value = Xmax;
    params.kmax.value = kmax;
    params.k0.value = kmin;
