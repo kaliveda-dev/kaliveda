@@ -265,7 +265,7 @@ public:
    }
    template
    <typename T>
-   T* get_object(const char* name) const
+   T* get_object(const TString& name) const
    {
       return dynamic_cast<T*>(FindObject(name));
    }
