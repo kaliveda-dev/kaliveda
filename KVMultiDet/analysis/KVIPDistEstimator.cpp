@@ -35,7 +35,7 @@ KVIPDistEstimator::KVIPDistEstimator()
    P_X_fit_function.SetParNames("#theta", "X_{max}", "X_{min}", "#alpha", "#gamma");
 }
 
-KVIPDistEstimator::KVIPDistEstimator(double ALPHA, double GAMMA, double THETA, double XMIN, double XMAX, double sigmaR, double deltaB)
+KVIPDistEstimator::KVIPDistEstimator(double ALPHA, double GAMMA, double THETA, double XMIN, double XMAX)
    : KVBase(),
      params(ALPHA, GAMMA, THETA, XMIN, XMAX),
      p_X_cb_integrator("p_X_cb_integrator", this, &KVIPDistEstimator::P_X_cb_for_integral, 0, 1, 1),
@@ -53,7 +53,6 @@ KVIPDistEstimator::KVIPDistEstimator(double ALPHA, double GAMMA, double THETA, d
 {
    p_X_cb_integrator.SetParNames("X");
    P_X_fit_function.SetParNames("#theta", "X_{max}", "X_{min}", "#alpha", "#gamma");
-   SetIPDistParams(sigmaR, deltaB);
 }
 
 //____________________________________________________________________________//
@@ -161,8 +160,8 @@ void KVIPDistEstimator::DrawBDistForSelection(TH1* sel, TH1* incl, Option_t* opt
    h_selection = sel;
 
    B_dist_for_arb_X_select.SetParameters(Xmin, Xmax);
+   B_dist_for_arb_X_select.SetRange(0, GetIPDist().GetB0() + 2 * GetIPDist().GetDeltaB());
    B_dist_for_arb_X_select.DrawCopy(opt);
-   std::cout << B_dist_for_arb_X_select.Mean(0, 20) << "+/-" << TMath::Sqrt(B_dist_for_arb_X_select.Variance(0, 20)) << std::endl;
 }
 
 void KVIPDistEstimator::GetMeanAndSigmaBDistForSelection(TH1* sel, TH1* incl, double& mean, double& sigma)

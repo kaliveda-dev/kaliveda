@@ -215,7 +215,7 @@ class KVIPDistEstimator : public KVBase {
       if (p[0] <= 0) return 0;
       fill_params_from_array(p);
       p_X_cb_integrator.SetParameter(0, x[0]); // set value of X in integrand
-      return p_X_cb_integrator.Integral(0, 1);
+      return p_X_cb_integrator.Integral(0, 1, 1.e-4);
    }
    double P_X_from_fit(double* x, double* par)
    {
@@ -223,7 +223,7 @@ class KVIPDistEstimator : public KVBase {
       // x[0] = X
       // par[0] = normalisation
       p_X_cb_integrator.SetParameter(0, x[0]); // set value of X in integrand
-      return par[0] * p_X_cb_integrator.Integral(0, 1);
+      return par[0] * p_X_cb_integrator.Integral(0, 1, 1.e-4);
    }
    double mean_b_vs_X_integrand(double* x, double* p)
    {
@@ -242,7 +242,7 @@ class KVIPDistEstimator : public KVBase {
       double px = P_X_from_fit(x, nullptr);
       if (px > 0) {
          mean_b_vs_X_integrator.SetParameter(0, x[0]);
-         return mean_b_vs_X_integrator.Integral(0, 1) / px;
+         return mean_b_vs_X_integrator.Integral(0, 1, 1.e-4) / px;
       }
       return 0;
    }
@@ -254,8 +254,8 @@ class KVIPDistEstimator : public KVBase {
       // p[1] = X2
 
       p_X_X_integrator.SetParameter(0, x[0]);
-      double num =  p_X_X_integrator.Integral(p[0], p[1]);
-      double den = fitted_P_X.Integral(p[0], p[1]);
+      double num =  p_X_X_integrator.Integral(p[0], p[1], 1.e-4);
+      double den = fitted_P_X.Integral(p[0], p[1], 1.e-4);
       if (den > 0) return num / den;
       return 0;
    }
@@ -267,7 +267,7 @@ class KVIPDistEstimator : public KVBase {
       // p[1] = X2
 
       p_X_X_integrator.SetParameter(0, fIPDist.GetCentrality().Eval(x[0]));
-      double num =  p_X_X_integrator.Integral(p[0], p[1]);
+      double num =  p_X_X_integrator.Integral(p[0], p[1], 1.e-4);
       return num * fIPDist.GetIPDist().Eval(x[0]);
    }
    double b_dist_for_arb_X_selection(double* x, double* p)
@@ -278,14 +278,13 @@ class KVIPDistEstimator : public KVBase {
       // p[1] = X2
 
       p_X_X_integrator_with_selection.SetParameter(0, fIPDist.GetCentrality().Eval(x[0]));
-      double num =  p_X_X_integrator_with_selection.Integral(p[0], p[1]);
+      double num =  p_X_X_integrator_with_selection.Integral(p[0], p[1], 1.e-4);
       return num * fIPDist.GetIPDist().Eval(x[0]);
    }
 
 public:
    KVIPDistEstimator();
-   KVIPDistEstimator(double ALPHA, double GAMMA, double THETA, double XMIN, double XMAX,
-                     double sigmaR = 31.4, double deltaB = 0);
+   KVIPDistEstimator(double ALPHA, double GAMMA, double THETA, double XMIN, double XMAX);
    virtual ~KVIPDistEstimator();
 
    const bce_fit_results& GetFitResults() const
@@ -355,7 +354,6 @@ public:
    {
       B_dist_for_X_select.SetParameters(X1, X2);
       B_dist_for_X_select.DrawCopy(opt);
-      //std::cout << B_dist_for_X_select.Mean(0, 20) << "+/-" << TMath::Sqrt(B_dist_for_X_select.Variance(0, 20)) << std::endl;
    }
    void DrawBDistForSelection(TH1* sel, TH1* incl, Option_t* opt = "");
    void GetMeanAndSigmaBDistForSelection(TH1* sel, TH1* incl, double& mean, double& sigma);
