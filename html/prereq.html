@@ -1,0 +1,58 @@
+<h1>Prerequisites</h1>
+
+KaliVeda is an object-oriented toolkit written in (mostly) C++ and based on <a href="https://root.cern.ch">ROOT</a>, so the prerequisites for
+building and installing it are basically the same as <a href="https://root.cern.ch/build-prerequisites">those for ROOT</a>:
+if you have a correctly-installed functioning version of ROOT on your machine, you should be able to build
+and install KaliVeda.
+
+<dd>
+<dl>
+<dt>Operating systems</dt>
+Linux (Ubuntu, Scientific Linux, CentOS, Debian, ...) and MacOS X operating systems are supported. No support for Windows.
+</dl>
+
+<dl>
+<dt>Basic software</dt>
+You will need <a href="http://git-scm.com">git</a> to download the sources, and <a href="https://cmake.org/">cmake</a>
+to configure the build (at least version 2.8.11; note that the most recent versions of ROOT require more
+recent <tt>cmake</tt>).
+
+For the other required software see the prerequisites for ROOT for your OS:
+<a href="https://root.cern.ch/build-prerequisites#ubuntu">Ubuntu</a>,
+<a href="https://root.cern.ch/build-prerequisites#fedora">CentOS</a>,
+<a href="https://root.cern.ch/build-prerequisites#macosx">MacOS</a>, etc.
+</dl>
+
+<dl>
+<dt>ROOT versions</dt>
+<a href="https://root.cern.ch/releases">All versions of ROOT</a> are supported. See <a href="https://github.com/kaliveda-dev/kaliveda/wiki/ROOT-compatibility-status">here</a> for a more-or-less up to date status table.
+If you build ROOT yourself, we recommend doing this with <a href="https://cmake.org/">cmake</a> (for the most recent versions this is compulsory).
+The following ROOT libraries <i>must</i> be installed:
+<ul>
+<li>libRint.so</li>
+<li>libGraf.so</li>
+<li>libGeom.so</li>
+<li>libSpectrum.so</li>
+<li>libProof.so</li>
+<li>libProofPlayer.so</li>
+<li>libPhysics.so</li>
+<li>libHist.so</li>
+<li>libRIO.so</li>
+<li>libTree.so</li>
+<li>libMathCore.so</li>
+<li>libMatrix.so</li>
+<li>libGpad.so</li>
+<li>libGui.so</li>
+<li>libNet.so</li>
+<li>libGraf3d.so</li>
+<li>libThread.so</li>
+</ul>
+The following ROOT libraries are recommended but not compulsory:
+<ul>
+<li>libRGL.so - OpenGL support</li>
+<li>libMinuit.so - data-fitting library</li>
+<li>libRooFit.so & libRooFitCore.so - advanced data-fitting library</li>
+<li>libRSQLite.so or libSQLite.so - SQLite database interface</li>
+</ul>
+</dl> 
+</dd>

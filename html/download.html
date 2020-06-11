@@ -1,42 +1,92 @@
-    <h1>Download</h1>
-        <p>
-        KaliVeda is available to download and build from source from our 
-        <a href="https://github.com/kaliveda-dev/kaliveda">Github repository</a>.
-        </p>
-        <br>
-        <h3 class="newsTitle">Source code<a name="source"></a></h3>
-        <p class="newsText">
-        Source code is available from Github either in the form of compressed archives (tarballs) of released
-        versions, or you can just clone/fork the repository in order to keep up to date with the latest
-        developments and bugfixes using <a href="http://git-scm.com/">Git</a>.
-        <dl>
-        <dt>Releases</dt>
-        <dd>
-        Source code for all released versions are available
-        <a href="https://github.com/kaliveda-dev/kaliveda/releases">here</a>. Releases can be downloaded
-        as either a .zip or a .tar.gz archive.
-        </dd>
-        <dt>Git<a name="git"></a></dt>
-        <dd>
-        You can clone the git repository by doing:
-<div class="code">$ git clone https://github.com/kaliveda-dev/kaliveda.git
+<h1>Getting the sources</h1>
 
-Cloning into 'kaliveda'...
- remote: Counting objects: 30161, done.
- remote: Total 30161 (delta 0), reused 0 (delta 0), pack-reused 30161
- Receiving objects: 100% (30161/30161), 363.74 MiB | 9.01 MiB/s, done.
- Resolving deltas: 100% (21645/21645), done.
- Checking connectivity... done.</div>
-        This will create a directory called 'kaliveda' containing the source code.
-        To update the source code after the initial clone, you can do:
+<p>
+KaliVeda is available to download and build from source from our 
+<a href="https://github.com/kaliveda-dev/kaliveda">Github repository</a>.
+If you want to know more about <tt>git</tt>, here is a good <a href="http://git-scm.com/book/en/v2">book</a> you can read (for free).
+The <tt>git</tt> reference guide is <a href="http://git-scm.com/docs">here</a>.
+</p>
+
+<dd>
+<dl>
+<dt>First time setup</dt>
+The first time you download the source code, you need to <i>clone</i> the repository by typing the following command
+(note that the <tt>'$'</tt> at the beginning of the line represents the shell prompt, which may be different on
+your machine):
+
+<div class="code">$ git clone https://github.com/kaliveda-dev/kaliveda.git
+</div>
+
+
+This will create a directory called 'kaliveda' containing the source code. By default, the version of KaliVeda
+in this directory will be 1.10. Different versions are stored in the repository as different <i>branches</i>:
+
+<div class="code">$ cd kaliveda
+$ git branch -vv
+* <font color="green">1.10</font> b3429a41 [<font color="blue">origin/1.10</font>] Same as previous commit  for Si2-CsI identification...
+</div>
+</dl>
+
+<dl>
+<dt>Changing/choosing the version/branch</dt>
+
+There are two main branches of KaliVeda to choose from, depending on your needs. This table gives the branch names
+and corresponding version numbers:
+
+<table>
+<tr>
+   <th>Branch</th>
+   <th>Version</th>
+   <th>Comments</th>
+</tr>
+<tr>
+   <td>1.10</td>
+   <td>1.10/17</td>
+   <td><i>Old (stable) version, required for INDRA-VAMOS analysis</i></td>
+</tr>
+<tr>
+   <td>master</td>
+   <td>1.11/01</td>
+   <td><i>Development version, required for INDRAFAZIA analysis</i></td>
+</tr>
+</table>
+
+To change the version of the KaliVeda source code in your copy you need to change working directory
+to the directory where you cloned the repository and use the <tt>git checkout</tt> command:
+
+<div class="code">$ cd kaliveda
+$ git checkout master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+Switched to a new branch 'master'
+
+$ git branch -vv
+  1.10   b3429a41 [origin/1.10] Same as previous commit  for Si2-CsI identification...
+* <font color="green">master</font> 379a3779 [<font color="blue">origin/master</font>] Adding missing CsI calib params for FAZIACOR
+</div>
+
+You can change from one branch to another at any time using the same command and the name of the branch you want.
+</dl>
+
+<dl>
+<dt>Updating your copy of the sources</dt>
+To keep up to date with ongoing development, you may need to update your sources from the server from time
+to time. To do this, change working directory to the directory where you cloned the repository, make sure
+you are on the right branch (see above), and then use the <tt>git pull</tt> command:
 <div class="code">$ cd kaliveda
 $ git pull
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Total 5 (delta 4), reused 5 (delta 4), pack-reused 0
+Unpacking objects: 100% (5/5), 678 bytes | 22.00 KiB/s, done.
+From github.com:kaliveda-dev/kaliveda
+   35b7e473..379a3779  master     -> origin/master
+Updating 35b7e473..379a3779
+Fast-forward
+ FAZIA/FAZIACOR/calibCSI.dat | 10 <font color="green">++++++++++</font>
+ 1 file changed, 10 insertions(+)
+Current branch master is up to date.
 </div>
-        </dd>
-        </dl>
-        </p>
-        <p class="newsText">
-        Once you have downloaded the source tree, you need to <a href="build.html">Build & Install</a> the toolkit.
-        </p>
-        <br>
+</dl>
+</dd>
+<br>
 

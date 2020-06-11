@@ -193,13 +193,13 @@ Geometric filter
 	 In this case, all but one of the particles which stop in the same detector will be given
 	 the status `KVReconstructedNucleus::kStatusPileupGhost`{.cpp}.
 	 
-[KVMultiDetArray]: http://kaliveda-dev.github.io/kaliveda/classKVMultiDetArray.html
-[KVSimEvent]: http://kaliveda-dev.github.io/kaliveda/classKVSimEvent.html
-[KVReconstructedEvent]: http://kaliveda-dev.github.io/kaliveda/classKVReconstructedEvent.html
-[KVEvent]: http://kaliveda-dev.github.io/kaliveda/classKVEvent.html
-[KVNameValueList]: http://kaliveda-dev.github.io/kaliveda/classKVNameValueList.html
+[KVMultiDetArray]: http://indra.in2p3.fr/kaliveda/doc/master/classKVMultiDetArray.html
+[KVSimEvent]: http://indra.in2p3.fr/kaliveda/doc/master/classKVSimEvent.html
+[KVReconstructedEvent]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconstructedEvent.html
+[KVEvent]: http://indra.in2p3.fr/kaliveda/doc/master/classKVEvent.html
+[KVNameValueList]: http://indra.in2p3.fr/kaliveda/doc/master/classKVNameValueList.html
 
-[Kinematics]: http://kaliveda-dev.github.io/kaliveda/classKVParticle.html
-[ParticleGroups]: http://kaliveda-dev.github.io/kaliveda/classKVParticle.html
-[ParticleParams]: http://kaliveda-dev.github.io/kaliveda/classKVParticle.html
-[CheckIdentificationThreshold]: http://kaliveda-dev.github.io/kaliveda/classKVIDTelescope.html
+[Kinematics]: http://indra.in2p3.fr/kaliveda/doc/master/classKVParticle.html
+[ParticleGroups]: http://indra.in2p3.fr/kaliveda/doc/master/classKVParticle.html
+[ParticleParams]: http://indra.in2p3.fr/kaliveda/doc/master/classKVParticle.html
+[CheckIdentificationThreshold]: http://indra.in2p3.fr/kaliveda/doc/master/classKVIDTelescope.html

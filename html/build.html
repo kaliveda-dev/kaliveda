@@ -1,74 +1,63 @@
-    <h1>Build & Install</h1>
+<h1>Build & Install</h1>
+<dd>
+<dl>
+<p>
+Once all mandatory and optional software has been installed and you have an up-to-date copy of
+the sources of the KaliVeda branch that you want to compile, you are ready to build.
+</p>
+<p>
+We present here the simplest example of building & installing KaliVeda, using only default settings.
+Note that this will not compile any of the software which is specific to certain (multi)detectors
+(INDRA, FAZIA, etc.). For a detailed explanation of the build options, including how to enable INDRA-
+or FAZIA-specific software,
+see <a href="https://github.com/kaliveda-dev/kaliveda/wiki/Build-System#cmake-options">here</a>.
+</p>
+<p>
+In the following, <b>S</b> is the top directory of your source tree, <b>B</b> is
+where you want to build the toolkit, and <b>I</b> is where you want to install
+the toolkit. Please note that all three of <b>S</b>, <b>B</b>, and <b>I</b> <em>must</em>
+be different directories. Also note that <b>B</b> is a temporary directory just used for
+compilation: after installation, <b>B</b> can be deleted if required.
+</p>
 
-        <p>
-        If you downloaded KaliVeda source code, you will need to build & install the
-        toolkit. Here are some instructions (you will also find them in the file INSTALL in
-        the top directory of the source tree).
-        </p>
-        <h3>Prerequisites</h3>
-        <p>
-        <dl>
-        <dt>ROOT</dt>
-        <dd>At least v5.32 is required, ROOT6 is fully supported.<br>
-        The following ROOT libraries
-        <em>must</em> be installed: <i>libRint.so, libGraf.so, libGeom.so, libSpectrum.so, libProof.so,
-        libProofPlayer.so, libPhysics.so, libHist.so, libRIO.so, libTree.so, libMathCore.so,
-        libMatrix.so, libGpad.so, libGui.so, libNet.so</i>
-        </dd>
-        <dt>cmake</dt>
-        <dd>The build system is based on CMake, at least v2.8.11 is required
-        </dd>
-        </dl>
-        </p>
-        
-        <h3>Quick Start</h3>
-        <p>
-        Here is a quick & simple build & installation, using only default settings.
-        For a detailed explanation of the build system,
-        see <a href="https://github.com/kaliveda-dev/kaliveda/wiki/Build-System">here</a>.
-        </p>
-        
-        <p>
-        In the following, <b>S</b> is the top directory of your source tree, <b>B</b> is
-        where you want to build the toolkit, and <b>I</b> is where you want to install
-        the toolkit. Please note that all three of <b>S</b>, <b>B</b>, and <b>I</b> <em>must</em>
-        be different directories.
-        </p>
-        
-        <ol>
-        <li>Configure the build
+<dt>Configure the build</dt>
+Configuring the build means choosing options concerning which parts of the software you want to compile,
+where you want to install it, and how. See
+<a href="https://github.com/kaliveda-dev/kaliveda/wiki/Build-System#cmake-options">here</a>
+for the full list of options.
+
 <div class="code">[do the following anywhere except in S or I]
 
 $ mkdir B
 $ cd B
-$ cmake S -DCMAKE_INSTALL_PREFIX=I</div>
-See <a href="https://github.com/kaliveda-dev/kaliveda/wiki/Build-System#cmake-options">here</a> for a full list of
-build options which can be passed to CMake.
-</li>
-        <li>Compile and install
+$ cmake S -DCMAKE_INSTALL_PREFIX=I
+</div>
+</dl>
+<dl>
+<dt>Compile and install</dt>
 <div class="code">[do the following in build directory B]
 
-$ make [-j[number of CPUs on multicore machine]] install</div></li>
-</ol>
-On a single-core machine, just type 'make install'. On a quad-core machine, type 'make -j4 install' etc.</p>
-
+$ make [-j[number of CPUs on multicore machine]] install
+</div>
 <p>
-If you are using a source tree under git version control, from time
-to time you will want to update your source tree to the latest versions and rebuild the toolkit. It is usually
-sufficient, in this case, to just repeat step 2 above.</p> 
+On a single-core machine, just type '<tt>make install</tt>'.  On a multi-processor machine the build process
+can be considerably speeded-up by performing the compilation in parallel.
+For example, on a quad-core machine, type '<tt>make -j4 install</tt>' etc.
+</p>
+</dl>
 
-<h3>Setup</h3>
-
-<p>
+<dl>
+<dt>Setting up the environment</dt>
 After installing, you can use one of the following scripts to set up the necessary paths on your system
-to find the executables and run-time libraries:
+to find the executables and run-time libraries (they are based on the equivalent scripts for setting up ROOT,
+which we recommend you use also). Choose the right script for your shell:
 
 <div class="code">$ source I/bin/thiskaliveda.csh   [(t)csh shell]
 $ . I/bin/thiskaliveda.sh         [(ba)sh shell] </div>
 where <b>I</b> is your installation directory. On (t)csh machines, you will probably need to follow this
 with a call to the 'rehash' system function before proceeding. After doing this you should be able to do e.g.:
 <div class="code">$ kaliveda-config --version
-1.10/13
+1.11/01
 
 $ kaliveda
 ***********************************************************
@@ -76,10 +65,10 @@ $ kaliveda
 *                                                         *
 *         W E L C O M E     to     K A L I V E D A        *
 *                                                         *
-* Version: 1.10/13                      Built: 2017-01-27 *
-* git: release-1.10.13@release-1.10.13                    *
+* Version: 1.11/01                      Built: 2020-05-18 *
+* git: heads/master@release-1.11.00-26-g35b7e473          *
 *                                                         *
-*               For help, read the doc on :               *
+*               For help, see the website :               *
 *             http://indra.in2p3.fr/kaliveda              *
 *                                                         *
 *                          ENJOY !!!                      *
@@ -87,11 +76,18 @@ $ kaliveda
 
 kaliveda [0]
 </div>    
-        </p>
-        
-<p>
+<br>
 To setup the KaliVeda paths every time you login to your system, place the call to thiskaliveda.(c)sh
 at the end of whatever login script is appropriate for your shell,
 a slight modification is required for (t)csh shells:
 <div class="code">source I/bin/thiskaliveda.csh I   [(t)csh shell] </div>
-</p>
+</dl>
+
+<dl>
+<dt>Rebuild after updating sources</dt>
+In the future, after updating the sources in <b>S</b> using <tt>git pull</tt>, return to <b>B</b> (or create a new
+build directory if it was deleted) and repeat the <tt>cmake</tt> and <tt>make</tt> steps. In case of problems
+with either step, delete <b>B</b> and start afresh with a new build directory.
+</dl>
+
+</dd>

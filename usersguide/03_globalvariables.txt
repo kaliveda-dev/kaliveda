@@ -1,6 +1,6 @@
 % KaliVeda User's Guide
 
-# Global Variables for analysis of multibody events #
+# Global Variables #
 
 A global variable is an analysis tool for condensing the information in a multibody event into one or a few
 characteristic values. A simple example is the event multiplicity (the number of particles in each event),
@@ -166,13 +166,13 @@ MyClassName* myvg = (MyClassName*)AddGV("MyClassName", "myVarGlob");
 ~~~~~~~
 
 
-[KVEvent]: http://kaliveda-dev.github.io/kaliveda/classKVEvent.html
-[KVNucleus]: http://kaliveda-dev.github.io/kaliveda/classKVNucleus.html
-[KVVarGlob]: http://kaliveda-dev.github.io/kaliveda/classKVVarGlob.html
-[KVVarGlob1]: http://kaliveda-dev.github.io/kaliveda/classKVVarGlob1.html
-[KVVarGlobMean]: http://kaliveda-dev.github.io/kaliveda/classKVVarGlobMean.html
-[KVVGSum]: http://kaliveda-dev.github.io/kaliveda/classKVVGSum.html
-[KVGVList]: http://kaliveda-dev.github.io/kaliveda/classKVGVList.html
-[KVSelector]: http://kaliveda-dev.github.io/kaliveda/classKVSelector.html
-[KVEventSelector]: http://kaliveda-dev.github.io/kaliveda/classKVEventSelector.html
-[KVTensP]: http://kaliveda-dev.github.io/kaliveda/classKVTensP.html
+[KVEvent]: http://indra.in2p3.fr/kaliveda/doc/master/classKVEvent.html
+[KVNucleus]: http://indra.in2p3.fr/kaliveda/doc/master/classKVNucleus.html
+[KVVarGlob]: http://indra.in2p3.fr/kaliveda/doc/master/classKVVarGlob.html
+[KVVarGlob1]: http://indra.in2p3.fr/kaliveda/doc/master/classKVVarGlob1.html
+[KVVarGlobMean]: http://indra.in2p3.fr/kaliveda/doc/master/classKVVarGlobMean.html
+[KVVGSum]: http://indra.in2p3.fr/kaliveda/doc/master/classKVVGSum.html
+[KVGVList]: http://indra.in2p3.fr/kaliveda/doc/master/classKVGVList.html
+[KVSelector]: http://indra.in2p3.fr/kaliveda/doc/master/classKVSelector.html
+[KVEventSelector]: http://indra.in2p3.fr/kaliveda/doc/master/classKVEventSelector.html
+[KVTensP]: http://indra.in2p3.fr/kaliveda/doc/master/classKVTensP.html

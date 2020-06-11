@@ -1,11 +1,12 @@
 MKDWN_EXT = .txt
 #GLOBAL_PANDOC_OPTIONS = --mathjax --number-sections --pdf-engine=pdflatex -s --toc --toc-depth=5 -c css/rootdoc.css --section-divs
 GLOBAL_PANDOC_OPTIONS = --number-sections --pdf-engine=pdflatex -s --toc --toc-depth=5 -c css/rootdoc.css --section-divs
-MKDWN_SOURCES := $(wildcard *$(MKDWN_EXT))
+MKDWN_SOURCES := $(shell ls *$(MKDWN_EXT))
 #GLOBAL_PANDOC_OPTIONS = --mathjax --number-sections --pdf-engine=pdflatex -s --toc --toc-depth=5 -c rootdoc.css --section-divs
 #MKDWN_SOURCES := indrafazia-e789.txt
 
-HTML_OUTPUT := $(patsubst %$(MKDWN_EXT),html/%.html,$(MKDWN_SOURCES))
+HTML_OUTPUT := $(patsubst %$(MKDWN_EXT),html/%.html,$(shell ./strip_number $(MKDWN_SOURCES)))
+#HTML_OUTPUT := $(shell ./strip_number $(MKDWN_SOURCES))
 PDF_OUTPUT  := $(patsubst %$(MKDWN_EXT),pdf/%.pdf,$(MKDWN_SOURCES))
 TEX_OUTPUT  := $(patsubst %$(MKDWN_EXT),tex/%.tex,$(MKDWN_SOURCES))
 
@@ -43,16 +44,17 @@ tex/%.tex: %$(MKDWN_EXT)
 # sed -n '/^# /p' filter.txt | sed 's/^[# ]*// ; s/[ #]*$//'
 links_to_doc:
 	@mkdir -p html
-	@echo \<ol\> > userguide_TOC.html ; \
+	@echo \<div class=\"dropdown-content\"\> > userguide_TOC.html ; \
         i=1;\
 	for docfile in $(MKDWN_SOURCES); do \
 		title=`sed -n '/ #$$/p' $$docfile | sed -n '/^# /p' | sed 's/^[# ]*// ; s/[ #]*$$//'`; \
-		echo \<li\>\<a href=\"UsersGuide\/$${docfile%.*}.html\"\>$$title\<\/a\>\<\/li\> >> userguide_TOC.html ; \
-		htmlfile="html/`basename --suffix=$(MKDWN_EXT) $$docfile`.html";\
+		stripdocfile=`./strip_number $$docfile`;\
+		echo \<a href=\"UsersGuide\/$${stripdocfile%.*}.html\"\>$$i $$title\<\/a\> >> userguide_TOC.html ; \
+                htmlfile="html/`basename --suffix=$(MKDWN_EXT) $$stripdocfile`.html";\
                 pandoc $(GLOBAL_PANDOC_OPTIONS) --number-offset=$$((i-1)) -f markdown -t html -s -o $$htmlfile $$docfile;\
                 i=$$((i+1));\
 	done ; \
-	echo \<\/ol\> >> userguide_TOC.html
+	echo \<\/div\> >> userguide_TOC.html
 
 install:
 	@mkdir -p $(PREFIX)/UsersGuide

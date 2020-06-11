@@ -174,18 +174,18 @@ for(KVEvent::Iterator it = event.GetNextParticleIterator(opt); it!=event.end(); 
    KVNucleus* nuc = it.pointer<KVNucleus>();
 ~~~~~~~~~
 
-[KVSeqCollection]: http://kaliveda-dev.github.io/kaliveda/classKVSeqCollection.html
-[KVList]: http://kaliveda-dev.github.io/kaliveda/classKVList.html
-[KVNucleus]: http://kaliveda-dev.github.io/kaliveda/classKVNucleus.html
-[KVEvent]: http://kaliveda-dev.github.io/kaliveda/classKVEvent.html
-[KVEventViewer]: http://kaliveda-dev.github.io/kaliveda/classKVEventViewer.html
-[KVSimNucleus]: http://kaliveda-dev.github.io/kaliveda/classKVSimNucleus.html
-[KVSimEvent]: http://kaliveda-dev.github.io/kaliveda/classKVSimEvent.html
-[KVReconstructedNucleus]: http://kaliveda-dev.github.io/kaliveda/classKVReconstructedNucleus.html
-[KVReconstructedEvent]: http://kaliveda-dev.github.io/kaliveda/classKVReconstructedEvent.html
-[Particles]: http://kaliveda-dev.github.io/kaliveda/classKVParticle.html
-[Nuclei]: http://kaliveda-dev.github.io/kaliveda/classKVNucleus.html
+[KVSeqCollection]: http://indra.in2p3.fr/kaliveda/doc/master/classKVSeqCollection.html
+[KVList]: http://indra.in2p3.fr/kaliveda/doc/master/classKVList.html
+[KVNucleus]: http://indra.in2p3.fr/kaliveda/doc/master/classKVNucleus.html
+[KVEvent]: http://indra.in2p3.fr/kaliveda/doc/master/classKVEvent.html
+[KVEventViewer]: http://indra.in2p3.fr/kaliveda/doc/master/classKVEventViewer.html
+[KVSimNucleus]: http://indra.in2p3.fr/kaliveda/doc/master/classKVSimNucleus.html
+[KVSimEvent]: http://indra.in2p3.fr/kaliveda/doc/master/classKVSimEvent.html
+[KVReconstructedNucleus]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconstructedNucleus.html
+[KVReconstructedEvent]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconstructedEvent.html
+[Particles]: http://indra.in2p3.fr/kaliveda/doc/master/classKVParticle.html
+[Nuclei]: http://indra.in2p3.fr/kaliveda/doc/master/classKVNucleus.html
 [Filter]: filter.html
-[KVEvent::Iterator]: http://kaliveda-dev.github.io/kaliveda/classKVEvent_1_1Iterator.html
+[KVEvent::Iterator]: http://indra.in2p3.fr/kaliveda/doc/master/classKVEvent_1_1Iterator.html
 [std::algorithm library]: http://en.cppreference.com/w/cpp/algorithm
 [range-based for loop]: http://en.cppreference.com/w/cpp/language/range-for

@@ -1,6 +1,6 @@
 % KaliVeda User's Guide
 
-# Using Detector Array Geometries #
+# Detector Array Geometries #
 
 The main purpose of KaliVeda is to describe charged-particle detector arrays in order
 to perform the following tasks:
@@ -183,9 +183,13 @@ After closing the geometry we are then ready to import the geometry into KaliVed
 ### Angular positioning & detector alignment ###
 There is a trick to placing detectors at given angular coordinates $(\theta,\phi)$ while keeping
 the detector's axis aligned with the flight path of particles coming from the target (assumed to
-be placed at the origin). As it is not easy to deduce, we give it here for future reference.
+be placed at the origin). As it is not easy to deduce, we provide the static method
 
-We use the KaliVeda coordinate-system convention: *i.e.*
+~~~~~~~{.cpp}
+KVMultiDetArray::GetVolumePositioningMatrix(Double_t distance, Double_t theta, Double_t phi)
+~~~~~~~
+
+As always, using the KaliVeda coordinate-system convention: *i.e.*
 
    * the positive $z$-axis is aligned with the beam direction;
    * the positive $x$-axis is vertically upwards (12 o'clock);
@@ -203,12 +207,8 @@ to the origin, do the following:
 [Double_t detector_thickness = ... guess]
 [Int_t node_number = number to give to this detector in geometry]
 
-TGeoRotation rot1,rot2;
-rot2.SetAngles(phi+90, theta, 0);
-rot1.SetAngles(-phi, 0., 0.);
-TGeoTranslation trans(0,0,D+0.5*detector_thickness);
-TGeoHMatrix h = rot2 * trans * rot1;
-top->AddNode(det, node_number, new TGeoHMatrix(h));
+top->AddNode(det, node_number,
+          KVMultiDetArray::GetVolumePositioningMatrix(D+0.5*detector_thickness,theta,phi));
 ~~~~~~~~
 
 ### Detector structures ###
@@ -231,7 +231,7 @@ be (after importing the geometry) `TELESCOPE`.
 
 ## Importing the geometry ##
 Once you have a valid ROOT geometry describing your array, you can import it into KaliVeda
-using the `KVGeoImport` class to initialise a new `KVMultiDetArray` object:
+using the [KVGeoImport] class to initialise a new [KVMultiDetArray] object:
 
 ~~~~~~~~{.cpp}
 KVGeoImport gimp(gGeoManager, KVMaterial::GetRangeTable(), new KVMultiDetArray);
@@ -286,13 +286,14 @@ gMultiDetArray->GetTrajectories()->ls();
 GDNTraj_1 : SILICON_3/SILICON_2/SILICON_1/
 ~~~~~~~~
 
-Notice that trajectories always begin with the detector the furthest from the target (origin).
+Notice that trajectories always begin with the detector the furthest from the target (origin). See class
+[KVGeoDNTrajectory].
 
 From this information, we then
 proceed to deduce all possible ways that a (charged) particle could be identified from its energy
 losses in the detectors on the different trajectories. By default, this means associating each pair
 of successive detectors on the same trajectory into a $\Delta E$-$E$ identification telescope,
-but it is possible (by defining appropriate `KVIDTelescope` plugins) to add single-detector identification
+but it is possible (by defining appropriate plugins for the [KVIDTelescope] base class) to add single-detector identification
 methods (such as pulse shape analysis in silicon detectors or cesium iodide scintillators). To see the list
 of deduced identification telescopes:
 
@@ -324,7 +325,7 @@ Identifications [0/0] :
 ~~~~~~~~
 
 Each reconstruction trajectory has an associated list of identification telescopes which could be used
-to try to identify corresponding particles.
+to try to identify corresponding particles. See class [KVReconNucTrajectory].
 
 Now let us see what happens if we import our [ionisation chamber + silicon telescope structure example](#detector-structures):
 
@@ -369,7 +370,7 @@ Here we can see that our `TELESCOPE` structure has been faithfully imported into
 are defined automatically for all detector geometries, a group corresponds to the largest subset of
 detectors which can be treated independently of all others in the array.
 
-###Structure & detector names ###
+### Structure & detector names ###
 
 The names of the detectors reflect their positioning in a `TELESCOPE` structure, which gives quite long names,
 especially for the derived identification telescope(s):
@@ -382,7 +383,7 @@ gMultiDetArray->GetListOfIDTelescopes()->ls()
 
 What can we do?
 
-####Change default formatting####
+#### Change default formatting ####
 We can change the default names given to structures and detectors using two methods provided by `KVGeoNavigator`
 (the base class for `KVGeoImport`). They allow to define our own formatting conventions for the names
 derived from the geometry. For example, if we do
@@ -415,7 +416,7 @@ gMultiDetArray->GetListOfIDTelescopes()->ls()
  OBJ: KVIDTelescope	ID_CH_T01_SI_T01	 : 0 at: 0x3d56770
 ~~~~~~
 
-####Use correspondance list name translation####
+#### Use correspondance list name translation ####
 Not every case can be treated using formatting strings as above however, so we provide another possibility.
 If you provide a file containing lines like:
 
@@ -457,10 +458,55 @@ gMultiDetArray->GetListOfIDTelescopes()->ls()
 
 ## Using the geometry ##
 
-Once you have a detector array geometry described by [KVMultiDetArray] or a derived class,
+With a detector array geometry described by [KVMultiDetArray] or a derived class, you have access to all
+useful information on the geometry, the detectors, the structures and the identification telescopes etc. of the array, e.g.:
 
+~~~~~~~{.cpp}
+gMultiDetArray->GetDetectors();          // list of all detectors
+gMultiDetArray->GetDetector(name);       // find detector by name
+gMultiDetArray->GetDetectorByType(type); // find detector by type
+~~~~~~~
+
+(these methods are actually defined by base class [KVGeoStrucElement]).
+
+### Nodes & trajectories ###
+The geometry is represented as a set of nodes ([KVGeoDetectorNode]) which are linked by trajectories
+([KVGeoDNTrajectory]) corresponding to all unique paths any particle may take starting from the origin (target
+position) and traversing the detectors of the array. Each node is associated with a detector.
+Each node/detector can be associated with one or more trajectories going either *forwards* (towards the target)
+or *backwards* (away from the target), depending on how detectors in the array are aligned.
+
+~~~~~~~{.cpp}
+// retrieve first (in case there are several) trajectory going forwards from SOME_DETECTOR
+KVGeoDNTrajectory* tr =
+   (KVGeoDNTrajectory*)gMultiDetArray->GetDetector("SOME_DETECTOR")->GetNode()->GetForwardTrajectories()->First();
+~~~~~~~
+
+It is then easy to follow the trajectory *i.e.* to iterate over all nodes/detectors in a given
+direction:
+
+~~~~~~~{.cpp}
+// start new forwards iteration
+tr->IterateFrom();
+
+KVGeoDetectorNode* n;
+while( ( n = tr->GetNextNode() ) )
+{
+   KVDetector* det = n->GetDetector();
+   // do something with each detector on trajectory
+   // ...
+}
+~~~~~~~
+
+See [KVGeoDNTrajectory] class for more details.
 
 [ROOTgeom]: https://root.cern.ch/root/htmldoc/guides/users-guide/ROOTUsersGuide.html#the-geometry-package
 [KVMultiDetArray]: http://indra.in2p3.fr/kaliveda/doc/master/classKVMultiDetArray.html
+[KVGeoStrucElement]: http://indra.in2p3.fr/kaliveda/doc/master/classKVGeoStrucElement.html
+[KVGeoImport]: http://indra.in2p3.fr/kaliveda/doc/master/classKVGeoImport.html
+[KVGeoDetectorNode]: http://indra.in2p3.fr/kaliveda/doc/master/classKVGeoDetectorNode.html
+[KVGeoDNTrajectory]: http://indra.in2p3.fr/kaliveda/doc/master/classKVGeoDNTrajectory.html
+[KVReconNucTrajectory]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconNucTrajectory.html
 [KVMaterial]: http://indra.in2p3.fr/kaliveda/doc/master/classKVMaterial.html
+[KVIDTelescope]: http://indra.in2p3.fr/kaliveda/doc/master/classKVIDTelescope.html
 [Energy loss & range calculations]: energyloss.html

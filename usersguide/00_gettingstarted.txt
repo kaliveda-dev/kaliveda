@@ -1,0 +1,166 @@
+% KaliVeda User's Guide
+
+# Getting started #
+
+## Using the toolkit in an interactive environment
+
+Type `kaliveda` to launch the interactive C++ interpreter of ROOT with all the basic
+libraries of the toolkit already linked in and all necessary paths required for compilation
+of your code predefined.
+This is so that you can compile any code written using the KaliVeda toolkit on the command line in
+a `kaliveda` interactive session, just like you would with ROOT:
+
+~~~~~~~~{.bash}
+$ kaliveda
+***********************************************************
+*                    HI COQUINE !!!                       *
+*                                                         *
+*         W E L C O M E     to     K A L I V E D A        *
+*                                                         *
+* Version: 1.11/01                      Built: 2020-05-28 *
+* git: heads/master@release-1.11.00-37-g48b83dd9          *
+*                                                         *
+*               For help, see the website :               *
+*             http://indra.in2p3.fr/kaliveda              *
+*                                                         *
+*                          ENJOY !!!                      *
+***********************************************************
+
+kaliveda[0] .L MyClass.cpp+
+Info in <TUnixSystem::ACLiC>: creating shared library ./MyClass_cpp.so
+~~~~~~~~
+
+## Finding your way around the installation
+We provide the `kaliveda-config` command tool to inform about paths to different parts of the
+installation, compilation flags, etc. (it is based on the equivalent `root-config` command):
+
+~~~~~~~~~{.bash}
+$ kaliveda-config --help
+Usage: kaliveda-config [options]
+
+  --version             Print the KaliVeda version
+  --bindir              Print the executable directory
+  --libdir              Print the library directory
+  --incdir              Print the header directory
+  --libs                Print linker directives for all libraries
+  --builddir            Print the CMake build directory
+  --srcdir              Print the source directory
+  --gitinfos            Print the git branch and commit
+  --examples            Print the examples directory
+  --cflags              Print all flags for compiling (including ROOT flags)
+  --linklibs            Print all directives for linking (including ROOT libs)
+  --help                Print this message
+~~~~~~~~~
+
+Note that depending on the version of KaliVeda you are using, not all of the above options
+may be implemented.
+
+## Using KaliVeda outside of the interpreter
+### Compilation flags/options
+If you want/need to compile code using the toolkit in stand-alone mode, you can use
+the `kaliveda-config` tool in order to obtain the necessary installation-dependent
+paths to header files and libraries. Given the following code:
+
+~~~~~~~~{.cpp}
+// file: MyCode.cpp
+
+#include "KVNucleus.h"
+
+int main()
+{
+   KVNucleus xe("129Xe",49.9);
+   KVNucleus sn("119Sn");
+   KVNucleus CN = xe + sn;
+   CN.Print();
+}
+~~~~~~~~
+
+this can be compiled and linked into an executable using the following command:
+
+~~~~~~~~{.bash}
+$ g++ MyCode.cpp `kaliveda-config --cflags --linklibs`
+~~~~~~~~
+
+(we assume the g++ compiler; in reality you should use whatever compiler was used to compile
+ROOT, i.e. the result of `root-config --cxx`). Running the executable produces:
+
+~~~~~~~~{.bash}
+$ ./a.out 
+KVNucleus Z=104 A=248 E*=2787.58
+KVParticle mass=233900 Theta=0 Phi=0 KE=3368.84 Vpar=5.03395
+~~~~~~~~
+
+Note that the above commands include also the required paths and libraries from ROOT, and are equivalent
+to
+
+~~~~~~~~{.bash}
+-I`kaliveda-config --incdir` `root-config --cflags` -L`kaliveda-config --libdir --libs` `root-config --glibs`
+~~~~~~~~
+
+### Use in a CMake project
+The above method is unwieldy for anything more than a simple executable. It cannot be used to
+make shared libraries containing your own classes, for which you would also need to generate the
+associated ROOT dictionaries, etc.. Therefore we provide modules which enable
+KaliVeda to be used with the [CMake](https://cmake.org) build system. Note that our CMake modules transparently
+take care of certain incompatibilities between ROOT versions 5 and 6 (most notably dictionary generation),
+and can also be used just for this purpose.
+
+Given the MyCode.cpp file above, the same executable can be built using `cmake` with the following
+configuration file `CMakeLists.txt`:
+
+~~~~~~~~~{.cmake}
+cmake_minimum_required(VERSION 2.8.11)
+
+project(MyProject)
+
+#------- locate KaliVeda installation
+find_package(KaliVeda REQUIRED)
+include(${KALIVEDA_USE_FILE})
+
+#------- locate ROOT installation
+find_package(ROOT REQUIRED)
+include(SetUpROOTBuild)
+
+add_executable(XeSn MyCode.cpp)
+target_link_libraries(XeSn ${KALIVEDA_LIBRARIES})
+~~~~~~~~~
+
+Configuration of the build then proceeds like this (note that we strongly discourage in-source
+builds, the following is just a simplified example):
+
+~~~~~~~{.bash}
+$ cmake .
+
+-- The C compiler identification is GNU 9.3.0
+-- The CXX compiler identification is GNU 9.3.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found KaliVeda: [...] (found version 1.11.01)
+-- Found ROOT version 6.20.99
+-- SetUpROOTBuild : CMAKE_CXX_FLAGS =   -std=c++11 -pipe -fsigned-char -pthread
+-- Configuring done
+-- Generating done
+-- Build files have been written to: [...]
+~~~~~~~
+
+After which your code can be compiled like so (note we are assuming a Unix Makefile build generator):
+
+~~~~~~~{.bash}
+$ make
+Scanning dependencies of target XeSn
+[ 50%] Building CXX object CMakeFiles/XeSn.dir/MyCode.cpp.o
+[100%] Linking CXX executable bin/XeSn
+[100%] Built target XeSn
+~~~~~~~
+
+For more details (including how to make shared libraries of your own classes), see [here](https://github.com/kaliveda-dev/kaliveda/wiki/Using-KaliVeda-in-a-CMake-based-project).

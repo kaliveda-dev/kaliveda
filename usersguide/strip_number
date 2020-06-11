@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# strip '01_' etc from 01_toto.txt
+
+allfich=""
+for fich in $*
+do
+   index=`expr index "$fich" _`
+   allfich="${allfich}${fich:$index} "
+done
+echo $allfich
