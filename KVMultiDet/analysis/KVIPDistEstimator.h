@@ -321,13 +321,15 @@ public:
    {
       return mean_X_vs_cb_function;
    }
-   void DrawMeanXvsb(Option_t* opt = "")
+   void DrawMeanXvsb(const TString& title = "", Color_t color = -1, Option_t* opt = "")
    {
       Double_t par[5];
       fill_array_from_params(par);
       mean_X_vs_b_function.SetRange(0, GetIPDist().GetB0() + 2 * GetIPDist().GetDeltaB());
       mean_X_vs_b_function.SetParameters(par);
-      mean_X_vs_b_function.Draw(opt);
+      TF1* copy = mean_X_vs_b_function.DrawCopy(opt);
+      if (!title.IsNull()) copy->SetTitle(title);
+      if (color >= 0) copy->SetLineColor(color);
    }
    void DrawNormalisedMeanXvsb(const TString& title = "", Color_t color = -1, Option_t* opt = "");
    TGraph* GetMeanbvsX(int npoints = 101)
@@ -350,10 +352,13 @@ public:
       Cb_dist_for_X_select.SetParameters(X1, X2);
       Cb_dist_for_X_select.Draw(opt);
    }
-   void DrawBDistForXSelection(double X1, double X2, Option_t* opt = "")
+   void DrawBDistForXSelection(double X1, double X2, Option_t* opt = "", Color_t color = kRed, const TString& title = "")
    {
       B_dist_for_X_select.SetParameters(X1, X2);
-      B_dist_for_X_select.DrawCopy(opt);
+      TF1* f = B_dist_for_X_select.DrawCopy(opt);
+      f->SetNpx(200);
+      f->SetLineColor(color);
+      f->SetTitle(title);
    }
    void DrawBDistForSelection(TH1* sel, TH1* incl, Option_t* opt = "");
    void GetMeanAndSigmaBDistForSelection(TH1* sel, TH1* incl, double& mean, double& sigma);
