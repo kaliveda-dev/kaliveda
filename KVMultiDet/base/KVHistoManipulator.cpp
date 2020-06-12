@@ -3,13 +3,7 @@
 
 #include "KVHistoManipulator.h"
 #include "Riostream.h"
-
 #include "TProfile.h"
-#include "TH1.h"
-#include "TH2.h"
-
-#include "TF1.h"
-#include "TCutG.h"
 #include "TList.h"
 #include "TString.h"
 #include "TClass.h"
@@ -19,8 +13,6 @@
 #include "TMath.h"
 #include "TRandom.h"
 #include "KVNumberList.h"
-#include "KVList.h"
-
 #include "TSpline.h"
 #include "TStyle.h"
 #include "TCanvas.h"
@@ -293,18 +285,13 @@ TH1* KVHistoManipulator::ScaleHisto(TH1* hh, TF1* fx, TF1* fy, Int_t nx, Int_t n
    return gg;
 }
 
-//###############################################################################################################
-//-------------------------------------------------
-TGraph* KVHistoManipulator::ScaleGraph(TGraph* hh, TF1* fx, TF1* fy)
+TGraph* KVHistoManipulator::ScaleGraph(const TGraph* hh, const TString& axis, const TF1& f1, const TF1& f2) const
 {
-//-------------------------------------------------
-   // Applique les transformations correspondantes aux fonctions (TF1 *) donnees en argument
-   // et donne en sortie le graph transforme celui ci a pour nom "nom_de_histo_input"_scaled
+   // Returns pointer to new graph whose X- and/or Y-coordinates are those of the input graph scaled according to the given function(s).
    //
-   // IMPORTANT le graph d'entree n'est pas modifie
-   //
-   // les parametres de la fonction doivent etre initialises avant.
-   // Si la fonction est un pointeur NULL, aucune transformation n est appliquee et l axe reste tel quel.
+   // * If axis="X", f1 is applied to X-coordinates
+   // * If axis="Y", f1 is applied to Y-coordinates
+   // * If axis="XY", f1 is applied to X-coordinates and f2 is applied to Y-coordinates
 
    TGraph* gg = nullptr;
    TClass* clas = TClass::GetClass(hh->ClassName());
@@ -314,14 +301,20 @@ TGraph* KVHistoManipulator::ScaleGraph(TGraph* hh, TF1* fx, TF1* fy)
    hname.Form("%s_scaled", hh->GetName());
    gg->SetNameTitle(hname.Data(), hh->GetTitle());
 
+   bool scale_X = axis.Contains("X");
+   const TF1* FX = &f1;
+   bool scale_Y = axis.Contains("Y");
+   const TF1* FY = &f2;
+   if (axis == "Y") FY = &f1;
+
    Int_t np = hh->GetN();
    for (Int_t nn = 0; nn < np; nn += 1) {
       Double_t xx1, yy1;
       hh->GetPoint(nn, xx1, yy1);
       Double_t xx2 = xx1;
-      if (fx) xx2 = fx->Eval(xx1);
+      if (scale_X) xx2 = FX->Eval(xx1);
       Double_t yy2 = yy1;
-      if (fy) yy2 = fy->Eval(yy1);
+      if (scale_Y) yy2 = FY->Eval(yy1);
       gg->SetPoint(nn, xx2, yy2);
       if (gg->InheritsFrom("TGraphErrors")) {
          // transformation of errors
@@ -329,14 +322,13 @@ TGraph* KVHistoManipulator::ScaleGraph(TGraph* hh, TF1* fx, TF1* fy)
          //    e_f  =  abs0(df/dx) * e_x
          Double_t e_x = ((TGraphErrors*)hh)->GetErrorX(nn);
          Double_t e_y = ((TGraphErrors*)hh)->GetErrorY(nn);
-         if (fx) e_x = TMath::Abs(fx->Derivative(xx1)) * e_x;
-         if (fy) e_y = TMath::Abs(fy->Derivative(yy1)) * e_y;
+         if (scale_X) e_x = TMath::Abs(FX->Derivative(xx1)) * e_x;
+         if (scale_Y) e_y = TMath::Abs(FY->Derivative(yy1)) * e_y;
          ((TGraphErrors*)gg)->SetPointError(nn, e_x, e_y);
       }
    }
 
    return gg;
-
 }
 //###############################################################################################################
 //-------------------------------------------------
@@ -1792,7 +1784,6 @@ TGraph* KVHistoManipulator::ComputeNewGraphFrom(TGraph* g0, TGraph* g1, const TS
       Double_t result = f1.Eval(x0[ii]);
       gfinal->SetPoint(ii, x0[ii], result);
    }
-
    return gfinal;
 }
 

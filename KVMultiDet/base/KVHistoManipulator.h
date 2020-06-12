@@ -20,6 +20,7 @@ $Date: 2009/04/07 14:54:15 $
 #include "TGraph.h"
 #include "TGraphErrors.h"
 #include "TMath.h"
+#include <TF1.h>
 
 class TCanvas;
 class KVNumberList;
@@ -68,7 +69,18 @@ public:
 
    TH1*  ScaleHisto(TH1* hh, TF1* fx, TF1* fy = NULL, Int_t nx = -1, Int_t ny = -1,
                     Double_t xmin = -1., Double_t xmax = -1., Double_t ymin = -1., Double_t ymax = -1., Option_t* norm = "");
-   TGraph* ScaleGraph(TGraph* hh, TF1* fx, TF1* fy);
+   TGraph* ScaleGraph(const TGraph* hh, TF1* fx = nullptr, TF1* fy = nullptr) const
+   {
+      // \sa ScaleGraph(const TGraph*, const TString&, const TF1&, const TF1&) const
+
+      TString axis;
+      if (fx) axis = "X";
+      if (fy) axis.Append("Y");
+      if (axis == "XY") return ScaleGraph(hh, axis, *fx, *fy);
+      else if (axis == "X") return ScaleGraph(hh, axis, *fx);
+      return ScaleGraph(hh, axis, *fy);
+   }
+   TGraph* ScaleGraph(const TGraph* hh, const TString& axis, const TF1& f1, const TF1& f2 = TF1("f2", "x")) const;
 
    TH1*  CentreeReduite(TH1* hh, Int_t nx = -1, Int_t ny = -1, Double_t xmin = -1., Double_t xmax = -1., Double_t ymin = -1., Double_t ymax = -1.);
    TH2*  CentreeReduiteX(TH2* hh, Int_t nx = -1, Double_t xmin = -1., Double_t xmax = -1.);
