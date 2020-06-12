@@ -58,8 +58,21 @@ class KVImpactParameter : public KVBase {
    Double_t Smax; // maximum of cross-section scale
 
    void make_scale(Int_t npoints);
-
+#ifdef WITH_CPP11
+   KVImpactParameter(const KVImpactParameter&) = delete; // copying is not possible
+#else
+   KVImpactParameter(const KVImpactParameter&) : KVBase() {}; // copying is not possible
+#endif
 public:
+   KVImpactParameter()
+   {
+      fData = nullptr;
+      fIPScale = nullptr;
+      fXSecScale = nullptr;
+      fObsTransform = nullptr;
+      fObsTransformXSec = nullptr;
+      Bmax = 1.0;
+   }
    KVImpactParameter(TH1*, Option_t* evol = "D");
    virtual ~KVImpactParameter();
 

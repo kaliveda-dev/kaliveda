@@ -19,8 +19,8 @@ KVImpactParameter::KVImpactParameter(TH1* data, Option_t* evol)
    // Call with evol = "C" if the observable increases as b increases.
    fData = data;
    fEvol = evol;
-   fIPScale = 0;
-   fObsTransform = 0;
+   fIPScale = nullptr;
+   fObsTransform = nullptr;
    Bmax = 1.0;
 }
 
@@ -28,6 +28,7 @@ KVImpactParameter::~KVImpactParameter()
 {
    // Destructor
    SafeDelete(fIPScale);
+   SafeDelete(fXSecScale);
    SafeDelete(fObsTransform);
 }
 
@@ -65,7 +66,7 @@ void KVImpactParameter::MakeScale(Int_t npoints, Double_t bmax)
 
 void KVImpactParameter::make_scale(Int_t npoints)
 {
-   TH1* cumul = HM.CumulatedHisto(fData, fEvol.Data(), -1, -1, "max");
+   std::unique_ptr<TH1> cumul(HM.CumulatedHisto(fData, fEvol.Data(), -1, -1, "max"));
    Int_t nbins = cumul->GetNbinsX();
    Int_t first_bin = 1;
    Int_t last_bin = nbins;
@@ -82,7 +83,6 @@ void KVImpactParameter::make_scale(Int_t npoints)
       fIPScale->SetPoint(i, et12, b);
       fXSecScale->SetPoint(i, et12, sigma);
    }
-   delete cumul;
 
    fObsTransform = new TF1("fObsTransform", this, &KVImpactParameter::BTransform,
                            fData->GetXaxis()->GetXmin(), fData->GetXaxis()->GetXmax(), 0, "KVImpactParameter", "BTransform");
