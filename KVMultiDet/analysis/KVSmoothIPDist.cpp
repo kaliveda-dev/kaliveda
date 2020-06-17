@@ -64,6 +64,7 @@ double ana_centrality(double* x, double* par)
    double db = par[1];
    if (db == 0) {
       // sharp cut-off
+      if (b > b0) return 1;
       return TMath::Power(b / b0, 2);
    }
    const double pi_sqr_over_6 = TMath::Power(TMath::Pi(), 2) / 6.;
