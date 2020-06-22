@@ -317,8 +317,11 @@ public:
       mean_X_vs_cb_function.SetParameters(par);
       mean_X_vs_cb_function.Draw();
    }
-   const TF1& GetMeanXvsCb() const
+   TF1& GetMeanXvsCb()
    {
+      Double_t par[5];
+      fill_array_from_params(par);
+      mean_X_vs_cb_function.SetParameters(par);
       return mean_X_vs_cb_function;
    }
    void DrawMeanXvsb(const TString& title = "", Color_t color = -1, Option_t* opt = "")
