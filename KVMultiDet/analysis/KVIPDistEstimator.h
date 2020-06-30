@@ -222,8 +222,10 @@ class KVIPDistEstimator : public KVBase {
       // same as previous function, but just using current values of parameters
       // x[0] = X
       // par[0] = normalisation
+      // par[1] = cb_min (=0 by default)
+      // par[2] = cb_max (=1 by default)
       p_X_cb_integrator.SetParameter(0, x[0]); // set value of X in integrand
-      return par[0] * p_X_cb_integrator.Integral(0, 1, 1.e-4);
+      return par[0] * p_X_cb_integrator.Integral(par[1], par[2], 1.e-4);
    }
    double mean_b_vs_X_integrand(double* x, double* p)
    {
@@ -355,13 +357,17 @@ public:
       Cb_dist_for_X_select.SetParameters(X1, X2);
       Cb_dist_for_X_select.Draw(opt);
    }
-   void DrawBDistForXSelection(double X1, double X2, Option_t* opt = "", Color_t color = kRed, const TString& title = "")
+   double DrawBDistForXSelection(double X1, double X2, Option_t* opt = "", Color_t color = kRed, const TString& title = "")
    {
+      // returns maximum of distribution
       B_dist_for_X_select.SetParameters(X1, X2);
       TF1* f = B_dist_for_X_select.DrawCopy(opt);
-      f->SetNpx(200);
+      f->SetNpx(500);
       f->SetLineColor(color);
+      f->SetLineWidth(2);
       f->SetTitle(title);
+      std::cout << B_dist_for_X_select.Mean(0, 20) << " +/-" << TMath::Sqrt(B_dist_for_X_select.Variance(0, 20)) << std::endl;
+      return f->GetMaximum();
    }
    void DrawBDistForSelection(TH1* sel, TH1* incl, Option_t* opt = "");
    void GetMeanAndSigmaBDistForSelection(TH1* sel, TH1* incl, double& mean, double& sigma);

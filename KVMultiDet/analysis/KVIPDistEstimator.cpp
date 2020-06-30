@@ -26,13 +26,15 @@ KVIPDistEstimator::KVIPDistEstimator()
      mean_b_vs_X_function("mean_b_vs_X", this, &KVIPDistEstimator::mean_b_vs_X, 0, 1, 0),
      p_X_X_integrator("p_X_X_integrator", this, &KVIPDistEstimator::P_X_cb_for_X_integral, 0, 1000, 1),
      p_X_X_integrator_with_selection("p_X_X_integrator_with_selection", this, &KVIPDistEstimator::P_X_cb_for_X_integral_with_selection, 0, 1000, 1),
-     fitted_P_X("fitted_P_X", this, &KVIPDistEstimator::P_X_from_fit, 0, 1000, 1),
+     fitted_P_X("fitted_P_X", this, &KVIPDistEstimator::P_X_from_fit, 0, 1000, 3),
      Cb_dist_for_X_select("Cb_dist_for_X_select", this, &KVIPDistEstimator::cb_dist_for_X_selection, 0, 1, 2),
      B_dist_for_X_select("b_dist_for_X_select", this, &KVIPDistEstimator::b_dist_for_X_selection, 0, 20, 2),
      B_dist_for_arb_X_select("b_dist_for_arb_X_select", this, &KVIPDistEstimator::b_dist_for_arb_X_selection, 0, 20, 2)
 {
    p_X_cb_integrator.SetParNames("X");
    P_X_fit_function.SetParNames("#theta", "X_{max}", "X_{min}", "#alpha", "#gamma");
+   fitted_P_X.SetParameter(1, 0);
+   fitted_P_X.SetParameter(2, 1);
 }
 
 KVIPDistEstimator::KVIPDistEstimator(double ALPHA, double GAMMA, double THETA, double XMIN, double XMAX)
@@ -46,13 +48,15 @@ KVIPDistEstimator::KVIPDistEstimator(double ALPHA, double GAMMA, double THETA, d
      mean_b_vs_X_function("mean_b_vs_X", this, &KVIPDistEstimator::mean_b_vs_X, 0, 1, 0),
      p_X_X_integrator("p_X_X_integrator", this, &KVIPDistEstimator::P_X_cb_for_X_integral, 0, 1000, 1),
      p_X_X_integrator_with_selection("p_X_X_integrator_with_selection", this, &KVIPDistEstimator::P_X_cb_for_X_integral_with_selection, 0, 1000, 1),
-     fitted_P_X("fitted_P_X", this, &KVIPDistEstimator::P_X_from_fit, 0, 1000, 1),
+     fitted_P_X("fitted_P_X", this, &KVIPDistEstimator::P_X_from_fit, 0, 1000, 3),
      Cb_dist_for_X_select("Cb_dist_for_X_select", this, &KVIPDistEstimator::cb_dist_for_X_selection, 0, 1, 2),
      B_dist_for_X_select("b_dist_for_X_select", this, &KVIPDistEstimator::b_dist_for_X_selection, 0, 20, 2),
      B_dist_for_arb_X_select("b_dist_for_arb_X_select", this, &KVIPDistEstimator::b_dist_for_arb_X_selection, 0, 20, 2)
 {
    p_X_cb_integrator.SetParNames("X");
    P_X_fit_function.SetParNames("#theta", "X_{max}", "X_{min}", "#alpha", "#gamma");
+   fitted_P_X.SetParameter(1, 0);
+   fitted_P_X.SetParameter(2, 1);
 }
 
 //____________________________________________________________________________//
