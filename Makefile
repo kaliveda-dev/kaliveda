@@ -27,6 +27,7 @@ main_site:
 	@cat html/header.html userguide_TOC.html html/header_bot.html html/prereq.html html/tail.html > $(prefix)/KaliVedaDoc/prereq.html
 	@cat html/header.html userguide_TOC.html html/header_bot.html html/appli.html html/tail.html > $(prefix)/KaliVedaDoc/appli.html
 	@cat html/header.html userguide_TOC.html html/header_bot.html html/build.html html/tail.html > $(prefix)/KaliVedaDoc/build.html
+	@cat html/header.html userguide_TOC.html html/header_bot.html html/docker.html html/tail.html > $(prefix)/KaliVedaDoc/docker.html
 	@cat html/header.html userguide_TOC.html html/header_bot.html html/download.html html/tail.html > $(prefix)/KaliVedaDoc/download.html
 	@cat html/header.html userguide_TOC.html html/header_bot.html html/index.html html/tail.html > $(prefix)/KaliVedaDoc/index.html
 	@cp -r css $(prefix)/KaliVedaDoc/

@@ -1,0 +1,39 @@
+<h1>Docker containers & continuous integration (CI)</h1>
+
+<dd>
+<dl>
+<dt>KaliVeda Docker containers</dt>
+As part of our Continuous Integration efforts, <a href="https://www.docker.com/resources/what-container">Docker containers</a>
+of the KaliVeda toolkit are automatically generated for several versions of ROOT and using several
+different OS every time that a new change is committed to the
+<a href="https://github.com/kaliveda-dev/kaliveda">git repository</a>. This is to ensure that new
+changes to code do not lead to compilation errors with older ROOT versions or compilers. 
+</dl>
+
+<dl>
+In order to use one, for example the 1.10 branch compiled with ROOT version 5.34, try
+
+<div class="code">$ docker run -it gitlab-registry.in2p3.fr/kaliveda/docker/root5.34/kaliveda:1.10</div>
+
+The list of all available
+containers can be found <a href="https://gitlab.in2p3.fr/kaliveda/docker/container_registry">here</a>.
+Details on the generation of the containers can be found <a href="https://gitlab.in2p3.fr/kaliveda/docker">here</a>.
+</dl>
+
+<dl>
+<dt>ROOT Docker containers</dt>
+As a side effect of our CI, we also maintain several non-official ROOT docker containers
+(official containers can be found <a href="https://hub.docker.com/u/rootproject">here</a>) which
+are updated automatically on a weekly basis with the latest versions of the code. 
+</dl>
+
+<dl>
+In order to use one, for example ROOT version 6.22, try
+
+<div class="code">$ docker run -it gitlab-registry.in2p3.fr/kaliveda/root-docker:6.22</div>
+
+The list of all available
+containers can be found <a href="https://gitlab.in2p3.fr/kaliveda/root-docker/container_registry">here</a>.
+Details on the generation of the containers can be found <a href="https://gitlab.in2p3.fr/kaliveda/root-docker">here</a>.
+</dl>
+</dd>
