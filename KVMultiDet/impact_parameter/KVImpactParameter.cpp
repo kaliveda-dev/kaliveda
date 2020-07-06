@@ -252,3 +252,25 @@ std::vector<Double_t> KVImpactParameter::SliceXSec(Int_t nslices, Double_t totXs
    return slices;
 }
 
+double KVImpactParameter::GetMeanBForSCA(double bmin, double bmax) const
+{
+   // Calculate the mean impact parameter for b in [bmin,bmax]
+   // in sharp cut-off approximation i.e. assuming a triangular distribution:
+   //\f[
+   //\bar{b} = \frac{2(b^3_{max}-b^3_{min})}{3(b^2_{max}-b^2_{min})}
+   //\f]
+
+   return (2. / 3.) * (pow(bmax, 3) - pow(bmin, 3)) / (pow(bmax, 2) - pow(bmin, 2));
+}
+
+double KVImpactParameter::GetSigmaBForSCA(double bmin, double bmax) const
+{
+   // Calculate the standard deviation of impact parameter for b in [bmin,bmax]
+   // in sharp cut-off approximation i.e. assuming a triangular distribution:
+   //\f[
+   //\sigma^2_b = \frac{(b^4_{max}-b^4_{min})}{2(b^2_{max}-b^2_{min})} - \bar{b}^2
+   //\f]
+
+   return sqrt(0.5 * (pow(bmax, 4) - pow(bmin, 4)) / (pow(bmax, 2) - pow(bmin, 2)) - pow(GetMeanBForSCA(bmin, bmax), 2));
+}
+

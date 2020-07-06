@@ -142,6 +142,8 @@ public:
       return pow(xsec / 10. / TMath::Pi(), 0.5);
    }
    std::vector<Double_t> SliceXSec(Int_t nslices, Double_t totXsec);
+   double GetMeanBForSCA(double bmin, double bmax) const;
+   double GetSigmaBForSCA(double bmin, double bmax) const;
 
    ClassDef(KVImpactParameter, 2) //Impact parameter analysis tools
 };
