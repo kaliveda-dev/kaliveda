@@ -12,6 +12,6 @@
 #pragma link C++ class KVImpactParameters::bayesian_estimator<KVImpactParameters::rogly_fitting_function<4>>+;
 #pragma link C++ class KVImpactParameters::algebraic_fitting_function+;
 #pragma link C++ class KVImpactParameters::bayesian_estimator<KVImpactParameters::algebraic_fitting_function>+;
-#pragma link C++ class KVImpactParameter+;
+#pragma link C++ class KVImpactParameters::cavata_prescription+;
 #pragma link C++ class KVSmoothIPDist+;
 #endif

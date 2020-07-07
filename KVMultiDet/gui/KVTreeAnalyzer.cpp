@@ -78,13 +78,6 @@ void KVTreeAnalyzer::init()
    fSelectedSelections = 0;
    fSelectedLeaves = 0;
    fSelectedHistos = 0;
-   ipscale = 0;
-//    GDfirst=new KVGumbelDistribution("Gum1",1);
-//    GDsecond=new KVGumbelDistribution("Gum2",2);
-//    GDthird=new KVGumbelDistribution("Gum3",3);
-//    GausGum1=new KVGausGumDistribution("GausGum1",1);
-//    GausGum2=new KVGausGumDistribution("GausGum2",2);
-//    GausGum3=new KVGausGumDistribution("GausGum3",3);
 
    fNx = fNy = 500;
    fXmin = fXmax = fYmin = fYmax = -1.;
@@ -128,7 +121,6 @@ KVTreeAnalyzer::~KVTreeAnalyzer()
    // Destructor
    SafeDelete(fSelectedSelections);
    SafeDelete(fSelectedHistos);
-   SafeDelete(ipscale);
    if (!fDeletedByGUIClose) SafeDelete(fMain_histolist);
    if (gTreeAnalyzer == this) gTreeAnalyzer = 0x0;
    fgAnalyzerList->Remove(this);
@@ -1891,11 +1883,6 @@ void KVTreeAnalyzer::DrawLeaf(TObject* obj)
          }
          if (!histo) return;
       }
-//       if(fNewCanvas)  {KVCanvas*c=new KVCanvas; c->SetTitle(histo->GetTitle()); c->SetWindowSize(600,600);}
-//       histo->Draw();
-//       if(histo->InheritsFrom("TH2")) gPad->SetLogz(fDrawLog);
-//       else gPad->SetLogy(fDrawLog);
-//       gPad->Modified();gPad->Update();
       DrawHisto(histo);
    }
    else {
@@ -1908,11 +1895,6 @@ void KVTreeAnalyzer::DrawLeaf(TObject* obj)
       if (!histo) histo = MakeHisto(expr, "", 500, 0, (fUserWeight ? fWeight.Data() : ""));
       if (!histo) return;
       histo->GetXaxis()->SetTitle(obj->GetTitle());
-//       if(fNewCanvas)  {KVCanvas*c=new KVCanvas; c->SetTitle(histo->GetTitle());}
-//       histo->Draw();
-//       if(histo->InheritsFrom("TH2")) gPad->SetLogz(fDrawLog);
-//       else gPad->SetLogy(fDrawLog);
-//       gPad->Modified();gPad->Update();
       DrawHisto(histo);
    }
 }
@@ -1924,94 +1906,15 @@ void KVTreeAnalyzer::HistoSelectionChanged()
    SafeDelete(fSelectedHistos);
    G_histo_del->SetEnabled(kFALSE);
    G_histo_add->SetEnabled(kFALSE);
-//    G_make_ip_scale->SetEnabled(kFALSE);
-//    G_fit1->SetEnabled(kFALSE);
-//    G_fit2->SetEnabled(kFALSE);
-//    G_fit3->SetEnabled(kFALSE);
-//    G_fitGG1->SetEnabled(kFALSE);
-//    G_fitGG2->SetEnabled(kFALSE);
-//    G_fitGG3->SetEnabled(kFALSE);
    fSelectedHistos = G_histolist->GetSelectedObjects();
    if (fSelectedHistos) {
       if (fSelectedHistos->GetEntries() > 0) {
          G_histo_del->SetEnabled(kTRUE);
          if (fSelectedHistos->GetEntries() == 1 && fSelectedHistos->First()->IsA() == TH1F::Class()) {
-//                G_make_ip_scale->SetEnabled(kTRUE);
-//                G_fit1->SetEnabled(kTRUE);
-//                G_fit2->SetEnabled(kTRUE);
-//                G_fit3->SetEnabled(kTRUE);
-//                G_fitGG1->SetEnabled(kTRUE);
-//                G_fitGG2->SetEnabled(kTRUE);
-//                G_fitGG3->SetEnabled(kTRUE);
          }
          if (fSelectedHistos->GetEntries() == 2) G_histo_add->SetEnabled(kTRUE);
       }
    }
-}
-
-// void KVTreeAnalyzer::GenerateIPSelection()
-// {
-//    // Method called when user hits 'return' in the 'b<...' text-box
-//    // of the histogram GUI.
-//    // Create a new selection of events based on the impact parameter
-//    // scale previously created using MakeIPScale.
-//
-//    TString bmax = G_make_ip_selection->GetText();
-//    Double_t Bmax = bmax.Atof();
-//    TGString histotit = G_ip_histo->GetText();
-//    KVString ipvar,ipsel,ipweight;
-//    KVHistogram::ParseHistoTitle(histotit.Data(),ipvar,ipsel,ipweight);
-//    Double_t varCut = ipscale->GetObservable(Bmax);
-//    TString selection;
-//    selection.Form("%s>%f", ipvar.Data(), varCut);
-//    TEntryList* save_elist = fChain->GetEntryList();
-//    SetSelection(ipsel);
-//    MakeSelection(selection);
-//    SetEntryList(save_elist);
-// }
-//
-void KVTreeAnalyzer::GenerateConstantXSecSelections(const char* name, Double_t sigmaTot, Double_t sigmaBin)
-{
-   // Generate selections corresponding to constant cross-section
-   // using histogram with name
-
-   MakeAbsoluteIPScale(name, sigmaTot);
-   std::vector<Double_t> slices = ipscale->SliceXSec(sigmaTot / sigmaBin, sigmaTot);
-   TH1* histo = GetHistogram(name);
-   if (!histo) return;
-   TString histotit = histo->GetTitle();
-   KVString ipvar, ipsel, ipweight;
-   KVHistogram::ParseHistoTitle(histotit.Data(), ipvar, ipsel, ipweight);
-
-   bool integer_values = (name[0] == 'I');
-
-   for (unsigned int i = 0; i < slices.size(); ++i) {
-      Double_t varCut = slices[i];
-      if (integer_values) varCut = TMath::Nint(varCut);
-      Double_t varCutold = (i > 0 ? slices[i - 1] : 0.);
-      if (integer_values) varCutold = TMath::Nint(varCutold);
-      TString selection;
-      if (i > 0) selection.Form("%s>=%f && %s<%f", ipvar.Data(), varCut, ipvar.Data(), varCutold);
-      else selection.Form("%s>=%f", ipvar.Data(), varCut);
-      TEntryList* save_elist = fChain->GetEntryList();
-      SetSelection(ipsel);
-      MakeSelection(selection);
-      SetEntryList(save_elist);
-   }
-}
-
-void KVTreeAnalyzer::MakeAbsoluteIPScale(const char* name, Double_t sigmaTot)
-{
-   // generate absolute IP scale from named histogram
-   //  sigmaTot = total reaction cross-section [mb]
-   SafeDelete(ipscale);
-   TH1* histo = GetHistogram(name);
-   if (!histo) return;
-   ipscale = new KVImpactParameter(histo);
-   ipscale->MakeAbsoluteScale(100, KVImpactParameter::GetIPFromXSec(sigmaTot));
-//    G_ip_histo->SetText(histo->GetTitle());
-//    G_ip_histo->Resize();
-//    G_make_ip_selection->SetEnabled(kTRUE);
 }
 
 void KVTreeAnalyzer::SetSelection(const Char_t* sel)

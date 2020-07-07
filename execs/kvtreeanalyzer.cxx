@@ -1,3 +1,4 @@
+#include "KVBase.h"
 #include <KVTreeAnalyzer.h>
 #include "TRint.h"
 

@@ -121,9 +121,6 @@
 #include "TEntryList.h"
 #include "KVUniqueNameList.h"
 #include "TBrowser.h"
-#include "KVImpactParameter.h"
-// #include "KVGumbelDistribution.h"
-// #include "KVGausGumDistribution.h"
 
 class KVHistogram;
 
@@ -249,7 +246,6 @@ private:
    TGTextButton* G_fitGG2;//!
    TGTextButton* G_fitGG3;//!
    TGTextEntry* G_make_ip_selection;//!
-   KVImpactParameter* ipscale;//!
    TGLabel* G_ip_histo;//!
 //    KVGumbelDistribution *GDfirst;//!
 //    KVGumbelDistribution *GDsecond;//!
