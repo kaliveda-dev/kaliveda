@@ -6,7 +6,7 @@
 /**
   \defgroup ImpactParameters The Impact Parameter module
 
-  Module for estimating impact parameters for experimental data
+  Tools for estimating impact parameters for experimental data
  */
 namespace KVImpactParameters {
    /** \class KVImpactParameters::algebraic_fitting_function
