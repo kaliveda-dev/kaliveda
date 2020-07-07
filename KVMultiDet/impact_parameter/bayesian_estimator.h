@@ -302,22 +302,27 @@ namespace KVImpactParameters {
 
       virtual ~bayesian_estimator() {}
 
-      void FitHisto(TH1* h)
+      void renormalise_histo(TH1* h)
       {
-         // Normalise histogram if not already done, then fit it
+         // Turn data histogram into probability distribution (taking account of binning)
+
          histo = h;
-         if (h->Integral("width") != 1.0) {
-            h->Sumw2();
-            h->Scale(1. / h->Integral("width"));
-            h->SetMarkerStyle(24);
-            h->SetMarkerSize(1.5);
-         }
+         histo->Scale(1. / h->Integral("width"));
+      }
 
-         P_X_fit_function.SetRange(h->GetXaxis()->GetBinLowEdge(1), h->GetXaxis()->GetBinUpEdge(h->GetNbinsX()));
-         theFitter.set_initial_parameters(h, P_X_fit_function);
-         h->Fit(&P_X_fit_function);
+      void fit_histo(TH1* h = nullptr)
+      {
+         // Prepare initial values for fit from data in histogram, then fit
+         //
+         // Call renormalise_histo(h) first if histo is not a correctly normalised probability distribution
+         //
+         // \param[in] h pointer to histogram to fit. if not given, use internal histogram set by call to renormalise_histo
 
-         mean_b_vs_X_function.SetRange(h->GetXaxis()->GetBinLowEdge(1), h->GetXaxis()->GetBinUpEdge(h->GetNbinsX()));
+         if (h) histo = h;
+         P_X_fit_function.SetRange(histo->GetXaxis()->GetBinLowEdge(1), histo->GetXaxis()->GetBinUpEdge(histo->GetNbinsX()));
+         theFitter.set_initial_parameters(histo, P_X_fit_function);
+         histo->Fit(&P_X_fit_function);
+         mean_b_vs_X_function.SetRange(histo->GetXaxis()->GetBinLowEdge(1), histo->GetXaxis()->GetBinUpEdge(histo->GetNbinsX()));
       }
 
       void SetIPDistParams(double sigmaR, double deltab)
