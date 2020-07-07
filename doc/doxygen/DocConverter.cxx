@@ -488,7 +488,7 @@ void ConvertAllModules(const KVString& path)
 
    KVString _path = gSystem->ExpandPathName(path.Data());
    _path.Append("/");
-   KVString modlist = "analysis,calibration,daq_cec,data_management,globvars,identification,simulation,trieur";
+   KVString modlist = "analysis,calibration,daq_cec,data_management,globvars,identification,impact_parameter,simulation,trieur";
    modlist += ",base,db,events,exp_events,geometry,gui,particles,stopping,minimiser,montecarlo,weights,signals";
 
    modlist.Begin(",");
