@@ -16,7 +16,29 @@ namespace KVImpactParameters {
    \class cavata_prescription
    \ingroup ImpactParameters
 
-   Impact parameter estimation neglecting fluctuations using sharp cut-off approximation
+   Impact parameter estimation neglecting fluctuations using sharp cut-off approximation.
+
+   This class implements impact parameter estimation using the method of Cavata et al., *Phys. Rev.* **C** 72, 1460(1990).
+   Given an observable \f$X\f$ which is assumed monotonically
+   decreasing with impact parameter, the upper limit \f$b\leq b_0\f$ corresponding to a cut
+   \f$X\geq X_0\f$ is estimated by equating the fraction of the total measured cross-section retained
+   by the cut with the ratio of the cross-sections for the two triangular impact parameter
+   distributions \f$b\leq b_0\f$ and \f$b\leq b_{max}\f$, where \f$\sigma=\pi b_{max}^2\f$ is the total
+   measured cross-section for *all* reactions:
+   \f[
+   \frac{b_0}{b_{max}}=\left[\int_{X_0}^{\infty} P(X) dX \right]^{\frac{1}{2}}
+   \f]
+   where \f$P(X)\f$ is the probability distribution of \f$X\f$ for all measured reactions.
+
+   This relationship is strictly true if fluctuations of \f$X\f$ for a fixed \f$b\f$ are
+   negligible, which is never the case in heavy-ion collisions at intermediate energies.
+   The Cavata prescription implies a one-to-one correspondence between each value of \f$X\f$
+   i.e. each event and a unique value of \f$b\f$, which is clearly not true. Although for
+   peripheral collisions this prescription gives a reasonable estimation of the mean value of
+   impact parameter associated with selected events, it greatly underestimates the widths of
+   the actual distributions of impact parameter, and the more "central" the event selection the
+   more Cavata underestimates the mean impact parameters, giving a false impression that
+   higher and higher cuts in \f$X\f$ produce event samples with smaller and smaller \f$\langle b\rangle\f$.
     */
    class cavata_prescription : public KVBase {
       TH1* fData; // histogram containing distribution of ip-related observable
@@ -30,12 +52,13 @@ namespace KVImpactParameters {
       Double_t Smax; // maximum of cross-section scale
 
       void make_scale(Int_t npoints);
-#ifdef WITH_CPP11
-      cavata_prescription(const cavata_prescription&) = delete; // copying is not possible
-#else
+#ifndef WITH_CPP11
       KVImpactParameter(const KVImpactParameter&) : KVBase() {}; // copying is not possible
 #endif
    public:
+#ifdef WITH_CPP11
+      cavata_prescription(const cavata_prescription&) = delete; // copying is not possible
+#endif
       cavata_prescription()
       {
          fData = nullptr;
@@ -45,7 +68,12 @@ namespace KVImpactParameters {
          fObsTransformXSec = nullptr;
          Bmax = 1.0;
       }
-      cavata_prescription(TH1*, Option_t* evol = "D");
+      ////////////////////////////////////////////////////////
+      // Constructor for impact parameter estimator
+      //
+      // \param h     Histogram containing distribution of the observable used to calculate impact parameter.
+      // \param evol  Determine whether observable is monotonically decreasing ("D") or increasing ("C")
+      cavata_prescription(TH1* h, Option_t* evol = "D");
       virtual ~cavata_prescription();
 
       void MakeScale(Int_t npoints = 100, Double_t bmax = 1.0);

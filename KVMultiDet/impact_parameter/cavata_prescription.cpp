@@ -6,17 +6,9 @@
 ClassImp(KVImpactParameters::cavata_prescription)
 
 namespace KVImpactParameters {
-   cavata_prescription::cavata_prescription(TH1* data, Option_t* evol)
+   cavata_prescription::cavata_prescription(TH1* h, Option_t* evol)
    {
-      // Default constructor
-      //
-      // Argument 'data' is pointer to data histogram containing distribution of the observable
-      // which is used to calculate the impact parameter. Usually, this will be an observable
-      // which is supposed to increase or decrease monotonically as a function of b.
-      //
-      // By default, evol = "D" which means observable increases as b decreases.
-      // Call with evol = "C" if the observable increases as b increases.
-      fData = data;
+      fData = h;
       fEvol = evol;
       fIPScale = nullptr;
       fObsTransform = nullptr;
