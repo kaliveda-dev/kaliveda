@@ -11,6 +11,8 @@ namespace KVImpactParameters {
    \class KVImpactParameters::rogly_fitting_function
    \ingroup ImpactParameters
 
+   \tparam PolyDegree The degree of the polynomial, \f$N\f$
+
    Exponential function relating mean value of observable to centrality
 
    This implements the function
@@ -18,8 +20,7 @@ namespace KVImpactParameters {
    k(c_b) = k_0 \exp{\left(-\sum_{i=1}^{N} a_i c_b^i\right)}
    \f]
    from Rogly et al., *Phys. Rev.* **C** 98, 024902(2018), describing the centrality dependence of the mean
-   value of an observable which decreases monotonically with impact parameter. The degree of the
-   polynomial, \f$N\f$, is given as template parameter PolyDegree.
+   value of an observable which decreases monotonically with impact parameter.
    */
 
    template<int PolyDegree>
@@ -39,13 +40,13 @@ namespace KVImpactParameters {
       }
       constexpr int npar() const
       {
-         // Number of parameters for fitting function
+         // \returns number of parameters for fitting function (=PolyDegree+2)
          return PolyDegree + 2;
       }
 
       double k_cb(double cb) const
       {
-         // Calculate and return value of \f$k(c_b)\f$ for given centrality
+         // \returns value of \f$k(c_b)\f$ for given centrality
          // \param[in] cb centrality
          double kcb = 0;
          for (int j = 1; j <= PolyDegree; ++j) kcb += poly_param[j - 1].value * pow(cb, j);
@@ -55,6 +56,11 @@ namespace KVImpactParameters {
       {
          // Set values of parameters from values in the array (interface to ROOT TF1)
          // \param[in] p address of an array of size given by npar()
+         // \param[in] p[0] \f$\theta\f$
+         // \param[in] p[1] \f$k_{max}\f$
+         // \param[in] p[2] \f$a_1\f$
+         // \param[in] p[...] ...
+         // \param[in] p[1+PolyDegree] \f$a_{PolyDegree}\f$
          theta_p.value = p[0];
          kmax.value = p[1];
          for (int j = 1; j <= PolyDegree; ++j) poly_param[j - 1].value = p[j + 1];
@@ -63,6 +69,11 @@ namespace KVImpactParameters {
       {
          // Copy values of parameters into the array (interface to ROOT TF1)
          // \param[in] p address of an array of size given by npar()
+         // \param[in] p[0] \f$\theta\f$
+         // \param[in] p[1] \f$k_{max}\f$
+         // \param[in] p[2] \f$a_1\f$
+         // \param[in] p[...] ...
+         // \param[in] p[1+PolyDegree] \f$a_{PolyDegree}\f$
          p[0] = theta_p.value;
          p[1] = kmax.value;
          for (int j = 1; j <= PolyDegree; ++j) p[j + 1] = poly_param[j - 1].value ;
@@ -133,7 +144,8 @@ namespace KVImpactParameters {
       void normalise_shape_function()
       {
          // Modify values of parameters so that \f$k(c_b)\f$ varies between 1 at \f$c_b=0\f$ to 0 at \f$c_b=1\f$.
-         // Currently this just scales \f$k_{max}\f$ to 1, the minimum at \f$c_b=1\f$ will not be zero (to be implemented).
+         //
+         // \todo Currently this just scales \f$k_{max}\f$ to 1, the minimum at \f$c_b=1\f$ will not be zero.
          kmax.value = 1;
       }
 

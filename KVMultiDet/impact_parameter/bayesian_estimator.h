@@ -164,10 +164,13 @@ namespace KVImpactParameters {
       }
       double cb_integrated_P_X(double* x, double* p)
       {
-         // integral used in function to fit experimental P(X) distribution
-         // P(X) = int_cb P(X|cb) d(cb)
-         // x[0] = X
-         // p[0]-p[Npar-1] = parameters of fitting function
+         // Function used to fit experimental \f$P(X)\f$ distribution by integrating the \f$\Gamma\f$-distribution \f$P(X|c_b)\f$
+         //\f[
+         //P(X)=\int P(X|c_b)\,\mathrm{d}c_b
+         //\f]
+         // \returns value of \f$P(X)\f$ at \f$X\f$ for current fit parameters
+         // \param[in] x[0] \f$X\f$
+         // \param[in] p[0],p[1],...,p[Npar-1] parameters of fitting function
 
          theFitter.fill_params_from_array(p);
          if (theFitter.theta() <= 0) return 0;
@@ -176,10 +179,13 @@ namespace KVImpactParameters {
       }
       double b_integrated_P_X(double* x, double* p)
       {
-         // integral used in function to fit experimental P(X) distribution
-         // P(X) = int_b P(X|b)P(b) d(b)
-         // x[0] = X
-         // p[0]-p[Npar-1] = parameters of fitting function
+         // Function used to fit experimental \f$P(X)\f$ distribution by integrating the \f$\Gamma\f$-distribution \f$P(X|b)\f$
+         //\f[
+         //P(X)=\int P(b)\,P(X|b)\,\mathrm{d}b
+         //\f]
+         // \returns value of \f$P(X)\f$ at \f$X\f$ for current fit parameters
+         // \param[in] x[0] \f$X\f$
+         // \param[in] p[0],p[1],...,p[Npar-1] parameters of fitting function
 
          theFitter.fill_params_from_array(p);
          if (theFitter.theta() <= 0) return 0;
@@ -217,10 +223,15 @@ namespace KVImpactParameters {
       }
       double cb_dist_for_X_selection(double* x, double* p)
       {
-         // return P(cb|X1<X<X2) calculated from fit
-         // x[0] = cb
-         // p[0] = X1
-         // p[1] = X2
+         // Function implementing the calculation of the centrality distribution \f$P(c_b|X_{1}<X<X_{2})\f$ for events selected
+         // by cuts in \f$X\f$, \f$X_{1}<X<X_{2}\f$
+         //\f[
+         //P(c_b|X_{1}<X<X_{2})=\frac{1}{c_{X_{1}}-c_{X_{2}}}\int_{X_{1}}^{X_{2}}P(X|c_b)\,\mathrm{d}X
+         //\f]
+         //
+         // \return value of \f$P(c_b|X_{1}<X<X_{2})\f$ for centrality \f$c_b\f$
+         // \param[in] x[0] centrality \f$c_b\f$
+         // \param[in] p[0],p[1] \f$X_1\f$, \f$X_2\f$
 
          p_X_X_integrator.SetParameter(0, x[0]);
          double num =  p_X_X_integrator.Integral(p[0], p[1], 1.e-4);
@@ -230,10 +241,15 @@ namespace KVImpactParameters {
       }
       double b_dist_for_X_selection(double* x, double* p)
       {
-         // return P(b|X1<X<X2) calculated from fit
-         // x[0] = b
-         // p[0] = X1
-         // p[1] = X2
+         // Function implementing the calculation of the impact parameter distribution \f$P(b|X_{1}<X<X_{2})\f$ for events selected
+         // by cuts in \f$X\f$, \f$X_{1}<X<X_{2}\f$
+         //\f[
+         //P(b|X_{1}<X<X_{2})=\frac{P(b)}{c_{X_{1}}-c_{X_{2}}}\int_{X_{1}}^{X_{2}}P(X|b)\,\mathrm{d}X
+         //\f]
+         //
+         // \return value of \f$P(b|X_{1}<X<X_{2})\f$ for impact parameter \f$b\f$
+         // \param[in] x[0]  impact parameter \f$b\f$
+         // \param[in] p[0],p[1] \f$X_1\f$, \f$X_2\f$
 
          p_X_X_integrator.SetParameter(0, fIPDist.GetCentrality().Eval(x[0]));
          double num =  p_X_X_integrator.Integral(p[0], p[1], 1.e-4);
@@ -241,10 +257,14 @@ namespace KVImpactParameters {
       }
       double b_dist_for_arb_X_selection(double* x, double* p)
       {
-         // return P(b) for arbitrary distribution of X
-         // x[0] = b
-         // p[0] = X1
-         // p[1] = X2
+         // Function implementing the calculation of the impact parameter distribution \f$P(b|\mathbb{S})\f$ for an arbitrary selection of events \f$\mathbb{S}\f$
+         //\f[
+         //P(b|\mathbb{S})=P(b)\frac{\int P(X|b)\frac{P(X|\mathbb{S})}{P(X)}\,\mathrm{d}X}{\int P(X|\mathbb{S})\,\mathrm{d}X}
+         //\f]
+         //
+         // \return value of \f$P(b|\mathbb{S})\f$ for impact parameter \f$b\f$
+         // \param[in] x[0]  impact parameter \f$b\f$
+         // \param[in] p[0],p[1] integration limits for \f$X\f$, \f$[X_1,X_2]\f$
 
          p_X_X_integrator_with_selection.SetParameter(0, fIPDist.GetCentrality().Eval(x[0]));
          double num =  p_X_X_integrator_with_selection.Integral(p[0], p[1], 1.e-4);

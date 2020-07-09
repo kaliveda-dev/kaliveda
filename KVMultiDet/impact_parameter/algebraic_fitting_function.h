@@ -23,6 +23,8 @@ namespace KVImpactParameters {
    used in Frankland et al., *Phys. Rev.* **C** xx, yy(2020), describing the centrality dependence of the mean
    value of an observable which decreases monotonically with impact parameter. This function is guaranteed to
    be mononotonic in the range \f$c_b=[0,1]\f$ for all values of the parameters \f$\alpha,\gamma>0\f$.
+
+   \sa bayesian_estimator
          */
    class algebraic_fitting_function {
       /** \class KVImpactParameters::algebraic_fitting_function::bce_fit_results

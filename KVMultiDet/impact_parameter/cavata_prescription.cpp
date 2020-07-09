@@ -26,24 +26,20 @@ namespace KVImpactParameters {
    void cavata_prescription::MakeScale(Int_t npoints, Double_t bmax)
    {
       // Calculate the relationship between the impact parameter and the observable
-      // whose distribution is contained in the histogram fData.
+      // whose distribution is contained in the histogram given to the constructor.
       //
-      // For a given value X of the observable x, the reduced impact parameter
-      // b_hat is calculated from the distribution of x, Y(x), using the following formula:
-      /*
-      BEGIN_LATEX
-      \hat{b}^{2} = \frac{\int^{\infty}_{x=X} Y(x) dx}{\int_{0}^{\infty} Y(x) dx}
-      END_LATEX
-      */
-      // npoints = number of points for which to calculate the impact parameter.
-      //
+      // \param[in] npoints number of points to use to calculate scale (points in generated TGraph).
       // The greater the number of points, the more accurate the results.
       // Default value is 100. Maximum value is number of bins in histogram of observable, fData.
+      // \param[in] bmax the maximum reduced impact parameter for the data
       //
-      // bmax is the maximum reduced impact parameter for the data.
+      // For a given value \f$X\f$ of the observable \f$x\f$, the reduced impact parameter
+      // \f$\hat{b}\f$ is calculated from the distribution of \f$x\f$, \f$Y(x)\f$, using the following formula:
+      //\f[
+      //\hat{b}^{2} = \frac{\int^{\infty}_{x=X} Y(x) dx}{\int_{0}^{\infty} Y(x) dx}
+      //\f]
       //
-      // To obtain absolute values of impact parameter/cross-section,
-      // use MakeAbsoluteScale.
+      // \remark To obtain absolute values of impact parameter/cross-section use MakeAbsoluteScale().
 
       if (bmax > 1.0) {
          Warning("MakeScale", "called with bmax>1.0 - calling MakeAbsoluteScale for absolute impact parameters");
@@ -84,23 +80,20 @@ namespace KVImpactParameters {
    void cavata_prescription::MakeAbsoluteScale(Int_t npoints, Double_t bmax)
    {
       // Calculate the relationship between the impact parameter and the observable
-      // whose distribution is contained in the histogram fData.
+      // whose distribution is contained in the histogram given to the constructor.
       //
-      // For a given value X of the observable x, the reduced impact parameter
-      // b_hat is calculated from the distribution of x, Y(x), using the following formula:
-      /*
-      BEGIN_LATEX
-      \hat{b}^{2} = \frac{\int^{\infty}_{x=X} Y(x) dx}{\int_{0}^{\infty} Y(x) dx}
-      END_LATEX
-      */
-      // npoints = number of points for which to calculate the impact parameter.
-      //
+      // \param[in] npoints number of points to use to calculate scale (points in generated TGraph).
       // The greater the number of points, the more accurate the results.
       // Default value is 100. Maximum value is number of bins in histogram of observable, fData.
+      // \param[in] bmax the maximum absolute impact parameter for the data in [fm]
       //
-      // bmax is the maximum absolute impact parameter for the data in [fm].
+      // For a given value \f$X\f$ of the observable \f$x\f$, the reduced impact parameter
+      // \f$\hat{b}\f$ is calculated from the distribution of \f$x\f$, \f$Y(x)\f$, using the following formula:
+      //\f[
+      //\hat{b}^{2} = \frac{\int^{\infty}_{x=X} Y(x) dx}{\int_{0}^{\infty} Y(x) dx}
+      //\f]
       //
-      // To obtain values of reduced impact parameter/cross-section, use MakeScale.
+      // \remark To obtain reduced values of impact parameter/cross-section use MakeScale().
 
       Bmax = bmax;
       Smax = GetXSecFromIP(bmax); //total X-section in [mb]
@@ -109,22 +102,26 @@ namespace KVImpactParameters {
 
    Double_t cavata_prescription::BTransform(Double_t* x, Double_t*)
    {
-      // Function using the TGraph calculated with MakeScale/MakeAbsoluteScale in order to
+      // Function using the TGraph calculated with MakeScale() or MakeAbsoluteScale() in order to
       // transform distributions of the observable histogrammed in fData
       // into distributions of the impact parameter.
       //
       // This function is used to generate the TF1 fObsTransform
+      //
+      // \param[in] x[0] value of observable
 
       return fIPScale->Eval(*x);
    }
 
    Double_t cavata_prescription::XTransform(Double_t* x, Double_t*)
    {
-      // Function using the TGraph calculated with MakeScale/MakeAbsoluteScale in order to
+      // Function using the TGraph calculated with MakeScale() or MakeAbsoluteScale() in order to
       // transform distributions of the observable histogrammed in fData
       // into distributions of cross-section.
       //
       // This function is used to generate the TF1 fObsTransformXsec
+      //
+      // \param[in] x[0] value of observable
 
       return fXSecScale->Eval(*x);
    }
@@ -133,12 +130,18 @@ namespace KVImpactParameters {
    {
       // Transform the distribution of the observable contained in the histogram 'obs'
       // into a distribution of the impact parameter.
-      // User's responsibility to delete histo.
       //
-      //  * nbinx = number of bins in I.P. histo (default = 100)
-      //  * norm = "" (default) : no adjustment is made for the change in bin width due to the transformation
-      //  * norm = "width" : bin contents are adjusted for width change, so that the integral of the histogram
-      //                   contents taking into account the bin width (i.e. TH1::Integral("width")) is the same.
+      // \param[in] obs pointer to histogram containing observable distribution for some selected events
+      // \param[in] nbinx number of bins in created impact parameter histo (default = 100)
+      // \param[in] norm
+      // \parblock
+      // - norm = "" (default)
+      //   no adjustment is made for the change in bin width due to the transformation
+      // - norm = "width"
+      //   bin contents are adjusted for width change, so that the integral of the histogram
+      //   contents taking into account the bin width (i.e. TH1::Integral("width")) is the same.
+      // \endparblock
+      // \return pointer to histogram filled with impact parameter distribution
 
       if (!fObsTransform) {
          Error("GetIPDistribution", "Call MakeScale first to calculate correspondance observable<->i.p.");
@@ -149,15 +152,18 @@ namespace KVImpactParameters {
 
    TGraph* cavata_prescription::GetIPEvolution(TH2* obscor, TString moment, TString axis)
    {
-      // obscor = pointer to histogram containing bidim correlating some observable Y with
-      // the observable used to calculate the impact parameter.
+      // Draw evolution of any observable as function of impact parameter
       //
-      // Return pointer to TGraph giving evolution of any given moment of Y as a function
-      // of the impact parameter, with moment = "GetMean", "GetRMS", "GetKurtosis", etc.
-      // (methods of TH1)
-      //
-      // If the impact parameter observable is on the Y-axis of obscor, use axis="X"
-      // (by default axis="Y", i.e. we assume that the I.P. observable is on the x axis).
+      // \param[in] obscor pointer to histogram containing bidim correlating some observable on Y axis with
+      // the observable used to calculate the impact parameter on the X axis
+      // \param[in] moment give moment of Y to use for evolution ("GetMean", "GetRMS", "GetKurtosis", etc. methods of TH1)
+      // \param[in] axis
+      // \parblock
+      // - if the impact parameter observable is on the Y-axis of obscor, use axis="X"
+      // - by default axis="Y", i.e. we assume that the I.P. observable is on the X axis)
+      //\endparblock
+      // \return pointer to TGraph giving evolution of given moment of Y as a function
+      // of the impact parameter
 
       if (!fObsTransform) {
          Error("GetIPEvolution", "Call MakeScale first to calculate correspondance observable<->i.p.");
@@ -172,14 +178,20 @@ namespace KVImpactParameters {
 
    TH1* cavata_prescription::GetXSecDistribution(TH1* obs, Int_t nbinx, Option_t* norm)
    {
-      // Transform the distribution of the observable contained in the histogram 'obs'
+      // Transform the distribution of the observable contained in the histogram obs
       // into a distribution of cross-section
-      // User's responsibility to delete histo.
       //
-      //  * nbinx = number of bins in I.P. histo (default = 100)
-      //  * norm = "" (default) : no adjustment is made for the change in bin width due to the transformation
-      //  * norm = "width" : bin contents are adjusted for width change, so that the integral of the histogram
-      //                   contents taking into account the bin width (i.e. TH1::Integral("width")) is the same.
+      // \param[in] obs pointer to histogram containing observable distribution for some selected events
+      // \param[in] nbinx number of bins in created impact parameter histo (default = 100)
+      // \param[in] norm
+      // \parblock
+      // - norm = "" (default)
+      //   no adjustment is made for the change in bin width due to the transformation
+      // - norm = "width"
+      //   bin contents are adjusted for width change, so that the integral of the histogram
+      //   contents taking into account the bin width (i.e. TH1::Integral("width")) is the same.
+      // \endparblock
+      // \return pointer to histogram filled with cross-section distribution
 
       if (!fObsTransformXSec) {
          Error("GetXSecDistribution", "Call MakeScale first to calculate correspondance observable<->i.p.");
@@ -190,15 +202,19 @@ namespace KVImpactParameters {
 
    TGraph* cavata_prescription::GetXSecEvolution(TH2* obscor, TString moment, TString axis)
    {
-      // obscor = pointer to histogram containing bidim correlating some observable Y with
-      // the observable used to calculate the impact parameter.
+      // Draw evolution of any observable as function of cross-section
       //
-      // Return pointer to TGraph giving evolution of any given moment of Y as a function
-      // of cross section, with moment = "GetMean", "GetRMS", "GetKurtosis", etc.
-      // (methods of TH1)
-      //
-      // If the impact parameter observable is on the Y-axis of obscor, use axis="X"
-      // (by default axis="Y", i.e. we assume that the I.P. observable is on the x axis).
+      // \param[in] obscor pointer to histogram containing bidim correlating some observable on Y axis with
+      // the observable used to calculate the impact parameter on the X axis
+      // \param[in] moment give moment of Y to use for evolution ("GetMean", "GetRMS", "GetKurtosis", etc. methods of TH1)
+      // \param[in] axis
+      // \parblock
+      // - if the impact parameter observable is on the Y-axis of obscor, use axis="X"
+      // - by default axis="Y", i.e. we assume that the I.P. observable is on the X axis)
+      //\endparblock
+      // \return pointer to TGraph giving evolution of given moment of Y as a function
+      // of cross-section
+
 
       if (!fObsTransformXSec) {
          Error("GetXSecEvolution", "Call MakeScale first to calculate correspondance observable<->i.p.");
@@ -213,10 +229,15 @@ namespace KVImpactParameters {
    std::vector<Double_t> cavata_prescription::SliceXSec(Int_t nslices, Double_t totXsec)
    {
       // Generate vector of observable values which can be used to select nslices
-      // of constant cross-section. Each slice will correspond to a cross-section
-      //    totXsec/nslices.
-      // Note that the vector will contain (nslices-1) values
+      // of constant cross-section.
       //
+      // \note the vector will contain (nslices-1) values
+      //
+      // \param[in] nslices number of slices to generates
+      // \param[in] totXsec total cross-section to slice
+      // \returns vector containing (nslices-1) values of the observable to make cuts
+      //
+      // Example:
       //~~~~~~~~~~~~{.cpp}
       //     KVImpactParameter ip(data);    // histo containing observable distribution
       //     ip.MakeAbsoluteScale(100,ip.GetIPFromXSec(data->Integral()))

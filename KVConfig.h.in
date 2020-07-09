@@ -115,6 +115,13 @@ using std::unique_ptr;
 #define AUTO_NEW_CTOR(classname,ptr) \
    classname* ptr = new classname
 #endif
+
+// hide C++11 constructs and syntax when necessary
+#ifdef WITH_CPP11
+#define CPP11_ONLY(construct) construct
+#else
+#define CPP11_ONLY(construct)
+#endif
 //-----------------------------------ROOT-version dependent compiler flags
 //-----------------------------------to handle backwards compatibility
 //
