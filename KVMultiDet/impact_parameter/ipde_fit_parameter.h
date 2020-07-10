@@ -8,7 +8,7 @@ namespace KVImpactParameters {
    \class KVImpactParameters::ipde_fit_parameter
    \ingroup ImpactParameters
 
-   Structure to hold value & uncertainty of fit parameters for Bayesian impact parameter estimators
+   \brief Structure to hold value & uncertainty of fit parameters for Bayesian impact parameter estimators
     */
    struct ipde_fit_parameter {
       double value;///< value of parameter

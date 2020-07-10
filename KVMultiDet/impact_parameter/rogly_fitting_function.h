@@ -10,10 +10,9 @@ namespace KVImpactParameters {
    /**
    \class KVImpactParameters::rogly_fitting_function
    \ingroup ImpactParameters
+   \brief Exponential function relating mean value of observable to centrality
 
    \tparam PolyDegree The degree of the polynomial, \f$N\f$
-
-   Exponential function relating mean value of observable to centrality
 
    This implements the function
    \f[

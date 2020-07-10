@@ -12,7 +12,7 @@ namespace KVImpactParameters {
    /** \class KVImpactParameters::algebraic_fitting_function
      \ingroup ImpactParameters
 
-   Algebraic relationship between mean value of observable and centrality.
+   \brief Algebraic relationship between mean value of observable and centrality
 
    This class implements the relationship between the mean value of an observable and centrality
 
@@ -30,7 +30,7 @@ namespace KVImpactParameters {
       /** \class KVImpactParameters::algebraic_fitting_function::bce_fit_results
          \ingroup ImpactParameters
 
-      Contains fit parameters for algebraic impact parameter dependence
+      \brief Contains fit parameters for algebraic impact parameter dependence
       \sa KVImpactParameters::algebraic_fitting_function
             */
       class bce_fit_results {

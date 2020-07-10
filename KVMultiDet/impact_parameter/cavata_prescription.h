@@ -16,7 +16,7 @@ namespace KVImpactParameters {
    \class cavata_prescription
    \ingroup ImpactParameters
 
-   Impact parameter estimation neglecting fluctuations using sharp cut-off approximation.
+   \brief Impact parameter estimation neglecting using sharp cut-off approximation
 
    This class implements impact parameter estimation using the method of Cavata et al., *Phys. Rev.* **C** 72, 1460(1990).
    Given an observable \f$X\f$ which is assumed monotonically
