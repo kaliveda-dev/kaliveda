@@ -12,6 +12,27 @@ namespace KVImpactParameters {
    \class impact_parameter_distribution
    \ingroup ImpactParameters
    \brief Class implementing parametrizable impact parameter distributions
+
+   Unbiased impact parameter distributions are determined by simple geometric considerations,
+   \f[
+   P(b)\,\mathrm{d}b=\frac{2\pi b}{\sigma_{R}}\,\mathrm{d}b
+   \f]
+   The sharp cut-off approximation assumes that the measured reaction cross-section \f$\sigma_R\f$
+   for any selected data has a triangular distribution up to the impact parameter \f$b_{\mathrm{max}}\f$
+   where \f$\sigma_R=\pi b^2_{\mathrm{max}}\f$.
+
+   More generally, simulations of reactions detected by large multidetector arrays operating with
+   a minimum bias multiplicity trigger indicate that the impact parameter distribution for the
+   measured collisions is triangular with a more gradual fall-off at the largest impact parameters,
+   and can be well-described by the distribution
+   \f[
+   P(b)=\frac{2\pi b}{\sigma_{R}}\left[1+\exp\left(\frac{b-b_{0}}{\Delta b}\right)\right]^{-1}
+   \f]
+
+   In this case the total reaction cross-section is given by
+   \f[
+   \sigma_{R}=-2\pi(\Delta b)^{2}\mathrm{Li}_{2}\left(-\exp\left(\frac{b_{0}}{\Delta b}\right)\right)
+   \f]
     */
    class impact_parameter_distribution : public KVBase {
       TH1*  fHisto;//! last fitted histogram
