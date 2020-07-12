@@ -43,8 +43,8 @@ namespace KVImpactParameters {
    \f]
    where \f$\theta\f$ is the ratio between the mean value \f$\bar{X}\f$ and the variance \f$\sigma^2\f$
    of the observable for any given value of centrality \f$c_b\f$. \f$k(c_b)\f$ is a parametrised function
-   describing the evolution of \f$\bar{X}\f$ with centrality. This has to be provided by the template
-   class parameter FittingFunction, which must provide the following methods:
+   describing the evolution of \f$\bar{X}\f$ with centrality. This has to be provided by the class
+   FittingFunction, which must provide the following methods:
 
    ~~~~~{.cpp}
    FittingFunction::FittingFunction()                               default constructor
@@ -64,6 +64,60 @@ namespace KVImpactParameters {
 
    \sa KVImpactParameters::algebraic_fitting_function
    \sa KVImpactParameters::rogly_fitting_function
+
+   ## Example of use
+   In all of the the following, the namespace prefix `KVImpactParameters::` can be dropped if
+   the following instruction is used:
+   ~~~~~~~~~{.cpp}
+   using namespace KVImpactParameters;
+   ~~~~~~~~~
+   ### Fitting a given inclusive P(X) distribution
+
+   First initialize the estimator with the required \f$k(c_b)\f$ function, such as for example:
+   ~~~~~~~~~{.cpp}
+   --/ use 3rd order exponential polynomial function of Rogly et al:
+   KVImpactParameters::bayesian_estimator<KVImpactParameters::rogly_fitting_function<3>> ipd;
+   --/ or use algebraic function of Frankland et al:
+   KVImpactParameters::bayesian_estimator<KVImpactParameters::algebraic_fitting_function> ipd;
+   ~~~~~~~~~
+   See rogly_fitting_function and algebraic_fitting_function for more details.
+
+   Assumng a pointer `TH1* h` to a histogram containing the inclusive distribution for an observable
+   filled from data, the first step is to transform the histogram into a correctly normalized probability
+   distribution (taking bin widths into account):
+   ~~~~~~~~~{.cpp}
+   ipd.RenormaliseHisto(h);
+   ~~~~~~~~~
+
+   Then to begin the fitting process, call the method
+   ~~~~~~~~~{.cpp}
+   ipd.FitHisto();
+   ~~~~~~~~~
+   (if the histogram to fit was already correctly normalised, you can skip the first method and call this one
+   giving the histogram pointer as argument). This will prepare initial parameter values for the fit based on
+   the histogram data, then perform a first fit attempt. As this first attempt is never successful, you should
+   then open the Fit Panel by right-clicking on the histogram in the canvas, and continue fitting using
+   "Previous Fit", adjusting the range of the fit, and if necessary the parameter limits, until a satisfactory
+   fit is achieved.
+
+   ### Using the results of the fit
+
+   Once a fit has been successful, the bayesian_estimator object can be used to deduce impact parameter
+   distributions etc. for the fitted observable. This can be just after performing the fit as in the
+   previous section, or using the already known parameters from a previous fit. In the latter case, you
+   should initialize the object using the appropriate FittingFunction constructor, e.g. for algebraic_fitting_function
+   which requires 5 parameters \f$\alpha,\gamma,\theta,X_{min},X_{max}\f$, you can initialise the
+   estimator like so:
+
+   ~~~~~~~~~{.cpp}
+   bayesian_estimator<algebraic_fitting_function> ipd({alpha,gamma,theta,Xmin,Xmax});
+
+   [if C++11 is not used:
+   bayesian_estimator<algebraic_fitting_function> ipd(algebraic_fitting_function(alpha,gamma,theta,Xmin,Xmax));
+   ]
+   ~~~~~~~~~
+
+   See the list of methods below which can then be used in order to exploit the fit result.
    */
 
    template
@@ -239,6 +293,7 @@ namespace KVImpactParameters {
            B_dist_for_X_select("b_dist_for_X_select", this, &bayesian_estimator::b_dist_for_X_selection, 0, 20, 2),
            B_dist_for_arb_X_select("b_dist_for_arb_X_select", this, &bayesian_estimator::b_dist_for_arb_X_selection, 0, 20, 2)
       {
+         // Initialise estimator for fitting the inclusive distribution of an observable.
          p_X_cb_integrator.SetParNames("X");
          theFitter.set_par_names(P_X_fit_function);
          theFitter.set_par_names(mean_X_vs_cb_function);
@@ -259,6 +314,7 @@ namespace KVImpactParameters {
            B_dist_for_X_select("b_dist_for_X_select", this, &bayesian_estimator::b_dist_for_X_selection, 0, 20, 2),
            B_dist_for_arb_X_select("b_dist_for_arb_X_select", this, &bayesian_estimator::b_dist_for_arb_X_selection, 0, 20, 2)
       {
+         // Initialise estimator with results of a previous fit.
          p_X_cb_integrator.SetParNames("X");
          theFitter.set_par_names(P_X_fit_function);
          theFitter.set_par_names(mean_X_vs_cb_function);
@@ -300,7 +356,7 @@ namespace KVImpactParameters {
 
       void SetIPDistParams(double sigmaR, double deltab)
       {
-         // Any distributions of \f$b\f$ deduced from data using this method depend on the
+         // Any distributions of \f$b\f$ deduced from data depend on the
          // impact parameter distribution \f$P(b)\f$ which is assumed for the full inclusive dataset,
          // i.e. for all collisions contributing to the \f$P(X)\f$ distribution fitted in order
          // to deduce the parameters for \f$k(c_b)\f$ and \f$\theta\f$.

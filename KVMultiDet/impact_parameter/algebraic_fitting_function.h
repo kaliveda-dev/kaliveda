@@ -28,8 +28,6 @@ namespace KVImpactParameters {
          */
    class algebraic_fitting_function {
       /** \class KVImpactParameters::algebraic_fitting_function::bce_fit_results
-         \ingroup ImpactParameters
-
       \brief Contains fit parameters for algebraic impact parameter dependence
       \sa KVImpactParameters::algebraic_fitting_function
             */

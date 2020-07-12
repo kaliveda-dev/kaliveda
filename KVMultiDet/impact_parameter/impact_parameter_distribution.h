@@ -19,7 +19,8 @@ namespace KVImpactParameters {
    \f]
    The sharp cut-off approximation assumes that the measured reaction cross-section \f$\sigma_R\f$
    for any selected data has a triangular distribution up to the impact parameter \f$b_{\mathrm{max}}\f$
-   where \f$\sigma_R=\pi b^2_{\mathrm{max}}\f$.
+   where \f$\sigma_R=\pi b^2_{\mathrm{max}}\f$ and the centrality is given in this case by
+   \f$c_b=(b/b_{\mathrm{max}})^2\f$.
 
    More generally, simulations of reactions detected by large multidetector arrays operating with
    a minimum bias multiplicity trigger indicate that the impact parameter distribution for the
@@ -33,12 +34,18 @@ namespace KVImpactParameters {
    \f[
    \sigma_{R}=-2\pi(\Delta b)^{2}\mathrm{Li}_{2}\left(-\exp\left(\frac{b_{0}}{\Delta b}\right)\right)
    \f]
+   and the centrality is related to impact parameter by
+   \f[
+   c_{b}=\frac{2\pi(\Delta b)^{2}}{\sigma_{R}}\left[\mathrm{-Li}_{2}\left(-\exp\left(\frac{b_{0}}{\Delta b}\right)\right)-\frac{\pi^{2}}{6}+\frac{(b^{2}-b_{0}^{2})}{2(\Delta b)^{2}}-\frac{b}{\Delta b}\ln\left(1+\exp\left((b-b_{0})/\Delta b\right)\right)-\mathrm{Li}_{2}\left(-\mathrm{e}^{(b-b_{0})/\Delta b}\right)\right]
+   \f]
     */
    class impact_parameter_distribution : public KVBase {
-      TH1*  fHisto;//! last fitted histogram
-      TF1 fIPdist;// impact parameter distribution
-      TF1 fSigmaR;// total reaction cross section
-      TF1 fCentrality;//
+
+   private:
+      TH1*  fHisto;///<! last fitted histogram
+      TF1 fIPdist;///< impact parameter distribution
+      TF1 fSigmaR;///< total reaction cross section
+      TF1 fCentrality;///< centrality as function of impact parameter
 
    public:
       impact_parameter_distribution();
@@ -50,20 +57,24 @@ namespace KVImpactParameters {
       Double_t GetCrossSection() const;
       Double_t GetB0() const
       {
+         // \returns current value of \f$b_0\f$
          return fIPdist.GetParameter(1);
       }
       Double_t GetDeltaB() const
       {
+         // \returns current value of \f$\Delta b\f$
          return fIPdist.GetParameter(2);
       }
       Double_t GetCrossSectionPerEvent() const;
       void SetB0(Double_t x)
       {
+         // \param[in] x value of \f$b_0\f$
          fIPdist.SetParameter(1, x);
          fCentrality.SetParameter(0, x);
       }
       void SetDeltaB(Double_t x)
       {
+         // \param[in] x value of \f$\Delta b\f$
          fIPdist.SetParameter(2, x);
          fSigmaR.SetParameter(0, x);
          fCentrality.SetParameter(1, x);
@@ -71,29 +82,34 @@ namespace KVImpactParameters {
       void SetDeltaB_WithConstantCrossSection(Double_t deltab, Double_t sigmaR = 0);
       TF1& GetIPDist()
       {
+         // \returns reference to TF1 implementing impact parameter distribution
+         // (actually the differential cross-section in [mb fm\f${}^{-1}\f$])
          return fIPdist;
       }
       const TF1& GetSigmaR()
       {
+         // \returns reference to TF1 implementing total cross-section in [mb]
+         // as a function of \f$b_0\f$.
          return fSigmaR;
       }
       const TF1& GetCentrality()
       {
+         // \returns reference to TF1 implementing centrality
+         // as a function of \f$b\f$.
          return fCentrality;
       }
       Double_t Calculate_b(Double_t centrality) const;
 
       void NormalizeIPDistToCrossSection()
       {
-         // Normalizing to total cross section,
-         // IP distribution will be probability distribution
+         // Changes impact parameter distribution from differential cross-section to probability distribution \f$P(b)\f$
 
          fIPdist.SetParameter(0, 1. / GetCrossSection());
       }
 
       Double_t GetRelativeCrossSection(double b) const
       {
-         // Return differential cross-section relative to 2*pi*b (in mb/fm)
+         // \return differential cross-section relative to \f$2\pi b\f$
          if (b > 0) return fIPdist.Eval(b) / (b * fIPdist.GetParameter(0));
          return 0;
       }

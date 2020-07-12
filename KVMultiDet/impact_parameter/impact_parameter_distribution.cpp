@@ -9,14 +9,16 @@
 ClassImp(KVImpactParameters::impact_parameter_distribution)
 
 namespace KVImpactParameters {
+
+   /////////////////////////////////////////////////////////////////////////////////
+   /// Smooth impact parameter distribution (with arbitrary normalisation par[0])
+   /// \param[in] x[0] \f$b\f$
+   /// \param[in] par[0] normalisation parameter \f$A\f$
+   /// \param[in] par[1] \f$b0\f$
+   /// \param[in] par[2] \f$\Delta b\f$
+   /// \returns  \f$Ab\left[1+\exp\left(\frac{b-b_{0}}{\Delta b}\right)\right]^{-1}\f$
    Double_t smooth_pb(Double_t* x, Double_t* par)
    {
-      // Smooth impact parameter distribution (arbitrary normalisation par[0])
-      // x = b
-      // par[1] = b0
-      // par[2] = delta_b
-      // f(b) = [0] * x * [ 1 + exp((x - [1])/[2]) ]**-1
-
       if (par[0] == 0) return 0;
 
       if (par[2] == 0) {
@@ -28,12 +30,13 @@ namespace KVImpactParameters {
       return par[0] * x[0] / (1. + TMath::Exp((x[0] - par[1]) / par[2]));
    }
 
+   /////////////////////////////////////////////////////////////////////////////////
+   /// Total reaction cross-section in [mb] as a function of \f$b_0\f$ and \f$\Delta b\f$
+   /// \param[in] x[0] \f$b_0\f$
+   /// \param[in] par[0] \f$\Delta b\f$
+   /// \returns \f$\sigma_{R}=-2\pi(\Delta b)^{2}\mathrm{Li}_{2}\left(-\exp\left(\frac{b_{0}}{\Delta b}\right)\right)\f$
    Double_t sigma_inel(Double_t* x, Double_t* p)
    {
-      // reaction cross-section [mb] as function of b0 and deltab
-      // x=b0
-      // p[0]=deltab
-
       if (p[0] == 0) {
          // sharp cut-off
          return TMath::Pi() * TMath::Power(x[0], 2) * 10.;
@@ -42,13 +45,14 @@ namespace KVImpactParameters {
              TMath::DiLog(-TMath::Exp(x[0] / p[0]));
    }
 
+   /////////////////////////////////////////////////////////////////////////////////
+   /// Centrality \f$c_b\f$ as a function of impact parameter \f$b\f$
+   /// \param[in] x[0] \f$b\f$
+   /// \param[in] par[0] \f$b_0\f$
+   /// \param[in] par[1] \f$\Delta b\f$
+   /// \returns \f$c_{b}=\frac{2\pi(\Delta b)^{2}}{\sigma_{R}}\left[\mathrm{-Li}_{2}\left(-\exp\left(\frac{b_{0}}{\Delta b}\right)\right)-\frac{\pi^{2}}{6}+\frac{(b^{2}-b_{0}^{2})}{2(\Delta b)^{2}}-\frac{b}{\Delta b}\ln\left(1+\exp\left((b-b_{0})/\Delta b\right)\right)-\mathrm{Li}_{2}\left(-\mathrm{e}^{(b-b_{0})/\Delta b}\right)\right]\f$
    double ana_centrality(double* x, double* par)
    {
-      // Analytic expression for centrality
-      //x=b
-      //par(0)=b_0
-      //par(1)=deltab
-
       double b = x[0];
       if (b <= 0) return 0;
       double b0 = par[0];
@@ -77,7 +81,8 @@ namespace KVImpactParameters {
         fSigmaR("sigmaR", sigma_inel, 0., 20., 1),
         fCentrality("centrality", ana_centrality, 0., 20., 2)
    {
-      // By default initialize a distribution which is triangular (sharp cut-off) between b=0 and b=1
+      // Initialize a default distribution which is triangular (sharp cut-off approximation) with
+      // \f$b_0=1\f$ and \f$\Delta b=0\f$.
       fIPdist.SetParNames("Norm", "b_{0}", "#Delta b");
       fSigmaR.SetParName(0, "#Delta b");
       fCentrality.SetParNames("b_{0}", "#Delta b");
@@ -93,7 +98,8 @@ namespace KVImpactParameters {
         fSigmaR(Form("%s_sigmaR", h->GetName()), sigma_inel, 0., 50., 1),
         fCentrality(Form("%s_centrality", h->GetName()), ana_centrality, 0., 20., 2)
    {
-      // Fit the given impact parameter distribution
+      // Fit \f$P(b)\f$ to the distribution in the histogram
+      // \param[in] h histogram containing impact parameter distribution
 
       fIPdist.SetParNames("Norm", "b_{0}", "#Delta b");
       fSigmaR.SetParName(0, "#Delta b");
@@ -103,7 +109,8 @@ namespace KVImpactParameters {
 
    void impact_parameter_distribution::FitIPDist(TH1* h)
    {
-      // Fit impact parameter distribution in histogram
+      // Fit impact parameter distribution given in histogram.
+      // \param[in] h histogram containing impact parameter distribution
 
       Double_t minb = h->GetXaxis()->GetBinLowEdge(1);
       Double_t maxb = h->GetXaxis()->GetBinUpEdge(h->GetXaxis()->GetNbins());
@@ -121,23 +128,26 @@ namespace KVImpactParameters {
 
    Double_t impact_parameter_distribution::GetCrossSection() const
    {
-      // Returns calculated total reaction cross-section in [mb] using
-      // current values of b0 and delta_b parameters
+      // \returns Total reaction cross-section \f$\sigma_R\f$ in [mb] using
+      // current values of \f$b_0\f$ and \f$\Delta b\f$.
 
       return fSigmaR.Eval(GetB0());
    }
 
    Double_t impact_parameter_distribution::GetCrossSectionPerEvent() const
    {
-      // Get cross-section per event in [mb] for last fit
+      // \returns Cross-section per event in [mb] for last fitted histogram. This is the total reaction
+      // cross-section calculated using GetCrossSection() divided by the number of entries in the histogram.
 
       return fHisto->GetEntries() ? GetCrossSection() / fHisto->GetEntries() : 0.;
    }
 
    void impact_parameter_distribution::SetDeltaB_WithConstantCrossSection(Double_t deltab, Double_t sigmaR)
    {
-      // Change deltab and modify b0 in order to have total cross section sigmaR
-      // If sigmaR=0 (default), keep current total cross section
+      // Changes \f$\Delta b\f$ and \f$b_0\f$ for a given total cross-section.
+      // \param[in] deltab new value of \f$\Delta b\f$
+      // \param[in] sigmaR required total cross-section \f$\sigma_R\f$. If sigmaR=0 (default),
+      //keep current total cross section
 
       Double_t sigma = sigmaR > 0 ? sigmaR : const_cast<impact_parameter_distribution*>(this)->GetCrossSection();
       SetDeltaB(deltab);
@@ -147,7 +157,8 @@ namespace KVImpactParameters {
 
    Double_t impact_parameter_distribution::Calculate_b(Double_t centrality) const
    {
-      // calculate b for given value of centrality using current parameters
+      // \returns value of impact parameter \f$b\f$ for given value of centrality \f$c_b\f$ using current parameters
+      // \param[in] centrality value of \f$c_b\f$
 
       return fCentrality.GetX(centrality);
    }
