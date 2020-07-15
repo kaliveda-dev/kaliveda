@@ -159,11 +159,15 @@ void KVFAZIAIDSiCsI_FAZIASYM::SetIdentificationStatus(KVReconstructedNucleus* n)
    //    no A identification for Z>18
 
    n->SetZMeasured();
-   fMassIDProb->SetParameters(16.5, .4);
-   Bool_t okmass = (n->GetZ() <= 14) || (n->GetZ() < 19 && gRandom->Uniform() < fMassIDProb->Eval(n->GetZ()));
+   fMassIDProb->SetParameters(17.7, 1.66);
+   Bool_t okmass = (gRandom->Uniform() < fMassIDProb->Eval(n->GetZ()));
    if (okmass) {
       n->SetAMeasured();
    }
-   else
+   else {
+      n->SetAMeasured(kFALSE);
+      double e = n->GetE();
       n->SetZ(n->GetZ());
+      n->SetE(e);
+   }
 }

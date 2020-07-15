@@ -131,16 +131,19 @@ void KVFAZIAIDSiCsI::SetIdentificationStatus(KVReconstructedNucleus* n)
    //
    // If A is not measured, we make sure the KE of the particle corresponds to the simulated one
    //
-   // modified to fit FAZIAPRE identification performances (16.5,0.4) -> (17.7,1.66)
+   // Modified to fit FAZIAPRE identification performances (16.5,0.4) -> (17.7,1.66)
+   // Strict 14-18 limits removed. Were there necessary ?
 
    n->SetZMeasured();
 //   fMassIDProb->SetParameters(16.5, .4);
    fMassIDProb->SetParameters(17.7, 1.66);
-   Bool_t okmass = (n->GetZ() <= 14) || (n->GetZ() < 19 && gRandom->Uniform() < fMassIDProb->Eval(n->GetZ()));
+//   Bool_t okmass = (n->GetZ() <= 14) || (n->GetZ() < 19 && gRandom->Uniform() < fMassIDProb->Eval(n->GetZ())); // why ????
+   Bool_t okmass = (gRandom->Uniform() < fMassIDProb->Eval(n->GetZ()));
    if (okmass) {
       n->SetAMeasured();
    }
    else {
+      n->SetAMeasured(kFALSE);
       double e = n->GetE();
       n->SetZ(n->GetZ());
       n->SetE(e);

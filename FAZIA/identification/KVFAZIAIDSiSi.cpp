@@ -38,7 +38,6 @@ void KVFAZIAIDSiSi::Initialize()
    // If there is at least 1 grid, we set fCanIdentify = kTRUE
    // "Natural" line widths are calculated for KVIDZAGrids.
 
-
    fSiSiGrid = (KVIDZAGrid*) GetIDGrid();
    fSi1 = (KVFAZIADetector*)GetDetector(1);
    fSi2 = (KVFAZIADetector*)GetDetector(2);
@@ -46,7 +45,8 @@ void KVFAZIAIDSiSi::Initialize()
    if (fSiSiGrid) {
       SetBit(kReadyForID);
       fSiSiGrid->Initialize();
-   } else {
+   }
+   else {
       ResetBit(kReadyForID);
    }
    if (!gDataSet->HasCalibIdentInfos()) SetBit(kReadyForID);
@@ -66,7 +66,8 @@ Bool_t KVFAZIAIDSiSi::Identify(KVIdentificationResult* idr, Double_t x, Double_t
 
    if (fSiSiGrid->IsIdentifiable(si2, si1)) {
       fSiSiGrid->Identify(si2, si1, idr);
-   } else {
+   }
+   else {
       idr->IDOK = kFALSE;
       idr->IDquality = KVIDZAGrid::kICODE8;
    }
