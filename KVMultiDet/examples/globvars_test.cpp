@@ -71,8 +71,15 @@ void globvars_test()
    globVars.AddGV("KVMultLegAv", "MultLCP_av_CM"); // mult Z<=2 forward CM
    KVVarGlob* vg = globVars.AddGV("KVMultLeg", "MultLCP_back_CM"); // mult Z<=2 backwards CM
    vg->SetFrame("CM");
+#ifdef USING_ROOT6
+   // 'adds' selection to existing "_NUC_->GetZ()<=2" selection
+   vg->AddSelection({"Vpar<0", [](const KVNucleus * nuc)
+   {
+      return nuc->GetVpar() < 0;
+   }});
+#else
    vg->AddSelection("_NUC_->GetVpar()<0"); // 'adds' selection to existing "_NUC_->GetZ()<=2" selection
-
+#endif
    // initialize all variables
    globVars.Init();
 
@@ -83,12 +90,14 @@ void globvars_test()
 
    // calculate all variables for 1 event
    generate_event(test_event);
-   globVars.CalculateGlobalVariables(&test_event);
 
+   globVars.CalculateGlobalVariables(&test_event);
    // fill values in TTree
    globVars.FillBranches();
    test_tree.Fill();
 
    globVars.Print();
    test_tree.Scan("*");
+
+   cout << "Et12 should be " << 5 * 50 * pow(TMath::Sin(60 * TMath::DegToRad()), 2) + 4 * 100 * pow(TMath::Sin(120 * TMath::DegToRad()), 2) << " MeV" << endl;
 }

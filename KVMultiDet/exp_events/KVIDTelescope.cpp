@@ -201,7 +201,7 @@ void KVIDTelescope::Initialize(void)
 
    if (gDataSet) {
       SetHasMassID(gDataSet->GetDataSetEnv(Form("%s.MassID", GetLabel()), kFALSE));
-      TString valid;
+      KVString valid;
       if ((valid = gDataSet->GetDataSetEnv(Form("%s.MassID.Validity", GetLabel()), "")) != "") {
          valid.ReplaceAll("Z", "_NUC_->GetZ()");
          valid.ReplaceAll("A", "_NUC_->GetA()");

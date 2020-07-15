@@ -21,7 +21,15 @@ class KVZtotAv: public KVZtot {
    void init()
    {
       SetFrame("CM");
+#ifdef USING_ROOT6
+      SetSelection({"Vpar>0", [](const KVNucleus * nuc)
+      {
+         return nuc->GetVpar() > 0;
+      }
+                   });
+#else
       SetSelection("_NUC_->GetVpar()>0");
+#endif
    }
 
 public:

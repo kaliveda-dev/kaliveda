@@ -40,8 +40,8 @@ protected:
    TList fVG1; // one-body variables
    TList fVG2; // two-body variables
    TList fVGN; // N-body variables
-   void Fill(KVNucleus* c);
-   void Fill2(KVNucleus* c1, KVNucleus* c2);
+   void Fill(KVNucleus& c);
+   void Fill2(KVNucleus& c1, KVNucleus& c2);
    void FillN(KVEvent* e);
    void Calculate();
    void Calculate2();

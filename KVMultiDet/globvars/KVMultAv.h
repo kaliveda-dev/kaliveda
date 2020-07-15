@@ -18,7 +18,20 @@
 
 class KVMultAv: public KVMult {
 
-   void init();
+   void init()
+   {
+      SetFrame("CM");
+#ifdef USING_ROOT6
+      SetSelection({"Vpar>0", [](const KVNucleus * nuc)
+      {
+         return nuc->GetVpar() > 0;
+      }
+                   });
+#else
+      SetSelection("_NUC_->GetVpar()>0");
+#endif
+   }
+
 
 public:
    ROOT_FULL_SET_WITH_INIT(KVMultAv, KVMult)

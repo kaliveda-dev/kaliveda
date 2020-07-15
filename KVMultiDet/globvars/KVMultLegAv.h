@@ -19,7 +19,15 @@ class KVMultLegAv: public KVMultAv {
 
    void init()
    {
+#ifdef USING_ROOT6
+      AddSelection({"Z<=2", [](const KVNucleus * nuc)
+      {
+         return nuc->GetZ() <= 2;
+      }
+                   });
+#else
       AddSelection("_NUC_->GetZ()<=2");
+#endif
    }
 
 public:

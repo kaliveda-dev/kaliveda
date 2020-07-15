@@ -87,24 +87,24 @@ void KVGVList::Reset(void)
 }
 
 //_________________________________________________________________
-void KVGVList::Fill(KVNucleus* c)
+void KVGVList::Fill(KVNucleus& c)
 {
    // Calls KVVarGlob::Fill(KVNucleus*) method of all one-body variables in the list
    // for all KVNucleus satisfying the KVParticleCondition given to
    // KVVarGlob::SetSelection() (if no selection given, all nuclei are used).
 
-   fVG1.R__FOR_EACH(KVVarGlob, Fill)(*c);
+   fVG1.R__FOR_EACH(KVVarGlob, Fill)(c);
 }
 
 
 //_________________________________________________________________
-void KVGVList::Fill2(KVNucleus* c1, KVNucleus* c2)
+void KVGVList::Fill2(KVNucleus& c1, KVNucleus& c2)
 {
    // Calls KVVarGlob::Fill(KVNucleus*,KVNucleus*) method of all two-body variables in the list
    // for all pairs of KVNucleus (c1,c2) satisfying the KVParticleCondition given to
    // KVVarGlob::SetSelection() (if no selection given, all nuclei are used).
 
-   fVG2.R__FOR_EACH(KVVarGlob, Fill2)(*c1, *c2);
+   fVG2.R__FOR_EACH(KVVarGlob, Fill2)(c1, c2);
 }
 
 //_________________________________________________________________
@@ -138,7 +138,6 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
    // - all 1-body variables will be calculated in a single loop over the particles;
    // - all 2-body variables will be calculated in a single loop over particle pairs;
    // - all N-body variables will be calculated
-
    Reset();
    if (Has1BodyVariables() || Has2BodyVariables()) {
 
@@ -160,17 +159,18 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
          }
       }
 #else
+
 #ifdef WITH_CPP11
       for (KVEvent::Iterator it1(e, KVEvent::Iterator::Type::OK); it1 != KVEvent::Iterator::End(); ++it1) {
 #else
       for (KVEvent::Iterator it1(e, KVEvent::Iterator::OK); it1 != KVEvent::Iterator::End(); ++it1) {
 #endif
-         if (Has1BodyVariables()) Fill(&(*it1));// calculate 1-body variables
+         if (Has1BodyVariables()) Fill(*it1);// calculate 1-body variables
          if (Has2BodyVariables()) {
             for (KVEvent::Iterator it2(it1); it2 != KVEvent::Iterator::End(); ++it2) {
                // calculate 2-body variables
                // we use every pair of particles (including identical pairs) in the event
-               Fill2(&(*it1), &(*it2));
+               Fill2(*it1, *it2);
             }
          }
       }

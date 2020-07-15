@@ -15,7 +15,6 @@ $Id: KVNucleus.h,v 1.40 2009/04/02 09:32:55 ebonnet Exp $
 #include "TEnv.h"
 #include "KVParticle.h"
 #include "KVNumberList.h"
-#include "KVParticleCondition.h"
 #include "TLorentzRotation.h"
 #include "KVString.h"
 
