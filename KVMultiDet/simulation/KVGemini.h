@@ -10,10 +10,12 @@ class TTree;
 
 class KVSimNucleus;
 class KVSimEvent;
+class CYrast;
 
 class KVGemini : public KVBase {
 
    int part_index;//! used for labelling decay products
+//   static CYrast* yrast;
 
 public:
    KVGemini();

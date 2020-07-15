@@ -173,6 +173,11 @@ Bool_t KVEventFiltering::Analysis()
    // then the reconstructed detected event is treated by the same identification and calibration
    // procedures as for experimental data.
 
+   // few event counter print at the beginning to be sure the process started properly
+   // because in case GEMINI decay is used, it sometimes stops (randomly) after few events
+   if ((fEVN <= 10)) Info("Analysis", "%d events processed", (int)fEVN);
+   else if ((fEVN <= 1000) && !(fEVN % 100)) Info("Analysis", "%d events processed", (int)fEVN);
+
 #ifdef DEBUG_FILTER
    if (fEVN == 2500) memory_check->SetInitStatistics();
    else if (fEVN > 4995) memory_check->CompareToInit();
@@ -225,6 +230,7 @@ Bool_t KVEventFiltering::Analysis()
    }
    while (fGemini && --iterations);
 #endif
+
 
    return kTRUE;
 }

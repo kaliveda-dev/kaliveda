@@ -7,6 +7,7 @@
 #include "KVSimNucleus.h"
 
 #include "CNucleus.h"
+#include "CYrast.h"
 
 ClassImp(KVGemini)
 
@@ -33,12 +34,18 @@ ClassImp(KVGemini)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+
+//CYrast * KVGemini::yrast;
+
 KVGemini::KVGemini() : KVBase("gemini++", "Calculate statistical decay of excited nuclei")
 {
    // Default constructor
    // enhanceIMF=true: call CWeight::setWeightIMF() before any decay
    //       (enhance the probabilty of IMF emission)
    //    in this case the event weights returned by
+
+//    yrast = CYrast::instance(); //!< gives fission barriers and rotational energies
+
 }
 
 KVGemini::~KVGemini()
@@ -59,7 +66,13 @@ void KVGemini::DecaySingleNucleus(KVSimNucleus& toDecay, KVSimEvent* decayProduc
 
    CNucleus CN(toDecay.GetZ(), toDecay.GetA());
    try {
-      CN.setCompoundNucleus(toDecay.GetExcitEnergy(), toDecay.GetAngMom().Mag());
+      // Adding rotationnal energy following K.Mazurek and M. Ciemala suggestion
+      // so if and J>0, E* is never 0 in CNucleus but follow the yrast line
+      // Could induce some problems for very exotic nuclei since yrast->getYrast()
+      // is defined only for a defined range of isotopes per element.
+
+//      Info("DecaySingleNucleus", "Decaying: Z=%d A=%d E*=%g S=%g", toDecay.GetZ(), toDecay.GetA(), toDecay.GetExcitEnergy(), toDecay.GetAngMom().Mag());
+      CN.setCompoundNucleus(toDecay.GetExcitEnergy() + CYrast::instance()->getYrast(toDecay.GetZ(), toDecay.GetA(), toDecay.GetAngMom().Mag()), toDecay.GetAngMom().Mag());
       // set velocity
       CN.setVelocityCartesian(toDecay.GetVelocity().X(), toDecay.GetVelocity().Y(), toDecay.GetVelocity().Z());
 
@@ -67,7 +80,11 @@ void KVGemini::DecaySingleNucleus(KVSimNucleus& toDecay, KVSimEvent* decayProduc
       CAngle ang(toDecay.GetAngMom().Theta(), toDecay.GetAngMom().Phi());
       CN.setSpinAxis(ang);
 
+//      Info("DecaySingleNucleus", "again Decaying: Z=%d A=%d E*=%g S=%g", toDecay.GetZ(), toDecay.GetA(), toDecay.GetExcitEnergy(), toDecay.GetAngMom().Mag());
+
       CN.decay();
+//      Info("DecaySingleNucleus", "decay done...");
+
    }
    catch (std::exception& e) {
       Info("DecaySingleNucleus", "Caught std::exception: %s", e.what());

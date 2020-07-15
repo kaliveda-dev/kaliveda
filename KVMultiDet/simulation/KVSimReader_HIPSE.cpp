@@ -105,8 +105,8 @@ Bool_t KVSimReader_HIPSE::ReadEvent()
    Int_t mult = 0, mtotal = 0;
 
    /*---------------------------------------------
-      mul_vrai = multiplicity of charged particles
-      mult     = total multiplicity (i.e. including neutrons)
+     mul_vrai = multiplicity of charged particles
+     mult     = total multiplicity (i.e. including neutrons)
    //---------------------------------------------
    */
    Int_t res = ReadLineAndCheck(2, " ");
@@ -127,9 +127,9 @@ Bool_t KVSimReader_HIPSE::ReadEvent()
    }
 
    /*---------------------------------------------
-      Esa       = excitation per nucleon
-      vcm       = center of mass energy
-      Bparstore = impact parameter
+     Esa       = excitation per nucleon
+     vcm       = center of mass energy
+     Bparstore = impact parameter
    //---------------------------------------------
    */
    res = ReadLineAndCheck(3, " ");
@@ -148,12 +148,12 @@ Bool_t KVSimReader_HIPSE::ReadEvent()
    }
 
    /*---------------------------------------------
-      energetic information
-      excitat        : total excitation energy
-      xmassav        : Q-value
-      ekinav         : total kinetic energy at freeze-out
-      epotav         : total potential energy at freeze-out
-      erotav         : total rotational energy at freeze-out
+     energetic information
+     excitat        : total excitation energy
+     xmassav        : Q-value
+     ekinav         : total kinetic energy at freeze-out
+     epotav         : total potential energy at freeze-out
+     erotav         : total rotational energy at freeze-out
    //---------------------------------------------
    */
    res = ReadLineAndCheck(2, " ");
@@ -207,11 +207,11 @@ Bool_t KVSimReader_HIPSE::ReadNucleus()
 
       case 1:
          /*
-         proven = 0 -> fusion of the QP and QT
-         proven = 1 -> QP
-         proven = 2 -> QT
-         proven > 2 -> other
-         */
+          proven = 0 -> fusion of the QP and QT
+          proven = 1 -> QP
+          proven = 2 -> QT
+          proven > 2 -> other
+          */
          nuc->SetZ(GetIntReadPar(1));
          nuc->SetA(GetIntReadPar(0));
          nuc->GetParameters()->SetValue("proven", GetDoubleReadPar(2));
@@ -236,10 +236,12 @@ Bool_t KVSimReader_HIPSE::ReadNucleus()
          return kFALSE;
    }
 
+   int AA = nuc->GetA();
+
    /*---------------------------------------------------------
-      exci(I)  : excitation energy
-      ether(I) : not used
-      spinx(i),spiny(i),spinz(i) : angular momentum (hbar units)
+     exci(I)  : excitation energy
+     ether(I) : not used
+     spinx(i),spiny(i),spinz(i) : angular momentum (hbar units)
    //---------------------------------------------
    */
    res = ReadLineAndCheck(2, " ");
@@ -249,7 +251,7 @@ Bool_t KVSimReader_HIPSE::ReadNucleus()
          return kFALSE;
 
       case 1:
-         nuc->SetExcitEnergy(GetDoubleReadPar(0));
+         nuc->SetExcitEnergy(GetDoubleReadPar(0)*AA);
          nuc->GetParameters()->SetValue("exci", GetDoubleReadPar(0));
          nuc->GetParameters()->SetValue("ether", GetDoubleReadPar(1));
          break;
@@ -257,6 +259,8 @@ Bool_t KVSimReader_HIPSE::ReadNucleus()
       default:
          return kFALSE;
    }
+
+   double JJ = 0;
 
    res = ReadLineAndCheck(3, " ");
    switch (res) {
@@ -266,14 +270,17 @@ Bool_t KVSimReader_HIPSE::ReadNucleus()
 
       case 1:
          //On effectue la meme rotation que les impulsions ... à vérifier
+         // do we put ang mom even without excitation energy ...?
          nuc->SetAngMom(GetDoubleReadPar(1), GetDoubleReadPar(2), GetDoubleReadPar(0));
+         // Rotationnal energy is now added when intializing CNucleus in KVGemini following K.Mazurek and M. Ciemala suggestion
+         // so if and J!=0, E* is never 0 in CNucleus but follow the yrast line
+//        JJ = nuc->GetAngMom().Mag();
+//        if(nuc->GetExcitEnergy()>0) nuc->SetExcitEnergy(nuc->GetExcitEnergy()+ (41.563*JJ*JJ/(2*0.4*pow(1.2,2.)*pow(AA,5./3.))));
          return kTRUE;
 
       default:
          return kFALSE;
    }
-
-
 
 }
 void KVSimReader_HIPSE::define_output_filename()
