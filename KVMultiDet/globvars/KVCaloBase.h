@@ -29,10 +29,10 @@ protected:
    Double_t kracine_max, kracine_min; //deux racines issues de la resolution de RootSquare
    Int_t    kroot_status;  //statut pour la methode de RootSquare
 
-   virtual Double_t getvalue_int(Int_t);
-   Double_t GetIngValue(Int_t idx);
-   void SetIngValue(KVString name, Double_t value);
-   void AddIngValue(KVString name, Double_t value);
+   virtual Double_t getvalue_int(Int_t) const;
+   Double_t GetIngValue(Int_t idx) const;
+   void SetIngValue(KVString name, Double_t value) const;
+   void AddIngValue(KVString name, Double_t value) const;
    void SetParameter(const Char_t* par, Double_t value);
 
    void init_KVCaloBase();
@@ -55,17 +55,17 @@ public:
 
    Int_t GetNumberOfValues() const;
 
-   Double_t GetIngValue(KVString name);
-   Double_t GetParValue(KVString name);
-   Bool_t HasParameter(KVString name);
-   Int_t GetNameIndex(const Char_t* name);
+   Double_t GetIngValue(KVString name) const;
+   Double_t GetParValue(KVString name) const;
+   Bool_t HasParameter(KVString name) const;
+   Int_t GetNameIndex(const Char_t* name) const;
    const Char_t* GetValueName(Int_t i) const;
    virtual Char_t GetValueType(Int_t) const;
-   Double_t* GetValuePtr(void);
+   std::vector<Double_t> GetValuePtr(void) const;
 
    virtual void   Fill(KVNucleus*);
    void AddNeutrons(Int_t mult, Double_t mke);
-   virtual Bool_t Calculate();
+   virtual void Calculate();
 
    ClassDef(KVCaloBase, 1) //compute CaloBase
 

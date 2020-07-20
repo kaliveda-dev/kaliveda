@@ -48,6 +48,22 @@
 #endif
 using std::unique_ptr;
 
+// macro which expands to default constructor
+#define ROOT_DEF_CTOR(classname,basename) \
+   classname() : basename() {}
+
+// macro which expands to constructor with name
+#define ROOT_NAME_CTOR(classname,basename) \
+   classname(const Char_t* name) : basename(name) {}
+
+// macro which expands to default constructor
+#define ROOT_DEF_CTOR_WITH_INIT(classname,basename) \
+   classname() : basename() { init(); }
+
+// macro which expands to constructor with name
+#define ROOT_NAME_CTOR_WITH_INIT(classname,basename) \
+   classname(const Char_t* name) : basename(name) { init(); }
+
 // macro which expands to standard ROOT assignment by copy operator definition
 // using object's Copy(TObject&) const method
 // place in header file as needed
@@ -60,6 +76,34 @@ using std::unique_ptr;
      } \
      return (*this); \
    }
+
+// macro which expands to standard ROOT copy constructor definition
+// using object's Copy(TObject&) const method
+// place in header file as needed
+#define ROOT_COPY_CTOR(classname,basename) \
+  classname(const classname& other) \
+    : basename() \
+  { \
+     other.Copy(*this); \
+  }
+
+// provide set of constructors (default, named, copy) & a default destructor,
+// plus copy assignment operator
+#define ROOT_FULL_SET(classname,basename) \
+   ROOT_DEF_CTOR(classname,basename) \
+   ROOT_NAME_CTOR(classname,basename) \
+   ROOT_COPY_CTOR(classname,basename) \
+   virtual ~classname() {} \
+   ROOT_COPY_ASSIGN_OP(classname)
+
+// provide set of constructors (default, named, copy) & a default destructor,
+// plus copy assignment operator, default & named ctors call init()
+#define ROOT_FULL_SET_WITH_INIT(classname,basename) \
+   ROOT_DEF_CTOR_WITH_INIT(classname,basename) \
+   ROOT_NAME_CTOR_WITH_INIT(classname,basename) \
+   ROOT_COPY_CTOR(classname,basename) \
+   virtual ~classname() {} \
+   ROOT_COPY_ASSIGN_OP(classname)
 
 // avoid warnings from clang static analyzer
 #ifdef WITH_CPP11

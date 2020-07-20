@@ -83,7 +83,7 @@ void KVQuadMoment::Fill(KVNucleus* c)
 {
    //Add the particle's contribution to the momentum tensor.
 
-   TVector3 P = c->GetFrame(fFrame.Data(), kFALSE)->GetMomentum();
+   TVector3 P = c->GetFrame(GetFrame(), kFALSE)->GetMomentum();
    Double_t P2 = P.Mag2();
    for (int i = 0; i < 3; i++) {
       for (int j = i; j < 3; j++) {
@@ -105,7 +105,7 @@ Double_t KVQuadMoment::getvalue_void(void) const
 }
 
 //_________________________________________________________________
-Double_t KVQuadMoment::getvalue_int(Int_t i)
+Double_t KVQuadMoment::getvalue_int(Int_t i) const
 {
    // i=0 : Qzz
    // i=1 : Qxx

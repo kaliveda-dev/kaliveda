@@ -29,6 +29,7 @@ protected:
    KVParticleCondition* fOptimal;//!
    KVString fClassName;//!
    KVClassFactory* cf;//! used to generate code for optimisation
+   KVString fOptimizedClassName;//! name of generated class used for optimisation
    Bool_t fOptOK;//!false if optimisation failed (can't load generated code)
 
    void Optimize();
@@ -42,7 +43,7 @@ public:
    KVParticleCondition(const Char_t* cond);
    virtual ~KVParticleCondition();
    virtual void Set(const Char_t*);
-   virtual Bool_t Test(KVNucleus*);
+   virtual Bool_t Test(const KVNucleus*);
 
    void SetParticleClassName(const Char_t* cl)
    {
@@ -56,6 +57,8 @@ public:
    KVParticleCondition& operator=(const Char_t*);
    KVParticleCondition operator&&(const KVParticleCondition&);
    KVParticleCondition operator||(const KVParticleCondition&);
+   KVParticleCondition& operator|=(const KVParticleCondition&);
+   KVParticleCondition& operator&=(const KVParticleCondition&);
 
    void Print(Option_t* opt = "") const;
    static void PrintOptimizedList()

@@ -1,26 +1,32 @@
-//
-// D.Cussol
-//
-// 17/02/2004:
-// Creation d'une classe Variable Globale
-//
-
 #ifndef KVZtotAv_h
 #define KVZtotAv_h
 #include "KVZtot.h"
 
-//#define DEBUG_KVZtot
+/**
+  \class KVZtotAv
+  \ingroup GlobalVariables
+
+  \brief Sum of atomic numbers \f$Z\f$ in forward c.m. hemisphere
+
+  This is a KVZtot with the added conditions
+
+  ~~~~~~~{.cpp}
+  SetFrame("CM");
+  SetSelection("_NUC_->GetVpar()>0");
+  ~~~~~~~
+ */
 
 class KVZtotAv: public KVZtot {
-// Methodes
+
+   void init()
+   {
+      SetFrame("CM");
+      SetSelection("_NUC_->GetVpar()>0");
+   }
+
 public:
-   KVZtotAv(void);              // constructeur par defaut
-   KVZtotAv(const char* nom);
+   ROOT_FULL_SET_WITH_INIT(KVZtotAv, KVZtot)
 
-   virtual ~ KVZtotAv(void);   // destructeur
-
-   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
-
-   ClassDef(KVZtotAv, 1)       // Global variable Sum(Z) for Vz > Vcm
+   ClassDef(KVZtotAv, 1)
 };
 #endif

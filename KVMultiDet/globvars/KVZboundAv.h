@@ -1,26 +1,29 @@
-//
-// D.Cussol
-//
-// 17/02/2004:
-// Creation d'une classe Variable Globale
-//
-
 #ifndef KVZboundAv_h
 #define KVZboundAv_h
-#include "KVZbound.h"
+#include "KVZtotAv.h"
 
-//#define DEBUG_KVZbound
+/**
+  \class KVZboundAv
+  \ingroup GlobalVariables
 
-class KVZboundAv: public KVZbound {
-// Methodes
+  \brief Sum of atomic numbers of fragments \f$Z\geq 3\f$ in forward c.m. hemisphere
+
+  This is a KVZtotAv with the added condition
+
+  ~~~~~~~{.cpp}
+  SetSelection("_NUC_->GetZ()>=3");
+  ~~~~~~~
+ */
+
+class KVZboundAv: public KVZtotAv {
+   void init()
+   {
+      AddSelection("_NUC_->GetZ()>=3");
+   }
+
 public:
-   KVZboundAv(void);            // constructeur par defaut
-   KVZboundAv(const char* nom);
+   ROOT_FULL_SET_WITH_INIT(KVZboundAv, KVZtotAv)
 
-   virtual ~ KVZboundAv(void); // destructeur
-
-   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
-
-   ClassDef(KVZboundAv, 1)     // Global variable Sum(Z) for Z>=Zmin and/or Z<=Zmax and Vz > 0
+   ClassDef(KVZboundAv, 1)
 };
 #endif

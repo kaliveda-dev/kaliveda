@@ -150,7 +150,7 @@ Double_t KVVarGlob1::getvalue_void(void) const
 }
 
 //_________________________________________________________________
-Double_t KVVarGlob1::getvalue_int(Int_t)
+Double_t KVVarGlob1::getvalue_int(Int_t) const
 {
    // there is only one value, so whatever the value of i,
    // this method returns the same as getvalue_void

@@ -52,5 +52,5 @@ void KVRisoAv::Fill(KVNucleus* c)
 //
 // Routine de remplissage
 //
-   if (c->GetFrame(fFrame.Data(), kFALSE)->GetVpar() > 0) KVRiso::Fill(c);
+   if (c->GetFrame(GetFrame(), kFALSE)->GetVpar() > 0) KVRiso::Fill(c);
 }

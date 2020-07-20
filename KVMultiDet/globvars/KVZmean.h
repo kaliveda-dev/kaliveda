@@ -1,37 +1,26 @@
-//
-// D.Cussol
-//
-// 18/02/2004:
-// Creation d'une classe Variable Globale
-//
-
 #ifndef KVZmean_h
 #define KVZmean_h
-#include "KVVarGlobMean.h"
+#include "KVZtot.h"
 
-//#define DEBUG_KVZmean
+/**
+  \class KVZmean
+  \ingroup GlobalVariables
 
-class KVZmean: public KVVarGlobMean {
+  \brief Mean atomic number \f$\langle Z\rangle\f$ of selected nuclei
+
+  \f[
+  \frac{1}{N}\sum_{i=1}^N Z_i
+  \f]
+ */
+class KVZmean: public KVZtot {
+   void init()
+   {
+      SetOption("mode", "mean");
+   }
+
 public:
-// Champs Statiques:
-   static Int_t nb;
-   static Int_t nb_crea;
-   static Int_t nb_dest;
-// Methodes
-protected:
-   void init_KVZmean(void);
+   ROOT_FULL_SET_WITH_INIT(KVZmean, KVZtot)
 
-public:
-   KVZmean(void);              // constructeur par defaut
-   KVZmean(const char* nom);
-   KVZmean(const KVZmean& a);  // constructeur par Copy
-
-   virtual ~ KVZmean(void);    // destructeur
-
-   KVZmean& operator =(const KVZmean& a);      // operateur =
-
-   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
-
-   ClassDef(KVZmean, 1)        // Global variable <Z>
+   ClassDef(KVZmean, 1)
 };
 #endif

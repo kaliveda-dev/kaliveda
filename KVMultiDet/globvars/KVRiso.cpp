@@ -236,7 +236,7 @@ Double_t KVRiso::getvalue_void(void) const
 }
 
 //_________________________________________________________________
-Double_t KVRiso::getvalue_int(Int_t i)
+Double_t KVRiso::getvalue_int(Int_t i) const
 {
 //
 // Retourne la valeur suivant l'indice
@@ -263,25 +263,6 @@ Double_t KVRiso::getvalue_int(Int_t i)
          break;
    }
 }
-
-//_________________________________________________________________
-Double_t* KVRiso::GetValuePtr(void)
-{
-// On retourne un tableau de valeurs. il est organise comme suit
-//
-//  Index   Meaning
-//----------------------------------------
-//  0       Riso
-//  1       Sum of parallel kinetic energies
-//  2       Sum of transverse kinetic energies
-//
-
-   for (Int_t i = 0; i < 3; i++) {
-      fVal[i] = GetValue(i);
-   }
-   return fVal;
-}
-
 //_________________________________________________________________
 void KVRiso::Fill(KVNucleus* c)
 {
@@ -289,8 +270,8 @@ void KVRiso::Fill(KVNucleus* c)
 // Routine de remplissage
 //
    Riso = -1;
-   Double_t ep = c->GetFrame(fFrame.Data(), kFALSE)->GetKE();
-   Double_t et = c->GetFrame(fFrame.Data(), kFALSE)->GetEtran();
+   Double_t ep = c->GetFrame(GetFrame(), kFALSE)->GetKE();
+   Double_t et = c->GetFrame(GetFrame(), kFALSE)->GetEtran();
 
    Epar += (ep - et);
    Etrans += et;

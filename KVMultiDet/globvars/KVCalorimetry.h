@@ -26,7 +26,7 @@ protected:
    void SetParticleFactor(Double_t value);
    void SetLevelDensityParameter(Double_t value);
    void SetNeutronMeanEnergyFactor(Double_t value);
-   void ComputeTemperature();
+   void ComputeTemperature() const;
 
    void init_KVCalorimetry();
 
@@ -43,7 +43,7 @@ public:
    void SetAsurZ(Double_t value);
 
    void  Fill(KVNucleus*);
-   Bool_t Calculate(void);
+   void Calculate();
 
    ClassDef(KVCalorimetry, 1) //compute calorimetry
 

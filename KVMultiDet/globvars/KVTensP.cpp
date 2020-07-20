@@ -131,7 +131,7 @@ KVTensP::KVTensP(const Char_t* nom, const Char_t* frame): KVVarGlob(nom)
 #ifdef DEBUG_KVTensP
    cout << nb << " crees...(nom) " << endl;
 #endif
-   fFrame = frame;
+   SetFrame(frame);
 }
 
 //_________________________________________________________________
@@ -208,8 +208,7 @@ void KVTensP::Init(void)
 {
    tenseurP->Reset();
    KVParticleCondition pc(Form("_NUC_->GetZ()>=%d", GetZmin()));
-   if (HasLabel()) pc = (pc && KVParticleCondition(Form("_NUC_->BelongsToGroup(\"%s\")", GetPartGroup())));
-   if (fSelection) pc = (pc && *fSelection);
+   if (HasLabel()) pc &= KVParticleCondition(Form("_NUC_->BelongsToGroup(\"%s\")", GetPartGroup()));
    SetSelection(pc);
 }
 
@@ -241,9 +240,10 @@ void KVTensP::Fill(KVNucleus* c)
    // if method is called by FillWithCondition i.e. by KVGVList::CalculateGlobalVariables
    // (conditioned_fill==kTRUE), all selections have already been tested
    // if not i.e. Fill method called "by hand", we need to test here
-   if (conditioned_fill || fSelection->Test(c)) {
+
+   if (conditioned_fill) { // || fSelection.Test(c)) {
       Double_t poids = (Double_t) c->GetA();
-      tenseurP->Fill(c->GetFrame(fFrame.Data(), kFALSE)->GetV(), poids);
+      tenseurP->Fill(c->GetFrame(GetFrame(), kFALSE)->GetV(), poids);
    }
 }
 
@@ -255,33 +255,7 @@ Double_t KVTensP::getvalue_void(void) const
 }
 
 //_________________________________________________________________
-Double_t* KVTensP::GetValuePtr(void)
-{
-   // On retourne un tableau de valeurs. il est organise comme suit
-   //
-   // Index  Meaning
-   //--------------------------------------
-   // 0      Theta flow
-   // 1      Sphericity
-   // 2      Coplanarity
-   // 3      Phi of the reaction plane
-   // 4      Value of the 1st eigenvalue
-   // 5      Value of the 2nd eigenvalue
-   // 6      Value of the 3rd eigenvalue
-   //
-
-   fVal[0] = tenseurP->GetThetaFlot();
-   fVal[3] = tenseurP->GetPhiPlan();
-   fVal[4] = tenseurP->GetVap(1);
-   fVal[5] = tenseurP->GetVap(2);
-   fVal[6] = tenseurP->GetVap(3);
-   fVal[1] = tenseurP->GetSphericite();
-   fVal[2] = tenseurP->GetCoplanarite();
-   return fVal;
-}
-
-//_________________________________________________________________
-Double_t KVTensP::getvalue_int(Int_t i)
+Double_t KVTensP::getvalue_int(Int_t i) const
 {
    // on retourne la ieme valeur du tableau
    //

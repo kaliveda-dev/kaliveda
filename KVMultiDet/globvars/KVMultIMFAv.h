@@ -1,26 +1,29 @@
-//
-// D.Cussol
-//
-// 17/02/2004:
-// Creation d'une classe Variable Globale
-//
-
 #ifndef KVMultIMFAv_h
 #define KVMultIMFAv_h
-#include "KVMultIMF.h"
+#include "KVMultAv.h"
 
-//#define DEBUG_KVMultIMF
+/**
+  \class KVMultIMFAv
+  \ingroup GlobalVariables
 
-class KVMultIMFAv: public KVMultIMF {
-// Methodes
+  \brief Multiplicity of IMF \f$Z\geq 3\f$ in forward hemisphere of c.m. frame
+
+  This is a KVMultAv with the added condition
+
+  ~~~~~~~{.cpp}
+  AddSelection("_NUC_->GetZ()>=3");
+  ~~~~~~~
+ */
+
+class KVMultIMFAv: public KVMultAv {
+   void init()
+   {
+      AddSelection("_NUC_->GetZ()>=3");
+   }
+
 public:
-   KVMultIMFAv(void);           // constructeur par defaut
-   KVMultIMFAv(const char* nom);
+   ROOT_FULL_SET_WITH_INIT(KVMultIMFAv, KVMultAv)
 
-   virtual ~ KVMultIMFAv(void);        // destructeur
-
-   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
-
-   ClassDef(KVMultIMFAv, 1)    // Multiplicity for fragments with Z >= Zmin and Vz > Vcm
+   ClassDef(KVMultIMFAv, 1)
 };
 #endif

@@ -141,7 +141,7 @@ KVParticleCondition::KVParticleCondition(const Char_t* cond)
 
 //_____________________________________________________________________________//
 
-Bool_t KVParticleCondition::Test(KVNucleus* nuc)
+Bool_t KVParticleCondition::Test(const KVNucleus* nuc)
 {
    //Evaluates the condition for the particle in question
    //
@@ -151,7 +151,7 @@ Bool_t KVParticleCondition::Test(KVNucleus* nuc)
    //If optimisation fails (see method Optimize()), the condition will always
    //be evaluated as 'kFALSE' for all particles
 
-   if (fCondition == "") return kTRUE;
+   if (!IsSet()) return kTRUE;
 
    if (!fOptimal) Optimize();
 
@@ -272,6 +272,24 @@ KVParticleCondition KVParticleCondition::operator||(const KVParticleCondition& o
    return tmp;
 }
 
+KVParticleCondition& KVParticleCondition::operator|=(const KVParticleCondition& other)
+{
+   // Replace current condition with a logical 'OR' between itself and other
+
+   KVParticleCondition tmp = *this || other;
+   tmp.Copy(*this);
+   return *this;
+}
+
+KVParticleCondition& KVParticleCondition::operator&=(const KVParticleCondition& other)
+{
+   // Replace current condition with a logical 'AND' between itself and other
+
+   KVParticleCondition tmp = *this && other;
+   tmp.Copy(*this);
+   return *this;
+}
+
 //_____________________________________________________________________________//
 
 void KVParticleCondition::AddExtraInclude(const Char_t* inc_file)
@@ -352,9 +370,10 @@ void KVParticleCondition::Optimize()
    Info("Optimize", "Optimization of KVParticleCondition : %s", fCondition.Data());
 
    CreateClassFactory();
+   KVString created_class_name = cf->GetClassName();
    //add Test() method
    cf->AddMethod("Test", "Bool_t");
-   cf->AddMethodArgument("Test", "KVNucleus*", "nuc");
+   cf->AddMethodArgument("Test", "const KVNucleus*", "nuc");
    cf->AddHeaderIncludeFile("KVNucleus.h");
 
    //write body of method
@@ -411,6 +430,7 @@ void KVParticleCondition::Optimize()
    }
    // add to list of optimized conditions
    fOptimal->SetName(GetName());
+   fOptimal->fOptimizedClassName = created_class_name;
    fgOptimized.Add(fOptimal);
    fOptimal->fNUsing++;
    Info("Optimize", "Success");

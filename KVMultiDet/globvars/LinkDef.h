@@ -13,7 +13,6 @@
 #pragma link C++ class KVZtot;
 #pragma link C++ class KVZmean;
 #pragma link C++ class KVZbound;
-#pragma link C++ class KVZBoundMean;
 #pragma link C++ class KVZtotAv;
 #pragma link C++ class KVZboundAv;
 #pragma link C++ class KVZmax;
@@ -25,6 +24,7 @@
 #pragma link C++ class KVPtot;
 #pragma link C++ class KVZVtot;
 #pragma link C++ class KVSource;
+#pragma link C++ class KVMult;
 #pragma link C++ class KVMultIMF;
 #pragma link C++ class KVMultLeg;
 #pragma link C++ class KVMultAv;
@@ -40,5 +40,4 @@
 #pragma link C++ class KVRelativeVelocity;
 #pragma link C++ class KVQuadMoment;
 #pragma link C++ class KVFlowTensor;
-#pragma link C++ class KVRotatedTensor;
 #endif

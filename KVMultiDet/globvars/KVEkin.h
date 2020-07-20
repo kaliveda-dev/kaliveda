@@ -1,37 +1,23 @@
-//
-// D.Cussol
-//
-// 17/02/2004:
-// Creation d'une classe Variable Globale
-//
-
 #ifndef KVEkin_h
 #define KVEkin_h
-#include "KVVarGlob1.h"
+#include "KVVGSum.h"
 
-//#define DEBUG_KVEkin
+/**
+  \class KVEkin
+  \ingroup GlobalVariables
 
-class KVEkin: public KVVarGlob1 {
+  \brief Sum of kinetic energies in event
+
+  \f[
+  \sum_{i=1}^N E_i
+  \f]
+
+ */
+class KVEkin: public KVVGSum {
+   void init();
 public:
-// Champs Statiques:
-   static Int_t nb;
-   static Int_t nb_crea;
-   static Int_t nb_dest;
-// Methodes
-protected:
-   void init_KVEkin(void);
+   ROOT_FULL_SET_WITH_INIT(KVEkin, KVVGSum)
 
-public:
-   KVEkin(void);               // constructeur par defaut
-   KVEkin(const Char_t* nom);
-   KVEkin(const KVEkin& a);    // constructeur par Copy
-
-   virtual ~ KVEkin(void);     // destructeur
-
-   KVEkin& operator =(const KVEkin& a);        // operateur =
-
-   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
-
-   ClassDef(KVEkin, 1)         // Global variable Sum(Ekin)
+   ClassDef(KVEkin, 1)// Global variable Sum(Ekin)
 };
 #endif

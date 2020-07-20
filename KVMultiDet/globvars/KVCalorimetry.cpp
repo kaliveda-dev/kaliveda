@@ -285,7 +285,7 @@ void KVCalorimetry::Fill(KVNucleus* n)
    // - mode avec distinction particules / fragments, actif si la methode
    // UseChargeDiff(Int_t FragmentMinimumCharge,Double_t ParticleFactor) a ete appelee :
    // ->Une distinction entre produits avec une
-   // charge strictement inferieur ‡ FragmentMinimumCharge (particules) et superieur ou egale (fragments)
+   // charge strictement inferieur √† FragmentMinimumCharge (particules) et superieur ou egale (fragments)
    // est appliquee
 
    kIsModified = kTRUE;
@@ -295,14 +295,14 @@ void KVCalorimetry::Fill(KVNucleus* n)
       if (n->GetZ() >= GetParValue("FragmentMinimumCharge")) {
          AddIngValue("Zfrag", n->GetZ());
          AddIngValue("Afrag", n->GetA());
-         AddIngValue("Ekfrag", n->GetFrame(fFrame.Data(), kFALSE)->GetKE());
+         AddIngValue("Ekfrag", n->GetFrame(GetFrame(), kFALSE)->GetKE());
          AddIngValue("Qfrag", n->GetMassExcess());
          AddIngValue("Mfrag", 1);
       }
       else {
          AddIngValue("Zpart", n->GetZ());
          AddIngValue("Apart", n->GetA());
-         AddIngValue("Ekpart", n->GetFrame(fFrame.Data(), kFALSE)->GetKE());
+         AddIngValue("Ekpart", n->GetFrame(GetFrame(), kFALSE)->GetKE());
          AddIngValue("Qpart", n->GetMassExcess());
          AddIngValue("Mpart", 1);
       }
@@ -338,7 +338,7 @@ void KVCalorimetry::SumUp()
    //
    // - mode avec prise en compte des neutrons libres, actif si la methode
    // IncludeFreeNeutrons(Double_t AsurZ,Double_t NeutronMeanEnergyFactor,Double_t LevelDensityParameter)
-   // L'estimation du nombre neutrons, est fait en utilisant un AsurZ (paramËtre de la calorimÈtrie)
+   // L'estimation du nombre neutrons, est fait en utilisant un AsurZ (param√®tre de la calorim√©trie)
    // suppose de la source reconstruite :
    // le nombre de neutrons libres est alors egal :
    // Mn =  [AsurZ]*Zsum - Asum
@@ -363,7 +363,7 @@ void KVCalorimetry::SumUp()
       // conservation du AsurZ du systeme --> multiplicite moyenne des neutrons
       Double_t Mneutron = Double_t(TMath::Nint(GetParValue("AsurZ") * GetIngValue("Zsum") - GetIngValue("Asum")));
       if (Mneutron < 0) {
-         //Warning("SumUp","Nombre de neutrons dÈduits nÈgatif : %1.0lf -> on le met ‡ zÈro",Mneutron);
+         //Warning("SumUp","Nombre de neutrons d√©duits n√©gatif : %1.0lf -> on le met √† z√©ro",Mneutron);
          SetIngValue("Aexcess", TMath::Abs(Mneutron));
          Mneutron = 0;
       }
@@ -384,9 +384,9 @@ void KVCalorimetry::SumUp()
 }
 
 //________________________________________________________________
-Bool_t   KVCalorimetry::Calculate(void)
+void KVCalorimetry::Calculate()
 {
-   //Realisation de la calorimÈtrie
+   //Realisation de la calorim√©trie
    //Calcul de l'energie d'excitation, temperature (optionnel), de l'energie moyenne des neutrons (optionnel)
    //appel de SumUp()
    //Cette methode retourne kTRUE si tout s'est bien passee, kFALSE si il y a un probleme dans la resolution
@@ -412,7 +412,7 @@ Bool_t   KVCalorimetry::Calculate(void)
 
    //Info("Calculate","Debut");
 
-   if (!kIsModified) return kTRUE;
+   if (!kIsModified) return;
    kIsModified = kFALSE;
    // premier calcul depuis le dernier remplissage par Fill
    SumUp();
@@ -438,7 +438,7 @@ Bool_t   KVCalorimetry::Calculate(void)
          //SetIngValue("Tmin",kracine_min); // la deuxieme solution de l'eq en T2
       }
       else {
-         return kFALSE;
+         return;
       }
 
    }
@@ -450,11 +450,10 @@ Bool_t   KVCalorimetry::Calculate(void)
       }
 
    }
-   return kTRUE;
 }
 
 //________________________________________________________________
-void KVCalorimetry::ComputeTemperature()
+void KVCalorimetry::ComputeTemperature() const
 {
 
    Double_t exci = GetIngValue("Exci");

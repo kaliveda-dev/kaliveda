@@ -42,9 +42,6 @@ ClassImp(KVPtot)
 //
 // If you want to normalize the values e.g. to the momentum of the projectile
 // in the laboratory frame, set the parameter "Normalization"
-Int_t KVPtot::nb = 0;
-Int_t KVPtot::nb_crea = 0;
-Int_t KVPtot::nb_dest = 0;
 
 //_________________________________________________________________
 void KVPtot::init_KVPtot(void)
@@ -53,8 +50,6 @@ void KVPtot::init_KVPtot(void)
 // Initialisation des champs de KVPtot
 // Cette methode privee n'est appelee par les createurs
 //
-   nb++;
-   nb_crea++;
 
    ptot.SetXYZ(0, 0, 0);
    SetNameIndex("Z", 0);
@@ -71,7 +66,6 @@ KVPtot::KVPtot(void): KVVarGlob()
    Char_t* nom = new Char_t[80];
 
    init_KVPtot();
-   sprintf(nom, "KVPtot_%d", nb_crea);
    SetName(nom);
    SetTitle(nom);
 #ifdef DEBUG_KVPtot
@@ -113,17 +107,7 @@ KVPtot::KVPtot(const KVPtot& a) : KVVarGlob()
 
 //_________________________________________________________________
 KVPtot::~KVPtot(void)
-{
-//
-// Destructeur
-//
-#ifdef DEBUG_KVPtot
-   cout << "Destruction de " << GetName() << "..." << endl;
-#endif
-   nb--;
-
-   nb_dest++;
-}
+{}
 
 //_________________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
@@ -199,7 +183,7 @@ Double_t KVPtot::getvalue_void() const
 }
 
 //_________________________________________________________________
-Double_t KVPtot::getvalue_int(Int_t i)
+Double_t KVPtot::getvalue_int(Int_t i) const
 {
 //
 // Retourne la valeur suivant l'indice
@@ -228,7 +212,7 @@ Double_t KVPtot::getvalue_int(Int_t i)
 }
 
 //_________________________________________________________________
-Double_t* KVPtot::GetValuePtr(void)
+std::vector<Double_t> KVPtot::GetValuePtr() const
 {
 // On retourne un tableau de valeurs. il est organise comme suit
 //
@@ -238,12 +222,11 @@ Double_t* KVPtot::GetValuePtr(void)
 //   1        X component of Ptot
 //   2        Y component of Ptot
 //
-
-
+   std::vector<Double_t> tmp;
    for (Int_t i = 0; i < 3; i++) {
-      fVal[i] = GetValue(i);
+      tmp.push_back(GetValue(i));
    }
-   return fVal;
+   return tmp;
 }
 
 //_________________________________________________________________
@@ -252,7 +235,7 @@ void KVPtot::Fill(KVNucleus* c)
 //
 // Routine de remplissage
 //
-   ptot += ((1. / fNorm) * c->GetFrame(fFrame.Data(), kFALSE)->GetMomentum());
+   //ptot += ((1. / fNorm) * c->GetFrame(fFrame.Data(), kFALSE)->GetMomentum());
 }
 
 //_________________________________________________________________

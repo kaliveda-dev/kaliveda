@@ -16,10 +16,9 @@ $Date: 2009/01/23 15:25:52 $
 #include "TClass.h"
 
 class KVVGSum: public KVVarGlobMean {
-private:
 
    TClass* fClass; //class used to represent particles
-   TMethodCall* fMethod; //method used to extract property of interest from particles
+   unique_ptr<TMethodCall> fMethod; //method used to extract property of interest from particles
    Double_t fVal; //used to retrieve value of property for each particle
 
    enum {
@@ -29,29 +28,16 @@ private:
       kNoFrame = BIT(17), //set if property to be calculated is independent of reference frame
       kInitDone = BIT(18) //set if Init() has been called
    };
+   void init(void);
 
 protected:
-   void init_KVVGSum(void);
    virtual Double_t getvalue_void(void) const;
 
 public:
-   KVVGSum(void);       // default constructor
-   KVVGSum(const Char_t* nom);      // constructor with a name
-   KVVGSum(const KVVGSum& a);// copy constructor
-
-   virtual ~KVVGSum(void);    // destructor
-
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   virtual void Copy(TObject& obj) const;
-#else
-   virtual void Copy(TObject& obj);
-#endif
+   ROOT_FULL_SET_WITH_INIT(KVVGSum, KVVarGlobMean)
 
    void Init();
-
-   KVVGSum& operator = (const KVVGSum& a); // operator =
-
-   virtual void Fill(KVNucleus* c);    // Filling method
+   void fill(const KVNucleus* c);    // Filling method
 
    ClassDef(KVVGSum, 0) //General global variable for calculating sums of various quantities
 };

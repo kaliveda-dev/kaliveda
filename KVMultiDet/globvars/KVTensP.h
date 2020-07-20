@@ -24,7 +24,7 @@ protected:
 
    void init_KVTensP(void);
    virtual Double_t getvalue_void(void) const;
-   virtual Double_t getvalue_int(Int_t i);
+   virtual Double_t getvalue_int(Int_t i) const;
 
 public:
    KVTensP(void);              // constructeur par defaut
@@ -48,8 +48,6 @@ public:
    virtual void Reset(void);    // Remise a zero avant le
    // traitement d'un evenement
    virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
-
-   virtual Double_t* GetValuePtr(void); // On retourne un tableau de
 
    virtual void SetPartGroup(const Char_t* lab)
    {

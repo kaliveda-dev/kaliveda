@@ -93,7 +93,7 @@ void KVGVList::Fill(KVNucleus* c)
    // for all KVNucleus satisfying the KVParticleCondition given to
    // KVVarGlob::SetSelection() (if no selection given, all nuclei are used).
 
-   fVG1.R__FOR_EACH(KVVarGlob, FillWithCondition)(c);
+   fVG1.R__FOR_EACH(KVVarGlob, Fill)(*c);
 }
 
 
@@ -104,19 +104,32 @@ void KVGVList::Fill2(KVNucleus* c1, KVNucleus* c2)
    // for all pairs of KVNucleus (c1,c2) satisfying the KVParticleCondition given to
    // KVVarGlob::SetSelection() (if no selection given, all nuclei are used).
 
-   fVG2.R__FOR_EACH(KVVarGlob, Fill2WithCondition)(c1, c2);
+   fVG2.R__FOR_EACH(KVVarGlob, Fill2)(*c1, *c2);
 }
 
 //_________________________________________________________________
 void KVGVList::FillN(KVEvent* r)
 {
    // Calls KVVarGlob::FillN(KVEvent*) method of all N-body variables in the list
-   TObjLink* lnk = fVGN.FirstLink();
-   while (lnk) {
-      KVVarGlob* vg = (KVVarGlob*) lnk->GetObject();
-      vg->FillN(r);
-      lnk = lnk->Next();
-   }
+   fVGN.R__FOR_EACH(KVVarGlob, fillN)(r);
+}
+
+void KVGVList::Calculate()
+{
+   // Calculate all 1-body observables after filling
+   fVG1.R__FOR_EACH(KVVarGlob, Calculate)();
+}
+
+void KVGVList::Calculate2()
+{
+   // Calculate all 2-body observables after filling
+   fVG2.R__FOR_EACH(KVVarGlob, Calculate)();
+}
+
+void KVGVList::CalculateN()
+{
+   // Calculate all N-body observables after filling
+   fVGN.R__FOR_EACH(KVVarGlob, Calculate)();
 }
 
 void KVGVList::CalculateGlobalVariables(KVEvent* e)
@@ -161,10 +174,15 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
             }
          }
       }
+      if (Has1BodyVariables()) Calculate();
+      if (Has2BodyVariables()) Calculate2();
 #endif
    }
    // calculate N-body variables
-   if (HasNBodyVariables()) FillN(e);
+   if (HasNBodyVariables()) {
+      FillN(e);
+      CalculateN();
+   }
 }
 
 //_________________________________________________________________
@@ -294,4 +312,66 @@ void KVGVList::FillBranches()
 
       }
    }
+}
+
+KVVarGlob* KVGVList::AddGV(const Char_t* class_name, const Char_t* name)
+{
+   //Add a global variable to the list.
+   //
+   //`"class_name"` must be the name of a valid class inheriting from KVVarGlob, e.g. any of the default global
+   //variable classes defined as part of the standard KaliVeda package (see the [Global Variables module](group__GlobalVariables.html)),
+   //or the name of a user-defined class (see below).
+   //
+   //`"name"` is a unique name for the new global variable object which will be created and added to the
+   //list of global variables. This name can later be used to retrieve the object (see GetGV()).
+   //
+   //Returns pointer to new global variable object in case more than the usual default initialisation is necessary.
+   //
+   //### User-defined global variables
+   //The user may use her own global variables, without having to add them to the main libraries.
+   //If the given class name is not known, it is assumed to be a user-defined class and we attempt to compile and load
+   //the class from the user's source code. For this to work, the user must:
+   //
+   //  1. add to the ROOT macro path the directory where her class's source code is kept, e.g. in `$HOME/.rootrc` add the following line:
+   //
+   //~~~~~~~~~~~~~~~
+   //              +Unix.*.Root.MacroPath:      $(HOME)/myVarGlobs
+   //~~~~~~~~~~~~~~~
+   //
+   //  2. for each user-defined class, add a line to $HOME/.kvrootrc to define a "plugin". E.g. for a class called MyNewVarGlob,
+   //
+   //~~~~~~~~~~~~~~~
+   //              +Plugin.KVVarGlob:    MyNewVarGlob    MyNewVarGlob     MyNewVarGlob.cpp+   "MyNewVarGlob()"
+   //~~~~~~~~~~~~~~~
+   //
+   //  It is assumed that `MyNewVarGlob.h` and `MyNewVarGlob.cpp` will be found in `$HOME/myVarGlobs` (in this example).
+
+   KVVarGlob* vg = 0;
+   TClass* clas = TClass::GetClass(class_name);
+   if (!clas) {
+      //class not in dictionary - user-defined class ? Look for plugin.
+      TPluginHandler* ph = KVBase::LoadPlugin("KVVarGlob", class_name);
+      if (!ph) {
+         //not found
+         Error("AddGV(const Char_t*,const Char_t*)",
+               "Called with class_name=%s.\nClass is unknown: not in standard libraries, and plugin (user-defined class) not found",
+               class_name);
+         return 0;
+      }
+      else {
+         vg = (KVVarGlob*) ph->ExecPlugin(0);
+      }
+   }
+   else if (!clas->InheritsFrom("KVVarGlob")) {
+      Error("AddGV(const Char_t*,const Char_t*)",
+            "%s is not a valid class deriving from KVVarGlob.",
+            class_name);
+      return 0;
+   }
+   else {
+      vg = (KVVarGlob*) clas->New();
+   }
+   vg->SetName(name);
+   Add(vg);
+   return vg;
 }

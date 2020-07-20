@@ -182,7 +182,7 @@ KVNameValueList* KVCaloBase::GetList(Option_t* option) const
 }
 
 //_________________________________________________________________
-Double_t KVCaloBase::getvalue_int(Int_t i)
+Double_t KVCaloBase::getvalue_int(Int_t i) const
 {
    // derived method
    // protected method
@@ -193,14 +193,13 @@ Double_t KVCaloBase::getvalue_int(Int_t i)
    // les variables avant d effectuer le retour
 
    if (i < nvl_ing->GetNpar()) {
-      Calculate();
       return GetIngValue(i);
    }
-   else return 0;
+   return 0;
 }
 
 //_________________________________________________________________
-Int_t KVCaloBase::GetNameIndex(const Char_t* name)
+Int_t KVCaloBase::GetNameIndex(const Char_t* name) const
 {
    // derived method
    // protected method
@@ -256,21 +255,15 @@ Char_t KVCaloBase::GetValueType(Int_t i) const
 }
 
 //_________________________________________________________________
-Double_t* KVCaloBase::GetValuePtr(void)
+std::vector<Double_t> KVCaloBase::GetValuePtr(void) const
 {
    // On retourne un tableau rassemblant l'ensemble des ingredients
-   // retourne 0 si aucun ingredient
-   // Note, c'est a l'utilisateur d'effacer ensuite ce tableau
 
-   if (GetNumberOfValues())
-      return 0;
-
-   Double_t* tab = new Double_t[GetNumberOfValues()];
-   for (Int_t ii = 0; ii < GetNumberOfValues(); ii += 1)
-      tab[ii] = getvalue_int(ii);
-
+   std::vector<Double_t> tab;
+   for (Int_t ii = 0; ii < GetNumberOfValues(); ++ii)
+      tab.push_back(getvalue_int(ii));
    return tab;
-};
+}
 
 //________________________________________________________________
 void KVCaloBase::init_KVCaloBase()
@@ -295,7 +288,7 @@ void KVCaloBase::init_KVCaloBase()
 }
 
 //________________________________________________________________
-Double_t KVCaloBase::GetIngValue(KVString name)
+Double_t KVCaloBase::GetIngValue(KVString name) const
 {
    //return the value of a name given ingredient
    //if it is not defined return 0
@@ -303,21 +296,21 @@ Double_t KVCaloBase::GetIngValue(KVString name)
    return nvl_ing->GetDoubleValue(name.Data());
 }
 //________________________________________________________________
-Double_t KVCaloBase::GetIngValue(Int_t idx)
+Double_t KVCaloBase::GetIngValue(Int_t idx) const
 {
    // protected method,
    //return the value of a index given ingredient
    return nvl_ing->GetDoubleValue(idx);
 }
 //________________________________________________________________
-void KVCaloBase::SetIngValue(KVString name, Double_t value)
+void KVCaloBase::SetIngValue(KVString name, Double_t value) const
 {
    // protected method,
    //set the value a name given ingredient
    nvl_ing->SetValue(name.Data(), value);
 }
 //________________________________________________________________
-void KVCaloBase::AddIngValue(KVString name, Double_t value)
+void KVCaloBase::AddIngValue(KVString name, Double_t value) const
 {
    // protected method,
    //increment the value of a name given ingredient
@@ -327,14 +320,14 @@ void KVCaloBase::AddIngValue(KVString name, Double_t value)
    SetIngValue(name, before);
 }
 //________________________________________________________________
-Bool_t KVCaloBase::HasParameter(KVString name)
+Bool_t KVCaloBase::HasParameter(KVString name) const
 {
    // protected method,
    //Check if a given parameter is defined
    return nvl_par->HasParameter(name.Data());
 }
 //________________________________________________________________
-Double_t KVCaloBase::GetParValue(KVString name)
+Double_t KVCaloBase::GetParValue(KVString name) const
 {
    //return the value of a name given parameter
    return nvl_par->GetDoubleValue(name.Data());
@@ -363,7 +356,7 @@ void KVCaloBase::Fill(KVNucleus* n)
    kIsModified = kTRUE;
    AddIngValue("Zsum", n->GetZ());
    AddIngValue("Asum", n->GetA());
-   AddIngValue("Eksum", n->GetFrame(fFrame.Data(), kFALSE)->GetKE());
+   AddIngValue("Eksum", n->GetFrame(GetFrame(), kFALSE)->GetKE());
    AddIngValue("Qsum", n->GetMassExcess());
    AddIngValue("Msum", 1);
 
@@ -391,10 +384,8 @@ void KVCaloBase::SumUp()
 //________________________________________________________________
 void KVCaloBase::ComputeExcitationEnergy()
 {
-
    Double_t exci = GetIngValue("Qsum") + GetIngValue("Eksum") - GetIngValue("Qini");
    SetIngValue("Exci", exci);
-
 }
 
 //________________________________________________________________
@@ -412,7 +403,7 @@ void KVCaloBase::AddNeutrons(Int_t mult, Double_t mke)
 
 }
 //________________________________________________________________
-Bool_t   KVCaloBase::Calculate(void)
+void   KVCaloBase::Calculate()
 {
    //Realisation de la calorimetrie
    //Calcul de l'energie d'excitation
@@ -424,13 +415,12 @@ Bool_t   KVCaloBase::Calculate(void)
    //
    //
 
-   if (!kIsModified) return kTRUE;
+   if (!kIsModified) return;
    kIsModified = kFALSE;
    // premier calcul depuis le dernier remplissage par Fill
    SumUp();
 
    ComputeExcitationEnergy();
-   return kTRUE;
 }
 
 //________________________________________________________________

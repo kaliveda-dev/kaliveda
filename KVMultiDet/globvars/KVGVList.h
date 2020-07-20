@@ -43,12 +43,17 @@ protected:
    void Fill(KVNucleus* c);
    void Fill2(KVNucleus* c1, KVNucleus* c2);
    void FillN(KVEvent* e);
+   void Calculate();
+   void Calculate2();
+   void CalculateN();
 
 public:
    KVGVList(void);             // constructeur par defaut
    KVGVList(const KVGVList& a);        // constructeur par Copy
 
    virtual ~ KVGVList(void) {}
+
+   KVVarGlob* AddGV(const Char_t* class_name, const Char_t* name);
 
    void Init(void);     // methode d'initialisation des variables globales
    void Reset(void);    // Remise a zero avant le

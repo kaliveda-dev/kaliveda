@@ -1,37 +1,29 @@
-//
-// D.Cussol
-//
-// 17/02/2004:
-// Creation d'une classe Variable Globale
-//
-
 #ifndef KVZtot_h
 #define KVZtot_h
-#include "KVVarGlob1.h"
+#include "KVVGSum.h"
 
-//#define DEBUG_KVZtot
+/**
+  \class KVZtot
+  \ingroup GlobalVariables
 
-class KVZtot: public KVVarGlob1 {
+  \brief Sum of atomic numbers \f$Z\f$ in event
+
+  \f[
+  \sum_{i=1}^N Z_i
+  \f]
+ */
+
+class KVZtot: public KVVGSum {
+
+   void init()
+   {
+      SetOption("mode", "sum");
+      SetOption("method", "GetZ");
+   }
+
 public:
-// Champs Statiques:
-   static Int_t nb;
-   static Int_t nb_crea;
-   static Int_t nb_dest;
-// Methodes
-protected:
-   void init_KVZtot(void);
+   ROOT_FULL_SET_WITH_INIT(KVZtot, KVVGSum)
 
-public:
-   KVZtot(void);               // constructeur par defaut
-   KVZtot(const char* nom);
-   KVZtot(const KVZtot& a);    // constructeur par Copy
-
-   virtual ~ KVZtot(void);     // destructeur
-
-   KVZtot& operator =(const KVZtot& a);        // operateur =
-
-   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
-
-   ClassDef(KVZtot, 1)         // Global variable Sum(Z)
+   ClassDef(KVZtot, 1)
 };
 #endif

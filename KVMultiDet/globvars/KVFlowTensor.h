@@ -16,8 +16,8 @@ class KVFlowTensor: public KVVarGlob {
       kNRKE,
       kRKE
    } weight;
-   TVectorD fEVal;//! the 3 eigenvalues
-   TVector3 fEVec[3];//! the 3 eigenvectors
+   mutable TVectorD fEVal;//! the 3 eigenvalues
+   mutable TVector3 fEVec[3];//! the 3 eigenvectors
    Double_t f(int i) const
    {
       return fEVal[i - 1];
@@ -46,7 +46,7 @@ class KVFlowTensor: public KVVarGlob {
 
 protected:
    Double_t getvalue_void() const;
-   Double_t getvalue_int(Int_t);
+   Double_t getvalue_int(Int_t) const;
    void Calculate();
 
 public:
@@ -63,7 +63,6 @@ public:
    virtual void Init(void);
    virtual void Reset(void);
 
-   virtual Double_t* GetValuePtr(void);
    virtual TObject* GetObject(void) const;
 private:
    void init_KVFlowTensor();

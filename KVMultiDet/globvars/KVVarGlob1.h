@@ -35,7 +35,7 @@ protected:
    static void FillMethodBody(KVString& body, int type);
 
    virtual Double_t getvalue_void(void) const;
-   virtual Double_t getvalue_int(Int_t i);
+   virtual Double_t getvalue_int(Int_t i) const;
 
 public:
    KVVarGlob1(void);            // constructeur par defaut

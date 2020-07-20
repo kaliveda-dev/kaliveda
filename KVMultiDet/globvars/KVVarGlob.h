@@ -1,11 +1,3 @@
-//
-// D.Cussol
-//
-// 16/02/2004:
-// Creation d'une classe Variable Globale pour KaliVeda
-//
-
-
 #ifndef KVVarGlob_h
 #define KVVarGlob_h
 #include "Riostream.h"
@@ -15,66 +7,185 @@
 #include "KVString.h"
 #include "KVParticleCondition.h"
 
-//#define DEBUG_KVVarGlob
+/**
+  \defgroup GlobalVariables The Global Variables module
+
+  Classes for semi-automatic calculation of global variables in event analysis
+ */
 
 class KVEvent;
+
+/**
+  \class KVVarGlob
+  \ingroup GlobalVariables
+
+  \brief Base class for all global variable implementations
+
+This class is a base class for the management of global variables.
+A global variable is an analysis tool for condensing the information in a multibody event into one or a few
+characteristic values. A simple example is the event multiplicity (the number of particles in each event),
+which can be used to characterize heavy-ion collision events in terms of violence or centrality.
+
+In KaliVeda, the base class for a multibody event is KVEvent, which is basically a collection of
+nuclei (base class KVNucleus). Therefore the global variable classes below can be used with any
+event described by a class derived from KVEvent, containing particles described by a class which
+inherits from KVNucleus.
+
+Global variable objects are used in the following schematic way:
+
+#### Creation & initialisation:
+
+~~~~~~~~~~~~{.cpp}
+      KVVarGlob VG;
+      VG.Init(); // perform any necessary initialisations
+~~~~~~~~~~~~
+
+#### Treatment of 1 event:
+
+~~~~~~~~~~~~{.cpp}
+      VG.Reset(); // reinitialise prior to analysis
+      while( [loop over particles in event] ){
+
+          VG.Fill( [particle] ); // calculate contribution of particle to variable
+      }
+      VG.Calculate();  // perform any necessary calculations
+      Double_t valueOfVG = VG.GetValue(); // retrieve value of global variable for event
+~~~~~~~~~~~~
+
+Global variables can be of different types:
+
+ - One-body global variable  (type = `KVVarGlob::kOneBody`)
+    - the variable is computed by performing a loop over all particles in an event
+      and calling the overridden fill(KVNucleus*) method for each particle in turn.
+ - Two-body global variable  (type = `KVVarGlob::kTwoBody`)
+    - the variable is computed by performing a loop over all pairs of particles in an event
+      and calling the overridden fill2(KVNucleus*,KVNucleus*) method for each pair in turn.
+ - N-body global variable (type = `KVVarGlob::kNBody`)
+    - the variable is computed from the full list of particles of the event, by defining
+      the overridden fillN(KVEvent*) method.
+
+Derived global variable classes of 2-body or N-body type must set the `fType` member variable
+to the appropriate type (`kTwoBody` or `kNBody`) and define the fill2(KVNucleus*,KVNucleus*)
+method (for 2-body variables) or the fillN(KVEvent*) method (for N-body variables).
+
+This is handled semi-automatically when using method
+
+~~~~~~~~~~~~{.cpp}
+     MakeClass(const Char_t * classname, const Char_t * classdesc, int type)
+~~~~~~~~~~~~
+
+to generate a skeleton '.h' and '.cpp' file for the implementation of a new global variable class.
+
+By default, global variables are 1-body and must define the fill(KVNucleus*) method.
+
+## Global variable lists
+The KVGVList class handles a list of global variables. A list can be used in the following
+schematic way to calculate several global variables at once:
+
+#### Creation & initialisation
+
+~~~~~~~~~~~~{.cpp}
+      KVVGList VGlist;
+      VGlist.Add( new KV...("var1") ); // add variable
+      VGlist.Add( new KV...("var2") ); // add variable
+      VGlist.Add( new KV...("var3") ); // add variable
+      ...
+      VGlist.Init(); // initialise all variables
+~~~~~~~~~~~~
+
+#### Treatment of 1 event
+
+~~~~~~~~~~~~{.cpp}
+      VGlist.CalculateGlobalVariables( [event] ); // calculate contribution of each particle to each variable
+      Double_t valueOfvar1 = VGlist.GetGV("var1")->GetValue(); // retrieve value of "var1" for event
+~~~~~~~~~~~~
+
+## Options, parameters, reference frames, particle selection, etc.
+### Particle selection
+The selection of particles which are taken into account can be handled by the variable
+itself. Define a selection using class KVParticleCondition and then set it by calling
+method SetSelection(KVParticleCondition&).
+
+### Options and parameters
+In order to give greater flexibility to global variable classes without the need to add
+member variables and the associated Get/Set methods, we provide methods to handle
+generic 'options' and 'parameters' for all variables.
+
+An 'option' is a name-value pair, the value is a character string. Methods to use are:
+
+~~~~~~~~~~~{.cpp}
+     void      SetOption(const Char_t* option, const Char_t* value)
+     Bool_t    IsOptionGiven(const Char_t* option)
+     KVString& GetOptionString(const Char_t* option) const
+     void      UnsetOption(const Char_t* opt)
+~~~~~~~~~~~
+
+A 'parameter' is a name-value pair, the value is a double-precision float value. Methods to use are:
+
+~~~~~~~~~~~{.cpp}
+     void     SetParameter(const Char_t* par, Double_t value)
+     Bool_t   IsParameterSet(const Char_t* par)
+     Double_t GetParameter(const Char_t* par)
+     void     UnsetParameter(const Char_t* par)
+~~~~~~~~~~~
+
+### Kinematical reference frames
+For global variables which use kinematical properties of particles, it can be useful to be
+able to calculate the same variable in different Lorentz reference frames (see KVParticle::SetFrame
+and KVEvent::SetFrame for how to define and access different frames). Therefore we
+provide the methods
+
+~~~~~~~~~~~{.cpp}
+     void           SetFrame(const Char_t*)
+     const Char_t*  GetFrame()
+~~~~~~~~~~~
+
+which allow to change the reference frame used for the calculation of the variable
+(depending on the implementation of the specific class).
+ */
 
 class KVVarGlob: public KVBase {
 
 public:
-// Champs Statiques:
-   static Int_t nb;
-   static Int_t nb_crea;
-   static Int_t nb_dest;
-
-   // global variable types
    enum {
       kOneBody, // one-body variable: Fill (KVNucleus*) must be defined
       kTwoBody, // two-body variable: Fill2 (KVNucleus*, KVNucleus*) must be defined
       kNBody      // N-body variable: FillN (KVEvent*) must be defined
    };
 
-// Champs Prive
+protected:
+   Int_t fType;   // type of variable global; = kOneBody, kTwoBody or kNBody
+   Char_t fValueType; // type (='I' integer or 'D' double) of global variable value
+   Bool_t conditioned_fill;//! can be tested in Fill/Fill2 method to know if it was called by FillWithCondition
 private:
    KVNameValueList nameList;//correspondence between variable name and index
    Bool_t fIsInitialized;//! flag set after initialisation
+   KVString fFrame;//(optional) name of reference frame used for kinematics
+   KVNameValueList fOptions;//list of options
+   KVNameValueList fParameters;//list of parameters
+   KVParticleCondition fSelection;//(optional) condition used to select particles
+   Int_t fMaxNumBranches;// max number of branches to create for multi-valued variable
+   Double_t fNormalization;// optional normalization parameter
 
-// Methodes
 protected:
-   void init(void);
+   void init();
    void SetNameIndex(const Char_t* name, Int_t index);  // associe un nom et un index
    void ClearNameIndex()
    {
       // Delete previously defined associations between variable name and index
       nameList.Clear();
-   };
-
-   KVString fFrame;//(optional) name of reference frame used for kinematics
-   KVNameValueList fOptions;//list of options
-   KVNameValueList fParameters;//list of parameters
-   KVParticleCondition* fSelection;//(optional) condition used to select particles
-
-   Int_t fType;   // type of variable global; = kOneBody, kTwoBody or kNBody
-
-   Char_t fValueType; // type (='I' integer or 'D' double) of global variable value
-   Int_t fMaxNumBranches;// max number of branches to create for multi-valued variable
+   }
 
    static void FillMethodBody(KVString& body, int type);
    static void AddInitMethod(const Char_t* classname, KVClassFactory& cf, KVString& body, int type);
    static void AddFillMethod(KVClassFactory& cf, int type);
    static void AddFillMethodBody(KVClassFactory& cf, KVString& body, int type);
 
-   /*** protected methods to be overridden in child classes ***/
-
    virtual Double_t getvalue_void() const
    {
-      // Redefine this method in child classes to change the behaviour of
-      // KVVarGlob::GetValue(void)
-
-      AbstractMethod("getvalue_void");
-      return 0;
-   };
-   virtual Double_t getvalue_char(const Char_t* name)
+      return getvalue_int(0);
+   }
+   Double_t getvalue_char(const Char_t* name) const
    {
       // By default, this method returns the value of the variable "name"
       // using the name-index table set up with SetNameIndex(const Char_t*,Int_t).
@@ -82,189 +193,316 @@ protected:
       // KVVarGlob::GetValue(const Char_t*)
 
       return getvalue_int(GetNameIndex(name));
-   };
-   virtual Double_t getvalue_int(Int_t)
-   {
-      // Redefine this method in child classes to change the behaviour of
-      // KVVarGlob::GetValue(Int_t)
-
-      AbstractMethod("getvalue_int");
-      return 0;
-   };
-   Bool_t conditioned_fill;//! can be tested in Fill/Fill2 method to know if it was called by FillWithCondition
+   }
+   virtual Double_t getvalue_int(Int_t) const = 0;
 
 public:
-   KVVarGlob(void);            // constructeur par defaut
-   KVVarGlob(const Char_t* nom);
-   KVVarGlob(const KVVarGlob& a);      // constructeur par Copy
+   KVVarGlob()
+      : KVBase("KVVarGlob", "KVVarGlob"), nameList("IndexList", "Correspondance variable name<->index")
+   {
+      init();
+   }
+   KVVarGlob(const Char_t* nom)
+      : KVBase(nom, nom), nameList("IndexList", "Correspondance variable name<->index")
+   {
+      init();
+   }
+   ROOT_COPY_CTOR(KVVarGlob, KVBase)
+   void Copy(TObject& obj) const
+   {
+      // Copy this to obj
+      KVBase::Copy(obj);
+      KVVarGlob& vgobj = dynamic_cast<KVVarGlob&>(obj);
+      nameList.Copy(vgobj.nameList);
+      vgobj.fIsInitialized = fIsInitialized;
+      vgobj.fFrame = fFrame;
+      fOptions.Copy(vgobj.fOptions);
+      fParameters.Copy(vgobj.fParameters);
+      fSelection.Copy(vgobj.fSelection);
+      vgobj.fType = fType;
+      vgobj.fValueType = fValueType;
+      vgobj.fMaxNumBranches = fMaxNumBranches;
+      vgobj.conditioned_fill = conditioned_fill;
+      vgobj.fNormalization = fNormalization;
+   }
+   virtual ~KVVarGlob(void)
+   {}
 
-   virtual ~ KVVarGlob(void);  // destructeur
+   ROOT_COPY_ASSIGN_OP(KVVarGlob)
 
-   KVVarGlob& operator =(const KVVarGlob& a);          // operateur =
-
-   // returns kTRUE for variables of one-body type for which Fill(KVNucleus*) method must be defined
    Bool_t IsOneBody()
    {
+      // \returns kTRUE for variables of one-body type for which Fill(KVNucleus*) method must be defined
       return fType == kOneBody;
-   };
+   }
 
-   // returns kTRUE for variables of two-body type for which Fill2(KVNucleus*,KVNucleus*) method must be defined
    Bool_t IsTwoBody()
    {
+      // \returns kTRUE for variables of two-body type for which Fill2(KVNucleus*,KVNucleus*) method must be defined
       return fType == kTwoBody;
-   };
+   }
 
-   // returns kTRUE for variables of N-body type for which FillN(KVEvent*) method must be defined
    Bool_t IsNBody()
    {
+      // \returns kTRUE for variables of N-body type for which FillN(KVEvent*) method must be defined
       return fType == kNBody;
-   };
+   }
 
-   void ListInit();
-   virtual void Init(void)
+   void ListInit()
    {
-      // Initialisation of internal variables, called once before beginning treatment
-      Info("Init", "Default method. Does nothing.");
-   };
+      // Method called by KVGVList::Init
+      // Ensures that initialisation of variable is performed only once
 
-   virtual void Reset(void)
+      if (!fIsInitialized) {
+         Init();
+         fIsInitialized = kTRUE;
+      }
+   }
+   virtual void Init() = 0;
+   virtual void Reset() = 0;
+   virtual void Calculate() = 0;
+   virtual void fill(const KVNucleus*)
    {
-      // Reset internal variables, called before treatment of each event
-      Info("Reset", "Default method. Does nothing.");
-   };
+      // abstract method which must be overriden in child classes
+      // describing one-body global variables.
+      AbstractMethod("fill(KVNucleus*)");
+   }
 
+   virtual void fill2(const KVNucleus*, const KVNucleus*)
+   {
+      // abstract method which must be overriden in child classes
+      // describing two-body global variables.
+      //
+      // NOTE: this method will be called for EVERY pair of nuclei in the event
+      // (i.e. n1-n2 and n2-n1), including pairs of identical nuclei (n1 = n2).
+      // If you want to calculate a global variable using only each non-identical pair once,
+      // then make sure in your implementation that you check n1!=n2 and divide
+      // the result of summing over the pairs by 2 to avoid double-counting.
+      AbstractMethod("fill2(KVNucleus*,KVNucleus*)");
+   }
 
-   virtual void Fill(KVNucleus* c);
-   virtual void Fill2(KVNucleus* n1, KVNucleus* n2);
-   virtual void FillN(KVEvent* e);
+   virtual void fillN(KVEvent*)
+   {
+      // abstract method which must be overriden in child classes
+      // describing N-body global variables.
+      AbstractMethod("FillN(KVEvent*)");
+   }
 
-   void FillWithCondition(KVNucleus* c)
+   void Fill(KVNucleus& c)
    {
       // Evaluate contribution of particle to variable only if it satisfies
-      // the particle selection criteria given with SetSelection(KVParticleCondition&)
-      Bool_t ok = (fSelection ? fSelection->Test(c) : kTRUE);
-      if (ok) {
-         conditioned_fill = kTRUE;
-         Fill(c);
-         conditioned_fill = kFALSE;
-      }
-   };
-   void Fill2WithCondition(KVNucleus* n1, KVNucleus* n2)
+      // the particle selection criteria given with SetSelection()/AddSelection(),
+      // call fill() with particle in desired frame
+
+      const KVNucleus* c_in_frame = dynamic_cast<const KVNucleus*>(c.GetFrame(fFrame, false));
+      if (fSelection.Test(c_in_frame)) fill(c_in_frame);
+   }
+   void Fill2(KVNucleus& n1, KVNucleus& n2)
    {
       // Evaluate contribution of particles to variable only if both satisfy
-      // the particle selection criteria given with SetSelection(KVParticleCondition&)
-      Bool_t ok = (fSelection ? (fSelection->Test(n1) && fSelection->Test(n2))  : kTRUE);
-      if (ok) {
-         conditioned_fill = kTRUE;
-         Fill2(n1, n2);
-         conditioned_fill = kFALSE;
-      }
-   };
-
+      // the particle selection criteria given with SetSelection(KVParticleCondition&),
+      // call fill() with particle in desired frame
+      const KVNucleus* n1_in_frame = dynamic_cast<const KVNucleus*>(n1.GetFrame(fFrame, false));
+      const KVNucleus* n2_in_frame = dynamic_cast<const KVNucleus*>(n2.GetFrame(fFrame, false));
+      if (fSelection.Test(n1_in_frame) && fSelection.Test(n2_in_frame))
+         fill2(n1_in_frame, n2_in_frame);
+   }
    Double_t GetValue(void) const
    {
-      // On retourne la valeur de la variable.
+      // \returns principal gobal variable value
       // To override behaviour of this method in child classes,
       // redefine the protected method getvalue_void()
+      //
+      // If a "Normalization" parameter has been set, it is applied here
 
-      return getvalue_void();
-   };
-   Double_t GetValue(const Char_t* name)
+      return getvalue_void() / fNormalization;
+   }
+   Double_t GetValue(const Char_t* name) const
    {
-      // on retourne la valeur de la variable "name"
+      // \return value of "name"
       // To override behaviour of this method in child classes,
       // redefine the protected method getvalue_char(const Char_t*)
 
-      return getvalue_char(name);
-   };
-   Double_t GetValue(Int_t i)
+      return getvalue_char(name) / fNormalization;
+   }
+   Double_t GetValue(Int_t i) const
    {
-      // on retourne la ieme valeur du tableau
+      // \return value with index i
       // To override behaviour of this method in child classes,
       // redefine the protected method getvalue_int(Int_t)
 
-      return getvalue_int(i);
-   };
-   virtual Double_t* GetValuePtr(void)
+      return getvalue_int(i) / fNormalization;
+   }
+   virtual std::vector<Double_t> GetValuePtr(void) const
    {
-      // On retourne un tableau de valeurs
-      AbstractMethod("GetValuePtr");
-      return NULL;
-   };
-   // On retourne la valeur de la variable.
-   Double_t operator()(void)
+      // \return vector of all values calculated by variable. The order of the values in the vector is the
+      // same as the indices defined by calls to SetNameIndex(), these indices correspond to those used with
+      // GetValue(Int_t)
+
+      std::vector<Double_t> tmp;
+      for (int i = 0; i < GetNumberOfValues(); ++i) tmp.push_back(GetValue(i) / fNormalization);
+      return tmp;
+   }
+
+   Double_t operator()(void) const
    {
       return GetValue();
-   };
-   // on retourne la valeur de la variable "name"
-   Double_t operator()(const Char_t* name)
+   }
+
+   Double_t operator()(const Char_t* name) const
    {
       return GetValue(name);
-   };
-   // on retourne la ieme valeur du tableau
-   Double_t operator()(Int_t i)
+   }
+
+   Double_t operator()(Int_t i) const
    {
       return GetValue(i);
-   };
-   // on retourne un pointeur sur un objet
-   virtual TObject* GetObject(void) const;
-   // on retourne l'index associe au nom contenu dans name
-   virtual Int_t GetNameIndex(const Char_t* name);
+   }
+
+   virtual TObject* GetObject(void) const
+   {
+      AbstractMethod("GetObject");
+      return nullptr;
+   }
+   virtual Int_t GetNameIndex(const Char_t* name) const;
 
    static void MakeClass(const Char_t* classname, const Char_t* classdesc, int type = kOneBody);
 
-   virtual void SetFrame(const Char_t*);
-
-   //Name of reference frame used for kinematics
-   virtual const Char_t* GetFrame()
+   void SetFrame(const Char_t* ref)
+   {
+      //Sets the reference frame used for kinematical calculations.
+      //By default, i.e. if this method is not called, we use the default frame of particles
+      //which (usually) corresponds to the 'laboratory' or 'detector' frame.
+      //
+      //The frame 'ref' must be defined before calculating global variables.
+      //See KVParticle::SetFrame and KVEvent::SetFrame methods for defining new reference frames.
+      //See KVParticle::GetFrame how to access particle kinematics in different frames.
+      fFrame = ref;
+   }
+   const Char_t* GetFrame() const
    {
       return fFrame.Data();
-   };
+   }
 
-   virtual void SetOption(const Char_t* option, const Char_t* value);
-   virtual Bool_t IsOptionGiven(const Char_t* option);
-   virtual TString GetOptionString(const Char_t* option) const;
-   virtual void UnsetOption(const Char_t* opt);
+   void SetOption(const Char_t* option, const Char_t* value)
+   {
+      //Set a value for an option
+      KVString tmp(value);
+      fOptions.SetValue(option, tmp);
+      fIsInitialized = kFALSE; //allow re-initialisation
+   }
 
-   virtual void SetParameter(const Char_t* par, Double_t value);
-   virtual Bool_t IsParameterSet(const Char_t* par);
-   virtual Double_t GetParameter(const Char_t* par) const;
-   virtual void UnsetParameter(const Char_t* par);
+   Bool_t IsOptionGiven(const Char_t* opt)
+   {
+      //Returns kTRUE if the option 'opt' has been set
 
-   virtual void SetSelection(const KVParticleCondition&);
+      return fOptions.HasParameter(opt);
+   }
 
-   virtual Double_t AsDouble() const
+   TString GetOptionString(const Char_t* opt) const
+   {
+      //Returns the value of the option
+
+      return fOptions.GetTStringValue(opt);
+   }
+   void UnsetOption(const Char_t* opt)
+   {
+      //Removes the option 'opt' from the internal lists, as if it had never been set
+
+      fOptions.RemoveParameter(opt);
+   }
+
+   void SetParameter(const Char_t* par, Double_t value)
+   {
+      //Set the value for a parameter
+      if (TString(par) == "Normalization") fNormalization = value;
+      else fParameters.SetValue(par, value);
+      fIsInitialized = kFALSE; //allow re-initialisation
+   }
+
+   Bool_t IsParameterSet(const Char_t* par)
+   {
+      //Returns kTRUE if the parameter 'par' has been set
+      if (TString(par) == "Normalization") return (fNormalization != 1.0);
+      return fParameters.HasParameter(par);
+   }
+
+   Double_t GetParameter(const Char_t* par) const
+   {
+      //Returns the value of the parameter 'par'
+      if (TString(par) == "Normalization") return fNormalization;
+      return fParameters.GetDoubleValue(par);
+   }
+
+   void UnsetParameter(const Char_t* par)
+   {
+      //Removes the parameter 'par' from the internal lists, as if it had never been set
+
+      if (TString(par) == "Normalization") fNormalization = 1.0;
+      fParameters.RemoveParameter(par);
+   }
+
+   void SetSelection(const KVParticleCondition& sel)
+   {
+      // Use this method to define the condition(s) which will be applied to select
+      // particles to contribute to the global variable.
+      //
+      // Any previously set conditions are replaced by this.
+      //
+      // \note if a reference frame is defined for this variable, it will automatically be applied
+      // to the kinematics of the particle used for the selection. E.g. if the selection is "_NUC_->GetVpar()>0"
+      // and the reference frame is "CM", the condition will be applied to the CM parallel velocities.
+      //
+      // \sa KVParticleCondition
+
+      fSelection = sel;
+   }
+
+   void AddSelection(const KVParticleCondition& sel)
+   {
+      // Use this method to add a condition which will be applied to select
+      // particles to contribute to the global variable.
+      //
+      // The final selection will be a logical 'AND' between any previously set
+      // conditions and this one
+      //
+      // \sa SetSelection()
+
+      fSelection &= sel;
+   }
+
+   Double_t AsDouble() const
    {
       return GetValue();
-   };
+   }
    operator double() const
    {
       return AsDouble();
-   };
+   }
 
-   virtual Int_t GetNumberOfValues() const
+   Int_t GetNumberOfValues() const
    {
-      // Returns number of values associated with this global variable.
-      // This is the number of indices defined using SetNameIndex method.
+      // \returns number of values associated with this global variable.
+      // This is the number of indices defined using SetNameIndex() method.
       return nameList.GetNpar();
-   };
-   virtual Int_t GetNumberOfBranches() const
+   }
+   Int_t GetNumberOfBranches() const
    {
       // Returns number of branches to create for this global variable (see KVGVList::MakeBranches).
       // This is the same as GetNumberOfValues() unless SetMaxNumBranches has been called with a different
       // (smaller) value.
       // Note that if SetMaxNumBranches(0) is called, no branch will be created for this variable.
       return (fMaxNumBranches > -1 ? fMaxNumBranches : GetNumberOfValues());
-   };
-   virtual const Char_t* GetValueName(Int_t i) const
+   }
+   TString GetValueName(Int_t i) const
    {
       // Returns name of value associated with index 'i',
       // as defined by using SetNameIndex method.
       for (int j = 0; j < GetNumberOfValues(); j++) {
          if (nameList.GetIntValue(j) == i) return nameList.GetParameter(j)->GetName();
       }
-      return "unknown";
-   };
+      return TString("unknown");
+   }
    virtual Char_t GetValueType(Int_t) const
    {
       // Returns type of value associated with index i
@@ -288,6 +526,6 @@ public:
    }
    void Print(Option_t* = "") const;
 
-   ClassDef(KVVarGlob, 5)      // Base class for global variables
+   ClassDef(KVVarGlob, 6)      // Base class for global variables
 };
 #endif

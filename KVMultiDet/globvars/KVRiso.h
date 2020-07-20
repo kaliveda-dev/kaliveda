@@ -27,7 +27,7 @@ protected:
 // Methodes
 protected:
    void init_KVRiso(void);
-   virtual Double_t getvalue_int(Int_t);
+   virtual Double_t getvalue_int(Int_t) const;
    virtual Double_t getvalue_void(void) const;
 
 public:
@@ -50,8 +50,6 @@ public:
    virtual void Reset(void);    // Remise a zero avant le
    // traitement d'un evenement
    virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
-
-   virtual Double_t* GetValuePtr(void); // On retourne la valeur de la
 
    virtual void CalculateRatio(void);   //on calculate the value of Riso
 

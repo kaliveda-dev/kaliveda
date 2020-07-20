@@ -1,34 +1,23 @@
-//
-// D.Cussol
-//
-// 17/02/2004:
-// Creation d'une classe Variable Globale
-//
-
 #ifndef KVMultIMF_h
 #define KVMultIMF_h
-#include "KVZbound.h"
+#include "KVMult.h"
 
-//#define DEBUG_KVMultIMF
+/**
+  \class KVMultIMF
+  \ingroup GlobalVariables
 
-class KVMultIMF: public KVZbound {
+  \brief Multiplicity of IMF \f$Z\geq 3\f$ in event
+ */
+
+class KVMultIMF: public KVMult {
+   void init()
+   {
+      SetSelection("_NUC_->GetZ()>=3");
+   }
+
 public:
-// Champs Statiques:
-   static Int_t nb;
-   static Int_t nb_crea;
-   static Int_t nb_dest;
-// Methodes
-protected:
-   void init_KVMultIMF(void);
+   ROOT_FULL_SET_WITH_INIT(KVMultIMF, KVMult)
 
-public:
-   KVMultIMF(void);            // constructeur par defaut
-   KVMultIMF(const Char_t* nom);
-
-   virtual ~ KVMultIMF(void);  // destructeur
-
-   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
-
-   ClassDef(KVMultIMF, 1)      // Multiplicity for fragments with Z >= Zmin
+   ClassDef(KVMultIMF, 1)
 };
 #endif

@@ -1,26 +1,30 @@
-//
-// D.Cussol
-//
-// 17/02/2004:
-// Creation d'une classe Variable Globale
-//
-
 #ifndef KVMultLegAv_h
 #define KVMultLegAv_h
-#include "KVMultLeg.h"
+#include "KVMultAv.h"
 
-//#define DEBUG_KVMultLeg
+/**
+  \class KVMultLegAv
+  \ingroup GlobalVariables
 
-class KVMultLegAv: public KVMultLeg {
-// Methodes
+  \brief Multiplicity of LCP \f$Z\leq 2\f$ in forward hemisphere of c.m. frame
+
+  This is a KVMultAv with the added condition
+
+  ~~~~~~~{.cpp}
+  AddSelection("_NUC_->GetZ()<=2");
+  ~~~~~~~
+ */
+
+class KVMultLegAv: public KVMultAv {
+
+   void init()
+   {
+      AddSelection("_NUC_->GetZ()<=2");
+   }
+
 public:
-   KVMultLegAv(void);           // constructeur par defaut
-   KVMultLegAv(const char* nom);
+   ROOT_FULL_SET_WITH_INIT(KVMultLegAv, KVMultAv)
 
-   virtual ~ KVMultLegAv(void);        // destructeur
-
-   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
-
-   ClassDef(KVMultLegAv, 1)    // Multiplicity for particules with Z <= Zmax and Vz > Vcm
+   ClassDef(KVMultLegAv, 1)
 };
 #endif

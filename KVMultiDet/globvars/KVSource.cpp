@@ -138,7 +138,7 @@ void KVSource::Fill(KVNucleus* c)
 {
    //Add the particle's contribution to global variable.
 
-   fSource += (*((KVNucleus*)c->GetFrame(fFrame, kFALSE)));
+   fSource += (*((KVNucleus*)c->GetFrame(GetFrame(), kFALSE)));
    c->AddGroup(GetName());
    fMult++;
 }
@@ -151,33 +151,7 @@ Double_t KVSource::getvalue_void() const
 }
 
 //_________________________________________________________________
-Double_t* KVSource::GetValuePtr(void)
-{
-// return an array containing all calculated values
-//
-//
-// Index  Meaning
-//--------------------------------------
-// 0    Ex
-// 1    Zsource
-// 2    Asource
-// 3    Vz
-// 4    Vx
-// 5    Vy
-// 6    Theta
-// 7    Mult
-//
-//
-   for (Int_t i = 0; i < 8; i++) {
-      fVal[i] = GetValue(i);
-   }
-
-
-   return fVal;
-}
-
-//_________________________________________________________________
-Double_t KVSource::getvalue_int(Int_t i)
+Double_t KVSource::getvalue_int(Int_t i) const
 {
 // returns the i-th value
 //

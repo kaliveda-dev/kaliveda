@@ -2102,7 +2102,9 @@ PREDEFINED             =  ClassImp(x)=// ClassImpQ(x)=// templateClassImp(x)=// 
 # definition found in the source code.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-EXPAND_AS_DEFINED      = ClassDef(x,y)
+EXPAND_AS_DEFINED      = ClassDef(x,y) ROOT_FULL_SET_WITH_INIT(x,y) \
+ROOT_COPY_CTOR(x,y) ROOT_COPY_ASSIGN_OP(x) ROOT_NAME_CTOR_WITH_INIT(x,y) \
+ROOT_DEF_CTOR_WITH_INIT(x,y) ROOT_NAME_CTOR(x,y) ROOT_DEF_CTOR(x,y)
 
 # If the SKIP_FUNCTION_MACROS tag is set to YES then doxygen's preprocessor will
 # remove all references to function-like macros that are alone on a line, have

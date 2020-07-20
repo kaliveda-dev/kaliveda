@@ -27,7 +27,7 @@ private:
 protected:
    void init_KVSource(void);
    virtual Double_t getvalue_void() const;
-   virtual Double_t getvalue_int(Int_t i);
+   virtual Double_t getvalue_int(Int_t i) const;
 
 
 public:
@@ -42,7 +42,6 @@ public:
    virtual void Init(void);
    virtual void Reset(void);
    virtual void Fill(KVNucleus* c);
-   virtual Double_t* GetValuePtr(void);
    virtual TObject* GetObject(void) const;
    virtual Char_t GetValueType(Int_t) const;
 

@@ -168,5 +168,5 @@ void KVZVtot::Fill(KVNucleus* c)
 //
 // Routine de remplissage
 //
-   ptot += ((c->GetZ() / fNorm) * c->GetFrame(fFrame.Data(), kFALSE)->GetVelocity());
+   ptot += ((c->GetZ() / fNorm) * c->GetFrame(GetFrame(), kFALSE)->GetVelocity());
 }

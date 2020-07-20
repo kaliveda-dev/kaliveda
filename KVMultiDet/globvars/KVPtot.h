@@ -9,25 +9,15 @@
 #define KVPtot_h
 #include "KVVarGlob.h"
 
-//#define DEBUG_KVPtot
-
 class KVPtot: public KVVarGlob {
-public:
-// Champs Statiques:
-   static Int_t nb;
-   static Int_t nb_crea;
-   static Int_t nb_dest;
-// Champs intermediaires
+
 protected:
    TVector3 ptot;
-   Double_t fVal[3];//! used by GetValuePtr
    Double_t fNorm;//! normalisation factor
 
-// Methodes
-protected:
    void init_KVPtot(void);
-   virtual Double_t getvalue_int(Int_t);
-   virtual Double_t getvalue_void(void) const;
+   Double_t getvalue_int(Int_t) const;
+   Double_t getvalue_void(void) const;
 
 public:
    KVPtot(void);               // constructeur par defaut
@@ -50,7 +40,7 @@ public:
    // traitement d'un evenement
    virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
 
-   virtual Double_t* GetValuePtr(void); // On retourne le tableau des valeurs
+   std::vector<Double_t> GetValuePtr() const; // On retourne le tableau des valeurs
 
    virtual TVector3 GetTVector3(void) const;    // on retourne le TVector3
    virtual TObject* GetObject(void) const

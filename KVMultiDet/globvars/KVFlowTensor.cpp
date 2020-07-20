@@ -127,17 +127,6 @@ void KVFlowTensor::Reset(void)
 }
 
 //_________________________________________________________________
-Double_t* KVFlowTensor::GetValuePtr(void)
-{
-   // You can use this method to return an array of values calculated by your global variable.
-   // The order of the array should correspond to the index set for each value
-   // using the method SetNameIndex(const Char_t*, Int_t) (see comments in method
-   // getvalue_int(Int_t))
-
-   return NULL;
-}
-
-//_________________________________________________________________
 TObject* KVFlowTensor::GetObject(void) const
 {
    // You can use this method to return the address of an object associated with your global variable.
@@ -165,7 +154,7 @@ Double_t KVFlowTensor::getvalue_void() const
    return const_cast<KVFlowTensor*>(this)->getvalue_int(kFlowAngle);
 }
 
-Double_t KVFlowTensor::getvalue_int(Int_t index)
+Double_t KVFlowTensor::getvalue_int(Int_t index) const
 {
    // Protected method, called by GetValue(Int_t) and GetValue(const Char_t*)
    // If your variable calculates several different values, this method allows to access each value
@@ -192,8 +181,6 @@ Double_t KVFlowTensor::getvalue_int(Int_t index)
    //     SetNameIndex("val1", 1);
    //
    // This should be done in the init_KVFlowTensor() method.
-
-   if (!fCalculated) Calculate();
 
    switch (index) {
       case kFlowAngle:

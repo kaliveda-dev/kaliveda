@@ -488,32 +488,7 @@ KVVarGlob* KVEventSelector::AddGV(const Char_t* class_name,
    //
    //  It is assumed that `MyNewVarGlob.h` and `MyNewVarGlob.cpp` will be found in `$HOME/myVarGlobs` (in this example).
 
-   KVVarGlob* vg = 0;
-   TClass* clas = gROOT->GetClass(class_name);
-   if (!clas) {
-      //class not in dictionary - user-defined class ? Look for plugin.
-      TPluginHandler* ph = KVBase::LoadPlugin("KVVarGlob", class_name);
-      if (!ph) {
-         //not found
-         Error("AddGV(const Char_t*,const Char_t*)",
-               "Called with class_name=%s.\nClass is unknown: not in standard libraries, and plugin (user-defined class) not found",
-               class_name);
-         return 0;
-      }
-      else {
-         vg = (KVVarGlob*) ph->ExecPlugin(0);
-      }
-   }
-   else if (!clas->InheritsFrom("KVVarGlob")) {
-      Error("AddGV(const Char_t*,const Char_t*)",
-            "%s is not a valid class deriving from KVVarGlob.",
-            class_name);
-      return 0;
-   }
-   else {
-      vg = (KVVarGlob*) clas->New();
-   }
-   vg->SetName(name);
+   KVVarGlob* vg = GetGVList()->AddGV(class_name, name);
    AddGV(vg);
    return vg;
 }

@@ -79,89 +79,23 @@ ClassImp(KVVGSum)
 //    vgs->SetOption("method", "GetEtran");
 ////////////////////////////////////////////////////////////////////////////////
 
-void KVVGSum::init_KVVGSum(void)
+void KVVGSum::init(void)
 {
    ClearNameIndex();
-   fClass = 0;
-   fMethod = 0;
+   fClass = nullptr;
    fVal = 0;
 }
 
 //_________________________________________________________________
 
-KVVGSum::KVVGSum(void): KVVarGlobMean()
+void KVVGSum::fill(const KVNucleus* c)
 {
-   init_KVVGSum();
-   SetName("KVVGSum");
-   SetTitle("A KVVGSum");
-}
-
-//_________________________________________________________________
-
-KVVGSum::KVVGSum(const Char_t* nom): KVVarGlobMean(nom)
-{
-   init_KVVGSum();
-}
-
-//_________________________________________________________________
-
-KVVGSum::KVVGSum(const KVVGSum& a): KVVarGlobMean()
-{
-   // Copy constructor
-
-   init_KVVGSum();
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   a.Copy(*this);
-#else
-   ((KVVGSum&)a).Copy(*this);
-#endif
-}
-
-//_________________________________________________________________
-
-KVVGSum::~KVVGSum(void)
-{
-   SafeDelete(fMethod);
-}
-
-//_________________________________________________________________
-
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-void KVVGSum::Copy(TObject& a) const
-#else
-void KVVGSum::Copy(TObject& a)
-#endif
-{
-   // Copy method
-
-   KVVarGlobMean::Copy(a);
-}
-
-//_________________________________________________________________
-
-KVVGSum& KVVGSum::operator = (const KVVGSum& a)
-{
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   a.Copy(*this);
-#else
-   ((KVVGSum&)a).Copy(*this);
-#endif
-   return *this;
-}
-
-//_________________________________________________________________
-
-void KVVGSum::Fill(KVNucleus* c)
-{
-   if (fMethod) {
-      if (TestBit(kNoFrame))
-         fMethod->Execute(c, fVal);
-      else
-         fMethod->Execute((void*)c->GetFrame(fFrame.Data(), kFALSE), fVal);
-      FillVar(fVal, (Double_t)(fSelection ? fSelection->Test(c) : 1));
+   if (fMethod.get()) {
+      fMethod->Execute(const_cast<KVNucleus*>(c), fVal);
+      FillVar(fVal, 1);
    }
    else
-      FillVar(1, (Double_t)(fSelection ? fSelection->Test(c) : 1));
+      FillVar(1, 1);
 }
 
 //_________________________________________________________________
@@ -179,18 +113,27 @@ void KVVGSum::Init()
    SetBit(kInitDone);
 
    //Analyse options and set internal flags
-   Info("Init", "Called for %s", GetName());
+   //Info("Init", "Called for %s", GetName());
 
    //SET MODE OF OPERATION
    if (GetOptionString("mode") == "mult") {
       SetBit(kMult);
       fValueType = 'I'; // integer type for automatic TTree branch
+      SetNameIndex("Mult", 4);
    }
-   else if (GetOptionString("mode") == "sum") SetBit(kSum);
-   else if (GetOptionString("mode") == "mean") SetBit(kMean);
+   else if (GetOptionString("mode") == "sum") {
+      SetBit(kSum);
+      SetNameIndex("Sum", 2);
+   }
+   else if (GetOptionString("mode") == "mean") {
+      SetBit(kMean);
+      // redefine "Mean" and "RMS" indices
+      SetNameIndex("Mean", 0);
+      SetNameIndex("RMS", 1);
+   }
    else SetBit(kSum); //sum by default if unknown mode given
 
-   Info("Init", "mode=%s", GetOptionString("mode").Data());
+   //Info("Init", "mode=%s", GetOptionString("mode").Data());
 
    //SET UP METHOD CALL
    if (IsOptionGiven("class")) fClass = TClass::GetClass(GetOptionString("class"));
@@ -201,11 +144,11 @@ void KVVGSum::Init()
    }
    if (IsOptionGiven("method")) {
       if (IsOptionGiven("args"))
-         fMethod = new TMethodCall(fClass, GetOptionString("method").Data(), GetOptionString("args").Data());
+         fMethod.reset(new TMethodCall(fClass, GetOptionString("method").Data(), GetOptionString("args").Data()));
       else
-         fMethod = new TMethodCall(fClass, GetOptionString("method").Data(), "");
-      Info("Init", "Method = %s Params = %s", fMethod->GetMethodName(),
-           fMethod->GetParams());
+         fMethod.reset(new TMethodCall(fClass, GetOptionString("method").Data(), ""));
+      //Info("Init", "Method = %s Params = %s", fMethod->GetMethodName(),
+      //     fMethod->GetParams());
       // if we are summing an integer quantity, make automatic TTree branch with integer type
       if (fMethod->ReturnType() == TMethodCall::kLong && TestBit(kSum)) fValueType = 'I';
       //check if method is defined for KVParticle
@@ -213,7 +156,7 @@ void KVVGSum::Init()
       TClass* cl_par = TClass::GetClass("KVParticle");
       if (!cl_par->GetMethodAllAny(GetOptionString("method").Data())) SetBit(kNoFrame);
    }
-   if (TestBit(kNoFrame)) Info("Init", "Quantity is frame-independent");
+   //if (TestBit(kNoFrame)) Info("Init", "Quantity is frame-independent");
 }
 
 //_________________________________________________________________
@@ -224,9 +167,8 @@ Double_t KVVGSum::getvalue_void() const
    //If option "mode" = "sum", return the summed property defined by option "method"
    //If option "mode" = "mean", return the mean value of the property defined by option "method"
 
-   Double_t result = const_cast<KVVGSum*>(this)->getvalue_int(0); // does all necessary calculation
-   if (TestBit(kMean)) return result;
-   else if (TestBit(kMult)) return const_cast<KVVGSum*>(this)->getvalue_int(4);
+   if (TestBit(kMean)) return getvalue_int(0);
+   else if (TestBit(kMult)) return getvalue_int(4);
    //default: return sum
-   return const_cast<KVVGSum*>(this)->getvalue_int(2);
+   return getvalue_int(2);
 }

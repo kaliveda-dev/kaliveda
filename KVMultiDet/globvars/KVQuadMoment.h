@@ -11,7 +11,7 @@ class KVQuadMoment : public KVVarGlob {
 
    void init_KVQuadMoment(void);
    virtual Double_t getvalue_void(void) const;
-   virtual Double_t getvalue_int(Int_t i);
+   virtual Double_t getvalue_int(Int_t i) const;
 
 public:
    KVQuadMoment();

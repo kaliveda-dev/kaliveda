@@ -68,9 +68,6 @@ ClassImp(KVVarGlobMean)
 // Have a look to the KVZmean class for an example of a global variable deriving from KVVarGlobMean.
 // Look at KVVarGlob class to have an example of use.
 //
-int KVVarGlobMean::nb = 0;
-int KVVarGlobMean::nb_crea = 0;
-int KVVarGlobMean::nb_dest = 0;
 
 //_________________________________________________________________
 void KVVarGlobMean::init(void)
@@ -78,9 +75,6 @@ void KVVarGlobMean::init(void)
 // Initialisation des champs de KVVarGlobMean
 // Cette methode privee n'est appelee par les createurs
 //
-   nb++;
-   nb_crea++;
-   Init();
    SetNameIndex("Mean", 0);
    SetNameIndex("RMS", 1);
    SetNameIndex("SumVar", 2);
@@ -104,7 +98,7 @@ void KVVarGlobMean::FillVar(Double_t v, Double_t w)
 }
 
 //_________________________________________________________________
-void KVVarGlobMean::CalcVar(void)
+void KVVarGlobMean::Calculate(void)
 {
 // Routine de calcul des valeurs moyennes
 //
@@ -135,109 +129,25 @@ void KVVarGlobMean::FillVar(Double_t v)
    FillVar(v, 1.);
 }
 
-//_________________________________________________________________
-KVVarGlobMean::KVVarGlobMean(void): KVVarGlob1()
-{
-//
-// Createur par default
-//
-   TString nom;
-   init();
-   nom.Form("KVVarGlobMean_%d", nb_crea);
-   SetName(nom.Data());
-   SetTitle(nom.Data());
-#ifdef DEBUG_KVVarGlobMean
-   cout << nb << " crees...(defaut) " << endl;
-#endif
-}
-
-//_________________________________________________________________
-KVVarGlobMean::KVVarGlobMean(const Char_t* nom): KVVarGlob1(nom)
-{
-//
-// Constructeur avec un nom
-//
-   init();
-#ifdef DEBUG_KVVarGlobMean
-   cout << nb << " crees...(nom) " << endl;
-#endif
-}
-
-//_________________________________________________________________
-KVVarGlobMean::KVVarGlobMean(const KVVarGlobMean& a): KVVarGlob1(a)
-{
-//
-// Contructeur par Copy
-//
-   init();
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   a.Copy(*this);
-#else
-   ((KVVarGlobMean&) a).Copy(*this);
-#endif
-#ifdef DEBUG_KVVarGlobMean
-   cout << nb << " crees...(Copy) " << endl;
-#endif
-}
-
-//_________________________________________________________________
-KVVarGlobMean::~KVVarGlobMean(void)
-{
-//
-// Destructeur
-//
-#ifdef DEBUG_KVVarGlobMean
-   cout << "Destruction de " << GetName() << "..." << endl;
-#endif
-   nb--;
-
-   nb_dest++;
-}
-
-//_________________________________________________________________
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
 void KVVarGlobMean::Copy(TObject& a) const
-#else
-void KVVarGlobMean::Copy(TObject& a)
-#endif
 {
-   // Methode de Copy
+   // Copy this to a
 
-   KVVarGlob1::Copy(a);
-   ((KVVarGlobMean&) a).SetECT(((KVVarGlobMean*) this)->GetValue(1));
-   ((KVVarGlobMean&) a).SetSVAR(((KVVarGlobMean*) this)->GetValue(2));
-   ((KVVarGlobMean&) a).SetSVAR2(((KVVarGlobMean*) this)->GetValue(3));
-   ((KVVarGlobMean&) a).SetSW(((KVVarGlobMean*) this)->GetValue(4));
-   ((KVVarGlobMean&) a).SetMIN(((KVVarGlobMean*) this)->GetValue(5));
-   ((KVVarGlobMean&) a).SetMAX(((KVVarGlobMean*) this)->GetValue(6));
-   ((KVVarGlobMean&) a).SetCALC(GetCALC());
+   KVVarGlob::Copy(a);
+   KVVarGlobMean& _a = dynamic_cast<KVVarGlobMean&>(a);
+   _a.ect = ect;
+   _a.svar = svar;
+   _a.svar2 = svar2;
+   _a.sw = sw;
+   _a.min = min;
+   _a.max = max;
+   _a.calc = calc;
 }
 
 //_________________________________________________________________
-KVVarGlobMean& KVVarGlobMean::operator =(const KVVarGlobMean& a)
+void KVVarGlobMean::Reset()
 {
-//
-// Operateur =
-//
-#ifdef DEBUG_KVVarGlobMean
-   cout << "Copy par egalite de " << a.GetName() << "..." << endl;
-#endif
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   a.Copy(*this);
-#else
-   ((KVVarGlobMean&) a).Copy(*this);
-#endif
-#ifdef DEBUG_KVVarGlobMean
-   cout << "Nom de la Copy par egalite: " << GetName() << endl;
-#endif
-   return *this;
-}
-
-//_________________________________________________________________
-void KVVarGlobMean::Init(void)
-{
-// methode d'initialisation des
-// variables internes
+   var = 0;
    ect = 0;
    svar = 0;
    svar2 = 0;
@@ -247,53 +157,20 @@ void KVVarGlobMean::Init(void)
    calc = 0;
 }
 
-//_________________________________________________________________
-void KVVarGlobMean::Reset(void)
+void KVVarGlobMean::Init()
 {
-// Remise a zero avant le
-// traitement d'un evenement
-   KVVarGlob1::Reset();
-   Init();
+   Reset();
 }
 
 //_________________________________________________________________
-Double_t KVVarGlobMean::getvalue_void(void) const
+Double_t KVVarGlobMean::getvalue_void() const
 {
    // Returns mean value of variable
-   const_cast < KVVarGlobMean* >(this)->CalcVar();
-   return const_cast < KVVarGlobMean* >(this)->getvalue_int(0);
+   return getvalue_int(0);
 }
 
 //_________________________________________________________________
-Double_t* KVVarGlobMean::GetValuePtr(void)
-{
-// On retourne un tableau de valeurs. Ce tableau est organise comme suit:
-//
-// Index  Meaning
-//--------------------------
-// 0      Mean value of var = SumVar/SumOfWeights
-// 1      standard deviation of var = sqrt(SumVarSquared/SumOfWeights-Mean*Mean)
-// 2      Sum of weighted var values
-// 3      Sum of weighted squared var values
-// 4      Sum of weights
-//  5    Maximum value
-//  6    Max             6                       Minimum value
-//
-// The array is an internal variable of the class, do not delete it!
-
-   CalcVar();
-   fTab[0] = var;
-   fTab[1] = ect;
-   fTab[2] = svar;
-   fTab[3] = svar2;
-   fTab[4] = sw;
-   fTab[5] = min;
-   fTab[6] = max;
-   return fTab;
-}
-
-//_________________________________________________________________
-Double_t KVVarGlobMean::getvalue_int(Int_t i)
+Double_t KVVarGlobMean::getvalue_int(Int_t i) const
 {
 // on retourne la ieme valeur du tableau
 //
@@ -307,7 +184,6 @@ Double_t KVVarGlobMean::getvalue_int(Int_t i)
 // 5      Minimum value
 // 6      Maximum value
 //
-   CalcVar();
    Double_t rval = 0;
    switch (i) {
       case 0:
