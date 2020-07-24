@@ -6,7 +6,16 @@ DOXYFILE=Doxyfile
 kaliveda -b -q
 
 export KALIVEDA_VERSION=$(kaliveda-config --version)
+
+# main page
 cp kaliveda.git/README.md kaliveda.doxygen/
+
+# release notes
+cp kaliveda.git/doc/doxygen/release_notes.md kaliveda.doxygen/
+
+# documentation for each module (and definition of groups!)
+cp kaliveda.git/*/*/doc/* kaliveda.doxygen/
+
 # download ROOT tag file to link ROOT documentation
 if [ ! -f ./ROOT.tag ]; then
    wget https://root.cern/doc/master/ROOT.tag

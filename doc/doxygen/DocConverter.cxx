@@ -252,13 +252,13 @@ void DocConverter(const KVString& file)
    output_file.open(_output_file.Data());
 
    // put group definition in first file of group
-   if (!modules.HasParameter(group)) {
-      modules.SetValue(group, 1);
-      output_file << "/**" << endl;
-      output_file << "   \\defgroup " << group << " The " << group << " module" << endl;
-      output_file << endl << "    Part of the KaliVeda Analysis Toolkit" << endl;
-      output_file << "*/" << endl;
-   }
+//    if (!modules.HasParameter(group)) {
+//       modules.SetValue(group, 1);
+//       output_file << "/**" << endl;
+//       output_file << "   \\defgroup " << group << " The " << group << " module" << endl;
+//       output_file << endl << "    Part of the KaliVeda Analysis Toolkit" << endl;
+//       output_file << "*/" << endl;
+//    }
 
    KVString source_line;
    int line_no = 0;

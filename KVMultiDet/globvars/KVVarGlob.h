@@ -7,12 +7,6 @@
 #include "KVString.h"
 #include "KVParticleCondition.h"
 
-/**
-  \defgroup GlobalVariables The Global Variables module
-
-  Classes for semi-automatic calculation of global variables in event analysis
- */
-
 class KVEvent;
 
 /**
