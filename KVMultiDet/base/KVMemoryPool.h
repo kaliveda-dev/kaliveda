@@ -6,6 +6,11 @@
 
 #include "KVMemoryChunk.h"
 
+/**
+  \class KVMemoryPool
+  \brief Managed pool of memory
+  \ingroup Core
+ */
 class KVMemoryPool {
    KVMemoryChunk* fFirst;//first chunk in pool
    KVMemoryChunk* fLast;//first chunk in pool

@@ -45,6 +45,79 @@ class TTree;
 class TGraph;
 class KVEvent;
 
+/**
+ \class KVDetector
+ \ingroup Geometry
+ \ingroup Stopping
+ \brief Base class for detector geometry description, interface to energy-loss calculations
+
+A detector is composed of one or more absorber layers (KVMaterial objects) in which the energy loss of charged particles can be calculated. One of these layers
+is set as "active" (by default it is the last added layer) which means that only the energy loss in this layer can actually be "read", e.g. an ionisation chamber is composed of an
+"active" gas layer sandwiched between two "inactive" windows :
+
+~~~~~~~~~~~{.cpp}
+      KVDetector chio("Myl", 2.5*KVUnits::um);                       //first layer - 2.5 micron mylar window
+      KVMaterial *gas = new KVMaterial("C3F8", 5.*KVUnits::cm, 50.0*KVUnits::mbar);
+      chio.AddAbsorber(gas);                                         //second layer - 5cm of C3F8 gas at 50mbar pressure and 19 deg. C
+      chio.SetActiveLayer(gas);                                      //make gas layer "active"
+      KVMaterial *win = new KVMaterial("Myl",2.5*KVUnits::um);       //exit window
+      chio.AddAbsorber(win);
+~~~~~~~~~~~
+
+A detector is created either with the constructor taking the material type as argument:
+
+~~~~~~~~~~~{.cpp}
+      KVDetector det("Si");
+~~~~~~~~~~~
+
+or using SetMaterial:
+
+~~~~~~~~~~~{.cpp}
+      KVDetector det;
+      det.SetMaterial("Si");
+~~~~~~~~~~~
+
+or it is created when a ROOT geometry is imported into a KVMultiDetArray object using
+KVGeoImport.
+
+###Calculate the energy loss of a charged particle in a detector
+
+Two methods are available: one simply calculates the energy lost by the particle
+in the detector, but does not modify either the particle or the detector (GetELostByParticle);
+the other simulates the passage of the particle through the detector, the particle's energy
+is reduced by the amount lost in the detector's absorbers and the total energy lost in the
+detector is increased, e.g.:
+
+~~~~~~~~~~~{.cpp}
+      KVNucleus alpha(2,4);           //an alpha-particle
+      alpha.SetEnergy(100);           //with 100MeV kinetic energy
+      det.DetectParticle(&alpha);     //simulate passage of particle in the detector/target
+      det.GetEnergy();                        //energy lost by particle in detector/target
+      alpha.GetEnergy();                      //residual energy of particle
+      det.Clear();                            //reset detector ready for a new detection
+~~~~~~~~~~~
+
+###Important note on detector positions, angles, solid angle, distances etc.
+
+For detector geometries based on the ROOT geometry package, the following methods
+refer to the surface of the first volume constituting the detector crossed from the
+target (referred to as the "entrance window"):
+
+~~~~~~~~~~~{.cpp}
+  TVector3 GetRandomDirection();
+  void GetRandomAngles();
+  TVector3 GetDirection();
+  TVector3 GetCentreOfEntranceWindow() const;
+  Double_t GetTheta() const;
+  Double_t GetSinTheta() const;
+  Double_t GetCosTheta() const;
+  Double_t GetPhi();
+  Double_t GetDistance() const;
+  Double_t GetSolidAngle(void);
+~~~~~~~~~~~
+
+*/
+
 class KVDetector: public KVMaterial, public KVPosition {
 
 private:

@@ -13,6 +13,15 @@ $Author: franklan $
 #include "KVDBRun.h"
 
 class KVMultiDetArray;
+
+/**
+\class KVUpDater
+\brief Abstract class implementing necessary methods for setting multidetector parameters
+for each run of the current dataset
+\ingroup Identification
+\ingroup Calibration
+*/
+
 class KVUpDater {
 
 protected:

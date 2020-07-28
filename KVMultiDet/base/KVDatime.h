@@ -13,6 +13,22 @@ $Author: franklan $
 
 class KVList;
 
+/**
+   \class KVDatime
+   \brief Extension of TDatime to handle various useful date formats
+   \ingroup Core
+
+   This class can 'read' and 'write' date and timestamps in many different formats:
+      - old VAX GANIL acquisition (INDRA) run-sheet format `29-SEP-2005 09:42:17.00`
+      - 2010 GANIL acquisition runfile format `27Nov10_02h07m40s`
+      - current GANIL Narval acquisition runfile format `12-04-18_17h09m41s`
+      - SQL format date `2007-05-02 14:52:18`
+      - SRB format date `2008-12-19-15.21`
+      - IRODS format date `2008-12-19.15:21`
+      - DMY format date `19/12/2008`
+
+   */
+
 class KVDatime: public TDatime {
    static KVList* fmonths;      //list of months
    static Int_t ndatime;        //counter

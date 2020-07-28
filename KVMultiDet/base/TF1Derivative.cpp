@@ -5,14 +5,6 @@
 
 ClassImp(TF1Derivative)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>TF1Derivative</h2>
-<h4>Numerical first derivative of a TF1</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 TF1Derivative::TF1Derivative() : TF1(), fFunction(nullptr), fOrder(1)
 {
@@ -20,6 +12,7 @@ TF1Derivative::TF1Derivative() : TF1(), fFunction(nullptr), fOrder(1)
 
 TF1Derivative::TF1Derivative(TF1* func, int order) : TF1(*func), fFunction(func), fOrder(order)
 {
+   // Constructor with function to differentiate and order required (up to 3rd order).
 }
 
 

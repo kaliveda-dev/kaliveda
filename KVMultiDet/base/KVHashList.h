@@ -8,6 +8,23 @@
 #include "THashList.h"
 #include "RVersion.h"
 
+/**
+\class  KVHashList
+\brief Extended version of ROOT THashList
+\ingroup Core
+
+This collection class uses a THashList for quick look-up of objects based on
+the TString::Hash() value of their name, and adds all the extra functionality
+defined in KVSeqCollection.
+
+Automatic rehashing of the list is enabled by default
+(with rehash level = 2), unlike THashList (disabled by default).
+Beware if objects' names change or are changed after being added to the list: a manual Rehash() is required.
+
+#### Sorting the list
+As THashList::Sort() is defined, we implemented a KVHashList::Sort() method which takes exactly
+the same argument as THashList::Sort().
+ */
 class KVHashList : public KVSeqCollection {
 
 public:

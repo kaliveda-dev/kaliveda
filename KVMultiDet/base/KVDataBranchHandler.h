@@ -8,6 +8,11 @@
 #include "TTree.h"
 #include "TBranch.h"
 
+/**
+  \class KVDataBranchHandler
+  \brief Handles TTree branches for storing member variables of classes
+  \ingroup Core
+ */
 class KVDataBranchHandler : public KVBase {
    TTree* fTree;              // the TTree
    void* fAddr;                 // address of variable

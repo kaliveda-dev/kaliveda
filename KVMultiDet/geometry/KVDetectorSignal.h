@@ -3,7 +3,7 @@
 
 /***
   \class KVDetectorSignal
-  \ingroup Geometry
+  \ingroup Calibration
   \brief Data produced by a detector
 
 

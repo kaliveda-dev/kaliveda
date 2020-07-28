@@ -19,6 +19,67 @@ typedef std::vector<Int_t> IntArray;
 typedef std::vector<Int_t>::iterator IntArrayIter;
 typedef std::vector<Int_t>::const_iterator IntArrayCIter;
 
+/**
+\class KVNumberList
+\brief Strings used to represent a set of ranges of values
+
+Handles lists of positive numbers such as `"15-17 1-12 14"` or `"345,356-390"`.
+Strings with this format can be handled and analysed by this class.
+They can also be iterated over. Note that the numbers in the initializing string
+do not have to be in ascending order, or indeed unique. The resulting KVNumberList
+will contain only the unique values in ascending order.
+
+### Examples
+
+Create a new list with one of the constructors:
+~~~~{.cpp}
+    KVNumberList a("1-20, 51, 52-56");
+    KVNumberList i{1,5,11,3,2}; // C++11 initializer list
+~~~~
+Change an existing list:
+~~~~{.cpp}
+    a.SetList("1001 1003-1005,1010")
+~~~~
+Get first and last values of ranges in list (i.e. largest and smallest included values)
+~~~~{.cpp}
+    a.First()   (would give 1001 for previous example)
+    a.Last()   (would give 1010 for previous example)
+~~~~
+Get a vector filled with all values corresponding to ranges defined in list:
+~~~~{.cpp}
+    std::vector<int> val = a.GetArray():
+~~~~
+`val[0]` is same value as `a.First()`. `val[n-1]` is same value as `a.Last()`.
+
+Use AsString() or GetList() method to obtain list in its most compact form, using the "1-20, 51, 52-56" format.
+
+IsEmpty() returns kTRUE if the list is empty ;-p
+
+#### Iterating over all numbers in the list
+
+Initialise first by calling Begin(), then loop until End() returns kTRUE:
+
+~~~~~~~~~~{.cpp}
+    KVNumberList r("1-10");
+    r.Begin();
+    while( !r.End() ){
+       Int_t next_val = r.Next();
+       ...
+    }
+~~~~~~~~~~
+
+If list is empty, End() always returns kTRUE and Next() returns -1.
+
+Methods begin() and end() return a std:iterator for the underlying std::vector<int>.
+This means (from C++11 onwards), range-based for loops can be used:
+
+~~~~~~~~~~{.cpp}
+   KVNumberList pl("1-3,6");
+   for(auto i : pl) cout << i << " ";
+~~~~~~~~~~
+
+*/
+
 class KVNumberList : public TObject {
 
    mutable TString fString;

@@ -6,6 +6,11 @@
 
 #include "KVIDTelescope.h"
 
+/**
+  \class KVIDCsI
+  \ingroup Identification
+  \brief Generic CsI identification telescope
+ */
 class KVIDCsI : public KVIDTelescope {
 public:
    KVIDCsI();

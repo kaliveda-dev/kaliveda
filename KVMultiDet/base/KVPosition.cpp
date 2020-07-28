@@ -31,63 +31,6 @@ $Id: KVPosition.cpp,v 1.21 2008/12/17 13:01:26 franklan Exp $
 
 ClassImp(KVPosition);
 
-////////////////////////////////////////////////////////////////////////////////
-//KVPosition
-//
-//Base class used for handling geometry in a multidetector array.
-//
-//Each KVPosition object represents an element of solid angle, with a domain in
-//polar angle (theta) and azimuthal angle (phi). All methods necessary to
-//inquire about relative positions of such elements (overlaps, inclusion, etc.)
-//are provided.
-//
-//The coordinate system has the target position for its centre. The beam
-//direction defines the positive z axis, with respect to which polar angles are
-//measured. The +ve x-axis is taken to be vertical, and azimuthal angles
-//increase when going clockwise from the +ve x-axis, looking towards the +ve
-//z direction:
-//
-//               phi=0
-//    (x) beam    |
-//                |
-//                |
-//                +------- phi=90
-//
-//All angles are in degrees.
-//
-//Polar angles (theta) vary between 0 and 180 degrees
-//Azimuthal angles (phi) vary between 0 and 359.999... degrees.
-//
-//An element is defined by theta-min/max and phi-min/max:
-//Theta-min is the polar angle of the edge closest the beam (+ve z) axis
-//Theta-max is the polar angle of the edge furthest from the beam (+ve z) axis
-//Phi-min is the phi angle of the edge which is the most anticlockwise when
-//  looking as in the figure shown above
-//Phi-max is the phi angle of the edge which is the most clockwise when
-//  looking as in the figure shown above
-//
-//The above definitions mean that phi-min is not necessarily smaller than
-//phi-max: we redefine "smaller" for phi angles to mean "more anticlockwise than"
-//or "less clockwise than". Some examples:
-// an element with phi-min = 20 and phi-max = 40 has an azimuthal width of 20
-// degrees;
-// an element with phi-min = 40 and phi-max = 20 has an azimuthal width of 340
-// degrees;
-// an element with phi-min = 350 and phi-max = 10 has an azimuthal width of
-// 20 degrees.
-//
-//Examples of use of KVPosition objects:
-//______________________________________
-//
-//Generating a random unit vector within a given angular range
-//
-//  KVPosition pos;                 |
-//  pos.SetPolarMinMax(20, 30);         |  --  or:  KVPosition pos(20, 30, 0, 90);
-//  pos.SetAzimuthalMinMax(0, 90);  |
-//  TVector3 dir1 = pos.GetDirection();//unit vector in direction theta=25, phi=45
-//  TVector3 dir2 = pos.GetRandomDirection();//isotropic direction within angular limits of pos
-//  TVector3 dir3 = pos.GetRandomDirection("random");//random direction
-//
 
 void KVPosition::init()
 {

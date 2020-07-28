@@ -6,6 +6,11 @@
 #include "Rtypes.h"
 #include <cstdio>
 
+/**
+  \class KVMemoryChunk
+  \brief Memory handled by KVMemoryPool
+  \ingroup Core
+ */
 class KVMemoryChunk {
    char* fMemory;//pointer to start of chunk
    size_t fSize;//size of chunk in bytes

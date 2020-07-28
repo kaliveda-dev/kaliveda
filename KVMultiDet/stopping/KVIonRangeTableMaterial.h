@@ -15,6 +15,14 @@ class TF1;
 #define RTT  62.36367e+03  // cm^3.Torr.K^-1.mol^-1
 #define ZERO_KELVIN  273.15
 
+/**
+\class KVIonRangeTableMaterial
+\brief Material for use in energy loss & range calculations
+\ingroup Stopping
+
+\sa KVIonRangeTable
+ */
+
 class KVIonRangeTableMaterial : public KVBase {
 protected:
    const KVIonRangeTable* fTable;//parent range table

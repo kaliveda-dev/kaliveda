@@ -10,69 +10,11 @@
 
 ClassImp(KVIntegerList)
 
-////////////////////////////////////////////////////////////////////////////////
-/*
-BEGIN_HTML
-<h2>KVIntegerList</h2>
-<h4>Permet de gerer une liste de nombres entiers positifs</h4>
-La classe dérive de TNamed, le champ TNamed::fName contient le nom formaté de la partition et TNamed::fTitle <br>
-permet de stocker la population <br>
-L'écriture/lecture dans un fichier .root se fait en utilisant le streamer de TNamed <br>
-Les valeurs sont triées par ordre décroissant avec gestion de l'occurence <br>
-Les deux exemples suivants montrent les deux facons de remplir une liste: <br>
-<h5>Exemple 1:</h5>
-Les methodes de type Fill(), remplissent en une fois la liste et mets à jour les grandeurs reliées<br>
-<br>
-<code>
-KVIntegerList* ilist = new KVIntegerList();<br>
-Int_t tab[10]={1,3,6,4,9,7,3,59,8,160};<br>
-ilist->Fill(tab,10);<br>
-ilist->Print();<br>
-Info in <KVIntegerList::Print>: 160 59 9 8 7 6 4 3(2) 1 : population 1<br>
-</code>
-<h5>Exemple 2:</h5>
-Les methodes de type Add(), remplit successivement la liste, avant d'utiliser les grandeurs reliées<br>
-l'utilisateur doit appeler la méthode CheckForUpdate(), pour que la mise a jour du nom soit faite<br>
-par contre le nombre d'elements est mis a jour automatiquement<br>
-<br>
-<code>
-KVIntegerList* ilist = new KVIntegerList();<br>
-ilist->Add(23,6);<br>
-ilist->Add(12);<br>
-Int_t tab[3]={1,3,6};<br>
-ilist->Add(tab,3);<br>
-ilist->CheckForUpdate();<br>
-ilist->Print();<br>
-Info in <KVIntegerList::Print>: 23(6) 12 6 3 1 : population 1<br>
-ilist->Remove(23,3);<br>
-ilist->Print();<br>
-Info in <KVIntegerList::Print>: 23(6) 12 6 3 1 : population 1       &nbsp  &nbsp    !!! pour le nom  RIEN A CHANGER<br>
-<code>ilist->GetNbre();<br>
-(const Int_t)7                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp le nombre, lui est mis à jour<br>
-ilist->CheckForUpdate();<br>
-ilist->Print();<br>
-Info in <KVIntegerList::Print>: 23(3) 12 6 3 1 : population 1       &nbsp  &nbsp    OK : les modifs ont été prises en compte<br>
-ilist->GetNbre()<br>
-(const Int_t)7
-</code>
-END_HTML
 
-Les methodes de type Remove(), retirent des valeurs de la liste, là encore l'utilisateur doit appeler
-la méthode CheckForUpdate(), pour que la mise a jour soit faite
-Les grandeurs disponibles sont:
-- le nombre d'entiers, ie la multiplicité GetNbre()
-- le nom de la partition definie comme suit : ent1(occ) ent2 ent3(occ3), où entre parenthèses
-sont notées les occurences aupérieures à 1 d'une valeur
-- la population GetPopulation(), permet de gérer un ensemble de partitions (KVPartitionManager)
-
-*/
-////////////////////////////////////////////////////////////////////////////////
-
-//___________________________________________________________________________________________
 void KVIntegerList::init()
 {
 //Initialisation
-// La population est mise à 1
+// La population est mise Ã  1
    SetPopulation(1);
    fRegle = new TArrayI(100);
    fLimiteRegle = fRegle->fN - 1;
@@ -109,7 +51,7 @@ void KVIntegerList::ResetRegle()
 //___________________________________________________________________________________________
 void KVIntegerList::Clear(Option_t*)
 {
-//Classe dérivée de TNamed, Reinitialisation de l'object
+//Classe dÃ©rivÃ©e de TNamed, Reinitialisation de l'object
    TNamed::Clear();
    ResetRegle();
    ResetPopulation();
@@ -120,7 +62,7 @@ void KVIntegerList::Clear(Option_t*)
 //___________________________________________________________________________________________
 void KVIntegerList::Copy(TObject& obj) const
 {
-//Classe dérivée de TNamed, fait une copie vers l'objet obj
+//Classe dÃ©rivÃ©e de TNamed, fait une copie vers l'objet obj
    TNamed::Copy(obj);
    ((KVIntegerList&)obj).DeducePartitionFromTNamed();
    ((KVIntegerList&)obj).SetPopulation(this->GetPopulation());
@@ -130,15 +72,15 @@ void KVIntegerList::Copy(TObject& obj) const
 //___________________________________________________________________________________________
 void KVIntegerList::Print(Option_t*) const
 {
-//Classe dérivée de TNamed, Imprime la liste formattée et la population associée
+//Classe dÃ©rivÃ©e de TNamed, Imprime la liste formattÃ©e et la population associÃ©e
    Info("Print", "%s : population %d", GetName(), GetPopulation());
 }
 
 //___________________________________________________________________________________________
 void KVIntegerList::SetPartition(const Char_t* par)
 {
-//protected method, utilisée par le Streamer qui utilise le champ fName de la classe TNamed
-//voir également KVIntegerList::DeducePartitionFromTNamed
+//protected method, utilisÃ©e par le Streamer qui utilise le champ fName de la classe TNamed
+//voir Ã©galement KVIntegerList::DeducePartitionFromTNamed
    KVString st(par);
    st.Begin(" ");
    TObjArray* toks = 0;
@@ -169,7 +111,7 @@ void KVIntegerList::SetPartition(const Char_t* par)
 //___________________________________________________________________________________________
 Bool_t KVIntegerList::ToBeUpdated()
 {
-//protected method, test si les grandeurs associées à la liste doivent etre mises a jour
+//protected method, test si les grandeurs associÃ©es Ã  la liste doivent etre mises a jour
    return TestBit(kHastobeComputed);
 
 }
@@ -177,8 +119,8 @@ Bool_t KVIntegerList::ToBeUpdated()
 //___________________________________________________________________________________________
 void KVIntegerList::CheckForUpdate()
 {
-//Methode permettant de mettre à jour la liste, elle est a appeler si l'utilisateur a appelé précédemment
-//une méthode Add ou Remove
+//Methode permettant de mettre Ã  jour la liste, elle est a appeler si l'utilisateur a appelÃ© prÃ©cÃ©demment
+//une mÃ©thode Add ou Remove
    if (ToBeUpdated())
       Update();
 }
@@ -187,7 +129,7 @@ void KVIntegerList::CheckForUpdate()
 void KVIntegerList::Update()
 {
 //protected method, Mise a jour du nom de la partition (via SetName()), de sa longueur (fLength)
-//Le bit kHastobeComputed es mis à 0 pour indiquer que la mise à jour a été faite
+//Le bit kHastobeComputed es mis Ã  0 pour indiquer que la mise Ã  jour a Ã©tÃ© faite
 //
    KVString snom = "", stamp = "";
    for (Int_t ii = fLimiteRegle; ii >= 0; ii -= 1) {
@@ -214,8 +156,8 @@ void KVIntegerList::Update()
 //___________________________________________________________________________________________
 // void KVIntegerList::Fill(TArrayI* tab)
 // {
-// // La liste est re initialisée via KVIntegerList::Clear()
-// //remplie, puis mise à jour KVIntegerList::Update()
+// // La liste est re initialisÃ©e via KVIntegerList::Clear()
+// //remplie, puis mise Ã  jour KVIntegerList::Update()
 //    Clear();
 //    Add(tab);
 //    SetPopulation(1);
@@ -226,8 +168,8 @@ void KVIntegerList::Update()
 //___________________________________________________________________________________________
 void KVIntegerList::Fill(Int_t* tab, Int_t mult)
 {
-// La liste est re initialisée via KVIntegerList::Clear()
-//remplie, puis mise à jour KVIntegerList::Update()
+// La liste est re initialisÃ©e via KVIntegerList::Clear()
+//remplie, puis mise Ã  jour KVIntegerList::Update()
 
    Clear();
    Add(tab, mult);
@@ -239,8 +181,8 @@ void KVIntegerList::Fill(Int_t* tab, Int_t mult)
 //___________________________________________________________________________________________
 // void KVIntegerList::Fill(Double_t* tab,Int_t mult)
 // {
-// // La liste est re initialisée via KVIntegerList::Clear()
-// //remplie, puis mise à jour KVIntegerList::Update()
+// // La liste est re initialisÃ©e via KVIntegerList::Clear()
+// //remplie, puis mise Ã  jour KVIntegerList::Update()
 //
 //    Clear();
 //    Add(tab,mult);
@@ -252,8 +194,8 @@ void KVIntegerList::Fill(Int_t* tab, Int_t mult)
 //___________________________________________________________________________________________
 // void KVIntegerList::Fill(KVEvent* evt,Option_t* opt)
 // {
-// // La liste est re initialisée via KVIntegerList::Clear()
-// //remplie, puis mise à jour KVIntegerList::Update()
+// // La liste est re initialisÃ©e via KVIntegerList::Clear()
+// //remplie, puis mise Ã  jour KVIntegerList::Update()
 //
 //    if (!evt) return;
 //    Clear();
@@ -272,12 +214,12 @@ void KVIntegerList::add_values(Int_t val, Int_t freq)
 //protected method, Ajout de "freq" fois la valeur val
 //Verification de la taille du tableau (fLimiteRegle) et extension si besoin
 //
-//Routine appelée par toutes les autres routines Add(...), c'est celle-ci qui doit etre derivée
+//Routine appelÃ©e par toutes les autres routines Add(...), c'est celle-ci qui doit etre derivÃ©e
 //dans les classes filles
-//Le bit kHastobeComputed es mis à 1 pour indiquer la nécéssité de mettre a jour la partition
+//Le bit kHastobeComputed es mis Ã  1 pour indiquer la nÃ©cÃ©ssitÃ© de mettre a jour la partition
 //voir KVIntegerList::CheckForUpdate()
 //
-//Cette methode incremente la multiplicité fMult
+//Cette methode incremente la multiplicitÃ© fMult
 //
 
    if (val > fLimiteRegle) {
@@ -351,13 +293,13 @@ Bool_t KVIntegerList::remove_values(Int_t val, Int_t freq)
 {
 //protected method, On retire "freq" fois la valeur val
 //la methode retourne kTRUE si cette valeur etait effectivement presente, kFALSE sinon
-//Si freq > la frequence initiale ( KVIntegerList::GetFrequency(Int_t ) )de la valeur, on la retire complétement
-//Le bit kHastobeComputed es mis à 1 pour indiquer la nécéssité de mettre a jour la partition
+//Si freq > la frequence initiale ( KVIntegerList::GetFrequency(Int_t ) )de la valeur, on la retire complÃ©tement
+//Le bit kHastobeComputed es mis Ã  1 pour indiquer la nÃ©cÃ©ssitÃ© de mettre a jour la partition
 //voir KVIntegerList::CheckForUpdate()
-//Cette methode est appelée par les autres routines de type Remove...(...), c'est celle-ci qui doit etre derivée
+//Cette methode est appelÃ©e par les autres routines de type Remove...(...), c'est celle-ci qui doit etre derivÃ©e
 //dans les classes filles
 //
-//Cette methode décremente la multiplicité fMult
+//Cette methode dÃ©cremente la multiplicitÃ© fMult
 //
 
    if (val > fLimiteRegle)   return kFALSE;
@@ -379,7 +321,7 @@ Bool_t KVIntegerList::Remove(Int_t val, Int_t freq)
 {
 //On retire "freq" fois la valeur val
 //la methode retourne kTRUE si cette valeur etait effectivement presente, kFALSE sinon
-//Si freq > la frequence initiale ( KVIntegerList::GetFrequency(Int_t ) )de la valeur, on la retire complétement
+//Si freq > la frequence initiale ( KVIntegerList::GetFrequency(Int_t ) )de la valeur, on la retire complÃ©tement
 //
    return remove_values(val, freq);
 
@@ -390,7 +332,7 @@ Bool_t KVIntegerList::Remove(Int_t val)
 {
 //On retire 1 fois la valeur val
 //la methode retourne kTRUE si cette valeur etait effectivement presente, kFALSE sinon
-//Le bit kHastobeComputed es mis à 1 pour indiquer la nécéssité de mettre a jour la partition
+//Le bit kHastobeComputed es mis Ã  1 pour indiquer la nÃ©cÃ©ssitÃ© de mettre a jour la partition
 //voir KVIntegerList::CheckForUpdate()
 //
 
@@ -404,7 +346,7 @@ Bool_t KVIntegerList::RemoveAll(Int_t val)
 //Reture completement la valeur val
 //la methode retourne kTRUE si cette valeur etait effectivement presente, kFALSE sinon
 //
-//Le bit kHastobeComputed es mis à 1 pour indiquer la nécéssité de mettre a jour la partition
+//Le bit kHastobeComputed es mis Ã  1 pour indiquer la nÃ©cÃ©ssitÃ© de mettre a jour la partition
 //voir KVIntegerList::CheckForUpdate()
 //
 
@@ -414,7 +356,7 @@ Bool_t KVIntegerList::RemoveAll(Int_t val)
 //___________________________________________________________________________________________
 void KVIntegerList::ResetPopulation()
 {
-//Remet à 1 la population (comme dans le ctor)
+//Remet Ã  1 la population (comme dans le ctor)
    SetPopulation(1);
 }
 
@@ -427,14 +369,14 @@ Int_t KVIntegerList::GetPopulation() const
 //___________________________________________________________________________________________
 void KVIntegerList::AddPopulation(Int_t pop)
 {
-//Incrémente la population de "pop" fois
+//IncrÃ©mente la population de "pop" fois
    fPop += pop;
 }
 
 //___________________________________________________________________________________________
 void KVIntegerList::SetPopulation(Int_t pop)
 {
-//Initialise la population à "pop"
+//Initialise la population Ã  "pop"
    fPop = pop;
 }
 
@@ -450,9 +392,9 @@ Int_t KVIntegerList::GetNbre() const
 KVPartition* KVIntegerList::CreateKVPartition(Int_t mom_max)
 {
 //Cree un objet KVPartition
-//l'argument mom_max, correspond à l'ordre maximal pour lequel, les moments
-//de la partition sont calculés automatiquement voir KVPartition
-//L'objet cree doit etre effacé après utilisation par l'utilisateur
+//l'argument mom_max, correspond Ã  l'ordre maximal pour lequel, les moments
+//de la partition sont calculÃ©s automatiquement voir KVPartition
+//L'objet cree doit etre effacÃ© aprÃ¨s utilisation par l'utilisateur
    KVPartition* par = new KVPartition(fLimiteRegle,mom_max);
    TArrayI* tab = CreateTArrayI();
    par->Fill(tab);
@@ -466,7 +408,7 @@ TNamed* KVIntegerList::CreateTNamed()
 //Cree un objet TNamed
 //le nom de la partition est le champ TNamed::fName et la population de la partition dans le champ TNamed::fTitle
 //voir TNamed
-//L'objet cree doit etre effacé après utilisation par l'utilisateur
+//L'objet cree doit etre effacÃ© aprÃ¨s utilisation par l'utilisateur
    TNamed* nm = new TNamed(GetName(), Form("%d", GetPopulation()));
    return nm;
 }
@@ -476,7 +418,7 @@ TNamed* KVIntegerList::CreateTNamed()
 TArrayI* KVIntegerList::CreateTArrayI()
 {
 //Cree un objet TArrayI de dimension fMult ( KVIntegerList::GetNbre() ) et rempli par ordre decroissant toutes les valeurs de la partition
-//L'objet cree doit etre effacé après utilisation par l'utilisateur
+//L'objet cree doit etre effacÃ© aprÃ¨s utilisation par l'utilisateur
 
    TArrayI* tab = new TArrayI(GetNbre());
    Int_t mm = 0;
@@ -494,7 +436,7 @@ Int_t* KVIntegerList::CreateTableOfValues()
 {
 //Cree un objet tableau d'entier de dimension fMult ( KVIntegerList::GetNbre() )
 //et rempli par ordre decroissant toutes les valeurs de la partition
-//L'objet cree doit etre effacé après utilisation par l'utilisateur
+//L'objet cree doit etre effacÃ© aprÃ¨s utilisation par l'utilisateur
 
    Int_t* tab = new Int_t[GetNbre()];
    Int_t mm = 0;
@@ -510,7 +452,7 @@ Int_t* KVIntegerList::CreateTableOfValues()
 //___________________________________________________________________________________________
 Int_t KVIntegerList::Compare(const TObject* obj) const
 {
-//Classe dérivée de TNamed
+//Classe dÃ©rivÃ©e de TNamed
 //Compare deux objets de type KVIntegerList, le premier test concerne la longueur du nom (KVIntegerList::GetLengthName())
 //Si elle est identique, on test caractere par caractere, les deux noms TNamed::GetName()
 //Retourne 0 si les noms des deux KVIntegerList sont exactement les memes, -1 sinon;
@@ -534,7 +476,7 @@ Int_t KVIntegerList::Compare(const TObject* obj) const
 //___________________________________________________________________________________________
 Int_t KVIntegerList::GetFrequency(Int_t val) const
 {
-//Retourne l'occurence de la valeur "val", si elle n'est pas présente
+//Retourne l'occurence de la valeur "val", si elle n'est pas prÃ©sente
 //dans la liste retourne -1
    return (val <= fLimiteRegle ? fRegle->At(val) : -1);
 
@@ -552,8 +494,8 @@ Bool_t KVIntegerList::Contains(Int_t val) const
 //___________________________________________________________________________________________
 Ssiz_t KVIntegerList::GetLengthName() const
 {
-//Retourne la longueur du nom de la partition formatée GetName()
-// utilisée dans la methode Compare
+//Retourne la longueur du nom de la partition formatÃ©e GetName()
+// utilisÃ©e dans la methode Compare
    return fLength;
 
 }
@@ -562,10 +504,10 @@ Ssiz_t KVIntegerList::GetLengthName() const
 void KVIntegerList::Streamer(TBuffer& R__b)
 {
 //Streamer specifique
-//l'écriture dans un fichier root se fait par l'intermédiaire de la classe TNamed
-//seul, le nom et la partition et sa population sont enregistrées dans le fichier
+//l'Ã©criture dans un fichier root se fait par l'intermÃ©diaire de la classe TNamed
+//seul, le nom et la partition et sa population sont enregistrÃ©es dans le fichier
 //la lecture utilise aussi le streamer de TNamed, puis il y a un appel a la routine
-// protected DeducePartitionFromTNamed() qui permet de recréer complètement l'objet KVIntegerList
+// protected DeducePartitionFromTNamed() qui permet de recrÃ©er complÃ¨tement l'objet KVIntegerList
    if (R__b.IsReading()) {
       R__b.ReadClassBuffer(TNamed::Class(), this);
       DeducePartitionFromTNamed();
@@ -580,8 +522,8 @@ void KVIntegerList::Streamer(TBuffer& R__b)
 void KVIntegerList::DeducePartitionFromTNamed()
 {
 //protected method, Methode utilisee par le Streamer
-//Récupère les champs de TNamed:fName et TNamed:fTitle
-//et met à jour
+//RÃ©cupÃ¨re les champs de TNamed:fName et TNamed:fTitle
+//et met Ã  jour
    DeducePartitionFromName();
    DeducePopulationFromTitle();
 

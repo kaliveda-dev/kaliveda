@@ -49,15 +49,6 @@ $Id: KVMultiDetArray.cpp,v 1.91 2009/04/06 11:54:54 franklan Exp $
 using namespace std;
 
 ClassImp(KVASMultiDetArray)
-//////////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVASMultiDetArray</h2>
-<h4>Axially-Symmetric multidetector array base class</h4>
-<!-- */
-// --> END_HTML
-//////////////////////////////////////////////////////////////////////////////////////
-
 
 KVASMultiDetArray::KVASMultiDetArray()
 {

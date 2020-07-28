@@ -38,15 +38,6 @@ namespace range {
 
 ClassImp(KVRangeYanezMaterial)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVRangeYanezMaterial</h2>
-<h4>Description of absorber for the Range dE/dx and range library (Ricardo Yanez)</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 using namespace range;
 
 KVRangeYanezMaterial::KVRangeYanezMaterial()

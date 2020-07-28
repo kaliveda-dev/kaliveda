@@ -16,16 +16,6 @@ using namespace std;
 
 ClassImp(KVRangeYanez)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVRangeYanez</h2>
-<h4>Interface to Range dE/dx and range library (Ricardo Yanez)</h4>
-See <a href="http://www.calel.org/range.html">here</a> for details.
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVHashList* KVRangeYanez::fMaterials = 0x0;
 
 KVRangeYanez::KVRangeYanez()

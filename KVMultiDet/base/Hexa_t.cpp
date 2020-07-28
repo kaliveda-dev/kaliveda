@@ -5,10 +5,6 @@
 #include "Binary_t.h"
 
 ClassImp(Hexa_t)
-////////////////////////////////////////////////////////////////////////////
-//Hexa_t
-//
-//Class representing hexadecimal numbers
 TString Hexa_t::fPrefix = "0x"; //default prefix for hexadecimal numbers
 
 Hexa_t::Hexa_t()

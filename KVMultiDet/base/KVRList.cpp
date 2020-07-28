@@ -23,10 +23,6 @@ $Id: KVRList.cpp,v 1.20 2009/01/14 11:46:30 franklan Exp $
 #include "KVError.h"
 
 ClassImp(KVRList);
-//_______________________________________________________________________________
-//   Wrapper for a TRefArray
-//   Adds a few functionalities such as FindObjectByType()
-//
 
 KVBase* KVRList::FindObjectByName(const Char_t* name) const
 {

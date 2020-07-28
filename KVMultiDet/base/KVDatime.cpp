@@ -50,38 +50,45 @@ KVDatime::KVDatime(const Char_t* DateString, EKVDateFormat f)
    : TDatime()
 {
    //if f = KVDatime::kGANACQ:
+   //
    //Decodes GANIL acquisition (INDRA) run-sheet format date into a TDatime
-   //Format of date string is:
-   //      29-SEP-2005 09:42:17.00
+   //
+   //Format of date string is: `29-SEP-2005 09:42:17.00`
    //
    //if f = KVDatime::kGANACQ2010:
+   //
    //Decodes GANIL acquisition runfile format date into a TDatime
-   //Format of date string is:
-   //      27Nov10_02h07m40s
+   //
+   //Format of date string is: `27Nov10_02h07m40s`
    //
    //if f = KVDatime::kGANACQNarval:
+   //
    //Decodes GANIL Narval acquisition runfile format date into a TDatime
-   //Format of date string is:
-   //      12-04-18_17h09m41s
+   //
+   //Format of date string is: `12-04-18_17h09m41s`
    //
    //if f = KVDatime::kSQL:
+   //
    //Decodes SQL format date into a TDatime (i.e. same format as returned
-   //by TDatime::AsSQLString(): "2007-05-02 14:52:18")
+   //by TDatime::AsSQLString(): `2007-05-02 14:52:18`)
    //
    //if f = KVDatime::kSRB:
+   //
    //Decodes SRB format date into a TDatime
-   //Format of date string is:
-   //         2008-12-19-15.21
+   //
+   //Format of date string is: `2008-12-19-15.21`
    //
    //if f = KVDatime::kIRODS:
+   //
    //Decodes IRODS format date into a TDatime
-   //Format of date string is:
-   //         2008-12-19.15:21
+   //
+   //Format of date string is: `2008-12-19.15:21`
    //
    //if f = KVDatime::kDMY:
+   //
    //Decodes DMY format date into a TDatime
-   //Format of date string is:
-   //         19/12/2008
+   //
+   //Format of date string is: `19/12/2008`
 
    init();
    switch (f) {

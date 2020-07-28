@@ -25,51 +25,7 @@ namespace std {
 }
 #endif
 ClassImp(KVString)
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// KVString
-//
-// Allows backwards compatibility with ROOT v3.10/02 onwards.
-// TString::Tokenize and IsDigit methods are added here if they don't exist
-// in the version of ROOT being used.
-//
-// IsFloat() method is added: returns true if string is a floating-point number, i.e. if it
-//              has any of following formats (only first one returns kTRUE with TString::IsDigit()):
-//      64320
-//      6.4320  6,4320
-//      6.43e20   6.43E20 6,43e20
-//      6.43e-20  6.43E-20 6,43e-20
-//
-// Also Atoi() and Atof() are extended to include the following possibilities:
-//
-// Atoi(): with string="123 456", TString::Atoi() gives value=123
-//              KVString::Atoi() gives value=123456
-// Atof(): with string="12,34", TString::Atof() gives value=12
-//              KVString::Atof() gives value=12.34
-//
-// Begin(), Next() and End() can be used to loop over items in
-// a string separated by the delimiter character given as argument
-// to Begin().
-//
-// Example:
-//   KVString str("First | Second | Third");
-//   str.Begin("|");
-//   while( !str.End() ){
-//     cout << str.Next().Data() << endl;
-//   }
-//
-// This will give the following output:
-//
-// First
-//  Second
-//  Third
-//
-// or, if Next is called with argument strip_whitespace=kTRUE,
-//
-// First
-// Second
-// Third
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 #ifdef __WITHOUT_TSTRING_TOKENIZE
 TObjArray* KVString::Tokenize(const TString& delim) const

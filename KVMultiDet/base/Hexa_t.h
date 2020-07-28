@@ -5,7 +5,11 @@
 #include "Riostream.h"
 #include "TString.h"
 
-//class Binary_t;
+/**
+  \class Hexa_t
+  \ingroup Core
+  \brief Hexadecimal numbers
+ */
 
 class Hexa_t {
 private:

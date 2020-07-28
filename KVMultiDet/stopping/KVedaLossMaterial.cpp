@@ -11,15 +11,6 @@
 
 ClassImp(KVedaLossMaterial)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVedaLossMaterial</h2>
-<h4>Description of material properties used by KVedaLoss range calculation</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 Bool_t KVedaLossMaterial::fNoLimits = kFALSE;
 KVedaLoss* KVedaLossMaterial::fgTable = nullptr;
 
@@ -59,16 +50,16 @@ Bool_t KVedaLossMaterial::ReadRangeTable(FILE* fp)
    // Read Z- & A-dependent range parameters for material
    //
    // For each material we create 4 TF1 objects:
-   //   KVedaLossMaterial:[type]:Range                -  gives range in g/cm**2 as a function of particle energy
-   //   KVedaLossMaterial:[type]:StoppingPower           -  gives dE/dx in MeV/(g/cm**2) as a function of particle energy
-   //   KVedaLossMaterial:[type]:EnergyLoss           -  gives dE as a function of particle energy
-   //   KVedaLossMaterial:[type]:ResidualEnergy       -  gives energy after material (0 if particle stops)
+   //   - KVedaLossMaterial:[type]:Range                -  gives range in g/cm**2 as a function of particle energy
+   //   - KVedaLossMaterial:[type]:StoppingPower        -  gives dE/dx in MeV/(g/cm**2) as a function of particle energy
+   //   - KVedaLossMaterial:[type]:EnergyLoss           -  gives dE as a function of particle energy
+   //   - KVedaLossMaterial:[type]:ResidualEnergy       -  gives energy after material (0 if particle stops)
    //
    // The TF1::fNpx parameter for these functions is defined by the environment variables
    //
-   //   KVedaLoss.Range.Npx:         20      /* also used for StoppingPower */
-   //   KVedaLoss.EnergyLoss.Npx:         50
-   //   KVedaLoss.ResidualEnergy.Npx:         20
+   //   - KVedaLoss.Range.Npx:         20      /* also used for StoppingPower */
+   //   - KVedaLoss.EnergyLoss.Npx:         50
+   //   - KVedaLoss.ResidualEnergy.Npx:         20
    //
 
    char line[132];
@@ -198,8 +189,9 @@ Bool_t KVedaLossMaterial::ReadRangeTable(FILE* fp)
 Double_t KVedaLossMaterial::DeltaEFunc(Double_t* E, Double_t*)
 {
    // Function parameterising the energy loss of charged particles in this material.
-   // The incident energy E[0] is given in MeV.
-   // The energy loss is calculated in MeV.
+   //
+   // \param E[0] incident energy given in MeV.
+   // \returns  energy loss calculated in MeV.
 
    return (E[0] - EResFunc(E, nullptr));
 }
@@ -207,12 +199,12 @@ Double_t KVedaLossMaterial::DeltaEFunc(Double_t* E, Double_t*)
 Double_t KVedaLossMaterial::EResFunc(Double_t* E, Double_t*)
 {
    // Function parameterising the residual energy of charged particles in this material.
-   // The incident energy E[0] is given in MeV.
-   // The residual energy is calculated in MeV.
+   //
+   // \param E[0] incident energy given in MeV.
+   // \returns  residual energy calculated in MeV.
 
-   // if range < thickness, particle stops: Eres=0
    Double_t R0 = RangeFunc(E, nullptr);
-   if (R0 < thickness) {
+   if (R0 < thickness) {// if range < thickness, particle stops: Eres=0
       fRangeOfLastDE = R0;
       return 0.0;
    }
@@ -232,9 +224,9 @@ Double_t KVedaLossMaterial::EResFunc(Double_t* E, Double_t*)
 
 TF1* KVedaLossMaterial::GetRangeFunction(Int_t Z, Int_t A, Double_t isoAmat)
 {
-   // Return function giving range (in g/cm**2) as a function of energy (in MeV) for
-   // charged particles (Z,A) in this material.
-   // If required, the isotopic mass of the material can be given.
+   // Return function giving range (in \f$g/cm^2\f$) as a function of energy (in MeV) for
+   // charged particles \f$Z,A\f$ in this material.
+   // \param isoAmat If required, the isotopic mass of the material can be given.
 
    RF_Z = Z;
    RF_A = A;
@@ -274,9 +266,9 @@ TF1* KVedaLossMaterial::GetRangeFunction(Int_t Z, Int_t A, Double_t isoAmat)
 
 TF1* KVedaLossMaterial::GetStoppingFunction(Int_t Z, Int_t A, Double_t isoAmat)
 {
-   // Return function giving stopping power (in MeV/(g/cm**2)) as a function of energy (in MeV) for
-   // charged particles (Z,A) in this material.
-   // If required, the isotopic mass of the material can be given.
+   // Return function giving stopping power (in \f$MeV/(g/cm^2)\f$) as a function of energy (in MeV) for
+   // charged particles \f$Z,A\f$ in this material.
+   // \param isoAmat If required, the isotopic mass of the material can be given.
 
    RF_Z = Z;
    RF_A = A;
@@ -306,8 +298,8 @@ TF1* KVedaLossMaterial::GetStoppingFunction(Int_t Z, Int_t A, Double_t isoAmat)
 Double_t KVedaLossMaterial::RangeFunc(Double_t* E, Double_t*)
 {
    // Function parameterising the range of charged particles in this material.
-   // The energy E[0] is given in MeV.
-   // The range is calculated in units of g/cm**2
+   // \param E[0] energy is given in MeV.
+   // \returns range calculated in units of \f$g/cm^2\f$
 
    eps = E[0] / RF_A;
    dleps = TMath::Log(eps);
@@ -328,9 +320,9 @@ Double_t KVedaLossMaterial::RangeFunc(Double_t* E, Double_t*)
 
 Double_t KVedaLossMaterial::StoppingFunc(Double_t* E, Double_t*)
 {
-   // Function parameterising the stopping of charged particles in this material.
-   // The energy E[0] is given in MeV.
-   // The stopping power is calculated in units of MeV/(g/cm**2)
+   // Function parameterising the stopping power of charged particles in this material.
+   // \param E[0] energy is given in MeV.
+   // \returns stopping power calculated in units of \f$Mev/(g/cm^2)\f$
 
    eps = E[0] / RF_A;
    dleps = TMath::Log(eps);
@@ -353,8 +345,9 @@ Double_t KVedaLossMaterial::StoppingFunc(Double_t* E, Double_t*)
 TF1* KVedaLossMaterial::GetDeltaEFunction(Double_t e, Int_t Z, Int_t A, Double_t isoAmat)
 {
    // Return function giving energy loss (in MeV) as a function of incident energy (in MeV) for
-   // charged particles (Z,A) traversing (or not) the thickness e (in g/cm**2) of this material.
-   // If required, the isotopic mass of the material can be given.
+   // charged particles (Z,A) traversing (or not) material
+   // \param e thickness (in \f$g/cm^2\f$) of this material.
+   // \param isoAmat If required, the isotopic mass of the material can be given.
 
    GetRangeFunction(Z, A, isoAmat);
    thickness = e;
@@ -365,8 +358,9 @@ TF1* KVedaLossMaterial::GetDeltaEFunction(Double_t e, Int_t Z, Int_t A, Double_t
 TF1* KVedaLossMaterial::GetEResFunction(Double_t e, Int_t Z, Int_t A, Double_t isoAmat)
 {
    // Return function giving residual energy (in MeV) as a function of incident energy (in MeV) for
-   // charged particles (Z,A) traversing (or not) the thickness e (in g/cm**2) of this material.
-   // If required, the isotopic mass of the material can be given.
+   // charged particles (Z,A) traversing (or not) material
+   // \param e thickness (in \f$g/cm^2\f$) of this material.
+   // \param isoAmat If required, the isotopic mass of the material can be given.
 
    GetRangeFunction(Z, A, isoAmat);
    thickness = e;
@@ -376,12 +370,9 @@ TF1* KVedaLossMaterial::GetEResFunction(Double_t e, Int_t Z, Int_t A, Double_t i
 
 Double_t KVedaLossMaterial::GetRangeOfIon(Int_t Z, Int_t A, Double_t E, Double_t isoAmat)
 {
-   // Returns range (in g/cm**2) of ion (Z,A) with energy E (MeV) in material.
-   // Give Amat to change default (isotopic) mass of material,
+   // \returns range (in \f$g/cm^2\f$) of ion (Z,A) with energy E (MeV) in material.
+   // \param isoAmat change default (isotopic) mass of material,
 
-   /*if(E>GetEmaxValid(Z,A))
-      Warning("GetRangeOfIon", "Incident energy of (%d,%d) > limit of validity of KVedaLoss (Emax=%f)",
-            Z,A,GetEmaxValid(Z,A));*/
    if (Z == 0) return 0.0; //only charged particles
    TF1* f = GetRangeFunction(Z, A, isoAmat);
    return f->Eval(E);
@@ -389,12 +380,11 @@ Double_t KVedaLossMaterial::GetRangeOfIon(Int_t Z, Int_t A, Double_t E, Double_t
 
 Double_t KVedaLossMaterial::GetDeltaEOfIon(Int_t Z, Int_t A, Double_t E, Double_t e, Double_t isoAmat)
 {
-   // Returns energy lost (in MeV) by ion (Z,A) with energy E (MeV) after thickness e (in g/cm**2).
-   // Give Amat to change default (isotopic) mass of material,
+   // \returns energy lost (in MeV) by ion (Z,A)
+   // \param E incident energy (MeV)
+   // \param e thickness (in \f$g/cm^2\f$)
+   // \param isoAmat change default (isotopic) mass of material,
 
-   /* if(E>GetEmaxValid(Z,A))
-      Warning("GetDeltaEOfIon", "Incident energy of (%d,%d) > limit of validity of KVedaLoss (Emax=%f)",
-            Z,A,GetEmaxValid(Z,A)); */
    if (Z == 0) return 0.0; //only charged particles
    TF1* f = GetDeltaEFunction(e, Z, A, isoAmat);
    return f->Eval(E);
@@ -403,12 +393,11 @@ Double_t KVedaLossMaterial::GetDeltaEOfIon(Int_t Z, Int_t A, Double_t E, Double_
 Double_t KVedaLossMaterial::GetEResOfIon(Int_t Z, Int_t A, Double_t E, Double_t e,
       Double_t isoAmat)
 {
-   // Returns residual energy (in MeV) of ion (Z,A) with energy E (MeV) after thickness e (in g/cm**2).
-   // Give Amat to change default (isotopic) mass of material
+   // \returns energy lost (in MeV) by ion (Z,A)
+   // \param E incident energy (MeV)
+   // \param e thickness (in \f$g/cm^2\f$)
+   // \param isoAmat change default (isotopic) mass of material,
 
-   /* if(E>(GetEmaxValid(Z,A)+0.1))
-      Warning("GetEResOfIon", "Incident energy of (%d,%d) %f MeV/A > limit of validity of KVedaLoss (Emax=%f MeV/A)",
-            Z,A,E/A,GetEmaxValid(Z,A)/A); */
    if (Z == 0) return 0.0; //only charged particles
    TF1* f = GetEResFunction(e, Z, A, isoAmat);
    return f->Eval(E);
@@ -417,9 +406,9 @@ Double_t KVedaLossMaterial::GetEResOfIon(Int_t Z, Int_t A, Double_t E, Double_t 
 Double_t KVedaLossMaterial::GetPunchThroughEnergy(Int_t Z, Int_t A, Double_t e, Double_t isoAmat)
 {
    // Calculate incident energy (in MeV) for ion (Z,A) for which the range is equal to the
-   // given thickness e (in g/cm**2). At this energy the residual energy of the ion is (just) zero,
+   // given thickness e (in \f$g/cm^2\f$). At this energy the residual energy of the ion is (just) zero,
    // for all energies above this energy the residual energy is > 0.
-   // Give Amat to change default (isotopic) mass of material.
+   // \param isoAmat change default (isotopic) mass of material,
 
    if (Z == 0) return 0.0; //only charged particles
    GetRangeFunction(Z, A, isoAmat);
@@ -431,8 +420,8 @@ Double_t KVedaLossMaterial::GetPunchThroughEnergy(Int_t Z, Int_t A, Double_t e, 
 
 Double_t KVedaLossMaterial::GetEIncFromEResOfIon(Int_t Z, Int_t A, Double_t Eres, Double_t e, Double_t isoAmat)
 {
-   // Calculates incident energy (in MeV) of an ion (Z,A) with residual energy Eres (MeV) after thickness e (in g/cm**2).
-   // Give Amat to change default (isotopic) mass of material.
+   // Calculates incident energy (in MeV) of an ion (Z,A) with residual energy Eres (MeV) after thickness e (in \f$g/cm^2\f$).
+   // \param isoAmat change default (isotopic) mass of material,
 
    if (Z == 0) return 0.0; //only charged particles
    GetRangeFunction(Z, A, isoAmat);
@@ -447,6 +436,9 @@ void KVedaLossMaterial::GetParameters(Int_t Zion, Int_t& Aion, std::vector<Doubl
 {
    // For the given ion atomic number, give the reference mass used and the six
    // parameters for the range function fit
+   // \param[in] Zion ion atomic number
+   // \param[out] Aion reference mass used by table
+   // \param[out] rangepar vector containing the six parameters for the range function fit
 
    rangepar = std::vector<Double_t>(fCoeff[Zion - 1].begin() + 2, fCoeff[Zion - 1].end());
    Aion = fCoeff[Zion - 1][1];

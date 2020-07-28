@@ -10,7 +10,7 @@
 
 /**
    \class KVINDRACsITotLightReconstructor
-   \ingroup Calibration
+   \ingroup INDRACalibration
    \brief Calculation of light output from fast and slow components for INDRA CsI detectors
 
    As the calculation requires pedestal-corrected values of fast and slow components

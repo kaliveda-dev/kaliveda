@@ -12,6 +12,11 @@
 #include "KVReconNucTrajectory.h"
 class KVTelescope;
 
+/**
+  \class KVReconstructedNucleus
+ \brief Nuclei reconstructed from data measured by a detector array
+\ingroup Reconstruction
+*/
 class KVReconstructedNucleus: public KVNucleus {
 
 protected:

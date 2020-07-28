@@ -6,6 +6,13 @@
 
 #include "KVExpDB.h"
 
+/**
+  \class KVExpSetUpDB
+  \ingroup Calibration
+  \brief Calibration database for experiments using coupled detector arrays
+
+\sa KVExpSetUp
+ */
 class KVExpSetUpDB : public KVExpDB {
 
 public:

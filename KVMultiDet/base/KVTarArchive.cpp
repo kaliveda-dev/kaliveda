@@ -14,14 +14,7 @@ $Date: 2009/01/21 08:04:20 $
 
 ClassImp(KVTarArchive)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVTarArchive</h2>
-<h4>Handles directories stored in .tgz archive files</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
+
 
 KVTarArchive::KVTarArchive()
 {

@@ -14,14 +14,6 @@
 
 ClassImp(KVOnlineReconDataAnalyser)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVOnlineReconDataAnalyser</h2>
-<h4>Online analysis of reconstructed data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVOnlineReconDataAnalyser::KVOnlineReconDataAnalyser()
    : KVReconDataAnalyser()

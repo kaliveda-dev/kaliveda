@@ -1,8 +1,34 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 24th July 2020
+Last update: 31st July 2020
 
 ## Version 1.11/01 (current development focus)
+
+\ref Analysis
+
+KVParticleCondition has been extended to use lambda expressions (if KaliVeda is compiled with ROOT
+version 6 or later).
+The lambda must take a `const KVNucleus*` pointer as argument and return a boolean:
+~~~~~~{.cpp}
+KVParticleCondition l1("Z>2", [](const KVNucleus* nuc){ return nuc->GetZ()>2; });
+KVParticleCondition l2("Vpar>0", [](const KVNucleus* nuc){ return nuc->GetVpar()>0; });
+~~~~~~
+Note the first argument to the constructor is a name which the user is free to define
+in order to remember what the condition does.
+
+Like any lambda expressions, variables can be 'captured' from the surrounding scope, which
+can be useful in some situations. For example, given the following definitions:
+~~~~~~{.cpp}
+int zmin = 3;
+KVParticleCondition l3("Z>zmin", [&](const KVNucleus* nuc){ return nuc->GetZ()>=zmin; });
+~~~~~~
+then the limit for the selection can be changed dynamically like so:
+~~~~~~{.cpp}
+KVNucleus N("7Li");
+l3.Test(&N);      ==> returns true
+zmin=5;
+l3.Test(&N);      ==> returns false
+~~~~~~
 
 \ref GlobalVariables
 

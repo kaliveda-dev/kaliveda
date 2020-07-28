@@ -16,16 +16,6 @@ $Date: 2009/01/30 09:27:06 $
 
 ClassImp(KVEventListMaker)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVEventListMaker</h2>
-<h4>compute TEventList on trees input are filename, treename and branchname branches has to be defined as integer</h4>
-<h5>all tree entries are read and TEventList are created when a new value of concerning branches are found</h5>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 void KVEventListMaker::Process()
 {
 

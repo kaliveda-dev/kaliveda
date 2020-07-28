@@ -16,6 +16,13 @@ class KVedaLoss;
 #define ZMAX_VEDALOSS 100
 #define VERY_BIG_ENERGY  1.e+6
 
+/**
+  \class KVedaLossMaterial
+  \ingroup Stopping
+  \brief Description of material in the KVedaLoss range table
+
+  \sa KVedaLoss
+ */
 class KVedaLossMaterial : public KVIonRangeTableMaterial {
 
 private:
@@ -69,14 +76,16 @@ public:
 
    static void SetNoLimits(Bool_t on = kTRUE)
    {
-      // Normally all range, dE, Eres functions are limited to range 0<=E<=Emax,
-      // where Emax is nominal max energy for which range tables are valid
-      // (usually 400MeV/u for Z<3, 250MeV/u for Z>3)
-      // if higher energies are required, call this static method in order to recalculate the Emax limits
-      // in such way that:
-      //     range function is always monotonically increasing function of Einc
-      //     stopping power is concave (i.e. no minimum of stopping power followed by an increase)
-      // at the most, the new limit will be 1 GeV/nucleon.
+      // Normally all range, \f$dE\f$, \f$E_{res}\f$ functions are limited to range \f$0\leq E\leq E_{max}\f$,
+      // where \f$E_{max}\f$ is nominal maximum energy for which range tables are valid
+      // (usually 400MeV/u for \f$Z<3\f$, 250MeV/u for \f$Z>3\f$).
+      //
+      // If higher energies are required, call static method KVedaLoss::SetIgnoreEnergyLimits() **BEFORE ANY MATERIALS ARE CREATED**
+      // in order to recalculate the \f$E_{max}\f$ limits in such a way that:
+      //    -  range function is always monotonically increasing function of \f$E_{inc}\f$;
+      //    -  stopping power is concave (i.e. no minimum of stopping power followed by an increase)
+      //
+      // Then, at the most, the new limit will be 1 GeV/nucleon, or
       // at the least, it will remain at the nominal (400 or 250 MeV/nucleon) level.
       fNoLimits = on;
    };

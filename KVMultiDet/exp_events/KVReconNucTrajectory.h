@@ -10,7 +10,7 @@
 
 /**
   \class KVReconNucTrajectory
-  \ingroup Exp_Events
+  \ingroup Reconstruction
   \brief Path through detector array used to reconstruct detected particle
 
   This class handles trajectories for reconstructed nuclei (see KVReconstructedNucleus).

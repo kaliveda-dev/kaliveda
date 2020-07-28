@@ -6,34 +6,7 @@
 
 ClassImp(KVPartitionFunction)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVPartitionFunction</h2>
-<h4>Calculates number of partitions of (A,Z,M)</h4>
-These functions calculate the total number of partitions and the number of partitions
-per multiplicity either for a single component system (corresponding to the partition function
-of number theory, i.e. the number of ways to decompose an integer into distinct sums of other
-integers), or for a system made of two kinds of objects, i.e. protons and neutrons, with A=N+Z.
-These are exact results, the numbers correspond to each and every partition appearing
-once and only once.
 
-<h3>Single component system</h3>
-Double_t PartFunc(Int_t A, Int_t M) calculates the total number of ways to partition an integer
-A into the sum of M integers (1<=M<=A). We use the recursion relation given by J.P. Bondorf in
-Nucl. Phys. A443, 321 (1985), Eq. (2.6).
-
-Double_t PartSum(Int_t A) returns the total number of partitions summed over all multiplicities.
-
-<h3>Two component system</h3>
-Double_t PartFunc(Int_t A, Int_t Z, Int_t M) calculates the total number of ways to
-partition Z protons and (A-Z) neutrons into M fragments, using the method given by K. Sneppen
-in Nucl. Phys. A470, 213 (1987), Eqs. (4)-(6).
-
-Double_t PartSum(Int_t A, Int_t Z) returns the total number of partitions summed over all multiplicities.
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVPartitionFunction::KVPartitionFunction()
    : fTable(10000000, 5)

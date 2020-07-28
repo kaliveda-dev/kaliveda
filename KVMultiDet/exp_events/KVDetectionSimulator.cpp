@@ -6,15 +6,6 @@
 
 ClassImp(KVDetectionSimulator)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDetectionSimulator</h2>
-<h4>Simulate detection of particles or events in a detector array</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDetectionSimulator::KVDetectionSimulator(KVMultiDetArray* a, Double_t e_cut_off) :
    KVBase(Form("DetectionSimulator_%s", a->GetName()),
           Form("Simulate detection of particles or events in detector array %s", a->GetTitle())),

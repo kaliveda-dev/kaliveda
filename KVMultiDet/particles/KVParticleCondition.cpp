@@ -19,82 +19,7 @@ using namespace std;
 
 ClassImp(KVParticleCondition)
 
-////////////////////////////////////////////////////////////////////////////////
-/*
-<h2>KVParticleCondition</h2>
-<h4>Implements parser of particle selection criteria</h4>
 
-These must be valid C++ expressions using _NUC_ instead and in place of
-a pointer to the particle to be tested. Note that the methods used in the selection
-do not have to be limited to the KVNucleus class. The 'real' class of the object
-passed to Test() will be used to cast the base pointer (KVNucleus*) up to the
-required pointer type at execution. In this case, you must call the method
-SetParticleClassName() with the name of the class to use in the cast.
-
-Conditions can be combined using Boolean '&&' and '||' operators.
-
-Note that the first time Test() is called we generate and compile a class derived
-from KVParticleCondition which implements the required test. For all subsequent
-calls it is this compiled code which is used, greatly increasing speed of
-execution.
-
-### EXAMPLES
-
-~~~~~~~~~~~~~~~~
-// select nuclei with Z>2
-KVParticleCondition pc("_NUC_->GetZ()>2");
-
-KVNucleus nuc("56Fe");
-pc.Test(&nuc);
-
-Info in <KVParticleCondition::Optimize>: Optimization of KVParticleCondition : _NUC_->GetZ()>2;
-<KVClassFactory::WriteClassHeader> : File KVParticleCondition_9594f66c.h generated.
-<KVClassFactory::WriteClassImp> : File KVParticleCondition_9594f66c.cpp generated.
-Info in <TUnixSystem::ACLiC>: creating shared library /./KVParticleCondition_9594f66c_cpp.so
-Info in <KVParticleCondition::Optimize>: fOptimal = 0x55add512d3a0
-Info in <KVParticleCondition::Optimize>: Success
-(bool) true
-
-pc.Test(&nuc);
-(bool) true
-
-// select simulated nuclei with spin>40hbar
-KVParticleCondition pc2 = "_NUC_->GetSpin().Mag()<40";
-
-KVSimNucleus p("56Fe");
-p.SetSpin(50,0,0);
-
-pc2.Test(&p);
-
-Info in <KVParticleCondition::Optimize>: Optimization of KVParticleCondition : _NUC_->GetSpin().Mag()>40;
-<KVClassFactory::WriteClassHeader> : File KVParticleCondition_b04461fe.h generated.
-<KVClassFactory::WriteClassImp> : File KVParticleCondition_b04461fe.cpp generated.
-Info in <TUnixSystem::ACLiC>: creating shared library /./KVParticleCondition_b04461fe_cpp.so
-In file included from input_line_11:9:
-././KVParticleCondition_b04461fe.cpp:43:16: error: no member named 'GetSpin' in 'KVNucleus'
-   return nuc->GetSpin().Mag()>40;
-          ~~~  ^
-Error in <ACLiC>: Dictionary generation failed!
-Error in <KVParticleCondition::Optimize>:  *** Optimization failed for KVParticleCondition : _NUC_->GetSpin().Mag()>40;
-Error in <KVParticleCondition::Optimize>:  *** Use method AddExtraInclude(const Char_t*) to give the names of all necessary header files for compilation of your condition.
-Fatal in <KVParticleCondition::Optimize>:  *** THIS CONDITION WILL BE EVALUATED AS kFALSE FOR ALL PARTICLES!!!
-aborting
-
-KVParticleCondition pc2 = "_NUC_->GetSpin().Mag()<40";
-pc2.SetParticleClassName("KVSimNucleus"); // GetSpin() only defined for KVSimNucleus class
-pc2.Test(&p);
-
-Info in <KVParticleCondition::Optimize>: Optimization of KVParticleCondition : _NUC_->GetSpin().Mag()>40;
-<KVClassFactory::WriteClassHeader> : File KVParticleCondition_16f09224.h generated.
-<KVClassFactory::WriteClassImp> : File KVParticleCondition_16f09224.cpp generated.
-Info in <TUnixSystem::ACLiC>: creating shared library /./KVParticleCondition_16f09224_cpp.so
-Info in <KVParticleCondition::Optimize>: fOptimal = 0x55cc657e1d90
-Info in <KVParticleCondition::Optimize>: Success
-(bool) true
-~~~~~~~~~~~~~~~~
-
-*/
-////////////////////////////////////////////////////////////////////////////////
 
 KVHashList KVParticleCondition::fgOptimized;
 
@@ -123,8 +48,23 @@ void KVParticleCondition::Set(const KVString& cond)
 KVParticleCondition::KVParticleCondition(const KVString& cond)
    : KVBase(cond, "KVParticleCondition")
 {
-   //Create named object and set condition
-   fOptimal = nullptr;
+   //Create named object and set condition.
+   //   This must be a valid C++ expression using `_NUC_` instead and in place of
+   //   a `const KVNucleus*` pointer to the particle to be tested, for example
+   //   ~~~~{.cpp}
+   //   KVParticleCondition c1("_NUC_->GetZ()>2");
+   //   KVParticleCondition c2("_NUC_->GetVpar()>0");
+   //   ~~~~
+   //   Note that the methods used in the selection
+   //   do not have to be limited to the methods of the KVNucleus class.
+   //   The 'real' class of the object
+   //   passed to Test() can be used to cast the base pointer up (or is it down?) to the
+   //   required pointer type at execution. In this case, you must call the method
+   //   SetParticleClassName() with the name of the class to use in the cast.
+   //
+   //   Note that the first call to Test() automatically causes the 'optimization' of the
+   //   KVParticleCondition, which means that a class implementing the required condition is generated
+   //   and compiled on the fly before continuing (see method Optimize()).   fOptimal = nullptr;
    Set(cond);
    cf = nullptr;
    fOptOK = kFALSE;
@@ -144,7 +84,23 @@ KVParticleCondition::KVParticleCondition()
 KVParticleCondition::KVParticleCondition(const char* cond)
    : KVBase(cond, "KVParticleCondition")
 {
-   //Create named object and set condition
+   //Create named object and set condition.
+   //   This must be a valid C++ expression using `_NUC_` instead and in place of
+   //   a `const KVNucleus*` pointer to the particle to be tested, for example
+   //   ~~~~{.cpp}
+   //   KVParticleCondition c1("_NUC_->GetZ()>2");
+   //   KVParticleCondition c2("_NUC_->GetVpar()>0");
+   //   ~~~~
+   //   Note that the methods used in the selection
+   //   do not have to be limited to the methods of the KVNucleus class.
+   //   The 'real' class of the object
+   //   passed to Test() can be used to cast the base pointer up (or is it down?) to the
+   //   required pointer type at execution. In this case, you must call the method
+   //   SetParticleClassName() with the name of the class to use in the cast.
+   //
+   //   Note that the first call to Test() automatically causes the 'optimization' of the
+   //   KVParticleCondition, which means that a class implementing the required condition is generated
+   //   and compiled on the fly before continuing (see method Optimize()).   fOptimal = nullptr;
    fOptimal = nullptr;
    Set(cond);
    cf = nullptr;
@@ -245,6 +201,7 @@ void KVParticleCondition::SetClassFactory(KVClassFactory* CF)
 KVParticleCondition::KVParticleCondition(const KVParticleCondition& obj)
    : KVBase("KVParticleCondition", "Particle selection criteria")
 {
+   // Copy constructor. Create new condition which is a copy of existing condition, obj.
    fOptimal = nullptr;
    cf = nullptr;
    fOptOK = kFALSE;
@@ -256,6 +213,7 @@ KVParticleCondition::KVParticleCondition(const KVParticleCondition& obj)
 
 KVParticleCondition& KVParticleCondition::operator=(const KVParticleCondition& obj)
 {
+   // Set condition to be same as for existing KVParticleCondition object
    if (&obj != this) obj.Copy(*this);
    return (*this);
 }
@@ -264,6 +222,20 @@ KVParticleCondition& KVParticleCondition::operator=(const KVParticleCondition& o
 
 KVParticleCondition& KVParticleCondition::operator=(const KVString& sel)
 {
+   // Set condition using pseudo-code in string (replacing any previous definition).
+   //
+   //   This must be a valid C++ expression using `_NUC_` instead and in place of
+   //   a `const KVNucleus*` pointer to the particle to be tested, for example
+   //   ~~~~{.cpp}
+   //   KVParticleCondition c1("_NUC_->GetZ()>2");
+   //   KVParticleCondition c2("_NUC_->GetVpar()>0");
+   //   ~~~~
+   //   Note that the methods used in the selection
+   //   do not have to be limited to the methods of the KVNucleus class.
+   //   The 'real' class of the object
+   //   passed to Test() can be used to cast the base pointer up (or is it down?) to the
+   //   required pointer type at execution. In this case, you must call the method
+   //   SetParticleClassName() with the name of the class to use in the cast.
    Set(sel);
    return (*this);
 }
@@ -271,6 +243,7 @@ KVParticleCondition& KVParticleCondition::operator=(const KVString& sel)
 #ifdef USING_ROOT6
 KVParticleCondition& KVParticleCondition::operator=(const LambdaFunc& f)
 {
+   // Set condition using lambda expression (replacing any previous definition).
    fLambdaCondition = f;
    return (*this);
 }
@@ -281,8 +254,12 @@ KVParticleCondition& KVParticleCondition::operator=(const LambdaFunc& f)
 KVParticleCondition KVParticleCondition::operator&&(const KVParticleCondition& obj) const
 {
    //Perform boolean AND between the two selection conditions
-   //If SetParticleClassName has been called for either of the two conditions,
+   //
+   //If SetParticleClassName() has been called for either of the two conditions,
    //it will be called for the resulting condition with the same value
+   //
+   // Both conditions must be of same type, i.e. if one uses a lambda expression, the other
+   // must also use a lambda expression.
 
 #ifdef USING_ROOT6
    // if lambdas are used (error if not both ?)
@@ -313,8 +290,12 @@ KVParticleCondition KVParticleCondition::operator&&(const KVParticleCondition& o
 KVParticleCondition KVParticleCondition::operator||(const KVParticleCondition& obj) const
 {
    //Perform boolean OR between the two selection conditions
+   //
    //If SetParticleClassName has been called for either of the two conditions,
    //it will be called for the resulting condition with the same value
+   //
+   // Both conditions must be of same type, i.e. if one uses a lambda expression, the other
+   // must also use a lambda expression.
 
 #ifdef USING_ROOT6
    // if lambdas are used (error if not both ?)
@@ -343,6 +324,9 @@ KVParticleCondition KVParticleCondition::operator||(const KVParticleCondition& o
 KVParticleCondition& KVParticleCondition::operator|=(const KVParticleCondition& other)
 {
    // Replace current condition with a logical 'OR' between itself and other
+   //
+   // Both conditions must be of same type, i.e. if one uses a lambda expression, the other
+   // must also use a lambda expression.
 
    KVParticleCondition tmp = *this || other;
    tmp.Copy(*this);
@@ -352,6 +336,9 @@ KVParticleCondition& KVParticleCondition::operator|=(const KVParticleCondition& 
 KVParticleCondition& KVParticleCondition::operator&=(const KVParticleCondition& other)
 {
    // Replace current condition with a logical 'AND' between itself and other
+   //
+   // Both conditions must be of same type, i.e. if one uses a lambda expression, the other
+   // must also use a lambda expression.
 
    KVParticleCondition tmp = *this && other;
    tmp.Copy(*this);
@@ -362,8 +349,8 @@ KVParticleCondition& KVParticleCondition::operator&=(const KVParticleCondition& 
 
 void KVParticleCondition::AddExtraInclude(const Char_t* inc_file)
 {
-   //Optimisation of KVParticleCondition::Test implies the automatic generation
-   //of a new class which implements the selection required by the user (see Optimize).
+   //Optimisation of KVParticleCondition::Test() implies the automatic generation
+   //of a new class which implements the selection required by the user (see Optimize()).
    //
    //If the user's condition depends on objects of classes other than the family
    //of particle classes (TLorentVector <- KVParticle <- KVNucleus ...) there will
@@ -373,17 +360,19 @@ void KVParticleCondition::AddExtraInclude(const Char_t* inc_file)
    //'#include' file to be added to the class implementation.
    //
    //Example:
+   //~~~~~{.cpp}
    //    KVParticleCondition p("_NUC_->GetVpar()>=gDataAnalyser->GetKinematics()->GetNucleus(1)->GetVpar()");
+   //~~~~~
+   //Optimization will not work, as:
+   //  - gDataAnalyser pointer to current analysis manager (KVDataAnalyser object), defined in KVDataAnalyser.h
+   //  - gDataAnalyser->GetKinematics() returns a pointer to a KV2Body object, defined in KV2Body.h
    //
-   //Optimization will not work, as the 'gIndra' pointer is declared in KVINDRA.h, which
-   //is not a default '#include' file when the optimised class is generated; similarly,
-   //gIndra->GetSystem() returns a pointer to a KVDBSystem : => #include "KVDBSystem.h";
-   //and KVDBSystem::GetKinematics() returns a pointer to a KV2Body : => #include "KV2Body.h".
    //Therefore, for this condition to work, the user must first call the methods :
    //
-   //    p.AddExtraInclude("KVINDRA.h");
+   //~~~~~{.cpp}
+   //    p.AddExtraInclude("KVDataAnalyser.h");
    //    p.AddExtraInclude("KV2Body.h");
-   //    p.AddExtraInclude("KVDBSystem.h");
+   //~~~~~
    //
    //before the first call to p.Test() (when optimization occurs).
 
@@ -425,9 +414,8 @@ void KVParticleCondition::Optimize() const
    //
    //If compilation fails, the condition will evaluate to kFALSE for all subsequent calls.
 
-   /* check that the same condition has not already been optimized */
    fOptimal = (KVParticleCondition*)fgOptimized.FindObject(GetName());
-   if (fOptimal) {
+   if (fOptimal) {  /* check that the same condition has not already been optimized */
       Info("Optimize", "Using existing optimized condition %p", fOptimal);
       fOptimal->fNUsing++;
       fOptOK = kTRUE;

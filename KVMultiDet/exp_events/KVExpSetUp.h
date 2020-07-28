@@ -7,6 +7,19 @@
 #include "KVMultiDetArray.h"
 class KVDBRun;
 
+/**
+  \class KVExpSetUp
+  \ingroup Geometry
+  \brief Describe an experimental set-up coupling two or more different detector arrays
+
+KVExpSetUp combines two or more existing KVMultiDetArray objects to describe the
+geometry, detectors, etc. of an experiment coupling several different arrays.
+Each KVMultiDetArray can have its own
+dedicated calibration database (KVExpDB and KVUpdater class)
+used to store and set calibration parameters.
+
+\note All detector & structure names in individual arrays must be unique! The group numbering has to be modified (in Build()) to make them unique.
+ */
 class KVExpSetUp : public KVMultiDetArray {
 
 protected:

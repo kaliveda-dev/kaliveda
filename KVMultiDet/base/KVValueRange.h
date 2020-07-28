@@ -6,6 +6,13 @@
 
 #include "KVBase.h"
 
+/**
+  \class  KVValueRange
+ \brief Range of values specified by minimum, maximum
+\ingroup Core
+*/
+
+
 template< typename ValueType >
 class KVValueRange : public KVBase {
    ValueType fMin;

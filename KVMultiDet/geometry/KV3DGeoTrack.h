@@ -5,6 +5,12 @@
 #include "TVirtualGeoTrack.h"
 #include "KVNucleus.h"
 
+/**
+ \class KV3DGeoTrack
+ \ingroup Geometry
+ \brief Visualise particle trajectories through array geometry
+ */
+
 class KV3DGeoTrack : public TPolyLine3D {
 
 protected:

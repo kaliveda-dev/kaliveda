@@ -25,6 +25,12 @@ class TCanvas;
 class KVNumberList;
 class TMultiGraph;
 
+/**
+  \class KVHistoManipulator
+  \brief Toolkit for various operations on histograms & graphs not provided by ROOT
+  \ingroup Analysis
+ */
+
 class KVHistoManipulator {
    Bool_t kVisDebug;// = kTRUE for visual debugging
    TCanvas* fVDCanvas;//! used for visual debugging

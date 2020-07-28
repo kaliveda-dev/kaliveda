@@ -7,6 +7,11 @@
 #include "Rtypes.h"
 #include "TMath.h"
 
+/**
+  \class KVCouple
+  \brief Handles binary decomposition of an integer
+  \ingroup Analysis
+ */
 class KVCouple {
 
 protected:

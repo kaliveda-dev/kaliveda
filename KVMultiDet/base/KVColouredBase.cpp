@@ -5,15 +5,6 @@
 
 ClassImp(KVColouredBase)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVColouredBase</h2>
-<h4>A basic coloured object for coloured list views</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVColouredBase::KVColouredBase() : fColour("white")
 {
    // Default constructor

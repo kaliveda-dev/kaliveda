@@ -7,6 +7,11 @@ $Id: KVLogReader.h,v 1.10 2008/04/07 15:34:27 franklan Exp $
 #include "Rtypes.h"
 #include "KVString.h"
 
+/**
+  \class KVLogReader
+  \brief Base class for reading batch log files at CC-IN2P3
+  \ingroup Core
+ */
 class KVLogReader {
 protected:
 

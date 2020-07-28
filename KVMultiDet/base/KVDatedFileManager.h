@@ -15,6 +15,13 @@ $Date: 2007/05/03 11:05:47 $
 #include "KVString.h"
 #include "KVList.h"
 
+/**
+   \class KVSortableDatedFile
+\brief A filename with an SQL-format date extension which can be used to sort a list according to date
+\ingroup Core
+
+Used by KVDatedFileManager.
+*/
 class KVSortableDatedFile : public TNamed {
    KVDatime fTimestamp;//timestamp extracted from filename
 
@@ -33,7 +40,16 @@ public:
    ClassDef(KVSortableDatedFile, 1)//A filename with an SQL-format date extension which can be used to sort a list according to date
 };
 
-//__________________________________________________________________________________________________//
+/**
+   \class KVDatedFileManager
+\brief Handles a set of different versions of files with the same base name and a timestamp
+\ingroup Core
+
+Read all versions of file with a given basename in directory and put them
+in a list sorted according to their timestamps.
+Environment variables (like `$KVROOT`) and other special symbols ('`~`') can be used
+in the directory name.
+*/
 
 class KVDatedFileManager {
    KVString fBaseName;//the base name of the file

@@ -10,6 +10,12 @@
 class KVDetector;
 class KVNucleus;
 
+/**
+ \class KVGroup
+ \ingroup Geometry
+ \brief Group of detectors which can be treated independently of all others in array
+ */
+
 class KVGroup : public KVGeoStrucElement {
 
 protected:

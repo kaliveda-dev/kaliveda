@@ -25,6 +25,65 @@ $Date: 2007/03/26 10:14:56 $
 
 class KVClassFactory;
 
+/**
+  \class KVParticleCondition
+\brief Handles particle selection criteria for data analysis classes
+\ingroup Analysis
+
+A KVParticleCondition object can be used to select nuclei to include in data analysis
+(see KVEventSelector::SetParticleConditions()) or in the calculation of global
+variables (see KVVarGlob::SetSelection()). The Test() method returns true or false
+for a given nucleus depending on whether or not the condition is fulfilled. Combinations of
+selections can be performed using Boolean logic operations `&&` and `||`.
+
+There are two ways to define and use KVParticleCondition objects:
+  1. Using strings of pseudo-code
+  2. Using lambda expressions (only with ROOT6 or later)
+
+### Using strings of pseudo-code
+These must be valid C++ expressions using `_NUC_` instead and in place of
+a `const KVNucleus*` pointer to the particle to be tested, for example
+~~~~{.cpp}
+KVParticleCondition c1("_NUC_->GetZ()>2");
+KVParticleCondition c2("_NUC_->GetVpar()>0");
+~~~~
+Note that the methods used in the selection
+do not have to be limited to the methods of the KVNucleus class.
+The 'real' class of the object
+passed to Test() can be used to cast the base pointer up (or is it down?) to the
+required pointer type at execution. In this case, you must call the method
+SetParticleClassName() with the name of the class to use in the cast.
+
+Note that the first call to Test() automatically causes the 'optimization' of the
+KVParticleCondition, which means that a class implementing the required condition is generated
+and compiled on the fly before continuing (see method Optimize()).
+
+### Using lambda expressions (only with ROOT6 or later)
+Lambda expressions were introduced in C++11 and provide an easy way to define small functions
+on the fly inside code. The lambda must take a `const KVNucleus*` pointer as argument and return
+a boolean:
+~~~~~~{.cpp}
+KVParticleCondition l1("Z>2", [](const KVNucleus* nuc){ return nuc->GetZ()>2; });
+KVParticleCondition l2("Vpar>0", [](const KVNucleus* nuc){ return nuc->GetVpar()>0; });
+~~~~~~
+Note the first argument to the constructor is a name which the user is free to define
+in order to remember what the condition does.
+
+Like any lambda expressions, variables can be 'captured' from the surrounding scope, which
+can be useful in some situations. For example, given the following definitions:
+~~~~~~{.cpp}
+int zmin = 3;
+KVParticleCondition l3("Z>zmin", [&](const KVNucleus* nuc){ return nuc->GetZ()>=zmin; });
+~~~~~~
+then the limit for the selection can be changed dynamically like so:
+~~~~~~{.cpp}
+KVNucleus N("7Li");
+l3.Test(&N);      ==> returns true
+zmin=5;
+l3.Test(&N);      ==> returns false
+~~~~~~
+*/
+
 class KVParticleCondition : public KVBase {
    static KVHashList fgOptimized;// list of optimized particle conditions
    mutable Int_t fNUsing;//! number of classes using this as an optimized condition
@@ -60,7 +119,29 @@ public:
    KVParticleCondition(const KVString& name, const LambdaFunc& F)
       : KVBase(name, "KVParticleCondition"), fLambdaCondition(F)
    {
-      // Create named object using lambda capture for condition
+      // Create named object using lambda expression for condition
+      // The lambda must take a `const KVNucleus*` pointer as argument and return
+      // a boolean:
+      // ~~~~~~{.cpp}
+      // KVParticleCondition l1("Z>2", [](const KVNucleus* nuc){ return nuc->GetZ()>2; });
+      // KVParticleCondition l2("Vpar>0", [](const KVNucleus* nuc){ return nuc->GetVpar()>0; });
+      // ~~~~~~
+      // Note the first argument to the constructor is a name which the user is free to define
+      // in order to remember what the condition does.
+      //
+      // Like any lambda expressions, variables can be 'captured' from the surrounding scope, which
+      // can be useful in some situations. For example, given the following definitions:
+      // ~~~~~~{.cpp}
+      // int zmin = 3;
+      // KVParticleCondition l3("Z>zmin", [&](const KVNucleus* nuc){ return nuc->GetZ()>=zmin; });
+      // ~~~~~~
+      // then the limit for the selection can be changed dynamically like so:
+      // ~~~~~~{.cpp}
+      // KVNucleus N("7Li");
+      // l3.Test(&N);      ==> returns true
+      // zmin=5;
+      // l3.Test(&N);      ==> returns false
+      // ~~~~~~
       fOptimal = nullptr;
       cf = nullptr;
       fOptOK = kFALSE;
@@ -68,6 +149,7 @@ public:
    }
    bool IsLambda() const
    {
+      // \returns true if this condition is defined using a lambda expression
       return (bool)fLambdaCondition || ((bool)fSavedLambda1 && (bool)fSavedLambda2);
    }
 #endif
@@ -75,7 +157,16 @@ public:
 #ifdef USING_ROOT6
    void Set(const KVString& name, const LambdaFunc& F)
    {
-      // set condition using lambda capture
+      // Set condition using lambda expression (replace any existing definition).
+      //
+      // The lambda must take a `const KVNucleus*` pointer as argument and return
+      // a boolean:
+      // ~~~~~~{.cpp}
+      // KVParticleCondition l1("Z>2", [](const KVNucleus* nuc){ return nuc->GetZ()>2; });
+      // KVParticleCondition l2("Vpar>0", [](const KVNucleus* nuc){ return nuc->GetVpar()>0; });
+      // ~~~~~~
+      // Note the first argument to the constructor is a name which the user is free to define
+      // in order to remember what the condition does.
       fLambdaCondition = F;
       SetName(name);
    }
@@ -110,6 +201,8 @@ public:
    Bool_t IsSet() const
    {
       // Return kTRUE if a condition/selection has been defined
+      //
+      // If this is not true, Test() will return true for all and any nuclei.
 #ifdef USING_ROOT6
       return (fLambdaCondition || fCondition != "");
 #else

@@ -11,6 +11,11 @@
 #include "TString.h"
 #include "TObjString.h"
 
+/**
+  \class KVFileReader
+  \ingroup Core
+  \brief Handle reading text files
+ */
 class KVFileReader : public KVBase {
 private:
    void init()

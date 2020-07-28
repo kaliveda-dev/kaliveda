@@ -8,6 +8,12 @@
 #include "KVUniqueNameList.h"
 class KVDetector;
 
+/**
+ \class KVGeoStrucElement
+ \ingroup Geometry
+ \brief Base class describing elements of array geometry
+ */
+
 class KVGeoStrucElement : public KVBase {
    void init();
 

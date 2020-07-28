@@ -65,14 +65,6 @@ Bool_t KVMultiDetArray::fBuildTarget = kFALSE;
 Bool_t KVMultiDetArray::fMakeMultiDetectorSetParameters = kTRUE;
 
 ClassImp(KVMultiDetArray)
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVMultiDetArray</h2>
-<h4>Multidetector array base class</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVMultiDetArray::KVMultiDetArray()
    : KVGeoStrucElement(), fTrajectories(kTRUE)
@@ -1504,9 +1496,6 @@ void KVMultiDetArray::GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollect
    // If the list of fired acquisition parameters 'fired_params' is given, then we use this list
    // to find, first, the associated fired detectors, then, the associated groups. If not given,
    // or if it is empty, we may use the internal fFiredACQParams list.
-   //
-   // The KVDetectorEvent object can then be used by KVReconstructedEvent::ReconstructEvent
-   // in order to generate a list of particles (KVReconstructedNucleus).
    //
    // Call method detev->Clear() before reading another event in order to reset all of the hit groups
    // (including all detectors etc.) and emptying the list.

@@ -9,6 +9,11 @@
 class TChain;
 class KVDBRun;
 
+/**
+  \class KVReconDataAnalyser
+  \ingroup Analysis
+  \brief Manages user analysis of reconstructed experimental data
+ */
 class KVReconDataAnalyser: public KVDataSetAnalyser {
 
 protected:

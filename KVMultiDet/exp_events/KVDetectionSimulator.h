@@ -11,6 +11,11 @@
 #include "KVTarget.h"
 #include "KVRangeTableGeoNavigator.h"
 
+/**
+  \class KVDetectionSimulator
+  \ingroup Simulation
+  \brief Simulate detection of particles or events in a detector array
+ */
 class KVDetectionSimulator : public KVBase {
 
 private:

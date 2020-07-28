@@ -5,6 +5,12 @@
 #include "KVGeoNavigator.h"
 #include "KVIonRangeTable.h"
 
+/**
+ \class KVRangeTableGeoNavigator
+ \ingroup Geometry
+ \brief Propagate particles through array geometry calculating energy losses
+ */
+
 class KVRangeTableGeoNavigator : public KVGeoNavigator {
 
    KVIonRangeTable* fRangeTable;

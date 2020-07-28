@@ -9,6 +9,13 @@
 #include "TCutG.h"
 #include "KVNameValueList.h"
 
+/**
+\class KVHistogram
+\brief Wrapper for histograms and graphical cuts used by KVTreeAnalyzer
+\ingroup Analysis
+
+ \note GetType() returns either "Histo" or "Cut"
+*/
 class KVHistogram : public KVBase {
 protected:
    TH1* fHisto;//pointer to histogram

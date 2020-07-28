@@ -10,6 +10,24 @@
 #include "KVMultiDetArray.h"
 #include "KVReconstructedEvent.h"
 
+/**
+  \class KVEventReconstructor
+  \ingroup Reconstruction
+  \brief Base class for event reconstruction from array data
+
+ Event reconstruction begins with a KVMultiDetArray containing hit
+ detectors (either following the simulated detection of a simulated event,
+ or after reading some experimental data corresponding to an experimental
+ event) and ends with a KVReconstructedEvent object filled with
+ KVReconstructedNucleus objects corresponding to the reconstructed
+ (and possibly identfied & calibrated) particles.
+
+ -# Get list of hit groups (KVDetectorEvent)
+ -# For each hit group, perform reconstruction/identification/ etc. in the group
+    using a KVGroupReconstructor-derived object (uses plugins)
+ -# Merge together the different event fragments into the output reconstructed
+    event object
+*/
 class KVEventReconstructor : public KVBase {
 
 private:

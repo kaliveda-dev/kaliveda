@@ -10,25 +10,7 @@ using namespace std;
 
 ClassImp(KVReconstructedNucleus);
 
-//////////////////////////////////////////////////////////////////////////////////////////
-/*
-Particles reconstructed from data measured in multidetector arrays.
 
-If the particle has been identified (IsIdentified()=kTRUE) and calibrated (IsCalibrated()=kTRUE)
-then information on its nature and kinematics can be obtained using the methods of parent
-classes KVNucleus and KVParticle (GetZ(), GetVelocity(), etc.).
-
-Information specific to the detection and identification of the particle:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
-   GetReconstructionTrajectory()  -  list of detectors passed through, in reverse order
-   GetStoppingDetector()          -  detector in which particle stopped
-   GetIdentifyingTelescope()     -  ID telescope which identified this particle (if IsIdentified())
-   IsIdentified()               - =kTRUE if particle identification attempted
-   IsCalibrated()               - =kTRUE if particle's energy has been set
-   GetPID()                     - result of linearisation procedure (particle identification)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
 
 void KVReconstructedNucleus::init()
 {

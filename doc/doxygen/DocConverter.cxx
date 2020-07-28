@@ -100,27 +100,27 @@ void write_class_description(KVString& group, int& last_non_code_line, ofstream&
 //      std::for_each(classname.begin(),classname.end(),errmess);
    }
 
-   if (classname.size()) {
-      output_file << "/** \\class " << classname[0] << endl;
-      output_file << "\\ingroup " << group << endl;
-      if (briefdesc != "") output_file << "\\brief " << briefdesc << endl;
-      if (class_description.size()) {
-         for (auto& l : class_description) {
-            output_file << l << endl;
-         }
-      }
-      output_file << "*/" << endl;
-   }
-   if (classname.size() > 1) {
-      auto it = classname.begin();
-      ++it;
-      for (; it != classname.end(); ++it) {
-         output_file << "/** \\class " << *it << endl;
-         output_file << "\\ingroup " << group << endl;
-         output_file << "\\copydoc " << classname[0] << endl;
-         output_file << "*/" << endl;
-      }
-   }
+//    if (classname.size()) {
+//       output_file << "/** \\class " << classname[0] << endl;
+//       output_file << "\\ingroup " << group << endl;
+//       if (briefdesc != "") output_file << "\\brief " << briefdesc << endl;
+//       if (class_description.size()) {
+//          for (auto& l : class_description) {
+//             output_file << l << endl;
+//          }
+//       }
+//       output_file << "*/" << endl;
+//    }
+//    if (classname.size() > 1) {
+//       auto it = classname.begin();
+//       ++it;
+//       for (; it != classname.end(); ++it) {
+//          output_file << "/** \\class " << *it << endl;
+//          output_file << "\\ingroup " << group << endl;
+//          output_file << "\\copydoc " << classname[0] << endl;
+//          output_file << "*/" << endl;
+//       }
+//    }
    class_description.clear();
 }
 

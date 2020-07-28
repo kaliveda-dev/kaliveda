@@ -7,6 +7,12 @@
 #include "KVDetectorSignal.h"
 #include "TFormula.h"
 
+/**
+ \class KVDetectorSignalExpression
+ \ingroup Calibration
+ \brief Detector output from a mathematical combination of other signals
+ */
+
 class KVDetectorSignalExpression : public KVDetectorSignal {
 #if ROOT_VERSION_CODE < ROOT_VERSION(6,0,0)
    TFormula* fFormula;//!

@@ -9,15 +9,6 @@
 
 ClassImp(KVSimDirFilterAnalyser)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSimDirFilterAnalyser</h2>
-<h4>Analysis of filtered simulations</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVSimDirFilterAnalyser::KVSimDirFilterAnalyser()
    : KVSimDirAnalyser()
 {

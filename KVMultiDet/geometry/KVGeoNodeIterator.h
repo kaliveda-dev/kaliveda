@@ -8,6 +8,12 @@
 #include "KVGeoDetectorNode.h"
 #include "KVGeoDNTrajectory.h"
 
+/**
+ \class KVGeoNodeIterator
+ \ingroup Geometry
+ \brief Iterate from node to node along trajectories in array geometry
+ */
+
 class KVGeoNodeIterator : public KVBase {
    KVGeoDetectorNode* start_node;
    mutable KVGeoDetectorNode* current_node;

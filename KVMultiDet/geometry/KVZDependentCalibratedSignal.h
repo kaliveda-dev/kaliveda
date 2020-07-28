@@ -8,7 +8,7 @@
 
 /**
   \class KVZDependentCalibratedSignal
-  \ingroup Geometry
+  \ingroup Calibration
   \brief Handle several calibrations valid for different Z ranges
 
   If 2 or more calibrations which define the same SignalOut have a ZRange parameter:

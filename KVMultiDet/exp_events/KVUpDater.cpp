@@ -19,17 +19,6 @@ $Author: franklan $
 using namespace std;
 
 ClassImp(KVUpDater)
-//////////////////////////////////////////////////////////////////////////////////
-//
-//KVUpDater
-//
-//Abstract class implementing necessary methods for setting multidetector parameters
-//for each run of the current dataset, gDataSet
-//
-//In specific implementations for different detectors, the method
-//      void SetParameters (UInt_t run)
-//must be defined. This updates the current detector array gMultiDetArray with the
-//parameter values for the run found in the current gDataBase database.
 KVUpDater::KVUpDater() : fArray(nullptr)
 {
    //Default ctor for KVUpDater object.

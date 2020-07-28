@@ -6,6 +6,11 @@
 
 #include "KVBase.h"
 
+/**
+  \class KVColouredBase
+  \brief A basic coloured object for couloured list views
+  \ingroup Core
+ */
 class KVColouredBase : public KVBase {
 protected:
    TString fColour;

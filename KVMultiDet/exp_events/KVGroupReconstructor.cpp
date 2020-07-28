@@ -11,15 +11,6 @@ using std::endl;
 
 ClassImp(KVGroupReconstructor)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGroupReconstructor</h2>
-<h4>Base class for handling event reconstruction in detector groups</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 bool KVGroupReconstructor::fDoIdentification = kTRUE;
 bool KVGroupReconstructor::fDoCalibration = kTRUE;
 

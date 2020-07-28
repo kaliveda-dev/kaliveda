@@ -10,9 +10,7 @@ $Id: KVLogReader.cpp,v 1.13 2008/12/08 14:07:37 franklan Exp $
 using namespace std;
 
 ClassImp(KVLogReader)
-//////////////////////////////
-//For reading CCIN2P3 log files
-//
+
 KVLogReader::KVLogReader()
 {
    fFMT = "%d";

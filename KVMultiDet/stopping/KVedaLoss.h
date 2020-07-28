@@ -10,6 +10,26 @@
 class KVedaLossMaterial;
 class TGeoMaterial;
 
+/**
+  \class KVedaLoss
+  \ingroup Stopping
+  \brief C++ implementation of VEDALOSS stopping power calculation
+
+See documentation <a href="KVedaLossDoc/KVedaLoss.html">here</a>.
+
+### Energy limits
+Normally all range, \f$dE\f$, \f$E_{res}\f$ functions are limited to range \f$0\leq E\leq E_{max}\f$,
+where \f$E_{max}\f$ is nominal maximum energy for which range tables are valid
+(usually 400MeV/u for \f$Z<3\f$, 250MeV/u for \f$Z>3\f$).
+
+If higher energies are required, call static method KVedaLoss::SetIgnoreEnergyLimits() **BEFORE ANY MATERIALS ARE CREATED**
+in order to recalculate the \f$E_{max}\f$ limits in such a way that:
+   -  range function is always monotonically increasing function of \f$E_{inc}\f$;
+   -  stopping power is concave (i.e. no minimum of stopping power followed by an increase)
+
+Then, at the most, the new limit will be 1 GeV/nucleon, or
+at the least, it will remain at the nominal (400 or 250 MeV/nucleon) level.
+ */
 class KVedaLoss : public KVIonRangeTable {
    static KVHashList* fMaterials;// static list of all known materials
    TString fLocalMaterialsDirectory;

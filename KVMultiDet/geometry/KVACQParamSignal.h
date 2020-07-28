@@ -6,6 +6,11 @@
 
 #include "KVDetectorSignal.h"
 #include "KVACQParam.h"
+/**
+ \class KVACQParamSignal
+ \ingroup Calibration
+ \brief Wrapper signal for KVACQParam objects
+*/
 
 class KVACQParamSignal : public KVDetectorSignal {
    KVACQParam* fParam;

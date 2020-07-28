@@ -6,6 +6,13 @@
 
 #include "KVReconDataAnalyser.h"
 
+
+/**
+\class KVOnlineReconDataAnalyser
+\brief Online analysis of reconstructed data
+\ingroup Analysis
+*/
+
 class KVOnlineReconDataAnalyser : public KVReconDataAnalyser {
    mutable Bool_t fUpdate;
 public:

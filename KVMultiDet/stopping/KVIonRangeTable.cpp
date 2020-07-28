@@ -22,15 +22,6 @@
 
 ClassImp(KVIonRangeTable)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIonRangeTable</h2>
-<h4>Abstract base class for calculation of range & energy loss of charged particles in matter</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVIonRangeTable::KVIonRangeTable(const Char_t* name, const Char_t* title)
    : KVBase(name, title)
 {

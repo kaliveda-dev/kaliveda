@@ -15,17 +15,6 @@
 
 ClassImp(KVExpSetUp)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVExpSetUp</h2>
-<h4>Describe an experimental set-up made of several KVMultiDetArray objects</h4>
-<!-- */
-// --> END_HTML
-// All detector & structure names in individual arrays must be unique!
-// The group numbering has to be modified (in Build()) to make them unique.
-////////////////////////////////////////////////////////////////////////////////
-
 void KVExpSetUp::init()
 {
    fBuildTarget = kFALSE;

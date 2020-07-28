@@ -12,7 +12,7 @@ class KVEnv;
 
 /**
  \class KVNameValueList
- \ingroup Base
+ \ingroup Core
  \brief Handles lists of named parameters with different types, a list of KVNamedParameter objects
 
  ###Create a list from a string###

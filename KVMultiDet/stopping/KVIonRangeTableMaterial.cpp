@@ -13,15 +13,6 @@ using namespace std;
 
 ClassImp(KVIonRangeTableMaterial)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIonRangeTableMaterial</h2>
-<h4>Material for use in energy loss & range calculations</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVIonRangeTableMaterial::KVIonRangeTableMaterial()
    : KVBase(),
      fTable(0),

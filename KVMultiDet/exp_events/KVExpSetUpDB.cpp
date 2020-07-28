@@ -9,22 +9,6 @@
 
 ClassImp(KVExpSetUpDB)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVExpSetUpDB</h2>
-<h4>Database for dataset using KVExpSetUp</h4>
-<!-- */
-// --> END_HTML
-/*
-KVExpSetUp combines two or more existing KVMultiDetArray objects to describe the
-geometry, detectors, etc. of an experiment. Each KVMultiDetArray can have its own
-dedicated KVExpDB and KVUpdater class used to store and set calibration parameters.
-In this case building the database for the experiment means building each individual
-database...
-*/
-////////////////////////////////////////////////////////////////////////////////
-
 KVExpSetUpDB::KVExpSetUpDB()
    : KVExpDB()
 {

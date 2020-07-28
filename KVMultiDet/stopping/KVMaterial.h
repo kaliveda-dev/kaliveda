@@ -33,6 +33,11 @@ class KVNucleus;
 class TGeoMedium;
 class TGeoVolume;
 
+/**
+  \class KVMaterial
+  \ingroup Stopping
+  \brief  Description of physical materials used to construct detectors; interface to range tables
+ */
 class KVMaterial: public KVBase {
 
 protected:
@@ -144,7 +149,7 @@ public:
       return fAbsorberVolume;
    }
 
-   ClassDef(KVMaterial, 6)      // Class describing physical materials used to construct detectors & targets
+   ClassDef(KVMaterial, 6)// Class describing physical materials used to construct detectors & targets
 };
 
 #endif

@@ -1,23 +1,3 @@
-/***************************************************************************
-$Id: KVTelescope.h,v 1.19 2008/12/17 13:01:26 franklan Exp $
-// Author: J.D. Frankland, A. Mignon
-                          kvtelescope.h  -  description
-                             -------------------
-    begin                : Thu May 16 2002
-    copyright            : (C) 2002 by J.D. Frankland
-    email                : frankland@ganil.fr
-
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-
 #ifndef KVTELESCOPE_H
 #define KVTELESCOPE_H
 #include "KVGroup.h"
@@ -26,6 +6,12 @@ $Id: KVTelescope.h,v 1.19 2008/12/17 13:01:26 franklan Exp $
 #include "KVList.h"
 #include "KVNameValueList.h"
 #include "KVGeoStrucElement.h"
+
+/**
+ \class KVTelescope
+ \ingroup Geometry
+ \brief Associates two detectors placed one behind the other
+*/
 
 class KVNucleus;
 class TGraph;

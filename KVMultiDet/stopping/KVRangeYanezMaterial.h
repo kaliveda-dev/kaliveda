@@ -6,7 +6,9 @@
 /**
  \class KVRangeYanezMaterial
  \ingroup Stopping
- \brief Description of absorber for the Range dE/dx and range library (Ricardo Yanez)
+ \brief Description of absorber for the Range dE/dx and range library
+
+ \sa KVRangeYanez
  */
 
 #include "KVIonRangeTableMaterial.h"

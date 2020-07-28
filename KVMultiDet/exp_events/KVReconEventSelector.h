@@ -8,6 +8,12 @@
 #include "KVDBRun.h"
 #include "KVReconstructedEvent.h"
 
+/**
+   \class KVReconEventSelector
+\brief Base class for user analysis of reconstructed data
+\ingroup Analysis
+*/
+
 class KVReconEventSelector : public KVEventSelector {
    KVDBRun* fCurrentRun;//current run being analysed
 

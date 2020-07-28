@@ -6,6 +6,11 @@
 
 #include "TSystemDirectory.h"
 
+/**
+  \class KVSystemDirectory
+  \brief Extension of ROOT TSystemDirectory class, handling browsing directories on disk
+  \ingroup Core
+ */
 class KVSystemDirectory : public TSystemDirectory {
    TList* fContents;//contents of directory
    TList* fSubdirs;//subdirectories of directory

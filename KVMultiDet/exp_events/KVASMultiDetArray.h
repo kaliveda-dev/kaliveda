@@ -25,6 +25,11 @@ $Id: KVMultiDetArray.h,v 1.55 2009/03/03 14:27:15 franklan Exp $
 #include "KVRing.h"
 class KVASGroup;
 
+/**
+  \class KVASMultiDetArray
+  \ingroup Geometry
+  \brief Base class for azimuthally-symmetric multidetector arrays (obsolete)
+ */
 class KVASMultiDetArray : public KVMultiDetArray {
 
 protected:

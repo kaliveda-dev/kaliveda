@@ -12,6 +12,12 @@ $Date: 2009/01/21 08:04:20 $
 
 #include "KVBase.h"
 
+/**
+   \class KVTarArchive
+\brief Handles directories stored in .tgz archive files
+\ingroup Core
+*/
+
 class KVTarArchive : public KVBase {
    void init();
 

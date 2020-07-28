@@ -16,60 +16,6 @@
 
 ClassImp(KVGeoImport)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGeoImport</h2>
-<h4>Import a ROOT geometry into a KVMultiDetArray object</h4>
-<!-- */
-// --> END_HTML
-//
-// To use:
-//~~~~~~~~{.cpp}
-// KVGeoImport geo(gGeoManager, KVMaterial::GetRangeTable(), new KVMultiDetArray);
-// gImp.ImportGeometry();
-//~~~~~~~~
-//
-// ### RULES FOR VALID DETECTOR GEOMETRY ###
-//
-// 1.) All detector volumes & nodes must have names which begin with **DET_**
-//
-// 2.) They must be made of materials which are known by the range table fRangeTable.
-//
-// 3.) For multi-layer detectors, the *active* layer volume/node must have a name beginning with **ACTIVE_**
-//
-// 4.) The "thickness" of the detector or any layer inside a multilayer detector
-//     will be taken as the size of the volume's shape along its Z-axis
-//     (so make sure that you define your detector volumes in this way).
-//
-// 5.) It is assumed that the natural length units of the geometry are centimetres.
-//
-// 6.) The name of the KVDetector object created and added to the array will be taken
-//     from the unique full path of the node corresponding to the geometrical positioning
-//     of the detector, see KVGeoNavigator::ExtractDetectorNameFromPath()
-//
-//  ### STRUCTURE ELEMENTS ###
-// A structure element  is any association of detectors which may occur several times
-// in a geometry in different places, with the same internal structure.
-//
-// #### Example: a wall of detectors in a rectangular array. ####
-//
-// The detectors in the wall may all be represented by a single volume (if they
-// are identical) called **DET_SI**, for example, which is placed *N* times in *N*
-// different positions on nodes called, by default, **DET_SI_1**, **DET_SI_2**, etc.
-//
-// Once you have defined the wall volume, call it **STRUCT_SIWALL** (or whatever you
-// want: only the **STRUCT_** part is mandatory).
-// Now you can place the same wall structure in different positions of your
-// geometry on nodes called **STRUCT_SIWALL_1**, **STRUCT_SIWALL_2**, etc.
-//
-// This will give a full path to the node of **DET_SI_1** in **SIWALL_2** like this:
-//~~~~~~
-//    /TOP_1/STRUCT_SIWALL_2/DET_SI_1
-//~~~~~~
-// which will be interpreted by KVGeoNavigator::ExtractDetectorNameFromPath() as a
-// detector with unique name: **SIWALL_2_SI_1** (the **STRUCT_** and **DET_** parts are stripped off).
-////////////////////////////////////////////////////////////////////////////////
 
 KVGeoImport::KVGeoImport(TGeoManager* g, KVIonRangeTable* r, KVMultiDetArray* m, Bool_t create) : KVGeoNavigator(g), fCreateArray(create), fOrigin(nullptr)
 {

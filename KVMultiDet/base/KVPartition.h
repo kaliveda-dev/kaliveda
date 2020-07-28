@@ -7,6 +7,26 @@
 #include "KVIntegerList.h"
 #include "KVValues.h"
 
+/**
+\class KVPartition
+\brief Handle partitions
+\ingroup Analysis
+
+A la classe mere, est rajoutée l'object fValues, qui permet le calcul automatique de
+des moments d'une variable jusqu'à un ordre donné (par defaut GetOrdreMax() = 5)
+Deux TArrayI permettent de stocker les valeurs de la liste et sont remplis dans la routine Update
+- ftab ( accessible via GetValues() ) -> tableau de toutes les valeurs de la liste de dimension fMult (GetMult())
+- ftab_diff ( accessible via GetValuesDiff() ) -> tableau des valeurs différentes de la liste de dimension fMult_diff (GetMultDiff())
+
+Cette classe donne accès aux grandeurs calculées dans la classe KVValues KVPartition::GetAddValues()
+et aux valeurs de la liste via par exemple :
+- Double_t GetZmax(Int_t rang=0)
+- Double_t GetZmin(Int_t rang=0)
+- Double_t GetZ1() const
+- Double_t GetZ2() const
+- Double_t GetZtot() const
+etc ....
+*/
 class KVPartition : public KVIntegerList {
 
 protected:
@@ -51,7 +71,7 @@ public:
       return ftab_diff->At(rang);
    }
 
-   //Methodes donnant acc�s � toutes les valeus de la partition avec la notion d'occurence/frequence
+   //Methodes donnant accès à toutes les valeus de la partition avec la notion d'occurence/frequence
    //en utilisant le rang ou la valeur
    Int_t GetMult(void) const
    {

@@ -5,15 +5,6 @@
 
 ClassImp(KVDataBranchHandler)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDataBranchHandler</h2>
-<h4>Handles TTree branches for storing member variables of classes</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDataBranchHandler::KVDataBranchHandler(TTree* tree, TObject* obj, const Char_t* var,
       const Char_t* type, const Char_t* prefix) :
    KVBase()

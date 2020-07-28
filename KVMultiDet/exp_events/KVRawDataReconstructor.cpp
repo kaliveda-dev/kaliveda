@@ -7,15 +7,6 @@
 
 ClassImp(KVRawDataReconstructor)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVRawDataReconstructor</h2>
-<h4>Reconstruct physical events from raw data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVRawDataReconstructor::KVRawDataReconstructor()
    : KVRawDataAnalyser()
 {

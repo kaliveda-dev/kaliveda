@@ -26,6 +26,11 @@ $Id: KVReconstructedEvent.h,v 1.11 2007/11/12 15:08:32 franklan Exp $
 class KVDetectorEvent;
 class TList;
 
+/**
+  \class KVReconstructedEvent
+  \ingroup Reconstruction
+  \brief Physical event reconstructed from data measured with a detector array using implemented identification and calibration procedures.
+*/
 class KVReconstructedEvent: public KVEvent {
 
    Bool_t fMeanAngles;          //!kTRUE if particle momenta calculated using mean angles of detectors (default: randomised angles)

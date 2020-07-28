@@ -13,6 +13,19 @@ $Date: 2008/12/17 15:27:25 $
 #include "KVList.h"
 #include "KVString.h"
 
+/**
+   \class KVEventListMaker
+   \brief Compute TEventList for TTree
+   \ingroup Analysis
+
+Inputs are filename, treename and space-separated list of branchnames.
+
+Only branches containing integer values are handled.
+
+All tree entries are read and TEventList are created when a new value of concerned
+branches are found.
+*/
+
 class KVEventListMaker {
 
 protected:

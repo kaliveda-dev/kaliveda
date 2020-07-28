@@ -7,6 +7,12 @@
 #include "KVEventReconstructor.h"
 #include "KVRawDataAnalyser.h"
 
+/**
+   \class KVRawDataReconstructor
+ \brief Manage task of reconstruction of physical events from raw data
+ \ingroup Reconstruction
+  */
+
 class KVRawDataReconstructor : public KVRawDataAnalyser {
 
    unique_ptr<KVEventReconstructor> fEvRecon;

@@ -8,6 +8,49 @@
 #include "TString.h"
 #include "THashTable.h"
 
+/**
+\class KVPartitionFunction
+\brief Calculates number of partitions of (A,Z,M)
+\ingroup Analysis
+
+These functions calculate the total number of partitions and the number of partitions
+per multiplicity either for a single component system (corresponding to the partition function
+of number theory, i.e. the number of ways to decompose an integer into distinct sums of other
+integers), or for a system made of two kinds of objects, i.e. protons and neutrons, with A=N+Z.
+
+These are exact results, the numbers correspond to each and every partition appearing
+once and only once.
+
+#### Single component system
+The method
+~~~~{.cpp}
+Double_t PartFunc(Int_t A, Int_t M)
+~~~~
+calculates the total number of ways to partition an integer
+A into the sum of M integers (\f$1\leq M\leq A\f$). We use the recursion relation given by J.P. Bondorf in
+Nucl. Phys. A443, 321 (1985), Eq. (2.6).
+
+The method
+~~~~{.cpp}
+Double_t PartSum(Int_t A)
+~~~~
+returns the total number of partitions summed over all multiplicities.
+
+#### Two component system
+The method
+~~~~{.cpp}
+Double_t PartFunc(Int_t A, Int_t Z, Int_t M)
+~~~~
+calculates the total number of ways to
+partition Z protons and (A-Z) neutrons into M fragments, using the method given by K. Sneppen
+in Nucl. Phys. A470, 213 (1987), Eqs. (4)-(6).
+
+The method
+~~~~{.cpp}
+Double_t PartSum(Int_t A, Int_t Z)
+~~~~
+returns the total number of partitions summed over all multiplicities.
+*/
 class KVPartitionFunction : public TObject {
    THashTable fTable;
 

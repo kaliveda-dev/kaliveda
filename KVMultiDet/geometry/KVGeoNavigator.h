@@ -17,6 +17,12 @@ class TGeoVolume;
 class TGeoNode;
 class TEnv;
 
+/**
+ \class KVGeoNavigator
+ \ingroup Geometry
+ \brief Base class for propagation of particles through array geometry
+ */
+
 class KVGeoNavigator : public KVBase {
 private:
    TGeoManager* fGeometry;//geometry to navigate

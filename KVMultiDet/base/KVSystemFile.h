@@ -8,6 +8,12 @@
 #include "TSystem.h"
 #include "TDatime.h"
 
+/**
+\class KVSystemFile
+\brief Extended ROOT TSystemFile with added info on file size etc.
+\ingroup Core
+*/
+
 class KVSystemFile : public TSystemFile {
    FileStat_t fFileInfos;
    UserGroup_t* fUserInfo;

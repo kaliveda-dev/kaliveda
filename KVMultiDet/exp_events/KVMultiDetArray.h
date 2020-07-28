@@ -48,6 +48,14 @@ class KVExpDB;
 class KVDBTable;
 class KVDBRun;
 
+/**
+  \class KVMultiDetArray
+  \ingroup Geometry
+  \brief Base class for describing the geometry of a detector array
+
+  See the chapter in the [KaliVeda Users' Guide](UsersGuide/geometry.html)
+
+ */
 class KVMultiDetArray : public KVGeoStrucElement {
 
    friend class KVGeoImport;

@@ -16,6 +16,12 @@
 
 class KVDetectorEvent;
 
+/**
+   \class KVRawDataAnalyser
+   \brief Abstract base class for user analysis of raw data
+ \ingroup Analysis
+*/
+
 class KVRawDataAnalyser : public KVDataSetAnalyser {
 protected:
 

@@ -25,6 +25,33 @@ $Id: KVDetectorEvent.h,v 1.8 2006/10/19 14:32:43 franklan Exp $
 #include "KVEvent.h"
 #include "KVGroup.h"
 
+/**
+ \class KVDetectorEvent
+ \ingroup Reconstruction
+ \brief List of hit groups in a multidetector array
+
+Multiparticle event detected/"seen" by a multidetector array.
+The result is basically a list of all the hit groups of the array (see KVGroup and KVMultiDetArray), from which we
+can access the energy losses etc. in the different detectors.
+
+A group is said to be "hit" if at least one detector has fired in the group (see KVDetector::Fired()).
+The list of "hit" groups is filled by KVMultiDetArray::GetDetectorEvent().
+
+GetGroups() returns a pointer to the list of hit groups.
+
+To loop over all hit groups in a KVDetectorEvent* kde, do something like this:
+~~~~~~~{.cpp}
+   KVGroup *g;
+   TIter next( kde->GetGroups() );
+   while( (g = (KVGroup*)next()) ){
+        ...
+   }
+~~~~~~~~
+
+ContainsGroup(KVGroup* grp) returns kTRUE if 'grp' points to a KVGroup belonging to the list of hit groups
+i.e. if ContainsGroup() returns kTRUE, then the group was hit in the event.
+
+ */
 class KVDetectorEvent: public KVBase {
 
 private:

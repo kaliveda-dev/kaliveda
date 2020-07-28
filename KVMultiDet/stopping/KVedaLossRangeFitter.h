@@ -12,6 +12,14 @@
 
 class TGraph;
 
+/**
+\class KVedaLossRangeFitter
+\ingroup Stopping
+\brief Fit a range table using the VEDALOSS functional
+
+\sa KVedaLoss
+*/
+
 class KVedaLossRangeFitter : public KVBase {
    KVedaLoss VEDALOSS;
 

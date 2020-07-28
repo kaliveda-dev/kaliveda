@@ -14,18 +14,6 @@ $Date: 2007/06/14 10:39:55 $
 
 ClassImp(KVDatedFileManager)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDatedFileManager</h2>
-<h4>Handles a set of different versions of files with the same base name and a timestamp</h4>
-Read all versions of file with a given basename in directory and put them
-in a list sorted according to their timestamps
-Environment variables ($KVROOT) and other special symbols ('~') can be used
-in the directory name.
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVDatedFileManager::KVDatedFileManager(const Char_t* base, const Char_t* dir): fBaseName(base), fDirectory(dir)
 {

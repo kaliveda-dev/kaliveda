@@ -33,16 +33,6 @@ using namespace std;
 
 ClassImp(KVHistoManipulator)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVHistoManipulator</h2>
-<h4>Propose differentes operations sur les histo</h4>
-<h5>En evolution merci de me tenir informer d'eventuels bugs bonnet@ganil.fr</h5>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVHistoManipulator* gHistoManipulator;
 
 KVHistoManipulator::KVHistoManipulator()

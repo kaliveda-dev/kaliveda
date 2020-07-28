@@ -31,12 +31,6 @@ using namespace std;
 
 ClassImp(KVMaterial);
 
-///////////////////////////////////////////////////////////////////////////////
-//                       KVMaterial
-//
-// Description of materials used for detectors and targets.
-///////////////////////////////////////////////////////////////////////////////
-
 KVIonRangeTable* KVMaterial::fIonRangeTable = 0x0;
 
 //___________________________________________________________________________________

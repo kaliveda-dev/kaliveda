@@ -14,6 +14,21 @@
 #endif
 #include <string>
 
+/**
+  \class KVGroupReconstructor
+  \ingroup Reconstruction
+  \brief Base class for particle reconstruction in the one group of a detector array
+
+Recalling that a group of detectors (KVGroup) is the largest part of an array which can be trated
+independently of all other detectors, KVGroupReconstructor is the basic working unit of event
+reconstruction. A KVEventReconstructor will use many KVGroupReconstructor objects in order to
+reconstruct an event from data detected by the array.
+
+Daughter classes of KVGroupReconstructor can be specialised for event reconstruction in
+specific arrays (or even specific parts of specific arrays).
+
+\sa KVEventReconstructor, KVGroup, KVMultiDetArray
+ */
 class KVGroupReconstructor : public KVBase {
 
    static bool fDoIdentification;

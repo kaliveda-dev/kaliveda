@@ -6,16 +6,7 @@
 
 ClassImp(KVHistogram)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVHistogram</h2>
-<h4>Wrapper for histograms and graphical cuts used by KVTreeAnalyzer</h4>
-<!-- */
-// --> END_HTML
-// GetType()
-//   - returns either "Histo" or "Cut"
-////////////////////////////////////////////////////////////////////////////////
+
 
 void KVHistogram::ParseExpressionAndSelection()
 {

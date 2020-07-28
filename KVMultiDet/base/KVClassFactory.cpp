@@ -17,60 +17,6 @@ $Date: 2009/01/21 08:04:20 $
 using namespace std;
 
 ClassImp(KVClassFactory)
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Factory class for generating skeleton files for new classes.
-//It can generate basic '.h' and '.cpp' files for
-//      - base classes (base_class="")
-//      - inherited classes (base_class!="")
-//      - classes based on template files
-//
-//There are two ways to use KVClassFactory in order to generate code:
-//
-//1. Using the static (stand-alone) method
-//
-//      KVClassFactory::MakeClass(classname, classdesc, base_class, withTemplate, templateFile);
-//
-//2. Create and configure a KVClassFactory object and then call the GenerateCode() method:
-//
-//    KVClassFactory fact(classname, classdesc, base_class, withTemplate, templateFile);
-//    fact.GenerateCode();
-//
-//The second method is more flexible and allows to add methods to classes before
-//code generation, even if the class is created from a predefined template.
-//
-//For example, let us suppose that we want to add the following method to our class:
-//
-//   declaration:
-//      virtual const Char_t* GetName(Option_t* = "") const;
-//
-//   implementation:
-//      const Char_t* MyNewClass::GetName(Option_t* opt) const
-//      {
-//            //A new method
-//            if( strcmp(opt,"") ) cout << "Option : " << opt << endl;
-//            else cout << fName.Data() << endl;
-//            return fName.Data();
-//      }
-//
-//This can be done as follows:
-//
-//    fact.AddMethod("GetName", "const Char_t*", kTRUE, kTRUE);
-//    fact.AddMethodArgument("GetName", "Option_t*", "opt", "\"\"");
-//    KVString body;
-//    body += "      //A new method\n";
-//    body += "      if( strcmp(opt,\"\") ) cout << \"Option : \" << opt << endl;\n";
-//    body += "      else cout << fName.Data() << endl;\n";
-//    body += "      return fName.Data();";
-//    fact.AddMethodBody("GetName", body);
-//
-//The addition of a new method may mean that it is necessary to add an '#include'
-//directive to either the header or the implementation file of the new class. For example,
-//in this case, the use of 'cout', 'endl' etc. may require to add an '#include "Riostream.h"'
-//to the '.cpp' file of the new class. This can be done as follows:
-//
-//    fact.AddImplIncludeFile("Riostream.h");
-//
-//For another example of this kind of approach, see the method KVParticleCondition::Optimize.
 
 KVString __add_indented_line(const KVString& line, const KVString& indent, Bool_t newline = kTRUE)
 {
@@ -528,7 +474,9 @@ void KVClassFactory::MakeClass(const Char_t* classname,
                                const Char_t* templateFile)
 {
    //Static method for generating skeleton header and implementation files for a new class.
+   //
    //Give a name for the class and a short description, used for HTML doc.
+   //
    //The optional string 'base_class' gives the name(s) of the parent class(es)*, in case of inheritance;
    //if not given, the new class will be a base class.
    //    *(in case of several base classes, give a comma-separated list)
@@ -536,20 +484,22 @@ void KVClassFactory::MakeClass(const Char_t* classname,
    //if withTemplate=kTRUE, we use a template for the class structure, defined in a '.h' and a '.cpp' file,
    //as follows:
    //
-   //      if templateFile="" (default), we expect base_class!="", and template files with names base_classTemplate.h and base_classTemplate.cpp
+   //    - if templateFile="" (default), we expect base_class!="", and template files with names base_classTemplate.h and base_classTemplate.cpp
    //      must be present in either $KVROOT/KVFiles, $HOME or $PWD directories.
    //      the dummy classname "base_classTemplate" will be replaced everywhere by 'classname'
    //
-   //      if templateFile="/absolute/path/classTemplate" we use classTemplate.h & classTemplate.cpp in the given directory.
+   //    - if templateFile="/absolute/path/classTemplate" we use classTemplate.h & classTemplate.cpp in the given directory.
    //      the dummy classname "classTemplate" will be replaced everywhere by 'classname'
    //
-   //      if templateFile="classTemplate" we look for classTemplate.h & classTemplate.cpp in $KVROOT/KVFiles, $HOME or $PWD directories.
+   //    - if templateFile="classTemplate" we look for classTemplate.h & classTemplate.cpp in $KVROOT/KVFiles, $HOME or $PWD directories.
    //      the dummy classname "classTemplate" will be replaced everywhere by 'classname'
    //
    //Example of use:
+   //~~~~~{.cpp}
    //      KVClassFactory::MakeClass("MyClass", "A brand new class", "TObject")
-   //
+   //~~~~~
    //will generate the following MyClass.h and MyClass.cpp files:
+   //~~~~{.cpp}
 //MyClass.h ======================================>>>>
 // //Created by KVClassFactory on Fri Mar 24 23:52:54 2006    (<-------creation date)
 // //Author: John Frankland    (<----- full name of user who calls MakeClass method)
@@ -572,6 +522,8 @@ void KVClassFactory::MakeClass(const Char_t* classname,
 // #endif
 //<<<<<<<===========================================
 //
+   //~~~~
+   //~~~~{.cpp}
 //MyClass.cpp=================================>>>>>>>
 // //Created by KVClassFactory on Fri Mar 24 23:52:54 2006
 // //Author: John Frankland   (<----- full name of user who calls MakeClass method)
@@ -593,6 +545,7 @@ void KVClassFactory::MakeClass(const Char_t* classname,
 // {
 //      //Destructor
 // }
+   //~~~~
 
    KVClassFactory cf(classname, classdesc, base_class, withTemplate, templateFile);
    if (!cf.IsZombie()) cf.GenerateCode();
@@ -641,7 +594,7 @@ void KVClassFactory::GenerateCode()
    }
 }
 
-KVClassMember* KVClassFactory::AddMember(const Char_t* name, const Char_t* type, const Char_t* comment, const Char_t* access)
+KVClassFactory::KVClassMember* KVClassFactory::AddMember(const Char_t* name, const Char_t* type, const Char_t* comment, const Char_t* access)
 {
    // Add a member variable to the class, with name 'f[name]' according to ROOT convention.
    // The access type is by default "protected", in accordance with OO-encapsulation.
@@ -969,7 +922,7 @@ void KVClassFactory::AddMethod(const KVClassMethod& kvcm)
 
 //______________________________________________________
 
-KVClassMethod* KVClassFactory::AddMethod(const Char_t* name, const Char_t* return_type, const Char_t* access,
+KVClassFactory::KVClassMethod* KVClassFactory::AddMethod(const Char_t* name, const Char_t* return_type, const Char_t* access,
       Bool_t isVirtual, Bool_t isConst)
 {
    // Add a method to the class.
@@ -995,7 +948,7 @@ KVClassMethod* KVClassFactory::AddMethod(const Char_t* name, const Char_t* retur
 
 //______________________________________________________
 
-KVClassConstructor* KVClassFactory::AddConstructor(const Char_t* argument_type,
+KVClassFactory::KVClassConstructor* KVClassFactory::AddConstructor(const Char_t* argument_type,
       const Char_t* argument_name, const Char_t* default_value, const Char_t* access)
 {
    // Add a constructor with or without arguments to the class.
@@ -1292,12 +1245,12 @@ void KVClassFactory::AddAssignmentOperator()
 //___________________________________________________________________________________
 
 
-ClassImp(KVClassMethod)
-ClassImp(KVClassMember)
+ClassImp(KVClassFactory::KVClassMethod)
+ClassImp(KVClassFactory::KVClassMember)
 /////////////////////////////////////////////////////////////////////////////////////
 //Helper classes for KVClassFactory
 
-void KVClassMethod::WriteDeclaration(KVString& decl)
+void KVClassFactory::KVClassMethod::WriteDeclaration(KVString& decl)
 {
    //Write declaration in the KVString object
    //If method is inline write method body directly after declaration
@@ -1338,7 +1291,7 @@ void KVClassMethod::WriteDeclaration(KVString& decl)
    write_method_body(decl);
 }
 
-void KVClassMember::WriteDeclaration(KVString& decl)
+void KVClassFactory::KVClassMember::WriteDeclaration(KVString& decl)
 {
    //Write declaration in the KVString object
 
@@ -1350,7 +1303,7 @@ void KVClassMember::WriteDeclaration(KVString& decl)
    decl += GetComment();
 }
 
-void KVClassMethod::write_method_body(KVString& decl)
+void KVClassFactory::KVClassMethod::write_method_body(KVString& decl)
 {
    KVString indentation = "";
    if (IsInline()) indentation = "   ";
@@ -1374,7 +1327,7 @@ void KVClassMethod::write_method_body(KVString& decl)
    decl += __add_indented_line("}", indentation, kFALSE);
 }
 
-void KVClassConstructor::write_method_body(KVString& decl)
+void KVClassFactory::KVClassConstructor::write_method_body(KVString& decl)
 {
    KVString indentation = "";
    if (IsInline()) indentation = "   ";
@@ -1456,7 +1409,7 @@ void KVClassConstructor::write_method_body(KVString& decl)
    decl += __add_indented_line("}", indentation, kFALSE);
 }
 
-void KVClassMethod::WriteImplementation(KVString& decl)
+void KVClassFactory::KVClassMethod::WriteImplementation(KVString& decl)
 {
    //Write skeleton implementation in the KVString object
    //All constructors call the default ctor of the base class (if defined)
@@ -1493,7 +1446,7 @@ void KVClassMethod::WriteImplementation(KVString& decl)
 
 //__________________________________________________________________________________
 
-KVClassMember::KVClassMember(const KVClassMember& obj) : KVBase()
+KVClassFactory::KVClassMember::KVClassMember(const KVClassMember& obj) : KVBase()
 {
    //ctor par copie
    obj.Copy(*this);
@@ -1501,7 +1454,7 @@ KVClassMember::KVClassMember(const KVClassMember& obj) : KVBase()
 
 //__________________________________________________________________________________
 
-KVClassMethod::KVClassMethod(const KVClassMethod& obj) : KVClassMember()
+KVClassFactory::KVClassMethod::KVClassMethod(const KVClassMethod& obj) : KVClassMember()
 {
    //ctor par copie
    obj.Copy(*this);
@@ -1509,7 +1462,7 @@ KVClassMethod::KVClassMethod(const KVClassMethod& obj) : KVClassMember()
 
 //__________________________________________________________________________________
 
-void KVClassMember::Copy(TObject& obj) const
+void KVClassFactory::KVClassMember::Copy(TObject& obj) const
 {
    //copy this to obj
    KVBase::Copy(obj);
@@ -1519,7 +1472,7 @@ void KVClassMember::Copy(TObject& obj) const
 
 //__________________________________________________________________________________
 
-void KVClassMethod::Copy(TObject& obj) const
+void KVClassFactory::KVClassMethod::Copy(TObject& obj) const
 {
    //copy this to obj
    KVClassMember::Copy(obj);
@@ -1530,7 +1483,7 @@ void KVClassMethod::Copy(TObject& obj) const
    ((KVClassMethod&)obj).SetInline(IsInline());
 }
 
-void KVClassMethod::AddArgument(Int_t i, const Char_t* type, const Char_t* argname, const Char_t* defaultvalue)
+void KVClassFactory::KVClassMethod::AddArgument(Int_t i, const Char_t* type, const Char_t* argname, const Char_t* defaultvalue)
 {
    // Add an argument to the method, which will be in i-th position in the argument list
    // Any existing arguments with indices [i,fNargs] will first be moved to [i+1,fNargs+1]
@@ -1579,7 +1532,7 @@ void KVClassMethod::AddArgument(Int_t i, const Char_t* type, const Char_t* argna
 }
 
 //__________________________________________________________________________________
-void KVClassMethod::Print(Option_t*) const
+void KVClassFactory::KVClassMethod::Print(Option_t*) const
 {
    // print the KVClass method
    cout << "KVClassMethod object -----> " << GetName() << endl;
@@ -1590,7 +1543,7 @@ void KVClassMethod::Print(Option_t*) const
 }
 
 //__________________________________________________________________________________
-void KVClassMember::Print(Option_t*) const
+void KVClassFactory::KVClassMember::Print(Option_t*) const
 {
    // print the KVClass member
    cout << "KVClassMember object -----> " << GetType() << " " << GetName() << endl;
@@ -1646,7 +1599,7 @@ void KVClassFactory::AddDestructor(const TString& access)
    }
 }
 
-KVClassMember::KVClassMember(const Char_t* name, const Char_t* type, const Char_t* comment, const Char_t* access)
+KVClassFactory::KVClassMember::KVClassMember(const Char_t* name, const Char_t* type, const Char_t* comment, const Char_t* access)
    : KVBase(Form("f%s", name), type), fComment(comment), fRealName(name)
 {
    // New class member variable

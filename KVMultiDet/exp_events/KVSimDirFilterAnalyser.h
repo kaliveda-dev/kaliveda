@@ -8,6 +8,12 @@
 #include <KV2Body.h>
 #include <KVEventSelector.h>
 
+/**
+\class KVSimDirFilterAnalyser
+\brief Manage user analysis of filtered simulation data
+\ingroup Analysis
+*/
+
 class KVSimDirFilterAnalyser : public KVSimDirAnalyser {
 protected:
    KVEventSelector* fAnalysisClass;   // user analysis class

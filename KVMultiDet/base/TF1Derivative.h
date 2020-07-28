@@ -6,6 +6,12 @@
 
 #include "TF1.h"
 
+/**
+   \class TF1Derivative
+\brief Numerical derivative of a TF1
+\ingroup Analysis
+*/
+
 class TF1Derivative : public TF1 {
    TF1* fFunction;
    int fOrder;

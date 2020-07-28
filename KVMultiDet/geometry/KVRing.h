@@ -1,23 +1,3 @@
-/***************************************************************************
-                          kvring.h  -  description
-                             -------------------
-    begin                : Thu May 16 2002
-    copyright            : (C) 2002 by J.D. Frankland
-    email                : frankland@ganil.fr
-
-$Id: KVRing.h,v 1.15 2007/10/23 14:09:02 ebonnet Exp $
-
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-
 #ifndef KVRING_H
 #define KVRING_H
 
@@ -29,6 +9,12 @@ $Id: KVRing.h,v 1.15 2007/10/23 14:09:02 ebonnet Exp $
 #include "KVList.h"
 #include "TGeoVolume.h"
 class KVTelescope;
+
+/**
+ \class KVRing
+ \ingroup INDRAGeometry
+ \brief Ring in INDRA array (obsolete)
+ */
 
 class KVRing : public KVGeoStrucElement, public KVPosition {
 

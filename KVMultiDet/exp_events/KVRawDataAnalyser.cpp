@@ -12,14 +12,7 @@ using namespace std;
 
 ClassImp(KVRawDataAnalyser)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVRawDataAnalyser</h2>
-<h4>Abstract base class for user analysis of raw data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
+
 
 KVRawDataAnalyser::KVRawDataAnalyser()
 {

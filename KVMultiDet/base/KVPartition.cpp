@@ -8,31 +8,7 @@
 
 ClassImp(KVPartition)
 
-////////////////////////////////////////////////////////////////////////////////
-/*
-BEGIN_HTML
-<h2>KVPartition</h2>
-<h4>Classe dérivée de KVIntegerList</h4>
-<br>
-END_HTML
-A la classe mere, est rajoutée l'object fValues, qui permet le calcul automatique de
-des moments d'une variable jusqu'à un ordre donné (par defaut GetOrdreMax() = 5)
-Deux TArrayI permettent de stocker les valeurs de la liste et sont remplis dans la routine Update
-- ftab ( accessible via GetValues() ) -> tableau de toutes les valeurs de la liste de dimension fMult (GetMult())
-- ftab_diff ( accessible via GetValuesDiff() ) -> tableau des valeurs différentes de la liste de dimension fMult_diff (GetMultDiff())
 
-Cette classe donne accès aux grandeurs calculées dans la classe KVValues KVPartition::GetAddValues()
-et aux valeurs de la liste via par exemple :
-- Double_t GetZmax(Int_t rang=0)
-- Double_t GetZmin(Int_t rang=0)
-- Double_t GetZ1() const
-- Double_t GetZ2() const
-- Double_t GetZtot() const
-etc ....
-
-
-*/
-////////////////////////////////////////////////////////////////////////////////
 
 void KVPartition::init(Int_t mommax)
 {
@@ -73,7 +49,7 @@ KVPartition::~KVPartition()
 //___________________________________________________________________________________________
 void KVPartition::Clear(Option_t*)
 {
-//Methode dérivée de KVIntegerList, Reinitialisation de l'object
+//Methode dÃ©rivÃ©e de KVIntegerList, Reinitialisation de l'object
 
    KVIntegerList::Clear();
 
@@ -89,7 +65,7 @@ void KVPartition::Clear(Option_t*)
 //___________________________________________________________________________________________
 void KVPartition::Copy(TObject& obj) const
 {
-//Methode dérivée de KVIntegerList, fait une copie dans l'objet "obj"
+//Methode dÃ©rivÃ©e de KVIntegerList, fait une copie dans l'objet "obj"
    KVIntegerList::Copy(obj);
    ((KVPartition&)obj).Update();
 
@@ -98,9 +74,9 @@ void KVPartition::Copy(TObject& obj) const
 //___________________________________________________________________________________________
 void KVPartition::Update()
 {
-//protected method, Methode dérivée de KVIntegerList,
+//protected method, Methode dÃ©rivÃ©e de KVIntegerList,
 //Appel de KVIntegerList::Update()
-//les deux TArrayI ftab et ftab_diff sont mis à jour
+//les deux TArrayI ftab et ftab_diff sont mis Ã  jour
 //un test de dimension est fait pour etendre si besoin
 
    if (fMult > ftab->fN)           ftab->Set(fMult);
@@ -137,9 +113,9 @@ void KVPartition::Update()
 //___________________________________________________________________________________________
 void KVPartition::Print(Option_t* option) const
 {
-//Methode dérivée de KVIntegerList, imprime les informations
+//Methode dÃ©rivÃ©e de KVIntegerList, imprime les informations
 //option="" -> appel uniquement de KVIntegerList::Print
-//option=="Moments", imprime les moments calculés via la classe KVValues
+//option=="Moments", imprime les moments calculÃ©s via la classe KVValues
 //option=="Partition", imprime le nombre de valeurs GetMult() et le nombre de valeurs differentes (GetMultDiff())
    KVIntegerList::Print(option);
    if (!strcmp(option, "Moments")) {
@@ -161,7 +137,7 @@ void KVPartition::Print(Option_t* option) const
 //___________________________________________________________________________________________
 void KVPartition::add_values(Int_t val, Int_t freq)
 {
-//protected method, dérivée de KVIntegerList
+//protected method, dÃ©rivÃ©e de KVIntegerList
 //Incrementation si besoin du nombre de valeurs differentes GetMultDiff
 //Remplissage de l'objet KVIntegerList::fValues, pour le calcul des moments
    if (!Contains(val)) fMult_diff += 1;
@@ -173,9 +149,9 @@ void KVPartition::add_values(Int_t val, Int_t freq)
 //___________________________________________________________________________________________
 Bool_t KVPartition::remove_values(Int_t val, Int_t freq)
 {
-//protected method, dérivée de KVIntegerList
+//protected method, dÃ©rivÃ©e de KVIntegerList
 //Decrementation si besoin du nombre de valeurs differentes GetMultDiff
-//Les valeurs considerees sont également retires dans le calcul des moments, object KVIntegerList::fValues
+//Les valeurs considerees sont Ã©galement retires dans le calcul des moments, object KVIntegerList::fValues
 
    if (GetFrequency(val) <= freq) fMult_diff -= 1;
    fValues->FillVar(val, -1.*freq);

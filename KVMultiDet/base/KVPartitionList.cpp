@@ -8,29 +8,6 @@
 
 ClassImp(KVPartitionList)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVPartitionList</h2>
-<h3>Classe dérivant de KVUniqueNameList</h3>
-<h4>Gestion d'une liste de partition (objet de la classe KVIntegerList ou derivee)</h4>
-<!-- */
-// --> END_HTML
-/*
-Cette classe a toute son utilité si on s'attend a avoir dans une liste de partitions
-une part importante de partition identique un exmeple dans KVBreakUp
------
-Via la methode Fill(KVIntegerList* )
-on test la présence ou non d'une partition, si une partition identique est deja
-presente, on incremente la population de celle-ci KVIntegerList::AddPopulation()
-sinon on ajoute la partition dans la liste.
-Le nombre de partition totale est accessible via GetNbreTot()
-et le nombre de partitions différentes via GetNbreDiff()
------
-Apres le remplissage, l'utilisateur peut sauvegarder l'ensemble des partitions
-dans un arbre et l'ecrire dans un fichier root via la methode SaveAsTree
-*/
-////////////////////////////////////////////////////////////////////////////////
 
 //_______________________________________________________
 void KVPartitionList::init()
@@ -80,9 +57,9 @@ void KVPartitionList::Clear(Option_t* option)
 //_______________________________________________________
 Bool_t KVPartitionList::IsInTheList()
 {
-   // retourne un booléen indiquant si la dernière partition
-   // utilisée dans les méthodes Add...()
-   // était déjà dans la liste (kTRUE) ou non (kFALSE)
+   // retourne un boolÃ©en indiquant si la derniÃ¨re partition
+   // utilisÃ©e dans les mÃ©thodes Add...()
+   // Ã©tait dÃ©jÃ  dans la liste (kTRUE) ou non (kFALSE)
    return atrouve;
 
 }
@@ -91,8 +68,8 @@ Bool_t KVPartitionList::IsInTheList()
 Double_t KVPartitionList::GetNbreTot()
 {
    //Retourne le nombre de partitions totales ie le nombre de fois ou la methode
-   //Fill a été appelée
-   //Exemple: si 3 partitions differentes et pop(i) leur population associée
+   //Fill a Ã©tÃ© appelÃ©e
+   //Exemple: si 3 partitions differentes et pop(i) leur population associÃ©e
    //knbre_tot = pop(1) + pop(2) + pop(3)
    return knbre_tot;
 
@@ -101,9 +78,9 @@ Double_t KVPartitionList::GetNbreTot()
 //_______________________________________________________
 Double_t KVPartitionList::GetNbreDiff()
 {
-   //Retourne le nombre de partitions différentes
+   //Retourne le nombre de partitions diffÃ©rentes
    //
-   //Exemple: si 3 partitions differentes et pop(i) leur population associée
+   //Exemple: si 3 partitions differentes et pop(i) leur population associÃ©e
    //knbre_diff = 3
    return knbre_diff;
 
@@ -112,8 +89,8 @@ Double_t KVPartitionList::GetNbreDiff()
 //_______________________________________________________
 Bool_t KVPartitionList::Fill(KVIntegerList* par)
 {
-   //Incrémente le nombre totale de partitions
-   //retourne kTRUE si une partition identique est déjà dans la liste
+   //IncrÃ©mente le nombre totale de partitions
+   //retourne kTRUE si une partition identique est dÃ©jÃ  dans la liste
    //
    knbre_tot += 1.;
 
@@ -132,7 +109,7 @@ void KVPartitionList::Add(TObject* obj)
    // if it is in, the population of it is incremented
 
    TObject* find = 0;
-   //Test la présence d'une partition identique
+   //Test la prÃ©sence d'une partition identique
    if (!(find = FindObject(obj->GetName()))) {
       //Ajout de la partition
       KVHashList::Add(obj);
@@ -150,10 +127,10 @@ void KVPartitionList::Add(TObject* obj)
 void KVPartitionList::ValidateEntrance(KVIntegerList* il)
 {
    //Protected methode
-   //appelée dans le cas ou il y a une nouvelle partition
+   //appelÃ©e dans le cas ou il y a une nouvelle partition
    atrouve = kFALSE;
    knbre_diff += 1; //on incremente le nombre de partitions differentes
-   //on incremente egalement la liste contenant les multiplicités
+   //on incremente egalement la liste contenant les multiplicitÃ©s
    mult_range->Add(il->GetNbre());
 }
 
@@ -250,7 +227,7 @@ void KVPartitionList::AddBefore(const TObject* before, TObject* obj)
 //_______________________________________________________
 void KVPartitionList::Update()
 {
-   //Met a jour l'intervalle de multiplicité associées aux partitions dans la liste
+   //Met a jour l'intervalle de multiplicitÃ© associÃ©es aux partitions dans la liste
    mult_range->CheckForUpdate();
    mult_range->Print("Partitions");
 
@@ -265,7 +242,7 @@ TTree* KVPartitionList::GenereTree(const Char_t* treename, Bool_t Compress)
 
    Update();
 
-   Int_t mmax = Int_t(mult_range->GetZmax(0));  //Multiplicité max enregistrée
+   Int_t mmax = Int_t(mult_range->GetZmax(0));  //MultiplicitÃ© max enregistrÃ©e
    Info("GenereTree", "Multiplicite max entregistree %d", mmax);
    Int_t* tabz = new Int_t[mmax];
    Int_t mtot;
@@ -274,11 +251,11 @@ TTree* KVPartitionList::GenereTree(const Char_t* treename, Bool_t Compress)
 
    TTree* tree = new TTree(treename, Class_Name());
    //Declaration des branches
-   tree->Branch("mtot",       &mtot,   "mtot/I");  //multiplicité
+   tree->Branch("mtot",       &mtot,   "mtot/I");  //multiplicitÃ©
    tree->Branch("tabz",       tabz,    "tabz[mtot]/I");  //partition sous forme de tableau d'entiers
    if (Compress)
       tree->Branch("pop",  &pop,    "pop/I");   //Si Compress==kTRUE, la branche population
-   //associée à chaue partition
+   //associÃ©e Ã  chaue partition
    KVIntegerList* par;
    TArrayI* table = 0;
    for (Int_t kk = 0; kk < GetEntries(); kk += 1) {
@@ -293,7 +270,7 @@ TTree* KVPartitionList::GenereTree(const Char_t* treename, Bool_t Compress)
       for (Int_t mm = 0; mm < mtot; mm += 1)
          tabz[mm] = table->At(mm);
 
-      //Si Compress==kTRUE, on remplie une fois avec la population (pop) associée
+      //Si Compress==kTRUE, on remplie une fois avec la population (pop) associÃ©e
       //sinon on rempli pop fois cette partition
       if (Compress) {
          tree->Fill();

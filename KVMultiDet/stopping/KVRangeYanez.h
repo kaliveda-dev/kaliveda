@@ -9,6 +9,19 @@
 
 class KVRangeYanezMaterial;
 
+/**
+\class KVRangeYanez
+\brief Interface to Range dE/dx and range library
+\ingroup Stopping
+
+This is a modified version of the Range package developed by Ricardo Yanez.
+See <a href="http://www.calel.org/range.html">here</a> for details.
+
+Modifications concern:
+  - corrected calculation of Northcliffe-Schilling ranges
+  - modified stopping extrapolation for gases in Hubert-Bimbot-Gauvin table
+*/
+
 class KVRangeYanez : public KVIonRangeTable {
    static KVHashList* fMaterials;// static list of all currently defined materials
    void CheckMaterialsList() const;

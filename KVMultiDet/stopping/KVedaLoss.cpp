@@ -13,27 +13,6 @@
 
 ClassImp(KVedaLoss)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVedaLoss</h2>
-<h4>C++ implementation of VEDALOSS stopping power calculation</h4>
-See documentation <a href="KVedaLossDoc/KVedaLoss.html">here</a>.
-<!-- */
-// --> END_HTML
-// Energy limits
-// Normally all range, dE, Eres functions are limited to range 0<=E<=Emax,
-// where Emax is nominal max energy for which range tables are valid
-// (usually 400MeV/u for Z<3, 250MeV/u for Z>3)
-// If higher energies are required, call static method KVedaLoss::SetIgnoreEnergyLimits()
-// BEFORE ANY MATERIALS ARE CREATED
-// in order to recalculate the Emax limits in such a way that:
-//     range function is always monotonically increasing function of Einc
-//     stopping power is concave (i.e. no minimum of stopping power followed by an increase)
-// at the most, the new limit will be 1 GeV/nucleon.
-// at the least, it will remain at the nominal (400 or 250 MeV/nucleon) level.
-////////////////////////////////////////////////////////////////////////////////
-
 KVHashList* KVedaLoss::fMaterials = 0x0;
 Bool_t KVedaLoss::fgNewRangeInversion = kTRUE;
 
@@ -42,14 +21,16 @@ void KVedaLoss::SetIgnoreEnergyLimits(Bool_t yes)
    // Call this static method with yes=kTRUE in order to recalculate the nominal limits
    // on incident ion energies for which the range tables are valid.
    //
-   // Normally all range, dE, Eres functions are limited to range 0<=E<=Emax,
-   // where Emax is nominal max energy for which range tables are valid
-   // (usually 400MeV/u for Z<3, 250MeV/u for Z>3)
-   // If higher energies are required, call this static method in order to recalculate the Emax limits
-   // in such a way that:
-   //     range function is always monotonically increasing function of Einc
-   //     stopping power is concave (i.e. no minimum of stopping power followed by an increase)
-   // at the most, the new limit will be 1 GeV/nucleon.
+   // Normally all range, \f$dE\f$, \f$E_{res}\f$ functions are limited to range \f$0\leq E\leq E_{max}\f$,
+   // where \f$E_{max}\f$ is nominal maximum energy for which range tables are valid
+   // (usually 400MeV/u for \f$Z<3\f$, 250MeV/u for \f$Z>3\f$).
+   //
+   // If higher energies are required, call static method KVedaLoss::SetIgnoreEnergyLimits() **BEFORE ANY MATERIALS ARE CREATED**
+   // in order to recalculate the \f$E_{max}\f$ limits in such a way that:
+   //   -  range function is always monotonically increasing function of \f$E_{inc}\f$;
+   //   -  stopping power is concave (i.e. no minimum of stopping power followed by an increase)
+   //
+   // Then, at the most, the new limit will be 1 GeV/nucleon, or
    // at the least, it will remain at the nominal (400 or 250 MeV/nucleon) level.
    KVedaLossMaterial::SetNoLimits(yes);
 }

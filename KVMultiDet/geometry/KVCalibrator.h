@@ -8,7 +8,7 @@
 
 /**
   \class KVCalibrator
-  \ingroup Geometry
+  \ingroup Calibration
   \brief Base class for all detector calibrations
 
   You can define a basic calibrator object with a mathematical formula string (TFormula) and a type name:

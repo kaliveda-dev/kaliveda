@@ -8,39 +8,6 @@
 
 ClassImp(KVGELogReader)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGELogReader</h2>
-<h4>Read GE (Grid Engine) log files</h4>
-
-Updated to handle correctly new format of end-of-job informations:
-
-~~~~~~~~
-**********************************************************************
-* Submitted on:                   Tue Apr 14 11:27:31 CEST 2020      *
-* Started on:                     Tue Apr 14 11:27:42 CEST 2020      *
-* Ended on:                       Tue Apr 14 12:02:19 CEST 2020      *
-* Exit status:                    0                                  *
-**********************************************************************
-* Requested                                                          *
-*   CPU cores:                    1 core(s)                          *
-*   CPU time:                     00:33:20 (2000 seconds)            *
-**********************************************************************
-* Consumed                                                           *
-*   wallclock:                    00:34:37 (2077 seconds)            *
-*   CPU time:                     00:32:14 (1934 seconds)            *
-*   CPU scaling factor:           10.430000                          *
-*   normalized CPU time:          05:36:18 (20178 HS06 seconds)      *
-*   CPU efficiency:               93 % (1)                           *
-*   vmem:                         1.284 GB (2)                       *
-*   maxvmem:                      1.284 GB (2)                       *
-*   maxrss:                       407.348 MB (2)                     *
-**********************************************************************
-~~~~~~~~
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 void KVGELogReader::ReadLine(const KVString& line, Bool_t& ok)
 {

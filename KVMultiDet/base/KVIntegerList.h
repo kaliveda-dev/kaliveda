@@ -7,6 +7,64 @@
 #include "TArrayI.h"
 #include "TNamed.h"
 
+/**
+
+\class KVIntegerList
+\brief Handle a list of positive integers (partition)
+\ingroup Analysis
+
+Values are sorted into decreasing order.
+
+Two examples of filling a list:
+
+#### Example 1
+Fill() can be used to fill the list from an array of values and update relevant quantities:
+~~~~{.cpp}
+KVIntegerList ilist;
+int tab[] = {1,3,6,4,9,7,3,59,8,160};
+ilist->Fill(tab,10);
+ilist->Print();
+
+Info in <KVIntegerList::Print>: 160 59 9 8 7 6 4 3(2) 1 : population 1
+~~~~{.cpp}
+
+#### Example 2
+Les methodes de type Add(), remplit successivement la liste, avant d'utiliser les grandeurs reliées<br>
+l'utilisateur doit appeler la méthode CheckForUpdate(), pour que la mise a jour du nom soit faite<br>
+par contre le nombre d'elements est mis a jour automatiquement<br>
+<br>
+<code>
+KVIntegerList* ilist = new KVIntegerList();<br>
+ilist->Add(23,6);<br>
+ilist->Add(12);<br>
+Int_t tab[3]={1,3,6};<br>
+ilist->Add(tab,3);<br>
+ilist->CheckForUpdate();<br>
+ilist->Print();<br>
+Info in <KVIntegerList::Print>: 23(6) 12 6 3 1 : population 1<br>
+ilist->Remove(23,3);<br>
+ilist->Print();<br>
+Info in <KVIntegerList::Print>: 23(6) 12 6 3 1 : population 1       &nbsp  &nbsp    !!! pour le nom  RIEN A CHANGER<br>
+<code>ilist->GetNbre();<br>
+(const Int_t)7                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp le nombre, lui est mis à jour<br>
+ilist->CheckForUpdate();<br>
+ilist->Print();<br>
+Info in <KVIntegerList::Print>: 23(3) 12 6 3 1 : population 1       &nbsp  &nbsp    OK : les modifs ont été prises en compte<br>
+ilist->GetNbre()<br>
+(const Int_t)7
+</code>
+END_HTML
+
+Les methodes de type Remove(), retirent des valeurs de la liste, là encore l'utilisateur doit appeler
+la méthode CheckForUpdate(), pour que la mise a jour soit faite
+Les grandeurs disponibles sont:
+- le nombre d'entiers, ie la multiplicité GetNbre()
+- le nom de la partition definie comme suit : ent1(occ) ent2 ent3(occ3), où entre parenthèses
+sont notées les occurences aupérieures à 1 d'une valeur
+- la population GetPopulation(), permet de gérer un ensemble de partitions (KVPartitionManager)
+
+*/
+
 class KVIntegerList : public TNamed {
 
 protected:
@@ -47,11 +105,9 @@ public:
 
    void CheckForUpdate();
 
-   // ATTENTION aux methodes 'virtual' avec surcharge!!!
-// virtual void Fill(TArrayI* tab);
-   virtual void Fill(Int_t* tab, Int_t mult);
-// virtual void Fill(Double_t* tab,Int_t mult);
-// virtual void Fill(KVEvent* evt,Option_t* opt);
+   //void Fill(TArrayI* tab);
+   void Fill(Int_t* tab, Int_t mult);
+   //void Fill(Double_t* tab,Int_t mult);
 
    void Add(TArrayI* tab);
    void Add(Int_t* tab, Int_t mult);

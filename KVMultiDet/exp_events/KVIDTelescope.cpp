@@ -43,70 +43,6 @@ Author : $Author: franklan $
 using namespace std;
 
 ClassImp(KVIDTelescope)
-/////////////////////////////////////////////////////////////////////////////////////////
-//KVIDTelescope
-//
-//Charged particle identification is handled by KVIDTelescope and derived classes.
-//A KVIDTelescope is an association of one or more detectors which is capable of particle
-//identification.
-//Although initially conceived in terms of DE-E two-stage telescopes, the identification
-//method can be quite different (see KVIDCsI for example).
-//
-//Visualising Identification (ID) Grids & Maps
-//--------------------------------------------
-//Identification in such 'telescopes' is often associated with a 'grid' or set of
-//graphical cuts permitting to associate the informations measured in the 'telescope'
-//with certain types of particles. For any class derived from KVIDTelescope, the
-//identification grid (KVIDGraph), if one exists, can be obtained and visualised using :
-//
-//      idtelescope->GetIDGrid()->Draw();
-//
-//Note that if no grid has been defined for the telescope, GetIDGrid() returns a null
-//pointer, so you should only use the previous method if you are absolutely sure that
-//the ID telescope in question has a grid.
-//
-//Visualising identifications based on fitted functionals
-//--------------------------------------------------------
-//The identification functionals devised by L. Tassan-Got and defined in KVTGIDFunctions
-//can be visualised as identification grids for classes having KVTGIDManager as a base
-//class. In this case a grid can be created and drawn using :
-//
-//      KVIDGrid* g = idtelescope->GetTGIDGrid("name_of_functional", max_X_coord_of_lines);
-//      g->Draw();
-//
-//You should keep a pointer to the grid because it is the user's responsibility to delete it after
-//use.
-//
-//Particle Identification and Calibration/Coherency
-//-------------------------------------------------
-//Particles reconstructed from data measured in the detectors of a multidetector array
-//(KVReconstructedNucleus) are identified using the KVReconstructedNucleus::Identify()
-//method. This takes the list of ID telescopes through whose detectors the particle passed,
-//beginning with the telescope in which the particle stopped, and calls the Identify()
-//method of each ID telescope in turn. This continues until identification is achieved.
-//Thus the identification method, specific to each type of ID telescope, can be defined
-//by overriding the Identify() method in child classes.
-//
-//Similarly, calibration of identified particles is achieved by KVReconstructedNucleus::
-//Calibrate() which uses the Calibrate() method of the 'identifying telescope' (i.e. the
-//KVIDTelescope in which identification was achieved). Again, this may be redefined in
-//child classes (see KVIDCsI for example), but the default procedure defined here is to
-//calculate the energy losses of the particle in all the detectors preceding the ID
-//telescope and compare them to the measured energy losses in these detectors, in order
-//to check for double-hits. The results of this procedure may then be used by some
-//coherency algorithm.
-//
-//Setting identification parameters
-//---------------------------------------------
-//The method SetIdentificationParameters(const KVMultiDetArray*) will be used by the
-//KVMultiDetArray to which this telescope belongs in order to set the parameters of
-//ALL telescopes of this type in the array.
-//By default, this method looks for the file with name given by the environment variable
-//[dataset name].IdentificationParameterFile.[telescope label]:       [filename]
-//which is assumed to contain identification grids. The file will be read in by gIDGridManager
-//and the grids added to its list.
-/////////////////////////////////////////////////////////////////////////////////////////
-
 TEnv* KVIDTelescope::fgIdentificationBilan = nullptr;
 
 KVIDTelescope::KVIDTelescope()
@@ -646,6 +582,7 @@ KVIDTelescope* KVIDTelescope::MakeIDTelescope(const Char_t* uri)
    //Static function which will create an instance of the KVIDTelescope-derived class
    //corresponding to 'name'
    //These are defined as 'Plugin' objects in the file $KVROOT/KVFiles/.kvrootrc :
+   //~~~~~~~
    // # The KVMultiDetArray::GetIDTelescopes(KVDetector*de, KVDetector*e) method uses these plugins to
    // # create KVIDTelescope instances adapted to the specific array geometry and detector types.
    // # For each pair of detectors we look for a plugin with one of the following names:
@@ -658,9 +595,10 @@ KVIDTelescope* KVIDTelescope::MakeIDTelescope(const Char_t* uri)
    // #    [name_of_dataset].de_detector_type[de detector thickness]
    // #    [name_of_dataset].e_detector_type[e detector thickness]
    // # then we add also an instance of this 1-detector identification telescope.
+   //~~~~~~~
 
-   //check and load plugin library
    TPluginHandler* ph;
+   //check and load plugin library
    if (!(ph = LoadPlugin("KVIDTelescope", uri)))
       return 0;
 

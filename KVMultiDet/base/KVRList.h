@@ -28,6 +28,11 @@ $Id: KVRList.h,v 1.15 2009/01/19 12:03:10 franklan Exp $
 #include "TRefArray.h"
 #include "KVConfig.h"
 
+/**
+  \class KVRList
+  \brief Wrapper for TRefArray adding some functionality
+  \ingroup Core
+ */
 class KVRList: public TRefArray {
 
 public:

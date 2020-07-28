@@ -11,27 +11,6 @@ using namespace std;
 
 ClassImp(KVEventReconstructor)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVEventReconstructor</h2>
-<h4>Base class for handling event reconstruction</h4>
-<!-- */
-// --> END_HTML
-// Event reconstruction begins with a KVMultiDetArray containing hit
-// detectors (either following the simulated detection of a simulated event,
-// or after reading some experimental data corresponding to an experimental
-// event) and ends with a KVReconstructedEvent object filled with
-// KVReconstructedNucleus objects corresponding to the reconstructed
-// (and possibly identfied & calibrated) particles.
-//
-// 1. Get list of hit groups (KVDetectorEvent)
-// 2. For each hit group, perform reconstruction/identification/ etc. in the group
-//    using a KVGroupReconstructor-derived object (uses plugins)
-// 3. Merge together the different event fragments into the output reconstructed
-//    event object
-////////////////////////////////////////////////////////////////////////////////
-
 KVEventReconstructor::KVEventReconstructor(KVMultiDetArray* a, KVReconstructedEvent* e, Bool_t)
    : KVBase("KVEventReconstructor", Form("Reconstruction of events in array %s", a->GetName())),
      fArray(a), fEvent(e), fGroupReconstructor(a->GetNumberOfGroups(), 1)

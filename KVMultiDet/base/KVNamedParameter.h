@@ -12,7 +12,7 @@ typedef const char* cstring;
 
 /**
   \class KVNamedParameter
-  \ingroup Base
+  \ingroup Core
   \brief A generic named parameter storing values of different types
 
   The four different types which are handled are: `int`, `double`, `bool`, `TString`:

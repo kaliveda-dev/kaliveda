@@ -7,6 +7,12 @@
 #include "KVGroup.h"
 #include "KVTelescope.h"
 
+/**
+ \class KVASGroup
+ \ingroup Geometry
+ \brief Group in axially-symmetric array
+ */
+
 class KVASGroup : public KVGroup, public KVPosition {
 
 protected:

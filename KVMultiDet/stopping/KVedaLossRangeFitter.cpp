@@ -11,15 +11,6 @@ using namespace::std;
 
 ClassImp(KVedaLossRangeFitter)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVedaLossRangeFitter</h2>
-<h4>Fit a range table using the VEDALOSS functional</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 static Double_t energy[] = {
    0.1, .2, 0.5, 1, 2, 5, 10, 25, 50, 100, 250, 500, -1
 };

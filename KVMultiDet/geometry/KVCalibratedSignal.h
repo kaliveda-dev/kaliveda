@@ -7,6 +7,12 @@
 #include "KVDetectorSignal.h"
 #include "KVCalibrator.h"
 
+/**
+ \class KVCalibratedSignal
+ \ingroup Calibration
+ \brief Calibrated output from detector
+ */
+
 class KVCalibratedSignal : public KVDetectorSignal {
 
    KVDetectorSignal* fInputSignal;// signal which is used as input to generate calibrated signal

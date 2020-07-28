@@ -9,6 +9,85 @@
 #include "TFile.h"
 #include "KVConfig.h"
 
+/**
+\class KVSeqCollection
+\brief KaliVeda extensions to ROOT collection classes
+\ingroup Core
+
+This class adds functionalities such as
+ - FindObjectByType()
+ - FindObjectByLabel()
+ - GetSublistWithType()
+
+etc. to the standard ROOT collection classes. The actual collection is embedded and
+referenced through a TSeqCollection base pointer. The class of the embedded object for any given
+instance is passed as an argument to the constructor:
+~~~~{.cpp}
+KVSeqCollection my_coll("THashList");
+~~~~
+Any collection class derived from TSeqCollection is valid: this means all ordered collections, for which the order in which
+objects are added is preserved. Some of these lists can also be sorted (see below).
+
+Any object derived from TObject can be stored in the collection, but only objects
+derived from KVBase can be sought using their 'type', 'label', or 'number' attributes
+(these characteristics are not defined for TObject).
+
+Note that we can test the 'KVBase'-ness of any object through a
+TObject* base pointer using the 'KaliVeda' bit, KVBase::kIsKaliVedaObject:
+~~~~{.cpp}
+TObject *obj = [address of some object];
+if( obj->TestBit( KVBase::kIsKaliVedaObject ) ){
+   // => object derives from KVBase
+}
+~~~~
+
+### Signals & slots: monitoring list modification
+If SendModifiedSignals() is called, then every time an object is added to or removed from the list, it will emit
+the signal Modified(). This can be used to monitor any changes to the
+state of the list.
+
+### FindObjectBy...
+In addition to the standard TList::FindObject(const Char_t*) and
+TList::FindObject(TObject*) methods, KVSeqCollection adds methods to find
+objects based on several different properties, such as type, label,
+number, or class. Note that type, label and number are only defined for
+objects derived from KVBase; if the list contains a mixture of TObject-
+and KVBase-derived objects, the TObject-derived objects will be ignored
+if type, label or number are used to search.
+
+Finally, the very general FindObjectWithMethod() method can search for an
+object using any valid method.
+
+### Sublists
+The GetSubListWith... methods allow to generate new lists containing a
+subset of the objects in the main list, according to their name, label,
+type, etc. These sublists do not own their objects (they are supposed
+to be owned by the main list), and must be deleted by the user in order
+to avoid memory leaks.
+
+### Execute
+The Execute methods can be used to execute a given method with the same
+arguments for every object in the list.
+
+### Sorting lists
+No Sort() method is defined in base class TSeqCollection, although the TCollection::IsSortable()
+method returns kTRUE by default (and is not overridden in child classes which do not implement
+sorting). Therefore whether or not a KVSeqCollection can be sorted depends on the collection
+class which is being used. We do not define a KVSeqCollection::Sort() method. If you want to sort
+a KVSeqCollection and you know that the embedded collection class has a valid Sort() method,
+you can do as follows:
+~~~~{.cpp}
+KVSeqCollection seqlist("TList");
+seqlist.Add(...);
+...
+((TList*)seqlist.GetCollection())->Sort();
+~~~~
+or perhaps more cautiously you should do:
+~~~~{.cpp}
+TList* tlist = dynamic_cast<TList*>(seqlist.GetCollection());
+if(tlist) tlist->Sort();
+~~~~
+*/
 class KVSeqCollection : public TSeqCollection {
    RQ_OBJECT("KVSeqCollection")
 

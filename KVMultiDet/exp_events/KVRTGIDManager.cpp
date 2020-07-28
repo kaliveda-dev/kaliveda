@@ -11,36 +11,7 @@ using namespace std;
 
 ClassImp(KVRTGIDManager)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVRTGIDManager</h2>
-<h4>Run-dependant KVTGIDManager</h4>
-<!-- */
-// --> END_HTML
-//
-//As KVTGIDManager, this class handles a set of Tassan-Got functional-based identifications (KVTGID objects) for use by KVIDTelescope.
-//However, it allows to load the identification functions associated to a given run. To do that, you can remove all identification
-//functions loaded in the KVIDTelescopes (which inherits from KVRTGIDManager) with the method RemoveAllTGID(). Then use the static
-//function SetIDFuncInTelescopes(run) to load the functions, which are valid for the given run, in the KVIDTelescope associated to
-//these functions. See the following exemple:
-//
-//    TIter next_idt(gMultiDetArray->GetListOfIDTelescopes());
-//
-//    KVIDTelescope  *idt    = NULL;
-//    KVRTGIDManager *rtgidm = NULL;
-//
-//    while ((idt = (KVIDTelescope *) next_idt()))
-//    {
-//    if(idt->InheritsFrom("KVRTGIDManager")){
-//          rtgidm = (KVRTGIDManager *)idt->IsA()->DynamicCast(KVRTGIDManager::Class(),idt);
-//          rtgidm->RemoveAllTGID();
-//    }
-//
-//    }
-//    KVRTGIDManager::SetIDFuncInTelescopes(run);
-//
-////////////////////////////////////////////////////////////////////////////////
+
 
 
 KVList* KVRTGIDManager::fIDGlobalList = NULL;

@@ -7,6 +7,12 @@
 #include "TEnv.h"
 #include "TList.h"
 
+/**
+\class KVEnv
+\brief Extension of TEnv to allow the writing of comments in the file
+\ingroup Core
+*/
+
 class KVEnv : public TEnv {
 protected:
    TList fComments;

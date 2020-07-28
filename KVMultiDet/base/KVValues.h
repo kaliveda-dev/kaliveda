@@ -15,6 +15,12 @@
 class KVNumberList;
 class KVList;
 
+/**
+\class KVValues
+\brief Handle Operation on variable
+\ingroup Analysis
+*/
+
 class KVValues : public KVNameValueList {
 
 protected:

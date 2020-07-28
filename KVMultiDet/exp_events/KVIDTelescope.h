@@ -39,7 +39,54 @@ class KVParticleCondition;
 #include <map>
 #endif
 
+/**
+  \class KVIDTelescope
+  \ingroup Identification
+  \brief Base class for all detectors or associations of detectors in array which can identify charged particles
+
+Charged particle identification is handled by KVIDTelescope and derived classes.
+A KVIDTelescope is an association of one or more detectors which is capable of particle
+identification.
+Although initially conceived in terms of \f$\Delta E\f$-\f$E\f$ two-stage telescopes, the identification
+method can be quite different.
+
+### Visualising Identification (ID) Grids & Maps
+Identification in such 'telescopes' is often associated with a 'grid' or set of
+graphical cuts permitting to associate the informations measured in the 'telescope'
+with certain types of particles. For any class derived from KVIDTelescope, the
+identification grid (base class: KVIDGraph), if one exists, can be obtained and visualised using :
+~~~~~~~~{.cpp}
+idtelescope->GetIDGrid()->Draw();
+~~~~~~~~
+Note that if no grid has been defined for the telescope, GetIDGrid() returns a null
+pointer, so you should only use the previous method if you are absolutely sure that
+the ID telescope in question has a grid.
+
+### Visualising identifications based on fitted functionals
+The identification functionals devised by L. Tassan-Got and defined in KVTGIDFunctions
+can be visualised as identification grids for classes having KVTGIDManager as a base
+class. In this case a grid can be created and drawn using :
+~~~~~~~~{.cpp}
+      KVIDGrid* g = idtelescope->GetTGIDGrid("name_of_functional", max_X_coord_of_lines);
+      g->Draw();
+~~~~~~~~
+You should keep a pointer to the grid because it is the user's responsibility to delete it after
+use.
+
+### Setting identification parameters
+The method SetIdentificationParameters() will be used by the
+KVMultiDetArray to which this telescope belongs in order to set the parameters of
+__all__ telescopes of this type in the array.
+By default, this method looks for the file with name given by the environment variable
+~~~~~~
+[dataset name].IdentificationParameterFile.[telescope label]:       [filename]
+~~~~~~
+which is assumed to contain identification grids. The file will be read in by gIDGridManager
+and the grids added to its list.
+ */
+
 class KVIDTelescope: public KVBase {
+
 
    static TEnv* fgIdentificationBilan;
    UShort_t fIDCode;            //! general id code corresponding to correct identification by this type of telescope

@@ -6,21 +6,6 @@
 
 ClassImp(KVHashList)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVHashList</h2>
-<h4>Extended version of ROOT THashList</h4>
-This collection class uses a THashList for quick look-up of objects based on
-the TString::Hash() value of their name, and adds all the extra functionality
-defined in KVSeqCollection. Automatic rehashing of the list is enabled by default
-(with rehash level = 2), unlike THashList (disabled by default).
-<h3>Sorting the list</h3>
-As THashList::Sort() is defined, we implemented a KVHashList::Sort() method which takes exactly
-the same argument as THashList::Sort().
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVHashList::KVHashList(Int_t capacity, Int_t rehash)
    : KVSeqCollection()
@@ -60,15 +45,16 @@ Float_t KVHashList::AverageCollisions() const
 void KVHashList::Rehash(Int_t newCapacity)
 {
    // Rehash the hashlist.
+   //
    // This needs to be done in two cases:
-   //   1) If the collision rate becomes too high (i.e. the average size of the
+   //   1. If the collision rate becomes too high (i.e. the average size of the
    //   linked lists become too long - use AverageCollisions() to check if you
    //   need to rehash.) then lookup efficiency decreases since relatively long
    //   lists have to be searched every time.
    //   To improve performance rehash the hashtable, increasing
    //   the number of slots. This method resizes the table to newCapacity slots
    //   and refills the table.
-   //   2) If the names of any objects in the list CHANGE, you must
+   //   2. If the names of any objects in the list CHANGE, you must
    //   rehash the list (as the lookup of objects depends on the TString::Hash()
    //   value calculated from their name when they are added to the list).
    //   In this case it is not necessary to increase the capacity of the list,
