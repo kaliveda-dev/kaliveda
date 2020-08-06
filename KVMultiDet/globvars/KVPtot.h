@@ -40,7 +40,7 @@ public:
    // traitement d'un evenement
    virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
 
-   std::vector<Double_t> GetValuePtr() const; // On retourne le tableau des valeurs
+   std::vector<Double_t> GetValueVector() const; // On retourne le tableau des valeurs
 
    virtual TVector3 GetTVector3(void) const;    // on retourne le TVector3
    virtual TObject* GetObject(void) const

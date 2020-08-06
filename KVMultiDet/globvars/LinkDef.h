@@ -30,10 +30,6 @@
 #pragma link C++ class KVMultAv;
 #pragma link C++ class KVMultIMFAv;
 #pragma link C++ class KVMultLegAv;
-#pragma link C++ class KVTenseur3;
-#pragma link C++ class KVTensP;
-#pragma link C++ class KVTensE;
-#pragma link C++ class KVTensPCM;
 #pragma link C++ class KVRiso;
 #pragma link C++ class KVFoxH2;
 #pragma link C++ class KVRisoAv;

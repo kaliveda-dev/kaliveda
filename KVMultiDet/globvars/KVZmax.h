@@ -3,7 +3,7 @@
 #include "KVVarGlob.h"
 
 /**
-\class KVZMax
+\class KVZmax
 \ingroup GlobalVariables
 \brief Global variable used to sort particles in order of decreasing atomic number</h4>
 
@@ -33,7 +33,6 @@
 class KVZmax: public KVVarGlob {
 
    KVList heaviest;            //sorted list of pointers to nuclei, sorted by decreasing Z
-   Bool_t fSorted;              //true if list has been sorted already
 
    void init();
 protected:
@@ -55,36 +54,37 @@ public:
    virtual void Copy(TObject& obj) const;
    void Init()
    {
-      fSorted = kFALSE;
+      // nothing to do
    }
    void Calculate()
    {
+      // sort nuclei by descending Z
       heaviest.Sort();
-      fSorted = kTRUE;
    }
    void Reset()
    {
+      // clear list of nuclei
       heaviest.Clear();
-      fSorted = kFALSE;
    }
    void fill(const KVNucleus* c)
    {
+      // add nucleus to list
       heaviest.Add(const_cast<KVNucleus*>(c));
    }
    virtual TObject* GetObject(void) const
    {
-      // Retourne le pointeur du fragment le plus lourd.
+      // \return pointer to fragment with largest Z in event
       return GetZmax(0);
    }
 
    KVNucleus* GetZmax(Int_t i) const
    {
-      // Pointer to (i+1)th heaviest fragment (i=0 : Zmax, i=1 : Zmax2, etc.)
+      // \return pointer to (i+1)th heaviest fragment (i=0 : \f$Z_{max}\f$, i=1 : \f$Z_{max2}\f$, etc.)
 
       return (KVNucleus*) heaviest.At(i);
    }
 
-   std::vector<Double_t> GetValuePtr(void) const;
+   std::vector<Double_t> GetValueVector(void) const;
 
    ClassDef(KVZmax, 1)//Rank fragments by charge and return Z or pointer of i_th heaviest fragment
 };

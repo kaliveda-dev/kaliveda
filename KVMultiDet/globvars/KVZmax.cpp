@@ -5,7 +5,6 @@ ClassImp(KVZmax)
 void KVZmax::init()
 {
    heaviest.SetOwner(kFALSE);
-   fSorted = kFALSE;
    //set up list of indices
    for (int i = 1; i <= 50; i++)
       SetNameIndex(Form("Zmax%d", i), i - 1);
@@ -19,14 +18,13 @@ void KVZmax::Copy(TObject& a) const
    KVVarGlob::Copy(a);
    KVZmax& _a = dynamic_cast<KVZmax&>(a);
    heaviest.Copy(_a.heaviest);
-   _a.fSorted = fSorted;
 }
 
 
 //_________________________________________________________________
-std::vector<Double_t> KVZmax::GetValuePtr(void) const
+std::vector<Double_t> KVZmax::GetValueVector(void) const
 {
-   //Return vector containing ordered list of Z (all fragments)
+   // \return vector containing ordered list of Z (all fragments)
 
    UInt_t size_event = heaviest.GetEntries();
    std::vector<Double_t> tmp;

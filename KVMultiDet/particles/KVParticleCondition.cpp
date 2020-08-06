@@ -14,12 +14,11 @@ $Date: 2007/03/26 10:14:56 $
 #include "KVClassFactory.h"
 #include "TPluginManager.h"
 #include "TUUID.h"
+#include <utility>
 
 using namespace std;
 
 ClassImp(KVParticleCondition)
-
-
 
 KVHashList KVParticleCondition::fgOptimized;
 
@@ -64,24 +63,15 @@ KVParticleCondition::KVParticleCondition(const KVString& cond)
    //
    //   Note that the first call to Test() automatically causes the 'optimization' of the
    //   KVParticleCondition, which means that a class implementing the required condition is generated
-   //   and compiled on the fly before continuing (see method Optimize()).   fOptimal = nullptr;
+   //   and compiled on the fly before continuing (see method Optimize()).
+   fOptimal = nullptr;
    Set(cond);
    cf = nullptr;
    fOptOK = kFALSE;
    fNUsing = 0;
 }
 
-KVParticleCondition::KVParticleCondition()
-   : KVBase("KVParticleCondition", "Particle selection criteria")
-{
-   //default ctor
-   fOptimal = nullptr;
-   cf = nullptr;
-   fOptOK = kFALSE;
-   fNUsing = 0;
-}
-
-KVParticleCondition::KVParticleCondition(const char* cond)
+KVParticleCondition::KVParticleCondition(const Char_t* cond)
    : KVBase(cond, "KVParticleCondition")
 {
    //Create named object and set condition.
@@ -100,9 +90,19 @@ KVParticleCondition::KVParticleCondition(const char* cond)
    //
    //   Note that the first call to Test() automatically causes the 'optimization' of the
    //   KVParticleCondition, which means that a class implementing the required condition is generated
-   //   and compiled on the fly before continuing (see method Optimize()).   fOptimal = nullptr;
+   //   and compiled on the fly before continuing (see method Optimize()).
    fOptimal = nullptr;
    Set(cond);
+   cf = nullptr;
+   fOptOK = kFALSE;
+   fNUsing = 0;
+}
+
+KVParticleCondition::KVParticleCondition()
+   : KVBase("KVParticleCondition", "Particle selection criteria")
+{
+   //default ctor
+   fOptimal = nullptr;
    cf = nullptr;
    fOptOK = kFALSE;
    fNUsing = 0;
@@ -241,10 +241,85 @@ KVParticleCondition& KVParticleCondition::operator=(const KVString& sel)
 }
 
 #ifdef USING_ROOT6
+KVParticleCondition::KVParticleCondition(KVParticleCondition&& other) noexcept :
+   KVBase(other),
+#ifdef WITH_CPP14
+   fNUsing(std::exchange(other.fNUsing, 0)),
+#endif
+   fLambdaCondition(std::move(other.fLambdaCondition)),
+   fSavedLambda1(std::move(other.fSavedLambda1)),
+   fSavedLambda2(std::move(other.fSavedLambda2)),
+   fOpType(other.fOpType),
+   fCondition(std::move(other.fCondition)),
+   fCondition_brackets(std::move(other.fCondition_brackets)),
+#ifdef WITH_CPP14
+   fOptimal(std::exchange(other.fOptimal, nullptr)),
+#endif
+   fClassName(std::move(other.fClassName)),
+#ifdef WITH_CPP14
+   cf(std::exchange(other.cf, nullptr)),
+#endif
+   fOptimizedClassName(std::move(other.fOptimizedClassName))
+#ifdef WITH_CPP14
+   , fOptOK(std::exchange(other.fOptOK, false))
+#endif
+{
+   // Move constructor
+#ifndef WITH_CPP14
+   fNUsing = other.fNUsing;
+   other.fNUsing = 0;
+   fOptimal = other.fOptimal;
+   other.fOptimal = nullptr;
+   cf = other.cf;
+   other.cf = nullptr;
+   fOptOK = other.fOptOK;
+   other.fOptOK = false;
+#endif
+}
+
 KVParticleCondition& KVParticleCondition::operator=(const LambdaFunc& f)
 {
    // Set condition using lambda expression (replacing any previous definition).
    fLambdaCondition = f;
+   return (*this);
+}
+
+KVParticleCondition& KVParticleCondition::operator=(KVParticleCondition&& other) noexcept
+{
+   // Move assignment operator
+   KVBase::operator=(other);
+#ifdef WITH_CPP14
+   fNUsing = std::exchange(other.fNUsing, 0);
+#else
+   fNUsing = other.fNUsing;
+   other.fNUsing = 0;
+#endif
+   fLambdaCondition = std::move(other.fLambdaCondition);
+   fSavedLambda1 = std::move(other.fSavedLambda1);
+   fSavedLambda2 = std::move(other.fSavedLambda2);
+   fOpType = other.fOpType;
+   fCondition = std::move(other.fCondition);
+   fCondition_brackets = std::move(other.fCondition_brackets);
+#ifdef WITH_CPP14
+   fOptimal = std::exchange(other.fOptimal, nullptr);
+#else
+   fOptimal = other.fOptimal;
+   other.fOptimal = nullptr;
+#endif
+   fClassName = std::move(other.fClassName);
+#ifdef WITH_CPP14
+   cf = std::exchange(other.cf, nullptr);
+#else
+   cf = other.cf;
+   other.cf = nullptr;
+#endif
+   fOptimizedClassName = std::move(other.fOptimizedClassName);
+#ifdef WITH_CPP14
+   fOptOK = std::exchange(other.fOptOK, false);
+#else
+   fOptOK = other.fOptOK;
+   other.fOptOK = false;
+#endif
    return (*this);
 }
 #endif
@@ -260,7 +335,18 @@ KVParticleCondition KVParticleCondition::operator&&(const KVParticleCondition& o
    //
    // Both conditions must be of same type, i.e. if one uses a lambda expression, the other
    // must also use a lambda expression.
+   //
+   // If one or other of the conditions is not set, we just return the condition which has been set.
 
+   if (!(IsSet() && obj.IsSet())) {
+      // one or both conditions is/are not set
+      if (!(IsSet() || obj.IsSet())) {
+         // neither is set: return blank (unset) condition
+         return KVParticleCondition();
+      }
+      else if (IsSet()) return KVParticleCondition(*this);
+      else return KVParticleCondition(obj);
+   }
 #ifdef USING_ROOT6
    // if lambdas are used (error if not both ?)
    if (IsLambda() || obj.IsLambda()) {
@@ -296,7 +382,18 @@ KVParticleCondition KVParticleCondition::operator||(const KVParticleCondition& o
    //
    // Both conditions must be of same type, i.e. if one uses a lambda expression, the other
    // must also use a lambda expression.
+   //
+   // If one or other of the conditions is not set, we just return the condition which has been set.
 
+   if (!(IsSet() && obj.IsSet())) {
+      // one or both conditions is/are not set
+      if (!(IsSet() || obj.IsSet())) {
+         // neither is set: return blank (unset) condition
+         return KVParticleCondition();
+      }
+      else if (IsSet()) return KVParticleCondition(*this);
+      else return KVParticleCondition(obj);
+   }
 #ifdef USING_ROOT6
    // if lambdas are used (error if not both ?)
    if (IsLambda() || obj.IsLambda()) {

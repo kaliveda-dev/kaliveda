@@ -15,7 +15,7 @@ class KVEvent;
 
   \brief Base class for all global variable implementations
 
-This class is a base class for the management of global variables.
+Abstract base class for the management of global variables.
 A global variable is an analysis tool for condensing the information in a multibody event into one or a few
 characteristic values. A simple example is the event multiplicity (the number of particles in each event),
 which can be used to characterize heavy-ion collision events in terms of violence or centrality.
@@ -25,41 +25,20 @@ nuclei (base class KVNucleus). Therefore the global variable classes below can b
 event described by a class derived from KVEvent, containing particles described by a class which
 inherits from KVNucleus.
 
-Global variable objects are used in the following schematic way:
-
-#### Creation & initialisation:
-
-~~~~~~~~~~~~{.cpp}
-      KVVarGlob VG;
-      VG.Init(); // perform any necessary initialisations
-~~~~~~~~~~~~
-
-#### Treatment of 1 event:
-
-~~~~~~~~~~~~{.cpp}
-      VG.Reset(); // reinitialise prior to analysis
-      while( [loop over particles in event] ){
-
-          VG.Fill( [particle] ); // calculate contribution of particle to variable
-      }
-      VG.Calculate();  // perform any necessary calculations
-      Double_t valueOfVG = VG.GetValue(); // retrieve value of global variable for event
-~~~~~~~~~~~~
-
 Global variables can be of different types:
 
  - One-body global variable  (type = `KVVarGlob::kOneBody`)
     - the variable is computed by performing a loop over all particles in an event
-      and calling the overridden fill(KVNucleus*) method for each particle in turn.
+      and calling the overridden fill(const KVNucleus*) method for each particle in turn.
  - Two-body global variable  (type = `KVVarGlob::kTwoBody`)
     - the variable is computed by performing a loop over all pairs of particles in an event
-      and calling the overridden fill2(KVNucleus*,KVNucleus*) method for each pair in turn.
+      and calling the overridden fill2(const KVNucleus*,const KVNucleus*) method for each pair in turn.
  - N-body global variable (type = `KVVarGlob::kNBody`)
     - the variable is computed from the full list of particles of the event, by defining
       the overridden fillN(KVEvent*) method.
 
 Derived global variable classes of 2-body or N-body type must set the `fType` member variable
-to the appropriate type (`kTwoBody` or `kNBody`) and define the fill2(KVNucleus*,KVNucleus*)
+to the appropriate type (`kTwoBody` or `kNBody`) and define the fill2(const KVNucleus*,const KVNucleus*)
 method (for 2-body variables) or the fillN(KVEvent*) method (for N-body variables).
 
 This is handled semi-automatically when using method
@@ -70,9 +49,53 @@ This is handled semi-automatically when using method
 
 to generate a skeleton '.h' and '.cpp' file for the implementation of a new global variable class.
 
-By default, global variables are 1-body and must define the fill(KVNucleus*) method.
+By default, global variables are 1-body and must define the fill(const KVNucleus*) method.
 
-## Global variable lists
+In addition, implementations in daughter classes *must* define the following methods:
+ - getvalue_int(int index) : return (possibly) several values calculated by the global variable,
+   depending on the index. In daughter class KVVarGlob1 (global variables with only 1 value),
+   this method is implemented to return the value of the variable for any index.
+ - Init() : initialisation of any internal variables to be performed once before beginning analysis loop.
+ - Calculate() : perform any necessary calculations after filling for 1 event is finished.
+ - Reset() : reset internal variables ready for another event.
+
+### Usage
+
+#### Creation & initialisation
+
+~~~~~~~~~~~~{.cpp}
+SomeVarGlob VG("var1");   // daughter class implementing 1-body global variable
+
+VG.Init();                // perform any necessary initialisations
+~~~~~~~~~~~~
+
+#### Analysis loop
+
+~~~~~~~~~~~~{.cpp}
+while( [loop over events] )
+{
+   while( [loop over particles in event] )
+   {
+      VG.Fill( [particle] ); // calculate contribution of particle to variable
+   }
+
+   VG.Calculate();  // perform any necessary calculations
+
+   // accessing the result
+   auto vg = VG.GetValue();       // retrieve unique or principal value of variable
+   auto vh = VG.GetValue(2);      // retrieve value with index 2 from multi-valued variable (implementation-dependent)
+   auto vi = VG.GetValue("Toto"); // retrieve value named "Toto" from multi-valued variable (implementation-dependent)
+   auto vv = VG.GetValueVector(); // retrieve vector containing all values of multi-valued variable
+   for(auto V : vv)               // print all values
+   {
+      std::cout << V << std::endl;
+   }
+
+   VG.Reset(); // reinitialise prior to analysis of next event
+}
+~~~~~~~~~~~~
+
+### Global variable lists
 The KVGVList class handles a list of global variables. A list can be used in the following
 schematic way to calculate several global variables at once:
 
@@ -80,9 +103,8 @@ schematic way to calculate several global variables at once:
 
 ~~~~~~~~~~~~{.cpp}
       KVVGList VGlist;
-      VGlist.Add( new KV...("var1") ); // add variable
-      VGlist.Add( new KV...("var2") ); // add variable
-      VGlist.Add( new KV...("var3") ); // add variable
+      VGlist.Add( new SomeVarGlob("var1") );    // add variable using explicit call to constructor
+      VGlist.AddGV("SomeOtherVarGlob", "var2"); // add variable using class name
       ...
       VGlist.Init(); // initialise all variables
 ~~~~~~~~~~~~
@@ -90,9 +112,13 @@ schematic way to calculate several global variables at once:
 #### Treatment of 1 event
 
 ~~~~~~~~~~~~{.cpp}
-      VGlist.CalculateGlobalVariables( [event] ); // calculate contribution of each particle to each variable
-      Double_t valueOfvar1 = VGlist.GetGV("var1")->GetValue(); // retrieve value of "var1" for event
+      VGlist.CalculateGlobalVariables( [event] );          // calculate contribution of each particle to each variable
+
+      auto valueOfvar1 = VGlist.GetGV("var1")->GetValue(); // retrieve value of "var1" for event
 ~~~~~~~~~~~~
+
+The KVGVList::CalculateGlobalVariables() method is optimised to ensure that all one- and two-body variables
+are calculated with a single loop over the particles in each event. See KVGVList for more details.
 
 ## Options, parameters, reference frames, particle selection, etc.
 ### Particle selection
@@ -177,14 +203,13 @@ protected:
 
    virtual Double_t getvalue_void() const
    {
+      // By default, returns value with index 0
       return getvalue_int(0);
    }
    Double_t getvalue_char(const Char_t* name) const
    {
       // By default, this method returns the value of the variable "name"
       // using the name-index table set up with SetNameIndex(const Char_t*,Int_t).
-      // Redefine this method in child classes to change the behaviour of
-      // KVVarGlob::GetValue(const Char_t*)
 
       return getvalue_int(GetNameIndex(name));
    }
@@ -327,7 +352,7 @@ public:
 
       return getvalue_int(i) / fNormalization;
    }
-   virtual std::vector<Double_t> GetValuePtr(void) const
+   virtual std::vector<Double_t> GetValueVector(void) const
    {
       // \return vector of all values calculated by variable. The order of the values in the vector is the
       // same as the indices defined by calls to SetNameIndex(), these indices correspond to those used with

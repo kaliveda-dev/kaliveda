@@ -61,7 +61,7 @@ public:
    Int_t GetNameIndex(const Char_t* name) const;
    const Char_t* GetValueName(Int_t i) const;
    virtual Char_t GetValueType(Int_t) const;
-   std::vector<Double_t> GetValuePtr(void) const;
+   std::vector<Double_t> GetValueVector(void) const;
 
    virtual void   Fill(KVNucleus*);
    void AddNeutrons(Int_t mult, Double_t mke);

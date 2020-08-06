@@ -112,8 +112,8 @@ protected:
 public:
 
    KVParticleCondition();
-   KVParticleCondition(const char* cond);
    KVParticleCondition(const KVString& cond);
+   KVParticleCondition(const Char_t* cond);
    KVParticleCondition(const KVParticleCondition&);
 #ifdef USING_ROOT6
    KVParticleCondition(const KVString& name, const LambdaFunc& F)
@@ -152,6 +152,8 @@ public:
       // \returns true if this condition is defined using a lambda expression
       return (bool)fLambdaCondition || ((bool)fSavedLambda1 && (bool)fSavedLambda2);
    }
+   KVParticleCondition(KVParticleCondition&& other) noexcept;
+   KVParticleCondition& operator=(KVParticleCondition&& other) noexcept;
 #endif
    virtual ~KVParticleCondition();
 #ifdef USING_ROOT6

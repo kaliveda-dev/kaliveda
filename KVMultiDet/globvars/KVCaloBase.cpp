@@ -255,7 +255,7 @@ Char_t KVCaloBase::GetValueType(Int_t i) const
 }
 
 //_________________________________________________________________
-std::vector<Double_t> KVCaloBase::GetValuePtr(void) const
+std::vector<Double_t> KVCaloBase::GetValueVector(void) const
 {
    // On retourne un tableau rassemblant l'ensemble des ingredients
 

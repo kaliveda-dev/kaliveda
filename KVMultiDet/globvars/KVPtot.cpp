@@ -212,7 +212,7 @@ Double_t KVPtot::getvalue_int(Int_t i) const
 }
 
 //_________________________________________________________________
-std::vector<Double_t> KVPtot::GetValuePtr() const
+std::vector<Double_t> KVPtot::GetValueVector() const
 {
 // On retourne un tableau de valeurs. il est organise comme suit
 //

@@ -1,6 +1,6 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 31st July 2020
+Last update: 6th August 2020
 
 ## Version 1.11/01 (current development focus)
 
@@ -72,7 +72,10 @@ e3.SetFrame("CM"); // total transverse energy of fragments in forward CM hemisph
 In addition, as part of this rationalization, all existing global variables calculating
 multiplicities, or sums or mean values of scalar quantities have been reimplemented
 using KVVGSum, which vastly reduces code replication.
- 
+
+Removed classes
+:   KVZboundMean, KVTenseur3, KVTensP, KVTensE, KVTensPCM
+
 ## Version 1.11/00
 
 Released: 9th March 2020 
