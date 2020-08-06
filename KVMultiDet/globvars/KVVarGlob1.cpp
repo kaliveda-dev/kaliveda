@@ -142,22 +142,6 @@ void KVVarGlob1::Reset(void)
 }
 
 //_________________________________________________________________
-Double_t KVVarGlob1::getvalue_void(void) const
-{
-   // On retourne la valeur de la
-   // variable.
-   return var;
-}
-
-//_________________________________________________________________
-Double_t KVVarGlob1::getvalue_int(Int_t) const
-{
-   // there is only one value, so whatever the value of i,
-   // this method returns the same as getvalue_void
-   return getvalue_void();
-}
-
-//_________________________________________________________________
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
 void KVVarGlob1::Copy(TObject& a) const
 #else
