@@ -111,7 +111,7 @@ void KVGVList::Fill2(KVNucleus& c1, KVNucleus& c2)
 void KVGVList::FillN(KVEvent* r)
 {
    // Calls KVVarGlob::FillN(KVEvent*) method of all N-body variables in the list
-   fVGN.R__FOR_EACH(KVVarGlob, fillN)(r);
+   fVGN.R__FOR_EACH(KVVarGlob, FillN)(r);
 }
 
 void KVGVList::Calculate()

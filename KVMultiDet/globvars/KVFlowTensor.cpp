@@ -6,48 +6,6 @@
 
 ClassImp(KVFlowTensor)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVFlowTensor</h2>
-<h4>Kinetic energy flow tensor of Gyulassy et al</h4>
-<!-- */
-// --> END_HTML
-// This global variable class implements the kinetic energy flow tensor of
-// M. Gyulassy et al., Phys. Lett. 110B(1982)185:
-// BEGIN_LATEX
-// F_{ij}=\sum_{\nu=1}^{N}w_{\nu}p_{i}(\nu)p_{j}(\nu)
-// END_LATEX
-// which is built from the components of the momenta of all (or a selection of)
-// reaction products in each event.
-// With the weight w=1, this expression gives the sphericity tensor. Such a
-// tensor is not appropriate for analysing collisions in which composite
-// fragments are produced. To correctly weight composite fragments, Gyulassy
-// et al. proposed to use the weight
-// BEGIN_LATEX
-// w_{\nu}=(2m_{\nu})^{-1}
-// END_LATEX
-// in which case F becomes the (non-relativistic) kinetic energy flow tensor
-// (the trace of F is the total non-relativistic kinetic energy of the products).
-// This is the default weight used.
-// To change the weight, call method SetOption("weight","[your choice]")
-// with one of the following choices:
-//
-//     "RKE" : relativistic kinetic energy tensor
-//     i.e. with
-// BEGIN_LATEX
-// w_{\nu}={1 \over {m_{\nu}(\gamma_{\nu}+1)}}
-// END_LATEX
-//
-//     "ONE","1", or "" : weight w=1
-//
-//     "NRKE" : non-relativistic KE tensor (default)
-//
-// Gyulassy et al.: "We emphasize that event shape analysis makes sense only in the
-// nucleus-nucleus center of mass system since the eigenvalues of F specify
-// an ellipsoid centered at the origin."
-//    => default frame is "CM"
-////////////////////////////////////////////////////////////////////////////////
 
 KVFlowTensor::KVFlowTensor(void): KVVarGlob(), fTensor(3)
 {
@@ -68,7 +26,6 @@ KVFlowTensor::KVFlowTensor(const Char_t* nom): KVVarGlob(nom), fTensor(3)
 KVFlowTensor::KVFlowTensor(const KVFlowTensor& a): KVVarGlob(), fTensor(3)
 {
    // Copy constructor
-   init_KVFlowTensor();
    a.Copy(*this);
 }
 
@@ -83,18 +40,12 @@ void KVFlowTensor::Copy(TObject& a) const
 {
    // Copy properties of 'this' object into the KVVarGlob object referenced by 'a'
 
+   KVFlowTensor& aglob = (KVFlowTensor&)a;
    KVVarGlob::Copy(a);// copy attributes of KVVarGlob base object
-
-   //KVFlowTensor& aglob = (KVFlowTensor&)a;
-   // Now copy any additional attributes specific to this class:
-   // To copy a specific field, do as follows:
-   //
-   //     aglob.field=field;
-   //
-   // If setters and getters are available, proceed as follows
-   //
-   //    aglob.SetField(GetField());
-   //
+   aglob.Init();
+   aglob.fTensor = fTensor;
+   aglob.fNParts = fNParts;
+   if (fCalculated) aglob.Calculate();
 }
 
 //_________________________________________________________________
@@ -110,11 +61,13 @@ KVFlowTensor& KVFlowTensor::operator = (const KVFlowTensor& a)
 void KVFlowTensor::Init(void)
 {
    // Initialisation of internal variables, called once before beginning treatment
+
    Reset();
-   TString wgt = GetOptionString("weight").Data();
+   TString wgt = GetOptionString("weight");
    if (wgt == "RKE") weight = kRKE;
    else if (wgt == "ONE" || wgt == "" || wgt == "1") weight = kONE;
    else weight = kNRKE;
+   SetFrame("CM");
 }
 
 //_________________________________________________________________
@@ -122,66 +75,27 @@ void KVFlowTensor::Reset(void)
 {
    // Reset internal variables, called before treatment of each event
    fTensor.Zero();
-   fCalculated = kFALSE;
    fNParts = 0;
-}
-
-//_________________________________________________________________
-TObject* KVFlowTensor::GetObject(void) const
-{
-   // You can use this method to return the address of an object associated with your global variable.
-   // This may be a list of particles, an intermediate object used to compute values, etc.
-
-   return NULL;
-}
-
-Double_t KVFlowTensor::getvalue_void() const
-{
-   // Protected method, called by GetValue()
-   // This method should return the 'principal' or 'default' value associated with this global variable.
-   //
-   // For historical reasons, this method is 'const', which means that you cannot change the values
-   // of any internal variables in this method (trying to do so will lead to your class not compiling).
-   // If you need to get around this restriction, then you can use the following workaround:
-   //
-   //    const_cast<KVFlowTensor*>(this)->MemberVariable = NewValue;
-   //
-   // The restriction also applies to calling other methods of the class which are not 'const'.
-   // If you need to do this, you can use the same workaround:
-   //
-   //   const_cast<KVFlowTensor*>(this)->NotAConstMethod(someArguments);
-
-   return const_cast<KVFlowTensor*>(this)->getvalue_int(kFlowAngle);
+   fCalculated = false;
 }
 
 Double_t KVFlowTensor::getvalue_int(Int_t index) const
 {
-   // Protected method, called by GetValue(Int_t) and GetValue(const Char_t*)
-   // If your variable calculates several different values, this method allows to access each value
-   // based on a unique index number.
+   // \param index one of the following values:
    //
-   // You should implement something like the following:
+   //   Name           | Index                       | Definition
+   //   ---------------|-----------------------------|---------------------------------------------
+   //  "FlowAngle"     |KVFlowTensor::kFlowAngle     |polar angle of \f$\vec{e_1}\f$
+   //  "Sphericity"    |KVFlowTensor::kSphericity    |\f$\frac{3}{2}(1-\lambda_1)\f$
+   //  "Coplanarity"   |KVFlowTensor::kCoplanarity   |\f$\frac{\sqrt{3}}{2}(\lambda_2-\lambda_3)\f$
+   //  "KinFlowRatio13"|KVFlowTensor::kKinFlowRatio13|\f$\sqrt{\frac{\lambda_1}{\lambda_3}}\f$
+   //  "KinFlowRatio23"|KVFlowTensor::kKinFlowRatio23|\f$\sqrt{\frac{\lambda_2}{\lambda_3}}\f$
+   //  "PhiReacPlane"  |KVFlowTensor::kPhiReacPlane  |\f$\phi\f$ angle of \f$\vec{e_1}\f$
+   //  "SqueezeAngle"  |KVFlowTensor::kSqueezeAngle  |see Gyulassy et al
+   //  "SqueezeRatio"  |KVFlowTensor::kSqueezeRatio  |see Gyulassy et al
+   //  "NumberParts"   |KVFlowTensor::kNumberParts   |number of particles used in tensor
    //
-   //   switch(index){
-   //         case 0:
-   //            return val0;
-   //            break;
-   //         case 1:
-   //            return val1;
-   //            break;
-   //   }
-   //
-   // where 'val0' and 'val1' are the internal variables of your class corresponding to the
-   // required values.
-   //
-   // In order for GetValue(const Char_t*) to work, you need to associate each named value
-   // with an index corresponding to the above 'switch' statement, e.g.
-   //
-   //     SetNameIndex("val0", 0);
-   //     SetNameIndex("val1", 1);
-   //
-   // This should be done in the init_KVFlowTensor() method.
-
+   // \return value associated with given index
    switch (index) {
       case kFlowAngle:
          return TMath::RadToDeg() * e(1).Theta();
@@ -189,6 +103,10 @@ Double_t KVFlowTensor::getvalue_int(Int_t index) const
 
       case kSphericity:
          return fSphericity;
+         break;
+
+      case kCoplanarity:
+         return fCoplanarity;
          break;
 
       case kKinFlowRatio13: {
@@ -285,14 +203,15 @@ void KVFlowTensor::Calculate()
    if (inPlane <= 0.) fSqOutRatio = -1.;
    else fSqOutRatio = TMath::Min(1.e+03, outOfPlane / inPlane);
 
-   // calculate sphericity
+   // calculate sphericity & coplanarity
    Double_t sum_val_prop = f(1) + f(2) + f(3);
    if (sum_val_prop > .1) {
-      fSphericity = 3. * (1. - f(1) / sum_val_prop) / 2.;
+      fSphericity = 1.5 * (1. - f(1) / sum_val_prop);
+      fCoplanarity = sqrt(3.) * (f(2) - f(3)) / sum_val_prop / 2.;
    }
-   else
-      fSphericity = -1;
-
+   else {
+      fSphericity = fCoplanarity = -1;
+   }
    fCalculated = kTRUE;
 }
 
@@ -300,20 +219,22 @@ void KVFlowTensor::Calculate()
 //________________________________________________________________
 void KVFlowTensor::init_KVFlowTensor()
 {
-   // PRIVATE method
-   // Private initialisation method called by all constructors.
-   // All member initialisations should be done here.
+   //Common initialisation for all constructors
    //
-   // You should also (if your variable calculates several different quantities)
-   // set up a correspondance between named values and index number
-   // using method SetNameIndex(const Char_t*,Int_t)
-   // in order for GetValue(const Char_t*) to work correctly.
-   // The index numbers should be the same as in your getvalue_int(Int_t) method.
+   // Default frame is set to "CM".
+   //
+   // Default weight is set to NRKE if none was given
+   //  by calling method SetOption("weight","[your choice]")
+   //   with one of the following choices:
+   //  Option      | Name                                 | Weight
+   //  ------------|--------------------------------------|---------------------------------------------------
+   //  "NRKE"      | non-relativistic KE tensor (default) | \f$w_{\nu}=(2m_{\nu})^{-1}\f$
+   //  "RKE"       | relativistic KE tensor               | \f$w_{\nu}={1 \over {m_{\nu}(\gamma_{\nu}+1)}}\f$
+   //  "ONE","1",""| sphericity tensor                    | \f$w=1\f$
+   //
+   // Default maximum number of branches for TTree is 3: FlowAngle, Sphericity, and Coplanarity
 
    fType = KVVarGlob::kOneBody; // this is a 1-body variable
-
-   // reference frame = "CM"
-   // weight = NRKE [non-relativistic kinetic energy] (1/2m)
 
    SetFrame("CM");
    SetOption("weight", "NRKE");
@@ -322,30 +243,31 @@ void KVFlowTensor::init_KVFlowTensor()
 
    SetNameIndex("FlowAngle", kFlowAngle);
    SetNameIndex("Sphericity", kSphericity);
+   SetNameIndex("Coplanarity", kCoplanarity);
    SetNameIndex("KinFlowRatio13", kKinFlowRatio13);
    SetNameIndex("KinFlowRatio23", kKinFlowRatio23);
    SetNameIndex("PhiReacPlane", kPhiReacPlane);
    SetNameIndex("SqueezeAngle", kSqueezeAngle);
    SetNameIndex("SqueezeRatio", kSqueezeRatio);
    SetNameIndex("NumberParts", kNumberParts);
+
+   SetMaxNumBranches(3);
 }
 
-//________________________________________________________________
-void KVFlowTensor::Fill(KVNucleus* n)
+void KVFlowTensor::fill(const KVNucleus* n)
 {
-   // Fill tensor components with nucleus' momentum components in required
-   // frame, using the required weight
+   // Fill tensor components with nucleus' momentum components using the required weight
+   //
    // If option "DOUBLE" is set, the chosen weight will be doubled
    // (this is for the case where e.g. only forward hemisphere particles are included)
 
    Double_t W;
-   const KVParticle* frame = n->GetFrame(GetFrame(), kFALSE);
    switch (weight) {
       case kONE:
          W = 1;
          break;
       case kRKE:
-         W = 1. / (n->GetMass() * (1 + frame->Gamma()));
+         W = 1. / (n->GetMass() * (1 + n->Gamma()));
          break;
       default:
       case kNRKE:
@@ -355,7 +277,7 @@ void KVFlowTensor::Fill(KVNucleus* n)
    if (IsOptionGiven("DOUBLE")) W *= 2.;
    for (int i = 0; i < 3; i++) {
       for (int j = i; j < 3; j++) {
-         Double_t xx = W * frame->GetMomentum()[i] * frame->GetMomentum()[j];
+         Double_t xx = W * n->GetMomentum()[i] * n->GetMomentum()[j];
          fTensor(i, j) += xx;
          if (i != j) fTensor(j, i) += xx;
       }

@@ -161,10 +161,13 @@ KVClassFactory::KVClassFactory(const KVClassFactory& obj) : TObject()
 //___________________________________________________
 void KVClassFactory::WriteWhoWhen(ofstream& file)
 {
-   //Write date of creation and name of USER who called ClassFactory
+   // Write a stub doxygen comment block to be used to document the file
+   // This will include
+   //  class name, brief description, author name and date
 
-   file << "//Created by KVClassFactory on " << fNow.AsString() << endl;
-   file << "//Author: " << fAuthor.Data() << "\n" << endl;
+   file << "/**\n \\class " << GetClassName() << "\n \\brief " << GetClassDesc() << "\n\n ";
+   file << "Write a detailed documentation for your class here, see doxygen manual for help.\n\n ";
+   file << "\\author " << fAuthor.Data() << "\n \\date " << fNow.AsString() << "\n*/\n\n";
 }
 
 //___________________________________________________
@@ -729,8 +732,8 @@ void KVClassFactory::WriteClassWithTemplateHeader()
    if (fClassPath != "") gSystem->mkdir(fClassPath, kTRUE);
    file_h.open(GetHeaderFileName());
 
-   WriteWhoWhen(file_h);
    WritePreProc(file_h);
+   WriteWhoWhen(file_h);
 
    ifstream file_h_template;
 
@@ -770,14 +773,26 @@ void KVClassFactory::WriteClassWithTemplateHeader()
 
       KVString part_add;
       //write declarations of added methods
+      // group by access type
       if (fMethods.GetSize()) {
          KVString line;
-         TIter next(&fMethods);
-         KVClassMethod* meth;
-         while ((meth = (KVClassMethod*)next())) {
-            meth->WriteDeclaration(line);
-            part_add += line;
-            part_add += "\n";
+         KVString acc_types[] = {"private", "protected", "public", "-"};
+         int iac = 0;
+         while (acc_types[iac] != "-") {
+            std::unique_ptr<KVSeqCollection> sublist(fMethods.GetSubListWithLabel(acc_types[iac]));
+            if (sublist->GetEntries()) {
+               part_add += acc_types[iac];
+               part_add += ":\n";
+               TIter next(sublist.get());
+               KVClassMethod* meth;
+               while ((meth = (KVClassMethod*)next())) {
+                  meth->WriteDeclaration(line);
+                  part_add += line;
+                  part_add += "\n";
+               }
+               part_add += "\n";
+            }
+            ++iac;
          }
       }
 
@@ -787,7 +802,7 @@ void KVClassFactory::WriteClassWithTemplateHeader()
 
    file_h << headFile.ReplaceAll(fTemplateClassName.Data(),
                                  fClassName.Data());
-   file_h << "\n\n#endif" << endl;      //don't forget to close the preprocessor #if !!!
+   file_h << "\n#endif" << endl;      //don't forget to close the preprocessor #if !!!
    file_h.close();
 
    cout << "<KVClassFactory::WriteClassWithTemplateHeader> : File " << GetHeaderFileName() << " generated." << endl;
@@ -805,8 +820,6 @@ void KVClassFactory::WriteClassWithTemplateImp()
    if (fClassPath != "") gSystem->mkdir(fClassPath, kTRUE);
    file_cpp.open(GetImpFileName());
 
-   WriteWhoWhen(file_cpp);
-
    file_cpp << "#include \"" << fClassName.Data() << ".h\"" << endl;
    if (fImpInc.GetSize()) {
       TIter next(&fImpInc);
@@ -816,18 +829,6 @@ void KVClassFactory::WriteClassWithTemplateImp()
       }
    }
    file_cpp << endl << "ClassImp(" << fClassName.Data() << ")\n" << endl;
-   file_cpp <<
-            "////////////////////////////////////////////////////////////////////////////////"
-            << endl;
-   file_cpp << "// BEGIN_HTML <!--" << endl;
-   file_cpp << "/* -->" << endl;
-   file_cpp << "<h2>" << fClassName.Data() << "</h2>" << endl;
-   file_cpp << "<h4>" << fClassDesc.Data() << "</h4>" << endl;
-   file_cpp << "<!-- */" << endl;
-   file_cpp << "// --> END_HTML" << endl;
-   file_cpp <<
-            "////////////////////////////////////////////////////////////////////////////////\n"
-            << endl;
 
    TString cppFile;
    ifstream file_cpp_template;
@@ -853,7 +854,6 @@ void KVClassFactory::WriteClassWithTemplateImp()
       KVClassMethod* meth;
       while ((meth = (KVClassMethod*)next())) {
          meth->WriteImplementation(line);
-         line.Prepend("\n//________________________________________________________________\n");
          file_cpp << line.Data();
       }
    }
@@ -1255,7 +1255,7 @@ void KVClassFactory::KVClassMethod::WriteDeclaration(KVString& decl)
    //Write declaration in the KVString object
    //If method is inline write method body directly after declaration
 
-   decl = "";
+   decl = "   ";
    if (fVirtual) decl += "virtual ";
    if (IsNormalMethod()) {
       decl += GetReturnType();
@@ -1414,6 +1414,28 @@ void KVClassFactory::KVClassMethod::WriteImplementation(KVString& decl)
    //Write skeleton implementation in the KVString object
    //All constructors call the default ctor of the base class (if defined)
 
+   if (fFields.HasParameter("Comment")) {
+      // Go through comment line by line adding doxygen comment markers
+      KVString comment(fFields.GetTStringValue("Comment"));
+      comment.Begin("\n");
+      // find longest line
+      Ssiz_t longest = 0;
+      while (!comment.End()) {
+         KVString line = comment.Next();
+         if (line.Length() > longest) longest = line.Length();
+      }
+      // write "////...." as long as longest line
+      while (longest--) decl += "/";
+      decl += "\n";
+      comment.Begin("\n");
+      while (!comment.End()) {
+         KVString line = comment.Next();
+         decl += "/// ";
+         decl += line;
+         decl += "\n";
+      }
+      decl += "\n";
+   }
    decl = GetReturnType();
    if (IsNormalMethod()) {
       decl += " ";
@@ -1440,7 +1462,7 @@ void KVClassFactory::KVClassMethod::WriteImplementation(KVString& decl)
    decl += ")";
    if (fConst) decl += " const";
    write_method_body(decl);
-   decl += "\n\n//____________________________________________________________________________//";
+   decl += "\n\n";
 
 }
 

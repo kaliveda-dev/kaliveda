@@ -12,7 +12,6 @@ class KVEvent;
 /**
   \class KVVarGlob
   \ingroup GlobalVariables
-
   \brief Base class for all global variable implementations
 
 Abstract base class for the management of global variables.
@@ -162,6 +161,9 @@ provide the methods
 
 which allow to change the reference frame used for the calculation of the variable
 (depending on the implementation of the specific class).
+
+\authors D. Cussol (LPC Caen), J.D. Frankland (GANIL)
+\date 2004-2020
  */
 
 class KVVarGlob: public KVBase {
@@ -187,9 +189,9 @@ private:
    Int_t fMaxNumBranches;// max number of branches to create for multi-valued variable
    Double_t fNormalization;// optional normalization parameter
 
-protected:
    void init();
-   void SetNameIndex(const Char_t* name, Int_t index);  // associe un nom et un index
+protected:
+   void SetNameIndex(const Char_t* name, Int_t index);
    void ClearNameIndex()
    {
       // Delete previously defined associations between variable name and index
@@ -214,6 +216,25 @@ protected:
       return getvalue_int(GetNameIndex(name));
    }
    virtual Double_t getvalue_int(Int_t) const = 0;
+   virtual void fill(const KVNucleus*)
+   {
+      // abstract method which must be overriden in child classes
+      // describing one-body global variables.
+      AbstractMethod("fill(KVNucleus*)");
+   }
+
+   virtual void fill2(const KVNucleus*, const KVNucleus*)
+   {
+      // abstract method which must be overriden in child classes
+      // describing two-body global variables.
+      //
+      // NOTE: this method will be called for EVERY pair of nuclei in the event
+      // (i.e. n1-n2 and n2-n1), including pairs of identical nuclei (n1 = n2).
+      // If you want to calculate a global variable using only each non-identical pair once,
+      // then make sure in your implementation that you check n1!=n2 and divide
+      // the result of summing over the pairs by 2 to avoid double-counting.
+      AbstractMethod("fill2(KVNucleus*,KVNucleus*)");
+   }
 
 public:
    KVVarGlob()
@@ -227,6 +248,7 @@ public:
       init();
    }
    ROOT_COPY_CTOR(KVVarGlob, KVBase)
+   ROOT_COPY_ASSIGN_OP(KVVarGlob)
    void Copy(TObject& obj) const
    {
       // Copy this to obj
@@ -246,8 +268,6 @@ public:
    }
    virtual ~KVVarGlob(void)
    {}
-
-   ROOT_COPY_ASSIGN_OP(KVVarGlob)
 
    Bool_t IsOneBody()
    {
@@ -280,32 +300,6 @@ public:
    virtual void Init() = 0;
    virtual void Reset() = 0;
    virtual void Calculate() = 0;
-   virtual void fill(const KVNucleus*)
-   {
-      // abstract method which must be overriden in child classes
-      // describing one-body global variables.
-      AbstractMethod("fill(KVNucleus*)");
-   }
-
-   virtual void fill2(const KVNucleus*, const KVNucleus*)
-   {
-      // abstract method which must be overriden in child classes
-      // describing two-body global variables.
-      //
-      // NOTE: this method will be called for EVERY pair of nuclei in the event
-      // (i.e. n1-n2 and n2-n1), including pairs of identical nuclei (n1 = n2).
-      // If you want to calculate a global variable using only each non-identical pair once,
-      // then make sure in your implementation that you check n1!=n2 and divide
-      // the result of summing over the pairs by 2 to avoid double-counting.
-      AbstractMethod("fill2(KVNucleus*,KVNucleus*)");
-   }
-
-   virtual void fillN(KVEvent*)
-   {
-      // abstract method which must be overriden in child classes
-      // describing N-body global variables.
-      AbstractMethod("FillN(KVEvent*)");
-   }
 
    void Fill(KVNucleus& c)
    {
@@ -325,6 +319,12 @@ public:
       const KVNucleus* n2_in_frame = dynamic_cast<const KVNucleus*>(n2.GetFrame(fFrame, false));
       if (fSelection.Test(n1_in_frame) && fSelection.Test(n2_in_frame))
          fill2(n1_in_frame, n2_in_frame);
+   }
+   virtual void FillN(KVEvent*)
+   {
+      // abstract method which must be overriden in child classes
+      // describing N-body global variables.
+      AbstractMethod("FillN(KVEvent*)");
    }
    Double_t GetValue(void) const
    {
@@ -508,8 +508,10 @@ public:
    Int_t GetNumberOfBranches() const
    {
       // Returns number of branches to create for this global variable (see KVGVList::MakeBranches).
-      // This is the same as GetNumberOfValues() unless SetMaxNumBranches has been called with a different
+      //
+      // This is the same as GetNumberOfValues() unless SetMaxNumBranches() has been called with a different
       // (smaller) value.
+      //
       // Note that if SetMaxNumBranches(0) is called, no branch will be created for this variable.
       return (fMaxNumBranches > -1 ? fMaxNumBranches : GetNumberOfValues());
    }

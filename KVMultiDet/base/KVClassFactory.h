@@ -271,7 +271,10 @@ public:
       {
          fFields.SetValue("Body", body);
       }
-
+      void SetMethodComment(const KVString& com)
+      {
+         fFields.SetValue("Comment", com);
+      }
       const Char_t* GetReturnType()
       {
          if (fFields.HasParameter("ReturnType"))

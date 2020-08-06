@@ -30,14 +30,15 @@ void KVVarGlob::MakeClass(const Char_t* classname, const Char_t* classdesc, int 
    // inherits from this class. Give a name for the new class and a short description
    // which will be used to document the class.
    //
-   // By default the new class will be of type 1-body. A Fill(KVNucleus*) method
+   // By default the new class will be of type 1-body. A fill(const KVNucleus*) method
    // will be generated which the user should complete.
+   //
    // For a 2-body variable, call MakeClass with type = KVVarGlob::kTwoBody.
-   // A skeleton Fill2(KVNucleus*,KVNucleus*) method will be generated.
+   // A skeleton fill2(const KVNucleus*,const KVNucleus*) method will be generated.
+   //
    // For a N-body variable, call MakeClass with type = KVVarGlob::kNBody.
-   // A skeleton FillN(KVEvent*) method will be generated.
+   // A skeleton fillN(KVEvent*) method will be generated.
 
-   // basic class template
    KVClassFactory cf(classname, classdesc, "KVVarGlob", kTRUE);
 
    KVString body;
@@ -45,10 +46,10 @@ void KVVarGlob::MakeClass(const Char_t* classname, const Char_t* classdesc, int 
    // add 'init' method
    KVVarGlob::AddInitMethod(classname, cf, body, type);
 
-   // add 'Fill', 'Fill2', or 'FillN' method
+   // add 'fill', 'fill2', or 'FillN' method
    KVVarGlob::AddFillMethod(cf, type);
 
-   // body of 'Fill', 'Fill2', or 'FillN' method
+   // body of 'fill', 'fill2', or 'FillN' method
    KVVarGlob::FillMethodBody(body, type);
 
    // add body of method
@@ -60,7 +61,7 @@ void KVVarGlob::MakeClass(const Char_t* classname, const Char_t* classdesc, int 
 void KVVarGlob::FillMethodBody(KVString& body, int type)
 {
    // PRIVATE method used by MakeClass.
-   // body of 'Fill', 'Fill2', or 'FillN' method
+   // body of 'fill', 'fill2', or 'FillN' method
    switch (type) {
       case kTwoBody:
          body = "   // Calculation of contribution to 2-body global variable of pair (n1,n2) of nuclei.\n";
@@ -82,7 +83,7 @@ void KVVarGlob::AddInitMethod(const Char_t* classname, KVClassFactory& cf, KVStr
 {
    // PRIVATE method used by MakeClass.
    // add 'init' method
-   cf.AddMethod(Form("init_%s", classname), "void", "private");
+   cf.AddMethod("init", "void", "private");
    body = "   // Private initialisation method called by all constructors.\n";
    body += "   // All member initialisations should be done here.\n";
    body += "   //\n";
@@ -102,7 +103,7 @@ void KVVarGlob::AddInitMethod(const Char_t* classname, KVClassFactory& cf, KVStr
       default:
          body += "   fType = KVVarGlob::kOneBody; // this is a 1-body variable\n";
    }
-   cf.AddMethodBody(Form("init_%s", classname), body);
+   cf.AddMethodBody("init", body);
 }
 
 void KVVarGlob::AddFillMethod(KVClassFactory& cf, int type)
@@ -111,9 +112,9 @@ void KVVarGlob::AddFillMethod(KVClassFactory& cf, int type)
    // add 'Fill', 'Fill2', or 'FillN' method
    switch (type) {
       case kTwoBody:
-         cf.AddMethod("Fill2", "void");
-         cf.AddMethodArgument("Fill2", "KVNucleus*", "n1");
-         cf.AddMethodArgument("Fill2", "KVNucleus*", "n2");
+         cf.AddMethod("fill2", "void", "protected");
+         cf.AddMethodArgument("fill2", "const KVNucleus*", "n1");
+         cf.AddMethodArgument("fill2", "const KVNucleus*", "n2");
          break;
       case kNBody:
          cf.AddMethod("FillN", "void");
@@ -121,8 +122,8 @@ void KVVarGlob::AddFillMethod(KVClassFactory& cf, int type)
          cf.AddHeaderIncludeFile("KVEvent.h");
          break;
       default:
-         cf.AddMethod("Fill", "void");
-         cf.AddMethodArgument("Fill", "KVNucleus*", "n");
+         cf.AddMethod("fill", "void", "protected");
+         cf.AddMethodArgument("fill", "const KVNucleus*", "n");
    }
 }
 
@@ -132,20 +133,32 @@ void KVVarGlob::AddFillMethodBody(KVClassFactory& cf, KVString& body, int type)
    // add body of fill method
    switch (type) {
       case kTwoBody:
-         cf.AddMethodBody("Fill2", body);
+         cf.AddMethodBody("fill2", body);
          break;
       case kNBody:
          cf.AddMethodBody("FillN", body);
          break;
       default:
-         cf.AddMethodBody("Fill", body);
+         cf.AddMethodBody("fill", body);
    }
 }
 
 //_________________________________________________________________
 void KVVarGlob::SetNameIndex(const Char_t* name, Int_t index)
 {
-   // Make the link between a variable name and an index
+   // For a multi-valued global variable, sets up the correspondance between value name and index.
+   //
+   // These can then be used to retrieve values with GetValue("name") or GetValue(index).
+   //
+   // When automatic branch creation in a TTree is used (see KVGVList::MakeBranches()), the names given
+   // to this method will be used to name the branches as:
+   //  - [varName].[value0_name]
+   //  - [varName].[value1_name]
+   //  - ... etc.
+   //
+   // GetNumberOfValues() returns the number of values associated with the variable,
+   // corresponding to the number of name-index associations are created by calling this method.
+
    if (!(nameList.HasParameter(name))) {
       nameList.SetValue(name, index);
    }
@@ -158,7 +171,9 @@ void KVVarGlob::SetNameIndex(const Char_t* name, Int_t index)
 
 Int_t KVVarGlob::GetNameIndex(const Char_t* name) const
 {
-   // return the index corresponding to name
+   // \return the index corresponding to name
+   // \sa SetNameIndex()
+
    Int_t index = 0;
    if (nameList.HasParameter(name)) {
       index = nameList.GetIntValue(name);

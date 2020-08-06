@@ -1,24 +1,29 @@
 class KVVarGlobTemplate: public KVVarGlob {
 
 protected:
-   Double_t getvalue_void() const;
-   Double_t getvalue_int(Int_t);
+   Double_t getvalue_int(Int_t) const;
 
 public:
-   KVVarGlobTemplate(void);
-   KVVarGlobTemplate(Char_t* nom);
-   KVVarGlobTemplate(const KVVarGlobTemplate& a);
+   KVVarGlobTemplate()
+      : KVVarGlob()
+   {
+      init();
+   }
+   KVVarGlobTemplate(const Char_t* nom)
+      : KVVarGlob(nom)
+   {
+      init();
+   }
+   ROOT_COPY_CTOR(KVVarGlobTemplate, KVVarGlob)
+   ROOT_COPY_ASSIGN_OP(KVVarGlobTemplate)
 
-   virtual ~KVVarGlobTemplate(void);
+   virtual ~KVVarGlobTemplate() {}
 
-   virtual void Copy(TObject& obj) const;
+   void Copy(TObject& obj) const;
 
-   KVVarGlobTemplate& operator = (const KVVarGlobTemplate& a);
+   void Init();
+   void Reset();
+   void Calculate();
 
-   virtual void Init(void);
-   virtual void Reset(void);
-
-   virtual Double_t* GetValuePtr(void);
-   virtual TObject* GetObject(void) const;
    ClassDef(KVVarGlobTemplate, 1)
 };
