@@ -67,11 +67,10 @@ void KVVarGlob::FillMethodBody(KVString& body, int type)
    switch (type) {
       case kTwoBody:
          body = "Calculation of contribution to 2-body global variable of pair (n1,n2) of nuclei.\n";
-         body += "NOTE: this method will be called for EVERY pair of nuclei in the event\n";
-         body += "(i.e. n1-n2 and n2-n1), including pairs of identical nuclei (n1 = n2).\n";
-         body += "If you want to calculate a global variable using only each non-identical pair once,\n";
-         body += "then make sure in your implementation that you check n1!=n2 and divide the\n";
-         body += "contribution to any sum by 2 to avoid double-counting.\n";
+         body += "NOTE: this method will be called once for each distinct pair of nuclei in the event\n";
+         body += "including pairs of identical nuclei (n1 = n2).\n";
+         body += "If you want to calculate a global variable using only each non-identical pair,\n";
+         body += "then make sure in your implementation that you check n1!=n2\n";
          break;
       case kNBody:
          body = "Calculation of contribution to N-body global variable of particles in event e.\n";
