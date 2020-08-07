@@ -7,8 +7,8 @@
   \brief Abstract base class for global variables which calculate a single value
   \ingroup GlobalVariables
 
-  \author D. Cussol
-  \date 2004
+  \author D. Cussol (LPC Caen), J.D. Frankland (GANIL)
+  \date 2004-2020
  */
 class KVVarGlob1: public KVVarGlob {
 

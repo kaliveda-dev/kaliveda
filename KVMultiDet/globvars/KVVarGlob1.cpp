@@ -25,7 +25,8 @@ void KVVarGlob1::MakeClass(const Char_t* classname, const Char_t* classdesc, int
    KVString body;
 
    // add 'init' method
-   KVVarGlob::AddInitMethod(classname, cf, body, type);
+   KVVarGlob::AddInitMethod(cf, body);
+   KVVarGlob::ImplementInitMethod(cf, body, type);
 
    // add 'Fill', 'Fill2', or 'FillN' method
    KVVarGlob::AddFillMethod(cf, type);
@@ -43,35 +44,28 @@ void KVVarGlob1::FillMethodBody(KVString& body, int type)
 {
    // PRIVATE method used by MakeClass.
    // body of 'Fill', 'Fill2', or 'FillN' method
+
+   KVVarGlob::FillMethodBody(body, type);
    switch (type) {
       case kTwoBody:
-         body = "   // Calculation of contribution to 2-body global variable of pair (n1,n2) of nuclei.\n";
-         body += "   // NOTE: this method will be called for EVERY pair of nuclei in the event\n";
-         body += "   // (i.e. n1-n2 and n2-n1), including pairs of identical nuclei (n1 = n2).\n";
-         body += "   // If you want to calculate a global variable using only each non-identical pair once,\n";
-         body += "   // then make sure in your implementation that you check n1!=n2 and divide the\n";
-         body += "   // contribution to any sum by 2 (or use a weight=0.5) to avoid double-counting.\n";
-         body += "   //\n";
-         body += "   // Use the FillVar(v) method to increment the quantity of the global variable.\n";
-         body += "   // The value, v, is to be evaluated from the properties of the\n";
-         body += "   // two KVNucleus pointers passed as argument.\n";
+         body += "\n";
+         body += "Use the FillVar(v) method to increment the quantity of the global variable.\n";
+         body += "The value, v, is to be evaluated from the properties of the\n";
+         body += "two KVNucleus pointers passed as arguments.\n";
          break;
       case kNBody:
-         body = "   // Calculation of contribution to N-body global variable of particles in event e.\n";
-         body += "   //\n";
-         body += "   // Use the FillVar(v) method to increment the quantity of the global variable.\n";
-         body += "   // The value, v, is to be evaluated from the properties of the\n";
-         body += "   // KVEvent pointer passed as argument.\n";
+         body += "\n";
+         body += "Use the FillVar(v) method to increment the quantity of the global variable.\n";
+         body += "The value, v, is to be evaluated from the properties of the\n";
+         body += "KVEvent pointer passed as argument.\n";
          break;
       default:
-         body = "   // Calculation of contribution to 1-body global variable of nucleus n1\n";
-         body += "   //\n";
-         body += "   // Use the FillVar(v) method to increment the quantity of the global variable.\n";
-         body += "   // The value, v, is to be evaluated from the properties of the \n";
-         body += "   // KVNucleus passed as argument. For example, to evaluate the sum of the charge\n";
-         body += "   // of all fragments, you may proceed as follows:\n";
-         body += "   //\n";
-         body += "   // FillVar(n->GetZ());\n";
+         body += "\n";
+         body += "Use the FillVar(v) method to increment the quantity of the global variable.\n";
+         body += "The value, v, is to be evaluated from the properties of the \n";
+         body += "KVNucleus passed as argument. For example, to evaluate the sum of the charge\n";
+         body += "of all fragments, you may proceed as follows:\n";
+         body += "\n";
+         body += "FillVar(n->GetZ());\n";
    }
 }
-

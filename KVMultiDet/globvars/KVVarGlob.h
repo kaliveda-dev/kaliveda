@@ -190,6 +190,8 @@ private:
    Double_t fNormalization;// optional normalization parameter
 
    void init();
+   static void AddExtraInitMethodComment(KVClassFactory& cf, KVString& body);
+
 protected:
    void SetNameIndex(const Char_t* name, Int_t index);
    void ClearNameIndex()
@@ -199,7 +201,8 @@ protected:
    }
 
    static void FillMethodBody(KVString& body, int type);
-   static void AddInitMethod(const Char_t* classname, KVClassFactory& cf, KVString& body, int type);
+   static void AddInitMethod(KVClassFactory& cf, KVString& body);
+   static void ImplementInitMethod(KVClassFactory& cf, KVString& body, int type);
    static void AddFillMethod(KVClassFactory& cf, int type);
    static void AddFillMethodBody(KVClassFactory& cf, KVString& body, int type);
 

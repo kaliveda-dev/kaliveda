@@ -1,15 +1,24 @@
 class KVVarGlob1Template: public KVVarGlob1 {
+
 public:
+   KVVarGlob1Template()
+      : KVVarGlob1()
+   {
+      init();
+   }
+   KVVarGlob1Template(const Char_t* nom)
+      : KVVarGlob1(nom)
+   {
+      init();
+   }
+   ROOT_COPY_CTOR(KVVarGlob1Template, KVVarGlob1)
+   ROOT_COPY_ASSIGN_OP(KVVarGlob1Template)
 
-   KVVarGlob1Template(void);
-   KVVarGlob1Template(Char_t* nom);
-   KVVarGlob1Template(const KVVarGlob1Template& a);
-
-   virtual ~KVVarGlob1Template(void);
+   virtual ~KVVarGlob1Template(void) {}
 
    virtual void Copy(TObject& obj) const;
 
-   KVVarGlob1Template& operator = (const KVVarGlob1Template& a);
+   void Calculate();
 
    ClassDef(KVVarGlob1Template, 1)
 };

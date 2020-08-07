@@ -44,7 +44,9 @@ void KVVarGlob::MakeClass(const Char_t* classname, const Char_t* classdesc, int 
    KVString body;
 
    // add 'init' method
-   KVVarGlob::AddInitMethod(classname, cf, body, type);
+   KVVarGlob::AddInitMethod(cf, body);
+   KVVarGlob::AddExtraInitMethodComment(cf, body);
+   KVVarGlob::ImplementInitMethod(cf, body, type);
 
    // add 'fill', 'fill2', or 'FillN' method
    KVVarGlob::AddFillMethod(cf, type);
@@ -79,21 +81,8 @@ void KVVarGlob::FillMethodBody(KVString& body, int type)
    }
 }
 
-void KVVarGlob::AddInitMethod(const Char_t* classname, KVClassFactory& cf, KVString& body, int type)
+void KVVarGlob::ImplementInitMethod(KVClassFactory& cf, KVString& body, int type)
 {
-   // PRIVATE method used by MakeClass.
-   // add 'init' method
-   cf.AddMethod("init", "void", "private");
-   body = "Private initialisation method called by all constructors.\n";
-   body += "All member initialisations should be done here.\n";
-   body += "\n";
-   body += "You should also (if your variable calculates several different quantities)\n";
-   body += "set up a correspondance between named values and index number\n";
-   body += "using method SetNameIndex(const Char_t*,Int_t)\n";
-   body += "in order for GetValue(const Char_t*) to work correctly.\n";
-   body += "The index numbers should be the same as in your getvalue_int(Int_t) method.\n";
-   body += "\n";
-   cf.AddMethodComment("init", body);
    switch (type) {
       case kTwoBody:
          body = "   fType = KVVarGlob::kTwoBody; // this is a 2-body variable\n";
@@ -105,6 +94,28 @@ void KVVarGlob::AddInitMethod(const Char_t* classname, KVClassFactory& cf, KVStr
          body = "   fType = KVVarGlob::kOneBody; // this is a 1-body variable\n";
    }
    cf.AddMethodBody("init", body);
+}
+
+void KVVarGlob::AddExtraInitMethodComment(KVClassFactory& cf, KVString& body)
+{
+   body += "\n";
+   body += "You should also (if your variable calculates several different quantities)\n";
+   body += "set up a correspondance between named values and index number\n";
+   body += "using method SetNameIndex(const Char_t*,Int_t)\n";
+   body += "in order for GetValue(const Char_t*) to work correctly.\n";
+   body += "The index numbers should be the same as in your getvalue_int(Int_t) method.\n";
+   body += "\n";
+   cf.AddMethodComment("init", body);
+}
+
+void KVVarGlob::AddInitMethod(KVClassFactory& cf, KVString& body)
+{
+   // PRIVATE method used by MakeClass.
+   // add 'init' method
+   cf.AddMethod("init", "void", "private");
+   body = "Private initialisation method called by all constructors.\n";
+   body += "All member initialisations should be done here.\n";
+   cf.AddMethodComment("init", body);
 }
 
 void KVVarGlob::AddFillMethod(KVClassFactory& cf, int type)
