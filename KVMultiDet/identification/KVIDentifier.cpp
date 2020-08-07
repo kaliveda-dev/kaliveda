@@ -343,6 +343,13 @@ void KVIDentifier::ExtendLine(Double_t Limit, Option_t* Direction)
       Double_t a = vv - v;
       Double_t b = u - uu;
       Double_t c = -(b * v + a * u);
+      //
+      // Check that 'Limit' the x-coordinate of the new point is larger than the x-coordinate of the last existing point, in order to avoid issues
+      if (Limit < u) {
+         Error("ExtendLine", "Cannot extend line, with x-coordinate wanted smaller than the one of the existing last point!");
+         return;
+      }
+      //
       // use 'Limit' as x-coordinate of new point
       newX = Limit;
       newY = -(a * newX + c) / b;
