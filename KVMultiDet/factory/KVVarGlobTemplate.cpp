@@ -33,6 +33,13 @@ void KVVarGlobTemplate::Reset(void)
 {
 }
 
+//////////////////////////////////////////////////////////////////////
+/// Calculation of global variable value(s) after filling is finished
+
+void KVVarGlobTemplate::Calculate(void)
+{
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 /// Protected method, called by GetValue(Int_t) and GetValue(const Char_t*)
 /// If your variable calculates several different values, this method allows to access each value

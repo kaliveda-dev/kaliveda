@@ -64,18 +64,18 @@ void KVVarGlob::FillMethodBody(KVString& body, int type)
    // body of 'fill', 'fill2', or 'FillN' method
    switch (type) {
       case kTwoBody:
-         body = "   // Calculation of contribution to 2-body global variable of pair (n1,n2) of nuclei.\n";
-         body += "   // NOTE: this method will be called for EVERY pair of nuclei in the event\n";
-         body += "   // (i.e. n1-n2 and n2-n1), including pairs of identical nuclei (n1 = n2).\n";
-         body += "   // If you want to calculate a global variable using only each non-identical pair once,\n";
-         body += "   // then make sure in your implementation that you check n1!=n2 and divide the\n";
-         body += "   // contribution to any sum by 2 to avoid double-counting.\n";
+         body = "Calculation of contribution to 2-body global variable of pair (n1,n2) of nuclei.\n";
+         body += "NOTE: this method will be called for EVERY pair of nuclei in the event\n";
+         body += "(i.e. n1-n2 and n2-n1), including pairs of identical nuclei (n1 = n2).\n";
+         body += "If you want to calculate a global variable using only each non-identical pair once,\n";
+         body += "then make sure in your implementation that you check n1!=n2 and divide the\n";
+         body += "contribution to any sum by 2 to avoid double-counting.\n";
          break;
       case kNBody:
-         body = "   // Calculation of contribution to N-body global variable of particles in event e.\n";
+         body = "Calculation of contribution to N-body global variable of particles in event e.\n";
          break;
       default:
-         body = "   // Calculation of contribution to 1-body global variable of nucleus n\n";
+         body = "Calculation of contribution to 1-body global variable of nucleus n\n";
    }
 }
 
@@ -84,24 +84,25 @@ void KVVarGlob::AddInitMethod(const Char_t* classname, KVClassFactory& cf, KVStr
    // PRIVATE method used by MakeClass.
    // add 'init' method
    cf.AddMethod("init", "void", "private");
-   body = "   // Private initialisation method called by all constructors.\n";
-   body += "   // All member initialisations should be done here.\n";
-   body += "   //\n";
-   body += "   // You should also (if your variable calculates several different quantities)\n";
-   body += "   // set up a correspondance between named values and index number\n";
-   body += "   // using method SetNameIndex(const Char_t*,Int_t)\n";
-   body += "   // in order for GetValue(const Char_t*) to work correctly.\n";
-   body += "   // The index numbers should be the same as in your getvalue_int(Int_t) method.\n";
+   body = "Private initialisation method called by all constructors.\n";
+   body += "All member initialisations should be done here.\n";
    body += "\n";
+   body += "You should also (if your variable calculates several different quantities)\n";
+   body += "set up a correspondance between named values and index number\n";
+   body += "using method SetNameIndex(const Char_t*,Int_t)\n";
+   body += "in order for GetValue(const Char_t*) to work correctly.\n";
+   body += "The index numbers should be the same as in your getvalue_int(Int_t) method.\n";
+   body += "\n";
+   cf.AddMethodComment("init", body);
    switch (type) {
       case kTwoBody:
-         body += "   fType = KVVarGlob::kTwoBody; // this is a 2-body variable\n";
+         body = "   fType = KVVarGlob::kTwoBody; // this is a 2-body variable\n";
          break;
       case kNBody:
-         body += "   fType = KVVarGlob::kNBody; // this is a N-body variable\n";
+         body = "   fType = KVVarGlob::kNBody; // this is a N-body variable\n";
          break;
       default:
-         body += "   fType = KVVarGlob::kOneBody; // this is a 1-body variable\n";
+         body = "   fType = KVVarGlob::kOneBody; // this is a 1-body variable\n";
    }
    cf.AddMethodBody("init", body);
 }
@@ -133,13 +134,13 @@ void KVVarGlob::AddFillMethodBody(KVClassFactory& cf, KVString& body, int type)
    // add body of fill method
    switch (type) {
       case kTwoBody:
-         cf.AddMethodBody("fill2", body);
+         cf.AddMethodComment("fill2", body);
          break;
       case kNBody:
-         cf.AddMethodBody("FillN", body);
+         cf.AddMethodComment("FillN", body);
          break;
       default:
-         cf.AddMethodBody("fill", body);
+         cf.AddMethodComment("fill", body);
    }
 }
 

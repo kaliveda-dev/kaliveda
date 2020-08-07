@@ -28,7 +28,7 @@ class TList;
 
 /**
   \class KVReconstructedEvent
-  \ingroup Reconstruction
+  \ingroup Reconstruction,NucEvents
   \brief Physical event reconstructed from data measured with a detector array using implemented identification and calibration procedures.
 */
 class KVReconstructedEvent: public KVEvent {

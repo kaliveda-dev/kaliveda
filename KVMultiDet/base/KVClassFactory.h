@@ -40,15 +40,16 @@ There are two ways to use KVClassFactory in order to generate code:
 The second method is more flexible and allows to add methods to classes before
 code generation, even if the class is created from a predefined template.
 
-For example, let us suppose that we want to add the following method to our class:
+For example, let us suppose that we want to add the following public method to our class:
 ~~~~~~{.cpp}
    -//-> declaration:
       virtual const Char_t* GetName(Option_t* = "") const;
 
    -//-> implementation:
+     _//////////////////////////////////////////////
+     _/// Doxygen comments to document my new method
       const Char_t* MyNewClass::GetName(Option_t* opt) const
       {
-            //A new method
             if( strcmp(opt,"") ) cout << "Option : " << opt << endl;
             else cout << fName.Data() << endl;
             return fName.Data();
@@ -59,10 +60,10 @@ This can be done as follows:
 
 ~~~~~~{.cpp}
     KVClassFactory fact("MyNewClass", "My latest creation");
-    fact.AddMethod("GetName", "const Char_t*", kTRUE, kTRUE);
+    fact.AddMethod("GetName", "const Char_t*", "public", kTRUE, kTRUE);
     fact.AddMethodArgument("GetName", "Option_t*", "opt", "\"\"");
+    fact.AddMethodComment("Doxygen comments to document my new method");
     KVString body;
-    body += "      //A new method\n";
     body += "      if( strcmp(opt,\"\") ) std::cout << \"Option : \" << opt << std::endl;\n";
     body += "      else std::cout << fName.Data() << std::endl;\n";
     body += "      return fName.Data();";
@@ -396,7 +397,7 @@ public:
          : KVClassMethod(kTRUE)
       {
          SetName("destructor");
-         SetMethodBody("   // Destructor");
+         SetMethodComment("Destructor");
       }
       virtual ~KVClassDestructor() {}
       virtual Bool_t IsDestructor() const
@@ -440,6 +441,7 @@ public:
    void AddMethodArgument(const Char_t* method_name, const Char_t* argument_type,
                           const Char_t* argument_name = "", const Char_t* default_value = "");
    void AddMethodBody(const Char_t* method_name, const KVString& body);
+   void AddMethodComment(const Char_t* method_name, const KVString& comment);
 
    void AddHeaderIncludeFile(const Char_t* filename);
    void AddImplIncludeFile(const Char_t* filename);

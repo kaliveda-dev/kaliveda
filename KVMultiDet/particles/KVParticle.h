@@ -34,6 +34,11 @@ $Id: KVParticle.h,v 1.41 2008/05/21 13:19:56 ebonnet Exp $
 class KVKinematicalFrame;
 class KVParticleCondition;
 
+/**
+  \class KVParticle
+  \ingroup NucEvents
+  \brief Base class for kinematics of massive particles
+ */
 class KVParticle: public TLorentzVector {
 
 private:

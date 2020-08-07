@@ -15,7 +15,7 @@ class KVTelescope;
 /**
   \class KVReconstructedNucleus
  \brief Nuclei reconstructed from data measured by a detector array
-\ingroup Reconstruction
+\ingroup Reconstruction,NucEvents
 */
 class KVReconstructedNucleus: public KVNucleus {
 

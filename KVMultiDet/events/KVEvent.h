@@ -39,6 +39,11 @@ $Id: KVEvent.h,v 1.29 2008/12/17 11:23:12 ebonnet Exp $
 
 class KVIntegerList;
 
+/**
+  \class KVEvent
+  \brief Base class container for multi-particle events
+  \ingroup NucEvents
+ */
 class KVEvent: public KVBase {
 
 protected:
