@@ -12,41 +12,50 @@ $Date: 2009/01/23 15:25:52 $
 
 #include "KVVarGlob1.h"
 
-class KVFoxH2: public KVVarGlob1 {
-// Static fields (if any):
-public:
+/**
+\class KVFoxH2
+\brief Event shape global variable : second Fox-Wolfram moment, H(2)
+\ingroup GlobalVariables
 
-// Protected fields (if any):
-protected:
+We use the following formula:
+\f[
+H_{2} = \frac{\sum_{i,j} |p_{i}| |p_{j}| (3cos^{2}\theta_{rel} - 1) }{2\sum_{i,j} |p_{i}||p_{j}|}
+\f]
+to calculate \f$H(2)\f$. By default, momenta in "CM" frame are used. (change with SetFrame()).
+*/
+
+class KVFoxH2: public KVVarGlob1 {
+
    Double_t num;
    Double_t den;
 
-// Methods
+   void init();
+
 protected:
-   void init_KVFoxH2(void);
-   virtual Double_t getvalue_void(void) const;
+   void fill2(const KVNucleus* n1, const KVNucleus* n2);
 
 public:
-   KVFoxH2(void);       // default constructor
-   KVFoxH2(const Char_t* nom);      // constructor with aname
-   KVFoxH2(const KVFoxH2& a);// copy constructor
+   KVFoxH2()
+      : KVVarGlob1()
+   {
+      init();
+   }
+   KVFoxH2(const Char_t* nom)
+      : KVVarGlob1(nom)
+   {
+      init();
+   }
+   ROOT_COPY_CTOR(KVFoxH2, KVVarGlob1)
+   ROOT_COPY_ASSIGN_OP(KVFoxH2)
+   virtual ~KVFoxH2() {}
 
-   void Init(void);
-   void Reset(void);
-   virtual ~KVFoxH2(void);    // destructor
+   void Init();
+   void Reset();
+   void Calculate();
 
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    virtual void Copy(TObject& obj) const;
-#else
-   virtual void Copy(TObject& obj);
-#endif
-
-   KVFoxH2& operator = (const KVFoxH2& a); // operator =
-
-   void Fill2(KVNucleus* n1, KVNucleus* n2);    // Filling method
 
    ClassDef(KVFoxH2, 1) //Event shape global variable : second Fox-Wolfram moment, H(2)
-
 };
 
 
