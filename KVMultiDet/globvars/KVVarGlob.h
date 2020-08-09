@@ -381,11 +381,6 @@ public:
       return GetValue(i);
    }
 
-   virtual TObject* GetObject(void) const
-   {
-      AbstractMethod("GetObject");
-      return nullptr;
-   }
    virtual Int_t GetNameIndex(const Char_t* name) const;
 
    static void MakeClass(const Char_t* classname, const Char_t* classdesc, int type = kOneBody);

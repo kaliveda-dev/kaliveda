@@ -71,12 +71,6 @@ public:
       // add nucleus to list
       heaviest.Add(const_cast<KVNucleus*>(c));
    }
-   virtual TObject* GetObject(void) const
-   {
-      // \return pointer to fragment with largest Z in event
-      return GetZmax(0);
-   }
-
    KVNucleus* GetZmax(Int_t i) const
    {
       // \return pointer to (i+1)th heaviest fragment (i=0 : \f$Z_{max}\f$, i=1 : \f$Z_{max2}\f$, etc.)
