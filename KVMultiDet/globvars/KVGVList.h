@@ -1,21 +1,48 @@
-//
-// D.Cussol
-//
-// 18/02/2004:
-// Creation d'une classe Liste de variables globales
-//
-//
-
 #ifndef KVGVList_h
 #define KVGVList_h
 #include "KVVarGlob.h"
 #include "KVUniqueNameList.h"
 #include "TTree.h"
 
-//#define DEBUG_KVGVList
-
 #define MAX_CAP_BRANCHES 100
 
+/**
+\class KVGVList
+\brief Mangae a list of global variables
+\ingroup GlobalVariables
+
+This class allows to process in a single call many KVVargGlob instances.
+The methods used to initialize and fill variables in such a list are:
+
+~~~~~~~~~~~~
+    void Init(void);                             // initializes the global variables (call once)
+    void CalculateGlobalVariables(KVEvent *e);   // compute all global variables for the event
+~~~~~~~~~~~~
+
+By default the KVGVList does not own the objects it contains (they may be on the stack).
+User's responsibility in this case to delete heap-based objects after use.
+
+~~~~~~~~~~~~
+    // Declarations and initialisations
+    KVEkin *Sekin=new KVEkin("SEkin");
+    KVZmean zmean;
+    KVZmax  zmax;
+    KVGVList gvlist;
+    gvlist.Add(Sekin);
+    gvlist.Add(&zmean);
+    gvlist.Add(&zmax);
+    gvlist.Init();
+
+    // Treatment loop for each event called for each event
+    gvlist.CalculateGlobalVariables(event); // with KVEvent* pointer to event to analyse
+
+    cout << "Total kinetic energy : " << Sekin->GetValue() << endl;
+    cout << "Mean charge          : " << zmean() << endl;
+    cout << "Standard deviation   : " << zmean("RMS") << endl;
+    cout << "Charge of the heaviest   : " << zmax() << endl;
+    cout << "Vpar of the heaviest     : " << zmax.GetZmax(0)->GetVpar() << endl;
+~~~~~~~~~~~~
+ */
 class KVGVList: public KVUniqueNameList {
 
    Double_t fBranchVar[MAX_CAP_BRANCHES];//! used for automatic creation & filling of TTree branches

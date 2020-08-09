@@ -7,45 +7,7 @@
 #include <KVEvent.h>
 
 ClassImp(KVGVList)
-//////////////////////////////////////////////////////////////////////////////////
-/*
-<h2>KVGVList</h2>
-<h4>List of global variables</h4>
 
-This class allows to process in a single call many KVVargGlob instances.
-The methods used to initialize and fill variables in such a list are:
-
-~~~~~~~~~~~~
-    void Init(void);                             // initializes the global variables (call once)
-    void CalculateGlobalVariables(KVEvent *e);   // compute all global variables for the event
-~~~~~~~~~~~~
-
-By default the KVGVList does not own the objects it contains (they may be on the stack).
-User's responsibility in this case to delete heap-based objects after use.
-
-~~~~~~~~~~~~
-    // Declarations and initialisations
-    KVEkin *Sekin=new KVEkin("SEkin");
-    KVZmean zmean;
-    KVZmax  zmax;
-    KVGVList gvlist;
-    gvlist.Add(Sekin);
-    gvlist.Add(&zmean);
-    gvlist.Add(&zmax);
-    gvlist.Init();
-
-    // Treatment loop for each event called for each event
-    gvlist.CalculateGlobalVariables(event); // with KVEvent* pointer to event to analyse
-
-    cout << "Total kinetic energy : " << Sekin->GetValue() << endl;
-    cout << "Mean charge          : " << zmean() << endl;
-    cout << "Standard deviation   : " << zmean("RMS") << endl;
-    cout << "Charge of the heaviest   : " << zmax() << endl;
-    cout << "Vpar of the heaviest     : " << zmax.GetZmax(0)->GetVpar() << endl;
-~~~~~~~~~~~~
-
-*/
-//////////////////////////////////////////////////////////////////////////////////
 
 //_________________________________________________________________
 void KVGVList::init_KVGVList(void)

@@ -1,53 +1,47 @@
-/*
-$Id: KVRelativeVelocity.h,v 1.2 2007/11/29 13:12:22 franklan Exp $
-$Revision: 1.2 $
-$Date: 2007/11/29 13:12:22 $
-*/
-
-//Created by KVClassFactory on Wed Nov 28 11:05:04 2007
-//Author: bonnet
-
 #ifndef __KVRELATIVEVELOCITY_H
 #define __KVRELATIVEVELOCITY_H
 
 #include "KVVarGlobMean.h"
 
+/**
+ \class KVRelativeVelocity
+ \brief Calculate mean relative velocity of particls
+
+ Write a detailed documentation for your class here, see doxygen manual for help.
+
+ \author John Frankland
+ \date Sun Aug  9 17:26:58 2020
+*/
+
 class KVRelativeVelocity: public KVVarGlobMean {
-// Static fields (if any):
-public:
 
-// Protected fields (if any):
-protected:
-
-// Methods
-protected:
-   TList* heaviest;            //list of pointers to nuclei
-   void init_KVRelativeVelocity(void);
+   void init()
+   {
+      fType = kTwoBody;
+   }
 
 public:
-   KVRelativeVelocity(void);        // default constructor
-   KVRelativeVelocity(const Char_t* nom);    // constructor with aname
-   KVRelativeVelocity(const KVRelativeVelocity& a);// copy constructor
+   KVRelativeVelocity()
+      : KVVarGlobMean()
+   {
+      init();
+   }
+   KVRelativeVelocity(const Char_t* nom)
+      : KVVarGlobMean(nom)
+   {
+      init();
+   }
+   ROOT_COPY_CTOR(KVRelativeVelocity, KVVarGlobMean)
+   ROOT_COPY_ASSIGN_OP(KVRelativeVelocity)
+   virtual ~KVRelativeVelocity(void) {}
 
-   virtual ~KVRelativeVelocity(void);     // destructor
+protected:
+   void fill2(const KVNucleus* n1, const KVNucleus* n2)
+   {
+      if (n1 != n2) FillVar((n1->GetVelocity() - n2->GetVelocity()).Mag());
+   }
 
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   virtual void Copy(TObject& obj) const;
-#else
-   virtual void Copy(TObject& obj);
-#endif
-
-   KVRelativeVelocity& operator = (const KVRelativeVelocity& a); // operator =
-
-   //virtual void Fill2(KVNucleus *ci,KVNucleus *cj);    // Filling method
-   virtual void Fill(KVNucleus* c);     // Remplissage de la variable.
-   virtual void Reset(void);    // Remise a zero de la charge et du
-   // pointeur.
-   virtual void Init(void);     // Remise a zero de la charge et du
-
-   ClassDef(KVRelativeVelocity, 1) //calculate for a given a couple of particles the magnitude of relative velocity
-
+   ClassDef(KVRelativeVelocity, 1) //Calculate mean relative velocity of particls
 };
-
 
 #endif
