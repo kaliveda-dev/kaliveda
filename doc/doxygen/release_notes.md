@@ -1,10 +1,10 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 7th August 2020
+Last update: 9th August 2020
 
 ## Version 1.11/01 (current development focus)
 
-__Changes 7/8/2020 in__ \ref GlobalVariables
+__Changes 9/8/2020 in__ \ref GlobalVariables
 
 Major rewrite of global variable classes.
 
@@ -47,7 +47,19 @@ In addition, as part of this rationalization, all existing global variables calc
 multiplicities, or sums or mean values of scalar quantities have been reimplemented
 using KVVGSum, which vastly reduces code replication.
 
-__Removed classes__ :   KVZboundMean, KVTenseur3, KVTensP, KVTensE, KVTensPCM
+All 'Av' variants (calculating various multiplicities or sums in the "forward" hemisphere)
+have been removed, as they can all be implemented using existing classes just by applying
+particle selection criterion
+~~~~~{.cpp}
+vg.AddSelection([](const KVNucleus*n){ n->GetVpar()>0; }
+~~~~~
+and optionally defining the correct frame in which to apply it:
+~~~~~{.cpp}
+vg.SetFrame("CM");
+~~~~~
+
+__Removed classes__ :   KVZboundMean, KVTenseur3, KVTensP, KVTensE, KVTensPCM, KVMultAv, KVMultLegAv,
+KVMultIMFAv, KVZtotAv, KVRisoAv
 
 __________________________
 

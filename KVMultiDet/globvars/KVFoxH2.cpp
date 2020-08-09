@@ -1,12 +1,3 @@
-/*
-$Id: KVFoxH2.cpp,v 1.2 2009/01/23 15:25:52 franklan Exp $
-$Revision: 1.2 $
-$Date: 2009/01/23 15:25:52 $
-*/
-
-//Created by KVClassFactory on Tue Nov 27 17:47:49 2007
-//Author: John Frankland
-
 #include "KVFoxH2.h"
 
 ClassImp(KVFoxH2)

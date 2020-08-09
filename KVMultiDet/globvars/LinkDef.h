@@ -6,6 +6,9 @@
 #pragma link C++ nestedclasses;
 #pragma link C++ nestedtypedefs;
 #pragma link C++ class KVVarGlob;
+#pragma link C++ class KVVGObjectSum<TVector3>;
+#pragma link C++ class KVVGObjectSum<KVNucleus>;
+#pragma link C++ class KVVGVectorSum;
 #pragma link C++ class KVVarGlob1;
 #pragma link C++ class KVVarGlobMean;
 #pragma link C++ class KVVGSum;
@@ -13,8 +16,6 @@
 #pragma link C++ class KVZtot;
 #pragma link C++ class KVZmean;
 #pragma link C++ class KVZbound;
-#pragma link C++ class KVZtotAv;
-#pragma link C++ class KVZboundAv;
 #pragma link C++ class KVZmax;
 #pragma link C++ class KVEtrans;
 #pragma link C++ class KVEtransLCP;
@@ -27,12 +28,8 @@
 #pragma link C++ class KVMult;
 #pragma link C++ class KVMultIMF;
 #pragma link C++ class KVMultLeg;
-#pragma link C++ class KVMultAv;
-#pragma link C++ class KVMultIMFAv;
-#pragma link C++ class KVMultLegAv;
 #pragma link C++ class KVRiso;
 #pragma link C++ class KVFoxH2;
-#pragma link C++ class KVRisoAv;
 #pragma link C++ class KVRelativeVelocity;
 #pragma link C++ class KVQuadMoment;
 #pragma link C++ class KVFlowTensor;
