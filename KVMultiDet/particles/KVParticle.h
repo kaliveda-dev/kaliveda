@@ -43,8 +43,8 @@ class KVParticle: public TLorentzVector {
 
 private:
    void print_frames(TString fmt = "") const;
-   KVKinematicalFrame* get_frame(const Char_t*);
-   KVKinematicalFrame* get_parent_frame(const Char_t*, KVKinematicalFrame* F = nullptr);
+   KVKinematicalFrame* get_frame(const Char_t*) const;
+   KVKinematicalFrame* get_parent_frame(const Char_t*, KVKinematicalFrame* F = nullptr) const;
 
    TString fName;                       //!non-persistent name field - Is useful
    TString fFrameName;                  //!non-persistent frame name field, sets when calling SetFrame method
@@ -361,7 +361,7 @@ public:
    void SetFrame(const Char_t* frame, const KVFrameTransform&);
    void SetFrame(const Char_t* newframe, const Char_t* oldframe, const KVFrameTransform&);
 
-   KVParticle const* GetFrame(const Char_t* frame, Bool_t warn_and_return_null_if_unknown = kTRUE);
+   KVParticle const* GetFrame(const Char_t* frame, Bool_t warn_and_return_null_if_unknown = kTRUE) const;
 
    const Char_t* GetFrameName(void) const
    {

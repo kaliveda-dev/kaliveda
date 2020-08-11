@@ -36,6 +36,12 @@ class KVZmax: public KVVarGlob {
 
    void init();
 protected:
+   void fill(const KVNucleus* c)
+   {
+      // add nucleus to list
+      heaviest.Add(const_cast<KVNucleus*>(c));
+   }
+
    Double_t getvalue_int(Int_t i) const
    {
       //returns the Z of the (i+1)th heaviest fragment
@@ -65,11 +71,6 @@ public:
    {
       // clear list of nuclei
       heaviest.Clear();
-   }
-   void fill(const KVNucleus* c)
-   {
-      // add nucleus to list
-      heaviest.Add(const_cast<KVNucleus*>(c));
    }
    KVNucleus* GetZmax(Int_t i) const
    {

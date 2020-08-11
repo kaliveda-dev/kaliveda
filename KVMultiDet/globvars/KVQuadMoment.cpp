@@ -5,15 +5,6 @@
 
 ClassImp(KVQuadMoment)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVQuadMoment</h2>
-<h4>Quadrupole moment tensor of particle momenta</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVQuadMoment::KVQuadMoment()
 {
    // Default constructor
@@ -22,29 +13,10 @@ KVQuadMoment::KVQuadMoment()
 
 //________________________________________________________________
 
-KVQuadMoment::KVQuadMoment(const KVQuadMoment& obj) : KVVarGlob()
-{
-   // Copy constructor
-   // This ctor is used to make a copy of an existing object (for example
-   // when a method returns an object), and it is always a good idea to
-   // implement it.
-   // If your class allocates memory in its constructor(s) then it is ESSENTIAL :-)
-
-   init_KVQuadMoment();
-   obj.Copy(*this);
-}
-
-//________________________________________________________________
-
 KVQuadMoment::KVQuadMoment(const Char_t* nom) : KVVarGlob(nom)
 {
    // Write your code here
    init_KVQuadMoment();
-}
-
-KVQuadMoment::~KVQuadMoment()
-{
-   // Destructor
 }
 
 //________________________________________________________________
@@ -59,7 +31,12 @@ void KVQuadMoment::Copy(TObject& obj) const
    //    CastedObj.SetToto( GetToto() );
 
    KVVarGlob::Copy(obj);
-   //KVQuadMoment& CastedObj = (KVQuadMoment&)obj;
+   KVQuadMoment& CastedObj = (KVQuadMoment&)obj;
+   for (int i = 0; i < 3; ++i) {
+      for (int j = 0; j < 3; ++j) {
+         CastedObj.matrix[i][j] = matrix[i][j];
+      }
+   }
 }
 
 void KVQuadMoment::init_KVQuadMoment(void)
@@ -79,11 +56,11 @@ void KVQuadMoment::Reset(void)
    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) matrix[i][j] = 0.;
 }
 
-void KVQuadMoment::Fill(KVNucleus* c)
+void KVQuadMoment::fill(const KVNucleus* c)
 {
    //Add the particle's contribution to the momentum tensor.
 
-   TVector3 P = c->GetFrame(GetFrame(), kFALSE)->GetMomentum();
+   TVector3 P = c->GetMomentum();
    Double_t P2 = P.Mag2();
    for (int i = 0; i < 3; i++) {
       for (int j = i; j < 3; j++) {
@@ -95,13 +72,6 @@ void KVQuadMoment::Fill(KVNucleus* c)
          }
       }
    }
-}
-
-//_________________________________________________________________
-Double_t KVQuadMoment::getvalue_void(void) const
-{
-   // Returns Qzz
-   return matrix[2][2];
 }
 
 //_________________________________________________________________

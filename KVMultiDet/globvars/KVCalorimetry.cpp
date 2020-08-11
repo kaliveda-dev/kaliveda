@@ -12,125 +12,7 @@ $Date: 2009/01/23 15:25:52 $
 
 ClassImp(KVCalorimetry)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVCalorimetry</h2>
-<h4>Improved calorimetry of hot nuclei</h4>
-<!-- */
-// --> END_HTML
-//
-// This is an extension of the KVCaloBase basic calorimetry, with several operating modes.
-//
-// ## Two filling modes
-//
-// 1. Normal mode (default) - as for KVCaloBase
-// 2. Mode distinguishing light and heavy particles depending on Z.
-//    Activated by calling UseChargeDiff(Int_t FragmentMinimumCharge,Double_t ParticleFactor)
-//     FragmentMinimumCharge is discriminating parameter :
-//       - KVNucleus::GetZ()<FragmentMinimumCharge -> "light particles"
-//       - KVNucleus::GetZ()>=FragmentMinimumCharge -> "fragments"
-//     the ParticleFactor parameter is used in the calculation of Zsum, Asum, Eksum, Qsum.
-//
-//    In method SumUp we have
-//
-//~~~~~~~~~~~~~~~~~~~~
-// Eksum = \Sigma Ek(Z>=[FragmentMinimumCharge]) + [ParticleFactor]*\Sigma Ek(Z<[FragmentMinimumCharge])
-//~~~~~~~~~~~~~~~~~~~~
-//
-//    and the different contributions are stored in the ingredients list:
-//
-//~~~~~~~~~~~~~~~~~~~~
-//       root [12] ca.Print("ing");    //Example output
-//          Ingredients, 17 stored:
-//          0 | Zpart | 3.000000000
-//          1 | Apart | 7.000000000
-//          2 | Ekpart | 10.0000000
-//          3 | Qpart | 17.37470000
-//          4 | Mpart | 2.000000000
-//          5 | Zfrag | 7.000000000
-//          6 | Afrag | 16.00000000
-//          7 | Ekfrag | 40.0000000
-//          8 | Qfrag | 5.683700000
-//          9 | Mfrag | 1.000000000
-//          10 | Zsum | 13.00000000
-//          11 | Asum | 30.00000000
-//          12 | Eksum | 60.0000000
-//          13 | Qsum | 40.43310000
-//          14 | Msum | 5.000000000
-//          15 | Qini | -15.8724000
-//          16 | Exci | 116.3055000
-//       root [13] ca.Print("par");
-//          Parameters, 2 stored:
-//          0 | FragmentMinimumCharge | 5.000
-//          1 | ParticleFactor | 2.0000
-//~~~~~~~~~~~~~~~~~~~~
-//
-//
-// ## Two calculation modes
-//
-// 1. Normal mode (default) - as KVCaloBase
-// 2. Inclusion of free neutrons
-//    Activated by calling
-//
-//~~~~~~~~~~~~~~~~~~~~
-//   IncludeFreeNeutrons(Double_t AsurZ,Double_t NeutronMeanEnergyFactor,Double_t LevelDensityParameter);
-//
-//    Mn =  [AsurZ]*Zsum - Asum  (methode SumUp)
-//    Asum/[LevelDensityParameter] * T*T + Qi - \Sigma Ek - [NeutronMeanEnergyFactor]*Mn*T - \Sigma Q = 0   (methode Calculate)
-//    Exci = Asum/[LevelDensityParameter] * T*T
-//~~~~~~~~~~~~~~~~~~~~
-//
-// __N.B.__ : If calculated neutron multiplicity Mneu<0, we set Mneu=0 and add a parameter 'Aexcess' = TMath::Abs(Mneu)
-//  In this case calorimetry is performed without considering free neutrons.
-//
-//    All informations are stored in ingredients list:
-//
-//~~~~~~~~~~~~~~~~~~~~
-//       root [31] ca.Print("ing");       //Example
-//          Ingredients, 13 stored:
-//          0 | Zsum | 10.0000000000
-//          1 | Asum | 25.0000000000
-//          2 | Eksum | 62.913404145
-//          3 | Qsum | 39.2010000000
-//          4 | Msum | 5.00000000000
-//          5 | Aneu | 2.00000000000
-//          6 | Qneu | 16.1426000000
-//          7 | Mneu | 2.00000000000
-//          8 | Qini | -2.1081000000
-//          9 | Temp | 6.45670207291 (MeV)
-//          10 | Exci | 104.22250414 (MeV)
-//          11 | Ekneu | 12.91340414 (MeV)
-//       root [32] ca.Print("par");
-//          Parameters, 3 stored:
-//          0 | AsurZ | 2.50000000
-//          1 | NeutronMeanEnergyFactor | 1.00
-//          2 | LevelDensityParameter | 10.000
-//~~~~~~~~~~~~~~~~~~~~
-//
-// ### Temperature
-// When free neutrons are considered, the temperature is calculated as part of the method.
-// If not, you can call method DeduceTemperature(Double_t LevelDensityParameter) which gives the temperature
-// according to the Fermi gas formula:
-//
-//~~~~~~~~~~~~~~~~~~~~
-// T = TMath::Sqrt(Exci * [LevelDensityParameter]/Asum)
-//~~~~~~~~~~~~~~~~~~~~
-//
-// ## Summary
-//    You __must__ call Calculate() before using any variables calculated by this class
-//    This method returns kTRUE if all went well.
-//    Methods:
-//
-//~~~~~~~~~~~~~~~~~~~~
-//       void UseChargeDiff(Int_t FragmentMinimumCharge,Double_t ParticleFactor);
-//       void DeduceTemperature(Double_t LevelDensityParameter);
-//       void IncludeFreeNeutrons(Double_t AsurZ,Double_t NeutronMeanEnergyFactor,Double_t LevelDensityParameter);
-//~~~~~~~~~~~~~~~~~~~~
-//
-//    __must__ be called before Fill()-ing the variable
-//
-////////////////////////////////////////////////////////////////////////////////
+
 
 KVCalorimetry::KVCalorimetry(void): KVCaloBase()
 {
@@ -271,7 +153,7 @@ void KVCalorimetry::IncludeFreeNeutrons(Double_t AsurZ, Double_t NeutronMeanEner
 }
 
 //________________________________________________________________
-void KVCalorimetry::Fill(KVNucleus* n)
+void KVCalorimetry::fill(const KVNucleus* n)
 {
    // Remplissage des energies, masse, charge et defaut de masse
    // Pour l'energie cinetique, si l'utilisateur a utilise en amont
@@ -287,12 +169,11 @@ void KVCalorimetry::Fill(KVNucleus* n)
    // ->Une distinction entre produits avec une
    // charge strictement inferieur à FragmentMinimumCharge (particules) et superieur ou egale (fragments)
    // est appliquee
-
    kIsModified = kTRUE;
 
    if (kchargediff) {
 
-      if (n->GetZ() >= GetParValue("FragmentMinimumCharge")) {
+      if (n->GetZ() >= GetParameter("FragmentMinimumCharge")) {
          AddIngValue("Zfrag", n->GetZ());
          AddIngValue("Afrag", n->GetA());
          AddIngValue("Ekfrag", n->GetFrame(GetFrame(), kFALSE)->GetKE());
@@ -310,7 +191,7 @@ void KVCalorimetry::Fill(KVNucleus* n)
       return;
 
    }
-   KVCaloBase::Fill(n);
+   KVCaloBase::fill(n);
 
 }
 
@@ -350,18 +231,18 @@ void KVCalorimetry::SumUp()
 
    if (kchargediff) {
       // somme des contributions fragments et particules
-      AddIngValue("Zsum", GetIngValue("Zfrag") + GetParValue("ParticleFactor")*GetIngValue("Zpart"));
-      AddIngValue("Asum", GetIngValue("Afrag") + GetParValue("ParticleFactor")*GetIngValue("Apart"));
-      AddIngValue("Eksum", GetIngValue("Ekfrag") + GetParValue("ParticleFactor")*GetIngValue("Ekpart"));
-      AddIngValue("Qsum", GetIngValue("Qfrag") + GetParValue("ParticleFactor")*GetIngValue("Qpart"));
-      AddIngValue("Msum", GetIngValue("Mfrag") + GetParValue("ParticleFactor")*GetIngValue("Mpart"));
+      AddIngValue("Zsum", GetIngValue("Zfrag") + GetParameter("ParticleFactor")*GetIngValue("Zpart"));
+      AddIngValue("Asum", GetIngValue("Afrag") + GetParameter("ParticleFactor")*GetIngValue("Apart"));
+      AddIngValue("Eksum", GetIngValue("Ekfrag") + GetParameter("ParticleFactor")*GetIngValue("Ekpart"));
+      AddIngValue("Qsum", GetIngValue("Qfrag") + GetParameter("ParticleFactor")*GetIngValue("Qpart"));
+      AddIngValue("Msum", GetIngValue("Mfrag") + GetParameter("ParticleFactor")*GetIngValue("Mpart"));
    }
 
    //printf("Eksum=%lf avant neutrons \n",GetIngValue("Eksum"));
 
    if (kfree_neutrons_included) {
       // conservation du AsurZ du systeme --> multiplicite moyenne des neutrons
-      Double_t Mneutron = Double_t(TMath::Nint(GetParValue("AsurZ") * GetIngValue("Zsum") - GetIngValue("Asum")));
+      Double_t Mneutron = Double_t(TMath::Nint(GetParameter("AsurZ") * GetIngValue("Zsum") - GetIngValue("Asum")));
       if (Mneutron < 0) {
          //Warning("SumUp","Nombre de neutrons déduits négatif : %1.0lf -> on le met à zéro",Mneutron);
          SetIngValue("Aexcess", TMath::Abs(Mneutron));
@@ -419,8 +300,8 @@ void KVCalorimetry::Calculate()
 
    if (kfree_neutrons_included) {
 
-      Double_t coefA = GetIngValue("Asum") / GetParValue("LevelDensityParameter");
-      Double_t coefB = -1.*GetParValue("NeutronMeanEnergyFactor") * GetIngValue("Mneu");
+      Double_t coefA = GetIngValue("Asum") / GetParameter("LevelDensityParameter");
+      Double_t coefB = -1.*GetParameter("NeutronMeanEnergyFactor") * GetIngValue("Mneu");
       Double_t coefC = GetIngValue("Qini") - GetIngValue("Qsum") - GetIngValue("Eksum");
 
       // Resolution du polynome de degre 2
@@ -431,7 +312,7 @@ void KVCalorimetry::Calculate()
          SetIngValue("Exci", coefA * TMath::Power(GetIngValue("Temp"), 2.));
 
          // ajout de l'energie des neutrons a l energie totale de la source
-         SetIngValue("Ekneu", GetParValue("NeutronMeanEnergyFactor") * GetIngValue("Mneu")*GetIngValue("Temp"));
+         SetIngValue("Ekneu", GetParameter("NeutronMeanEnergyFactor") * GetIngValue("Mneu")*GetIngValue("Temp"));
          AddIngValue("Eksum", GetIngValue("Ekneu"));
 
          //parametre additionnel
@@ -457,7 +338,100 @@ void KVCalorimetry::ComputeTemperature() const
 {
 
    Double_t exci = GetIngValue("Exci");
-   Double_t temp = TMath::Sqrt(GetParValue("LevelDensityParameter") * exci / GetIngValue("Asum"));
-   SetIngValue("Temp", temp);
+   Double_t temp = TMath::Sqrt(GetParameter("LevelDensityParameter") * exci / GetIngValue("Asum"));
+   const_cast<KVCalorimetry*>(this)->SetIngValue("Temp", temp);
 
+}
+
+void KVCalorimetry::Init()
+{
+   // Init() is called by KVGVList::MakeBranches(), so this is the latest they
+   // can be set up. Depending on options chosen by user, list of branches will
+   // be very different.
+   //
+   // Example: with kchargediff=true:
+   //          0 | Zpart | 3.000000000
+   //          1 | Apart | 7.000000000
+   //          2 | Ekpart | 10.0000000
+   //          3 | Qpart | 17.37470000
+   //          4 | Mpart | 2.000000000
+   //          5 | Zfrag | 7.000000000
+   //          6 | Afrag | 16.00000000
+   //          7 | Ekfrag | 40.0000000
+   //          8 | Qfrag | 5.683700000
+   //          9 | Mfrag | 1.000000000
+   //          10 | Zsum* | 13.00000000  *same as KVCaloBase
+   //          11 | Asum* | 30.00000000
+   //          12 | Eksum* | 60.0000000
+   //          13 | Qsum* | 40.43310000
+   //          14 | Msum* | 5.000000000
+   //          15 | Qini* | -15.8724000
+   //          16 | Exci* | 116.3055000
+   // or with kfree_neutrons_included = true:
+   //   <Zsum*=55>
+   //   <Asum*=130>
+   //   <Eksum*=0>
+   //   <Qsum*=-81.4084>
+   //   <Msum*=2>
+   //   <Aexcess=20>
+   //   <Aneu=0>
+   //   <Qneu=0>
+   //   <Mneu=0>
+   //   <Qini*=-86.9004>
+   //   <Temp=0.64997>
+   //   <Exci*=5.492>
+   //   <Ekneu=0>
+   // or with both options:
+   //   <Zfrag=54>
+   //   <Afrag=129>
+   //   <Ekfrag=0>
+   //   <Qfrag=-88.6974>
+   //   <Mfrag=1>
+   //   <Zpart=1>
+   //   <Apart=1>
+   //   <Ekpart=0>
+   //   <Qpart=7.289>
+   //   <Mpart=1>
+   //   <Zsum*=56>
+   //   <Asum*=131>
+   //   <Eksum*=0>
+   //   <Qsum*=-74.1194>
+   //   <Msum*=3>
+   //   <Aexcess=19>
+   //   <Aneu=0>
+   //   <Qneu=0>
+   //   <Mneu=0>
+   //   <Qini*=-86.683>
+   //   <Temp=0.979313>
+   //   <Exci*=12.5636>
+   //   <Ekneu=0>
+
+   KVCaloBase::Init();
+   int min_index = GetNumberOfValues();
+   if (kchargediff) {
+      KVString fragpart = "frag,part";
+      fragpart.Begin(",");
+      while (!fragpart.End()) {
+         KVString _fragpart = fragpart.Next(kTRUE);
+
+         KVString prefixes = "Z,A,Ek,Q,M";
+         prefixes.Begin(",");
+         while (!prefixes.End()) {
+            KVString name = prefixes.Next(kTRUE) + _fragpart;
+            SetNameIndex(name, min_index++);
+         }
+      }
+   }
+   if (kfree_neutrons_included) {
+      KVString _fragpart = "neu";
+
+      KVString prefixes = "A,Ek,Q,M";
+      prefixes.Begin(",");
+      while (!prefixes.End()) {
+         KVString name = prefixes.Next(kTRUE) + _fragpart;
+         SetNameIndex(name, min_index++);
+      }
+      SetNameIndex("Aexcess", min_index++);
+      SetNameIndex("Temp", min_index++);
+   }
 }

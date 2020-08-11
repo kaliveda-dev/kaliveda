@@ -1013,7 +1013,7 @@ void KVParticle::SetFrame(const Char_t* frame, const KVFrameTransform& ft)
 }
 
 //___________________________________________________________________________//
-KVParticle const* KVParticle::GetFrame(const Char_t* frame, Bool_t warn_and_return_null_if_unknown)
+KVParticle const* KVParticle::GetFrame(const Char_t* frame, Bool_t warn_and_return_null_if_unknown) const
 {
    // Return the momentum of the particle in the Lorentz-boosted frame corresponding to the name
    // "frame" given as argument (see SetFrame() for definition of different frames).
@@ -1081,7 +1081,7 @@ void KVParticle::UpdateAllFrames()
    }
 }
 
-KVKinematicalFrame* KVParticle::get_frame(const Char_t* frame)
+KVKinematicalFrame* KVParticle::get_frame(const Char_t* frame) const
 {
    // PRIVATE method for internal use only
    // This allows to modify the returned frame, i.e. in order to define
@@ -1102,7 +1102,7 @@ KVKinematicalFrame* KVParticle::get_frame(const Char_t* frame)
    return f;
 }
 
-KVKinematicalFrame* KVParticle::get_parent_frame(const Char_t* f, KVKinematicalFrame* F)
+KVKinematicalFrame* KVParticle::get_parent_frame(const Char_t* f, KVKinematicalFrame* F) const
 {
    // PRIVATE method for internal use only
    // Returns pointer to parent frame of 'f'

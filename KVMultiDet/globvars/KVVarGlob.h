@@ -239,6 +239,15 @@ protected:
       AbstractMethod("fill2(KVNucleus*,KVNucleus*)");
    }
 
+   KVNameValueList& GetParameters()
+   {
+      return fParameters;
+   }
+   const KVNameValueList& GetParameters() const
+   {
+      return fParameters;
+   }
+
 public:
    KVVarGlob()
       : KVBase("KVVarGlob", "KVVarGlob"), nameList("IndexList", "Correspondance variable name<->index")
@@ -304,26 +313,25 @@ public:
    virtual void Reset() = 0;
    virtual void Calculate() = 0;
 
-   void Fill(KVNucleus& c)
+   void Fill(const KVNucleus* c)
    {
       // Evaluate contribution of particle to variable only if it satisfies
       // the particle selection criteria given with SetSelection()/AddSelection(),
       // call fill() with particle in desired frame
-
-      const KVNucleus* c_in_frame = dynamic_cast<const KVNucleus*>(c.GetFrame(fFrame, false));
+      const KVNucleus* c_in_frame = dynamic_cast<const KVNucleus*>(c->GetFrame(fFrame, false));
       if (fSelection.Test(c_in_frame)) fill(c_in_frame);
    }
-   void Fill2(KVNucleus& n1, KVNucleus& n2)
+   void Fill2(const KVNucleus* n1, const KVNucleus* n2)
    {
       // Evaluate contribution of particles to variable only if both satisfy
       // the particle selection criteria given with SetSelection(KVParticleCondition&),
       // call fill() with particle in desired frame
-      const KVNucleus* n1_in_frame = dynamic_cast<const KVNucleus*>(n1.GetFrame(fFrame, false));
-      const KVNucleus* n2_in_frame = dynamic_cast<const KVNucleus*>(n2.GetFrame(fFrame, false));
+      const KVNucleus* n1_in_frame = dynamic_cast<const KVNucleus*>(n1->GetFrame(fFrame, false));
+      const KVNucleus* n2_in_frame = dynamic_cast<const KVNucleus*>(n2->GetFrame(fFrame, false));
       if (fSelection.Test(n1_in_frame) && fSelection.Test(n2_in_frame))
          fill2(n1_in_frame, n2_in_frame);
    }
-   virtual void FillN(KVEvent*)
+   virtual void FillN(const KVEvent*)
    {
       // abstract method which must be overriden in child classes
       // describing N-body global variables.

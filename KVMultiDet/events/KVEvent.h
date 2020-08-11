@@ -98,7 +98,7 @@ public:
       {
          // Returns pointer to current particle in iteration
          // Resets fIterating flag to kFALSE at end of list
-         return static_cast<KVNucleus*>(*fIter);
+         return reinterpret_cast<KVNucleus*>(*fIter);
       }
    public:
       Iterator()

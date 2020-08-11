@@ -27,7 +27,7 @@ void zmax_example1()
    KVZmax zmax("ZMAX");
    zmax.Init();
    KVNucleus* nunuc;
-   while ((nunuc = event.GetNextParticle())) zmax.Fill(*nunuc);
+   while ((nunuc = event.GetNextParticle())) zmax.Fill(nunuc);
 
    cout << endl << "Sorted event :" << endl << endl;
    for (int i = 0; i < mult; ++i) zmax.GetZmax(i)->Print();

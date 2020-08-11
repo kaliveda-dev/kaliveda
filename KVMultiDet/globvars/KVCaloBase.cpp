@@ -12,128 +12,27 @@ $Date: 2009/01/23 15:25:52 $
 
 ClassImp(KVCaloBase)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVCaloBase</h2>
-<h4>Calorimetry of hot nuclei</h4>
-<!-- */
-// --> END_HTML
-// Inherits from KVVarGlob adding two KVNameValueList to handle the ingredients/parameters.
-// These lists are accessible via GetList(Option_t* option = "ing" or "par")
-//
-// ## Principle
-// KVCaloBase sums the Z (Zsum), A (Asum), Ek (Eksum) and Q (Qsum) of the considered nuclei (method Fill(KVNucleus* ))
-// These ingredients allow to calculate the excitation energy using the following relation:
-//
-//~~~~~~~~~~~~~~~~~~~~~~~
-// Exci + Qini  = Eksum + Qsum -> Exci = Eksum + Qsum - Qini
-//~~~~~~~~~~~~~~~~~~~~~~~
-//
-// __N.B.__ If method KVVarGlob::SetFrame(const Char_t* ) is called, kinetic energies of nuclei
-//  are taken in that frame
-//
-//
-// ### Example of use
-//
-//~~~~~~~~~~~~~~~~~~~~~
-//KVNucleus alpha(2,4,10); //definition of nuclei
-//KVNucleus triton(1,3);
-//KVNucleus azote(7,16,40);
-//
-//KVCaloBase ca;
-//
-//ca.Fill(&alpha);   //filling the variable
-//ca.Fill(&triton);
-//ca.Fill(&azote);
-//
-//ca.Calculate();
-//ca.Print("ing");   // print ingredients
-//
-//Ingredients, 7 stored:
-//0 | Zsum | 10.00000   Sum of charges
-//1 | Asum | 23.00000   Sum of masses
-//2 | Eksum | 50.0000   Sum of kinetic energies (MeV)
-//3 | Qsum | 23.05840   Sum of mass excess (MeV)
-//4 | Msum | 3.000000   Multiplicity
-//5 | Qini | -5.15400   Mass Excess of the initial state (reconstructed source)
-//6 | Exci | 78.21240   Excitation energy (MeV)
-//
-//ca.GetValue(0);  // return value "Zsum"
-//10.0000
-//ca.GetValue("Exci")
-//78.21240
-//~~~~~~~~~~~~~~~~~~~~~
-//
-// __N.B.__  You *must* call method Calculate() before trying to use any of the results of KVCaloBase
-//   This method returns kTRUE if the calculation succeeded
-//
-////////////////////////////////////////////////////////////////////////////////
 
-KVCaloBase::KVCaloBase(void): KVVarGlob()
-{
-// Createur par default
 
-   init_KVCaloBase();
-   SetName("KVCaloBase");
-   SetTitle("A KVCaloBase");
 
-}
-
-//_________________________________________________________________
-KVCaloBase::KVCaloBase(const Char_t* nom): KVVarGlob(nom)
-{
-// Constructeur avec un nom
-
-   init_KVCaloBase();
-}
-
-//_________________________________________________________________
-KVCaloBase::KVCaloBase(const KVCaloBase& a): KVVarGlob()
-{
-// Contructeur par Copy
-
-   init_KVCaloBase();
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   a.Copy(*this);
-#else
-   ((KVCaloBase&)a).Copy(*this);
-#endif
-}
-
-//_________________________________________________________________
-KVCaloBase::~KVCaloBase(void)
-{
-// Destructeur
-
-   delete nvl_ing;
-   delete nvl_par;
-}
-
-//_________________________________________________________________
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
 void KVCaloBase::Copy(TObject& a) const
-#else
-void KVCaloBase::Copy(TObject& a)
-#endif
 {
 // Methode de Copy
    KVVarGlob::Copy(a);
-   nvl_ing->Copy(*((KVCaloBase&)a).GetList("ing"));
-   nvl_par->Copy(*((KVCaloBase&)a).GetList("par"));
-
+   nvl_ing.Copy(dynamic_cast<KVCaloBase&>(a).nvl_ing);
 }
 
-//_________________________________________________________________
-KVCaloBase& KVCaloBase::operator = (const KVCaloBase& a)
+void KVCaloBase::Init()
 {
-// Operateur =
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
-   a.Copy(*this);
-#else
-   ((KVCaloBase&)a).Copy(*this);
-#endif
-   return *this;
+   // Init() is called by KVGVList::MakeBranches(), so this is the latest they
+   // can be set up.
+   SetNameIndex("Zsum", 0);
+   SetNameIndex("Asum", 1);
+   SetNameIndex("Eksum", 2);
+   SetNameIndex("Qsum", 3);
+   SetNameIndex("Msum", 4);
+   SetNameIndex("Qini", 5);
+   SetNameIndex("Exci", 6);
 }
 
 //_________________________________________________________________
@@ -142,10 +41,14 @@ void KVCaloBase::Reset(void)
    // Remise a zero avant le
    // traitement d'un evenement
 
-   for (Int_t nn = 0; nn < nvl_ing->GetNpar(); nn += 1)
-      nvl_ing->SetValue(nvl_ing->GetNameAt(nn), 0.);
+#ifdef WITH_CPP11
+   for (auto& par : nvl_ing) {
+      par.Set(0.0);
+   }
+#else
+   for (KVNameValueList::Iterator it = nvl_ing.begin(); it != nvl_ing.end(); ++it)(*it).Set(0.0);
+#endif
    kIsModified = kTRUE;
-
 }
 
 //_________________________________________________________________
@@ -156,16 +59,16 @@ void KVCaloBase::Print(Option_t* option) const
    //opt==par, print the list of parameters
 
    if (!strcmp(option, "ing"))
-      nvl_ing->Print();
+      nvl_ing.Print();
    else if (!strcmp(option, "par"))
-      nvl_par->Print();
+      GetParameters().Print();
    else
       KVVarGlob::Print();
 
 }
 
 //_________________________________________________________________
-KVNameValueList* KVCaloBase::GetList(Option_t* option) const
+const KVNameValueList& KVCaloBase::GetList(Option_t* option) const
 {
    //retourne la KVNameValueList ou sont enregistres les ingredients (option=="ing")
    //ou les parametres (option=="par")
@@ -173,10 +76,10 @@ KVNameValueList* KVCaloBase::GetList(Option_t* option) const
    if (!strcmp(option, "ing"))
       return nvl_ing;
    if (!strcmp(option, "par"))
-      return nvl_par;
+      return GetParameters();
    else {
-      Info("GetList", "type has to be equal to \"ing\" or \"par\", return NULL pointer");
-      return 0;
+      Info("GetList", "type has to be equal to \"ing\" or \"par\"");
+      return GetParameters();
    }
 
 }
@@ -184,42 +87,11 @@ KVNameValueList* KVCaloBase::GetList(Option_t* option) const
 //_________________________________________________________________
 Double_t KVCaloBase::getvalue_int(Int_t i) const
 {
-   // derived method
-   // protected method
-   // On retourne la ieme valeur du tableau
-   // si i est superieur au nbre de variables definies dans ingredient_list
-   // retourne la valeur par defaut (ie 0)
-   // appel a la methode Calculate pour mettre a jour
-   // les variables avant d effectuer le retour
+   // can't assume all ingredients declared to SetNameIndex in list nvl_ing exist
+   //  - as they are dynamically created as data is filled
+   // therefore use NameIndex to retrieve name, then look for value in list by name
 
-   if (i < nvl_ing->GetNpar()) {
-      return GetIngValue(i);
-   }
-   return 0;
-}
-
-//_________________________________________________________________
-Int_t KVCaloBase::GetNameIndex(const Char_t* name) const
-{
-   // derived method
-   // protected method
-   //return the index (position in the list ) of a given name
-   return nvl_ing->GetNameIndex(name);
-}
-
-//_________________________________________________________________
-const Char_t* KVCaloBase::GetValueName(Int_t ii) const
-{
-   // Returns name of value associated with index 'i',
-   return nvl_ing->GetNameAt(ii);
-};
-
-//_________________________________________________________________
-Int_t KVCaloBase::GetNumberOfValues() const
-{
-   //derived method
-   return nvl_ing->GetNpar();
-
+   return GetIngValue(GetValueName(i));
 }
 
 //_________________________________________________________________
@@ -278,39 +150,34 @@ void KVCaloBase::init_KVCaloBase()
    //Elles sont remplies au fur et a mesure des
    //methodes, pas besoin de definition a priori des
    //noms des ingredients / parametres
-   nvl_ing = new KVNameValueList();
-   nvl_ing->SetName("Ingredients");
-   nvl_par = new KVNameValueList();
-   nvl_par->SetName("Parameters");
-
+   nvl_ing.SetName("Ingredients");
    kIsModified = kTRUE;
-
 }
 
 //________________________________________________________________
-Double_t KVCaloBase::GetIngValue(KVString name) const
+Double_t KVCaloBase::GetIngValue(const KVString& name) const
 {
    //return the value of a name given ingredient
    //if it is not defined return 0
-   if (!nvl_ing->HasParameter(name.Data())) return 0;
-   return nvl_ing->GetDoubleValue(name.Data());
+   if (!nvl_ing.HasParameter(name.Data())) return 0;
+   return nvl_ing.GetDoubleValue(name.Data());
 }
 //________________________________________________________________
 Double_t KVCaloBase::GetIngValue(Int_t idx) const
 {
    // protected method,
    //return the value of a index given ingredient
-   return nvl_ing->GetDoubleValue(idx);
+   return nvl_ing.GetDoubleValue(idx);
 }
 //________________________________________________________________
-void KVCaloBase::SetIngValue(KVString name, Double_t value) const
+void KVCaloBase::SetIngValue(KVString name, Double_t value)
 {
    // protected method,
    //set the value a name given ingredient
-   nvl_ing->SetValue(name.Data(), value);
+   nvl_ing.SetValue(name.Data(), value);
 }
 //________________________________________________________________
-void KVCaloBase::AddIngValue(KVString name, Double_t value) const
+void KVCaloBase::AddIngValue(KVString name, Double_t value)
 {
    // protected method,
    //increment the value of a name given ingredient
@@ -319,32 +186,9 @@ void KVCaloBase::AddIngValue(KVString name, Double_t value) const
    before += value;
    SetIngValue(name, before);
 }
-//________________________________________________________________
-Bool_t KVCaloBase::HasParameter(KVString name) const
-{
-   // protected method,
-   //Check if a given parameter is defined
-   return nvl_par->HasParameter(name.Data());
-}
-//________________________________________________________________
-Double_t KVCaloBase::GetParValue(KVString name) const
-{
-   //return the value of a name given parameter
-   return nvl_par->GetDoubleValue(name.Data());
-}
 
 //________________________________________________________________
-void KVCaloBase::SetParameter(const Char_t* par, Double_t value)
-{
-   //protected method
-   //Set the vamlue of a given name parameter
-   nvl_par->SetValue(par, value);
-   KVVarGlob::SetParameter(par, value);
-
-}
-
-//________________________________________________________________
-void KVCaloBase::Fill(KVNucleus* n)
+void KVCaloBase::fill(const KVNucleus* n)
 {
    // Remplissage des energies, masse, charge et defaut de masse
    // Pour l'energie cinetique, si l'utilisateur a utilise en amont
@@ -356,10 +200,9 @@ void KVCaloBase::Fill(KVNucleus* n)
    kIsModified = kTRUE;
    AddIngValue("Zsum", n->GetZ());
    AddIngValue("Asum", n->GetA());
-   AddIngValue("Eksum", n->GetFrame(GetFrame(), kFALSE)->GetKE());
+   AddIngValue("Eksum", n->GetKE());
    AddIngValue("Qsum", n->GetMassExcess());
    AddIngValue("Msum", 1);
-
 }
 
 //________________________________________________________________
@@ -395,7 +238,6 @@ void KVCaloBase::AddNeutrons(Int_t mult, Double_t mke)
    // multiplicity (number) and mean kinetic energy
 
    kIsModified = kTRUE;
-   //AddIngValue("Zsum",n->GetZ());
    AddIngValue("Asum", mult);
    AddIngValue("Eksum", mult * mke);
    AddIngValue("Qsum", mult * nn.GetMassExcess(0, 1));
