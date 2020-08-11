@@ -1,8 +1,24 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 9th August 2020
+Last update: 11th August 2020
 
 ## Version 1.11/01 (current development focus)
+
+__Changes 11/8/2020 in__ \ref Core
+
+Added STL-style iterator to KVNameValueList. It is now possible to do the following (with C++11 support enabled):
+~~~~{.cpp}
+KVNameValueList p;
+p.SetValue("X",3.6);
+p.SetValue("Y",false);
+p.SetValue("Z","hello");
+
+for(auto& d:p) { d.Print(); }
+
+Info in <KVNamedParameter::Print>: Name = X type = Double_t value = 3.600000
+Info in <KVNamedParameter::Print>: Name = Y type = Bool_t value = false
+Info in <KVNamedParameter::Print>: Name = Z type = string value = hello
+~~~~
 
 __Changes 9/8/2020 in__ \ref GlobalVariables
 

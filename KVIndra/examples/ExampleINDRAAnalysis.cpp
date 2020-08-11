@@ -24,10 +24,17 @@ void ExampleINDRAAnalysis::InitAnalysis(void)
    AddGV("KVZVtot", "zvtot")->SetMaxNumBranches(1);     // total Z*vpar
    AddGV("KVEtransLCP", "et12");                        // total LCP transverse energy
    AddGV("KVFlowTensor", "tensor")->SetOption("weight", "RKE");  // relativistic CM KE tensor
+#ifdef USING_ROOT6
+   GetGV("tensor")->SetSelection({"Z>2", [](const KVNucleus * N)
+   {
+      return N->GetZ() > 2;
+   }
+                                 });
+#else
    GetGV("tensor")->SetSelection("_NUC_->GetZ()>2");
+#endif
    GetGV("tensor")->SetMaxNumBranches(2);               // FlowAngle & Sphericity branches
    AddGV("KVMultLeg", "Mlcp");
-   AddGV("KVTensPCM", "tenspcm")->SetMaxNumBranches(2); // FlowAngle & Sphericity branches
 
    /*** USING A TREE ***/
    CreateTreeFile();//<--- essential

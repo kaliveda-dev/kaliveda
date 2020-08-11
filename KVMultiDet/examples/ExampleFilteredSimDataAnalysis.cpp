@@ -32,7 +32,7 @@ void ExampleFilteredSimDataAnalysis::InitAnalysis()
    // charged particle multiplicity
    KVVarGlob* v = AddGV("KVVGSum", "Mcha");
    v->SetOption("mode", "mult");
-   v->SetSelection(KVParticleCondition("_NUC_->GetZ()>0"));
+   v->SetSelection("_NUC_->GetZ()>0");
 
    AddGV("KVZtot", "ZTOT");//total charge
    AddGV("KVZVtot", "ZVTOT");//total pseudo-momentum
