@@ -317,7 +317,7 @@ Bool_t KVNameValueList::HasParameter(const Char_t* name) const
 }
 
 //______________________________________________
-Int_t KVNameValueList::GetNameIndex(const Char_t* name)
+Int_t KVNameValueList::GetNameIndex(const Char_t* name) const
 {
    //return the position in the list of a given parameter
    //using its name

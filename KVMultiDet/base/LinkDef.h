@@ -17,6 +17,7 @@
 #pragma link C++ class KVString+;
 #pragma link C++ class Hexa_t+;
 #pragma link C++ class KVNameValueList+;
+#pragma link C++ class KVNameValueList::Iterator+;
 #pragma link C++ class KVBase-;//customised streamer
 #pragma link C++ class KVColouredBase+;
 #pragma link C++ class KVClassFactory+;

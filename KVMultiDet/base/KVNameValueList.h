@@ -118,12 +118,97 @@ protected:
    Bool_t fIgnoreBool;//do not convert "yes", "false", "on", etc. in TEnv file to boolean
 
 public:
-
    KVNameValueList();
    KVNameValueList(const Char_t* name, const Char_t* title = "");
    KVNameValueList(const KVNameValueList&);
    virtual ~KVNameValueList();
    KVNameValueList& operator=(const KVNameValueList&);
+
+   class Iterator {
+   public:
+      typedef std::forward_iterator_tag iterator_category;
+      typedef KVNamedParameter value_type;
+      typedef std::ptrdiff_t difference_type;
+      typedef KVNamedParameter* pointer;
+      typedef KVNamedParameter& reference;
+   private:
+      TIter fIter;// iterator over hash list
+      KVNamedParameter* current() const
+      {
+         // Returns pointer to current parameter
+         return reinterpret_cast<KVNamedParameter*>(*fIter);
+      }
+
+   public:
+      Iterator()
+         : fIter(static_cast<TIterator*>(nullptr))
+      {}
+      Iterator(const KVNameValueList* N)
+         : fIter(N->GetList())
+      {
+         fIter.Begin();
+      }
+      Iterator(const KVNameValueList& N)
+         : fIter(N.GetList())
+      {
+         fIter.Begin();
+      }
+      KVNamedParameter& operator* () const
+      {
+         // Returns reference to current parameter in iteration
+
+         return *(current());
+      }
+      Bool_t operator!= (const Iterator& it) const
+      {
+         // returns kTRUE if the 2 iterators are not pointing to the same particle
+         return current() != it.current();
+      }
+      Bool_t operator== (const Iterator& it) const
+      {
+         // returns kTRUE if the 2 iterators are pointing to the same particle
+         return current() == it.current();
+      }
+      const Iterator& operator++ ()
+      {
+         // Prefix ++ operator
+         ++fIter;
+         return *this;
+      }
+      Iterator operator++ (int)
+      {
+         // Postfix ++ operator
+         // Advance iterator to next particle in event compatible with selection
+         Iterator tmp(*this);
+         operator++();
+         return tmp;
+      }
+      Iterator& operator= (const Iterator& rhs)
+      {
+         // copy-assignment operator
+         if (this != &rhs) { // check self-assignment based on address of object
+            fIter = rhs.fIter;
+         }
+         return *this;
+      }
+      static Iterator End()
+      {
+         return Iterator();
+      }
+      virtual ~Iterator() {}
+
+      ClassDef(Iterator, 0) //Iterator for KVNameValueList
+   };
+   Iterator begin() const
+   {
+      // return iterator to beginning of list
+      return Iterator(this);
+   }
+   Iterator end() const
+   {
+      // return iterator to end of list (a nullptr)
+      return Iterator::End();
+   }
 
    bool Set(const KVString&);
 
@@ -282,7 +367,7 @@ public:
       // return kTRUE if the parameter is _strictly_ of the given type.
       return (HasIntParameter(name) || HasDoubleParameter(name)) || (HasStringParameter(name) && GetTStringValue(name).IsFloat());
    }
-   Int_t GetNameIndex(const Char_t* name);
+   Int_t GetNameIndex(const Char_t* name) const;
    const Char_t* GetNameAt(Int_t idx) const;
    Int_t GetNpar() const;
    Int_t GetEntries() const
