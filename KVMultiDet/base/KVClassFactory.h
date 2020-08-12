@@ -537,8 +537,8 @@ public:
 
    void AddGetSetMethods(const KVNameValueList&);
 
-   void InlineAllMethods();
-   void InlineAllConstructors();
+   void InlineAllMethods(bool yes = true);
+   void InlineAllConstructors(bool yes = true);
 
    void SetOutputPath(const KVString& p)
    {

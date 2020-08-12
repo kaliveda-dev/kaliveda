@@ -558,6 +558,8 @@ void KVClassFactory::GenerateCode()
       return;
    }
 
+   InlineAllConstructors();
+
    if (fWithTemplate) {
       WriteClassWithTemplateHeader();
       WriteClassWithTemplateImp();
@@ -1101,25 +1103,27 @@ void KVClassFactory::AddGetSetMethods(const KVNameValueList& nvl)
    }
 }
 
-void KVClassFactory::InlineAllMethods()
+void KVClassFactory::InlineAllMethods(bool yes)
 {
-   // Write implementation of all non-ctor methods in the header file of the class
+   // \param yes =true: Write implementation of all non-ctor/non-dtor methods in the header file of the class
 
    TIter it(&fMethods);
    KVClassMethod* m;
    while ((m = (KVClassMethod*)it())) {
-      if (!m->IsConstructor()) m->SetInline(kTRUE);
+      if (!m->IsConstructor() && !m->IsDestructor()) m->SetInline(yes);
    }
-   fInlineAllMethods = kTRUE;
+   fInlineAllMethods = yes;
 }
 
-void KVClassFactory::InlineAllConstructors()
+void KVClassFactory::InlineAllConstructors(bool yes)
 {
-   // Write implementation of all constructors in the header file of the class
+   // \param yes =true: Write implementation of all constructors & the destructor in the header file of the class.
 
    unique_ptr<KVSeqCollection> ctors(fMethods.GetSubListWithMethod("1", "IsConstructor"));
-   ctors->R__FOR_EACH(KVClassConstructor, SetInline)(kTRUE);
-   fInlineAllCtors = kTRUE;
+   ctors->R__FOR_EACH(KVClassConstructor, SetInline)(yes);
+   fInlineAllCtors = yes;
+   KVClassDestructor* dtor = fMethods.get_object<KVClassDestructor>("destructor");
+   if (dtor) dtor->SetInline(yes);
 }
 
 //__________________________________________________________________________________
