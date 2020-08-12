@@ -16,8 +16,6 @@ void KVNumberList::init_numberlist()
    //Default initialisation used by ctors
    fMaxNLimits = 0;
    fNLimits = 0;
-   fLowerBounds = new TArrayI;
-   fUpperBounds = new TArrayI;
    fFirstValue = 99999999;
    fLastValue = -99999999;
    fNValues = 0;
@@ -81,7 +79,7 @@ KVNumberList::KVNumberList(std::initializer_list<int> L)
 
 //____________________________________________________________________________________________//
 
-void KVNumberList::ParseList() const
+void KVNumberList::ParseList()
 {
    //PRIVATE METHOD
    //Breaks string containing list down and fills limits arrays accordingly
@@ -101,12 +99,12 @@ void KVNumberList::Clear(Option_t*)
    fString = "";
 }
 
-void KVNumberList::clear() const
+void KVNumberList::clear()
 {
    // private method called by ParseList()
    fNLimits = 0;
-   fLowerBounds->Reset();
-   fUpperBounds->Reset();
+   fLowerBounds.Reset();
+   fUpperBounds.Reset();
    fFirstValue = 99999999;
    fLastValue = -99999999;
    fNValues = 0;
@@ -126,7 +124,7 @@ void KVNumberList::SetName(const char* name)
 
 //____________________________________________________________________________________________//
 
-void KVNumberList::ParseAndFindLimits(const TString& string, const Char_t delim) const
+void KVNumberList::ParseAndFindLimits(const TString& string, const Char_t delim)
 {
    //Takes a string and breaks it up into its constituent parts,
    //which were initially separated by white space or a comma.
@@ -152,7 +150,7 @@ void KVNumberList::ParseAndFindLimits(const TString& string, const Char_t delim)
 
 //____________________________________________________________________________________________//
 
-void KVNumberList::AddLimits(TString& string) const
+void KVNumberList::AddLimits(TString& string)
 {
    //'string' should contain something like "34-59" i.e. two integers separated by a '-'.
    //these two numbers are taken for new lower and upper limits, fNLimits is increased by one,
@@ -169,18 +167,18 @@ void KVNumberList::AddLimits(TString& string) const
 
 //____________________________________________________________________________________________//
 
-void KVNumberList::AddLimits(Int_t min, Int_t max) const
+void KVNumberList::AddLimits(Int_t min, Int_t max)
 {
    //The numbers contained in the range [min,max]
    //are added to the list.
 
    if (++fNLimits > fMaxNLimits) {
       fMaxNLimits += 10;
-      fLowerBounds->Set(fMaxNLimits);
-      fUpperBounds->Set(fMaxNLimits);
+      fLowerBounds.Set(fMaxNLimits);
+      fUpperBounds.Set(fMaxNLimits);
    }
-   (*fLowerBounds)[fNLimits - 1] = min;
-   (*fUpperBounds)[fNLimits - 1] = max;
+   fLowerBounds[fNLimits - 1] = min;
+   fUpperBounds[fNLimits - 1] = max;
    if (min < fFirstValue)
       fFirstValue = min;
    if (max > fLastValue)
@@ -197,21 +195,21 @@ void KVNumberList::PrintLimits() const
    //remove duplicate entries, correct fList, then re-parse
    GetList();
    fIsParsed = kFALSE; // force re-parse
-   ParseList();
+   const_cast<KVNumberList*>(this)->ParseList();
 
    std::cout << "KVNumberList::" << GetName() << std::endl;
    std::cout << "There are " << fNLimits << " limits in the string : " <<
              fString.Data() << std::endl;
    std::cout << "MIN = ";
    for (int i = 0; i < fNLimits; i++) {
-      std::cout << Form("%5d", (*fLowerBounds)[i]);
+      std::cout << Form("%5d", fLowerBounds[i]);
       if (i < fNLimits - 1)
          std::cout << ",";
    }
    std::cout << std::endl;
    std::cout << "MAX = ";
    for (int i = 0; i < fNLimits; i++) {
-      std::cout << Form("%5d", (*fUpperBounds)[i]);
+      std::cout << Form("%5d", fUpperBounds[i]);
       if (i < fNLimits - 1)
          std::cout << ",";
    }
@@ -249,9 +247,9 @@ void KVNumberList::SetList(const TString& list)
 Bool_t KVNumberList::Contains(Int_t val) const
 {
    //returns kTRUE if the value 'val' is contained in the ranges defined by the number list
-   if (!fIsParsed) ParseList();
+   if (!fIsParsed) const_cast<KVNumberList*>(this)->ParseList();
    for (int i = 0; i < fNLimits; i++) {
-      if (val >= (*fLowerBounds)[i] && val <= (*fUpperBounds)[i])
+      if (val >= fLowerBounds[i] && val <= fUpperBounds[i])
          return kTRUE;
    }
    return kFALSE;
@@ -262,7 +260,7 @@ Bool_t KVNumberList::Contains(Int_t val) const
 Int_t KVNumberList::First() const
 {
    //Returns smallest number included in list
-   if (!fIsParsed) ParseList();
+   if (!fIsParsed) const_cast<KVNumberList*>(this)->ParseList();
    return fFirstValue;
 }
 
@@ -271,7 +269,7 @@ Int_t KVNumberList::First() const
 Int_t KVNumberList::Last() const
 {
    //Returns largest number included in list
-   if (!fIsParsed) ParseList();
+   if (!fIsParsed) const_cast<KVNumberList*>(this)->ParseList();
    return fLastValue;
 }
 
@@ -286,13 +284,13 @@ IntArray KVNumberList::GetArray() const
    if (IsEmpty())
       return IntArray();
 
-   if (!fIsParsed) ParseList();
+   if (!fIsParsed) const_cast<KVNumberList*>(this)->ParseList();
 
    IntArray temp(fNValues);
    Int_t index = 0;
    for (int i = 0; i < fNLimits; i++) {
-      Int_t min = (*fLowerBounds)[i];
-      Int_t max = (*fUpperBounds)[i];
+      Int_t min = fLowerBounds[i];
+      Int_t max = fUpperBounds[i];
       for (int j = min; j <= max; j++) {
          temp[index++] = j;
       }
@@ -316,7 +314,7 @@ IntArray KVNumberList::GetArray() const
       }
       fNValues = n_uniq;
       fIsParsed = kFALSE; // force re-parsing
-      ParseList();
+      const_cast<KVNumberList*>(this)->ParseList();
    }
    return temp;
 }
@@ -400,7 +398,7 @@ void KVNumberList::Add(const IntArray& v)
    SetList(tmp);
 }
 
-KVNumberList KVNumberList::operator+(const KVNumberList& other)
+KVNumberList KVNumberList::operator+(const KVNumberList& other) const
 {
    // Return sum of this list and the other one
 
@@ -473,7 +471,7 @@ const Char_t* KVNumberList::GetList() const
    //This string will become the new internal representation of the list.
    //Returns empty string if list is empty.
 
-   if (!fIsParsed) ParseList();
+   if (!fIsParsed) const_cast<KVNumberList*>(this)->ParseList();
 
    //no numbers in list  ?
    if (!fNValues) {
@@ -523,7 +521,7 @@ const Char_t* KVNumberList::GetExpandedList() const
    // in the list will be represented.
    // Returns empty string if list is empty.
 
-   if (!fIsParsed) ParseList();
+   if (!fIsParsed) const_cast<KVNumberList*>(this)->ParseList();
 
    static TString tmp = "";
 
@@ -610,16 +608,6 @@ TString KVNumberList::GetSQL(const Char_t* column) const
    return cond;
 }
 
-//____________________________________________________________________________________________//
-
-KVNumberList& KVNumberList::operator=(const KVNumberList& val)
-{
-   //Set this number list equal to val
-
-   val.Copy(*this);
-   return (*this);
-}
-
 void KVNumberList::Copy(TObject& o) const
 {
    // Copy content of this number list into 'o'
@@ -679,7 +667,7 @@ void KVNumberList::Begin() const
    fEndList = fValues.end();
 }
 
-IntArrayIter KVNumberList::begin()
+IntArrayIter KVNumberList::begin() const
 {
    // Returns a std::iterator over all unique values in the list, ordered from smallest to largest.
    // Allows use in range-based for loops:
@@ -698,7 +686,7 @@ IntArrayIter KVNumberList::begin()
    return fIterIndex;
 }
 
-IntArrayIter KVNumberList::end()
+IntArrayIter KVNumberList::end() const
 {
    // Returns a std::iterator to element after end of list.
    // Allows use in range-based for loops.
@@ -858,7 +846,7 @@ KVNumberList KVNumberList::GetSubList(Int_t vinf, Int_t vsup) const
 
 //____________________________________________________________________________________________//
 
-KVNumberList KVNumberList::operator-(const KVNumberList& other)
+KVNumberList KVNumberList::operator-(const KVNumberList& other) const
 {
    // Returns difference between 'this' and 'other'
    // i.e. 'this' list with any values in 'other' removed

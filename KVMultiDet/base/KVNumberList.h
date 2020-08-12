@@ -83,12 +83,12 @@ This means (from C++11 onwards), range-based for loops can be used:
 class KVNumberList : public TObject {
 
    mutable TString fString;
-   TArrayI* fLowerBounds; //->
-   TArrayI* fUpperBounds; //->
-   mutable Int_t fNLimits;              //number of limits in arrays
-   mutable Int_t fMaxNLimits;           //size of arrays
-   mutable Int_t fFirstValue;           //smallest value included in list
-   mutable Int_t fLastValue;            //largest value included in list
+   TArrayI fLowerBounds; //
+   TArrayI fUpperBounds; //
+   Int_t fNLimits;              //number of limits in arrays
+   Int_t fMaxNLimits;           //size of arrays
+   Int_t fFirstValue;           //smallest value included in list
+   Int_t fLastValue;            //largest value included in list
    mutable Int_t fNValues;              //total number of values included in ranges
 
    mutable TString fTMPSTR;//! dummy string to compute AsString (non static)
@@ -101,11 +101,11 @@ class KVNumberList : public TObject {
    mutable Bool_t fIsParsed;//!
 
    void init_numberlist();
-   void clear() const;
-   void ParseList() const;
-   void AddLimits(Int_t min, Int_t max) const;
-   void AddLimits(TString& string) const;
-   void ParseAndFindLimits(const TString& string, const Char_t delim) const;
+   void clear();
+   void ParseList();
+   void AddLimits(Int_t min, Int_t max);
+   void AddLimits(TString& string);
+   void ParseAndFindLimits(const TString& string, const Char_t delim);
 
 public:
 
@@ -117,10 +117,8 @@ public:
 #ifdef WITH_CPP11
    KVNumberList(std::initializer_list<int> L);
 #endif
-   virtual ~ KVNumberList()
+   virtual ~KVNumberList()
    {
-      delete fUpperBounds;
-      delete fLowerBounds;
    }
 
    virtual void     SetName(const char* name);
@@ -141,7 +139,7 @@ public:
    }
    void SetList(const TString&);
    void SetMinMax(Int_t min, Int_t max, Int_t pas = 1);
-   KVNumberList& operator=(const KVNumberList&);
+   ROOT_COPY_ASSIGN_OP(KVNumberList)
    void Copy(TObject&) const;
 
    /* Add numbers/lists to the list */
@@ -173,7 +171,7 @@ public:
    }
    Bool_t IsEmpty() const
    {
-      if (!fIsParsed) ParseList();
+      if (!fIsParsed) const_cast<KVNumberList*>(this)->ParseList();
       return (fNValues == 0);
    }
    Bool_t IsFull(Int_t vinf = -1, Int_t vsup = -1) const;
@@ -196,12 +194,12 @@ public:
    {
       return (fIterIndex == fEndList);
    }
-   IntArrayIter begin();
-   IntArrayIter end();
+   IntArrayIter begin() const;
+   IntArrayIter end() const;
 
    /* LIST ARITHMETIC OPERATIONS */
-   KVNumberList operator+(const KVNumberList&);
-   KVNumberList operator-(const KVNumberList&);
+   KVNumberList operator+(const KVNumberList&) const;
+   KVNumberList operator-(const KVNumberList&) const;
    KVNumberList GetComplementaryList() const;
    KVNumberList GetSubList(Int_t vinf, Int_t vsup) const;
    TList* CutInSubList(Int_t number);
@@ -221,7 +219,7 @@ public:
    bool operator==(const KVNumberList&) const;
    bool operator!=(const KVNumberList&) const;
 
-   ClassDef(KVNumberList, 3)    //Strings used to represent a set of ranges of values
+   ClassDef(KVNumberList, 4)    //Strings used to represent a set of ranges of values
 };
 
 #endif
