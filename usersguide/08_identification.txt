@@ -87,7 +87,7 @@ then when the grid will be loaded by the identification telescope using
 idt->SetGrid(mygrid);
 ~~~~~~~~~~
 
-the default `GetIDMapX/Y` methods of [KVIDTelescope] will automatically return the
+the default `GetIDGridCoords` methods of [KVIDTelescope] will automatically return the
 correct values for your grid, according to the expressions in `VARX` and `VARY`.
 
 ### Multiple grids for the same telescope ###

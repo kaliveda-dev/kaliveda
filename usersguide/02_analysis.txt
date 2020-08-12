@@ -87,14 +87,15 @@ It should be noted that for all except `raw` data analysis (i.e. for all data st
 The user's analysis class can acces the `KVDataAnalyser` object which is running the analysis through the `gDataAnalyser` global pointer
 (see below).
 
-### `InitAnalysis()`
+### Defining histograms, trees, global variables: `InitAnalysis()`
 
-This is the place to create/open any ROOT files, histograms, trees etc. you require in order to store the output of your analysis. Also the place to define any global variables needed for the analysis.
+This is the place to create/open any ROOT files, histograms, trees etc. you require in order to store the output of your analysis.
+Also the place to define any [Global Variables] needed for the analysis.
 See the examples given and comments in the example analysis classes.
 
 If you are analysing reconstructed experimental/simulated data, do **not** try to access the experimental set-up (`gMultiDetArray`, etc.) associated with the data you want to analyse here - it will not be defined until `InitRun()`.
 
-### `InitRun()`
+### Defining particle selection criteria: `InitRun()`
 
 Called once at the beginning of each new data file. 
 In case of analysing *experimental* reconstructed data you can access the experimental set-up (`gMultiDetArray`, system being analysed, run number, etc.)
@@ -123,7 +124,7 @@ when iterating over the event).
 ##### Identification & calibration codes
 
 The first selection applied is to consider "OK" only those particles which have
-acceptable identification codes (`KVReconstructedNucles::GetIDCode()`) and calibration
+acceptable identification codes (`KVReconstructedNucleus::GetIDCode()`) and calibration
 codes (`KVReconstructedNucleus::GetECode()`). For each multidetector array,
 the default values of the acceptable codes can be defined using the configuration
 variables
@@ -140,8 +141,8 @@ To change the default acceptable codes for particles reconstructed by a given ar
 use
 
 ~~~~~~~~~{.cpp}
-   gMultiDetArray->AcceptIDCodes(const TString&)
-   gMultiDetArray->AcceptECodes(const TString&)
+   gMultiDetArray->AcceptIDCodes(const KVNumberList&)
+   gMultiDetArray->AcceptECodes(const KVNumberList&)
 ~~~~~~~~~
 
 using the same format for the lists of codes as in the configuration variable
@@ -149,31 +150,50 @@ example given above. If analysing data for a set-up consisting of several
 different detector arrays, you should use
 
 ~~~~~~~~~{.cpp}
-   gMultiDetArray->GetArray("[name]")->AcceptIDCodes(const TString&)
-   gMultiDetArray->GetArray("[name]")->AcceptECodes(const TString&)
+   gMultiDetArray->GetArray("[name]")->AcceptIDCodes(const KVNumberList&)
+   gMultiDetArray->GetArray("[name]")->AcceptECodes(const KVNumberList&)
 ~~~~~~~~~
 
 replacing `[name]` by the appropriate array name.
 
-##### Customised selections with `KVParticleCondition`
+##### Customised particle selections
 
 For any other selections which need to be applied to exclude 'bad' particles
-from the analysis, you can use the `KVParticleCondition` class to define any
+from the analysis, you can use the [KVParticleCondition] class to define any
 number of selections based on particle properties which will be applied to
 all particles which passed the identification/calibration code selections.
 
 > Note that you cannot 'retrieve' a particle which has been excluded due to bad
-> identification or calibration codes using a `KVParticleCondition` selection
+> identification or calibration codes using a [KVParticleCondition] selection
 
 These selections are then added to the analysis using the `SetParticleConditions()` method:
 
 ~~~~~~~~~{.cpp}
-   KVParticleCondition pc("_NUC_->GetZ()>0");
-   SetParticleConditions(pc);
+#ifdef USING_ROOT6
+   SetParticleConditions({"Z>0", [](const KVNucleus *n){ return n->GetZ()>0; }});
+#else
+   SetParticleConditions("_NUC_->GetZ()>0");
+#endif
 ~~~~~~~~~
 
 See the example analysis classes for more examples. See the class reference for
-`KVParticleCondition` for usage.
+[KVParticleCondition] for usage.
+
+### Event-by-event analysis: `Analysis()`
+
+This method is called once for each event to analyse. Implement the event-by-event analysis here.
+
+During reconstructed data analysis, when this method is called
+
+* all particles have been labelled `OK` or not according to the criteria set in `InitRun()`;
+* for all `OK` particles, the `CM` centre-of-mass reference frame is defined;
+* all global variables added in `InitAnalysis()` have been calculated using all `OK` particles
+
+To iterate over all or a subset of the particles of the event, see [here].
+  
+### `EndRun()`, `EndAnalysis()`
+
+There is usually no need to implement these methods.
 
 [KaliVedaGUI]: ../KaliVedaGUIDoc/KaliVedaGUI.html
 [kaliveda-sim]: ../KVSimDirGUIDoc/KVSimDirGUI.html
@@ -186,3 +206,8 @@ See the example analysis classes for more examples. See the class reference for
 [Using Detector Array Geometries]: geometry.html
 [KVReconstructedEvent]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconstructedEvent.html
 [KVReconstructedNucleus]: http://indra.in2p3.fr/kaliveda/doc/master/classKVReconstructedNucleus.html
+[KVEventReconstructor]: http://indra.in2p3.fr/kaliveda/doc/master/classKVEventReconstructor.html
+[KVGroupReconstructor]: http://indra.in2p3.fr/kaliveda/doc/master/classKVGroupReconstructor.html
+[KVParticleCondition]: http://indra.in2p3.fr/kaliveda/doc/master/classKVParticleCondition.html
+[here]: events.html#iterating-over-particles-in-events
+[Global Variables]: globalvariables.html#iterating-over-particles-in-events

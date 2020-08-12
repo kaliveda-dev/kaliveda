@@ -93,12 +93,12 @@ In order to access methods which are specific to derived particle classes you ca
 ~~~~~~~~~{.cpp}
 // e.g. with KVReconstructedEvent reconEvent:
 for(KVEvent::Iterator it = reconEvent.begin(); it != reconEvent.end(); ++it){
-   it.pointer<KVReconstructedNucleus>()->GetStoppingDetector(); // call KVReconstructedNucleus method
+   it.get_pointer<KVReconstructedNucleus>()->GetStoppingDetector(); // call KVReconstructedNucleus method
 }
 
 // e.g. with KVSimEvent simulEvent:
 for(KVEvent::Iterator it = simulEvent.begin(); it != reconEvent.end(); ++it){
-   it.reference<KVSimNucleus>().GetSpin(); // call KVSimNucleus method
+   it.get_reference<KVSimNucleus>().GetSpin(); // call KVSimNucleus method
 }
 ~~~~~~~~~
 

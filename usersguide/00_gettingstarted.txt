@@ -164,3 +164,158 @@ Scanning dependencies of target XeSn
 ~~~~~~~
 
 For more details (including how to make shared libraries of your own classes), see [here](https://github.com/kaliveda-dev/kaliveda/wiki/Using-KaliVeda-in-a-CMake-based-project).
+
+## Writing code with KaliVeda
+
+### Automatic class source code generator
+
+KaliVeda provides a class which can write source code for other classes: [KVClassFactory]. At its simplest, only a class name and
+short description are required in order to generate a fully ROOT-compatible class from the KaliVeda command line. Giving a base class
+to derive your new class from will copy and implement all constructors from the base class:
+
+~~~~{.cpp}
+kaliveda [0] KVClassFactory::MakeClass("MyClass", "A new class", "TNamed")
+<KVClassFactory::WriteClassHeader> : File MyClass.h generated.
+<KVClassFactory::WriteClassImp> : File MyClass.cpp generated.
+~~~~ 
+
+will generate the following `MyClass.h` file (all constructors and destructors are inlined by default)
+which includes the beginning of a doxygen comment block to document your class:
+
+~~~~{.cpp}
+#ifndef __MYCLASS_H
+#define __MYCLASS_H
+
+#include "TNamed.h"
+
+/**
+ \class MyClass
+ \brief A new class
+
+ Write a detailed documentation for your class here, see doxygen manual for help.
+
+ \author John Frankland
+ \date Wed Aug 12 14:28:34 2020
+*/
+
+class MyClass : public TNamed
+{
+public:
+   MyClass()
+   : TNamed()
+   {
+   }
+   MyClass(const char* name, const char* title)
+   : TNamed(name, title)
+   {
+   }
+   MyClass(const TString& name, const TString& title)
+   : TNamed(name, title)
+   {
+   }
+
+   virtual ~MyClass()
+   {
+   }
+
+   ClassDef(MyClass,1)//A new class
+};
+
+#endif
+~~~~ 
+
+You can also add methods to your class before generating the code, or use template files to define complicated
+methods which can be reused in many classes. See the [KVClassFactory] documentation and the [examples].
+
+### Useful C++ Pre-processor Symbols
+The header file `KVConfig.h` which is configured and generated at build time contains several symbols which
+may be of help when writing your own code using KaliVeda. `KVConfig.h` is `#include`d by most class headers
+in the toolkit; in case of doubt, just add `#include "KVConfig.h"` before your code.
+
+The following symbols are mainly to ensure portability of code:
+
++---------------------+-----------------------------------------+
+| Symbol              | Functionality                           |
++=====================+=========================================+
+| `WITH_GEMINI`<br>   | Defined when each specific piece of<br> |
+| `WITH_MFM`<br>      | 3rd-party software is available         |
+| `WITH_ZMQ`<br>      |                                         |
+| `WITH_BOOST`<br>    |                                         |
+|  etc. etc.          |                                         |
++---------------------+-----------------------------------------+
+| `WITH_MULTICORE_CPU`| Defined to number of cores              |
++---------------------+-----------------------------------------+
+| `WITH_CPP11`<br>    | C++11 language can be used<br>          |
+| `WITH_CPP14`<br>    | C++14 & C++11 language can be used<br>  |
+| `WITH_CPP17`        | C++17,C++14 & C++11 can be used         |
++---------------------+-----------------------------------------+
+| `WITH_ROOT5`<br>    | Using a ROOT version before v6.00<br>   |
+|                     | [i.e. with CINT dictionaries]<br>       |
++---------------------+-----------------------------------------+
+| `WITH_ROOT6`<br>    | ROOT v6.00 or later<br>                 |
+|                     | [i.e. with CLING dictionaries]          |
++---------------------+-----------------------------------------+
+
+Example of use:
+
+~~~~~~{.cpp}
+   KVEvent Event;  // some multi-particle event i.e. collection of nuclei
+#ifdef WITH_CPP11
+   // range-based for-loop and 'auto' variables: C++11 onwards
+   for (auto& nuc : Event)
+   {
+      nuc.Print();   
+   }
+#else
+   // standard for-loop with iterators for C++03 & before
+   for (KVEvent::Iterator it = Event.begin(); it != Event.end(); ++it)
+   {
+      (*it).Print();
+   }
+#endif
+~~~~~~
+
+The following macros simplify the addition of commonly-used/required methods
+to classes:
+ 
++---------------------------------+-----------------------------------------------------------------------------------+
+| Macro                           | Equivalent code                                                                   |
++=================================+===================================================================================+
+| `ROOT_DEF_CTOR(C,B)`{.cpp}      | `C() : B() {} `{.cpp}                                                             |
++---------------------------------+-----------------------------------------------------------------------------------+
+| `ROOT_NAME_CTOR(C,B)`           | `C(const Char_t* name) : B(name) {} `{.cpp}                                       |
++---------------------------------+-----------------------------------------------------------------------------------+
+| `ROOT_DEF_CTOR_WITH_INIT(C,B)`  | `C() : B() { init(); } `{.cpp}                                                    |
++---------------------------------+-----------------------------------------------------------------------------------+
+| `ROOT_NAME_CTOR(C,B)`           | `C(const Char_t* name) : B(name) { init(); }`{.cpp}                               |
++---------------------------------+-----------------------------------------------------------------------------------+
+| `ROOT_COPY_CTOR(C,B)`           | `C(const C& o) : B() { o.Copy(*this); }`{.cpp}                                    |
++---------------------------------+-----------------------------------------------------------------------------------+
+| `ROOT_COPY_ASSIGN_OP(C)`        | ~~~~{.cpp} |
+|                                 | C& operator=(const C& o) |
+|                                 | { |
+|                                 |    if(this!=&o) |
+|                                 |       o.Copy(*this); |
+|                                 |    return *this; |
+|                                 | } |
+|                                 | ~~~~ |
++---------------------------------+-----------------------------------------------------------------------------------+
+| `ROOT_FULL_SET(C,B)`            | ~~~~{.cpp}                                                                        |
+|                                 | ROOT_DEF_CTOR(C,B)                                                                |
+|                                 | ROOT_NAME_CTOR(C,B)                                                               |
+|                                 | ROOT_COPY_CTOR(C,B)                                                               | 
+|                                 | virtual ~C() {}                                                                   |
+|                                 | ROOT_COPY_ASSIGN_OP(C)                                                            |
+|                                 | ~~~~                                                                              |
++---------------------------------+-----------------------------------------------------------------------------------+
+| `ROOT_FULL_SET_WITH_INIT(C,B)`  | ~~~~{.cpp}                                                                        |
+|                                 | ROOT_DEF_CTOR_WITH_INIT(C,B)                                                      |
+|                                 | ROOT_NAME_CTOR_WITH_INIT(C,B)                                                     |
+|                                 | ROOT_COPY_CTOR(C,B)                                                               | 
+|                                 | virtual ~C() {}                                                                   |
+|                                 | ROOT_COPY_ASSIGN_OP(C)                                                            |
+|                                 | ~~~~                                                                              |
++---------------------------------+-----------------------------------------------------------------------------------+
+
+[KVClassFactory]: http://indra.in2p3.fr/kaliveda/doc/master/classKVClassFactory.html
+[examples]: http://indra.in2p3.fr/kaliveda/doc/master/examples.html
