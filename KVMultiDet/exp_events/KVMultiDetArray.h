@@ -416,7 +416,7 @@ public:
    {
       return fAcceptECodes;
    }
-   void AcceptIDCodes(const TString& codelist)
+   void AcceptIDCodes(const KVNumberList& codelist)
    {
       // Set list of (numeric) identification codes which are acceptable for
       // analysis of reconstructed particles with this array. Multiple values
@@ -430,9 +430,9 @@ public:
       //
       // If called several times, only the last list of values will be taken into account.
 
-      fAcceptIDCodes.Set(codelist);
+      fAcceptIDCodes = codelist;
    }
-   void AcceptECodes(const TString& codelist)
+   void AcceptECodes(const KVNumberList& codelist)
    {
       // Set list of (numeric) calibration codes which are acceptable for
       // analysis of reconstructed particles with this array. Multiple values
@@ -446,7 +446,7 @@ public:
       //
       // If called several times, only the last list of values will be taken into account.
 
-      fAcceptECodes.Set(codelist);
+      fAcceptECodes = codelist;
    }
 
    virtual KVMultiDetArray* GetArray(const Char_t*) const

@@ -8,57 +8,6 @@
 #include "KVAlphaCalibration.h"
 
 ClassImp(KVAlphaCalibration)
-//////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-   <h2>KVAlphaCalibration</h2>
-   <h4>Set up and run the calibration of siliciums</h4>
-   <p>
-   This can be used either 'interactively' or in menu-driven mode.
-   In both cases, in order to run a calirbation, the user must specify
-   </p>
-   <ul>
-   <li>the histogram</li>
-   <li>the energy and normalization factor of the peaks present in the histogram</li>
-   <li>the parameter of the method  that will initialise the position of the peaks</li>
-   </ul>
-   <p>
-   The role of this class is to search for a number of peaks given by the user in a histogram
-   and to fit them in order to get several information about the response of the detectors. This class
-   was made in order to calibrate silicium with alpha but it can be use for every detectors which
-   response is a gaussian.
-   </p>
-   <h4>The way it has to be used </h4>
-   <p>
-   To set up the calibration class the user needs to give the number of peaks that
-   has to be found in the constructor.
-   If the user wants to fit several peaks with
-   one program, it is recommended to set up only one KVAlphaCalibration class and
-   to set the histograms in a loop, instead of using the constructor with a histogram.
-   </p>
-   <p>
-   Afterwards, the user needs to set the energy and the normalization factor of the peaks with
-   the method SetPeak(). The method SetSigmaSpec needs to be used in order to set up the
-   TSpectrum that will initialise the model, while SetSigmaFit will set the width for the model.
-   The default value of ThresholdOfTSpectrum may be fine but if the TSpectrum find to many peaks it can be
-   modified with SetThresholdOfTSpectrum.
-   Finally the user just has to use the FitInit and FitSpectrum methods in order
-   to get the results
-   </p>
-   <p>
-   It is possible for the user to draw the histogram, but he needs to create
-   a canvas. The histogram will be drawn in it
-   </p>
-
-   <p>
-   </p>
-   <pre>
-   #include "KVBatchSystem.h"
-   ...
-   </pre>
-   <!-- */
-// --> END_HTML
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 KVAlphaCalibration::KVAlphaCalibration(int NumberOfPeak_)
 {

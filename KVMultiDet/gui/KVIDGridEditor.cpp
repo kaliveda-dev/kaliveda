@@ -1131,7 +1131,7 @@ void KVIDGridEditor::MakeTransformation()
          }
       }
    }
-   if ((event == kButton1Double)) {
+   if (event == kButton1Double) {
       if (drawmode) drawmode = false;
       else if (!select->InheritsFrom("KVIDentifier")) {
          Int_t xx = fPad->GetEventX();

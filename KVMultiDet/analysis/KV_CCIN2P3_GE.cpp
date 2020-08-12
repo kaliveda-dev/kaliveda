@@ -14,18 +14,7 @@
 using namespace std;
 
 ClassImp(KV_CCIN2P3_GE)
-////////////////////////////////////////////////////////////////////////////////
-/*
-begin_html
-<H1>Interface to CCIN2P3 Grid Engine batch job management system</H1>
-<p>
-<a href="http://cc.in2p3.fr/docenligne/969">Submit a job</a><br>
-<a href="http://cc.in2p3.fr/docenligne/970">List of commands</a><br>
-<a href="http://cc.in2p3.fr/docenligne/972">Translation of BSQ to GE commands</a>
-</p>
-end_html
-*/
-////////////////////////////////////////////////////////////////////////////////
+
 KV_CCIN2P3_GE::KV_CCIN2P3_GE(const Char_t* name)
    : KVBatchSystem(name), fMultiJobs(kTRUE)
 {

@@ -18,59 +18,7 @@ $Date: 2008/04/14 08:49:11 $
 using namespace std;
 
 ClassImp(KVBatchSystem)
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVBatchSystem</h2>
-<h4>Base class for interface to a batch job management system</h4>
 
-<p>The different "batch" systems available are described in the $KVROOT/KVFiles/.kvrootrc
-or the user's $HOME/.kvrootrc, as in the following example:</p>
-<pre>
-BatchSystem:     Xterm
-Xterm.BatchSystem.Title:    Execute task in an X-terminal window
-Xterm.BatchSystem.DefaultJobOptions:   -T #JobName# -e
-Xterm.BatchSystem.JobSubCmd:   xterm
-Xterm.BatchSystem.JobScript: "$KVROOT/bin/KaliVedaAnalysis -b -n"&
-</pre>
-<p>For each named batch system, there may be a corresponding plugin which
-defines the actual class to use, if it is necessary to extend the functionality of the
-KVBatchSystem base class, as for example:</p>
-<pre>
-Plugin.KVBatchSystem:    Xterm    KVRootBatch     KVMultiDet    "KVRootBatch(const Char_t*)"
-</pre>
-<p>The "default" batch system is defined as follows:</p>
-<pre>
-#Default batch system
-Default.BatchSystem:   Xterm
-</pre>
-<p>It can be accessed via the batch system manager (see <a href="KVBatchSystemManager.html">KVBatchSystemManager</a>):</p>
-<pre>
-...
-#include "KVBatchSystemManager.h"
-...
-KVBatchSystem* default = gBatchSystemManager->GetDefaultBatchSystem();
-</pre>
-<h4>Access to batch parameters in user analysis class</h4>
-<p>Global pointer gBatchSystem is 0 if analysis task is not run in batch mode
-If it is non-zero, it gives access to the batch system used to run the task. Therefore, if the user
-puts</p><pre>
-#include "KVBatchSystem.h"
-</pre>
-<p>in her analysis code, she can then use gBatchSystem as follows:</p>
-<pre>
-if( gBatchSystem ) {
-   //running in batch. name results file after job name.
-   new TFile( Form( "%s.root", gBatchSystem->GetJobName() ), "recreate");
-}
-else {
-   //not running in batch. fixed name.
-   new TFile("Results.root", "recreate");
-}
-</pre>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 KVBatchSystem* gBatchSystem = 0;
 
 KVBatchSystem::KVBatchSystem(const Char_t* name)

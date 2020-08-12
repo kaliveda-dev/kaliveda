@@ -6,6 +6,11 @@
 
 #include <KVBatchSystem.h>
 
+/**
+  \class KV_CCIN2P3_GE
+\brief Interface to CCIN2P3 Grid Engine batch job management system
+\ingroup Infrastructure
+ */
 class KV_CCIN2P3_GE: public KVBatchSystem {
 
 protected:

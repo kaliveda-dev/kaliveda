@@ -65,6 +65,9 @@ In addition, implementations in daughter classes *must* define the following met
 ~~~~~~~~~~~~{.cpp}
 SomeVarGlob VG("var1");   // daughter class implementing 1-body global variable
 
+VG.SetSelection( [particle selection criteria] );
+VG.SetFrame( [reference frame for kinematics] );
+
 VG.Init();                // perform any necessary initialisations
 ~~~~~~~~~~~~
 
@@ -93,6 +96,9 @@ while( [loop over events] )
    VG.Reset(); // reinitialise prior to analysis of next event
 }
 ~~~~~~~~~~~~
+
+Note that although the Fill() method is called for all particles, only those which satsify the conditions
+given to SetSelection() will be used to calculate the variable.
 
 ### Global variable lists
 The KVGVList class handles a list of global variables. A list can be used in the following
