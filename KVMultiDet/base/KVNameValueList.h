@@ -143,6 +143,9 @@ public:
       Iterator()
          : fIter(static_cast<TIterator*>(nullptr))
       {}
+      Iterator(const Iterator& other)
+         : fIter(other.fIter)
+      {}
       Iterator(const KVNameValueList* N)
          : fIter(N->GetList())
       {
