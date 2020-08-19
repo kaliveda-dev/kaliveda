@@ -1,5 +1,5 @@
 if(NOT WITH_BUILTIN_GRU)
-    set(excluded_classes GTOneScaler GTScalers GTDataParameters GTGanilData)
+    set(excluded_classes GTOneScaler GTScalers GTDataParameters GTGanilData KVGANILDataReader)
 else()
     set(libs_to_link ${BUILTIN_GRU_LIB})
 endif()

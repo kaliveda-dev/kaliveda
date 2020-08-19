@@ -1,6 +1,12 @@
 #--- Top-level CMake file for KaliVeda
 cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
 
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+  message(FATAL_ERROR
+    " KaliVeda must be built out-of-source.\n"
+    " Please see http://indra.in2p3.fr/kaliveda for instructions.")
+endif()
+
 project(KaliVeda)
 
 #-- Fixing warning on Mac OSX due to CMake version
@@ -162,6 +168,23 @@ endif()
 
 #---Google Protobuffers for reading FAZIA data
 find_package(Protobuf)
+if(NOT PROTOBUF_FOUND)
+   # we may need pkg-config to find installation
+   find_package(PkgConfig QUIET)
+   
+   if(PkgConfig_FOUND)
+      message(STATUS "Looking for protobuf with pkg-config")
+      ## use pkg-config to get hints for protobuf locations
+      pkg_check_modules(PROTOBUF QUIET protobuf)
+      if(PROTOBUF_FOUND)
+         set(CMAKE_LIBRARY_PATH ${PROTOBUF_LIBRARY_DIRS} ${CMAKE_LIBRARY_PATH})
+         set(PROTOBUF_INCLUDE_DIR ${PROTOBUF_INCLUDE_DIRS})
+         set(Protobuf_INCLUDE_DIR ${PROTOBUF_INCLUDE_DIRS})
+         find_package(Protobuf)
+      endif(PROTOBUF_FOUND)
+   endif(PkgConfig_FOUND)
+
+endif(NOT PROTOBUF_FOUND)
 if(PROTOBUF_FOUND)
    set(WITH_PROTOBUF yes)
    include_directories(${PROTOBUF_INCLUDE_DIRS})
@@ -300,6 +323,15 @@ if(USE_MICROSTAT)
 	add_subdirectory(MicroStat)
 endif()
 if(USE_INDRA)
+   if(CCIN2P3_BUILD)
+      if($ENV{GROUP} STREQUAL "indra")
+         #- if CERNLIB is available, compile Fortran for reading DSTs
+         find_package(CERNLIB QUIET)
+         if(CERNLIB_FOUND)
+            set(USE_INDRA2ROOT ON)
+         endif(CERNLIB_FOUND)
+      endif($ENV{GROUP} STREQUAL "indra")
+   endif(CCIN2P3_BUILD)
 	add_subdirectory(KVIndra)
 	get_property(KVIndra_MOD_LIST GLOBAL PROPERTY KVIndra_MOD_LIST)
 	get_property(KVIndra_LIB_LIST GLOBAL PROPERTY KVIndra_LIB_LIST)
@@ -370,9 +402,13 @@ write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/KaliVedaConfigVersi
                                     VERSION ${KV_VERSION}
                                     COMPATIBILITY SameMajorVersion
                                     )
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KaliVedaConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/KaliVedaConfigVersion.cmake
-          ${CMAKE_SOURCE_DIR}/cmake/KaliVedaUseFile.cmake DESTINATION ${CMAKE_INSTALL_CMAKEPKGDIR}
-           )
+install(FILES
+         ${CMAKE_CURRENT_BINARY_DIR}/KaliVedaConfig.cmake
+         ${CMAKE_CURRENT_BINARY_DIR}/KaliVedaConfigVersion.cmake
+         ${CMAKE_SOURCE_DIR}/cmake/KaliVedaUseFile.cmake
+         ${CMAKE_SOURCE_DIR}/cmake/FindZMQ.cmake
+         DESTINATION ${CMAKE_INSTALL_CMAKEPKGDIR}
+        )
 
 #---in order to be able to reuse cmake macros for building ROOT libraries with either ROOT5 or ROOT6
 install(FILES 
