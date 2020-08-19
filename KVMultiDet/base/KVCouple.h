@@ -4,6 +4,7 @@
 #ifndef __KVCOUPLE_H
 #define __KVCOUPLE_H
 
+#include "Rtypes.h"
 #include "TMath.h"
 
 class KVCouple {
