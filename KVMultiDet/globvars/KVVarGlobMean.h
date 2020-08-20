@@ -62,6 +62,7 @@ deviation. A global variable class deriving from KVVarGlobmean has to provide th
  Have a look to the KVZmean class for an example of a global variable deriving from KVVarGlobMean.
  Look at KVVarGlob class to have an example of use.
 
+ By default, only Mean and RMS branches are added to TTrees.
 
   \author D. Cussol (LPC Caen), J.D. Frankland (GANIL)
   \date 2004-2020

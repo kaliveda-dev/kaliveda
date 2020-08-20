@@ -13,6 +13,8 @@ void KVVarGlobMean::init(void)
    SetNameIndex("SumOfWeights", 4);
    SetNameIndex("Min", 5);
    SetNameIndex("Max", 6);
+
+   SetMaxNumBranches(2);
 }
 
 void KVVarGlobMean::FillVar(Double_t v, Double_t w)

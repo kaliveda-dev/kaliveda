@@ -17,6 +17,7 @@ namespace MicroStat {
       KVHashList fKEDist;//!
       Double_t A, B;
       static Double_t edist(Double_t*, Double_t*);
+      TF1 fCosTheta;//! function used to draw random CosTheta values
 
       TF1* getKEdist(Int_t, Double_t);
 
@@ -27,6 +28,14 @@ namespace MicroStat {
       virtual ~mdweight();
 
       virtual void SetWeight(KVEvent* e, Double_t E);
+      void SetAnisotropy(double a, double b)
+      {
+         // Set anisotropy of particle momentum distribution
+         // a,b are maximum and minimum of P(cos theta)
+         // i.e. P(cos theta = +/-1) = a
+         // P(cos theta= 0) = b
+         fCosTheta.SetParameters(a, b);
+      }
 
       void initGenerateEvent(KVEvent* partition);
       void resetGenerateEvent();

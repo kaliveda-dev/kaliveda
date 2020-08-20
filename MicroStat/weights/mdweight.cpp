@@ -52,7 +52,24 @@ namespace MicroStat {
       return f;
    }
 
+   double CosThetaDist(double* x, double* par)
+   {
+      // parameterise angular distribution as function of ratio between
+      // P(cos theta=+/-1) and P(cos theta=0)
+      // par[0] = a = P(cos theta=+/-1)
+      // par[1] = b = P(cos theta=0)
+      // x = cosTheta
+      if (abs(par[0] - par[1]) < 1.e-6) return par[1];
+
+      double a = par[0];
+      double b = par[1];
+      double cosTheta = x[0];
+      double alpha = TMath::Pi() * cosTheta;
+      return (a - b) / 2.*(1. - TMath::Cos(alpha)) + b;
+   }
+
    mdweight::mdweight()
+      : fCosTheta("CosTheta", CosThetaDist, -1, 1, 2)
    {
       fKEDist.SetOwner();
       log2pi = TMath::Log(TMath::TwoPi());
@@ -63,6 +80,7 @@ namespace MicroStat {
       px = 0.0;
       py = 0.0;
       pz = 0.0;
+      SetAnisotropy(1, 1);
    }
 
    mdweight::~mdweight()
@@ -103,7 +121,9 @@ namespace MicroStat {
       // Call before generating an event with StatWeight::GenerateEvent
       // using the given partition and available energy
 
-      massTot0 = partition->GetSum("GetMass");
+      massTot0 = 0;
+      for (auto e : *partition) massTot0 += e.GetMass();
+//      massTot0 = partition->GetSum("GetMass");
       resetGenerateEvent();
    }
 
@@ -143,7 +163,7 @@ namespace MicroStat {
             p = sqrt(2.*(massTot - mPart) * mPart * eDisp / massTot);
             ec = p * p / 2. / mPart;
          }
-         Double_t ct = 1. - 2.*gRandom->Rndm();
+         Double_t ct = fCosTheta.GetRandom(-1, 1); //1. - 2.*gRandom->Rndm();
          Double_t st = TMath::Sqrt(1. - ct * ct);
          Double_t phi = gRandom->Rndm() * 2.*TMath::Pi();
          ppz = ct * p;
