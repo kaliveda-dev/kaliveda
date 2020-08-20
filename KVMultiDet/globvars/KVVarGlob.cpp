@@ -235,11 +235,13 @@ void KVVarGlob::Print(Option_t*) const
       fSelection.Print();
    }
    printf("- Number of branches in TTree: %d\n", GetNumberOfBranches());
-   printf("- Available values:\n");
-   printf(" IND.   NAME      VALUE\n");
-   for (int i = 0; i < GetNumberOfValues(); ++i) {
-      KVNamedParameter* np = nameList.GetParameter(i);
-      printf("  %d      %s     %f\n", np->GetInt(), np->GetName(), GetValue(np->GetName()));
+   if (GetNumberOfValues() > 1) {
+      printf("- Available values:\n");
+      printf(" IND.   NAME      VALUE\n");
+      for (int i = 0; i < GetNumberOfValues(); ++i) {
+         KVNamedParameter* np = nameList.GetParameter(i);
+         printf("  %d      %s     %f\n", np->GetInt(), np->GetName(), GetValue(np->GetName()));
+      }
    }
    printf("\n");
 }

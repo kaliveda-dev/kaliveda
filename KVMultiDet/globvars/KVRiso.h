@@ -83,7 +83,6 @@ public:
 
    void Init(void)
    {
-      init();
    }
    void Reset(void)
    {

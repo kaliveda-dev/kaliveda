@@ -511,7 +511,7 @@ public:
       return AsDouble();
    }
 
-   Int_t GetNumberOfValues() const
+   virtual Int_t GetNumberOfValues() const
    {
       // \returns number of values associated with this global variable.
       // This is the number of indices defined using SetNameIndex() method.
