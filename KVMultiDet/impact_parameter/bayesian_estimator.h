@@ -475,6 +475,7 @@ namespace KVImpactParameters {
          TF1* f = Cb_dist_for_X_select.DrawCopy(opt);
          f->SetNpx(500);
          f->SetLineColor(color);
+         f->SetMarkerColor(color);
          f->SetLineWidth(2);
          f->SetTitle(title);
          return f->GetMaximum();
@@ -503,6 +504,7 @@ namespace KVImpactParameters {
          TF1* f = B_dist_for_X_select.DrawCopy(opt);
          f->SetNpx(500);
          f->SetLineColor(color);
+         f->SetMarkerColor(color);
          f->SetLineWidth(2);
          f->SetTitle(title);
          return f->GetMaximum();
@@ -553,6 +555,7 @@ namespace KVImpactParameters {
          TF1* f =  B_dist_for_arb_X_select.DrawCopy(opt);
          f->SetNpx(500);
          f->SetLineColor(color);
+         f->SetMarkerColor(color);
          f->SetLineWidth(2);
          f->SetTitle(title);
       }
