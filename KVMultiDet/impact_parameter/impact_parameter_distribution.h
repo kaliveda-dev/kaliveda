@@ -86,6 +86,12 @@ namespace KVImpactParameters {
          // (actually the differential cross-section in [mb fm\f${}^{-1}\f$])
          return fIPdist;
       }
+      void Draw(Option_t* opt = "")
+      {
+         // Draw the impact parameter distribution (differential cross-section in [mb fm\f${}^{-1}\f$])
+         // \param[in] opt Usual drawing option, passed to TF1::Draw()
+         fIPdist.Draw(opt);
+      }
       const TF1& GetSigmaR()
       {
          // \returns reference to TF1 implementing total cross-section in [mb]
