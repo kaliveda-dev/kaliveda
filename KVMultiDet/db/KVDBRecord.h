@@ -27,6 +27,18 @@ $Id: KVDBRecord.h,v 1.19 2007/05/31 09:59:22 franklan Exp $
 class KVDBKey;
 class KVDBTable;
 
+/**
+  \class KVDBRecord
+  \brief Record folder for the database
+  \ingroup Core
+
+  it's a base class, which suppose that it must be derived to have
+  the proper caracteristics for each type of record
+  it holds a list of keys.
+  Each key must have the name of a table of the data base
+      The folder owns the list of keys.
+*/
+
 class KVDBRecord: public TFolder {
 
 protected:

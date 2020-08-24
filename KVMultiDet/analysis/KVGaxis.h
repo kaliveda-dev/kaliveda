@@ -8,6 +8,12 @@
 #include "TLine.h"
 #include "TAttText.h"
 
+/**
+\class KVGaxis
+\brief Extension of TGaxis class optimised for KVGraph visualisation
+\ingroup GUI
+*/
+
 class KVGaxis : public TGaxis {
 protected:
    Int_t fNbins;

@@ -12,6 +12,12 @@ $Date: 2007/11/20 16:45:22 $
 
 #include <KVBatchSystem.h>
 
+/**
+  \class KVRootBatch
+  \brief Run job in separate xterm window
+  \ingroup Infrastructure
+ */
+
 class KVRootBatch: public KVBatchSystem {
 public:
 

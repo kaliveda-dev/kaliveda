@@ -7,7 +7,7 @@
 
 /**
  \class KV3DGeoTrack
- \ingroup Geometry
+ \ingroup Simulation
  \brief Visualise particle trajectories through array geometry
  */
 

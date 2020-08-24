@@ -10,14 +10,6 @@ using namespace std;
 
 ClassImp(KVDataTransferXRD)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDataTransferXRD</h2>
-<h4>Transfer data from remote repository using xrootd</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVDataTransferXRD::KVDataTransferXRD()
 {

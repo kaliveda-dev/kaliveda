@@ -7,14 +7,6 @@
 
 ClassImp(KVGumGumDistribution)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGumGumDistribution</h2>
-<h4>Sum of normalised Gumbel first asymptote and Gumbel last asymptote</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVGumGumDistribution::KVGumGumDistribution(): TF1(), fFirstGumbel(0), fLastGumbel(0)
 {

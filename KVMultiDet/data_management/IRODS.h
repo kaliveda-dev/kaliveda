@@ -6,6 +6,11 @@
 
 #include "KVDMS.h"
 
+/**
+  \class IRODS
+  \brief Interface to IRODS (Integrated Rule-Oriented Data System) DMS client
+  \ingroup Infrastructure
+ */
 class IRODS : public KVDMS {
 protected:
    virtual void ExtractFileInfos(TString&, DMSFile_t*) const;

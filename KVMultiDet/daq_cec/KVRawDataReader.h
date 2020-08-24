@@ -15,6 +15,19 @@ $Date: 2007/06/08 15:49:10 $
 
 #include <KVNameValueList.h>
 
+/**
+\class KVRawDataReader
+\brief Abstract base class for reading raw (DAQ) data
+  \ingroup DAQ
+
+Classes derived from this one must implement the methods
+
+  - Bool_t GetNextEvent();
+  - KVSeqCollection* GetFiredDataParameters() const;
+  - TString GetDataFormat() const;
+  - Int_t GetRunNumberReadFromFile() const;
+*/
+
 class KVRawDataReader : public KVBase {
 
 protected:

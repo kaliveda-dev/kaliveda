@@ -44,8 +44,22 @@ typedef struct {
 } gan_tape_desc;
 #endif
 
+/**
+  \class GTGanilData
+  \brief Read GANIL formatted tapes or files
+  \ingroup DAQ
 
-//______________________________________________________________________________
+ Usage can be as simple as:
+ GTGanilData myData("filename.dat");
+
+ It allow connection of data parameters values by Connect() routines
+ that can operate with the index or the parameter name.
+
+ Values of parameters are stored in an array of UShort_t (0 - 65535)
+ Before reading a new event, every parameter is set to 65535
+ Casting back this value to a Short_t (-32768 to 32768) gives "-1" which is the signal that the parameter's coder
+ did not fire in the event that was read.
+*/
 class GTGanilData {
 public:
    // What to do with scaler buffer

@@ -6,6 +6,12 @@
 
 #include "KVDMSDataRepository.h"
 
+/**
+\class IRODSDataRepository
+\brief Remote data repository using IRODS (Integrated Rule-Oriented Data System) DMS
+\ingroup DM
+*/
+
 class IRODSDataRepository : public KVDMSDataRepository {
 public:
    IRODSDataRepository();

@@ -7,16 +7,6 @@
 
 ClassImp(KVPROOFLiteBatch)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVPROOFLiteBatch</h2>
-<h4>Batch system interface to PROOFLite</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
-
 KVPROOFLiteBatch::KVPROOFLiteBatch(const Char_t* name)
    : KVBatchSystem(name)
 {

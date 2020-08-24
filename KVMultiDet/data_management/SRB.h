@@ -6,6 +6,11 @@
 
 #include "KVDMS.h"
 
+/**
+  \class SRB
+  \ingroup Infrastructure
+  \brief Interface to SRB (Storage Resource Broker) DMS client
+ */
 class SRB : public KVDMS {
 protected:
    virtual void ExtractFileInfos(TString&, DMSFile_t*) const;

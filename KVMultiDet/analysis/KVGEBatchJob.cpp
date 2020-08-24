@@ -6,15 +6,6 @@
 
 ClassImp(KVGEBatchJob)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGEBatchJob</h2>
-<h4>Job handled by Grid Engine batch system</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVGEBatchJob::KVGEBatchJob()
 {
    // Default constructor
@@ -22,13 +13,13 @@ KVGEBatchJob::KVGEBatchJob()
 // Bonjour,
 //
 // Le scaling factor n'est pas accessible par la commande qstat. La normalisation de la
-// puissance de calcul en HS06 a été ajoutée à la main par les administrateurs du batch
+// puissance de calcul en HS06 a Ã©tÃ© ajoutÃ©e Ã  la main par les administrateurs du batch
 // du centre de calcul.
 //
-// La ferme étant assez uniforme, vous pouvez considérer que ce facteur est de 10 pour
+// La ferme Ã©tant assez uniforme, vous pouvez considÃ©rer que ce facteur est de 10 pour
 // l'ensemble des machines. Ainsi en divisant le temps cpu en HS06 par 10 vous obtenez
-// approximativement le temps cpu consommé (ligne cpu time: 815/36000  dans fichier
-// toto.o689578). Ce sont les mêmes secondes que vous demandez au qsub.
+// approximativement le temps cpu consommÃ© (ligne cpu time: 815/36000  dans fichier
+// toto.o689578). Ce sont les mÃªmes secondes que vous demandez au qsub.
 //
 // Cette approche est approximative mais pour l'instant il n'y a pas mieux.
 //

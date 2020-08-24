@@ -9,6 +9,37 @@
 
 class KVSimFile;
 
+/**
+\class KVSimDir
+\brief Handle directory containing simulated and/or filtered simulated data
+\ingroup DM,Simulation
+
+ This class will read the contents of a directory and automatically list the simulated and/or
+ filtered simulated data it contains. To use:
+
+      KVSimDir sim("MySimultations", "/path/to/my/simulations");
+      sim.AnalyseDirectory();
+
+ When method AnalyseDirectory() is called, each ROOT file in the directory given to the
+ constructor will be opened and analysed in turn, by method AnalyseFile().
+ If there is a TTree in the file, then we look at all of its branches until we find one
+ containing objects which derive from KVEvent:
+
+   -- if they inherit from KVSimEvent, we add the file to the list of simulated data:
+            * a KVSimFile is created. The title of the TTree where data were found will
+               be used as 'Information' on the nature of the simulation.
+   -- if they inherit from KVReconstructedEvent, we add the file to the list of filtered data.
+            * a KVSimFile is created. Informations on the filtered data are extracted from
+              TNamed objects in the file with names 'Dataset', 'System', 'Run', 'Geometry'
+              (type of geometry used, 'ROOT' or 'KV'), 'Origin' (i.e. the name of the simulation
+              file which was filtered). These objects are automatically created when data is
+              filtered using KVEventFiltering.
+
+ Analysis of the file stops after the first TTree with a branch satisfying one of the
+ two criteria is found (it is assumed that in each file there is only one TTree containing
+ either simulated or filtered data).
+*/
+
 class KVSimDir : public KVBase {
 protected:
    KVList fSimData;// list of simulated data files

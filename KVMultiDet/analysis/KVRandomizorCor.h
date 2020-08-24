@@ -6,6 +6,11 @@
 
 #include "KVRandomizor.h"
 
+/**
+ \class KVRandomizorCor
+\ingroup Math
+ */
+
 class KVRandomizorCor : public KVRandomizor {
 public:
    KVRandomizorCor(Int_t ndim);

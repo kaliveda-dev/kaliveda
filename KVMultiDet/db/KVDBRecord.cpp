@@ -24,13 +24,6 @@ $Id: KVDBRecord.cpp,v 1.23 2007/05/31 09:59:22 franklan Exp $
 using namespace std;
 
 ClassImp(KVDBRecord);
-//__________________________________________________________________________
-//  Record folder for the database
-//  it's a base class, which suppose that it must be derived to have
-//  the proper caracteristics for each type of record
-//  it holds a list of keys.
-//  Each key must have the name of a table of the data base
-//      The folder owns the list of keys.
 
 //__________________________________________________________________________
 KVDBRecord::KVDBRecord()

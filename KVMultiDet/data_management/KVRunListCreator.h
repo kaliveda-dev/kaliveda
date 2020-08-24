@@ -5,6 +5,11 @@
 #include "TString.h"
 #include "KVRawDataReader.h"
 
+/**
+  \class KVRunListCreator
+  \brief Set up a list of runs from a directory containing data files
+  \ingroup DM
+ */
 class KVRunListCreator {
 
    TString fRunSheetDir;        //full path to directory holding runs

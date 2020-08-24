@@ -9,6 +9,13 @@
 
 class KVUniqueNameList;
 
+/**
+\class KVDMS
+\brief Abstract base class for interfaces to Data Management Systems (SRB, IRODS, etc.)
+\ingroup Infrastructure
+*/
+
+
 class DMSFile_t : public KVBase {
    KVDatime fModTime; // last modification
    Bool_t fIsCont;// kTRUE if is container

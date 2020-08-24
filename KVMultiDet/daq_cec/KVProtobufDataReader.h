@@ -5,12 +5,17 @@
 #define __KVProtobufDataReader_H
 
 #include "KVRawDataReader.h"
+/**
+  \class KVProtobufDataReader
+\brief Read Google Protobuf DAQ files
+  \ingroup DAQ
+*/
 
 class KVProtobufDataReader : public KVRawDataReader {
 protected:
    Int_t fBufSize;//! buffer size
    char* fBuffer;//! current buffer
-#if ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0)
+#ifdef USING_ROOT6
    unique_ptr<TFile> fFile;//! TFile plugin handle
 #else
    TFile* fFile;//! TFile plugin handle

@@ -8,6 +8,15 @@
 #include "MFMFileReader.h"
 #include "KVNameValueList.h"
 
+/**
+\class KVMFMDataFileReader
+\brief Read MFM format acquisition data
+  \ingroup DAQ
+
+This class uses the mfmlib package available from: https://gitlab.in2p3.fr/jdfcode/mfmlib.git
+(enabled by default if package found).
+*/
+
 class KVMFMDataFileReader : public KVRawDataReader, public MFMFileReader {
 
 public:

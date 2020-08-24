@@ -11,14 +11,6 @@
 
 ClassImp(KVRandomizor)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVRandomizor</h2>
-<h4>Test of generic class to perform sample on fonctions</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 //-------------------------
 KVRandomizor::KVRandomizor(Int_t ndim) : TNamed(),
@@ -58,11 +50,11 @@ void KVRandomizor::SetRange(Double_t* min, Double_t* max)
 }
 
 //-------------------------
-Double_t* KVRandomizor::GetPosition() // aiiieee!!!
+std::vector<Double_t> KVRandomizor::GetPosition()
 //-------------------------
 {
 
-   Double_t* pos = new Double_t[fNd]; // aiiieee!!!
+   std::vector<Double_t> pos(fNd);
    for (Int_t ii = 0; ii < fNd; ii += 1) {
       pos[ii] = GetPosition(ii);
    }
@@ -134,14 +126,13 @@ TH1* KVRandomizor::FillHisto1D(Int_t ntimes)
    );
    for (Int_t ii = 0; ii < ntimes; ii += 1) {
       fNtest += 1;
-      Double_t* pos = GetPosition();
-      if (TestValue(ComputeValue(pos))) {
+      std::vector<Double_t> pos = GetPosition();
+      if (TestValue(ComputeValue(&pos[0]))) {
          h1->Fill(pos[0]);
       }
       else {
          ii -= 1;
       }
-      delete [] pos;
    }
 
    return h1;
@@ -159,14 +150,13 @@ TH1* KVRandomizor::FillHisto2D(Int_t ntimes)
    );
    for (Int_t ii = 0; ii < ntimes; ii += 1) {
       fNtest += 1;
-      Double_t* pos = GetPosition();
-      if (TestValue(ComputeValue(pos))) {
+      std::vector<Double_t> pos = GetPosition();
+      if (TestValue(ComputeValue(&pos[0]))) {
          h1->Fill(pos[0], pos[1]);
       }
       else {
          ii -= 1;
       }
-      delete [] pos;
    }
    return h1;
 }
@@ -184,14 +174,13 @@ TH1* KVRandomizor::FillHisto3D(Int_t ntimes)
    );
    for (Int_t ii = 0; ii < ntimes; ii += 1) {
       fNtest += 1;
-      Double_t* pos = GetPosition();
-      if (TestValue(ComputeValue(pos))) {
+      std::vector<Double_t> pos = GetPosition();
+      if (TestValue(ComputeValue(&pos[0]))) {
          h1->Fill(pos[0], pos[1], pos[2]);
       }
       else {
          ii -= 1;
       }
-      delete [] pos;
    }
 
    return h1;

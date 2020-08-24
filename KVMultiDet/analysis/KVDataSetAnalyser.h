@@ -9,6 +9,12 @@
 class KVDataSet;
 class KVDBSystem;
 
+/**
+\class KVDataSetAnalyser
+\brief Pilots user analysis of experimental data
+\ingroup Analysis
+*/
+
 class KVDataSetAnalyser : public KVDataAnalyser {
 private:
    KVDBSystem* fSystem;         //system chosen by user

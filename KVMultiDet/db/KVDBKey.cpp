@@ -24,13 +24,6 @@ $Id: KVDBKey.cpp,v 1.23 2007/04/19 12:41:54 franklan Exp $
 
 ClassImp(KVDBKey)
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//   A key holds a list of cross-references to KVDBRecord objects
-//The name of the key is the name of the table, prefixed by "Key:"
-//The title of the key is the name of the record
-//
-//
 
 //____________________________________________________________________________
 KVDBKey::KVDBKey()

@@ -13,51 +13,6 @@
 
 ClassImp(KVGANILDataReader)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGANILDataReader</h2>
-<h4>Reads GANIL acquisition files (EBYEDAT)</h4>
-   Open and initialise a GANIL data file in EBYEDAT format for reading.
-   If file cannot be opened, this object will be made a zombie. Do not use.
-   To test if file is open, use IsOpen().
-   The basename of the file (excluding any path) can be obtained using GetName()
-   The full pathname of the file can be obtained using GetTitle()
-   <br><br>
-   If the dataset corresponding to the data to be read is known i.e. if gDataSet has been defined and points
-   to the correct dataset, this will allow to build the necessary multidetector object if it has not already
-   been done, and to set the calibration parameters etc. as a function of the run number.
-   <br><br>
-   If not (i.e. if no information is available on detectors, calibrations, geometry, etc.),
-   then a list of KVACQParam objects will be generated and connected ready for reading the data.
-   <br><br>
-   To fill a TTree with all data in the file, do the following:<br>
-<pre>
-KVGANILDataReader* runfile = new KVGANILDataReader("run1.dat");
-TFile* file = new TFile("run1.root","recreate");
-TTree* T = new TTree("Run1", "Raw data for Run1");
-runfile->ConnectRawDataParameters();
-runfile->SetUserTree(T);
-while( runfile->GetNextEvent() ) ;
-file->Write();
-file->Close();
-</pre><br>
-See method <a href="#KVGANILDataReader:SetUserTree">SetUserTree()</a> for more details.
-See below if you want to include a TTree containing scaler data in the file.
-<h4>Scaler buffers management</h4>
-By default, scaler buffers are ignored (<a href="GTGanilData.html#GTGanilData:SetScalerBuffersManagement">GTGanilData::SetScalerBuffersManagement</a>(GTGanilData::kSkipScaler)).
-This can be changed by changing the value of<br>
-<pre>
-KVGANILDataReader.ScalerBuffersManagement:       kSkipScaler
-</pre>
-<br>
-For possible values, see <a href="GTGanilData.html#GTGanilData:SetScalerBuffersManagement">GTGanilData::SetScalerBuffersManagement</a>.<br><br>
-You can also add a second TTree to the user tree generated above containing the values
-of all scaler buffers written in the data file. The TTree will be called 'Scalers'.
-You need to add "SCALERS" to the option given to method <a href="#KVGANILDataReader:SetUserTree">SetUserTree()</a> (see below).
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVGANILDataReader::KVGANILDataReader(const Char_t* file, Option_t* dataset)
 {

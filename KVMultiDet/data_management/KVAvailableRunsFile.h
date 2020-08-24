@@ -26,6 +26,23 @@ class KVList;
 class KVHashList;
 class KVNameValueList;
 
+/**
+  \class KVAvailableRunsFile
+  \brief Handles lists of available runs for different datasets and types of data
+  \ingroup DM
+
+For each type of data associated with each dataset (type="raw", "recon", "ident" or "root")
+we maintain runlist files which contain the run numbers of datafiles which are physically
+present/available, along with the date/time of last modification of each file, and the filename.
+
+These files are kept in the dataset's KVFiles subdirectory, i.e. in $KVROOT/KVFiles/[name of dataset]
+
+The name of each file has the following format:
+~~~~
+      [repository].available_runs.[dataset subdir].[type of data]
+~~~~
+*/
+
 class KVAvailableRunsFile: public KVBase {
 
    static KVString date_read_from_filename;//!

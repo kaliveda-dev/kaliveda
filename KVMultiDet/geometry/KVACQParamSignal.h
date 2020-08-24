@@ -8,7 +8,7 @@
 #include "KVACQParam.h"
 /**
  \class KVACQParamSignal
- \ingroup Calibration
+ \ingroup Calibration,DAQ
  \brief Wrapper signal for KVACQParam objects
 */
 

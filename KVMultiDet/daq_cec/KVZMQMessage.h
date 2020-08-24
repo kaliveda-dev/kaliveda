@@ -7,7 +7,7 @@
 
 /**
  * \class KVZMQMessage
- * \ingroup Daq_cec
+ * \ingroup Infrastructure
  * \brief Allow to send/receive ROOT/KV objects between ZeroMQ sockets
  *
  * ## Examples of use

@@ -25,12 +25,6 @@ $Id: KVDBRun.cpp,v 1.14 2009/03/12 14:01:02 franklan Exp $
 using namespace std;
 
 ClassImp(KVDBRun);
-///////////////////////////////////////////////////
-//KVDBRun
-//
-//Base class database entry for an experimental run
-//
-//____________________________________________________________________________
 
 KVDBRun::KVDBRun(): fDatime()
 {

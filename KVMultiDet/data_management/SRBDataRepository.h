@@ -6,6 +6,12 @@
 
 #include "KVDMSDataRepository.h"
 
+/**
+\class SRBDataRepository
+\brief Remote data repository using SRB (Storage Resource Broker) DMS
+\ingroup DM
+*/
+
 class SRBDataRepository : public KVDMSDataRepository {
 public:
    SRBDataRepository();

@@ -14,14 +14,6 @@ using namespace std;
 
 ClassImp(KVDataSetAnalyser)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDataSetAnalyser</h2>
-<h4>Analysis of data in datasets</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVDataSetAnalyser::KVDataSetAnalyser()
    : KVDataAnalyser()

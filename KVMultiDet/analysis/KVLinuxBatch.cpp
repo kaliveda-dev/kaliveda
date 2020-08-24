@@ -10,9 +10,6 @@ $Date: 2007/11/20 16:45:22 $
 #include "KVLinuxBatch.h"
 
 ClassImp(KVLinuxBatch)
-////////////////////////////////////////////////////////////////////////////////
-// Run KaliVeda analysis task in background on Linux system with output stored in logfile
-////////////////////////////////////////////////////////////////////////////////
 
 KVLinuxBatch::KVLinuxBatch(const Char_t* name)
    : KVRootBatch(name)

@@ -7,14 +7,12 @@
 //    copyright            : (C) 2001 by Garp
 //    email                : patois@ganil.fr
 //////////////////////////////////////////////////////////////////////////
-//
-// Part of ROOTGanilTape
-//
-// GTSOnecaler
-//
-// Scaler class for the scaler structure.
-//
-//////////////////////////////////////////////////////////////////////////
+
+/**
+ \class GTOneScaler
+ \brief Scaler class for the scaler structure.
+  \ingroup DAQ
+*/
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *

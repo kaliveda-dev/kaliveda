@@ -11,14 +11,7 @@ $Id: KVRunListLine.cpp,v 1.6 2006/10/19 14:32:43 franklan Exp $
 using namespace std;
 
 ClassImp(KVRunListLine)
-///////////////////////////////////////////////////////////////////////////
-//KVRunListLine
-//
-//Base class for reading runlists of INDRA experiments, either 'real' runlists
-//with all info (KVLineCSV) or the minimalist files used for old data and
-//based on the DST runlists kept at CC-IN2P3 (KVLineDST).
-//
-//For backwards compatibility, this uses KVString whenever possible.
+
 KVRunListLine::KVRunListLine()
 {
    //Default ctor

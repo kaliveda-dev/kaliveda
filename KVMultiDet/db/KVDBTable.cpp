@@ -2,7 +2,7 @@
 $Id: KVDBTable.cpp,v 1.18 2007/04/27 14:46:29 franklan Exp $
                           KVTable.cpp  -  description
                              -------------------
-    begin                : jeu fév 6 2003
+    begin                : jeu fÃ©v 6 2003
     copyright            : (C) 2003 by Alexis Mignon
     email                : mignon@ganil.fr
  ***************************************************************************/
@@ -26,13 +26,7 @@ $Id: KVDBTable.cpp,v 1.18 2007/04/27 14:46:29 franklan Exp $
 using namespace std;
 
 ClassImp(KVDBTable)
-///////////////////////////////////////////////
-//Base class for a table of the data base
-//It is a TFolder and contains a list of KVDBRecord records.
-//The folder owns this list.
-//
-//
-//__________________________________________________________________
+
 KVDBTable::KVDBTable()
 {
    fIsUnique = kFALSE;

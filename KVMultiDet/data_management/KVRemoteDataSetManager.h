@@ -13,6 +13,11 @@ $Date: 2007/09/20 11:30:17 $
 #include <KVDataSetManager.h>
 #include "Riostream.h"
 
+/**
+  \class KVRemoteDataSetManager
+  \brief Manage datasets stored in a remote data repository
+  \ingroup DM
+ */
 class KVRemoteDataSetManager: public KVDataSetManager {
 
 protected:

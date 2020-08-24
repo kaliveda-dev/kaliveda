@@ -9,6 +9,12 @@
 class TRandom3;
 class TH1;
 
+/**
+\class KVRandomizor
+\brief Test of generic class to perform sample on functions
+\ingroup Math
+*/
+
 class KVRandomizor : public TNamed {
 
 protected:
@@ -31,7 +37,7 @@ public:
 
    void SetExtrema(Double_t, Double_t vmin = 0);
    void SetRange(Double_t* min, Double_t* max);
-   Double_t* GetPosition();
+   std::vector<Double_t> GetPosition();
    Double_t GetPosition(Int_t idx);
    virtual Double_t ComputeValue(Double_t* pos);
 

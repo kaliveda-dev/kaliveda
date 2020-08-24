@@ -7,6 +7,12 @@
 #include "KVDataRepository.h"
 class KVDMS;
 
+/**
+\class KVDMSDataRepository
+\brief Manage remote data repository using a Data Management System
+\ingroup DM
+*/
+
 class KVDMSDataRepository : public KVDataRepository {
 protected:
    KVDMS* fDMS;//! connection to Data Management System

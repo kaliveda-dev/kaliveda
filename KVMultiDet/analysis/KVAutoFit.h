@@ -16,6 +16,11 @@
 #include "KVList.h"
 #include "TPaveLabel.h"
 
+/**
+\class KVAutoFit
+\brief Manage SemiAutomatic Fits
+\ingroup Math
+*/
 
 class KVAutoFit : public KVBase {
 

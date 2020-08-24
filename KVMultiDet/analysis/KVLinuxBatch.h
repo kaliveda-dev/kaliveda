@@ -12,6 +12,11 @@ $Date: 2007/11/20 16:45:22 $
 
 #include <KVRootBatch.h>
 
+/**
+  \class KVLinuxBatch
+  \brief Run KaliVeda analysis task in background on Linux system with output stored in logfile
+  \ingroup Infrastructure
+ */
 class KVLinuxBatch: public KVRootBatch {
 public:
 

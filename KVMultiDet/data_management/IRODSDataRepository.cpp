@@ -9,15 +9,6 @@ using namespace std;
 
 ClassImp(IRODSDataRepository)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>IRODSDataRepository</h2>
-<h4>Remote data repository using IRODS</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 IRODSDataRepository::IRODSDataRepository()
 {
    // Default constructor

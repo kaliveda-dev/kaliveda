@@ -11,65 +11,7 @@
 
 ClassImp(KVPROOFSelector)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVPROOFSelector</h2>
-<h4>General purpose class for running parallel tasks with PROOF</h4>
-<!-- */
-// --> END_HTML
-// Generate a class derived from this one using static method
-//
-//    KVPROOFSelector::Make("MySelector");
-//
-// then you can use PROOF in order to run tasks in parallel:
-//
-//    TProof::Open("");           // open PROOFLite session
-//    gProof->Process("MySelector.cpp+", [ncycles], "[options]");
-//
-// This will execute MySelector::Process(Long64_t) ncycles times.
-//
-// USING TREES & HISTOGRAMS TO SAVE DATA
-// - declare any histograms with method AddHisto(TH1*)
-// e.g. in InitAnalysis:
-// void MySelector::InitAnalysis()
-// {
-//     AddHisto( new TH2F("toto", "tata", 100, 0, 0, 500, 0, 0) );
-// }
-// Histograms can also be declared 'on the fly' in Analysis() method in
-// the same way;
-//
-// - for TTrees, first call CreateTreeFile("...") with name of file for TTree(s)
-// (by default, histograms and TTrees are written in different files - but see below),
-// then declare all trees using method AddTree(TTree*)
-// e.g. in InitAnalysis:
-// void MySelector::InitAnalysis()
-// {
-//     CreateTreeFile("MyTrees.root");
-//     TTree* aTree = new TTree("t1", "Some Tree");
-//     aTree->Branch(...) etc.
-//     AddTree(aTree);
-// }
-//
-// - if you want (not obligatory), you can use methods FillHisto(...) and
-//  FillTree(...) in your Analysis() method;
-//
-// - to save histograms to file in EndAnalysis(), call method
-//  SaveHistos(const Char_t* filename) in EndAnalysis()
-//
-// -  the file declared with CreateTreeFile will be automatically written
-// to disk at the end of the analysis.
-//
-// HISTOS & TREES IN SAME FILE
-// If you want all results of your analysis to be written in a single file
-// containing both histos and trees, put the following in the list of options:
-//      CombinedOutputFile=myResults.root
-// or call method SetCombinedOutputFile("myResults.root") in your InitAnalysis();
-// do not call SaveHistos() in EndAnalysis(), and make
-// sure you call CreateTreeFile() without giving a name (the
-// resulting intermediate file will have a default name
-// allowing it to be found at the end of the analysis)
-////////////////////////////////////////////////////////////////////////////////
+
 
 void KVPROOFSelector::Begin(TTree* /*tree*/)
 {

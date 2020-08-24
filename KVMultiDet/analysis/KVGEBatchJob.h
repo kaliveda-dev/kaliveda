@@ -6,6 +6,12 @@
 
 #include "KVBatchJob.h"
 
+/**
+\class KVGEBatchJob
+\brief Job handled by Grid Engine batch system at CC-IN2P3
+\ingroup Infrastructure
+*/
+
 class KVGEBatchJob : public KVBatchJob {
    TString resources;
    Double_t cpu_scaling_factor;

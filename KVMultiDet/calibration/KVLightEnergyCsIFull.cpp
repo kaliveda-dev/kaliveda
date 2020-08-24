@@ -6,16 +6,6 @@ using namespace std;
 
 ClassImp(KVLightEnergyCsIFull)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVLightEnergyCsIFull</h2>
-<h4>Light-energy calibration for CsI detectors uding exact expression</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
-
 //________________________________________________________________
 Double_t KVLightEnergyCsIFull::GetDeltaFraction(Double_t beta, Double_t beta_delta)
 {

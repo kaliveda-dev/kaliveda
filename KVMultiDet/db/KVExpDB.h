@@ -9,6 +9,12 @@
 
 class KVDBSystem;
 
+/**
+\class KVExpDB
+\brief Base class to describe database of an experiment
+\ingroup DM,Calibration
+*/
+
 class KVExpDB : public KVDataBase {
 
 protected:

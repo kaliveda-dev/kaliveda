@@ -8,18 +8,6 @@
 
 ClassImp(KVMFMDataFileReader)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVMFMDataFileReader</h2>
-<h4>Read MFM format acquisition data</h4>
-
-This class uses the mfmlib package available from: https://gitlab.in2p3.fr/jdfcode/mfmlib.git
-This class is enabled if you build kaliveda with cmake option -DUSE_MFM=yes
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVMFMDataFileReader::KVMFMDataFileReader(const Char_t* filepath)
    : KVRawDataReader(), MFMFileReader(filepath, 100 * 1024 * 1024)
 {

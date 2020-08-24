@@ -17,45 +17,7 @@ using namespace std;
 
 ClassImp(KVBatchSystemManager)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVBatchSystemManager</h2>
-<h4>Handles list of all available batch systems for processing non-interactive data analysis tasks</h4>
-<p>The different "batch" systems available are described in the $KVROOT/KVFiles/.kvrootrc
-or the user's $HOME/.kvrootrc, as in the following examples:</p>
-<pre>
-# Batch systems
-BatchSystem:     Xterm
-Xterm.BatchSystem.Title:    Execute task in an X-terminal window
-+BatchSystem:     Linux
-Linux.BatchSystem.Title:    Execute task in background with output stored in log file
-#+BatchSystem:     BQS
-#BQS.BatchSystem.Title:   Use CCIN2P3 BQS batch system
-#BQS.BatchSystem.DefaultJobTime:   4000
-#BQS.BatchSystem.DefaultJobMemory:   256MB
-#BQS.BatchSystem.DefaultJobDisk:   100MB
-</pre>
-<p>For each named batch system, there must be a corresponding plugin which
-defines the actual class to use:</p>
-<pre>
-#Plugins for batch systems
-Plugin.KVBatchSystem:    Xterm    KVRootBatch     KVMultiDet    "KVRootBatch()"
-+Plugin.KVBatchSystem:    Linux    KVLinuxBatch     KVMultiDet    "KVLinuxBatch()"
-+Plugin.KVBatchSystem:    BQS    KV_CCIN2P3_BQS     KVMultiDet    "KV_CCIN2P3_BQS()"
-</pre>
-<p>The "default" batch system is defined as follows:</p>
-<pre>
-#Default batch system
-Default.BatchSystem:   Xterm
-</pre>
-<p>It can be accessed via the global pointer to the batch system manager:</p>
-<pre>
-KVBatchSystem* default = gBatchSystemManager->GetDefaultBatchSystem();
-</pre>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
+
 
 KVBatchSystemManager* gBatchSystemManager = 0;
 

@@ -12,6 +12,11 @@ $Date: 2006/10/19 14:32:43 $
 
 #include <KVDataTransfer.h>
 
+/**
+  \class KVDataTransferSFTP
+  \brief Handles data transfer between repositories using sftp
+  \ingroup Infrastructure
+ */
 class KVDataTransferSFTP: public KVDataTransfer {
 public:
 

@@ -9,6 +9,12 @@
 
 #include <KVSimDir.h>
 
+/**
+  \class KVSimDirAnalyser
+  \brief Class piloting analyses of simulated data
+  \ingroup Analysis
+ */
+
 class KVSimDirAnalyser : public KVDataAnalyser {
 
    TList* fListOfSimFiles;//!    list of files/trees to analyse

@@ -7,15 +7,6 @@
 
 ClassImp(KVDataPatchList)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDataPatchList</h2>
-<h4>List of corrections to be applied to reconstructed calibrated data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVUniqueNameList* KVDataPatchList::fPatchList = 0;
 
 void KVDataPatchList::FillPatchList()

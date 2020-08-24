@@ -6,6 +6,12 @@
 
 #include "KVAutoFit.h"
 
+/**
+\class KVGaus1D
+\brief Handle semi-automatic fit to 1D Gaussian distributions
+\ingroup Math
+*/
+
 class KVGaus1D : public KVAutoFit {
 
 protected:

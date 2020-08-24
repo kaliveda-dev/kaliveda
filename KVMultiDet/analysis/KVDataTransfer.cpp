@@ -18,61 +18,7 @@ $Date: 2007/05/31 09:59:22 $
 #include "KVError.h"
 
 ClassImp(KVDataTransfer)
-////////////////////////////////////////////////////////////////////////////////
-// Transfers data between data repositories
-//
-// If the user has defined two or more repositories in her $HOME/.kvrootrc file,
-// e.g. as in the example #3 given in $KVROOT/KVFiles/.kvrootrc:
-//
-//    #Case 3: user has data files on his machine or on a locally-mounted disk, and can access
-//    #a remote data repository using xrootd via an SSH tunnel on port 10000 (the example given
-//    #is for the xrootd server at ccali centre de calcul).
-//
-//    #definition of local repository
-//    DataRepository: default
-//    default.DataRepository.Type: local
-//    default.DataRepository.RootDir: $(HOME)/Data
-//
-//    #definition of remote repository
-//    +DataRepository: ccali
-//    ccali.DataRepository.Type: remote
-//    ccali.DataRepository.RootDir:       cchpssindra:/hpss/in2p3.fr/group/indra
-//    ccali.DataRepository.ReadProtocol:     root
-//    ccali.DataRepository.XRDServer:      localhost:10000
-//    ccali.DataRepository.XRDRootDir:       /hpss/in2p3.fr/group/indra
-//    ccali.DataRepository.RemoteAvailableRuns.protocol:  curl
-//    ccali.DataRepository.RemoteAvailableRuns.url:   http://indra.in2p3.fr/KaliVedaDoc
-//    ccali.DataRepository.FileTransfer.type:    bbftp
-//    ccali.DataRepository.FileTransfer.server:    ccbbftp.in2p3.fr
-//    #if your login name is not the same as for ccali, give it here
-//    ccali.DataRepository.FileTransfer.user:
-//
-// then it is possible to transfer files from one to the other by running one of the following
-// commands on the local machine:
-//
-//    KVDataTransfer::NewTransfer("ccali", "default")->Run() // transfer from ccali to local machine
-//    KVDataTransfer::NewTransfer("default", "ccali")->Run() // transfer from local machine to ccali
-//
-// The same menu-driven approach as for submitting analysis tasks is used to
-// allow the user to choose among the available datasets, systems and runs to
-// transfer. The transferred files are copied in to the target repository, creating any
-// missing directories which may be needed.
-//
-// It is also possible to use a KVDataTransfer object interactively, in this case
-// you should use:
-//
-//    KVDataTransfer* trans = KVDataTransfer::NewTransfer("ccali", "default");
-//    trans->SetDataSet(...);
-//    trans->SetDataType(...);
-//    trans->SetRuns(...);
-//    trans->TransferRuns();
-//
-// To use the BBFTP transfer facility, a bbftp client must be installed on the user's machine
-// If the client is not located in the user's PATH, he should give the full path to the executable
-// in the configuration, e.g. on WinXP with cygwin version of bbftp client:
-//
-//    ccali.DataRepository.FileTransfer.type:    c:\cygwin\bin\bbftp.exe
-////////////////////////////////////////////////////////////////////////////////
+
 KVDataTransfer::KVDataTransfer()
 {
    //Default constructor.

@@ -6,6 +6,12 @@
 
 #include "KVDataTransfer.h"
 
+/**
+\class KVDataTransferXRD
+\brief Transfer data from remote repository using xrootd
+\ingroup Infrastructure
+*/
+
 class KVDataTransferXRD : public KVDataTransfer {
 
 public:

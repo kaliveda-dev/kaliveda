@@ -6,19 +6,6 @@
 //    begin                : Thu Jun 14 2001
 //    copyright            : (C) 2001 by Garp
 //    email                : patois@ganil.fr
-//////////////////////////////////////////////////////////////////////////
-//
-// Part of ROOTGanilTape
-//
-// GTDataParameters
-//
-// Handle parameters data names and related offsets in the event buffer.
-// Data on GANIL Tapes are labelled with a string name.
-// They are also known from theyr relative position (offset or index)in
-// the data buffer.
-// This class handle conversion between those two representation.
-//
-//////////////////////////////////////////////////////////////////////////
 // ---------------------------------------------------------------------------
 /*
  ***************************************************************************

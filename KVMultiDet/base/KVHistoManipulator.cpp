@@ -1058,6 +1058,35 @@ TGraphErrors* KVHistoManipulator::MakeGraphFrom(TProfile* pf, Bool_t Error)
    return gr;
 }
 
+TGraph* KVHistoManipulator::ExtractMeanAndSigmaFromProfile(TProfile* pf, TGraph*& sigma)
+{
+   // Extract mean and standard deviation (if generated with mode "profs") or error on mean (with "prof")
+   // from TProfile and put their evolution in 2 TGraphs.
+   // \returns Pointer to graph containing mean values
+   // \param sigma Pointer to graph containing standard deviation
+   //
+   // Example of use:
+   //~~~~{.cpp}
+   // TGraph* sig_graf;
+   // TGraph* mean_graf = HM.ExtractMeanAndSigmaFromProfile(pf, sig_graf);
+   //~~~~
+
+   Int_t nx = pf->GetNbinsX();
+
+   TGraph* gr = new TGraph;
+   sigma = new TGraph;
+   int i = 0;
+   for (Int_t xx = 1; xx <= nx; xx += 1) {
+      if (pf->GetBinEntries(xx) > 0) {
+         gr->SetPoint(i, pf->GetBinCenter(xx), pf->GetBinContent(xx));
+         sigma->SetPoint(i, pf->GetBinCenter(xx), pf->GetBinError(xx));
+         ++i;
+      }
+   }
+
+   return gr;
+}
+
 // //-------------------------------------------------
 // TGraphErrors* KVHistoManipulator::MakeGraphFrom(TH1* pf, Bool_t Error)
 // {

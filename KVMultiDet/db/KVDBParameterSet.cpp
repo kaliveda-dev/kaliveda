@@ -26,12 +26,6 @@ using std::endl;
 ClassImp(KVDBParameterSet);
 
 //___________________________________________________________________________
-//      Jeu de parametres pour la calibration
-//      Cette classe est juste un "wraper" pour un tableau de paramètre
-//
-//
-
-//___________________________________________________________________________
 KVDBParameterSet::KVDBParameterSet()
 {
    fParamNumber = 0;

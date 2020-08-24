@@ -26,6 +26,12 @@
 #define KV__SET_DBL(__param,__val) fParameters.SetValue(__param,__val);
 #define KV__SET_STR(__param,__val) fParameters.SetValue(__param,__val);
 
+/**
+  \class KVDBRun
+  \brief Description of an experimental run in database
+  \ingroup Calibration,DM
+ */
+
 class KVDBRun: public KVDBRecord {
 
    RQ_OBJECT("KVDBRun")

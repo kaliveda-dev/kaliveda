@@ -9,6 +9,12 @@
 
 class KVSimDir;
 
+/**
+\class KVSimFile
+\brief Handle file containing simulated and/or filtered simulated data
+\ingroup DM,Simulation
+*/
+
 class KVSimFile : public KVBase {
 protected:
    KVSimDir* fSimDir;//parent directory

@@ -24,6 +24,12 @@ $Id: KVDBTable.h,v 1.18 2007/05/31 09:59:22 franklan Exp $
 
 class KVDBRecord;
 
+/**
+  \class KVDBTable
+  \brief Table in a database
+  \ingroup Core
+ */
+
 class KVDBTable: public TFolder {
 
 private:

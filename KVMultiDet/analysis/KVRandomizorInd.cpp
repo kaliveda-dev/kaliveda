@@ -7,14 +7,6 @@ typedef Double_t (KVRandomizorInd::*FNMETHOD)(Double_t);
 
 ClassImp(KVRandomizorInd)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVRandomizorInd</h2>
-<h4>KVRandomizor</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 //-------------------------
 KVRandomizorInd::KVRandomizorInd(Int_t ndim) : KVRandomizor(ndim)

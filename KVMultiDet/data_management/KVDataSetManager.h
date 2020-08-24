@@ -15,6 +15,26 @@ $Author: franklan $
 #include "KVDataRepository.h"
 #include "KVDataAnalysisTask.h"
 
+/**
+  \class KVDataSetManager
+  \brief Manage all datasets contained in a given data repository
+  \ingroup DM
+
+KVDataSetManager handles a collection of  datasets contained in a data repository,
+which may be analysed with KaliVeda.
+The list of all known datasets is defined in $KVROOT/KVFiles/.kvrootrc.
+Some of these datasets may not be physically present in the repository. This is checked
+by method CheckAvailability(). This will search in the data repository for the subdirectories
+corresponding to each dataset, and afterwards KVDataSet::IsAvailable() will return kTRUE
+or kFALSE for each dataset depending on the result of the search.
+
+ACTIVE DATA REPOSITORY/DATASET MANAGER
+=====================================
+Each data repository has a data set manager. At any time, one repository is designated as
+being 'active' or 'current', and it's address is held in the global pointer gDataRepository.
+One can then access the corresponding dataset manager through gDataSetManager.
+*/
+
 class KVDataSetManager {
 
    friend class KVDataSet;

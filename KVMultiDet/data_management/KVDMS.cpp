@@ -15,15 +15,6 @@ using namespace std;
 
 ClassImp(KVDMS)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDMS</h2>
-<h4>Interface to Data Management Systems (SRB, IRODS, etc.)</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDMS::KVDMS(const Char_t* name, const Char_t* title)
    : KVBase(name, title)
 {

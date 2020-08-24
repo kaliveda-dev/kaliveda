@@ -18,26 +18,6 @@
 using namespace std;
 
 ClassImp(KVDBSystem);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//      KVDBSystem
-//
-//      Database class used to store information on different colliding systems studied during an experiment.
-//      A 'system' is a unique combination of projectile, target and beam energy.
-//
-//      Informations on Z & A of projectile and target and beam energy are here (GetZbeam(), GetZtarget(), etc.)
-//
-//      GetTarget() returns a pointer to a KVTarget object describing the physical characteristics of the
-//      target for this system : such an object can be used to calculate energy losses of incident charged
-//      particles etc.
-//      NOTE: if the current run being analysed corresponds to this system, the target of INDRA will have
-//      been set using this method. i.e. you can use gIndra->GetTarget() to obtain the KVTarget object of the current
-//      run.
-//
-//      GetKinematics() returns a pointer to a KV2Body object which can be used to obtain information on the kinematics
-//      of the colliding system. See the KV2Body class for more details.
-//      Some of the more commonly used kinematical quantities are also available directly here: GetPtot(), GetZVtot(),
-//      GetECM() etc.
-
 //___________________________________________________________________________
 KVDBSystem::KVDBSystem()
 {

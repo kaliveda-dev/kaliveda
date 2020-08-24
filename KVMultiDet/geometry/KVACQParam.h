@@ -6,7 +6,7 @@
 
 /**
  \class KVACQParam
- \ingroup Calibration
+ \ingroup DAQ
  \brief GANIL VXI/VME acquisition parameter
 */
 

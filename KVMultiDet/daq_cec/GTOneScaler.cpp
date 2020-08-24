@@ -20,17 +20,6 @@ using namespace std;
 
 ClassImp(GTOneScaler)
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Part of ROOTGanilTape
-//
-// GTOneScaler
-//
-// Scaler class for scaler events.
-//
-//////////////////////////////////////////////////////////////////////////
-
-//______________________________________________________________________________
 GTOneScaler::GTOneScaler(void)
 {
    // Default constructor. dont do anything

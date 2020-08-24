@@ -10,6 +10,18 @@
 #include "KVString.h"
 #include "KVList.h"
 
+/**
+\class KVRunListLine
+\brief Base class for reading runlists for experiments
+\ingroup DM,Core
+
+Base class for reading runlists for experiments, either 'real' runlists
+with all info (KVLineCSV) or the minimalist files used for old data and
+based on the DST runlists kept at CC-IN2P3 (KVLineDST).
+
+For backwards compatibility, this uses KVString whenever possible.
+ */
+
 class KVRunListLine {
 
 private:

@@ -6,6 +6,12 @@
 
 #include "TGraphErrors.h"
 
+/**
+\class KVGraph
+\brief Extension of TGraph class with new draw option
+\ingroup GUI
+*/
+
 class KVGraph : public TGraphErrors {
 protected:
    Double_t* fDisplayDivX;

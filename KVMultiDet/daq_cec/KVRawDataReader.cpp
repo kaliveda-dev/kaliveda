@@ -14,19 +14,6 @@ $Date: 2007/05/31 09:59:22 $
 
 ClassImp(KVRawDataReader)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVRawDataReader</h2>
-<h4>Pure abstract base class for reading raw data</h4>
-Classes derived from this one must implement the methods
-<li>
-<ui>GetNextEvent</ui>
-<ui>GetFiredDataParameters</ui>
-</li>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVRawDataReader::KVRawDataReader()
 {

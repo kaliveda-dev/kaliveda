@@ -7,14 +7,6 @@
 //    copyright            : (C) 2001 by Garp
 //    email                : patois@ganil.fr
 //////////////////////////////////////////////////////////////////////////
-//
-// Part of ROOTGanilTape
-//
-// GTScalers
-//
-// Scaler class for scaler events.
-//
-//////////////////////////////////////////////////////////////////////////
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -33,7 +25,11 @@
 #include <TClonesArray.h>
 class GTOneScaler;
 
-
+/**
+  \class GTScalers
+  \brief Handle scaler buffers in GANIL DAQ data
+  \ingroup DAQ
+ */
 class GTScalers : public TObject {
 public:
    GTScalers(void);

@@ -7,15 +7,6 @@
 
 ClassImp(KVProtobufDataReader)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVProtobufDataReader</h2>
-<h4>Read Google Protobuf DAQ files</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 #define KV_PROTOBUF_MSG_SIZE 4
 
 Bool_t KVProtobufDataReader::GetNextEvent()

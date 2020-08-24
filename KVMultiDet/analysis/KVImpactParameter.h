@@ -11,6 +11,41 @@
 #include "KVHistoManipulator.h"
 #include <vector>
 
+/**
+\class KVImpactParameter
+\brief Impact parameter analysis tools
+\ingroup Analysis
+
+Use a histogram containing the distribution of some observable strongly-correlated with
+the impact parameter in order to transform distributions of said observable into
+impact parameter distributions (using the method of C. Cavata <I>et al.</I>, <I>Phys. Rev.</I> <B>C42</B>, 1760 (1990)), and to calculate the evolution of other quantities as a function
+of the impact parameter.<br>
+To use, start with a pointer to a 1-D histogram of the observable, TH1* data:<br>
+<code>
+KVImpactParameter ip(data);
+ip.MakeScale(npoints, bmax);
+</code>
+The <a href="#KVImpactParameter:MakeScale">MakeScale</a> method calculates the relationship between the observable and the
+impact parameter, using
+END_HTML
+BEGIN_LATEX
+\hat{b}^{2} = \frac{\int^{\infty}_{x=X} Y(x) dx}{\int_{0}^{\infty} Y(x) dx}
+END_LATEX
+BEGIN_HTML
+To obtain the impact parameter distribution for some selection of events,
+you need the distribution of the observable for the selection, TH1* obs_sel,
+and then use:<br>
+<code>
+TH1* ip_dist_sel = ip.GetIPDistribution(obs_sel);
+</code>
+To obtain the impact-parameter evolution of some quantity, take a TH2* obscor, containing
+the bidimensional plot of the quantity as a function of the observable, and then use<br>
+<code>
+TGraph* ip_evol = ip.GetIPEvolution(obscor, "GetMean");
+</code>
+e.g. to have the mean value of the quantity as a function of impact parameter.
+*/
+
 class KVImpactParameter : public KVBase {
    TH1* fData; // histogram containing distribution of ip-related observable
    TString fEvol; // how the observable evolves with b

@@ -25,20 +25,7 @@ using namespace std;
 KVString KVAvailableRunsFile::date_read_from_filename = "";
 
 ClassImp(KVAvailableRunsFile)
-////////////////////////////////////////////////////////////////////////////////
-//Handles text files containing list of available runs for different datasets and types of data
-//
-//For each type of data associated with each dataset (type="raw", "recon", "ident" or "root")
-//we maintain runlist files which contain the run numbers of datafiles which are physically
-//present/available, along with the date/time of last modification of each file, and the filename.
-//
-//These files are kept in the dataset's KVFiles subdirectory, i.e. in $KVROOT/KVFiles/[name of dataset]
-//
-//The name of each file has the following format:
-//
-//      [repository].available_runs.[dataset subdir].[type of data]
-//
-////////////////////////////////////////////////////////////////////////////////
+
 KVAvailableRunsFile::KVAvailableRunsFile(const Char_t* type,
       const KVDataSet* parent): KVBase(type)
 {

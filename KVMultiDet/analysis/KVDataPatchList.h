@@ -8,6 +8,12 @@
 #include "KVUniqueNameList.h"
 #include <KVEvent.h>
 
+/**
+\class KVDataPatchList
+\brief List of corrections to be applied to reconstructed calibrated data
+\ingroup Analysis
+*/
+
 class KVDataPatchList : public KVBase {
    static KVUniqueNameList* fPatchList;//list of all defined patches
    void FillPatchList();

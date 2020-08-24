@@ -7,6 +7,11 @@
 #include "KVBase.h"
 #include <KVDatime.h>
 
+/**
+  \class KVBatchJob
+  \brief Handles jobs submitted to batch system
+  \ingroup Infrastructure
+ */
 class KVBatchJob : public KVBase {
 protected:
    KVDatime submitted;

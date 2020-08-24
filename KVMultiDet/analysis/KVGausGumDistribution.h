@@ -7,6 +7,12 @@
 #include "TF1.h"
 #include "KVGumbelDistribution.h"
 
+/**
+\class KVGausGumDistribution
+\brief Probability distribution function made of sum of normalised Gaussian and Gumbel distributions
+\ingroup Math
+*/
+
 class KVGausGumDistribution : public TF1 {
    Int_t fRank;//rank of Gumbel distribution
    Double_t fkFac;

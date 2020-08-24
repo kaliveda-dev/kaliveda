@@ -136,6 +136,7 @@ public:
    std::vector<Double_t> GetLimits(TMultiGraph* mgr);
    std::vector<Double_t> GetLimits(TSeqCollection* mgr);
    void ApplyCurrentLimitsToAllCanvas(Bool_t AlsoLog = kFALSE);
+   TGraph* ExtractMeanAndSigmaFromProfile(TProfile* pf, TGraph*& sigma);
 
    ClassDef(KVHistoManipulator, 1) //Propose differentes operations sur les histo
 };

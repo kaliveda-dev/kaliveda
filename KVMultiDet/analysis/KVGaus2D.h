@@ -7,6 +7,12 @@
 #include "KVAutoFit.h"
 #include "TF1.h"
 
+/**
+\class KVGaus2D
+\brief Handle semi-automatic fit to 2D Gaussian distributions
+\ingroup Math
+*/
+
 class KVGaus2D : public KVAutoFit {
 
 protected:

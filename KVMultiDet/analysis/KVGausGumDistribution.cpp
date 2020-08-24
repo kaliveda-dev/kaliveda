@@ -7,15 +7,6 @@
 
 ClassImp(KVGausGumDistribution)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGausGumDistribution</h2>
-<h4>Sum of normalised Gaussian and Gumbel distributions</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVGausGumDistribution::KVGausGumDistribution()
    : TF1(), fGaussComp(0), fGumbelComp(0)
 {

@@ -7,6 +7,12 @@
 #include "TF1.h"
 #include "KVGumbelDistribution.h"
 
+/**
+\class KVGumGumDistribution
+\brief Sum of normalised Gumbel first asymptote and Gumbel last asymptote
+\ingroup Math
+*/
+
 class KVGumGumDistribution : public TF1 {
 protected:
    Int_t fRank;//rank of Gumbel distribution

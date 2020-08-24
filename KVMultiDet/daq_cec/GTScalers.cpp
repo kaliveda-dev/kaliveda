@@ -33,17 +33,6 @@ using namespace std;
 
 ClassImp(GTScalers)
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Part of ROOTGanilTape
-//
-// GTScalers
-//
-// Scaler class for scaler events.
-//
-//////////////////////////////////////////////////////////////////////////
-
-//______________________________________________________________________________
 GTScalers::GTScalers(void)
    : fScalerArray("GTOneScaler", 256)
 {

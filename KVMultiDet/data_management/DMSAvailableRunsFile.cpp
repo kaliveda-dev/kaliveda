@@ -17,14 +17,6 @@ using namespace std;
 
 ClassImp(DMSAvailableRunsFile)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>DMSAvailableRunsFile</h2>
-<h4>Handles list of available runs using DMS</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 DMSAvailableRunsFile::DMSAvailableRunsFile()
 {

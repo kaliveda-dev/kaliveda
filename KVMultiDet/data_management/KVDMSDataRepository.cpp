@@ -9,15 +9,6 @@ using namespace std;
 
 ClassImp(KVDMSDataRepository)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDMSDataRepository</h2>
-<h4>Remote data repository using Data Management Systems</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDMSDataRepository::KVDMSDataRepository()
 {
    // Default constructor

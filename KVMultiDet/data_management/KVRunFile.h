@@ -9,6 +9,12 @@
 #include <KVDBRun.h>
 #include <KVDatime.h>
 
+/**
+\class KVRunFile
+\brief Description of an individual run file in an experimental dataset
+\ingroup DM
+*/
+
 class KVRunFile : public KVBase {
    KVDBRun* fRun;         // pointer to associated database run
    KVDatime fFileWritten; // modification date of file

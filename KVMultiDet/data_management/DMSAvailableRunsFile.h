@@ -6,6 +6,12 @@
 
 #include "KVAvailableRunsFile.h"
 
+/**
+\class DMSAvailableRunsFile
+\brief Handles lists of available runs using Data Management Systems
+\ingroup DM
+*/
+
 class DMSAvailableRunsFile : public KVAvailableRunsFile {
 
 public:

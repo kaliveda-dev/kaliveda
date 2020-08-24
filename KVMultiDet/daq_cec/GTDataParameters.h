@@ -30,7 +30,20 @@
 
 #include "TNamed.h"
 #include "TString.h"
-//______________________________________________________________________________
+
+/**
+  \class GTDataParameters
+  \class GTDataPar
+  \brief Classes handling VME/VXI parameters in GANIL DAQ data
+  \ingroup DAQ
+
+ Handle parameters data names and related offsets in the event buffer.
+ Data on GANIL Tapes are labelled with a string name.
+ They are also known from theyr relative position (offset or index)in
+ the data buffer.
+ This class handle conversion between those two representation.
+*/
+
 class GTDataPar : public TNamed {
 public:
    GTDataPar(const TString name, const int index, const int bits) :

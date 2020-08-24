@@ -8,6 +8,12 @@
 #include "TH2D.h"
 #include "TArray.h"
 
+/**
+\class KVClust3D
+\brief TH3 object which allow clusterization in cell density
+\ingroup Simulation
+*/
+
 class KVClust3D : public TH3D {
 
 protected:

@@ -24,6 +24,16 @@ $Id: KVDBKey.h,v 1.22 2009/03/11 14:19:50 franklan Exp $
 
 class KVDBRecord;
 
+/**
+  \class KVDBKey
+  \brief Cross-reference in a KVDataBase
+  \ingroup Core
+
+   A key holds a list of cross-references to KVDBRecord objects
+The name of the key is the name of the table, prefixed by "Key:"
+The title of the key is the name of the record
+   */
+
 class KVDBKey: public KVBase {
 
 protected:

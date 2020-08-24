@@ -12,6 +12,28 @@ $Date: 2008/01/24 10:09:38 $
 
 #include <KVCalibrator.h>
 
+/**
+\class KVPulseHeightDefect
+\brief Silicon PHD described by Moulton formula
+
+
+The static TF1 "fMoulton" calculates the PHD of a particle of incident energy
+E and charge Z calculated according to Moulton's formula:
+
+~~~~
+log_10(PHD) = b(Z) + a(Z)*log_10(Ed)  for Z > 2,<br>
+PHD = 0  for Z <= Zmin<br>
+ with  a(Z) = a_1*(Z**2/1000) + a_2<br>
+         b(Z) = b_1*(100/Z) + b_2<br>
+           Ed = energy lost by particle in detector (=E if particle stops)
+~~~~
+
+<p>The five parameters (a_1, a_2, b_1, b_2) can be set using method<br>
+SetParameters(a_1,a_2,b_1,b_2).
+It should be noted that all the PHD of all INDRA silicon detectors
+are calibrated with the fixed values of a_1=0.0223 and a_2=0.5682.
+</p>
+*/
 
 class KVPulseHeightDefect : public KVCalibrator {
    TF1* fMoulton;           //!Moulton formula for PHD =  f(E,Z)

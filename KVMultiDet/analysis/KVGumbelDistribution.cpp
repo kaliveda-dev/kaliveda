@@ -6,45 +6,7 @@
 
 ClassImp(KVGumbelDistribution)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGumbelDistribution</h2>
-<h4>Gumbel distributions for rank-ordered extremal variables</h4>
-Consider a probability distribution f(Z) which is used to generate
-m values of the random variable Z, which can then be ordered
-in terms of decreasing size
-<!-- */
-// --> END_HTML
-/*
-BEGIN_LATEX
-Z_{1}>Z_{2}> ... >Z_{m}
-END_LATEX
-*/
-// BEGIN_HTML <!--
-/* -->
-If such
-a procedure is repeated a sufficiently large number of times, it can
-be shown that the resulting probability distributions of the Z_k
-are given by the Gumbel distributions:
-<!-- */
-// --> END_HTML
-/*
-BEGIN_LATEX
-\phi_{k}(s_{k}) = \frac{k^{k}}{(k-1)!}\frac{1}{b_{m}}e^{-ks_{k}-ke^{-s_{k}}}
-END_LATEX
-*/
-// BEGIN_HTML <!--
-/* -->
-where
-<!-- */
-// --> END_HTML
-/*
-BEGIN_LATEX
-s_{k}  =  \frac{Z_{k}-a_{k}}{b_{k}}
-END_LATEX
-*/
-////////////////////////////////////////////////////////////////////////////////
+
 
 KVGumbelDistribution::KVGumbelDistribution()
    : TF1()

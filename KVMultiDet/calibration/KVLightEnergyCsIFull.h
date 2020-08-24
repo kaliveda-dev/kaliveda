@@ -7,6 +7,12 @@
 #include "KVLightEnergyCsI.h"
 #include "KVIonRangeTableMaterial.h"
 
+/**
+  \class KVLightEnergyCsIFull
+  \brief Exact calibration formula for CsI detectors
+  \ingroup Calibration
+ */
+
 class KVLightEnergyCsIFull : public KVLightEnergyCsI {
 
    Double_t gamma(double z, double a, double e);

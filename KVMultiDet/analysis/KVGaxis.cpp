@@ -29,15 +29,6 @@ const Int_t kHori = BIT(9);
 
 ClassImp(KVGaxis)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGaxis</h2>
-<h4>TAxis optimised for KVGraph visualisation</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVGaxis::KVGaxis() : TGaxis()
 {
    fNbins = 0;

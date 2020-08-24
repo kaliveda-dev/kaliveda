@@ -7,15 +7,6 @@
 
 ClassImp(KVClust3D)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVClust3D</h2>
-<h4>TH3 object which allow clusterization in cell density</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 //____________________________________________________________________________//
 
 void KVClust3D::init()
@@ -418,7 +409,7 @@ void KVClust3D::Clusterize()
       }
    }
 
-   //on passe les contenus en négatifs si ils appartiennent a aucun cluster
+   //on passe les contenus en nÃ©gatifs si ils appartiennent a aucun cluster
    //
    for (Int_t nx = 1; nx <= GetNbinsX(); nx += 1) {
       for (Int_t ny = 1; ny <= GetNbinsY(); ny += 1) {

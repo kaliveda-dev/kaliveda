@@ -14,57 +14,7 @@ $Date: 2007/11/21 11:34:41 $
 using namespace std;
 
 ClassImp(KVRemoteDataRepository)
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVRemoteDataRepository</h2>
-<h4>Class for accessing a collection of data files on a remote machine</h4>
-<p>
-Data repositories are defined in the user's $HOME/.kvrootrc; some typical examples are given
-in $KVROOT/KVFiles/.kvrootrc:
-</p>
-<pre>
-DataRepository: ccali
-ccali.DataRepository.Type: remote
-ccali.DataRepository.RootDir:       cchpssindra:/hpss/in2p3.fr/group/indra
-ccali.DataRepository.ReadProtocol:     root
-ccali.DataRepository.XRDServer:      ccxrdsn012:1999
-ccali.DataRepository.XRDRootDir:       /hpss/in2p3.fr/group/indra
-ccali.DataRepository.XRDTunnel.host:       ccali.in2p3.fr
-ccali.DataRepository.XRDTunnel.port:          10000
-ccali.DataRepository.XRDTunnel.user:
-ccali.DataRepository.RemoteAvailableRuns.protocol:  curl
-ccali.DataRepository.RemoteAvailableRuns.url:   http://indra.in2p3.fr/KaliVedaDoc
-ccali.DataRepository.FileTransfer.type:    bbftp
-ccali.DataRepository.FileTransfer.server:    ccbbftp.in2p3.fr
-ccali.DataRepository.FileTransfer.user:
-</pre>
-<p>
-This is the definition of a "remote" data repository.
-A remote data repository is principally characterised by the fact that access to the data files is
-via some non-local protocol: in this case it is xrootd ("...ReadProtocol: root"). The host name and port of
-the xrootd server are given ("...XRDServer: ccxrdsn012:1999"), as well as the root directory
-to be used ("...XRDRootDir:  /hpss/in2p3.fr/group/indra").
-</p>
-<p>
-In order to use a remote repository, some way to access the database of available
-data files for each run type must be defined. Here it is the curl programme which is used to read
-them via a website ("...RemoteAvailableRuns.protocol: curl"; "...RemoteAvailableRuns.url: http://indra.in2p3.fr/KaliVedaDoc").
-</p>
-<p>
-Another particularity of remote data repositories is that some additional stuff may be needed
-in order to be able to access the data.
-This is handled by <a href="KVRemoteDataRepository.html#KVRemoteDataRepository:IsConnected">KVRemoteDataRepository::IsConnected()</a>.
-In the present example, an SSH tunnel is set up in order to allow secure connection to the
-xrootd server ("...XRDTunnel.*:").
-</p>
-<p>
-Finally, transfer of data between data repositories is handled by <a href="KVDataTransfer.html">KVDataTransfer</a> and child classes.
-In the present example, this is configured to use bbftp ("...FileTransfer.type: bbftp"), for which the required details are given.
-</p>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
+
 KVRemoteDataRepository::KVRemoteDataRepository()
 {
    //Default constructor

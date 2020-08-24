@@ -9,15 +9,6 @@ ClassImp(KVSimFile)
 
 using namespace std;
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSimFile</h2>
-<h4>Handle file containing simulated and/or filtered simulated data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVSimFile::KVSimFile()
 {
    // Default constructor

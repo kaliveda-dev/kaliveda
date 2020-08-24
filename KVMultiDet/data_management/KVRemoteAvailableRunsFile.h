@@ -12,6 +12,12 @@ $Date: 2008/02/08 08:19:59 $
 
 #include <KVAvailableRunsFile.h>
 
+/**
+  \class KVRemoteAvailableRunsFile
+  \brief List of available runfiles in a remote data repository
+  \ingroup DM
+ */
+
 class KVRemoteAvailableRunsFile: public KVAvailableRunsFile {
 protected:
 

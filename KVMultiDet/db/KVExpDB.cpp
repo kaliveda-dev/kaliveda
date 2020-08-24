@@ -13,14 +13,6 @@ KVExpDB* gExpDB = nullptr;
 
 ClassImp(KVExpDB)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVExpDB</h2>
-<h4>base class to describe database of an experiment</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 void KVExpDB::init()
 {
    //default initialisations

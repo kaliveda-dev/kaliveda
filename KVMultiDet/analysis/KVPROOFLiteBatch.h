@@ -7,6 +7,12 @@
 #include "KVBatchSystem.h"
 #include "KVDataAnalyser.h"
 
+/**
+\class KVPROOFLiteBatch
+\brief Batch system interface to PROOFLite
+\ingroup Infrastructure
+*/
+
 class KVPROOFLiteBatch : public KVBatchSystem {
 public:
    KVPROOFLiteBatch(const Char_t* name);

@@ -22,6 +22,80 @@ class TFile;
 class KVDataSet;
 class KVDataSetManager;
 
+/**
+\class KVDataRepository
+\brief Base class for managing repositories of experimental data
+\ingroup DM
+
+<p>
+Data repositories are defined in the user's $HOME/.kvrootrc; some typical examples are given
+in $KVROOT/KVFiles/.kvrootrc:
+</p>
+<pre>
+DataRepository: home
+home.DataRepository.RootDir: $(HOME)/Data
+</pre>
+<p>
+This is the minimum requirement to define a data repository: give a name ("home") and the
+full path to the top level directory ("...RootDir: $(HOME)/Data"). In this case the top level
+directory must be directly accessible to the user's machine as a locally-mounted disk.
+Note that environment variables can be used, if enclosed between "$(...)".
+</p>
+<pre>
+DataRepository: ccali
+ccali.DataRepository.Type: remote
+ccali.DataRepository.RootDir:       cchpssindra:/hpss/in2p3.fr/group/indra
+ccali.DataRepository.ReadProtocol:     root
+ccali.DataRepository.XRDServer:      ccxroot:1999
+ccali.DataRepository.XRDRootDir:       /hpss/in2p3.fr/group/indra
+ccali.DataRepository.XRDTunnel.host:       ccali.in2p3.fr
+ccali.DataRepository.XRDTunnel.port:          10000
+ccali.DataRepository.XRDTunnel.user:
+ccali.DataRepository.RemoteAvailableRuns.protocol:  curl
+ccali.DataRepository.RemoteAvailableRuns.url:   http://indra.in2p3.fr/KaliVedaDoc
+ccali.DataRepository.FileTransfer.type:    bbftp
+ccali.DataRepository.FileTransfer.server:    ccbbftp.in2p3.fr
+ccali.DataRepository.FileTransfer.user:
+</pre>
+<p>
+This is the definition of a "remote" data repository. It will be handled by an object of the class
+<a href="KVRemoteDataRepository.html">KVRemoteDataRepository</a>.
+</p>
+<p>
+A remote data repository is principally characterised by the fact that access to the data files is
+via some non-local protocol: in this case it is xrootd ("...ReadProtocol: root"). The host name and port of
+the xrootd server are given ("...XRDServer: ccxroot:1999"), as well as the root directory
+to be used ("...XRDRootDir:  /hpss/in2p3.fr/group/indra").
+</p>
+<p>
+In order to use a remote repository, some way to access the database of available
+data files for each run type must be defined. Here it is the curl programme which is used to read
+them via a website ("...RemoteAvailableRuns.protocol: curl"; "...RemoteAvailableRuns.url: http://indra.in2p3.fr/KaliVedaDoc").
+</p>
+<p>
+Another particularity of remote data repositories is that some additional stuff may be needed
+in order to be able to access the data.
+This is handled by <a href="KVRemoteDataRepository.html#KVRemoteDataRepository:IsConnected">KVRemoteDataRepository::IsConnected()</a>.
+In the present example, an SSH tunnel is set up in order to allow secure connection to the
+xrootd server ("...XRDTunnel.*:").
+</p>
+<p>
+Finally, transfer of data between data repositories is handled by <a href="KVDataTransfer.html">KVDataTransfer</a> and child classes.
+In the present example, this is configured to use bbftp ("...FileTransfer.type: bbftp"), for which the required details are given.
+</p>
+<h4>Default data repository</h4>
+<p>If more than one repository is defined, which one will be "active" (gDataRepository)
+after initialisation of the data repository manager ? You can define the default repository
+by setting the variable
+</p>
+<pre>
+DataRepository.Default:   [name]
+</pre>
+<p>in your .kvrootrc file. If you don't, the default repository "by default" will be either:
+the data repository named "default" if there is one; or the last one defined in your .kvrootrc.
+</p>
+*/
+
 class KVDataRepository: public KVBase {
 
 protected:
