@@ -25,6 +25,7 @@ $Id: KVIDLine.cpp,v 1.22 2009/05/05 15:57:52 franklan Exp $
 #include "TPad.h"
 #include "TList.h"
 #include "TROOT.h"
+#include "TVirtualX.h"
 
 using namespace std;
 
@@ -185,7 +186,8 @@ KVIDLine* KVIDLine::MakeIDLine(TObject* obj, Double_t xdeb, Double_t xfin, Doubl
             line->SetPoint(pp++, xx, dynamic_cast<TF1*>(obj)->Eval(xx));
          }
          if (save) line->Fit(dynamic_cast<TF1*>(obj), "0+", "", xdeb_bis, xfin_bis);
-      } else if (obj->InheritsFrom("TGraph")) { // np has no effect in this case
+      }
+      else if (obj->InheritsFrom("TGraph")) {   // np has no effect in this case
          Int_t nx = dynamic_cast<TGraph*>(obj)->GetN(), np2 = 0;
          Double_t* xtab = dynamic_cast<TGraph*>(obj)->GetX();
          Double_t* ytab = dynamic_cast<TGraph*>(obj)->GetY();
@@ -194,7 +196,8 @@ KVIDLine* KVIDLine::MakeIDLine(TObject* obj, Double_t xdeb, Double_t xfin, Doubl
          if (xdeb_bis < xtab[0]) line->SetPoint(np2++, xdeb_bis, ytab[0]);
          for (Int_t pp = 0; pp < nx; pp += 1) if (xdeb_bis <= xtab[pp] && xtab[pp] <= xfin_bis) line->SetPoint(np2++, xtab[pp], ytab[pp]);
          if (xfin_bis > xtab[nx - 1]) line->SetPoint(np2, xfin_bis, ytab[nx - 1]);
-      } else if (obj->InheritsFrom("TProfile")) {
+      }
+      else if (obj->InheritsFrom("TProfile")) {
          TProfile* pf = dynamic_cast<TProfile*>(obj);
          Int_t nx = pf->GetNbinsX(), np2 = 0;
          Int_t pp = 1;
@@ -212,10 +215,12 @@ KVIDLine* KVIDLine::MakeIDLine(TObject* obj, Double_t xdeb, Double_t xfin, Doubl
          }
          if (xfin_bis > pf->GetBinCenter(xmax)) line->SetPoint(np2, xfin_bis, pf->GetBinContent(xmax));
          if (save) line->GetListOfFunctions()->Add(pf);
-      } else cout << "le type ne correspond pas " << endl;
+      }
+      else cout << "le type ne correspond pas " << endl;
       line->SetName(Form("from_%s", obj->GetName()));
       return line;
-   } else return NULL;
+   }
+   else return NULL;
 }
 
 //_____________________________________________________________________________________________
@@ -348,12 +353,14 @@ void KVIDLine::ExecuteEvent(Int_t event, Int_t px, Int_t py)
             py1old = 0;
             px2old = gPad->XtoAbsPixel(fX[1]);
             py2old = gPad->YtoAbsPixel(fY[1]);
-         } else if (ipoint == fNpoints - 1) {
+         }
+         else if (ipoint == fNpoints - 1) {
             px1old = gPad->XtoAbsPixel(gPad->XtoPad(fX[fNpoints - 2]));
             py1old = gPad->YtoAbsPixel(gPad->YtoPad(fY[fNpoints - 2]));
             px2old = 0;
             py2old = 0;
-         } else {
+         }
+         else {
             px1old = gPad->XtoAbsPixel(gPad->XtoPad(fX[ipoint - 1]));
             py1old = gPad->YtoAbsPixel(gPad->YtoPad(fY[ipoint - 1]));
             px2old = gPad->XtoAbsPixel(gPad->XtoPad(fX[ipoint + 1]));
@@ -421,7 +428,8 @@ void KVIDLine::ExecuteEvent(Int_t event, Int_t px, Int_t py)
             gVirtualX->DrawLine(pxp + 4, pyp - 4, pxp + 4,  pyp + 4);
             gVirtualX->DrawLine(pxp + 4, pyp + 4, pxp - 4,  pyp + 4);
             gVirtualX->DrawLine(pxp - 4, pyp + 4, pxp - 4,  pyp - 4);
-         } else {
+         }
+         else {
             if (px1old) gVirtualX->DrawLine(px1old, py1old, pxold,  pyold);
             if (px2old) gVirtualX->DrawLine(pxold,  pyold,  px2old, py2old);
             gVirtualX->DrawLine(pxold - 4, pyold - 4, pxold + 4,  pyold - 4);
@@ -479,7 +487,8 @@ void KVIDLine::ExecuteEvent(Int_t event, Int_t px, Int_t py)
                if (x) fX[i] = gPad->PadtoX(gPad->AbsPixeltoX(x[i] + dpx));
                if (y) fY[i] = gPad->PadtoY(gPad->AbsPixeltoY(y[i] + dpy));
             }
-         } else {
+         }
+         else {
             fX[ipoint] = gPad->PadtoX(gPad->AbsPixeltoX(pxold));
             fY[ipoint] = gPad->PadtoY(gPad->AbsPixeltoY(pyold));
 //          if (InheritsFrom("TCutG")) {
@@ -516,10 +525,12 @@ void KVIDLine::Streamer(TBuffer& R__b)
       Version_t R__v = R__b.ReadVersion(&R__s, &R__c);
       if (R__v < 2) {
          TGraph::Streamer(R__b);
-      } else {
+      }
+      else {
          R__b.ReadClassBuffer(KVIDLine::Class(), this, R__v, R__s, R__c);
       }
-   } else {
+   }
+   else {
       R__b.WriteClassBuffer(KVIDLine::Class(), this);
    }
 }

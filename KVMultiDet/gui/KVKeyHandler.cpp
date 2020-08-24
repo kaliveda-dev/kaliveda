@@ -5,6 +5,7 @@
 #include "TROOT.h"
 #include "TRootCanvas.h"
 #include "TGWindow.h"
+#include "TVirtualX.h"
 #include <KeySymbols.h>
 
 #include <Riostream.h>

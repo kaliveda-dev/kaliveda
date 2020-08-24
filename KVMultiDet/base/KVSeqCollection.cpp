@@ -6,6 +6,7 @@
 #include "TROOT.h"
 #include "KVBase.h"
 #include "TMethodCall.h"
+#include "TObjString.h"
 #include "Riostream.h"
 #include "TKey.h"
 

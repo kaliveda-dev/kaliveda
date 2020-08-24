@@ -9,6 +9,7 @@ $Date: 2009/04/28 09:11:29 $
 
 #include "KVListView.h"
 #include "TGButton.h"
+#include "TVirtualX.h"
 
 ClassImp(KVListView)
 

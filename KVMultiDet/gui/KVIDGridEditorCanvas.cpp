@@ -9,6 +9,7 @@
 #include "TContextMenu.h"
 #include "TRootCanvas.h"
 #include "TGWindow.h"
+#include "TVirtualX.h"
 #include <KeySymbols.h>
 
 ClassImp(KVIDGridEditorCanvas)
@@ -270,7 +271,8 @@ void KVIDGridEditorCanvas::HandleInput(EEventType event, Int_t px, Int_t py)
             if (newXfirst < 1) {
                newXfirst = 1;
                newXlast = NdisXbins;
-            } else {
+            }
+            else {
                newXlast = Xlast0 - dXbins;
                if (newXlast > NXbins) {
                   newXlast = NXbins;
@@ -288,7 +290,8 @@ void KVIDGridEditorCanvas::HandleInput(EEventType event, Int_t px, Int_t py)
             if (newYfirst < 1) {
                newYfirst = 1;
                newYlast = NdisYbins;
-            } else {
+            }
+            else {
                newYlast = Ylast0 - dYbins;
                if (newYlast > NYbins) {
                   newYlast = NYbins;

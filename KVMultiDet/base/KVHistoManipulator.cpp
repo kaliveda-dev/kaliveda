@@ -24,6 +24,7 @@ $Date: 2009/04/07 14:54:15 $
 #include "TROOT.h"
 #include "TMethodCall.h"
 #include "TMath.h"
+#include "TObjString.h"
 
 #include "KVNumberList.h"
 #include "KVList.h"
@@ -100,7 +101,8 @@ Int_t KVHistoManipulator::CutStatBin(TH1* hh, Int_t stat_min, Int_t stat_max)
             }
          }
       }
-   } else if (hh->InheritsFrom("TProfile")) {
+   }
+   else if (hh->InheritsFrom("TProfile")) {
       TProfile* prof = (TProfile*)hh;
       for (Int_t nx = 1; nx <= prof->GetNbinsX(); nx += 1) {
          raz = kFALSE;
@@ -113,7 +115,8 @@ Int_t KVHistoManipulator::CutStatBin(TH1* hh, Int_t stat_min, Int_t stat_max)
             nb_raz += 1;
          }
       }
-   } else if (hh->InheritsFrom("TH1")) {
+   }
+   else if (hh->InheritsFrom("TH1")) {
       for (Int_t nx = 1; nx <= hh->GetNbinsX(); nx += 1) {
          raz = kFALSE;
          if (stat_min != -1 && hh->GetBinContent(nx) < stat_min) raz = kTRUE;
@@ -211,7 +214,8 @@ TH1* KVHistoManipulator::ScaleHisto(TH1* hh, TF1* fx, TF1* fy, Int_t nx, Int_t n
       }
       fx->SetRange(hh->GetXaxis()->GetBinLowEdge(1), hh->GetXaxis()->GetBinUpEdge(nx));
       fx->SetNpx(nx + 1);
-   } else {
+   }
+   else {
       nx = hh->GetNbinsX();
       xmin = hh->GetXaxis()->GetBinLowEdge(1);
       xmax = hh->GetXaxis()->GetBinUpEdge(hh->GetNbinsX());
@@ -228,7 +232,8 @@ TH1* KVHistoManipulator::ScaleHisto(TH1* hh, TF1* fx, TF1* fy, Int_t nx, Int_t n
          }
          fy->SetRange(hh->GetYaxis()->GetBinLowEdge(1), hh->GetYaxis()->GetBinUpEdge(ny));
          fy->SetNpx(ny + 1);
-      } else {
+      }
+      else {
          ny = hh->GetNbinsY();
          ymin = hh->GetYaxis()->GetBinLowEdge(1);
          ymax = hh->GetYaxis()->GetBinUpEdge(hh->GetNbinsY());
@@ -281,7 +286,8 @@ TH1* KVHistoManipulator::ScaleHisto(TH1* hh, TF1* fx, TF1* fy, Int_t nx, Int_t n
                //gg->SetBinError(gg->GetXaxis()->FindBin(resx),gg->GetYaxis()->FindBin(resy),hh->GetBinError(xx,yy));
             }
          }
-      } else {
+      }
+      else {
          // 1-D histogram
          if (fixed_bins) {
             // histogram binning imposed by user. we need to randomise inside bins of original histogram
@@ -293,7 +299,8 @@ TH1* KVHistoManipulator::ScaleHisto(TH1* hh, TF1* fx, TF1* fy, Int_t nx, Int_t n
                gg->Fill(resx, Xbin_width_corr);
                //cout << resx << "  " << Xbin_width_corr << endl;
             }
-         } else {
+         }
+         else {
             // range and binning calculated from function.
             Double_t resy = hh->GetBinContent(xx);
             if (fy) resy = fy->Eval(resy);
@@ -483,7 +490,8 @@ TH2* KVHistoManipulator::RenormaliseHisto(TH2* hh, Int_t bmin, Int_t bmax, TStri
             }
          }
       }
-   } else if (axis == "Y") {
+   }
+   else if (axis == "Y") {
       if (bmax == -1) {
          bmax = hh->GetNbinsY();
       }
@@ -498,7 +506,8 @@ TH2* KVHistoManipulator::RenormaliseHisto(TH2* hh, Int_t bmin, Int_t bmax, TStri
             }
          }
       }
-   } else {
+   }
+   else {
       cout << "l option TString axis doit etre X ou Y" << endl;
    }
    return clone;
@@ -573,7 +582,8 @@ TH1*  KVHistoManipulator::CumulatedHisto(TH1* hh, TString direction, Int_t bmin,
             else if (nx > bmax) clone->SetBinContent(nx, 1.0);
             else if (nx < bmin) clone->SetBinContent(nx, 0.0);
          }
-      } else {
+      }
+      else {
          /* "reverse" cumulative histogram, from bin 'bmax' to bin 'bmin' */
          Double_t offset = integral[bmax], rescale = 1.0;
          if (integral[bmin - 1] < offset) rescale = 1. / (offset - integral[bmin - 1]);
@@ -587,12 +597,14 @@ TH1*  KVHistoManipulator::CumulatedHisto(TH1* hh, TString direction, Int_t bmin,
       if (!strcmp(norm, "surf")) {
          Double_t sw = clone->GetSumOfWeights();
          if (sw > 0) clone->Scale(1. / sw);
-      } else if (!strcmp(norm, "max")) {
+      }
+      else if (!strcmp(norm, "max")) {
          Double_t max = clone->GetMaximum();
          if (max > 0) clone->Scale(1. / max);
       }
       return clone;
-   } else {
+   }
+   else {
       cout << "cette methode n est pas prevue pour les TH2, TH3" << endl;
       return NULL;
    }
@@ -644,7 +656,8 @@ TH1*  KVHistoManipulator::GetDerivative(TH1* hh, Int_t order)
                      + 12 * hh->GetBinContent(nx + 1)
                      - 3 * hh->GetBinContent(nx + 2)
                   );
-         } else if (order == 1) {
+         }
+         else if (order == 1) {
             Double_t h = hh->GetBinWidth(1);
             dev = 1 / 12. / h * (
                      1 * hh->GetBinContent(nx - 2)
@@ -653,7 +666,8 @@ TH1*  KVHistoManipulator::GetDerivative(TH1* hh, Int_t order)
                      + 8 * hh->GetBinContent(nx + 1)
                      - 1 * hh->GetBinContent(nx + 2)
                   );
-         } else {
+         }
+         else {
             Double_t h2 = pow(hh->GetBinWidth(1), 2.);
             dev = 1 / 7. / h2 * (
                      2 * hh->GetBinContent(nx - 2)
@@ -666,7 +680,8 @@ TH1*  KVHistoManipulator::GetDerivative(TH1* hh, Int_t order)
          clone->SetBinContent(nx, dev);
       }
       return clone;
-   } else {
+   }
+   else {
       cout << "cette methode n est pas prevue pour les TH2, TH3" << endl;
       return NULL;
    }
@@ -706,7 +721,8 @@ TGraphErrors*  KVHistoManipulator::GetMomentEvolution(TH2* hh, TString momentx, 
       delete cmx;
       cmx = 0;
       return NULL;
-   } else if (!Ecmx->IsValid()) {
+   }
+   else if (!Ecmx->IsValid()) {
       delete Ecmx;
       Ecmx = 0;
    }
@@ -721,7 +737,8 @@ TGraphErrors*  KVHistoManipulator::GetMomentEvolution(TH2* hh, TString momentx, 
          cout << "GetMomentEvolution(TH2*,TString ,TString ,TString) TString momenty n'est pas une methode valide " << momenty.Data() << endl;
          delete cmy;
          return NULL;
-      } else if (!Ecmy->IsValid()) {
+      }
+      else if (!Ecmy->IsValid()) {
          delete Ecmy;
          Ecmy = 0;
       }
@@ -763,11 +780,13 @@ TGraphErrors*  KVHistoManipulator::GetMomentEvolution(TH2* hh, TString momentx, 
             gr->SetPoint(npts, valx, valy);
             if (Evalx != 0 && Evaly != 0) gr->SetPointError(npts, Evalx, Evaly);
             npts += 1;
-         } else {
+         }
+         else {
             if (axis == "Y") {
                valy = hh->GetXaxis()->GetBinCenter(bin);
                Evaly = hh->GetXaxis()->GetBinWidth(bin) / 2.;
-            } else           {
+            }
+            else           {
                valy = hh->GetYaxis()->GetBinCenter(bin);
                Evaly = hh->GetYaxis()->GetBinWidth(bin) / 2.;
             }
@@ -782,7 +801,8 @@ TGraphErrors*  KVHistoManipulator::GetMomentEvolution(TH2* hh, TString momentx, 
       if (Ecmx) delete Ecmx;
       if (Ecmy) delete Ecmy;
       return gr;
-   } else {
+   }
+   else {
       cout << "GetMomentEvolution(TH2*,TString ,TString ,TString) Aucun point dans le TGraph" << endl;
       if (cmx) delete cmx;
       if (cmy) delete cmy;
@@ -820,7 +840,8 @@ TGraph* KVHistoManipulator::LinkGraphs(TGraph* grx, TGraph* gry)
       if (grx->InheritsFrom("TGraphErrors")) ex = grx->GetEX();
       if (gry->InheritsFrom("TGraphErrors")) ey = gry->GetEY();
       corre = new TGraphErrors(npoints, xx, yy, ex, ey);
-   } else corre = new TGraph(npoints, xx, yy);
+   }
+   else corre = new TGraph(npoints, xx, yy);
 
    TString name;
    name.Form("corre_%s_VS_%s", gry->GetName(), grx->GetName());
@@ -898,7 +919,8 @@ KVList* KVHistoManipulator::Give_ProjectionList(TH2* hh, Double_t MinIntegral, T
             }
 
          }
-      } else if (axis == "Y") {
+      }
+      else if (axis == "Y") {
          for (Int_t ny = 1; ny <= hh->GetNbinsY(); ny += 1) {
             Double_t integ = 0;
             for (Int_t nx = 1; nx <= hh->GetNbinsX(); nx += 1)
@@ -911,12 +933,14 @@ KVList* KVHistoManipulator::Give_ProjectionList(TH2* hh, Double_t MinIntegral, T
                list->Add(h1d);
             }
          }
-      } else {
+      }
+      else {
          cout << "l option TString axis doit etre X ou Y" << endl;
       }
 
       return list;
-   } else {
+   }
+   else {
       cout << "cette methode n est prevue que pour les TH2 and sons" << endl;
       return NULL;
    }
@@ -1274,7 +1298,8 @@ Double_t KVHistoManipulator::GetX(TH1* ob, Double_t val, Double_t eps, Int_t nma
    if (xmin == xmax) {
       Xmax = ob->GetXaxis()->GetXmax();
       Xmin = ob->GetXaxis()->GetXmin();
-   } else {
+   }
+   else {
       Xmax = xmax;
       Xmin = xmin;
    }
@@ -1296,12 +1321,14 @@ Double_t KVHistoManipulator::GetX(TH1* ob, Double_t val, Double_t eps, Int_t nma
          ft = fr;
          if (side == -1) fs /= 2;
          side = -1;
-      } else if (fs * fr > 0) {
+      }
+      else if (fs * fr > 0) {
          s = r;
          fs = fr;
          if (side == +1) ft /= 2;
          side = +1;
-      } else break;
+      }
+      else break;
    }
    delete spline;
    return r;
@@ -1508,7 +1535,8 @@ void KVHistoManipulator::RescaleX(TH1* hist1, TH1* hist2, TF1* scale_func, Int_t
    if (xmin > -1 && xmax > -1) {
       cum1 = CumulatedHisto(hist1, xmin, xmax, direction, "max");
       cum2 = CumulatedHisto(hist2, xmin, xmax, direction, "max");
-   } else {
+   }
+   else {
       cum1 = CumulatedHisto(hist1, direction, -1, -1, "max");
       cum2 = CumulatedHisto(hist2, direction, -1, -1, "max");
    }
@@ -1634,7 +1662,8 @@ Double_t KVHistoManipulator::GetChisquare(TH1* h1, TF1* f1, Bool_t norm, Bool_t 
                      Double_t fval = f1->EvalPar(xx, para);
                      chi2 += TMath::Power((hval - fval) / herr, 2.);
                   }
-               } else {
+               }
+               else {
                   nbre += 1;
                   xx[0] = h1->GetXaxis()->GetBinCenter(nx);
                   xx[1] = h1->GetYaxis()->GetBinCenter(ny);
@@ -1643,7 +1672,8 @@ Double_t KVHistoManipulator::GetChisquare(TH1* h1, TF1* f1, Bool_t norm, Bool_t 
                }
             }
          }
-   } else {
+   }
+   else {
       Double_t xx[1];
       for (Int_t nx = 1; nx < h1->GetNbinsX(); nx += 1) {
          Double_t hval = h1->GetBinContent(nx);
@@ -1656,7 +1686,8 @@ Double_t KVHistoManipulator::GetChisquare(TH1* h1, TF1* f1, Bool_t norm, Bool_t 
                   Double_t fval = f1->EvalPar(xx, para);
                   chi2 += TMath::Power((hval - fval) / herr, 2.);
                }
-            } else {
+            }
+            else {
                nbre += 1;
                xx[0] = h1->GetXaxis()->GetBinCenter(nx);
                Double_t fval = f1->EvalPar(xx, para);
@@ -1699,7 +1730,8 @@ Double_t KVHistoManipulator::GetLikelihood(TH1* h1, TF1* f1, Bool_t norm, Double
                chi2 += fval - 1 * hval * logfval;
             }
          }
-   } else {
+   }
+   else {
       Double_t xx[1];
       for (Int_t nx = 1; nx < h1->GetNbinsX(); nx += 1) {
          Double_t hval = h1->GetBinContent(nx);
@@ -1800,7 +1832,8 @@ Double_t* KVHistoManipulator::GetLimits(TGraph* G1)
       if (ii == 0) {
          limits[0] = limits[2] = xx;
          limits[1] = limits[3] = yy;
-      } else {
+      }
+      else {
          if (xx < limits[0]) limits[0] = xx;
          if (yy < limits[1]) limits[1] = yy;
          if (xx > limits[2]) limits[2] = xx;
@@ -1831,7 +1864,8 @@ Double_t* KVHistoManipulator::GetLimits(TMultiGraph* mgr)
       gr = (TGraph*)lg->At(ii);
       if (ii == 0) {
          limits = GetLimits(gr);
-      } else {
+      }
+      else {
          temp = GetLimits(gr);
          if (temp[0] < limits[0]) limits[0] = temp[0];
          if (temp[1] < limits[1]) limits[1] = temp[1];
@@ -1865,7 +1899,8 @@ Double_t* KVHistoManipulator::GetLimits(TProfile* G1)
             first = kFALSE;
             limits[0] = limits[2] = xx;
             limits[1] = limits[3] = yy;
-         } else {
+         }
+         else {
             if (xx < limits[0]) limits[0] = xx;
             if (yy < limits[1]) limits[1] = yy;
             if (xx > limits[2]) limits[2] = xx;
@@ -1896,7 +1931,8 @@ Double_t* KVHistoManipulator::GetLimits(TSeqCollection* mgr)
       gr = (TProfile*)mgr->At(ii);
       if (ii == 0) {
          limits = GetLimits(gr);
-      } else {
+      }
+      else {
          temp = GetLimits(gr);
          if (temp[0] < limits[0]) limits[0] = temp[0];
          if (temp[1] < limits[1]) limits[1] = temp[1];
@@ -1935,7 +1971,8 @@ void KVHistoManipulator::ApplyCurrentLimitsToAllCanvas(Bool_t AlsoLog)
       if (h1->GetDimension() == 1) { //TH1 ou TProfile
          y1 = h1->GetMinimum();
          y2 = h1->GetMaximum();
-      } else {
+      }
+      else {
          y1 = h1->GetYaxis()->GetFirst();
          y2 = h1->GetYaxis()->GetLast();
       }
@@ -1943,7 +1980,8 @@ void KVHistoManipulator::ApplyCurrentLimitsToAllCanvas(Bool_t AlsoLog)
       if (h1->GetDimension() == 2) { //TH2 ou TProfile2D
          z1 = h1->GetMinimum();
          z2 = h1->GetMaximum();
-      } else {
+      }
+      else {
          z1 = h1->GetZaxis()->GetFirst();
          z2 = h1->GetZaxis()->GetLast();
       }
@@ -1971,13 +2009,15 @@ void KVHistoManipulator::ApplyCurrentLimitsToAllCanvas(Bool_t AlsoLog)
                   if (h1->GetDimension() == 1) {
                      h1->SetMinimum(y1);
                      h1->SetMaximum(y2);
-                  } else {
+                  }
+                  else {
                      h1->GetYaxis()->SetRange(y1, y2);
                   }
                   if (h1->GetDimension() == 2) {
                      h1->SetMinimum(z1);
                      h1->SetMaximum(z2);
-                  } else {
+                  }
+                  else {
                      h1->GetZaxis()->SetRange(y1, y2);
                   }
                }
