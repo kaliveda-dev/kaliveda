@@ -552,12 +552,19 @@ namespace KVImpactParameters {
          B_dist_for_arb_X_select.SetParameters(Xmin, Xmax);
          B_dist_for_arb_X_select.SetRange(0, 2 * GetIPDist().GetB0());
          B_dist_for_arb_X_select.GetHistogram();
-         TF1* f =  B_dist_for_arb_X_select.DrawCopy(opt);
-         f->SetNpx(500);
+         //TF1* f =  B_dist_for_arb_X_select.DrawCopy(opt);
+         //f->SetNpx(500);
+         TGraph* f = new TGraph;
+         for (int i = 0; i < 500; ++i) {
+            double b = 2 * i * GetIPDist().GetB0() / 499.;
+            f->SetPoint(i, b, B_dist_for_arb_X_select.Eval(b));
+         }
          f->SetLineColor(color);
          f->SetMarkerColor(color);
          f->SetLineWidth(2);
          f->SetTitle(title);
+         if (TString(opt) == "same") f->Draw("c");
+         else f->Draw("ac");
       }
 
       void GetMeanAndSigmaBDistForSelection(TH1* sel, TH1* incl, double& mean, double& sigma)
@@ -601,7 +608,8 @@ namespace KVImpactParameters {
 
          B_dist_for_arb_X_select.SetParameters(Xmin, Xmax);
          mean = B_dist_for_arb_X_select.Mean(0, 20);
-         sigma = TMath::Sqrt(B_dist_for_arb_X_select.Variance(0, 20));
+         double var = B_dist_for_arb_X_select.Variance(0, 20);
+         sigma = TMath::Sqrt(var);
       }
 
       void GetMeanAndSigmaBDistForXSelection(double X1, double X2, double& mean, double& sigma)
