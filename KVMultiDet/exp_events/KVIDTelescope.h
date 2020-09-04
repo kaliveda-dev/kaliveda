@@ -196,6 +196,9 @@ public:
    virtual Bool_t SetIdentificationParameters(const KVMultiDetArray*);
    virtual void RemoveIdentificationParameters();
 
+   void LoadIdentificationParameters(const Char_t* filename, const KVMultiDetArray* multidet);
+   void ReadIdentificationParameterFiles(const Char_t* filename, const KVMultiDetArray* multidet);
+
    // Returns kTRUE if telescope has been correctly initialised for identification.
    // Test after Initialize() method has been called.
    virtual Bool_t IsReadyForID()

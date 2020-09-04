@@ -697,32 +697,80 @@ Bool_t KVIDTelescope::SetIdentificationParameters(const KVMultiDetArray* multide
    // to the URI used to find the plugin class in $KVROOT/KVFiles/.kvrootrc.
    // By default, this method looks for the file with name given by the environment variable
    //
+   // [dataset name].IdentificationParameterList.[telescope label]:       [filename]
+   //
+   // which is assumed to contain the list of files containing the identification grids.
+   //
+   // If not such envionment variable is found, the method looks for another one:
+   //
    // [dataset name].IdentificationParameterFile.[telescope label]:       [filename]
    //
-   // which is assumed to contain identification grids. The file will be read in by gIDGridManager
-   // and the grids added to its list.
+   // which is assumed to contain identification grids.
 
-   TString filename = gDataSet->GetDataSetEnv(Form("IdentificationParameterFile.%s", GetLabel()));
-   if (filename == "") {
-      Warning("SetIdentificationParameters",
-              "No filename defined. Should be given by %s.IdentificationParameterFile.%s",
-              gDataSet->GetName(), GetLabel());
-      return kFALSE;
+   TString filename = gDataSet->GetDataSetEnv(Form("IdentificationParameterList.%s", GetLabel()));
+
+   if (filename != "") {
+      ReadIdentificationParameterFiles(filename.Data(), multidet);
+      return kTRUE;
    }
-   TString path;
-   if ((path = gDataSet->GetFullPathToDataSetFile(filename)) == "") {
-//   if (!SearchKVFile(filename.Data(), path, gDataSet->GetName())) {
-      Error("SetIdentificationParameters",
-            "File %s not found. Should be in %s",
-            filename.Data(), gDataSet->GetDataSetDir());
-      return kFALSE;
+   else {
+      filename = gDataSet->GetDataSetEnv(Form("IdentificationParameterFile.%s", GetLabel()));
+
+      if (filename == "") {
+         Warning("SetIdentificationParameters",
+                 "No filename defined. Should be given by %s.IdentificationParameterFile.%s or %s.IdentificationParameterFile.%s",
+                 gDataSet->GetName(), GetLabel(), gDataSet->GetName(), GetLabel());
+         return kFALSE;
+      }
+
+      LoadIdentificationParameters(filename, multidet);
    }
-   //read grids from file
-   Info("SetIdentificationParameters", "Using file %s", path.Data());
-   multidet->ReadGridsFromAsciiFile(path);
-   return kTRUE;
 }
 
+//____________________________________________________________________________________
+
+void KVIDTelescope::ReadIdentificationParameterFiles(const Char_t* filename, const KVMultiDetArray* multidet)
+{
+   // In the case where the identification grids are stored in several files, this method parse
+   // the file found with the following environment variable:
+   //
+   // [dataset name].IdentificationParameterList.[telescope label]:       [filename]
+   //
+   // which contains the list of files containing the identification grids.
+
+   KVFileReader fr;
+   fr.OpenFileToRead(gDataSet->GetFullPathToDataSetFile(filename));
+
+   while (fr.IsOK()) {
+      fr.ReadLine(0);
+
+      if (fr.GetCurrentLine() != "") LoadIdentificationParameters(fr.GetCurrentLine().Data(), multidet);
+   }
+
+   fr.CloseFile();
+}
+
+//____________________________________________________________________________________
+
+void KVIDTelescope::LoadIdentificationParameters(const Char_t* filename, const KVMultiDetArray* multidet)
+{
+   // This method add to the gIDGridManager list the identification grids.
+
+   TString path;
+
+   if ((path = gDataSet->GetFullPathToDataSetFile(filename)) == "") {
+      Error("LoadIdentificationParameters",
+            "File %s not found. Should be in %s",
+            filename, gDataSet->GetDataSetDir());
+      return;
+   }
+   //
+   //Read grids from file
+   Info("LoadIdentificationParameters", "Using file %s", path.Data());
+   multidet->ReadGridsFromAsciiFile(path);
+}
+
+//____________________________________________________________________________________
 
 void KVIDTelescope::RemoveIdentificationParameters()
 {
@@ -992,10 +1040,10 @@ KVIDGrid* KVIDTelescope::CalculateDeltaE_EGrid(const KVNumberList& Zrange, Int_t
       Int_t zz = Zrange.Next();
       part.SetZ(zz, massformula);
       Int_t aref = part.GetA();
-//        printf("%d\n",zz);
+      //        printf("%d\n",zz);
       for (Int_t aa = aref - deltaA; aa <= aref + deltaA; aa += 1) {
          part.SetA(aa);
-//            printf("+ %d %d %d\n",aa,aref,part.IsKnown());
+         //            printf("+ %d %d %d\n",aa,aref,part.IsKnown());
          if (part.IsKnown() && (part.GetLifeTime() > lifetime)) {
 
             //loop over energy
@@ -1063,7 +1111,7 @@ KVIDGrid* KVIDTelescope::CalculateDeltaE_EGrid(const KVNumberList& Zrange, Int_t
             }
             E2 *= xfactor;
             if ((!strcmp(det_eres->GetType(), "CSI")) && (E2 > 5000)) E2 = 5000;
-//                printf("z=%d a=%d E1=%lf E2=%lf\n",zz,aa,E1,E2);
+            //                printf("z=%d a=%d E1=%lf E2=%lf\n",zz,aa,E1,E2);
             KVIDZALine* line = (KVIDZALine*)idgrid->Add("ID", "KVIDZALine");
             if (TMath::Even(zz)) line->SetLineColor(4);
             line->SetZ(zz);
@@ -1187,12 +1235,12 @@ KVIDGrid* KVIDTelescope::CalculateDeltaE_EGrid(TH2* haa_zz, Bool_t Zonly, Int_t 
             }
          }
          part.SetZ(zz);
-//            printf("zz=%d\n",zz);
+         //            printf("zz=%d\n",zz);
          nlA.Begin();
          while (!nlA.End()) {
             Int_t aa = nlA.Next();
             part.SetA(aa);
-//                printf("+ aa=%d known=%d\n",aa,part.IsKnown());
+            //                printf("+ aa=%d known=%d\n",aa,part.IsKnown());
             if (part.IsKnown()) {
 
                //loop over energy
@@ -1259,7 +1307,7 @@ KVIDGrid* KVIDTelescope::CalculateDeltaE_EGrid(TH2* haa_zz, Bool_t Zonly, Int_t 
                   }
                }
 
-//                    printf("z=%d a=%d E1=%lf E2=%lf\n",zz,aa,E1,E2);
+               //                    printf("z=%d a=%d E1=%lf E2=%lf\n",zz,aa,E1,E2);
                KVIDZALine* line = (KVIDZALine*)idgrid->Add("ID", "KVIDZALine");
                if (TMath::Even(zz)) line->SetLineColor(4);
                line->SetAandZ(aa, zz);
