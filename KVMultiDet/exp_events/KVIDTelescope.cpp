@@ -702,27 +702,83 @@ Bool_t KVIDTelescope::SetIdentificationParameters(const KVMultiDetArray* multide
    // which is assumed to contain identification grids. The file will be read in by gIDGridManager
    // and the grids added to its list.
 
-   TString filename = gDataSet->GetDataSetEnv(Form("IdentificationParameterFile.%s", GetLabel()));
-   if (filename == "") {
-      Warning("SetIdentificationParameters",
-              "No filename defined. Should be given by %s.IdentificationParameterFile.%s",
-              gDataSet->GetName(), GetLabel());
-      return kFALSE;
+   TString filename = gDataSet->GetDataSetEnv(Form("IdentificationParameterList.%s", GetLabel()));
+
+   if (filename != "") {
+      ReadIdentificationParameterFiles(filename.Data(), multidet);
+      return kTRUE;
    }
-   TString path;
-   if ((path = gDataSet->GetFullPathToDataSetFile(filename)) == "") {
-//   if (!SearchKVFile(filename.Data(), path, gDataSet->GetName())) {
-      Error("SetIdentificationParameters",
-            "File %s not found. Should be in %s",
-            filename.Data(), gDataSet->GetDataSetDir());
-      return kFALSE;
+   else {
+      filename = gDataSet->GetDataSetEnv(Form("IdentificationParameterFile.%s", GetLabel()));
+
+      if (filename == "") {
+         Warning("SetIdentificationParameters",
+                 "No filename defined. Should be given by %s.IdentificationParameterFile.%s or %s.IdentificationParameterFile.%s",
+                 gDataSet->GetName(), GetLabel(), gDataSet->GetName(), GetLabel());
+         return kFALSE;
+      }
+
+      LoadIdentificationParameters(filename, multidet);
    }
-   //read grids from file
-   Info("SetIdentificationParameters", "Using file %s", path.Data());
-   multidet->ReadGridsFromAsciiFile(path);
-   return kTRUE;
+
+
+
+//    filename = gDataSet->GetDataSetEnv(Form("IdentificationParameterFile.%s", GetLabel()));
+//    if (filename == "") {
+//        Warning("SetIdentificationParameters",
+//                "No filename defined. Should be given by %s.IdentificationParameterFile.%s",
+//                gDataSet->GetName(), GetLabel());
+//        return kFALSE;
+//    }
+//    TString path;
+//    if ((path = gDataSet->GetFullPathToDataSetFile(filename)) == "") {
+//        //   if (!SearchKVFile(filename.Data(), path, gDataSet->GetName())) {
+//        Error("SetIdentificationParameters",
+//              "File %s not found. Should be in %s",
+//              filename.Data(), gDataSet->GetDataSetDir());
+//        return kFALSE;
+//    }
+//    //read grids from file
+//    Info("SetIdentificationParameters", "Using file %s", path.Data());
+//    multidet->ReadGridsFromAsciiFile(path);
+//    return kTRUE;
 }
 
+//____________________________________________________________________________________
+
+void KVIDTelescope::ReadIdentificationParameterFiles(const Char_t* filename, const KVMultiDetArray* multidet)
+{
+   KVFileReader fr;
+   fr.OpenFileToRead(gDataSet->GetFullPathToDataSetFile(filename));
+
+   while (fr.IsOK()) {
+      fr.ReadLine(0);
+
+      if (fr.GetCurrentLine() != "") LoadIdentificationParameters(fr.GetCurrentLine().Data(), multidet);
+   }
+
+   fr.CloseFile();
+}
+
+//____________________________________________________________________________________
+
+void KVIDTelescope::LoadIdentificationParameters(const Char_t* filename, const KVMultiDetArray* multidet)
+{
+   TString path;
+
+   if ((path = gDataSet->GetFullPathToDataSetFile(filename)) == "") {
+      Error("LoadIdentificationParameters",
+            "File %s not found. Should be in %s",
+            filename, gDataSet->GetDataSetDir());
+      return;
+   }
+   //
+   //Read grids from file
+   Info("LoadIdentificationParameters", "Using file %s", path.Data());
+   multidet->ReadGridsFromAsciiFile(path);
+}
+
+//____________________________________________________________________________________
 
 void KVIDTelescope::RemoveIdentificationParameters()
 {

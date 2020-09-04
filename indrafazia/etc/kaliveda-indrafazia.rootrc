@@ -193,7 +193,8 @@ INDRAFAZIA.E789.IdentificationParameterFile.FAZIA.Si-Si:        IDGridsFAZIA_Si_
 INDRAFAZIA.E789.IdentificationParameterFile.FAZIA.CsI:        IDGridsFAZIA_CsI.dat
 # define order to use grids - first try low range (QL1), then high range (QH1)
 INDRAFAZIA.E789.FAZIA.Si-Si.GridOrder:                    QL1.Amplitude_Q2.FPGAEnergy,QH1.FPGAEnergy_Q2.FPGAEnergy
-INDRAFAZIA.E789.IdentificationParameterFile.INDRA.CSI:          IDGridsINDRA_CSI_R_L.dat
+#INDRAFAZIA.E789.IdentificationParameterFile.INDRA.CSI:          IDGridsINDRA_CSI_R_L.dat
+INDRAFAZIA.E789.IdentificationParameterList.INDRA.CSI:          INDRA.IdentificationFiles.dat
 
 INDRAFAZIA.E789.QL1.BaseLineLength:            100
 INDRAFAZIA.E789.QL1.TauRC:                     250
