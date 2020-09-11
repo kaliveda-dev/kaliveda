@@ -23,6 +23,7 @@ class KVEventFiltering : public KVEventSelector {
    Bool_t fRotate;//true if random phi rotation should be applied [default: yes]
 #ifdef WITH_GEMINI
    Bool_t fGemini;//true if Gemini++ decay should be performed before detection [default: no]
+   Bool_t fGemAddRotEner;//true if rotational energy has to be added to excitation energy [default: no]
    Int_t fGemDecayPerEvent;//number of Gemini++ decays to be performed for each event [default:1]
    KVSimEvent fGemEvent;//event after decay with Gemini
    KVGemini GEM;

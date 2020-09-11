@@ -192,7 +192,7 @@ Bool_t KVEventFiltering::Analysis()
    do {
       if (fGemini) {
          try {
-            GEM.DecayEvent((KVSimEvent*)GetEvent(), &fGemEvent);
+            GEM.DecayEvent((KVSimEvent*)GetEvent(), &fGemEvent, fGemAddRotEner);
          }
          catch (...) {
             continue;
@@ -358,9 +358,12 @@ void KVEventFiltering::InitAnalysis()
       if (GetOpt("Gemini") == "yes") fGemini = kTRUE;
       if (IsOptGiven("GemDecayPerEvent")) fGemDecayPerEvent = GetOpt("GemDecayPerEvent").Atoi();
       else fGemDecayPerEvent = 1;
+      if (IsOptGiven("GemAddRotEner")) fGemAddRotEner = GetOpt("GemAddRotEner").Atoi();
+      else fGemAddRotEner = 0;
    }
    if (fGemini) Info("InitAnalysis", "Statistical decay with Gemini++ for each event before detection");
    if (fGemDecayPerEvent > 1) Info("InitAnalysis", "  -- %d decays per primary event", fGemDecayPerEvent);
+   if (fGemAddRotEner) Info("InitAnalysis", "  -- Rotational energy will be added to excitation energy");
 #endif
    if (!gDataSet->HasCalibIdentInfos()) {
       // for old data without implementation of calibration/identification

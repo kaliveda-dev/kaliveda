@@ -68,6 +68,8 @@ class KVSimDirGUI : public KVBase {
    TGCheckButton* gemini_decay;
    Bool_t fGemDecay;
    TGNumberEntry* gemini_decays;
+   TGCheckButton* gemini_add_rot_energy;
+   Bool_t fGemAddRotEner;
    enum {
       kFTGeo = 1,
       kFTSeuils,
@@ -146,35 +148,46 @@ public:
    void SetGeminiDecay(Bool_t on)
    {
       fGemDecay = on;
-      if (on) gemini_decays->SetState(kTRUE);
-      else gemini_decays->SetState(kFALSE);
+
+      if (on) {
+         gemini_decays->SetState(kTRUE);
+         gemini_add_rot_energy->SetEnabled(kTRUE);
+      }
+      else {
+         gemini_decays->SetState(kFALSE);
+         gemini_add_rot_energy->SetDisabledAndSelected(fGemAddRotEner);
+      }
+   }
+   void SetGeminiDecayAddRotEnergy(Bool_t on)
+   {
+      fGemAddRotEner = on;
    }
 
    //void ChangeOutputDirectory();
    void Run();
    void EnableProof()
    {
-//      if (fWithPROOF) return;
+      //      if (fWithPROOF) return;
       fWithPROOF = kTRUE;
       // make sure both buttons are down - note use of SetState(kButtonEngaged), not SetDown(kTRUE)
       // because if not, if button is set 'down' on one tab, and then we go to the other tab,
       // the other button is 'down', but the first click on it does nothing! we have to click it twice
       // to make it come up and call DisableProof. Using SetState(kButtonEngaged) avoids this.
       proof_analysis->SetDown(kTRUE);
-//      if (!proof_analysis_ana->IsDown()) {
-//         proof_analysis_ana->SetState(kButtonEngaged);
-//      } else {
-//         proof_analysis->SetState(kButtonEngaged);
-//      }
+      //      if (!proof_analysis_ana->IsDown()) {
+      //         proof_analysis_ana->SetState(kButtonEngaged);
+      //      } else {
+      //         proof_analysis->SetState(kButtonEngaged);
+      //      }
    }
    void DisableProof()
    {
-//      if (!fWithPROOF) return;
+      //      if (!fWithPROOF) return;
       fWithPROOF = kFALSE;
       // make sure both buttons are up
       proof_analysis->SetDown(kFALSE);
-//      if (proof_analysis_ana->IsDown()) proof_analysis_ana->SetDown(kFALSE);
-//      else proof_analysis->SetDown(kFALSE);
+      //      if (proof_analysis_ana->IsDown()) proof_analysis_ana->SetDown(kFALSE);
+      //      else proof_analysis->SetDown(kFALSE);
    }
 
    void ImportSimulation();
