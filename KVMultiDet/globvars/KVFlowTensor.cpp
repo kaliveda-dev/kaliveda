@@ -3,11 +3,12 @@
 
 #include "KVFlowTensor.h"
 #include "TMatrixDUtils.h"
+#include "TMatrixDSymEigen.h"
 
 ClassImp(KVFlowTensor)
 
 
-KVFlowTensor::KVFlowTensor(void): KVVarGlob(), fTensor(3)
+KVFlowTensor::KVFlowTensor(void): KVVarGlob(), fTensor(3), fEVal(3)
 {
    // Default constructor
    init_KVFlowTensor();
@@ -16,14 +17,14 @@ KVFlowTensor::KVFlowTensor(void): KVVarGlob(), fTensor(3)
 }
 
 //_________________________________________________________________
-KVFlowTensor::KVFlowTensor(const Char_t* nom): KVVarGlob(nom), fTensor(3)
+KVFlowTensor::KVFlowTensor(const Char_t* nom): KVVarGlob(nom), fTensor(3), fEVal(3)
 {
    // Constructor with a name for the global variable
    init_KVFlowTensor();
 }
 
 //_________________________________________________________________
-KVFlowTensor::KVFlowTensor(const KVFlowTensor& a): KVVarGlob(), fTensor(3)
+KVFlowTensor::KVFlowTensor(const KVFlowTensor& a): KVVarGlob(), fTensor(3), fEVal(3)
 {
    // Copy constructor
    a.Copy(*this);
@@ -152,10 +153,14 @@ void KVFlowTensor::Calculate()
 {
    // Calculate eigenvalues & eigenvectors of tensor
 
-   TMatrixT<double> evectors = fTensor.EigenVectors(fEVal);
+   //TMatrixT<double> evectors = fTensor.EigenVectors(fEVal);
+
+   TMatrixDSymEigen diagonalize(fTensor);
+   TMatrixD evectors = diagonalize.GetEigenVectors();
+   fEVal = diagonalize.GetEigenValues();
 
    for (int i = 0; i < 3; i++) {
-      TVectorD col = TMatrixDColumn(evectors, i);
+      TMatrixDColumn col(evectors, i);
       fEVec[i].SetXYZ(col[0], col[1], col[2]);
    }
 
@@ -204,7 +209,7 @@ void KVFlowTensor::Calculate()
    else fSqOutRatio = TMath::Min(1.e+03, outOfPlane / inPlane);
 
    // calculate sphericity & coplanarity
-   Double_t sum_val_prop = f(1) + f(2) + f(3);
+   sum_val_prop = f(1) + f(2) + f(3);
    if (sum_val_prop > .1) {
       fSphericity = 1.5 * (1. - f(1) / sum_val_prop);
       fCoplanarity = sqrt(3.) * (f(2) - f(3)) / sum_val_prop / 2.;
@@ -308,3 +313,13 @@ const TRotation& KVFlowTensor::GetFlowReacPlaneRotation()
    if (!fCalculated) Calculate();
    return fFlowReacPlane;
 }
+
+void KVFlowTensor::Print(Option_t* opt) const
+{
+   // if opt="tensor", just print contents of tensor
+
+   if (strcmp(opt, "tensor")) KVVarGlob::Print();
+   std::cout << "Number of particles = " << fNParts << std::endl;
+   fTensor.Print();
+}
+

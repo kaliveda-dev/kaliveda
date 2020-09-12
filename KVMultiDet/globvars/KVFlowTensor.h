@@ -2,7 +2,7 @@
 #define __KVFLOWTENSOR_H
 
 #include "KVVarGlob.h"
-#include "TMatrixTSym.h"
+#include "TMatrixDSym.h"
 #include "TVectorT.h"
 
 /**
@@ -79,7 +79,7 @@ Thus the default frame is "CM".
 
 class KVFlowTensor: public KVVarGlob {
 
-   TMatrixTSym<double> fTensor;//! the tensor
+   TMatrixDSym fTensor;//! the tensor
    enum {
       kONE,
       kNRKE,
@@ -103,10 +103,10 @@ class KVFlowTensor: public KVVarGlob {
    Double_t fCoplanarity;//!
    Int_t fNParts;//! number of particles included in tensor
    Bool_t fCalculated;
+   Double_t sum_val_prop;
 
 protected:
    Double_t getvalue_int(Int_t) const;
-   void Calculate();
 
 public:
    enum {
@@ -121,7 +121,7 @@ public:
       kNumberParts
    };
 
-   KVFlowTensor(void);
+   KVFlowTensor();
    KVFlowTensor(const Char_t* nom);
    KVFlowTensor(const KVFlowTensor& a);
 
@@ -131,8 +131,9 @@ public:
 
    KVFlowTensor& operator=(const KVFlowTensor& a);
 
-   virtual void Init(void);
-   virtual void Reset(void);
+   virtual void Init();
+   virtual void Reset();
+   void Calculate();
 
 private:
    void init_KVFlowTensor();
@@ -140,6 +141,36 @@ public:
    void fill(const KVNucleus* n);
    const TRotation& GetAziReacPlaneRotation();
    const TRotation& GetFlowReacPlaneRotation();
+
+   KVFlowTensor& operator+=(const KVFlowTensor& other)
+   {
+      // Add all components of tensor in other to this one, and increase number of
+      // particles included in tensor by the number in other
+
+      fTensor += other.fTensor;
+      fNParts += other.fNParts;
+      return (*this);
+   }
+   Double_t GetNormalisedEigenValue(Int_t i)
+   {
+      // Return normalised eignevalues
+      // \param[in] i index=1,2,3 (i=1 is largest eigenvalue)
+
+      return f(i) / sum_val_prop;
+   }
+
+   void Print(Option_t* = "") const;
+
+   Bool_t HasNaNElements() const
+   {
+      // check all elements of tensor are valid numbers
+      for (int i = 0; i < 3; ++i) {
+         for (int j = 0; j < 3; ++j) {
+            if (TMath::IsNaN(fTensor(i, j))) return kTRUE;
+         }
+      }
+      return kFALSE;
+   }
 
    ClassDef(KVFlowTensor, 1) //Kinetic energy flow tensor of Gyulassy et al
 };

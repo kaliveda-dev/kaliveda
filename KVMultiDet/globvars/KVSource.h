@@ -77,7 +77,12 @@ public:
       KVVGObjectSum::Reset();
       fMult = 0;
    }
+   void Calculate() {}
    Char_t GetValueType(Int_t) const;
+   const KVNucleus& GetSource() const
+   {
+      return GetSumObject();
+   }
 
    ClassDef(KVSource, 1) //Simple source reconstruction global variable
 

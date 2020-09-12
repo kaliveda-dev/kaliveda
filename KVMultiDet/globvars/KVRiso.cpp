@@ -26,7 +26,7 @@ void KVRiso::Calculate()
    //transverse energies
    //Limit to 100
 
-   if (Epar > 0) {
+   if (TMath::Abs(Epar) > 0) {
       Riso = TMath::Min(100., Etrans / (2. * Epar));
    }
    else Riso = -1;
