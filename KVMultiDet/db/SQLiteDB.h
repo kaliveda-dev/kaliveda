@@ -211,11 +211,13 @@ namespace KVSQLite {
       void set_constraint(const TString& c)
       {
          // set constraint for column, one of:
+         //~~~
          //   PRIMARY KEY
          //   UNIQUE
          //   CHECK
          //   NOT NULL
          //   DEFAULT
+         //~~~
          fConstraint = c;
          if (c == "PRIMARY KEY") fPrimaryKey = true;
       }
@@ -289,6 +291,7 @@ namespace KVSQLite {
       {
          // The insert mode determines how to deal with errors caused by constraints
          // The possible values of i are (with corresponding SQLite meaning):
+         //~~~
          //   KVSQLite::insert_mode::DEFAULT   ("INSERT INTO [table] ...")
          //   KVSQLite::insert_mode::FAIL      ("INSERT OR FAIL INTO [table] ...")
          //     - if any data in row being inserted fails a constraint on one or more
@@ -299,6 +302,7 @@ namespace KVSQLite {
          //   KVSQLite::insert_mode::REPLACE   ("INSERT OR REPLACE INTO [table] ...")
          //     - if any data in row being inserted fails a constraint on one or more
          //       columns, we replace the old row with the new one
+         //~~~
          fInsert = i;
       }
       const char* get_insert_command() const;
@@ -390,7 +394,9 @@ namespace KVSQLite {
       database(const database& db) : fDBserv(nullptr), fTables(), fSQLstmt(nullptr), fBulkTable(nullptr), fInserting(false), fSelecting(false), fIsValid(false)
       {
          // because of the use of std::unique_ptr, we cannot copy the address of the TSQLiteServer from db - it would delete the database connection in db
+         //
          // therefore if we "copy" a database, we create a new, independent interface to the same database
+         //
          // this is basically a workaround/kludge for C++11/14/g++6
          if (db.good()) open(db.fDBserv->GetDB());
       }
@@ -407,7 +413,7 @@ namespace KVSQLite {
       virtual ~database() {}
       bool is_inserting() const
       {
-         // return true if data insertion is in progress (i.e. after call to
+         // \return true if data insertion is in progress (i.e. after call to
          // database::prepare_data_insertion() and before call to
          // database::end_data_insertion())
          return fInserting;
@@ -434,7 +440,7 @@ namespace KVSQLite {
       void add_table(KVSQLite::table&);
       bool has_table(const TString& table)
       {
-         // returns true if "table" exists in database
+         // \returns true if "table" exists in database
          return fTables.count(table.Data());
       }
 

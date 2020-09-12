@@ -25,7 +25,10 @@ namespace KVSQLite {
 
    unique_ptr<TSQLResult> database::SelectRowsFromTable(const TString& table, const TString& columns, const TString& condition) const
    {
-      // return result of query "SELECT [columns] FROM [table] WHERE [condition]"
+      // \param[in] table name of table
+      // \param[in] columns comma-separated list of columns
+      // \param[in] condition selection to be applied, if any
+      // \returns result of query `SELECT [columns] FROM [table] WHERE [condition]`
 
       TString query;
       query.Form("SELECT %s FROM '%s'", columns.Data(), table.Data());
@@ -71,6 +74,7 @@ namespace KVSQLite {
    void database::open(const TString& dbfile)
    {
       // Open/create sqlite db file given path
+      // \param[in] dbfile full path to file
       TString uri = "sqlite://" + dbfile;
       fDBserv.reset(static_cast<TSQLiteServer*>(TSQLServer::Connect(uri, 0, 0)));
       // check for valid database file
@@ -134,14 +138,19 @@ namespace KVSQLite {
    void database::add_table(table& t)
    {
       // add table to database (if it does not exist already)
-      // WARNING: after calling this method, do not use the table given as argument
-      //     it does not correspond to the table in the database
-      //     instead use db["table name"] to access the table
       //
+      // _WARNING:_ after calling this method, do not use the table given as argument
+      //
+      //     it does not correspond to the table in the database
+      //
+      //     instead use `db["table name"]` to access the table
+      //
+      //~~~~{.cpp}
       //   e.g. KVSQLite::table tt("some table");
       //        tt.add_column(...);
       //        db.add_table(tt);
-      //        db["some table"]["column"].set_data(...)
+      //        db["some table"]["column"].set_data(...);
+      //~~~~
 
       TString command("CREATE ");
       if (t.is_temporary()) command += "TEMPORARY ";
@@ -164,15 +173,16 @@ namespace KVSQLite {
       // Call this method before insert_dat_row() in order to perform bulk data
       // insertion operation. i.e. something like:
       //
+      //~~~~{.cpp}
       //   db.prepare_data_insertion("my_table");
       //   while(...){  // loop over data to insert
       //       // set up data in table
       //       db.insert_data_row();
       //   }
       //   db.end_data_insertion();  // terminate data insertion
-      //
-      //  Until method end_data_insertion() is called, you cannot call prepare_data_insertion()
-      //  with a different table name.
+      //~~~~
+      // Until method end_data_insertion() is called, you cannot call prepare_data_insertion()
+      // with a different table name.
 
       if (fInserting) {
          if (fBulkTable) {
@@ -259,13 +269,15 @@ namespace KVSQLite {
 
    void database::insert_data_row()
    {
-      // Call (repeatedly) after a call to prepare_data_insertion(table_name)
+      // Call (repeatedly) after a call to prepare_data_insertion()
       // in order to insert current contents of table columns as a new row in the database.
+      //
       // Value of each column should first be set like this:
       //
+      //~~~~{.cpp}
       //    db["table"]["id"].set_data(6);
       //    db["table"]["name"].set_data("triumph");
-      //
+      //~~~~
       // Call end_data_insertion() when all data has been inserted
 
       if (!fInserting || !fBulkTable) {
@@ -291,7 +303,7 @@ namespace KVSQLite {
 
    void database::end_data_insertion()
    {
-      // Call after prepare_data_insertion(const char*) & insert_data_row() have been
+      // Call after prepare_data_insertion() & insert_data_row() have been
       // used to insert data into a table
 
       if (!fInserting) {
@@ -313,13 +325,15 @@ namespace KVSQLite {
    bool database::select_data(const TString& table, const TString& columns, const TString& selection, bool distinct, const TString& anything_else)
    {
       // Select data in database from given table according to
+      //~~~~
       //    SELECT [columns] FROM [table] WHERE [selection] [anything_else]
+      //~~~~
       // In order to retrieve results, call get_next_result() until it returns false.
       //
-      // [columns]: ="*" by default, i.e. data from all columns is retrieved.
+      // \param columns ="*" by default, i.e. data from all columns is retrieved.
       //            If specific column data is to be selected, give a comma-separated list of
       //            column names. These will be quoted correctly in case they contain spaces.
-      // [distinct]: can be used in conjunction with a selection of specific columns in order
+      // \param distinct can be used in conjunction with a selection of specific columns in order
       //             to retrieve only rows of data with different values for the column(s).
       if (fInserting) {
          Error("database::select_data",
@@ -390,7 +404,7 @@ namespace KVSQLite {
    bool database::get_next_result()
    {
       // Retrieve next result row resulting from previous call to select_data()
-      // Returns kFALSE when no more data is retrieved
+      // \returns kFALSE when no more data is retrieved
 
       if (fInserting) {
          Error("database::get_next_result",
@@ -428,8 +442,8 @@ namespace KVSQLite {
 
    KVNumberList database::get_integer_list(const TString& table, const TString& column, const TString& selection, const TString& anything_else)
    {
-      // Only for INTEGER columns!
-      // Fill KVNumberList with all DISTINCT values of "column" (only 1 column name at a time) for given selection
+      // \note Only for INTEGER columns!
+      // Fill KVNumberList with all `DISTINCT` values of "column" (only 1 column name at a time) for given selection
 
       KVNumberList result;
       if (select_data(table, column, selection, true, anything_else)) {
@@ -442,9 +456,9 @@ namespace KVSQLite {
 
    TString database::get_string_list(const TString& table, const TString& column, const TString& selection, const TString& anything_else)
    {
-      // Only for TEXT columns!
+      // \note Only for TEXT columns!
       // Fill TString with comma-separated list of values of "column" (only 1 column name at a time) for given selection
-      // Any NULL entries will be ignored
+      // \note Any NULL entries will be ignored
 
       TString result;
       if (select_data(table, column, selection, false, anything_else)) {
@@ -460,8 +474,8 @@ namespace KVSQLite {
    KVNameValueList database::get_name_value_list(const TString& tablename, const TString& name_column, const TString& value_column, const TString& selection, const TString& anything_else)
    {
       // Fill KVNameValueList with selected rows from table, adding for each row a parameter with the
-      // name contained in "name_column" (must be of type "TEXT") and the value contained in "value_column"
-      // (can be "INTEGER", "REAL", or "TEXT")
+      // name contained in "name_column" (must be of type `TEXT`) and the value contained in "value_column"
+      // (can be `INTEGER`, `REAL`, or `TEXT`)
 
       KVNameValueList result;
       if (select_data(tablename, Form("%s,%s", name_column.Data(), value_column.Data()), selection, false, anything_else)) {
@@ -502,11 +516,12 @@ namespace KVSQLite {
 
    int database::count(const TString& table, const TString& column, const TString& selection, bool distinct)
    {
-      // Returns number of rows in table for which selection holds true
-      //  if column="*" all rows are included
-      //  if a column name is given, only rows with a non-NULL value for column are counted
-      //  if distinct=false, count all rows including those with the same value of column
-      //  if distinct=true, count the number of different values of column
+      // Returns number of rows in table for which selection holds true:
+      //
+      //  + if column="*" all rows are included
+      //  + if a column name is given, only rows with a non-NULL value for column are counted
+      //  + if distinct=false, count all rows including those with the same value of column
+      //  + if distinct=true, count the number of different values of column
 
       TString qry = "SELECT count(";
       if (distinct) qry += "DISTINCT ";
@@ -531,8 +546,9 @@ namespace KVSQLite {
       // the current values of the data members of the columns will be used
       //
       // This is equivalent to
-      //
+      //~~~~
       //    UPDATE [table] SET col1=newval,col2=newval,... [WHERE [selection]]
+      //~~~~
 
       if (fInserting) {
          Error("database::update",
@@ -576,9 +592,9 @@ namespace KVSQLite {
       // delete rows from the table corresponding to selection
       //
       // This is equivalent to
-      //
+      //~~~~
       //    DELETE FROM [table] WHERE [selection]
-      //
+      //~~~~
       // With no selection, deletes all rows of table (clear_table())
 
       TString query = Form("DELETE FROM \"%s\"", table.Data());
@@ -589,7 +605,7 @@ namespace KVSQLite {
    column& database::add_column(const TString& table, const TString& name, const TString& type)
    {
       // add column to existing table
-      // return reference to new column
+      // \returns reference to new column
       TString query = Form("ALTER TABLE \"%s\" ADD COLUMN \"%s\" %s", table.Data(), name.Data(), type.Data());
       fDBserv->Exec(query);
       return (*this)[table].add_column(name, type);
@@ -598,7 +614,7 @@ namespace KVSQLite {
    void database::add_missing_columns(const TString& _table_, const KVNameValueList& l)
    {
       // add to table any columns which are defined in the list but don't exist
-      // cannot be called during data insertion or retrieval!!!
+      // \note cannot be called during data insertion or retrieval!!!
 
       if (fInserting) {
          Error("database::add_missing_columns",
@@ -621,9 +637,10 @@ namespace KVSQLite {
    void database::copy_table_data(const TString& source, const TString& destination, const TString& columns, const TString& selection)
    {
       // Copy all selected data in 'source' table to 'destination'
+      //
       // If the columns of the two tables are not identical, specify the columns to copy in 'columns'
       // (comma-separated list)
-      // N.B. SQLite will not allow copy if the number of selected columns from 'source' is not
+      // \note SQLite will not allow copy if the number of selected columns from 'source' is not
       // exactly equal to the number of columns in 'destination'
 
       TString COLUMNS = columns;
@@ -664,9 +681,9 @@ namespace KVSQLite {
    void column::set_data_in_statement(TSQLStatement* s, int idx) const
    {
       // set value of parameter in SQLite statement corresponding to this column
-      // if idx is given, use it as the statement parameter index instead of
-      // the column's index in the table (case where not all columns are treated
-      // in the statement)
+      // \param idx if given, use it as the statement parameter index instead of
+      //        the column's index in the table (case where not all columns are treated
+      //        in the statement)
 
       if (idx < 0) idx = index();
       if (fIsNull) {
@@ -694,10 +711,12 @@ namespace KVSQLite {
    void column::set_data_from_statement(TSQLStatement* s, int idx)
    {
       // set value of column according to value of parameter in statement
+      //
       // any column which has a NULL value will be given value 0, 0.0 or ""
-      // (for INTEGER, REAL or TEXT type, respectively): use column::is_null()
+      // (for `INTEGER`, `REAL` or `TEXT` type, respectively): use column::is_null()
       // to check if this corresponds to a null column value.
-      // if idx is given, use it as the statement parameter index instead of
+      //
+      // \param idx if given, use it as the statement parameter index instead of
       // the column's index in the table (case where not all columns are treated
       // in the statement)
 
@@ -768,8 +787,9 @@ namespace KVSQLite {
 
    column& table::add_column(const column& c)
    {
-      // add column to table. return reference to added column.
-      // cannot be used for existing table in database: see database::add_column
+      // add column to table
+      // \return reference to added column.
+      // \note cannot be used for existing table in database: see database::add_column()
       fColumns.push_back(c);
       fColMap[c.name()] = c.index();
       return fColumns.back();
@@ -777,18 +797,20 @@ namespace KVSQLite {
 
    column& table::add_column(const TString& name, const TString& type)
    {
-      // add column to table. return reference to added column.
-      // cannot be used for existing table in database: see database::add_column
+      // add column to table
+      // \return reference to added column
+      // \note cannot be used for existing table in database: see database::add_column()
       return add_column(name, type_map[type]);
    }
 
    const column& table::add_primary_key(const TString& name)
    {
       // add a PRIMARY KEY column to the table
-      // returns reference to primary key (cannot be modified)
+      // \returns reference to primary key (cannot be modified)
       //
-      // by default this is an INTEGER type column
-      // as it is auto-incremented with each inserted row, it should not
+      // \note by default this is an `INTEGER` type column
+      //
+      // \note as it is auto-incremented with each inserted row, it should not
       // be included in TSQLStatement used to write data to db
 
       column& c = add_column(name, KVSQLite::column_type::INTEGER);
@@ -799,7 +821,8 @@ namespace KVSQLite {
    const column& table::add_foreign_key(const TString& name, const TString& other_table, const TString& other_column)
    {
       // add a foreign key to the table, which is an INTEGER reference to
-      // another column in another table. returns reference to key (cannot be modified)
+      // another column in another table.
+      // \returns reference to key (cannot be modified)
 
       column& c = add_column(name, KVSQLite::column_type::INTEGER);
       c.set_foreign_key(other_table, other_column);
@@ -809,7 +832,8 @@ namespace KVSQLite {
    const column& table::add_foreign_key(const TString& name, const table& other_table, const column& other_column)
    {
       // add a foreign key to the table, which is an INTEGER reference to
-      // another column in another table. returns reference to key (cannot be modified)
+      // another column in another table.
+      // \returns reference to key (cannot be modified)
 
       column& c = add_column(name, KVSQLite::column_type::INTEGER);
       c.set_foreign_key(other_table, other_column);
@@ -819,7 +843,7 @@ namespace KVSQLite {
    int table::check_columns(const KVNameValueList& l)
    {
       // make sure that all parameters in the list have corresponding columns in the table
-      // returns the number of columns to be added
+      // \returns the number of columns to be added
 
       int ncols = 0;
       int ipar = l.GetNpar();
@@ -833,7 +857,9 @@ namespace KVSQLite {
    void table::prepare_data(const KVNameValueList& l, const KVNamedParameter* null_value)
    {
       // fill all columns in table with data contained in KVNameValueList parameters having the same name.
+      //
       // any columns which do not appear in the KVNameValueList will be set to 'null'
+      //
       // if required, any parameters with the same type&value as "null_value" will be set to 'null' too
 
       for (int i = 0; i < number_of_columns(); ++i) {
