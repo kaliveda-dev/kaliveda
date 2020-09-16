@@ -125,41 +125,6 @@ KVParticleCondition::~KVParticleCondition()
 
 //_____________________________________________________________________________//
 
-Bool_t KVParticleCondition::Test(const KVNucleus* nuc) const
-{
-   //Evaluates the condition for the particle in question
-   //
-   //If no condition has been set (object created with default ctor) this returns
-   //kTRUE for all nuclei.
-   //
-   //If optimisation fails (see method Optimize()), the condition will always
-   //be evaluated as 'kFALSE' for all particles
-
-#ifdef USING_ROOT6
-   // check if we were created by && or || and haven't been initialized yet
-   if (IsLambda() && !IsSet()) {
-      switch (fOpType) {
-         case LogOp::AND:
-            fLambdaCondition = [this](const KVNucleus * nuc) {
-               return (fSavedLambda1(nuc) && fSavedLambda2(nuc));
-            };
-            break;
-         case LogOp::OR:
-            fLambdaCondition = [this](const KVNucleus * nuc) {
-               return (fSavedLambda1(nuc) || fSavedLambda2(nuc));
-            };
-            break;
-      }
-   }
-#endif
-   if (!IsSet()) return kTRUE;
-#ifdef USING_ROOT6
-   if (IsLambda()) return fLambdaCondition(nuc);
-#endif
-   if (!fOptimal) Optimize();
-
-   return (fOptOK ? fOptimal->Test(nuc) : kFALSE);
-}
 
 //_____________________________________________________________________________//
 
@@ -326,7 +291,7 @@ KVParticleCondition& KVParticleCondition::operator=(KVParticleCondition&& other)
 
 //_____________________________________________________________________________//
 
-KVParticleCondition KVParticleCondition::operator&&(const KVParticleCondition& obj) const
+KVParticleCondition operator&&(const KVParticleCondition& A, const KVParticleCondition& B)
 {
    //Perform boolean AND between the two selection conditions
    //
@@ -338,24 +303,29 @@ KVParticleCondition KVParticleCondition::operator&&(const KVParticleCondition& o
    //
    // If one or other of the conditions is not set, we just return the condition which has been set.
 
-   if (!(IsSet() && obj.IsSet())) {
+#ifdef USING_ROOT6
+   A.logical_operator_lambda_condition_test();
+   B.logical_operator_lambda_condition_test();
+#endif
+
+   if (!(A.IsSet() && B.IsSet())) {
       // one or both conditions is/are not set
-      if (!(IsSet() || obj.IsSet())) {
+      if (!(A.IsSet() || B.IsSet())) {
          // neither is set: return blank (unset) condition
          return KVParticleCondition();
       }
-      else if (IsSet()) return KVParticleCondition(*this);
-      else return KVParticleCondition(obj);
+      else if (A.IsSet()) return KVParticleCondition(A);
+      else return KVParticleCondition(B);
    }
 #ifdef USING_ROOT6
    // if lambdas are used (error if not both ?)
-   if (IsLambda() || obj.IsLambda()) {
-      if (IsLambda() && obj.IsLambda()) {
+   if (A.IsLambda() || B.IsLambda()) {
+      if (A.IsLambda() && B.IsLambda()) {
          KVParticleCondition tmp;
-         tmp.fSavedLambda1 = fLambdaCondition;
-         tmp.fSavedLambda2 = obj.fLambdaCondition;
-         tmp.fOpType = LogOp::AND;
-         tmp.SetName(Form("(%s) && (%s)", GetName(), obj.GetName()));
+         tmp.fSavedLambda1 = A.fLambdaCondition;
+         tmp.fSavedLambda2 = B.fLambdaCondition;
+         tmp.fOpType = KVParticleCondition::LogOp::AND;
+         tmp.SetName(Form("(%s) && (%s)", A.GetName(), B.GetName()));
          return tmp;
       }
       else {
@@ -365,15 +335,15 @@ KVParticleCondition KVParticleCondition::operator&&(const KVParticleCondition& o
    }
 #endif
    KVParticleCondition tmp;
-   tmp.Set(fCondition_brackets + " && " + obj.fCondition_brackets);
-   if (fClassName != "") tmp.SetParticleClassName(fClassName);
-   else if (obj.fClassName != "") tmp.SetParticleClassName(obj.fClassName);
+   tmp.Set(A.fCondition_brackets + " && " + B.fCondition_brackets);
+   if (A.fClassName != "") tmp.SetParticleClassName(A.fClassName);
+   else if (B.fClassName != "") tmp.SetParticleClassName(B.fClassName);
    return tmp;
 }
 
 //_____________________________________________________________________________//
 
-KVParticleCondition KVParticleCondition::operator||(const KVParticleCondition& obj) const
+KVParticleCondition operator||(const KVParticleCondition& A, const KVParticleCondition& B)
 {
    //Perform boolean OR between the two selection conditions
    //
@@ -384,37 +354,41 @@ KVParticleCondition KVParticleCondition::operator||(const KVParticleCondition& o
    // must also use a lambda expression.
    //
    // If one or other of the conditions is not set, we just return the condition which has been set.
+#ifdef USING_ROOT6
+   A.logical_operator_lambda_condition_test();
+   B.logical_operator_lambda_condition_test();
+#endif
 
-   if (!(IsSet() && obj.IsSet())) {
+   if (!(A.IsSet() && B.IsSet())) {
       // one or both conditions is/are not set
-      if (!(IsSet() || obj.IsSet())) {
+      if (!(A.IsSet() || B.IsSet())) {
          // neither is set: return blank (unset) condition
          return KVParticleCondition();
       }
-      else if (IsSet()) return KVParticleCondition(*this);
-      else return KVParticleCondition(obj);
+      else if (A.IsSet()) return KVParticleCondition(A);
+      else return KVParticleCondition(B);
    }
 #ifdef USING_ROOT6
    // if lambdas are used (error if not both ?)
-   if (IsLambda() || obj.IsLambda()) {
-      if (IsLambda() && obj.IsLambda()) {
+   if (A.IsLambda() || B.IsLambda()) {
+      if (A.IsLambda() && B.IsLambda()) {
          KVParticleCondition tmp;
-         tmp.fSavedLambda1 = fLambdaCondition;
-         tmp.fSavedLambda2 = obj.fLambdaCondition;
-         tmp.fOpType = LogOp::OR;
-         tmp.SetName(Form("(%s) || (%s)", GetName(), obj.GetName()));
+         tmp.fSavedLambda1 = A.fLambdaCondition;
+         tmp.fSavedLambda2 = B.fLambdaCondition;
+         tmp.fOpType = KVParticleCondition::LogOp::OR;
+         tmp.SetName(Form("(%s) || (%s)", A.GetName(), B.GetName()));
          return tmp;
       }
       else {
-         Error("operator||", "Both KVParticleCondition objects must use lambda captures in order to do this");
+         Error("operator&&", "Both KVParticleCondition objects must use lambda captures in order to do this");
          return KVParticleCondition();
       }
    }
 #endif
    KVParticleCondition tmp;
-   tmp.Set(fCondition_brackets + " || " + obj.fCondition_brackets);
-   if (fClassName != "") tmp.SetParticleClassName(fClassName);
-   else if (obj.fClassName != "") tmp.SetParticleClassName(obj.fClassName);
+   tmp.Set(A.fCondition_brackets + " || " + B.fCondition_brackets);
+   if (A.fClassName != "") tmp.SetParticleClassName(A.fClassName);
+   else if (B.fClassName != "") tmp.SetParticleClassName(B.fClassName);
    return tmp;
 }
 

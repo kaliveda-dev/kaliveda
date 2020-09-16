@@ -92,7 +92,27 @@ class KVParticleCondition : public KVBase {
    mutable LambdaFunc fLambdaCondition;
    LambdaFunc fSavedLambda1, fSavedLambda2;// used by || and &&
    enum class LogOp { AND, OR } fOpType;
+
+   void logical_operator_lambda_condition_test() const
+   {
+      // check if we were created by && or || and haven't been initialized yet
+      if (IsLambda() && !IsSet()) {
+         switch (fOpType) {
+            case LogOp::AND:
+               fLambdaCondition = [this](const KVNucleus * nuc) {
+                  return (fSavedLambda1(nuc) && fSavedLambda2(nuc));
+               };
+               break;
+            case LogOp::OR:
+               fLambdaCondition = [this](const KVNucleus * nuc) {
+                  return (fSavedLambda1(nuc) || fSavedLambda2(nuc));
+               };
+               break;
+         }
+      }
+   }
 #endif
+
 protected:
 
    KVString fCondition;//string containing selection criteria with ";" at end
@@ -175,7 +195,40 @@ public:
 #endif
    void Set(const KVString&);
 
-   Bool_t Test(const KVNucleus*) const;
+   Bool_t Test(const KVNucleus* nuc) const
+   {
+      //Evaluates the condition for the particle in question
+      //
+      //If no condition has been set (object created with default ctor) this returns
+      //kTRUE for all nuclei.
+      //
+      //If optimisation fails (see method Optimize()), the condition will always
+      //be evaluated as 'kFALSE' for all particles
+
+#ifdef USING_ROOT6
+      logical_operator_lambda_condition_test();
+#endif
+      if (!IsSet()) return kTRUE;
+#ifdef USING_ROOT6
+      if (IsLambda()) return fLambdaCondition(nuc);
+#endif
+      if (!fOptimal) Optimize();
+
+      return (fOptOK ? fOptimal->Test(nuc) : kFALSE);
+   }
+
+   Bool_t Test(const KVNucleus& nuc) const
+   {
+      //Evaluates the condition for the particle in question
+      //
+      //If no condition has been set (object created with default ctor) this returns
+      //kTRUE for all nuclei.
+      //
+      //If optimisation fails (see method Optimize()), the condition will always
+      //be evaluated as 'kFALSE' for all particles
+
+      return Test(&nuc);
+   }
 
    void SetParticleClassName(const Char_t* cl)
    {
@@ -190,8 +243,8 @@ public:
 #ifdef USING_ROOT6
    KVParticleCondition& operator=(const LambdaFunc&);
 #endif
-   KVParticleCondition operator&&(const KVParticleCondition&) const;
-   KVParticleCondition operator||(const KVParticleCondition&) const;
+   friend KVParticleCondition operator&&(const KVParticleCondition&, const KVParticleCondition&);
+   friend KVParticleCondition operator||(const KVParticleCondition&, const KVParticleCondition&);
    KVParticleCondition& operator|=(const KVParticleCondition&);
    KVParticleCondition& operator&=(const KVParticleCondition&);
 
