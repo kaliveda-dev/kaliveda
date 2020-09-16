@@ -54,7 +54,7 @@ KVFlowTensor& KVFlowTensor::operator = (const KVFlowTensor& a)
 {
    // Operateur =
 
-   a.Copy(*this);
+   if (&a != this) a.Copy(*this);
    return *this;
 }
 
@@ -257,6 +257,8 @@ void KVFlowTensor::init_KVFlowTensor()
    SetNameIndex("NumberParts", kNumberParts);
 
    SetMaxNumBranches(3);
+
+   fNParts = 0;
 }
 
 void KVFlowTensor::fill(const KVNucleus* n)

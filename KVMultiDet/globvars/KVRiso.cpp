@@ -7,9 +7,11 @@ void KVRiso::init()
    Riso = -1;
    Epar = 0.;
    Etrans = 0.;
+   Mult = 0;
    SetNameIndex("Riso", 0);
    SetNameIndex("Epar", 1);
    SetNameIndex("Eperp", 2);
+   SetNameIndex("Mult", 3);
 }
 
 void KVRiso::Copy(TObject& a) const
@@ -18,6 +20,7 @@ void KVRiso::Copy(TObject& a) const
    ((KVRiso&) a).Riso = Riso;
    ((KVRiso&) a).Epar = Epar;
    ((KVRiso&) a).Etrans = Etrans;
+   ((KVRiso&) a).Mult = Mult;
 }
 
 void KVRiso::Calculate()
@@ -42,7 +45,7 @@ Double_t KVRiso::getvalue_int(Int_t i) const
 //  0  (default)        Riso
 //  1                   Sum of parallel kinetic energies
 //  2                   Sum of transverse kinetic energies
-//
+//  3                   Number of nuclei included in calculation
    switch (i) {
       case 0:
          return Riso;
@@ -52,6 +55,9 @@ Double_t KVRiso::getvalue_int(Int_t i) const
          break;
       case 2:
          return Etrans;
+         break;
+      case 3:
+         return Mult;
          break;
       default:
          Warning("GetValue(Int_t i)", "Index %d not valid. Riso returned.", i);
@@ -66,4 +72,5 @@ void KVRiso::fill(const KVNucleus* c)
    Double_t et = c->GetEtran();
    Epar += (ep - et);
    Etrans += et;
+   ++Mult;
 }

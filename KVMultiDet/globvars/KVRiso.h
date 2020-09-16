@@ -3,8 +3,11 @@
 #include "KVVarGlob.h"
 
 /**
-////////////////////////////////////////////////////////////////////////////////
-   Global variable returning the Riso variable. It is defined as follow:
+  \class KVRiso
+  \brief Energy isotropy ratio \f$R_{E}\f$
+  \ingroup GlobalVariables
+
+It is defined as follow:
 
            Etrans
    Riso= ----------
@@ -28,30 +31,7 @@ with method SetFrame() :
       Riso            0       (default)       Riso
       Epar            1                       Sum of parallel kinetic energies
       Eperp           2                       Sum of transverse kinetic energies
-
-
- All these values can be obtained by calling the GetValuePtr() method which
- returns an array of Double_t containing the values.
-
- Here are examples on how obtaining values.
-
- KVRiso *priso=new KVRiso();
- KVRiso riso;
- ...
- Double_t r=priso->GetValue();  |
-          r=prsio->GetValue(0); |--> Riso
-          r=priso("Riso");      |
- Double_t epar=riso(1);---------> Sum of parallel kinetic energies
- Double_t etrans=priso->GetValue("Eperp");--> Sum of transverse kinetic
-                                              energies
- Double_t *values=riso.GetValuePtr();
-          r=values[0];      --> Riso
-          epar=values[1];   --> Epar
-          etrans=values[2]; --> Eperp
-
-
- Look at KVVarGlob class to have an example of use.
-
+      Mult            3                       Number of particles included in calculation
 
  */
 class KVRiso: public KVVarGlob {
@@ -59,6 +39,7 @@ class KVRiso: public KVVarGlob {
    Double_t Riso;
    Double_t Epar;
    Double_t Etrans;
+   Int_t Mult;
 
    void init();
 
@@ -87,8 +68,15 @@ public:
    void Reset(void)
    {
       Epar = Etrans = 0;
+      Mult = 0;
    }
    void Calculate();
+   Char_t GetValueType(Int_t i) const
+   {
+      // "Mult" is an integer, return 'I' if i==3
+      if (i == 3) return 'I';
+      return 'D';
+   }
 
    ClassDef(KVRiso, 1)// Global variable Riso=Sum(epar)/2*Sum(eper)
 };

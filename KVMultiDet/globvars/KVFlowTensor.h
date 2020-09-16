@@ -65,12 +65,12 @@ Thus the default frame is "CM".
 "FlowAngle"     |KVFlowTensor::kFlowAngle     |polar angle of \f$\vec{e_1}\f$
 "Sphericity"    |KVFlowTensor::kSphericity    |\f$\frac{3}{2}(1-\lambda_1)\f$
 "Coplanarity"   |KVFlowTensor::kCoplanarity   |\f$\frac{\sqrt{3}}{2}(\lambda_2-\lambda_3)\f$
+"NumberParts"   |KVFlowTensor::kNumberParts   |number of particles used in tensor
 "KinFlowRatio13"|KVFlowTensor::kKinFlowRatio13|\f$\sqrt{\frac{\lambda_1}{\lambda_3}}\f$
 "KinFlowRatio23"|KVFlowTensor::kKinFlowRatio23|\f$\sqrt{\frac{\lambda_2}{\lambda_3}}\f$
 "PhiReacPlane"  |KVFlowTensor::kPhiReacPlane  |\f$\phi\f$ angle of \f$\vec{e_1}\f$
 "SqueezeAngle"  |KVFlowTensor::kSqueezeAngle  |see Gyulassy et al
 "SqueezeRatio"  |KVFlowTensor::kSqueezeRatio  |see Gyulassy et al
-"NumberParts"   |KVFlowTensor::kNumberParts   |number of particles used in tensor
 
 \author John Frankland (GANIL)
 \date Tue Jun 30 12:41:37 2015
@@ -113,12 +113,12 @@ public:
       kFlowAngle,
       kSphericity,
       kCoplanarity,
+      kNumberParts,
       kKinFlowRatio13,
       kKinFlowRatio23,
       kPhiReacPlane,
       kSqueezeAngle,
-      kSqueezeRatio,
-      kNumberParts
+      kSqueezeRatio
    };
 
    KVFlowTensor();
@@ -170,6 +170,12 @@ public:
          }
       }
       return kFALSE;
+   }
+   Char_t GetValueType(Int_t i) const
+   {
+      // "Mult" is an integer, return 'I' if i==3
+      if (i == 3) return 'I';
+      return 'D';
    }
 
    ClassDef(KVFlowTensor, 1) //Kinetic energy flow tensor of Gyulassy et al
