@@ -354,7 +354,6 @@ KVVarGlob* KVEventSelector::AddGV(const Char_t* class_name,
    //  It is assumed that `MyNewVarGlob.h` and `MyNewVarGlob.cpp` will be found in `$HOME/myVarGlobs` (in this example).
 
    KVVarGlob* vg = GetGVList()->AddGV(class_name, name);
-   AddGV(vg);
    return vg;
 }
 
