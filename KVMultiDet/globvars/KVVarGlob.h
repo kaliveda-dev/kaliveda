@@ -555,7 +555,7 @@ public:
       // analysis begins with n<N, only the first n branches will be used.
       // Note that if SetMaxNumBranches(0) is called, no branch will
       // be created for this variable.
-      fMaxNumBranches = (n < GetNumberOfValues() ? n : -1);
+      fMaxNumBranches = (n <= GetNumberOfValues() ? n : -1);
    }
    void Print(Option_t* = "") const;
 
