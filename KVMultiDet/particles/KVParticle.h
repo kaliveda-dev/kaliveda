@@ -223,37 +223,31 @@ public:
    };
    Double_t GetTransverseEnergy() const
    {
-      Double_t etran = TMath::Sin(Theta());
-      etran = TMath::Power(etran, 2.0);
-      etran *= GetKE();
-      return etran;
-   };
+      return GetKE() * TMath::Power(TMath::Sin(Theta()), 2.0);
+   }
    Double_t GetEtran() const
    {
       return GetTransverseEnergy();
-   };
+   }
 
    Double_t GetLongitudinalEnergy() const
    {
-      Double_t elong = TMath::Cos(Theta());
-      elong = TMath::Power(elong, 2.0);
-      elong *= GetKE();
-      return elong;
-   };
+      return GetKE() - GetTransverseEnergy();
+   }
    Double_t GetElong() const
    {
       return GetLongitudinalEnergy();
-   };
+   }
 
    Double_t GetRTransverseEnergy() const
    {
       Double_t etran = Mt() - GetMass();
       return etran;
-   };
+   }
    Double_t GetREtran() const
    {
       return GetRTransverseEnergy();
-   };
+   }
    Double_t GetE() const
    {
       return GetKE();
