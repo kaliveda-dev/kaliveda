@@ -43,9 +43,9 @@ void KVGVList::Init(void)
 //_________________________________________________________________
 void KVGVList::Reset(void)
 {
-   // Remise a zero avant le
-   // traitement d'un evenement
+   // Reset all variables before treating an event
    this->R__FOR_EACH(KVVarGlob, Reset)();
+   fAbortEventAnalysis = false;
 }
 
 //_________________________________________________________________
@@ -79,7 +79,17 @@ void KVGVList::FillN(const KVEvent* r)
 void KVGVList::Calculate()
 {
    // Calculate all 1-body observables after filling
-   fVG1.R__FOR_EACH(KVVarGlob, Calculate)();
+   TIter it(&fVG1);
+   KVVarGlob* vg;
+   while ((vg = (KVVarGlob*)it())) {
+      vg->Calculate();
+#ifdef USING_ROOT6
+      if (!vg->TestEventSelection()) {
+         fAbortEventAnalysis = true;
+         break;
+      }
+#endif
+   }
 }
 
 void KVGVList::Calculate2()
@@ -136,7 +146,10 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
             }
          }
       }
-      if (Has1BodyVariables()) Calculate();
+      if (Has1BodyVariables()) {
+         Calculate();
+         if (AbortEventAnalysis()) return;
+      }
       if (Has2BodyVariables()) Calculate2();
 #endif
    }

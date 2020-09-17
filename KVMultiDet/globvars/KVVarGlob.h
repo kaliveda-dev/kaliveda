@@ -168,6 +168,32 @@ provide the methods
 which allow to change the reference frame used for the calculation of the variable
 (depending on the implementation of the specific class).
 
+### Event selection criteria
+When used in a KVGVList of global variables, conditions ('cuts') can be set on each variable which
+decide whether or not to retain an event for analysis. If any variable in the list fails the
+test, processing of the list is abandoned.
+
+Selection criteria are set using lambda expressions. In this example, the variable "mtot"
+must have a value of at least 4 for the event to be retained:
+~~~~{.cpp}
+   KVGVList vglist;
+   auto mtot = vglist.AddGV("KVMult","mtot");
+   mtot->SetEventSelection([](const KVVarGlob* v){ return v->GetValue()>=4; });
+~~~~
+
+Any event selection criterion is tested as soon as each variable has been tested. If the test
+fails, no further variables are calculated and the KVGVList goes into 'abort event' mode:
+~~~~{.cpp}
+    KVEvent* event_to_analyse;
+    vglist.CalculateGlobalVariables( event_to_analyse );
+    if( !vglist.AbortEventAnalysis() )
+    {
+       ... do further analysis, mtot is >=4
+    }
+~~~~
+
+This mechanism is implemented in KVEventSelector.
+
 \authors D. Cussol (LPC Caen), J.D. Frankland (GANIL)
 \date 2004-2020
  */
@@ -184,7 +210,6 @@ public:
 protected:
    Int_t fType;   // type of variable global; = kOneBody, kTwoBody or kNBody
    Char_t fValueType; // type (='I' integer or 'D' double) of global variable value
-   Bool_t conditioned_fill;//! can be tested in Fill/Fill2 method to know if it was called by FillWithCondition
 private:
    KVNameValueList nameList;//correspondence between variable name and index
    Bool_t fIsInitialized;//! flag set after initialisation
@@ -194,6 +219,11 @@ private:
    KVParticleCondition fSelection;//(optional) condition used to select particles
    Int_t fMaxNumBranches;// max number of branches to create for multi-valued variable
    Double_t fNormalization;// optional normalization parameter
+
+#ifdef USING_ROOT6
+   using LambdaFunc = std::function<bool(const KVVarGlob*)>;
+   LambdaFunc fLambdaCondition;// used to select events in analysis based on value of variable
+#endif
 
    void init();
    static void AddExtraInitMethodComment(KVClassFactory& cf, KVString& body);
@@ -281,8 +311,8 @@ public:
       vgobj.fType = fType;
       vgobj.fValueType = fValueType;
       vgobj.fMaxNumBranches = fMaxNumBranches;
-      vgobj.conditioned_fill = conditioned_fill;
       vgobj.fNormalization = fNormalization;
+      vgobj.fLambdaCondition = fLambdaCondition;
    }
    virtual ~KVVarGlob(void)
    {}
@@ -559,6 +589,37 @@ public:
    }
    void Print(Option_t* = "") const;
 
-   ClassDef(KVVarGlob, 6)      // Base class for global variables
+#ifdef USING_ROOT6
+   void SetEventSelection(const LambdaFunc& f)
+   {
+      // Call this method with a lambda expression in order to define an event selection criterion
+      // based on the value of this variable. The signature of the lambda is
+      //~~~~{.cpp}
+      // [](const KVVarGlob* var){ return var->GetValue()>20; }
+      //~~~~
+      // i.e. it evaluates to `bool` based on the value of the global variable passed to it.
+      //
+      // If capture by reference is used, the 'cut' can be defined later:
+      //~~~~{.cpp}
+      // double my_cut;
+      // [&](const KVVarGlob* var){ return var->GetValue("Mean")<my_cut; }
+      //~~~~
+      //
+      // The condition will be tested by KVGVList just after calculation of this variable;
+      // if the condition is not met, no further variables will be calculated and the
+      // event will be rejected for further analysis.
+      fLambdaCondition = f;
+   }
+   bool TestEventSelection()
+   {
+      // Called by KVGVList just after calculation of this variable;
+      // if the condition is not met, no further variables will be calculated and the
+      // event will be rejected for further analysis.
+
+      return fLambdaCondition ? fLambdaCondition(this) : true;
+   }
+#endif
+
+   ClassDef(KVVarGlob, 7)      // Base class for global variables
 };
 #endif

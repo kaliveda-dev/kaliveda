@@ -17,7 +17,6 @@ void KVVarGlob::init(void)
    fType = kOneBody;
    fValueType = 'D';
    fMaxNumBranches = -1;
-   conditioned_fill = kFALSE;
    fIsInitialized = kFALSE;
    fNormalization = 1.0;
    fOptions.SetName("Options");

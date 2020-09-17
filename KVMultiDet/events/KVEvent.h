@@ -43,6 +43,42 @@ class KVIntegerList;
   \class KVEvent
   \brief Base class container for multi-particle events
   \ingroup NucEvents
+
+Particles are stored in a TClonesArray and KVEvent provides some basic
+functionality for accessing and manipulating the list.
+
+Events can be built using any class derived from KVNucleus to represent particles.
+These classes can allocate memory in their default ctor: when filling events in a loop,
+the same 'particle' objects are re-used for each new event, the ctor of each object will
+only be called once when the object is first created (e.g. in the first event).
+The particle class Clear() method will be called before each new event.
+Therefore the cycle of use of the particle objects in a loop over many events is:
+
+~~~~~~~~~~~~~~~
+<particle ctor>
+   Building 1st event
+   <particle Clear()>
+   Building 2nd event
+   <particle Clear()>
+   ...
+   Building last event
+<particle dtor>
+~~~~~~~~~~~~~~~
+
+When writing events in a TTree, it is very important to call the TBranch::SetAutoDelete(kFALSE)
+method of the branch which is used to store the event object.
+
+If not, when the events are read back, the KVEvent constructor and destructor will be called
+every time an event is read from the TTree meading to very slow reading times (& probably
+memory leaks).
+
+For this reason we provide the method:
+
+~~~~~~~~~~~~~~~
+    void MakeEventBranch(TTree*, const TString&, const TString&, void*)
+~~~~~~~~~~~~~~~
+
+which should be used whenever it is required to stock KVEvent-derived objects in a TTree.
  */
 class KVEvent: public KVBase {
 
@@ -338,14 +374,17 @@ public:
    Double_t GetGSChannelQValue() const;
    const Char_t* GetPartitionName();
 
-   static void MakeEventBranch(TTree* tree, const TString& branchname, const TString& classname, void* event, Int_t bufsize = 10000000)
+   static void MakeEventBranch(TTree* tree, const TString& branchname, const TString& classname, KVEvent* event, Int_t bufsize = 10000000)
    {
       // Use this method when adding a branch to a TTree to store KVEvent-derived objects.
       //
-      // If (*e) points to a valid KVEvent-derived object, we use the name of the class of the object.
-      // Otherwise we use the value of classname (default = "KVEvent")
+      // \param[in] tree pointer to TTree
+      // \param[in] branchname name of branch to create
+      // \param[in] classname name of actual class of object pointed to by event
+      // \param[in] event pointer to a valid (constructed) KVEvent-derived object
+      // \param[in] bufsize size of buffer to use for branch [default: 10000000]
 
-      tree->Branch(branchname, classname, event, bufsize, 0)->SetAutoDelete(kFALSE);
+      tree->Branch(branchname, classname, (void*)&event, bufsize, 0)->SetAutoDelete(kFALSE);
    }
 
    virtual void MergeEventFragments(TCollection*, Option_t* opt = "");

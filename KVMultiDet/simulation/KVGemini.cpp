@@ -170,7 +170,7 @@ void KVGemini::FillTreeWithEvents(KVSimNucleus& toDecay, bool addRotationalEnerg
 
    if (branchname == "") branchname = "gemini";
    KVSimEvent* decayProducts = new KVSimEvent;
-   KVEvent::MakeEventBranch(theTree, branchname, "KVSimEvent", &decayProducts);
+   KVEvent::MakeEventBranch(theTree, branchname, "KVSimEvent", decayProducts);
 
    while (nDecays--) {
       decayProducts->Clear();

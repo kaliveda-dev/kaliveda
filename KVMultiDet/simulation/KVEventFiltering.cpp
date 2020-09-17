@@ -398,7 +398,7 @@ void KVEventFiltering::InitAnalysis()
 
    TString reconevclass = gDataSet->GetReconstructedEventClassName();
    fReconEvent = (KVReconstructedEvent*)TClass::GetClass(reconevclass)->New();
-   KVEvent::MakeEventBranch(fTree, "ReconEvent", reconevclass, &fReconEvent);
+   KVEvent::MakeEventBranch(fTree, "ReconEvent", reconevclass, fReconEvent);
 
    AddTree(fTree);
 }

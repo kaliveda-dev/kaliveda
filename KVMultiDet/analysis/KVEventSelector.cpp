@@ -217,9 +217,11 @@ Bool_t KVEventSelector::Process(Long64_t entry)
    }
 
    Bool_t ok_anal = kTRUE;
-   ok_anal = Analysis();     //user analysis
-   if (gDataAnalyser) gDataAnalyser->postAnalysis();
-
+   if (gvlist && !gvlist->AbortEventAnalysis()) {
+      // events are only analysed if no global variables in the list have failed an event selection condition
+      ok_anal = Analysis();     //user analysis
+      if (gDataAnalyser) gDataAnalyser->postAnalysis();
+   }
    CheckEndOfRun();
 
    return ok_anal;

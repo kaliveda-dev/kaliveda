@@ -49,6 +49,7 @@ class KVGVList: public KVUniqueNameList {
    Int_t fIBranchVar[MAX_CAP_BRANCHES];//! used for automatic creation & filling of TTree branches
    Int_t fNbBranch;
    Int_t fNbIBranch;
+   bool fAbortEventAnalysis;// set to false if a global variable fails its own event selection criterion
 
    /// replace any mathematical symbols in 's' with '_'
    TString NameSanitizer(const Char_t* s) const
@@ -116,6 +117,11 @@ public:
 
    void MakeBranches(TTree*);
    void FillBranches();
+
+   bool AbortEventAnalysis() const
+   {
+      return fAbortEventAnalysis;
+   }
 
    ClassDef(KVGVList, 3)       // List of global variables
 };
