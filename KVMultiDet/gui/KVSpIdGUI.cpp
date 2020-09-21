@@ -34,19 +34,6 @@ Int_t  KVSpIdGUI::fNPoints = 50;
 
 ClassImp(KVSpIdGUI)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSpIdGUI</h2>
-<h4></h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
-// KVSpIdGUI::KVSpIdGUI()
-// {
-//    // Default constructor
-// }
 
 KVSpIdGUI::KVSpIdGUI(KVIDGraph* g, TH2* data_histo, Double_t xm, Double_t ym, Double_t pdx, Double_t pdy, const char* opt)
 {

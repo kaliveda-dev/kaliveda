@@ -14,22 +14,6 @@ $Id: KVTGIDZ.cpp,v 1.8 2009/03/03 14:27:15 franklan Exp $
 using namespace std;
 
 ClassImp(KVTGIDZ)
-//____________________________________________________________________________//
-//KVTGIDZ
-//
-//Abstract base class for charged particle Z identfication using functionals
-//developed by L. Tassan-Got (IPN Orsay)
-//
-//A KVIDZGrid identification grid can be generated from the functional in order
-//to visualise the corresponding identification lines.
-//
-//The following methods are defined in this class:
-//
-//      SetIdent() -- sets the Z for each KVIDZLine
-//      AddLine()  -- adds a KVIDZLine to the grid
-//      NewGrid()  -- generates a new KVIDZGrid
-//
-///////////////////////////////////////////////////////////////////////////////
 
 KVTGIDZ::KVTGIDZ(const Char_t* name,
                  const Char_t* function,

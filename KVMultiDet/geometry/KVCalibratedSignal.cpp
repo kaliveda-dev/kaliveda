@@ -5,15 +5,6 @@
 
 ClassImp(KVCalibratedSignal)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVCalibratedSignal</h2>
-<h4>Detector signal produced by a calibrator</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 Double_t KVCalibratedSignal::GetValue(const KVNameValueList& params) const
 {
    // Returns the value of the calibrated signal using the current value of the input

@@ -14,21 +14,6 @@ using namespace std;
 
 ClassImp(KVIDGUITelescopeChooserDialog)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIDGUITelescopeChooserDialog</h2>
-<h4>ID Grid Manager dialog for choice of ID telescope(s)</h4>
-<img alt="" src="http://indra.in2p3.fr/KaliVedaDoc/images/IDTelescopeChooser.png"><br>
-<p>This dialog box presents the user with a drop-down list of ID telescope
-types, and a box containing the list of all ID telescopes in a given multidetector
-array of the selected type. The user selects the type of ID telescope, then
-selects one or more telescopes in the list, and presses "OK" in order to
-validate the choice.</p>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVIDGUITelescopeChooserDialog::KVIDGUITelescopeChooserDialog(KVMultiDetArray* MDA, TList* selection, Bool_t* cancel_pressed,
       const TGWindow* p, const TGWindow* main, Bool_t disable_type_select,
       UInt_t w, UInt_t h)

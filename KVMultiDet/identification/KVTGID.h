@@ -16,6 +16,30 @@ $Id: KVTGID.h,v 1.12 2009/03/03 14:27:15 franklan Exp $
 #include "TString.h"
 #include "KVNumberList.h"
 
+/**
+\class KVTGID
+\brief Abstract base class for particle identfication using functionals developed by L. Tassan-Got (IPN Orsay)
+\ingroup Identification
+
+These functionals are defined in the KVTGIDFunctions
+namespace, and the functional used by each KVTGID object is defined by
+giving its name to the constructor. These objects are persistent, i.e. can be
+retrieved from a ROOT file and used for identification.
+
+GetIdentification() method performs an identification. Status code can be retrieved
+afterwards using GetStatus();
+
+A KVIDGrid identification grid can be generated from the functional in order
+to visualise the corresponding identification lines. (MakeIDGrid)
+
+The following methods must be defined by child-classes:
+~~~~{.cpp}
+      SetIdent() -- determine how to set the identification for each line in the grid
+      AddLine()  -- define the type of IDLine added to the grid
+      NewGrid()  -- define the type of IDGrid to generate
+~~~~
+*/
+
 class KVTGID: public TF1 {
 
 protected:

@@ -12,6 +12,14 @@
 #include "TH2F.h"
 #include "TCanvas.h"
 
+/**
+\class KVLevelScheme
+\brief Tool to simulate nucleus multi-particle decay
+\ingroup NucProp
+
+\note the default energy unit here is keV and not MeV
+*/
+
 class KVLevelScheme {
 public:
    KVNucleus* fDecayProd, *fCompNuc;

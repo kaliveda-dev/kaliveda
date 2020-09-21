@@ -19,14 +19,6 @@
 ClassImp(KVItvFinderDialog)
 //ClassImp(interval_painter)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVItvFinderDialog</h2>
-<h4>gui to KVPIDIntevalFinder</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVItvFinderDialog::KVItvFinderDialog(KVIDZAFromZGrid* gg, TH2* hh)//:fSpectrum(7,1)
 {

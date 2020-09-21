@@ -8,12 +8,6 @@
 #pragma link C++ global gCopyObject;
 #pragma link C++ global gIDGridEditor;
 #pragma link C++ global gTreeAnalyzer;
-#pragma link C++ class KVBrowser;
-#pragma link C++ class KVDataBaseBrowser;
-#pragma link C++ class KVWidget;
-#pragma link C++ class KVWidgetList;
-#pragma link C++ class KVMergeGridsDialog+;
-#pragma link C++ class KVCalculateChIoSiGridDialog+;
 #pragma link C++ class KVIDGUITelescopeChooserDialog+;
 #pragma link C++ class KVDBSystemDialog+;
 #pragma link C++ class KVSimDirGUI+;

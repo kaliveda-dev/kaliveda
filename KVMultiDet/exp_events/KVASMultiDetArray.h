@@ -27,7 +27,7 @@ class KVASGroup;
 
 /**
   \class KVASMultiDetArray
-  \ingroup Geometry
+  \ingroup INDRAGeometry
   \brief Base class for azimuthally-symmetric multidetector arrays (obsolete)
  */
 class KVASMultiDetArray : public KVMultiDetArray {

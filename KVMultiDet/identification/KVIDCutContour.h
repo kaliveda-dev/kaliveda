@@ -12,6 +12,13 @@ $Date: 2009/03/03 13:36:00 $
 
 #include "KVIDContour.h"
 
+/**
+\class KVIDCutContour
+\brief Graphical contour for excluding/including regions in particle identification maps
+\ingroup Identification
+*/
+
+
 class KVIDCutContour : public KVIDContour {
 protected:
 

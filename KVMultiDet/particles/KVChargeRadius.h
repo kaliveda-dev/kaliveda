@@ -6,6 +6,12 @@
 
 #include "KVNuclData.h"
 
+/**
+\class KVChargeRadius
+\brief Simple class for storing charge radius information of nuclei
+\ingroup NucProp
+*/
+
 class KVChargeRadius : public KVNuclData {
    void init();
 

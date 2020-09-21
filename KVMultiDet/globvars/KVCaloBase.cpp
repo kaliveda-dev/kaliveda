@@ -12,9 +12,6 @@ $Date: 2009/01/23 15:25:52 $
 
 ClassImp(KVCaloBase)
 
-
-
-
 void KVCaloBase::Copy(TObject& a) const
 {
 // Methode de Copy

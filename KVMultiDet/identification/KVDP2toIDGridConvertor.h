@@ -17,6 +17,17 @@ $Date: 2008/10/13 14:25:08 $
 class KVIDGrid;
 class TList;
 
+/**
+   \class KVDP2toIDGridConvertor
+\brief Converts dp2-format grids to KVIDGrids
+\ingroup Idenification
+
+Set the name of the class (derived from KVIDGrid) using SetGridClass(),
+then convert file with Convert("dp2_grids.dat"). The new grids are added
+to gIDGridManager.
+*/
+
+
 class KVDP2toIDGridConvertor {
 protected:
    TClass*      fGridClass;   // class of grid to create from dp2 file

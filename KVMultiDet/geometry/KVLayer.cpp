@@ -24,23 +24,6 @@ $Id: KVLayer.cpp,v 1.17 2006/10/19 14:32:43 franklan Exp $
 using namespace std;
 
 ClassImp(KVLayer)
-////////////////////////////////////////////////////////////////////////////////////////
-//Begin_Html
-//<img src="http://indra.in2p3.fr/KaliVedaDoc/images/kvmultidetarray_diag.gif"><br>
-//
-//<h3>KVLayer: collection of rings in a multidetector array</h3>
-//End_Html
-//
-// A layer is composed of rings of telescopes (usually, though not necessarily, of the same type)
-// all at the "same distance" from the target in a multidetector array.
-// The geometry of different layers in the same array is not necessarily the same. They are used
-// to define the hierarchy of detectors with respect to their distance from the target, i.e. the
-// order in which a particle leaving the target will pass through them. The layer number
-// (GetNumber()), defined by the order in which layers are added to the array, increases with
-// increasing distance from the target i.e. particles always pass through the telescopes in layer
-// 0 before those in layer 1 (unless there is a hole in layer 0 where particles can pass directly
-// to the layer 1 telescopes!).
-////////////////////////////////////////////////////////////////////////////////////////
 
 KVLayer::KVLayer()
 {

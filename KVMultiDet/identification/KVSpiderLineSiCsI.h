@@ -6,6 +6,12 @@
 
 #include "KVSpiderLine.h"
 
+/**
+\class KVSpiderLineSiCsI
+\brief KVSpiderLine specialized for PSA matrix
+\ingroup Identification
+*/
+
 class KVSpiderLineSiCsI : public KVSpiderLine {
 
 public:

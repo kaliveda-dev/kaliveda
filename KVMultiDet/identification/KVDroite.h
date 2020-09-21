@@ -8,7 +8,11 @@
 
 #include <Riostream.h>
 
-
+/**
+  \class KVDroite
+  \brief Apparently, a straight line
+  \ingroup Identification
+ */
 class KVDroite : public TNamed {
 private:
    double _a0;

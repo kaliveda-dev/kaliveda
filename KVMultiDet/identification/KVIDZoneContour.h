@@ -11,6 +11,12 @@ $Date: 2016/10/09 13:36:00 $
 
 #include "KVIDContour.h"
 
+/**
+\class KVIDZoneContour
+\brief Graphical contour for including regions with mass identification in PSA(Imax) maps
+\ingroup Identification
+*/
+
 class KVIDZoneContour : public KVIDContour {
 protected:
 

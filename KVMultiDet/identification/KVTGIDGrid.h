@@ -14,6 +14,12 @@ $Date: 2009/03/03 14:27:15 $
 
 class KVTGID;
 
+/**
+\class KVTGIDGrid
+\brief Grid representing result of fit
+\ingroup Identification
+*/
+
 class KVTGIDGrid : public KVIDZAGrid {
 protected:
    KVTGID*      fTGID;     //KVTGID used to generate grid

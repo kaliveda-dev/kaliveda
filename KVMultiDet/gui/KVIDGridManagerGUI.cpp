@@ -26,28 +26,7 @@
 using namespace std;
 
 ClassImp(KVIDGridManagerGUI)
-//////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIDGridManagerGUI, KVNewGridDialog, KVCalculateChIoSiGridDialog, KVTestIDGridDialog</h2>
 
-<h4>Graphical interface tool for managing, creating, testing and fitting identification grids.</h4>
-
- <h2>KVIDGridManagerGUI</h2>
- <h4><a name="fig1"></a></h4>
- <img alt="" src="http://indra.in2p3.fr/KaliVedaDoc/images/newIDgridManager.png"
- style="width: 800px; height: 619px;"><br>
- <h4>Fig 1 : the main window of the ID Grid Manager</h4>
-
- <p>Launch the ID Grid Manager in an interactive ROOT session using the
- command<br>
- </p>
- <div style="margin-left: 40px;"><code>gIDGridManager-&gt;StartViewer()</code><br>
- <br>
- </div>
-<!-- */
-// --> END_HTML
-//////////////////////////////////////////////////////////
 KVIDGridManagerGUI::KVIDGridManagerGUI(): TGMainFrame(gClient->GetRoot(), 500, 300)
 {
    fFirstGrid = 0;

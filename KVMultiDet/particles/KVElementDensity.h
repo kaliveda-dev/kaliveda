@@ -6,6 +6,12 @@
 
 #include "KVNuclData.h"
 
+/**
+\class KVElementDensity
+\brief Atomic element with name, symbol and density
+\ingroup NucProp
+*/
+
 class KVElementDensity : public KVNuclData {
    Int_t fZ;
    Bool_t fIsGas;

@@ -1,13 +1,6 @@
 //Created by KVClassFactory on Wed Jun  5 17:00:08 2019
 //Author: John Frankland,,,
 
-/***
-  \class KVDetectorSignal
-  \ingroup Calibration
-  \brief Data produced by a detector
-
-
-*/
 
 #ifndef __KVDETECTORSIGNAL_H
 #define __KVDETECTORSIGNAL_H
@@ -17,6 +10,12 @@
 
 class KVDetector;
 class KVNumberList;
+
+/**
+  \class KVDetectorSignal
+  \ingroup Calibration
+  \brief Output signal data produced by a detector
+*/
 
 class KVDetectorSignal : public KVBase {
 

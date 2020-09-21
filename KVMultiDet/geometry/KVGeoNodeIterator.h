@@ -12,6 +12,25 @@
  \class KVGeoNodeIterator
  \ingroup Geometry
  \brief Iterate from node to node along trajectories in array geometry
+
+ Use a KVGeoNodeIterator in order to iterate over all nodes on all trajectories
+ starting from a given node:
+~~~~{.cpp}
+     KVGeoDetectorNode* start; =//= node to start iteration from
+
+     KVGeoNodeIterator next_node(start);
+     KVGeoDetectorNode* node;
+
+     while( (node = next_node()) ){
+        =//= do something to each node
+     }
+~~~~
+ Note that the start node for the iteration is included, and will be iterated
+ over at the beginning of each trajectory. To exclude the start node from
+ the iteration, call method ExcludeStartNode(kTRUE) before iteration begins.
+
+ Default direction for iteration is FORWARDS i.e. moving towards the target.
+ To change direction, call method IterateBackwards(kTRUE) before iteration begins.
  */
 
 class KVGeoNodeIterator : public KVBase {

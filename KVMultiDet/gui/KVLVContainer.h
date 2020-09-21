@@ -22,9 +22,13 @@ $Date: 2009/04/28 09:11:29 $
 #include "KVList.h"
 #include "KVNumberList.h"
 
+/**
+  \class KVLVColumnData
+  \brief  Utility class describing the data used to fill each column of the list view container
+  \ingroup GUI
+  */
+
 class KVLVColumnData {
-   // Utility class describing the data used to fill each
-   // column of the list view container
 
    TString        fName;      // name used on button at top of column
    TString        fMethod;    // method used to retrieve data from objects
@@ -103,6 +107,12 @@ public:
 
    ClassDef(KVLVColumnData, 0) //column data handler
 };
+
+/**
+  \class KVLVContainer
+  \brief  Extension of TGLVContainer for KVListView widget
+  \ingroup GUI
+  */
 
 class KVLVContainer : public TGLVContainer {
 

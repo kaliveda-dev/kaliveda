@@ -7,6 +7,12 @@
 #include "KVNuclDataTable.h"
 #include "KVChargeRadius.h"
 
+/**
+\class KVChargeRadiusTable
+\brief Table of charge radius information for nuclei
+\ingroup NucProp
+*/
+
 class KVChargeRadiusTable : public KVNuclDataTable {
 protected:
    virtual void init();

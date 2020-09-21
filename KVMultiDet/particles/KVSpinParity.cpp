@@ -5,14 +5,6 @@
 #include "Riostream.h"
 ClassImp(KVSpinParity)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSpinParity</h2>
-<h4>Simple class for store life time information of nucleus</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 //_________________________________
 KVSpinParity::KVSpinParity(const Char_t* name): KVNuclData(name, "s")

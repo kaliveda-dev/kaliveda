@@ -24,6 +24,12 @@ nuclei (base class KVNucleus). Therefore the global variable classes below can b
 event described by a class derived from KVEvent, containing particles described by a class which
 inherits from KVNucleus.
 
+Each global variable class implements the calculation of a given observable for any set of nuclei;
+this is done independently of the selection of the nuclei in the set, or in what reference frame
+kinematics should be calculated for either selection purposes or for the calculation of the observable.
+The way the observable is calculated is defined by the implementation of the fill(const KVNucleus*)
+(for 1-body observables: see below) and Calculate() methods.
+
 Global variables can be of different types:
 
  - One-body global variable  (type = `KVVarGlob::kOneBody`)
@@ -51,9 +57,8 @@ to generate a skeleton '.h' and '.cpp' file for the implementation of a new glob
 By default, global variables are 1-body and must define the fill(const KVNucleus*) method.
 
 In addition, implementations in daughter classes *must* define the following methods:
- - getvalue_int(int index) : return (possibly) several values calculated by the global variable,
-   depending on the index. In daughter class KVVarGlob1 (global variables with only 1 value),
-   this method is implemented to return the value of the variable for any index.
+ - getvalue_int(int) : return (possibly) several values calculated by the global variable,
+   depending on the index.
  - Init() : initialisation of any internal variables to be performed once before beginning analysis loop.
  - Calculate() : perform any necessary calculations after filling for 1 event is finished.
  - Reset() : reset internal variables ready for another event.
@@ -65,6 +70,7 @@ In addition, implementations in daughter classes *must* define the following met
 ~~~~~~~~~~~~{.cpp}
 SomeVarGlob VG("var1");   // daughter class implementing 1-body global variable
 
+// if required:
 VG.SetSelection( [particle selection criteria] );
 VG.SetFrame( [reference frame for kinematics] );
 
@@ -78,7 +84,9 @@ while( [loop over events] )
 {
    while( [loop over particles in event] )
    {
-      VG.Fill( [particle] ); // calculate contribution of particle to variable
+      // calculate contribution of particle to variable, only if it satisfies
+      // the selection criteria set with method SetSelection() (if any)
+      VG.Fill( [particle] );
    }
 
    VG.Calculate();  // perform any necessary calculations
@@ -98,7 +106,9 @@ while( [loop over events] )
 ~~~~~~~~~~~~
 
 Note that although the Fill() method is called for all particles, only those which satsify the conditions
-given to SetSelection() will be used to calculate the variable.
+given to SetSelection() will be used to calculate the variable. Also, the internal fill(const KVNucleus*)
+etc. methods of each global variable class actually receive a pointer to each nucleus with as default
+kinematics those of the frame chosen with SetFrame().
 
 ### Global variable lists
 The KVGVList class handles a list of global variables. A list can be used in the following
@@ -118,8 +128,10 @@ schematic way to calculate several global variables at once:
 
 ~~~~~~~~~~~~{.cpp}
       VGlist.CalculateGlobalVariables( [event] );          // calculate contribution of each particle to each variable
-
-      auto valueOfvar1 = VGlist.GetGV("var1")->GetValue(); // retrieve value of "var1" for event
+      if( !VGlist.AbortEventAnalysis() ) // in case cuts for event selection were set - see KVVarGlob::SetEventSelection()
+      {
+          auto valueOfvar1 = VGlist.GetGV("var1")->GetValue(); // retrieve value of "var1" for event
+      }
 ~~~~~~~~~~~~
 
 The KVGVList::CalculateGlobalVariables() method is optimised to ensure that all one- and two-body variables
@@ -127,9 +139,13 @@ are calculated with a single loop over the particles in each event. See KVGVList
 
 ## Options, parameters, reference frames, particle selection, etc.
 ### Particle selection
-The selection of particles which are taken into account can be handled by the variable
-itself. Define a selection using class KVParticleCondition and then set it by calling
-method SetSelection(KVParticleCondition&).
+The selection of particles which are taken into account is handled by the variable
+itself by calling method SetSelection().
+
+### Kinematical reference frames
+To change the reference frame used by the variable to calculate kinematical properties of particles
+(including those used for particle selection), call method SetFrame() (see KVParticle::SetFrame
+and KVEvent::SetFrame for how to define and access different frames).
 
 ### Options and parameters
 In order to give greater flexibility to global variable classes without the need to add
@@ -153,20 +169,6 @@ A 'parameter' is a name-value pair, the value is a double-precision float value.
      Double_t GetParameter(const Char_t* par)
      void     UnsetParameter(const Char_t* par)
 ~~~~~~~~~~~
-
-### Kinematical reference frames
-For global variables which use kinematical properties of particles, it can be useful to be
-able to calculate the same variable in different Lorentz reference frames (see KVParticle::SetFrame
-and KVEvent::SetFrame for how to define and access different frames). Therefore we
-provide the methods
-
-~~~~~~~~~~~{.cpp}
-     void           SetFrame(const Char_t*)
-     const Char_t*  GetFrame()
-~~~~~~~~~~~
-
-which allow to change the reference frame used for the calculation of the variable
-(depending on the implementation of the specific class).
 
 ### Event selection criteria
 When used in a KVGVList of global variables, conditions ('cuts') can be set on each variable which

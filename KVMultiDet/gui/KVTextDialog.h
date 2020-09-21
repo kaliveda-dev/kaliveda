@@ -11,6 +11,10 @@ class TGTextEntry;
 class TGTextButton;
 class TGWindow;
 
+/**
+  \class KVTextDialog
+  \ingroup GUI
+ */
 class KVTextDialog {
    RQ_OBJECT("KVTextDialog")
 

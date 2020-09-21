@@ -8,6 +8,16 @@
 #include "KVParticle.h"
 #include "KVFrameTransform.h"
 
+/**
+\class KVKinematicalFrame
+\brief Kinematical representation of a particle in different reference frames
+\ingroup NucEvents
+
+ This class handles transformations between different reference frames for
+ KVParticle kinematics. It is a utility class servicing the relevant methods in
+ KVParticle.
+*/
+
 class KVKinematicalFrame : public TNamed {
    KVFrameTransform       fTransform;    //! kinematical transform wrt 'parent' frame
    unique_ptr<KVParticle> fParticle;     //! kinematically transformed particle

@@ -15,6 +15,11 @@ class KVTextEntry;
 class TGTextButton;
 class TGWindow;
 
+/**
+ \class  KVInputDialog
+ \brief General purpose dialog box asking for some input in the form of a string
+ \ingroup GUI
+ */
 class KVInputDialog {
 
    RQ_OBJECT("KVInputDialog")

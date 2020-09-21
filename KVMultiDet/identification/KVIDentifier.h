@@ -18,6 +18,12 @@ $Date: 2009/04/20 10:01:58 $
 class TF1;
 class KVIDGraph;
 
+/**
+\class KVIDentifier
+\brief Base class for graphical cuts used in particle identification
+\ingroup Identification
+*/
+
 class KVIDentifier : public TCutG {
    friend class KVIDGraph;
 

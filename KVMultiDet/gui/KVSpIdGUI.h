@@ -22,6 +22,10 @@
 #include "KVIDZAGrid.h"
 #include "KVSpiderIdentificator.h"
 
+/**
+\class KVSpIdGUI
+\ingroup GUI
+ */
 class KVSpIdGUI {
    RQ_OBJECT("KVSpIdGUI")
 

@@ -15,10 +15,15 @@
 #include "TGStatusBar.h"
 #include "KVIDGridEditor.h"
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// KVIDGridManagerGUI
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+\class KVIDGridManagerGUI
+\brief Graphical interface tool for managing, creating, testing and fitting identification grids
+\ingroup Identification
+\ingroup GUI
+
+\image http http://indra.in2p3.fr/kaliveda/images/newIDgridManager.png
+
+*/
 
 class KVIDGridManagerGUI: public TGMainFrame {
 

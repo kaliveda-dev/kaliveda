@@ -5,15 +5,6 @@
 
 ClassImp(KVElementDensity)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVElementDensity</h2>
-<h4>Atomic element with name, symbol and density</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVElementDensity::KVElementDensity()
 {
    // Default constructor

@@ -14,18 +14,6 @@
 
 ClassImp(KVIDGridEditorCanvas)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIDGridEditorCanvas</h2>
-Classe basée sur TCanvas avec surcharge de la méthode 'HandleInput'
-de manière à être sensible au mouvement de molette (kWheelUp/kWheelDown),
-et à suprimer la sensibilité des TPavaLabel.
-Cette Classe à été créée pour être urilisée par la classe KVIDGridEditor.
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 
 KVIDGridEditorCanvas::KVIDGridEditorCanvas(const char* name, const char* title, Int_t ww, Int_t wh): KVCanvas(name, title, ww, wh)
 {

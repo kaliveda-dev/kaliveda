@@ -42,6 +42,18 @@
 
 #define FACTOR -1.
 
+/**
+   \class KVIDGridEditor
+\brief Identification grid editor GUI
+\ingroup GUI,Identification
+
+\image http http://indra.in2p3.fr/KaliVedaDoc/images/IDGridEditor.png
+
+See users guide http://indra.in2p3.fr/kaliveda/images/DocGridEditor.pdf (in French)
+
+See also the presentation here: http://indra.in2p3.fr/kaliveda/images/JourneeAnalyse0312_1.pdf (in French)
+ */
+
 class KVIDGridEditor : public KVBase {
 //friend class KeyHandler;
    friend class KVIDGridEditorCanvas;

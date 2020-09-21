@@ -1,6 +1,5 @@
 #include "Riostream.h"
 #include "KVReconstructedNucleus.h"
-#include "KVTelescope.h"
 #include "KVIDTelescope.h"
 #include "KVGroup.h"
 #include "KVMultiDetArray.h"

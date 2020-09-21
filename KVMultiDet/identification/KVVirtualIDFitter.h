@@ -14,6 +14,12 @@ $Date: 2009/03/03 14:27:15 $
 #include "KVIDGrid.h"
 #include "TPad.h"
 
+/**
+\class KVVirtualIDFitter
+\brief ABC for fitting ID grids with functionals
+\ingroup Identification
+*/
+
 class KVVirtualIDFitter : public KVBase {
    static KVVirtualIDFitter* gDefaultFitter;
 

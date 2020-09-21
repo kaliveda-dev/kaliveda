@@ -17,15 +17,6 @@ using namespace std;
 
 ClassImp(KVIDentifier)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIDentifier</h2>
-<h4>Base class for graphical cuts used in particle identification</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 void  KVIDentifier::SetName(const char* name)
 {
    TGraph::SetName(name);

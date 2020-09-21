@@ -9,6 +9,12 @@
 #include "KVNuclearChart.h"
 #include "TLatex.h"
 
+/**
+\class KVNucleusBox
+\brief A TBox representing a nucleus in a KVNuclearChart
+\ingroup NucEvents
+*/
+
 class KVNucleusBox : public TBox {
 protected:
    Int_t fZ, fN, fA;

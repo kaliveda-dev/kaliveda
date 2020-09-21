@@ -21,6 +21,26 @@ class TEnv;
  \class KVGeoNavigator
  \ingroup Geometry
  \brief Base class for propagation of particles through array geometry
+
+ This is a base class for propagation of charged particles (KVNucleus) in events (KVEvent)
+ through any TGeoManager ROOT geometry. Classes derived from this one must
+ override the method
+~~~~~~~{.cpp}
+     ParticleEntersNewVolume(KVNucleus*)
+~~~~~~~
+ in order to do something useful every time that a particle of the event
+ enters a new volume (absorber, detector, etc.) of the geometry.
+
+ Then to use your derived class do something like:
+
+~~~~~{.cpp}
+  MyGeoNavigator nav( gGeoManager );
+  while( nevents-- ) {
+       nav.PropagateEvent( event );
+  }
+~~~~~
+
+ \sa KVRangeTableGeoNavigator, KVGeoImport
  */
 
 class KVGeoNavigator : public KVBase {

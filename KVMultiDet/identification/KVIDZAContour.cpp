@@ -13,15 +13,6 @@ using namespace std;
 
 ClassImp(KVIDZAContour)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIDZAContour</h2>
-<h4>Graphical contour associated with a given nucleus for use in particle identification</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVIDZAContour::KVIDZAContour()
 {
    // Default constructor

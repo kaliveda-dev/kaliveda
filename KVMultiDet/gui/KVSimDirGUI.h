@@ -23,6 +23,15 @@
 #endif
 class TChain;
 
+/**
+\class KVSimDirGUI
+\brief GUI for analysing and filtering simulated data
+
+\image http http://indra.in2p3.fr/kaliveda/images/KVSimDirGUI.png
+
+See documentation http://indra.in2p3.fr/kaliveda/KVSimDirGUIDoc/KVSimDirGUI.html
+*/
+
 class KVSimDirGUI : public KVBase {
    RQ_OBJECT("KVSimDirGUI")
 

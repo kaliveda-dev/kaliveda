@@ -10,6 +10,14 @@ class KVNuclDataTable;
 class KVNuclData;
 class TObjArray;
 
+/**
+\class KVNDTManager
+\brief Nuclear Data Table manager
+\ingroup NucProp
+
+Allow to navigate between different tables of nuclear data
+*/
+
 class KVNDTManager : public KVList {
 
 protected:

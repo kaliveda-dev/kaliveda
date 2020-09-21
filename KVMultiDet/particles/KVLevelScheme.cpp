@@ -12,15 +12,6 @@ using namespace std;
 
 ClassImp(KVLevelScheme)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVLevelScheme</h2>
-<h4>tool to simulate nucleus multi-particle decay</h4>
-Important note: the default energy unit here is keV and not MeV
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 
 KVLevelScheme::KVLevelScheme(const char* symb)

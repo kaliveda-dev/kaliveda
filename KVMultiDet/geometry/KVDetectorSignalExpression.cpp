@@ -6,15 +6,6 @@
 
 ClassImp(KVDetectorSignalExpression)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDetectorSignalExpression</h2>
-<h4>Mathematical expression involving one or more detector signals</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDetectorSignalExpression::KVDetectorSignalExpression(const Char_t* type, const KVString& _expr, KVDetector* det)
    : KVDetectorSignal(type, det), fFormula(nullptr)
 {

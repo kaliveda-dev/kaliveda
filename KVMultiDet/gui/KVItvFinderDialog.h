@@ -33,9 +33,11 @@
 #include <TF1.h>
 
 
-//#include "KVPIDIntervalFinder.h"
-
-//class interval_painter;
+/**
+\class KVItvFinderDialog
+\brief GUI for finding/fixing mass identification intervals
+\ingroup GUI
+ */
 
 class KVItvFinderDialog {
    RQ_OBJECT("KVZAFinderDialog")

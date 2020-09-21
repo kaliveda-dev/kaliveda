@@ -13,15 +13,6 @@ $Date: 2009/03/03 14:27:15 $
 
 ClassImp(KVVirtualIDFitter)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVVirtualIDFitter</h2>
-<h4>ABC for fitting ID grids with functionals</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVVirtualIDFitter* KVVirtualIDFitter::gDefaultFitter = 0;
 KVVirtualIDFitter* KVVirtualIDFitter::GetDefaultFitter()
 {

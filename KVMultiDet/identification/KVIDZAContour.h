@@ -12,6 +12,12 @@ $Date: 2009/03/03 13:36:00 $
 
 #include "KVIDContour.h"
 
+/**
+\class KVIDZAContour
+\brief Graphical contour associated with a given nucleus for use in particle identification
+\ingroup Identification
+*/
+
 class KVIDZAContour : public KVIDContour {
 protected:
 

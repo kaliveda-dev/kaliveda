@@ -1,7 +1,3 @@
-//
-// Implementation de KVDataAnalysisLauncher
-//
-
 #include "KVDataAnalysisLauncher.h"
 #include "TGLabel.h"
 #include "TGMsgBox.h"

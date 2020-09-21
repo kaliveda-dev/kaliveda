@@ -14,15 +14,6 @@
 
 ClassImp(KVTextDialog)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVTextDialog</h2>
-<h4></h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVTextDialog::KVTextDialog(const TGWindow* main, const Char_t* question, const Char_t* default_value, TString* chosen, Bool_t* ok, const char* unit)
 {
    fMain = new TGTransientFrame(gClient->GetDefaultRoot(), main, 200, 100);

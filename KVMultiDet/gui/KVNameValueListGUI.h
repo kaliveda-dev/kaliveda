@@ -11,6 +11,12 @@
 #include <TGButton.h>
 #include <TObjArray.h>
 
+/**
+\class KVNameValueListGUI
+\brief GUI for setting KVNameValueList parameters
+\ingroup GUI
+*/
+
 class KVNameValueListGUI {
    RQ_OBJECT("KVNameValueListGUI")
 private:

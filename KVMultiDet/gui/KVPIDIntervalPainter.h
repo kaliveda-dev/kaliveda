@@ -17,6 +17,12 @@
 
 #include "TNamed.h"
 
+/**
+   \class KVPIDIntervalPainter
+\brief Used for mass identification GUI
+\ingroup GUI
+*/
+
 class KVPIDIntervalPainter : public TNamed {
    RQ_OBJECT("KVPIDIntervalPainter")
 

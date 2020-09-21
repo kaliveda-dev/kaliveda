@@ -14,15 +14,6 @@ using namespace std;
 
 ClassImp(KVIDCutContour)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIDCutContour</h2>
-<h4>Graphical contour for excluding/including regions in particle identification maps</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVIDCutContour::KVIDCutContour()
 {
    // Default constructor

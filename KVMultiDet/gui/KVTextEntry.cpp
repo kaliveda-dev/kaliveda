@@ -11,15 +11,6 @@ $Date: 2007/12/11 16:03:45 $
 
 ClassImp(KVTextEntry)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVTextEntry</h2>
-<h4>TGTextEntry without any limit on the length of the text</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 //______________________________________________________________________________
 void KVTextEntry::SetText(const char* text, Bool_t emit)
 {

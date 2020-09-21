@@ -13,6 +13,12 @@ $Date: 2009/03/03 13:36:00 $
 #include "KVIDLine.h"
 #include "KVString.h"
 
+/**
+\class KVIDCutLine
+\brief Line in ID grid used to delimit regions where no identification is possible
+\ingroup Identification
+*/
+
 class KVIDCutLine : public KVIDLine {
 protected:
    KVString fAcceptedDirection;         //direction relative to cut line corresponding to acceptable region

@@ -8,6 +8,12 @@
 #include "TString.h"
 #include "KVConfig.h"
 
+/**
+\class KVNuclData
+\brief Simple abstract class to store value related to nuclear data
+\ingroup NucProp
+*/
+
 class KVNuclData : public TObject {
 protected:
    Double_t kValue;  //numerical value

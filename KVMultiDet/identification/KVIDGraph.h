@@ -22,6 +22,12 @@ $Date: 2009/04/28 09:07:47 $
 class TVirtualPad;
 class KVIdentificationResult;
 
+/**
+\class KVIDGraph
+\brief Base class for particle identification in a 2D map
+\ingroup Identification
+ */
+
 class KVIDGraph : public TCutG {
    friend class KVIDGridManager;
 

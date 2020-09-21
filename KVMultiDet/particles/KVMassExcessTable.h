@@ -7,6 +7,12 @@
 #include "KVNuclDataTable.h"
 #include "KVMassExcess.h"
 
+/**
+\class KVMassExcessTable
+\brief Manage mass excess data for nuclei
+\ingroup NucProp
+*/
+
 class KVMassExcessTable : public KVNuclDataTable {
 
 protected:

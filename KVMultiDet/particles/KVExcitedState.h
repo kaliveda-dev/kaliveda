@@ -7,6 +7,12 @@
 #include "TNamed.h"
 #include "KVString.h"
 
+/**
+\class KVExcitedState
+\brief Excited state of atomic nucleus
+\ingroup NucProp
+*/
+
 class KVExcitedState: public TNamed {
 public:
    TString fJPi;

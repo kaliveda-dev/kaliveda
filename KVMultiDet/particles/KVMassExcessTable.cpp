@@ -8,15 +8,6 @@
 
 ClassImp(KVMassExcessTable)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVMassExcessTable</h2>
-<h4>manage mass excess data for nuclei</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVMassExcessTable::KVMassExcessTable(): KVNuclDataTable("KVMassExcess")
 {
    // Default constructor

@@ -13,15 +13,6 @@ using namespace std;
 
 ClassImp(KVIDZoneContour)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIDZoneContour</h2>
-<h4>Graphical contour for including regions with mass identification in PSA(Imax) maps</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVIDZoneContour::KVIDZoneContour()
 {
    // Default constructor

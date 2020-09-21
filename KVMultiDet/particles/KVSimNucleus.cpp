@@ -6,20 +6,6 @@
 
 ClassImp(KVSimNucleus)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSimNucleus</h2>
-<h4>Classe dérivée de KVNucleus pour gérer des simulations dans KaliVeda</h4>
-<!-- */
-// --> END_HTML
-//Deux TVector3 sont ajoutés en champs de la classe :
-// - le vecteur position
-// - le vecteur moment angulaire
-//
-//Cette classe est couplée à KVSimEvent
-////////////////////////////////////////////////////////////////////////////////
-
 
 //___________________________
 KVSimNucleus::KVSimNucleus(const KVSimNucleus& o) : KVNucleus()

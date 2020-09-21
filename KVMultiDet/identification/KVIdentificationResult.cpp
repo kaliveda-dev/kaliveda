@@ -5,38 +5,6 @@
 
 ClassImp(KVIdentificationResult)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIdentificationResult</h2>
-<h4>Full result of one attempted particle identification</h4>
-When we attempt to identify a reconstructed charged particle (KVReconstructedNucleus) using an identification
-telescope (KVIDTelescope), we call the
-KVIDTelescope::Identify() method of the telescope in question, and the results of the
-identification attempt are stored in the KVIdentificationResult object.
-<br><br>
-The informations stored are:
-<ul>
-<li>Bool_t IDattempted : (=kTRUE if an identification attempt was made)</li>
-<li>Bool_t IDOK : general status of identification (=kTRUE if identification attempt successful)</li>
-<li>GetIDType() : returns string containing type of identification (corresponds to type of identification telescope)</li>
-<li>GetGridName() : returns the name of the grid used for identification (VARY_VARX)
-<li>Int_t IDcode : general identification quality code associated with this type of identification</li>
-<li>Int_t IDquality : specific quality code returned by identification procedure</li>
-<li>GetComment() : explanatory message regarding quality code returned by identification procedure</li>
-<li>Double_t PID : the particle identifier (interpolated mass or charge)</li>
-<li>Bool_t Zident : (=kTRUE if particle's Z was determined by the identification)</li>
-<li>Bool_t Aident : (=kTRUE if particle's A was determined by the identification)</li>
-<li>Int_t Z : the Z given by the identification attempt if Zident==kTRUE</li>
-<li>Int_t A : the A given by the identification attempt if Aident==kTRUE</li>
-<li>Int_t deltaEpedestal : tells if particle is in pedestal region of delta-E</li>
-</ul>
-Note that, apart from GetIDType() and GetComment() methods, all other informations are public member variables
-which can be accessed directly.
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 void KVIdentificationResult::Copy(TObject& obj) const
 {
    // Copy this to obj

@@ -9,6 +9,13 @@
 
 class TVector3;
 
+/**
+   \class KVSimNucleus
+\brief Nucleus in a simulated event
+\ingroup NucEvents,Simulation
+*/
+
+
 class KVSimNucleus : public KVNucleus {
 
 protected:

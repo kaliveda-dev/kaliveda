@@ -8,6 +8,22 @@
 #include "TLine.h"
 #include "Riostream.h"
 
+/**
+   \class KVDalitzPlot
+\brief Fill 3D observables \f${a1,a2,a3}\f$ in a dalitz plot
+\ingroup Math,Analysis
+
+Fill 3D observables \f${a1,a2,a3}\f$ in a dalitz plot, where \f$a1+a2+a3 = 1\f$
+and fill in an equilateral triangle where the distance from each side of the triangle
+represents the value of each componment.
+
+  - Normalize first the sum to 1 => \f$a1+a2+a3 = 1\f$
+  - Deduce the position in an equilateral triangle as following
+     + `a1n -> distance with the bottom border    /\`
+     + `a2n -> distance with the left border      /  \`
+     + `a3n -> distance with the right border  /____\`
+*/
+
 class KVDalitzPlot : public TH2F {
 
 protected:

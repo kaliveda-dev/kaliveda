@@ -11,35 +11,6 @@
 
 ClassImp(KVBatchSystemGUI)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVBatchSystemGUI</h2>
-<h4>GUI for batch system jobs</h4>
-<!-- */
-// --> END_HTML
-//Graphical interface for monitoring, altering, and deleting batch jobs.
-//To run:
-//
-//  root[0]  new KVBatchSystemGUI
-//
-//It will automatically connect to the default batch system and display
-//all of the user's queued or running jobs along with information
-//on resource requests and consumption.
-//The buttons at the top of the GUI can be used to (manually) refresh
-//the informations (see Automatic refresh, below), alter the properties
-//of selected (queued) job(s), or delete selected (queued or running) job(s).
-//
-//Automatic refresh
-//The GUI automatically refreshes every N seconds, as defined by the
-//following environment variables (.kvrootrc):
-//
-//   KVBatchSystemGUI.AutoUpdate:       yes
-//   KVBatchSystemGUI.RefreshInterval:    30
-//
-//Change these variables in your .kvrootrc if you want to modify or
-//disable automatic refreshing.
-////////////////////////////////////////////////////////////////////////////////
 
 Bool_t KVBatchSystemGUI::fOpen = kFALSE;
 

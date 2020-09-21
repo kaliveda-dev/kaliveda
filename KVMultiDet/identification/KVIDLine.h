@@ -16,6 +16,130 @@ $Id: KVIDLine.h,v 1.16 2009/03/03 14:27:15 franklan Exp $
 #include "TH2.h"
 #include "KVIDentifier.h"
 
+/**
+\class KVIDLine
+\brief Base class for lines/cuts used for particle identification in 2D data maps
+\ingroup Identification
+
+This provides all methods for calculating the shortest distance between a point (x,y)
+in the map and the line, or for finding the relative orientation of the point and
+the line (above/below, left/right). These methods are modified versions of methods
+existing in the TGraph base class.
+
+Note: by default, a KVIDLine cannot be graphically modified using the mouse.
+This is to avoid accidents! This can of course be changed either with the context menu
+of the line, or when using the KVIDGridManagerGUI in Edit mode.
+
+~~~~{.cpp}
+Double_t KVIDLine::DistanceToLine(Double_t px, Double_t py, Int_t &i_near)
+~~~~
+
+Compute the closest distance of approach from point px,py to this line.
+The units of px, py are the same as the coordinates of the graph.
+_WARNING_: can be *NEGATIVE* - see below.
+
+The distance from the point to each segment is calculated in turn.
+
+If the point lies between the endpoints of at least one segment, the returned
+distance will be the closest of these segments. In this case i_near gives the
+index of the first point of the closest segment.
+
+If not then the distance is the smallest distance between the endpoint
+of a segment and the point. In this case i_near gives the index of the
+closest endpoint.
+If the closest segment-endpoint is not one of the endpoints of the whole line,
+the returned distance is positive.
+On the other hand, if the closest part of the line to the point is one of the
+two endpoints of the line, the returned distance is NEGATIVE.
+
+~~~~{.cpp}
+Double_t KVIDLine::DistanceToLine(Double_t px, Double_t py, Double_t xp1, Double_t yp1, Double_t xp2, Double_t yp2, Int_t &i_nearest_point)
+~~~~
+
+Given a line segment defined by endpoints (xp1,yp1) and (xp2,yp2) find the
+  shortest distance between point (px,py) and the line.
+~~~~
+                                                   M
+      P1 (xp1,yp1) x---------------------------------------x P2 (xp2,yp2)
+                                                      |
+                                                      |
+                                                      |
+                                                      |
+                                                      |
+                                                      x
+                                                                P (px,py)
+~~~~
+This is simply the magnitude of the component of vector P1->P  (or P2->P)
+perpendicular to P1->P2.
+
+If the point is indeed between the two endpoints as shown, then
+\f$P1M + P2M = P1P2\f$.
+If not, \f$P1M + P2M > P1P2\f$. In this case the closest distance is that to the nearer
+of the two endpoints, but the value returned is negative; i_nearest_point gives the index (0 or 1)
+of the nearer endpoint
+
+~~~~{.cpp}
+Bool_t KVIDLine::PosRelToLine(Option_t* opt, Double_t px, Double_t py, Double_t xp1, Double_t yp1, Double_t xp2, Double_t yp2 )
+~~~~
+
+Given a line segment defined by endpoints (xp1,yp1) and (xp2,yp2) test the
+  direction of (px,py) with respect to the line in the (x,y) plane.
+~~~~
+                                                        M
+      P1 (xp1,yp1) x---------------------------------------x P2 (xp2,yp2)
+                                                         |
+                                                         |
+                                                         |
+                                                         |
+                                                         |
+                                                         x
+                                                                P (px,py)
+~~~~
+This is given by the angle phi between vector MP (component of vector P1->P  (or P2->P)
+perpendicular to P1->P2) and the +ve x-axis.
+  - Point is left of line if 90<phi<270
+  - Point is right of line if 270<phi<90
+  - Point is above line if 0<phi<180
+  - Point is below line if 180<phi<360
+
+The option string is "left", "right", "above" or "below", and the result is either kTRUE or kFALSE
+depending on the relative position of the point and the line.
+E.g. in the diagram shown above, PosRelToLine("below", ...) would give kTRUE - the point is
+below the line.
+
+~~~~{.cpp}
+Bool_t KVIDLine::WhereAmI(Double_t px, Double_t py, Option_t *opt)
+~~~~
+
+The relative position of point (px,py) with respect to the line is tested.
+The option string can be "left", "right", "above" or "below".
+WhereAmI( px, py, "above") returns kTRUE if the point is above the line etc. etc.
+
+First of all, the closest segment/point of the line to the point is found.
+Then the relative position of the point and this segment/point is tested.
+
+~~~~{.cpp}
+void KVIDLine::GetStartPoint(Double_t& x, Double_t& y) const
+~~~~
+
+Coordinates of first point in line
+
+~~~~{.cpp}
+void KVIDLine::GetEndPoint(Double_t& x, Double_t& y) const
+~~~~
+
+Coordinates of last point in line
+
+~~~~{.cpp}
+Bool_t KVIDLine::IsBetweenEndPoints(Double_t x, Double_t y, const Char_t* axis) const
+~~~~
+
+Returns kTRUE for point (x,y) if :
+ - axis = "" (default) and both x and y lie inside the endpoints of the line x1 < x < x2, y1 < y < y2
+ - axis = "x" and x lies inside the endpoints x1 < x < x2
+ - axis = "y" and y lies inside the endpoints y1 < y < y2
+*/
+
 class KVIDLine : public KVIDentifier {
 
 public:

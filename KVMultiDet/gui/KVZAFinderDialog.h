@@ -20,6 +20,12 @@
 #include <TGProgressBar.h>
 #include "KVCanvas.h"
 
+/**
+\class KVZAFinderDialog
+\brief Dialog box for KVZALineFinder class
+\ingroup GUI
+*/
+
 class KVZAFinderDialog {
    RQ_OBJECT("KVZAFinderDialog")
 

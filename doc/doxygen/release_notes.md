@@ -1,8 +1,35 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 11th August 2020
+Last update: 21st September 2020
 
 ## Version 1.11/01 (current development focus)
+
+__Changes 21/9/2020 in__ \ref GlobalVariables
+
+Event selection can be performed automatically based on the values of the global variables in a KVGVList.
+This is implemented for example in KVEventSelector, the base class for all analysis classes.
+
+For example, to retain for analysis only events with a total measured charge in the forward c.m.
+hemisphere which is at least equal to 80% of the charge of the projectile:
+
+~~~~{.cpp}
+int UserAnalysis::fZproj;// member variable (in .h file)
+
+void UserAnalysis::InitAnalysis()
+{
+   auto vg = AddGV("KVZtot", "ztot");
+   vg->SetFrame("cm");
+   vg->SetSelection("Vcm>0", [](const KVNucleus* n){ return n->GetVpar()>0; });
+   // note capture by reference in order to use value of fZproj (not defined yet)
+   vg->SetEventSelection([&](const KVVarGlob* v){ return v->GetValue()>0.8*fZproj; });
+}
+
+void UserAnalysis::InitRun()
+{
+   // initialize fZproj for current run
+   fZproj = GetCurrentRun()->GetSystem()->GetZproj();
+}
+~~~~
 
 __Changes 11/8/2020 in__ \ref Core
 

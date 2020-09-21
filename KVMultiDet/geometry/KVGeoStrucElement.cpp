@@ -9,15 +9,6 @@ using namespace std;
 
 ClassImp(KVGeoStrucElement)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGeoStrucElement</h2>
-<h4>A multidetector array geometry structural element</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 void KVGeoStrucElement::init()
 {
    // Default initialisations

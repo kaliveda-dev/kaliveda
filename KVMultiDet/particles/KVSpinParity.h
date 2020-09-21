@@ -6,6 +6,12 @@
 
 #include "KVNuclData.h"
 
+/**
+\class KVSpinParity
+\brief Spin parity assignment of nuclear levels
+\ingroup NucProp
+*/
+
 class KVSpinParity : public KVNuclData {
 
 protected:

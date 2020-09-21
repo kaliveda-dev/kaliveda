@@ -13,16 +13,6 @@ using namespace std;
 
 ClassImp(KVKeyHandler)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVKeyHandler</h2>
-Bricolage pour rediriger les signaux du clavier sur le KVCanvas...
-Pour que les signaux passent, la touche 'Verr.Num' doit etre inactive.
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 
 KVKeyHandler::KVKeyHandler(KVCanvas* Canvas) : TGFrame(gClient->GetRoot(), 0, 0)
 {

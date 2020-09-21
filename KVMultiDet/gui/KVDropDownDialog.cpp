@@ -15,14 +15,6 @@ $Author: franklan $
 #include "TTimer.h"
 
 ClassImp(KVDropDownDialog)
-//////////////////////////////////////////////////////////////
-//
-//      KVDropDownDialog
-//
-//  Ask user to choose between several options in a drop-down
-//  list.
-//
-/////////////////////////////////////////////////////////////
 
 
 KVDropDownDialog::KVDropDownDialog(const TGWindow* main,

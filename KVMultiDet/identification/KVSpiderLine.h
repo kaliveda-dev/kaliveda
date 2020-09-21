@@ -9,6 +9,11 @@
 
 #include <Riostream.h>
 
+/**
+  \class KVSpiderLine
+  \brief Part of Spider Identification
+  \ingroup Identification
+ */
 
 class KVSpiderLine : public TNamed {
 protected:

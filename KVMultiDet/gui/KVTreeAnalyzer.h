@@ -127,6 +127,24 @@
 
 class KVHistogram;
 
+/**
+\class KVTreeAnalyzer
+\brief GUI for simple intuitive analysis of data in TTree
+\ingroup GUI,Analysis
+
+<h5>Configure initial state of interface</h5>
+In .kvrootrc file, user can configure the following options, corresponding to check boxes in the interface:<br>
+<pre>
+KVTreeAnalyzer.LogScale:         off
+KVTreeAnalyzer.UserBinning:           off
+KVTreeAnalyzer.UserWeight:       off
+KVTreeAnalyzer.NewCanvas:      off
+KVTreeAnalyzer.Normalize:      off
+KVTreeAnalyzer.Stats:      off
+</pre>
+Change value to 'on' if required.
+*/
+
 class KVTreeAnalyzer : public TNamed {
 private:
    const Char_t* get_leaf_type_name(const TNamed* l);

@@ -23,6 +23,11 @@
 
 #include <vector>
 
+/**
+\class KVZALineFinder
+\brief (try to) find mass lines from charge lines
+\ingroup GUI
+ */
 
 class KVZALineFinder : public KVBase {
    RQ_OBJECT("KVZALineFinder")

@@ -11,14 +11,6 @@
 
 ClassImp(KVNDTManager)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVNDTManager</h2>
-<h4>Allow to navigate between different tables of nuclear data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 KVNDTManager* gNDTManager;
 
 KVNDTManager::KVNDTManager()

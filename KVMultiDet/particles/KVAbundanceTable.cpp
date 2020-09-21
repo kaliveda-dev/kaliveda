@@ -8,15 +8,6 @@
 
 ClassImp(KVAbundanceTable)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVAbundanceTable</h2>
-<h4>Store available values of the relative abundance</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVAbundanceTable::KVAbundanceTable(): KVNuclDataTable("KVAbundance")
 {
    // Default constructor

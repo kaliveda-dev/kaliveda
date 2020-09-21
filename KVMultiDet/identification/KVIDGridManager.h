@@ -15,6 +15,16 @@ $Id: KVIDGridManager.h,v 1.11 2009/03/03 14:27:15 franklan Exp $
 #include "KVIDGraph.h"
 #include "RQ_OBJECT.h"
 
+/**
+\class KVIDGridManager
+\brief Handles a stock of identification grids to be used by one or more identification telescopes
+\ingroup Identification
+
+Each KVIDTelescope asks the grid manager for a grid (FindGrid), if one is available its
+address is given to the telescope to use. In this way many IDTelescopes can use the same
+grid without making multiple copies.
+*/
+
 class KVIDGridManager: public KVBase {
 
    RQ_OBJECT("KVIDGridManager")

@@ -6,6 +6,12 @@
 
 #include "KVNuclData.h"
 
+/**
+\class KVMassExcess
+\brief Simple class for store life time information of nucleus
+\ingroup NucProp
+*/
+
 class KVMassExcess : public KVNuclData {
 
 public:

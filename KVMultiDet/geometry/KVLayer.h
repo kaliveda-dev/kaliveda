@@ -25,7 +25,7 @@ $Id: KVLayer.h,v 1.19 2009/03/03 14:27:15 franklan Exp $
 
 /**
  \class KVLayer
- \ingroup Geometry
+ \ingroup INDRAGeometry
  \brief Set of detectors at a similar distance from target (obsolete)
  */
 

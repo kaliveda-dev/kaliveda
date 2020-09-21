@@ -6,19 +6,6 @@
 
 ClassImp(KVKinematicalFrame)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVKinematicalFrame</h2>
-<h4>Kinematical representation of a particle in a different frame</h4>
-<!-- */
-// --> END_HTML
-//
-// This class handles transformations between different reference frames for
-// KVParticle kinematics. It is a utility class servicing the relevant methods in
-// KVParticle.
-////////////////////////////////////////////////////////////////////////////////
-
 KVKinematicalFrame::KVKinematicalFrame(const Char_t* name, const KVParticle* original, const KVFrameTransform& trans)
    : TNamed(name, "Kinematical frame"), fTransform(trans), fParticle((KVParticle*)original->IsA()->New())
 {

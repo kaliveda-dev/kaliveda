@@ -27,15 +27,6 @@ using namespace std;
 
 ClassImp(KVIDGraph)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIDGraph</h2>
-<h4>Base class for particle identification in a 2D map</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 void KVIDGraph::ResetPad()
 {
    cout << "The pad showing graph " << GetName() << " has been closed !" << endl;

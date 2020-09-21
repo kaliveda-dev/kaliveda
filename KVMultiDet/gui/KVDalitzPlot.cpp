@@ -9,24 +9,6 @@
 
 ClassImp(KVDalitzPlot)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDalitzPlot</h2>
-<h4>Fill 3D observables {a1,a2,a3} in a dalitz plot</h4>
-, a1+a2+a3 = 1
-and fill in a equilateral triangle where the distance from each side of the triangle represent the value of each componment</h4>
-
-<!-- */
-// --> END_HTML
-/*
-- Normalize first the sum to 1 => a1+a2+a3 = 1
-- Deduce the position in an equilateral triangle as following
-a1n -> distance with the bottom border   /\
-a2n -> distance with the left border    /  \
-a3n -> distance with the right border  /____\
-*/
-////////////////////////////////////////////////////////////////////////////////
 KVDalitzPlot::KVDalitzPlot(const char* name, const char* title, Bool_t ordered, Int_t nbinsx, Double_t xlow, Double_t xup, Int_t nbinsy, Double_t ylow, Double_t yup) :
    TH2F(name, title, nbinsx, xlow, xup, nbinsy, ylow, yup)
 {

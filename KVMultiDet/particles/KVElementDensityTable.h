@@ -8,6 +8,12 @@
 
 class KVElementDensity;
 
+/**
+\class KVElementDensityTable
+\brief Table of atomic elements with their density
+\ingroup NucProp
+*/
+
 class KVElementDensityTable : public KVNuclDataTable {
 
    virtual NDT::value* getNDTvalue(Int_t zz, Int_t aa) const;

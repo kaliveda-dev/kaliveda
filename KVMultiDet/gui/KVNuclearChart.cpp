@@ -14,25 +14,6 @@
 
 ClassImp(KVNuclearChart)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVNuclearChart</h2>
-<h4>Used to draw nuclear chart</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
-// KVNuclearChart::KVNuclearChart()
-// {
-//    // Default constructor
-//    fNmin = -1;
-//    fNmax = -1;
-//    fZmin = -1;
-//    fZmax = -1;
-//    fHisto = 0;
-// }
-
 KVNuclearChart::KVNuclearChart(Int_t nMin, Int_t nMax, Int_t zMin, Int_t zMax, Double_t life): fNucleusBoxList(kTRUE), fMagicList(kTRUE), fSymbolList(kTRUE)
 {
    fNmin = nMin;

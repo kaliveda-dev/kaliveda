@@ -13,7 +13,7 @@
 
   If 2 or more calibrations which define the same SignalOut have a ZRange parameter:
 
-  ~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
   calib1.dat:
   SignalOut:  Energy
   ZRange:  1-5
@@ -21,7 +21,7 @@
   calib2.dat:
   SignalOut:  Energy
   ZRange: 6-92
-  ~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
   a single `Energy` signal object of this class will be added to the concerned detectors,
   it will handle switching between the calibrators when GetValue() etc. are called with

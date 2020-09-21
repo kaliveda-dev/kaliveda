@@ -10,18 +10,6 @@ using namespace std;
 
 ClassImp(KVSpiderIdentificator)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSpiderIdentificator</h2>
-<h4>Générateur de lignes d'identifications</h4>
-
-Présentation de l'éditeur : <a href="http://indra.in2p3.fr/KaliVedaDoc/images/JourneeAnalyse0112_1.pdf"> JourneeAnalyse0112_1.pdf </a> (FR)
-
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 
 KVSpiderIdentificator::KVSpiderIdentificator()
 {

@@ -18,8 +18,7 @@ class KVMultiDetArray;
 \class KVUpDater
 \brief Abstract class implementing necessary methods for setting multidetector parameters
 for each run of the current dataset
-\ingroup Identification
-\ingroup Calibration
+\ingroup Identification,Calibration
 */
 
 class KVUpDater {

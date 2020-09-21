@@ -13,6 +13,16 @@ $Id: KVIDCsIRLLine.h,v 1.6 2009/03/03 13:36:00 franklan Exp $
 
 #include "KVIDZALine.h"
 
+/**
+   \class KVIDCsIRLLine
+\brief Base class for CsI R-L identification lines (A and Z identification).
+\ingroup Identification
+
+The particularity of such lines is the order in which they appear on the grid
+(in order of increasing R):
+p, d, t, 3He, 4He, 6He, *** 8Be ***, 6Li, 7Li, 8Li, 9Li, 7Be, 9Be, ...
+*/
+
 class KVIDCsIRLLine: public KVIDZALine {
 
 

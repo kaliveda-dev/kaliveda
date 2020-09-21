@@ -11,14 +11,6 @@ $Date: 2009/03/03 13:36:00 $
 
 ClassImp(KVIDContour)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIDContour</h2>
-<h4>Basic graphical contour class for use in particle identification</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVIDContour::KVIDContour()
 {

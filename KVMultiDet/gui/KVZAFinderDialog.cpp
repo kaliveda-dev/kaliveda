@@ -13,15 +13,6 @@ Int_t   KVZAFinderDialog::fStepsByLine  = -1;
 
 ClassImp(KVZAFinderDialog)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVZAFinderDialog</h2>
-<h4>dialog box for KVZALineFinder classe</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 //________________________________________________________________
 KVZAFinderDialog::KVZAFinderDialog(KVIDGraph* g, TH2* data_histo)
 {

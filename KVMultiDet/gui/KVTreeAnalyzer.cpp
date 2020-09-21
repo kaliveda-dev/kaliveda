@@ -31,25 +31,6 @@ using namespace std;
 
 ClassImp(KVTreeAnalyzer)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVTreeAnalyzer</h2>
-<h4>KVTreeAnalyzer</h4>
-<h5>Configure initial state of interface</h5>
-In .kvrootrc file, user can configure the following options, corresponding to check boxes in the interface:<br>
-<pre>
-KVTreeAnalyzer.LogScale:         off
-KVTreeAnalyzer.UserBinning:           off
-KVTreeAnalyzer.UserWeight:       off
-KVTreeAnalyzer.NewCanvas:      off
-KVTreeAnalyzer.Normalize:      off
-KVTreeAnalyzer.Stats:      off
-</pre>
-Change value to 'on' if required.
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 
 /* colours used for displaying several 1-D spectra on same plot */

@@ -13,6 +13,22 @@ $Id: KVTGIDZ.h,v 1.5 2009/03/03 14:27:15 franklan Exp $
 
 #include "KVTGID.h"
 
+/**
+   \class KVTGIDZ
+\brief Abstract base class for charged particle Z identfication using functionals developed by L. Tassan-Got (IPN Orsay)
+\ingroup Identfication
+
+A KVIDZGrid identification grid can be generated from the functional in order
+to visualise the corresponding identification lines.
+
+The following methods are defined in this class:
+~~~~{.cpp}
+      SetIdent() -- sets the Z for each KVIDZLine
+      AddLine()  -- adds a KVIDZLine to the grid
+      NewGrid()  -- generates a new KVIDZGrid
+~~~~
+*/
+
 class KVTGIDZ: public KVTGID {
 protected:
    virtual void SetIdent(KVIDLine*, Double_t ID);

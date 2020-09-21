@@ -10,6 +10,11 @@
 #include <TGNumberEntry.h>
 #include <TGTextEntry.h>
 
+/**
+  \class  KVBatchSystemParametersGUI
+   \brief Utility GUI used for setting batch system parameters
+   \ingroup GUI
+   */
 class KVBatchSystemParametersGUI : public KVNameValueListGUI {
    KVDataAnalyser* fAnalyser;
    TGCheckButton* fAJN; // auto job name widget

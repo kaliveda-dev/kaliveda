@@ -17,6 +17,13 @@
 #include <Riostream.h>
 #include <list>
 
+/**
+\class KVSpiderIdentificator
+\brief Semi-automatic identification grid generator
+
+See http://indra.in2p3.fr/kaliveda/images/JourneeAnalyse0112_1.pdf (in French)
+*/
+
 class KVSpiderIdentificator : public TNamed {
    RQ_OBJECT("KVSpiderIdentificator")
 protected:

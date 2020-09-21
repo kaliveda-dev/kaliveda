@@ -12,6 +12,12 @@ $Date: 2008/10/13 14:25:08 $
 
 #include "KVDP2toIDGridConvertor.h"
 
+/**
+\class KVDP2toCsIGridConvertor
+\brief Converts dp2-format CsI R-L grids to KVIDGrids
+\ingroup Identification
+*/
+
 class KVDP2toCsIGridConvertor : public KVDP2toIDGridConvertor {
 protected:
    virtual void ReadGammaFile(const Char_t* gammafile);

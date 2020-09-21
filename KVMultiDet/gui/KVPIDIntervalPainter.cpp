@@ -7,14 +7,6 @@
 
 ClassImp(KVPIDIntervalPainter)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVPIDIntervalPainter</h2>
-<h4>toot</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVPIDIntervalPainter::KVPIDIntervalPainter(interval* itv, TH1* hh): TNamed(Form("%d_%d", itv->GetZ(), itv->GetA()), Form("%d_%d", itv->GetZ(), itv->GetA()))
 {

@@ -26,14 +26,6 @@ $Id: KVIDGridManager.cpp,v 1.13 2009/03/03 14:27:15 franklan Exp $
 using namespace std;
 
 ClassImp(KVIDGridManager)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//KVIDGridManager
-//
-//Handles a stock of identification grids to be used by one or more identification telescopes.
-//Each KVIDTelescope asks the grid manager for a grid (FindGrid), if one is available its
-//address is given to the telescope to use. In this way many IDTelescopes can use the same
-//grid without making multiple copies.
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 KVIDGridManager* gIDGridManager;
 
 KVIDGridManager::KVIDGridManager()

@@ -17,6 +17,26 @@ $Id: KVTGIDManager.h,v 1.10 2008/04/04 09:06:25 franklan Exp $
 
 class KVTGIDGrid;
 
+/**
+\class KVTGIDManager
+\brief Handles a set of Tassan-Got functional-based identifications (KVTGID objects)  for use by a KVIDTelescope.
+\ingroup Identification
+
+IdentZ and IdentA are, respectively, Z and A identification procedures.
+Their purpose is to retrieve the correct KVTGID identification object
+from the manager's list, and then use KVTGID::GetIdentification.
+
+Status code for last identification with IdentZ and IdentA can be
+obtained using GetStatus/GetStatusString.
+~~~~
+ 0 KVTGIDManager::kStatus_OK            "ok",
+ 1 KVTGIDManager::kStatus_noTGID        "no KVTGID for requested identification",
+ 2 KVTGIDManager::kStatus_OutOfIDRange  "point to identify outside of identification range of function",
+ 3 KVTGIDManager::kStatus_ZtooSmall     "IdentA called with Z<1",
+ 4 KVTGIDManager::kStatus_ZtooLarge     "IdentA called with Z larger than max Z defined for KVTGIDZA isotopic identification object"
+~~~~
+*/
+
 class KVTGIDManager {
 protected:
    KVList fIDList;              //KVTGID objects for identifications

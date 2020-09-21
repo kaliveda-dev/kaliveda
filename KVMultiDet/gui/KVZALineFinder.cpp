@@ -10,15 +10,6 @@
 
 ClassImp(KVZALineFinder)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVZALineFinder</h2>
-<h4>(try to) find masse lines from charge lines</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVZALineFinder::KVZALineFinder(KVIDZAGrid* gg, TH2* hh)
 {
    // constructor

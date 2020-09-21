@@ -19,6 +19,12 @@ $Date: 2009/04/28 09:11:29 $
 #include "TEnv.h"
 using namespace std;
 
+/**
+  \class KVLVFrameElement
+  \brief  Extension of TGFrameElement used by KVLVContainer
+  \ingroup GUI
+  */
+
 class KVLVFrameElement : public TGFrameElement {
 public:
    KVLVContainer* fContainer; // object container

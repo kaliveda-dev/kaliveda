@@ -14,40 +14,6 @@
 
 ClassImp(KVEventViewer)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVEventViewer</h2>
-<h4>Draw events in 3D using OpenGL</h4>
-<br><img src="http://indra.in2p3.fr/KaliVedaDoc/images/kveventviewer.gif"><br>
-<!-- */
-// --> END_HTML
-// Any KVEvent object can be represented by using KVEventViewer::DrawEvent(KVEvent*, const Char_t* frame="").
-// The second (optional) argument allows to choose which reference frame to use (frame must already
-// have been defined for the KVEvent using KVEvent::SetFrame).
-//
-// For each nucleus of the event, a spherical cluster of protons and neutrons will be displayed,
-// using the default colors for these particles (see constructor and related methods).
-// One or more nuclei of each event can be "highlighted" (i.e. given different colors for their
-// neutrons and protons) according to the value given to method SetHighlightMode.
-//
-// You can use KVEventViewer::DrawNextEvent() to display, one after the other, a set of events stored in a TTree or in a text file.
-// With a TTree:
-//
-//   KVEventViewer view;
-//   view.SetInput( tree->GetBranch("whereTheEventsAre") );
-//   view.DrawNextEvent();
-//   view.DrawNextEvent(); etc. etc.
-//
-// With a text file (containing Z and velocity components of each nucleus):
-//
-//   KVEventViewer view;
-//   view.SetInput( "myEvents.dat" );
-//   view.DrawNextEvent();
-//   view.DrawNextEvent(); etc. etc.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 KVEventViewer::KVEventViewer(Int_t protoncolor, Int_t neutroncolor, Int_t highlightprotoncolor, Int_t highlightneutroncolor, Double_t freenucleonradius, Double_t nucleonradius, Double_t nuclearradiusparameter)
    : fproton_color(protoncolor), fneutron_color(neutroncolor),
      fProton_color(highlightprotoncolor), fNeutron_color(highlightneutroncolor),

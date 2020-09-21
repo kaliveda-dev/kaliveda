@@ -5,15 +5,6 @@
 #include "Riostream.h"
 ClassImp(KVLifeTime)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVLifeTime</h2>
-<h4>Simple class for store life time information of nucleus</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 //_________________________________
 KVLifeTime::KVLifeTime(const Char_t* name): KVNuclData(name, "s")
 {

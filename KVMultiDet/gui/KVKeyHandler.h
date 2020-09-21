@@ -9,6 +9,13 @@
 #include "TGFrame.h"
 #include "TGClient.h"
 
+/**
+\class KVKeyHandler
+\brief Utility class to redirect keyboard events to KVCanvas
+\ingroup GUI
+
+\note Numerical keypad must be deactivated for signals to pass
+ */
 class KVKeyHandler : public TGFrame {
 
 protected:

@@ -1,6 +1,3 @@
-//
-// Entete de la classe fenetre principale
-//
 #ifndef KVDataAnalysisLauncher_h
 #define KVDataAnalysisLauncher_h
 
@@ -26,6 +23,11 @@
 #include "KVListView.h"
 #include "KVConfig.h"
 
+/**
+  \class KVGFileList
+  \ingroup GUI
+  \brief File dialogue box for KVDataAnalysisLauncher
+ */
 class KVGFileList : public TGTransientFrame {
    enum ElementId {
       B_Add,
@@ -63,6 +65,12 @@ public:
    ClassDef(KVGFileList, 0)
 };
 
+/**
+  \class KVGDirectoryList
+  \ingroup GUI
+  \brief Directory dialogue box for KVDataAnalysisLauncher
+ */
+
 class KVGDirectoryList : public KVGFileList {
 
 protected:
@@ -78,6 +86,13 @@ public:
    ClassDef(KVGDirectoryList, 0)
 };
 
+/**
+  \class KVDataAnalysisLauncher
+  \ingroup GUI
+  \brief GUI for running data analysis tasks
+
+  See http://indra.in2p3.fr/kaliveda/KaliVedaGUIDoc/KaliVedaGUI.html
+ */
 
 class KVDataAnalysisLauncher : public TGMainFrame {
 #ifdef __WITHOUT_TGCOMBOBOX_REMOVEALL

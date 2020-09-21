@@ -12,15 +12,6 @@
 
 ClassImp(KVNucleusBox)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVNucleusBox</h2>
-<h4>A TBox representing a nucleus in a KVNuclearChart</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVNucleusBox::KVNucleusBox(Int_t Z, Int_t N, Double_t size, Int_t colStable, Int_t colRadio): TBox(N - size, Z - size, N + size, Z + size)
 {
    // Constructor with Z,N of a Nucleus

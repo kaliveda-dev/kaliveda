@@ -15,15 +15,6 @@ $Author: franklan $
 #include "TTimer.h"
 
 ClassImp(KVInputDialog)
-//////////////////////////////////////////////////////////////
-//
-//      KVInputDialog
-//
-//      Loosely based on TRootDialog, this general-purpose dialog box
-//      asks for some input in the form of a string.
-//      We use a KVTextEntry, so the string can take any length.
-//
-/////////////////////////////////////////////////////////////
 KVInputDialog::KVInputDialog(const TGWindow* main,
                              const Char_t* question, TString* answer,
                              Bool_t* ok, const Char_t* tooltip)

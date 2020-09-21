@@ -12,6 +12,11 @@ $Date: 2007/12/11 16:03:45 $
 
 #include "TGTextEntry.h"
 
+/**
+\class KVTextEntry
+\brief TGTextEntry without any limit on the length of the text
+*/
+
 class KVTextEntry : public TGTextEntry {
 
 public:

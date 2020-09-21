@@ -8,6 +8,12 @@
 #include "KVNameValueList.h"
 #include "KVLifeTime.h"
 
+/**
+\class KVLifeTimeTable
+\brief Store life time information of nuclei
+\ingroup NucProp
+*/
+
 class KVLifeTimeTable : public KVNuclDataTable {
 
 protected:

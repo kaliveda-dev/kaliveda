@@ -1,35 +1,27 @@
-// @(#)root/gui:$Id: KVFileDialog.h 23115 2008-04-10 13:35:37Z rdm $
-// Author: Fons Rademakers   20/01/98
-
-/*************************************************************************
- * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
- * All rights reserved.                                                  *
- *                                                                       *
- * For the licensing terms see $ROOTSYS/LICENSE.                         *
- * For the list of contributors see $ROOTSYS/README/CREDITS.             *
- *************************************************************************/
-
-
 #ifndef ROOT_KVFileDialog
 #define ROOT_KVFileDialog
 
-//////////////////////////////////////////////////////////////////////////
-//                                                                      //
-// KVFileDialog                                                         //
-//                                                                      //
-// This class creates a file selection dialog. It contains a combo box  //
-// to select the desired directory. A listview with the different       //
-// files in the current directory and a combo box with which you can    //
-// select a filter (on file extensions).                                //
-// When creating a file dialog one passes a pointer to a TGFileInfo     //
-// object. In this object you can set the fFileTypes and fIniDir to     //
-// specify the list of file types for the filter combo box and the      //
-// initial directory. When the KVFileDialog ctor returns the selected   //
-// file name can be found in the TGFileInfo::fFilename field and the    //
-// selected directory in TGFileInfo::fIniDir. The fFilename and         //
-// fIniDir are deleted by the TGFileInfo dtor.                          //
-//                                                                      //
-//////////////////////////////////////////////////////////////////////////
+/**
+   \class KVFileDialog
+   \brief Modified version of TGFileDialog file selection dialog
+   \ingroup GUI
+
+ This class creates a file selection dialog. It contains a combo box
+ to select the desired directory. A listview with the different
+ files in the current directory and a combo box with which you can
+ select a filter (on file extensions).
+
+ When creating a file dialog one passes a pointer to a TGFileInfo
+ object. In this object you can set the fFileTypes and fIniDir to
+ specify the list of file types for the filter combo box and the
+ initial directory.
+
+ When the KVFileDialog ctor returns the selected
+ file name can be found in the TGFileInfo::fFilename field and the
+ selected directory in TGFileInfo::fIniDir.
+
+The fFilename and fIniDir are deleted by the TGFileInfo dtor.
+*/
 
 #ifndef ROOT_TGFrame
 #include "TGFrame.h"

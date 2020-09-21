@@ -13,7 +13,11 @@
 #include "KVString.h"
 #include "KVNuclData.h"
 
-
+/**
+  \namespace NDT
+  \brief Define key-value pair for nuclear data tables
+  \ingroup NucProp
+  */
 namespace NDT {
    class key : public TNamed {
    public:
@@ -36,6 +40,41 @@ namespace NDT {
       ClassDef(value, 0)
    };
 };
+
+/**
+\class KVNuclDataTable
+\brief Abstract base class for nuclear data table
+\ingroup NucProp
+
+General methods:
+<ul>
+   <li>Bool_t IsInTable(Int_t zz, Int_t aa) - returns kTRUE for nuclei which appear in
+   the read table, kFALSE for others</li>
+</ul>
+Specific implementations must define the methods:
+<ul>
+   <li>Initialize() - called once to initialize mass table, for example by
+   reading in values from a file</li>
+   <li>Double_t GetValue(Int_t zz, Int_t aa) - returns value of the tabulated quantity</li>
+   <li>CreateTable(Int_t ntot) - Create table where for each nucleus, a pointeur of the class will be stored</li>
+   <li>CreateElement(Int_t idx)- Create element which correspond to the class pointeur associated to the nucleus</li>
+   For example :
+   If we consider a class KVLifeTime where is stored the value of life time of a nucleus
+   ~~~~{.cpp}
+   void KVNuclDataTable::CreateTable(Int_t ntot)
+   {
+      theTable = new KVLifeTime*[ntot];
+   }
+
+   void KVNuclDataTable::CreateElement(Int_t idx)
+   {
+      current_idx = idx;
+      theTable[idx] = new KVLifeTime();
+   }
+   ~~~~
+   For further detail see the KVLifeTimeTable and KVLifeTime class
+</ul>
+*/
 
 class KVNuclDataTable : public TNamed {
 

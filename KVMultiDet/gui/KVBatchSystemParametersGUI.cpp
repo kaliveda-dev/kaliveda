@@ -5,15 +5,6 @@
 
 ClassImp(KVBatchSystemParametersGUI)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVBatchSystemParametersGUI</h2>
-<h4>KVNameValueListGUI</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVBatchSystemParametersGUI::KVBatchSystemParametersGUI(const TGWindow* main, KVNameValueList* params, KVDataAnalyser* dan, Bool_t* cancel)
    : KVNameValueListGUI(main, params, cancel, kFALSE), fAnalyser(dan)
 {

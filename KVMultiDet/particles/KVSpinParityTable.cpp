@@ -8,14 +8,6 @@
 
 ClassImp(KVSpinParityTable)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSpinParityTable</h2>
-<h4>Store available values of the relative abundance</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVSpinParityTable::KVSpinParityTable(): KVNuclDataTable("KVSpinParity")
 {

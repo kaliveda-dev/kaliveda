@@ -15,6 +15,20 @@ $Id: KVIDZALine.h,v 1.6 2009/03/13 13:04:11 franklan Exp $
 #include "KVNucleus.h"
 #include "TGraphErrors.h"
 
+/**
+\class KVIDZALine
+\brief Base class for identification ridge lines corresponding to different nuclear species
+\ingroup Identification
+
+Each line is named "Z=x A=y" where x is the atomic number of the corresponding element
+(can be set with SetZ()) and y is the mass number (SetA). If only Z is set, the mass number is
+calculated according to one of the mass formulae defined in KVNucleus class. The default is
+the default for KVNucleus; you can change it with SetMassFormula.
+
+The sorting function Compare() sorts the lines as a function of increasing Z,
+then increasing A (i.e. p,d,t,3He,4He,6He, etc. etc.)
+*/
+
 class KVIDZALine: public KVIDLine {
 
    friend class KVIDZAGrid;

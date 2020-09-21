@@ -11,15 +11,6 @@ $Date: 2009/03/03 13:36:00 $
 
 ClassImp(KVIDMap)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIDMap</h2>
-<h4>Collection of graphical contours used for particle identification</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVIDMap::KVIDMap()
 {
    // Default constructor

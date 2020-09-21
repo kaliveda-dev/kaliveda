@@ -106,15 +106,6 @@ using namespace std;
 
 ClassImp(KVDBSystemDialog)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDBSystemDialog</h2>
-<h4>Dialog box for setting system parameters associated to runs</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDBSystemDialog::KVDBSystemDialog(const TGWindow* p, const TGWindow* main,
                                    KVDBSystem* init_sys, const KVNumberList& runs,
                                    UInt_t w, UInt_t h)

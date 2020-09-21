@@ -76,12 +76,14 @@ method is called.
  }
 ~~~~~~~~~~~~~~~~
 
-### Particle selection for global variables
-In order to control which particles are included in the calculation of global variables,
-define the selection using KVParticleCondition and set it by calling SetParticleConditions()
-in InitAnalysis() or InitRun().
+Note that the global variables are only calculated using particles which have their "OK" status set,
+for example because they correspond to the global particle selection criteria given to SetParticleConditions().
+Any further particle selections applied to individual global variables will then select from
+among these "OK" particles.
 
-This selection also applies to any iteration over "OK" particles in Analysis().
+If one or more global variables have event selection conditions defined (i.e. cuts on the values of the
+global variables) - see KVVarGlob::SetEventSelection() and KVGVList - then for each event which does not
+satisfy all conditions the Analysis() method will __not__ be called.
 
 ### Use with PROOF(lite)
  In order to use a KVEventSelector with PROOF:

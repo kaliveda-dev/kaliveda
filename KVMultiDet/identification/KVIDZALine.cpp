@@ -24,19 +24,6 @@ $Id: KVIDZALine.cpp,v 1.10 2009/05/05 15:57:52 franklan Exp $
 using namespace std;
 
 ClassImp(KVIDZALine)
-/////////////////////////////////////////////////////////////////////////////////////////
-//KVIDZALine
-//
-//Base class for identification ridge lines corresponding to different nuclear species.
-//
-//Each line is named "Z=x A=y" where x is the atomic number of the corresponding element
-//(can be set with SetZ()) and y is the mass number (SetA). If only Z is set, the mass number is
-//calculated according to one of the mass formulae defined in KVNucleus class. The default is
-//the default for KVNucleus; you can change it with SetMassFormula.
-//
-//The sorting function Compare() sorts the lines as a function of increasing Z,
-//then increasing A (i.e. p,d,t,3He,4He,6He, etc. etc.)
-/////////////////////////////////////////////////////////////////////////////////////////
 
 KVIDZALine::KVIDZALine()
 {

@@ -8,15 +8,6 @@ using namespace std;
 
 ClassImp(KVNuclData)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVNuclData</h2>
-<h4>Simple abstract class to store value related to nuclear data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVNuclData::KVNuclData(const Char_t* name, const Char_t* units): fName(name), fUnits(units)
 {
    //Constructor with name & units

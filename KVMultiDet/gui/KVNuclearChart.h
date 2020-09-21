@@ -14,6 +14,12 @@
 
 #include <TVirtualPad.h>
 
+/**
+   \class KVNuclearChart
+\brief Used to draw nuclear chart
+\ingroup NucEvents
+*/
+
 class KVNuclearChart : public KVBase {
 
 protected:

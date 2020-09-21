@@ -26,6 +26,12 @@ class KVList;
 class KVTarget;
 class KVMaterial;
 
+/**
+\class KVDBSystemDialog
+\brief Dialog box for setting system parameters associated to runs
+\ingroup GUI
+*/
+
 class KVDBSystemDialog {
 
    RQ_OBJECT("KVDBSystemDialog")

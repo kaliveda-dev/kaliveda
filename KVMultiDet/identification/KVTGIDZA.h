@@ -13,6 +13,29 @@ $Id: KVTGIDZA.h,v 1.8 2009/03/03 14:27:15 franklan Exp $
 
 #include "KVTGIDZ.h"
 
+/**
+\class KVTGIDZA
+\brief Base class for charged particle Z & A identfication using functionals developed by L. Tassan-Got (IPN Orsay)
+\ingroup Identification
+
+A KVIDZAGrid identification grid can be generated from the functional in order
+to visualise the corresponding identification lines.
+
+The following methods are defined in this class:
+~~~~{.cpp}
+      SetIdent() -- sets the Z & A for each KVIDZALine
+      AddLine()  -- adds a KVIDZALine to the grid
+      NewGrid()  -- generates a new KVIDZAGrid
+~~~~
+In order to use MakeIDGrid() for this class, the user must set the name of
+the parameter in the identification functional which corresponds to the
+atomic number Z i.e. using
+~~~~{.cpp}
+      SetParName(i,"Z")
+~~~~
+with i=the relevant parameter index.
+*/
+
 class KVTGIDZA: public KVTGIDZ {
 protected:
    virtual void SetIdent(KVIDLine*, Double_t ID);

@@ -11,6 +11,22 @@
  \class KVTelescope
  \ingroup Geometry
  \brief Associates two detectors placed one behind the other
+
+ An assembly of one or more layers of detectors, usually any particle
+ traversing the layer closest to the target will then traverse all
+ subsequent layers of the telescope (if it has sufficient energy).
+
+ Telescope structures own their detectors, and will delete them when
+ the telescope is deleted.
+
+ As detectors are added, we automatically set the KVDetectorNode
+ information as they are supposed to be placed one behind the other.
+
+ In imported ROOT geometries (see KVGeoImport), you can trigger the creation
+ of a KVTelescope structure by using a node name of the type
+~~~~
+     STRUCT_TELESCOPE_[number]
+~~~~
 */
 
 class KVNucleus;

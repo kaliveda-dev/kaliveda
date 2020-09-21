@@ -10,7 +10,6 @@
 #include "KVGroup.h"
 #include "TClonesArray.h"
 #include "KVReconNucTrajectory.h"
-class KVTelescope;
 
 /**
   \class KVReconstructedNucleus

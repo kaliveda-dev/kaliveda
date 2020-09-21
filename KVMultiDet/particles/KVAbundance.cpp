@@ -5,15 +5,6 @@
 
 ClassImp(KVAbundance)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVAbundance</h2>
-<h4>Value of the relative abundance</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 //_________________________________
 KVAbundance::KVAbundance(const Char_t* name): KVNuclData(name, "percentage")
 {

@@ -9,8 +9,8 @@
 
 /**
  \class KVASGroup
- \ingroup Geometry
- \brief Group in axially-symmetric array
+ \ingroup INDRAGeometry
+ \brief Group in axially-symmetric array (obsolete)
  */
 
 class KVASGroup : public KVGroup, public KVPosition {

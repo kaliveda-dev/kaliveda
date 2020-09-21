@@ -110,6 +110,10 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
    // - all 1-body variables will be calculated in a single loop over the particles;
    // - all 2-body variables will be calculated in a single loop over particle pairs;
    // - all N-body variables will be calculated
+   //
+   // For each variable for which an event selection condition was set (see KVVarGlob::SetEventSelection())
+   // the condition is tested as soon as the variable is calculated. If the condition is not satisfied,
+   // calculation of the other variable is abandonded and method AbortEventAnalysis() returns kTRUE.
    Reset();
    if (Has1BodyVariables() || Has2BodyVariables()) {
 

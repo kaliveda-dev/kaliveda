@@ -22,14 +22,6 @@ $Id: KVIDCsIRLLine.cpp,v 1.6 2009/03/03 13:36:00 franklan Exp $
 using namespace std;
 
 ClassImp(KVIDCsIRLLine)
-/////////////////////////////////////////////////////////////////////////////////////////
-//KVIDCsIRLLine
-//
-//Base class for CsI R-L identification lines (A and Z identification).
-//The particularity of such lines is the order in which they appear on the grid
-//(in order of increasing R):
-//p, d, t, 3He, 4He, 6He, *** 8Be ***, 6Li, 7Li, 8Li, 9Li, 7Be, 9Be, ...
-/////////////////////////////////////////////////////////////////////////////////////////
 
 KVIDCsIRLLine::KVIDCsIRLLine()
 {

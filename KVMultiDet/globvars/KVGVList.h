@@ -8,40 +8,58 @@
 
 /**
 \class KVGVList
-\brief Mangae a list of global variables
+\brief Manage a list of global variables
 \ingroup GlobalVariables
 
-This class allows to process in a single call many KVVargGlob instances.
-The methods used to initialize and fill variables in such a list are:
+The KVGVList class handles a list of global variables. A list can be used in the following
+schematic way to calculate several global variables at once:
 
+#### Creation & initialisation
+
+~~~~~~~~~~~~{.cpp}
+      KVVGList VGlist;
+      VGlist.Add( new SomeVarGlob("var1") );    // add variable using explicit call to constructor
+      VGlist.AddGV("SomeOtherVarGlob", "var2"); // add variable using class name
+      ...
+      VGlist.Init(); // initialise all variables
 ~~~~~~~~~~~~
-    void Init(void);                             // initializes the global variables (call once)
-    void CalculateGlobalVariables(KVEvent *e);   // compute all global variables for the event
+
+#### Treatment of 1 event
+
+~~~~~~~~~~~~{.cpp}
+      VGlist.CalculateGlobalVariables( [event] );          // calculate contribution of each particle to each variable
+      if( !VGlist.AbortEventAnalysis() ) // in case cuts for event selection were set - see below
+      {
+          auto valueOfvar1 = VGlist.GetGV("var1")->GetValue(); // retrieve value of "var1" for event
+      }
 ~~~~~~~~~~~~
 
-By default the KVGVList does not own the objects it contains (they may be on the stack).
-User's responsibility in this case to delete heap-based objects after use.
+The CalculateGlobalVariables() method is optimised to ensure that all one- and two-body variables
+are calculated with a single loop over the particles in each event.
 
-~~~~~~~~~~~~
-    // Declarations and initialisations
-    KVEkin *Sekin=new KVEkin("SEkin");
-    KVZmean zmean;
-    KVZmax  zmax;
-    KVGVList gvlist;
-    gvlist.Add(Sekin);
-    gvlist.Add(&zmean);
-    gvlist.Add(&zmax);
-    gvlist.Init();
+#### Event selection criteria
+Conditions ('cuts') can be set on each variable which
+decide whether or not to retain an event for analysis. If any variable in the list fails the
+test, processing of the list is abandoned.
 
-    // Treatment loop for each event called for each event
-    gvlist.CalculateGlobalVariables(event); // with KVEvent* pointer to event to analyse
+Selection criteria are set using lambda expressions. In this example, the variable "mtot"
+must have a value of at least 4 for the event to be retained:
+~~~~{.cpp}
+   KVGVList vglist;
+   auto mtot = vglist.AddGV("KVMult","mtot");
+   mtot->SetEventSelection([](const KVVarGlob* v){ return v->GetValue()>=4; });
+~~~~
 
-    cout << "Total kinetic energy : " << Sekin->GetValue() << endl;
-    cout << "Mean charge          : " << zmean() << endl;
-    cout << "Standard deviation   : " << zmean("RMS") << endl;
-    cout << "Charge of the heaviest   : " << zmax() << endl;
-    cout << "Vpar of the heaviest     : " << zmax.GetZmax(0)->GetVpar() << endl;
-~~~~~~~~~~~~
+Any event selection criterion is tested as soon as each variable has been tested. If the test
+fails, no further variables are calculated and the KVGVList goes into 'abort event' mode:
+~~~~{.cpp}
+    KVEvent* event_to_analyse;
+    vglist.CalculateGlobalVariables( event_to_analyse );
+    if( !vglist.AbortEventAnalysis() )
+    {
+       ... do further analysis, mtot is >=4
+    }
+~~~~
  */
 class KVGVList: public KVUniqueNameList {
 

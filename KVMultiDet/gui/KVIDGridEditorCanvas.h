@@ -8,6 +8,15 @@
 #include "KVCanvas.h"
 #include "TGFrame.h"
 
+/**
+   \class KVIDGridEditorCanvas
+   \brief Extended version of KVCanvas used by KVIDGridEditor
+   \ingroup GUI
+
+   Used to override the TCanvas::HandleInput() method so that it reacts to
+   mouse wheel events (kWheelUp/kWheelDown).
+*/
+
 class KVIDGridEditorCanvas : public KVCanvas {
 //friend class KeyHandler;
 

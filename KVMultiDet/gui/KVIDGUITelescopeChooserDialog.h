@@ -100,6 +100,19 @@ $Date: 2009/03/03 14:27:15 $
 #include "TList.h"
 #include "KVIDTelescope.h"
 
+/**
+\class KVIDGUITelescopeChooserDialog
+\brief ID Grid Manager dialog for choice of ID telescope(s)
+\ingroup GUI
+
+\image http://indra.in2p3.fr/KaliVedaDoc/images/IDTelescopeChooser.png
+
+This dialog box presents the user with a drop-down list of ID telescope
+types, and a box containing the list of all ID telescopes in a given multidetector
+array of the selected type. The user selects the type of ID telescope, then
+selects one or more telescopes in the list, and presses "OK" in order to
+validate the choice.
+ */
 class KVIDGUITelescopeChooserDialog {
 
    RQ_OBJECT("KVIDGUITelescopeChooserDialog")

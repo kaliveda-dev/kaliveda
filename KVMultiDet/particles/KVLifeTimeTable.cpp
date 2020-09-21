@@ -8,15 +8,6 @@
 
 ClassImp(KVLifeTimeTable)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVLifeTimeTable</h2>
-<h4>Store life time information of nuclei</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVLifeTimeTable::KVLifeTimeTable() : KVNuclDataTable("KVLifeTime")
 {
    // Default constructor

@@ -32,9 +32,7 @@ Int_t KVTestIDGridDialog::hzvseymin = 0;
 Int_t KVTestIDGridDialog::hzvseymax = 100;
 
 ClassImp(KVTestIDGridDialog)
-////////////////////////////////////////////////////////////////
-// KVTestIDGridDialog
-////////////////////////////////////////////////////////////////
+
 KVTestIDGridDialog::KVTestIDGridDialog(const TGWindow* p,
                                        const TGWindow* main, UInt_t w,
                                        UInt_t h, KVIDGraph* g, TH2* data_histo)

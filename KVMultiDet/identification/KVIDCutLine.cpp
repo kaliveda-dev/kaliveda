@@ -15,15 +15,6 @@ using namespace std;
 
 ClassImp(KVIDCutLine)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVIDCutLine</h2>
-<h4>Line in ID grid used to delimit regions where no identification is possible</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVIDCutLine::KVIDCutLine() : fAcceptedDirection("above")
 {
    // Default constructor

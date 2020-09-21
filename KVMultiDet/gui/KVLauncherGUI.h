@@ -12,6 +12,11 @@
 
 #include "KVNameValueList.h"
 
+/**
+\class KVLauncherGUI
+\brief Generic GUI launcher
+\ingroup GUI
+*/
 
 class KVLauncherGUI : public TGMainFrame {
 

@@ -11,15 +11,6 @@
 
 ClassImp(KVNameValueListGUI)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVNameValueListGUI</h2>
-<h4>GUI for setting KVNameValueList parameters</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 TObject* KVNameValueListGUI::AddAString(Int_t i, TGHorizontalFrame* hf)
 {
    TGTextEntry* text = new TGTextEntry(hf, theList->GetStringValue(i));

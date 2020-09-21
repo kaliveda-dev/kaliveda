@@ -7,6 +7,12 @@
 #include "KVNuclDataTable.h"
 #include "KVAbundance.h"
 
+/**
+\class KVAbundanceTable
+\brief Store available values of the relative abundance of isotopes
+\ingroup NucProp
+*/
+
 class KVAbundanceTable : public KVNuclDataTable {
 
 protected:

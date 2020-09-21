@@ -17,18 +17,6 @@ using namespace std;
 
 ClassImp(KVDP2toIDGridConvertor)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDP2toIDGridConvertor</h2>
-<h4>Converts dp2-format grids to KVIDGrids</h4>
-Set the name of the class (derived from KVIDGrid) using SetGridClass(),
-then convert file with Convert("dp2_grids.dat"). The new grids are added
-to gIDGridManager.
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDP2toIDGridConvertor::KVDP2toIDGridConvertor()
 {
    // Default constructor

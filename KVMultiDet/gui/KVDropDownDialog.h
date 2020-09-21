@@ -15,6 +15,11 @@ class TGComboBox;
 class TGTextButton;
 class TGWindow;
 
+/**
+   \class KVDropDownDialog
+\brief Ask user to choose between several options in a drop-down list.
+\ingroup GUI
+*/
 class KVDropDownDialog {
 
    RQ_OBJECT("KVDropDownDialog")

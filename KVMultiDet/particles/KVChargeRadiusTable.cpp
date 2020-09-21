@@ -8,15 +8,6 @@
 
 ClassImp(KVChargeRadiusTable)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVChargeRadiusTable</h2>
-<h4>//Store charge radius information for nuclei</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVChargeRadiusTable::KVChargeRadiusTable() : KVNuclDataTable("KVChargeRadius")
 {
    // Default constructor

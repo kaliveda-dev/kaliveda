@@ -13,6 +13,12 @@ $Date: 2009/03/03 13:36:00 $
 #include "KVIDentifier.h"
 #include "TCutG.h"
 
+/**
+\class KVIDContour
+\brief Basic graphical contour class for use in particle identification
+\ingroup Identification
+*/
+
 class KVIDContour : public KVIDentifier {
 
 public:

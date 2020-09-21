@@ -17,15 +17,6 @@ using namespace std;
 
 ClassImp(KVDP2toCsIGridConvertor)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDP2toCsIGridConvertor</h2>
-<h4>Converts dp2-format CsI R-L grids to KVIDGrids</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDP2toCsIGridConvertor::KVDP2toCsIGridConvertor()
 {
    // Default constructor

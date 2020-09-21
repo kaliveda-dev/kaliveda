@@ -10,6 +10,10 @@
 #include <TGButton.h>
 #include "KVListView.h"
 
+/**
+  \class KVTestListView
+  \ingroup GUI
+ */
 class KVTestListView : public KVBase {
    RQ_OBJECT("KVTestListView")
    TGMainFrame* MainFrame;

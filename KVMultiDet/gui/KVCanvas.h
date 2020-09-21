@@ -12,6 +12,44 @@
 #include "TSystem.h"
 #include "TGClient.h"
 
+/**
+   \class KVCanvas
+\brief TCanvas with mouse-controlled dynamic zoom and pan & scan
+\ingroup GUI
+
+\image html http://indra.in2p3.fr/KaliVedaDoc/images/KVCanvas.png
+
+#### MOUSE ACTIONS
+
+  - Dynamic zoom: left-click to draw rectangle around region of interest, release mouse button to zoom in<br>
+  - Zoom in: mouse wheel up<br>
+  - Zoom out: mouse wheel down<br>
+  - Pan: hold down mouse wheel (centre button) and move
+
+#### KEYBOARD SHORTCUTS
+
+  - `<ctrl> e`   show editor
+  - `<ctrl> f`   start fit panel (TH1)
+  - `<ctrl> g`   set/unset grid on X and Y axes
+  - `<ctrl> i`   show shortcuts infos
+  - `<ctrl> l`   set/unset log scale on Y axis (TH1) or Z axis (TH2)
+  - `<ctrl> n`   normalize drawn histogram to its integral
+  - `<ctrl> p x`   draw profile X (TH2)
+  - `<ctrl> p y`   draw profile Y (TH2)
+  - `<ctrl> s`   save canvas as
+  - `<ctrl> u`   update canvas
+  - `<ctrl> v`   set/unset 'vener' mode (TH2)
+  - `<ctrl> w`   set/unset 'Age Of Empire' mode (TH2)
+  - `<ctrl> +`   set minimum +1 (TH2)
+  - `<ctrl> -`   set minimum -1 (TH2)
+  - `F9`   set/unset log scale on X axis
+  - `F10`   set/unset log scale on X axis
+  - `F11`   set/unset log scale on X axis
+  - `F12`   unzoom
+  - `Arrows`   move on histogram or axis
+
+  */
+
 class KVCanvas : public TCanvas {
    friend class KVKeyHandler;
 

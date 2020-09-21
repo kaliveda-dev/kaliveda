@@ -7,6 +7,12 @@
 #include "KVNuclDataTable.h"
 #include "KVSpinParity.h"
 
+/**
+\class KVSpinParityTable
+\brief Table of spin parity values for nuclear levels
+\ingroup NucProp
+ */
+
 class KVSpinParityTable : public KVNuclDataTable {
 
 protected:

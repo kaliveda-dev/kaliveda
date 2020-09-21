@@ -10,15 +10,6 @@
 
 ClassImp(KVElementDensityTable)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVElementDensityTable</h2>
-<h4>Table of atomic elements</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVElementDensityTable::KVElementDensityTable(): KVNuclDataTable("KVElementDensity")
 {
    // Default constructor
