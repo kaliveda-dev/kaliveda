@@ -501,15 +501,24 @@ namespace KVImpactParameters {
 
 
          B_dist_for_X_select.SetParameters(X1, X2);
-         TF1* f = B_dist_for_X_select.DrawCopy(opt);
-         f->SetNpx(500);
+         //TF1* f = B_dist_for_X_select.DrawCopy(opt);
+         TGraph* f = new TGraph;
+         double maxS = 0;
+         for (int i = 0; i < 500; ++i) {
+            double b = 2 * i * GetIPDist().GetB0() / 499.;
+            double sig = B_dist_for_X_select.Eval(b);
+            if (sig > maxS) maxS = sig;
+            f->SetPoint(i, b, sig);
+         }
          f->SetLineColor(color);
          f->SetMarkerColor(color);
          f->SetLineWidth(2);
          f->SetTitle(title);
-         return f->GetMaximum();
+         if (TString(opt) == "same") f->Draw("c");
+         else f->Draw("ac");
+         return maxS;
       }
-      void DrawBDistForSelection(TH1* sel, TH1* incl, Option_t* opt = "", Color_t color = kRed, const TString& title = "")
+      void DrawBDistForSelection(TH1* sel, TH1* incl, double& mean, double& sigma, Option_t* opt = "", Color_t color = kRed, const TString& title = "")
       {
          // Draw impact parameter distribution (as differential cross-section) for an arbitrary selection
          // \f$\mathbb{S}\f$ of data,
@@ -519,6 +528,8 @@ namespace KVImpactParameters {
          //
          // \param[in] sel pointer to histogram containing observable distribution for selected events
          // \param[in] incl pointer to histogram containing inclusive observable distribution
+         // \param[out] mean mean value of b distribution
+         // \param[out] sigma standard deviation of b distribution
          // \param[in] opt drawing option if required, e.g. "same"
          // \param[in] color colour to use for drawing distribution
          // \param[in] title title to affect to the drawn distribution
@@ -552,17 +563,24 @@ namespace KVImpactParameters {
          B_dist_for_arb_X_select.SetParameters(Xmin, Xmax);
          B_dist_for_arb_X_select.SetRange(0, 2 * GetIPDist().GetB0());
          B_dist_for_arb_X_select.GetHistogram();
-         //TF1* f =  B_dist_for_arb_X_select.DrawCopy(opt);
-         //f->SetNpx(500);
+
+         double bmean(0), bsqrmean(0), sigtot(0);
          TGraph* f = new TGraph;
          for (int i = 0; i < 500; ++i) {
             double b = 2 * i * GetIPDist().GetB0() / 499.;
-            f->SetPoint(i, b, B_dist_for_arb_X_select.Eval(b));
+            double sig = B_dist_for_arb_X_select.Eval(b);
+            bmean += sig * b;
+            bsqrmean += sig * b * b;
+            sigtot += sig;
+            f->SetPoint(i, b, sig);
          }
          f->SetLineColor(color);
          f->SetMarkerColor(color);
          f->SetLineWidth(2);
          f->SetTitle(title);
+         mean = bmean / sigtot;
+         bsqrmean /= sigtot;
+         sigma = TMath::Sqrt(bsqrmean - mean * mean);
          if (TString(opt) == "same") f->Draw("c");
          else f->Draw("ac");
       }
