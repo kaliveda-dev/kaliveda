@@ -63,8 +63,7 @@ void KVGemini::DecaySingleNucleus(KVSimNucleus& toDecay, KVSimEvent* decayProduc
    //
    // addRotationalEnergy bool parameter is here to enable or not the addition of the rotational energy to the excitation energy.
    // Up to now, two cases are known:
-   //     - HIPSE model => the excitation energy consists just in the thermal energy, the addition of the rotational energy is needed
-   //     - DIT model => the excitation energy consists in the thermal energy + rotational energy, the addition is not needed
+   //     - HIPSE and DIT model => the excitation energy consists just in the thermal energy, the addition of the rotational energy is needed
    //
    // If there is a problem with the decay of the nucleus,
    // we throw an exception of type gemini_bad_decay
