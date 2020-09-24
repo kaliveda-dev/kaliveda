@@ -94,8 +94,9 @@ public:
 
    Int_t ReadLineAndCheck(Int_t nexpect, const Char_t* pattern)
    {
-
       ReadLine(0);
+      GetCurrentLine().RemoveAllExtraWhiteSpace();
+
       if (GetCurrentLine().IsNull()) {
          return 0;
       }
