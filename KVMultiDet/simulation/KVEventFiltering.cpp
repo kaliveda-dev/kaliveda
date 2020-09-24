@@ -358,8 +358,10 @@ void KVEventFiltering::InitAnalysis()
       if (GetOpt("Gemini") == "yes") fGemini = kTRUE;
       if (IsOptGiven("GemDecayPerEvent")) fGemDecayPerEvent = GetOpt("GemDecayPerEvent").Atoi();
       else fGemDecayPerEvent = 1;
-      if (IsOptGiven("GemAddRotEner")) fGemAddRotEner = GetOpt("GemAddRotEner").Atoi();
-      else fGemAddRotEner = 0;
+      if (IsOptGiven("GemAddRotEner")) {
+         if (GetOpt("GemAddRotEner") == "yes") fGemAddRotEner = kTRUE;
+         else fGemAddRotEner = kFALSE;
+      }
    }
    if (fGemini) Info("InitAnalysis", "Statistical decay with Gemini++ for each event before detection");
    if (fGemDecayPerEvent > 1) Info("InitAnalysis", "  -- %d decays per primary event", fGemDecayPerEvent);
@@ -430,6 +432,7 @@ void KVEventFiltering::OpenOutputFile(KVDBSystem* S, Int_t run)
    // KEY: TNamed RandomPhi;1 title=[yes/no, random rotation about beam axis]
    // KEY: TNamed Gemini++;1 title=[yes/no, Gemini++ decay before detection]
    // KEY: TNamed GemDecayPerEvent;1 title=[number of Gemini++ decays per primary event]
+   // KEY: TNamed GemAddRotEner;1 title=[Enable or not the addition of the rotational energy to the excitation energy]
    //
    TString basefile = GetOpt("SimFileName");
    basefile.Remove(basefile.Index(".root"), 5);
@@ -438,6 +441,7 @@ void KVEventFiltering::OpenOutputFile(KVDBSystem* S, Int_t run)
    if (fGemini) {
       outfile += "_Gemini";
       if (fGemDecayPerEvent > 1) outfile += fGemDecayPerEvent;
+      if (fGemAddRotEner) outfile += "AddedRotEner";
    }
 #endif
    outfile += "_geo=";
@@ -495,6 +499,7 @@ void KVEventFiltering::OpenOutputFile(KVDBSystem* S, Int_t run)
 #ifdef WITH_GEMINI
    (new TNamed("Gemini++", (fGemini ? "yes" : "no")))->Write();
    (new TNamed("GemDecayPerEvent", Form("%d", fGemDecayPerEvent)))->Write();
+   (new TNamed("GemAddRotEner", (fGemAddRotEner ? "yes" : "no")))->Write();
 #endif
    curdir->cd();
 }

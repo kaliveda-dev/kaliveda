@@ -349,13 +349,13 @@ KVSimDirGUI::KVSimDirGUI()
    gemini_add_rot_energy = new TGCheckButton(hhhf, "Add rotational energy");
    gemini_add_rot_energy->Connect("Toggled(Bool_t)", "KVSimDirGUI", this, "SetGeminiDecayAddRotEnergy(Bool_t)");
    gemini_add_rot_energy->SetToolTipText("Add the rotational energy to the excitation energy for each nucleus");
-   gemini_add_rot_energy->SetState(kButtonUp);
+   //gemini_add_rot_energy->SetState(kButtonDown);
    hhhf->AddFrame(gemini_add_rot_energy, new TGLayoutHints(kLHintsExpandX | kLHintsCenterY, 6, 2, 2, 3));
-   gemini_add_rot_energy->SetDisabledAndSelected(kFALSE);
+   gemini_add_rot_energy->SetDisabledAndSelected(kTRUE);
    //
 #endif
    fGemDecay = kFALSE;
-   fGemAddRotEner = kFALSE;
+   fGemAddRotEner = kTRUE;
    fGeoType = kGTROOT;
    vf1->AddFrame(bgroup, new TGLayoutHints(kLHintsTop, 1, 1, 1, 5));
 #ifdef WITH_GEMINI
@@ -954,10 +954,11 @@ void KVSimDirGUI::SetFilterOptions()
    if (fGemDecay) {
       options += ",Gemini=yes";
       options += Form(",GemDecayPerEvent=%d", (Int_t)gemini_decays->GetNumber());
-      options += Form(",GemAddRotEner=%d", (Int_t)fGemAddRotEner);
+
+      if (fGemAddRotEner) options += Form(",GemAddRotEner=yes");
+      else  options += Form(",GemAddRotEner=no");
    }
 
-   std::clog << "options are: " << options.Data() << std::endl ;
    gDataAnalyser->SetUserClassOptions(options);
 }
 
