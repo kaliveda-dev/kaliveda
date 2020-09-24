@@ -22,6 +22,7 @@
 #pragma link C++ class KVRungeKutta+;
 #pragma link C++ class KVSimEvent+;
 #pragma link C++ class KVSimReader;
+#pragma link C++ class KVSimReader_DIT;
 #pragma link C++ class KVSimReader_HIPSE;
 #pragma link C++ class KVSimReader_HIPSE_asym;
 #pragma link C++ class KVSimReader_SMF;
