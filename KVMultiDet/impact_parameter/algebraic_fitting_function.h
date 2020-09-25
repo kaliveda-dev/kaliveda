@@ -113,6 +113,14 @@ namespace KVImpactParameters {
       {
          params.Print();
       }
+      double meanX(double cb) const
+      {
+         return theta() * k_cb(cb);
+      }
+      double redVar(double cb) const
+      {
+         return theta();
+      }
    };
 
 }

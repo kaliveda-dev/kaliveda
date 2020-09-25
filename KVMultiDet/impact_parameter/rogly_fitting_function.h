@@ -147,6 +147,14 @@ namespace KVImpactParameters {
          // \todo Currently this just scales \f$k_{max}\f$ to 1, the minimum at \f$c_b=1\f$ will not be zero.
          kmax.value = 1;
       }
+      double meanX(double cb) const
+      {
+         return theta() * k_cb(cb);
+      }
+      double redVar(double cb) const
+      {
+         return theta();
+      }
 
       ClassDef(rogly_fitting_function, 0) //fit using exponential polynomial
    };

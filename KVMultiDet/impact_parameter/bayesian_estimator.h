@@ -14,15 +14,68 @@
 #include <TCanvas.h>
 #include <TGraph.h>
 #include "TMath.h"
-#include "Math/PdfFuncMathCore.h"
 #include "TNamed.h"
 
+#include "Math/PdfFuncMathCore.h"
+
 namespace KVImpactParameters {
+   /**
+   \class KVImpactParameters::gamma_kernel
+   \ingroup ImpactParameters
+   \brief Fluctuation kernel using gamma distribution for use with bayesian_estimator
+
+   The distribution of the observable \f$X\f$ is given by the gamma distribution
+   \f[
+   f(X) = \frac{1}{\Gamma(k)\theta^k} X^{k-1} \exp{(-X/\theta)}
+   \f]
+   with mean value \f$k\theta\f$ and variance \f$k\theta^2\f$.
+
+   \note For this distribution, the reduced variance \f$\sigma^2/\bar{X}\f$ can take any value \f$>0\f$.
+
+   */
+   class gamma_kernel {
+   public:
+      double operator()(double X, double mean, double reduced_variance)
+      {
+         // return probability of \f$X\f$ for given mean value \f$\bar{X}\f$ and reduced variance \f$\sigma^2/\bar{X}\f$.
+         return ROOT::Math::gamma_pdf(X, mean / reduced_variance, reduced_variance);
+      }
+
+      ClassDef(gamma_kernel, 0)
+   };
+
+   /**
+   \class KVImpactParameters::NBD_kernel
+   \ingroup ImpactParameters
+   \brief Fluctuation kernel using negative binomial distribution for use with bayesian_estimator
+
+   The distribution of the observable \f$X\f$ is given by the distribution
+   \f[
+   f(X) = \frac{(X+n-1)!}{X!(n-1)!} p^{n}(1-p)^{X}
+   \f]
+   with mean value \f$(1-p)n/p\f$ and variance \f$(1-p)n/p^2\f$.
+
+   \note For this distribution, the reduced variance \f$\sigma^2/\bar{X}>1\f$, Poissonian fluctuations or smaller are not allowed.
+
+   */
+   class NBD_kernel {
+   public:
+      double operator()(double X, double mean, double reduced_variance)
+      {
+         // return probability of \f$X\f$ for given mean value \f$\bar{X}\f$ and reduced variance \f$\sigma^2/\bar{X}\f$.
+         return ROOT::Math::negative_binomial_pdf(TMath::Nint(X), 1. / reduced_variance, mean / (reduced_variance - 1.));
+      }
+
+      ClassDef(NBD_kernel, 0)
+   };
+
+
    /**
    \class KVImpactParameters::bayesian_estimator
    \ingroup ImpactParameters
    \brief Impact parameter distribution reconstruction from experimental data
-   \tparam FittingFunction Class implementing a parameterization of the relationship between mean value of observables as a function of centrality, \f$k(c_b)\f$
+   \tparam FittingFunction Class implementing a parameterization of the relationship between mean value of observables as a function of centrality, \f$\bar{X}(c_b)\f$
+   \tparam FluctuationKernel Class implementing fluctuations of the observable according to a given PDF
 
    Implementation of the method of estimating impact parameter distributions for experimental data
    presented in the article Frankland et al., *Phys. Rev.* **Cxx**, yy(2020). The aim is to reproduce the
@@ -37,23 +90,23 @@ namespace KVImpactParameters {
    \f]
 
    \f$P(X|c_b)\f$ is the probability distribution of the observable as a function of the centrality,
-   and is given by the following gamma distribution:
-   \f[
-   P(X|c_b) = \frac{1}{\Gamma(k)\theta^k} X^{k-1} \exp{(-X/\theta)}
-   \f]
-   where \f$\theta\f$ is the ratio between the mean value \f$\bar{X}\f$ and the variance \f$\sigma^2\f$
-   of the observable for any given value of centrality \f$c_b\f$. \f$k(c_b)\f$ is a parametrised function
-   describing the evolution of \f$\bar{X}\f$ with centrality. This has to be provided by the class
-   FittingFunction, which must provide the following methods:
+   which is given by some FluctuationKernel which is a PDF for any value of \f$X\f$ given the expected
+   mean \f$\bar{X}\f$ and reduced variance \f$\sigma^2/\bar{X}\f$.
+
+   The FittingFunction class has to provide the functions
+   ~~~~{.cpp}
+   double meanX(double c) const
+   double redVar(double c) const
+   ~~~~
+   which describe how \f$\bar{X}\f$ and \f$\sigma^2/\bar{X}\f$. depende on centrality.
+   It must also provide the following methods:
 
    ~~~~~{.cpp}
    FittingFunction::FittingFunction()                               default constructor
    FittingFunction::FittingFunction(const FittingFunction&)         copy constructor, copy parameter values
-   constexpr int FittingFunction::npar() const                      number of parameters of function (including theta)
-   double FittingFunction::k_cb(double cb) const                    returns value of k_cb for given centrality
+   constexpr int FittingFunction::npar() const                      number of parameters of function
    void FittingFunction::fill_params_from_array(double*)            takes values of parameters from array
    void FittingFunction::fill_array_from_params(double*) const      puts values of parameters in array
-   double FittingFunction::theta() const                            returns value of theta parameter
    void FittingFunction::set_par_names(TF1&) const                  set names of parameters in TF1
    void FittingFunction::set_initial_parameters(TH1*,TF1&)          set initial values and limits on parameters to fit histogram
    void FittingFunction::print_fit_params() const                   set initial values and limits on parameters to fit histogram
@@ -64,6 +117,8 @@ namespace KVImpactParameters {
 
    \sa KVImpactParameters::algebraic_fitting_function
    \sa KVImpactParameters::rogly_fitting_function
+   \sa KVImpactParameters::gamma_kernel
+   \sa KVImpactParameters::NBD_kernel
 
    ## Example of use
    In all of the the following, the namespace prefix `KVImpactParameters::` can be dropped if
@@ -73,14 +128,14 @@ namespace KVImpactParameters {
    ~~~~~~~~~
    ### Fitting a given inclusive P(X) distribution
 
-   First initialize the estimator with the required \f$k(c_b)\f$ function, such as for example:
+   First initialize the estimator with the required fitting function and kernem, such as for example:
    ~~~~~~~~~{.cpp}
-   --/ use 3rd order exponential polynomial function of Rogly et al:
-   KVImpactParameters::bayesian_estimator<KVImpactParameters::rogly_fitting_function<3>> ipd;
-   --/ or use algebraic function of Frankland et al:
-   KVImpactParameters::bayesian_estimator<KVImpactParameters::algebraic_fitting_function> ipd;
+   --/ use 3rd order exponential polynomial function of Rogly et al with gamma kernel:
+   KVImpactParameters::bayesian_estimator<KVImpactParameters::rogly_fitting_function<3>,KVImpactParameters::gamma_kernel> ipd;
+   --/ or use algebraic function of Frankland et al with a negative binomial distribution kernel:
+   KVImpactParameters::bayesian_estimator<KVImpactParameters::algebraic_fitting_function, KVImpactParameters::NBD_kernel> ipd;
    ~~~~~~~~~
-   See rogly_fitting_function and algebraic_fitting_function for more details.
+   See rogly_fitting_function, algebraic_fitting_function, gamma_kernel and NBD_kernel for more details.
 
    Assumng a pointer `TH1* h` to a histogram containing the inclusive distribution for an observable
    filled from data, the first step is to transform the histogram into a correctly normalized probability
@@ -110,10 +165,10 @@ namespace KVImpactParameters {
    estimator like so:
 
    ~~~~~~~~~{.cpp}
-   bayesian_estimator<algebraic_fitting_function> ipd({alpha,gamma,theta,Xmin,Xmax});
+   bayesian_estimator<algebraic_fitting_function, gamma_kernel> ipd({alpha,gamma,theta,Xmin,Xmax});
 
    [if C++11 is not used:
-   bayesian_estimator<algebraic_fitting_function> ipd(algebraic_fitting_function(alpha,gamma,theta,Xmin,Xmax));
+   bayesian_estimator<algebraic_fitting_function, gamma_kernel> ipd(algebraic_fitting_function(alpha,gamma,theta,Xmin,Xmax));
    ]
    ~~~~~~~~~
 
@@ -121,10 +176,11 @@ namespace KVImpactParameters {
    */
 
    template
-   <class FittingFunction>
+   <class FittingFunction, class FluctuationKernel>
    class bayesian_estimator : public KVBase {
 
       FittingFunction theFitter;
+      FluctuationKernel theKernel;
 
       TH1* histo;
       TH1* h_selection;
@@ -150,7 +206,7 @@ namespace KVImpactParameters {
          // \returns mean value of \f$X\f$ for given centrality
 
          theFitter.fill_params_from_array(par);
-         return theFitter.k_cb(x[0]) * theFitter.theta();
+         return theFitter.meanX(x[0]);
       }
       double mean_X_vs_b(double* x, double* par)
       {
@@ -160,14 +216,14 @@ namespace KVImpactParameters {
          // \returns mean value of \f$X\f$ for given centrality
 
          theFitter.fill_params_from_array(par);
-         return theFitter.k_cb(fIPDist.GetCentrality().Eval(x[0])) * theFitter.theta();
+         return theFitter.meanX(fIPDist.GetCentrality().Eval(x[0]));
       }
       double P_X_cb(double X, double cb)
       {
-         // \returns \f$\Gamma\f$-distributed probability of observable \f$X\f$ for centrality \f$c_b\f$
+         // \returns probability of observable \f$X\f$ for centrality \f$c_b\f$, using FluctuationKernel
          // \param[in] X the value of the observable \f$X\f$
          // \param[in] cb the centrality \f$c_b\f$
-         return ROOT::Math::gamma_pdf(X, theFitter.k_cb(cb), theFitter.theta());
+         return theKernel(X, theFitter.meanX(cb), theFitter.redVar(cb));
       }
       double P_X_cb_for_integral(double* x, double* par)
       {
@@ -206,7 +262,7 @@ namespace KVImpactParameters {
       }
       double cb_integrated_P_X(double* x, double* p)
       {
-         // Function used to fit experimental \f$P(X)\f$ distribution by integrating the \f$\Gamma\f$-distribution \f$P(X|c_b)\f$
+         // Function used to fit experimental \f$P(X)\f$ distribution by integrating the distribution \f$P(X|c_b)\f$
          //\f[
          //P(X)=\int P(X|c_b)\,\mathrm{d}c_b
          //\f]
@@ -215,7 +271,6 @@ namespace KVImpactParameters {
          // \param[in] p[0],p[1],...,p[Npar-1] parameters of fitting function
 
          theFitter.fill_params_from_array(p);
-         if (theFitter.theta() <= 0) return 0;
          p_X_cb_integrator.SetParameter(0, x[0]); // set value of X in integrand
          return p_X_cb_integrator.Integral(0, 1, 1.e-4);
       }
