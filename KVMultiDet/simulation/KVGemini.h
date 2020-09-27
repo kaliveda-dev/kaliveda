@@ -21,10 +21,10 @@ public:
    KVGemini();
    virtual ~KVGemini();
 
-   void DecaySingleNucleus(KVSimNucleus&, KVSimEvent*);
-   void DecayEvent(const KVSimEvent*, KVSimEvent*);
-   void FillTreeWithEvents(KVSimNucleus&, Int_t, TTree*, TString branchname = "");
-   void FillTreeWithArrays(KVSimNucleus&, Int_t, TTree*, TString mode = "EThetaPhi");
+   void DecaySingleNucleus(KVSimNucleus&, KVSimEvent*, bool);
+   void DecayEvent(const KVSimEvent*, KVSimEvent*, bool);
+   void FillTreeWithEvents(KVSimNucleus&, bool, Int_t, TTree*, TString branchname = "");
+   void FillTreeWithArrays(KVSimNucleus&, bool, Int_t, TTree*, TString mode = "EThetaPhi");
 
    Float_t GetMaxSpinWithFissionBarrier(int, int);
    Float_t GetFissionBarrierRLDM(int z, int a, float J);
