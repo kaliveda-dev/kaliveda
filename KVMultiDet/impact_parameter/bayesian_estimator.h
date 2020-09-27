@@ -196,6 +196,8 @@ namespace KVImpactParameters {
       TF1 B_dist_for_X_select;
       TF1 B_dist_for_arb_X_select;
 
+      Bool_t fIntegerVariable;
+
       impact_parameter_distribution fIPDist;// used to convert centrality to impact parameter
 
       double mean_X_vs_cb(double* x, double* par)
@@ -223,7 +225,8 @@ namespace KVImpactParameters {
          // \returns probability of observable \f$X\f$ for centrality \f$c_b\f$, using FluctuationKernel
          // \param[in] X the value of the observable \f$X\f$
          // \param[in] cb the centrality \f$c_b\f$
-         return theKernel(X, theFitter.meanX(cb), theFitter.redVar(cb));
+         return fIntegerVariable ? theKernel(TMath::Nint(X), theFitter.meanX(cb), theFitter.redVar(cb))
+                : theKernel(X, theFitter.meanX(cb), theFitter.redVar(cb));
       }
       double P_X_cb_for_integral(double* x, double* par)
       {
@@ -334,7 +337,7 @@ namespace KVImpactParameters {
       }
 
    public:
-      bayesian_estimator()
+      bayesian_estimator(Bool_t integer_variable = false)
          : KVBase(),
            theFitter(),
            p_X_cb_integrator("p_X_cb_integrator", this, &bayesian_estimator::P_X_cb_for_integral, 0, 1, 1),
@@ -346,16 +349,19 @@ namespace KVImpactParameters {
            fitted_P_X("fitted_P_X", this, &bayesian_estimator::P_X_from_fit, 0, 1000, 1),
            Cb_dist_for_X_select("Cb_dist_for_X_select", this, &bayesian_estimator::cb_dist_for_X_selection, 0, 1, 2),
            B_dist_for_X_select("b_dist_for_X_select", this, &bayesian_estimator::b_dist_for_X_selection, 0, 20, 2),
-           B_dist_for_arb_X_select("b_dist_for_arb_X_select", this, &bayesian_estimator::b_dist_for_arb_X_selection, 0, 20, 2)
+           B_dist_for_arb_X_select("b_dist_for_arb_X_select", this, &bayesian_estimator::b_dist_for_arb_X_selection, 0, 20, 2),
+           fIntegerVariable(integer_variable)
       {
          // Initialise estimator for fitting the inclusive distribution of an observable.
+         //
+         // \param[in] integer_variable [default:false] set true if the observable to be fitted only takes integer values
          p_X_cb_integrator.SetParNames("X");
          theFitter.set_par_names(P_X_fit_function);
          theFitter.set_par_names(mean_X_vs_cb_function);
          theFitter.set_par_names(mean_X_vs_b_function);
       }
 
-      bayesian_estimator(const FittingFunction& previous_fit)
+      bayesian_estimator(const FittingFunction& previous_fit, Bool_t integer_variable = false)
          : KVBase(),
            theFitter(previous_fit),
            p_X_cb_integrator("p_X_cb_integrator", this, &bayesian_estimator::P_X_cb_for_integral, 0, 1, 1),
@@ -367,9 +373,13 @@ namespace KVImpactParameters {
            fitted_P_X("fitted_P_X", this, &bayesian_estimator::P_X_from_fit, 0, 1000, 1),
            Cb_dist_for_X_select("Cb_dist_for_X_select", this, &bayesian_estimator::cb_dist_for_X_selection, 0, 1, 2),
            B_dist_for_X_select("b_dist_for_X_select", this, &bayesian_estimator::b_dist_for_X_selection, 0, 20, 2),
-           B_dist_for_arb_X_select("b_dist_for_arb_X_select", this, &bayesian_estimator::b_dist_for_arb_X_selection, 0, 20, 2)
+           B_dist_for_arb_X_select("b_dist_for_arb_X_select", this, &bayesian_estimator::b_dist_for_arb_X_selection, 0, 20, 2),
+           fIntegerVariable(integer_variable)
       {
          // Initialise estimator with results of a previous fit.
+         //
+         // \param[in] previous_fit parameters of a previous fit
+         // \param[in] integer_variable [default:false] set true if the observable to be fitted only takes integer values
          p_X_cb_integrator.SetParNames("X");
          theFitter.set_par_names(P_X_fit_function);
          theFitter.set_par_names(mean_X_vs_cb_function);
