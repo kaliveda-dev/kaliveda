@@ -16,6 +16,30 @@
 #include "KVINDRA.h"
 #include "KVACQParam.h"
 
+/**
+\class KVINDRAGeneDataSelector
+\brief For analysing INDRA pulser & laser data
+\ingroup INDRAnalysis
+
+<p>User analysis classes derived from this one have access to the
+following variables :</p>
+<ul>
+<li>Int_t  RunNumber;</li>
+<li>Int_t  EventNumber;</li>
+<li>KVINDRATriggerInfo *TriggerInfo;</li>
+</ul>
+<p>For each event, the values of the acquisition parameters are read and stored
+in the corresponding KVACQParam objects of the INDRA detectors. Therefore to
+access the value in your Analysis() method, use something like this:</p>
+<pre>gIndra->GetACQParam("CI_0201_PG")->GetCoderData()</pre>
+or
+<pre>gIndra->GetDetector("CI_0201")->GetACQParam("PG")->GetCoderData()</pre>
+<p>Use TriggerInfo to check whether the event corresponds to pulser or laser,
+i.e.</p>
+<pre>if( TriggerInfo->IsLaser() ) { ... }</pre>
+<pre>if( TriggerInfo->IsPulser() ) { ... }</pre>
+*/
+
 class KVINDRAGeneDataSelector : public TSelector {
 protected :
    TTree*          fChain;   //!pointer to the analyzed TTree or TChain

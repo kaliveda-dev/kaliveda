@@ -15,6 +15,12 @@ $Id: KVDBTape.h,v 1.13 2006/10/19 14:32:43 franklan Exp $
 
 class KVDBRun;
 
+/**
+\class KVDBTape
+\brief Database entry describing a data storage tape used to store raw data.
+\ingroup INDRADB
+*/
+
 class KVDBTape: public KVDBRecord {
 
 public:

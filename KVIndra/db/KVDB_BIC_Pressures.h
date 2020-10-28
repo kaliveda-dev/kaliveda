@@ -16,6 +16,12 @@ $Date: 2007/02/14 14:13:05 $
 #define BIC_2 1
 #define BIC_3 2
 
+/**
+\class KVDB_BIC_Pressures
+\brief Database entry for BIC (Blocking Ionisation Chamber) pressures (experiment E416A)
+\ingroup INDRADB
+*/
+
 class KVDB_BIC_Pressures : public KVDBChIoPressures {
    void init();
 

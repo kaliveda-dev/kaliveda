@@ -10,6 +10,7 @@
   \class KVSimEvent
   \brief Container class for simulated nuclei, KVSimNucleus
   \ingroup Simulation
+\ingroup NucEvents
  */
 class KVSimEvent : public KVEvent {
 public:

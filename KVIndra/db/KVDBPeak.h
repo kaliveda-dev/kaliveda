@@ -22,6 +22,14 @@ $Id: KVDBPeak.h,v 1.4 2007/04/02 17:43:38 ebonnet Exp $
 #include "KVINDRARRMValidator.h"
 #include "TString.h"
 
+/**
+\class KVDBPeak
+\brief Calibration peak in database
+\ingroup INDRADB
+
+Wrapper for KVDBParameterSet used as base class for classes
+handling calibration peaks: KVDBAlphaPeak, KVDBElasticPeak, (KVDBBrhoPeak ?)
+ */
 
 class KVDBPeak: public KVDBParameterSet, public KVINDRARRMValidator {
 

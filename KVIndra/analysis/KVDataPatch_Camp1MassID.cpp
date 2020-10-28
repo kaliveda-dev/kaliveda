@@ -8,15 +8,6 @@
 
 ClassImp(KVDataPatch_Camp1MassID)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDataPatch_Camp1MassID</h2>
-<h4>Correct mass identification in 1st campaign data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDataPatch_Camp1MassID::KVDataPatch_Camp1MassID()
    : KVDataPatch()
 {

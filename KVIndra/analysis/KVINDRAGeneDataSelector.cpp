@@ -1,27 +1,4 @@
 #define KVINDRAGeneDataSelector_cxx
-// The class definition in KVINDRAGeneDataSelector.h has been generated automatically
-// by the ROOT utility TTree::MakeSelector(). This class is derived
-// from the ROOT class TSelector. For more information on the TSelector
-// framework see $ROOTSYS/README/README.SELECTOR or the ROOT User Manual.
-
-// The following methods are defined in this file:
-//    Begin():        called everytime a loop on the tree starts,
-//                    a convenient place to create your histograms.
-//    SlaveBegin():   called after Begin(), when on PROOF called only on the
-//                    slave servers.
-//    Process():      called for each event, in this function you decide what
-//                    to read and fill your histograms.
-//    SlaveTerminate: called at the end of the loop on the tree, when on PROOF
-//                    called only on the slave servers.
-//    Terminate():    called at the end of the loop on the tree,
-//                    a convenient place to draw/fit your histograms.
-//
-// To use this file, try the following session on your Tree T:
-//
-// Root > T->Process("KVINDRAGeneDataSelector.C")
-// Root > T->Process("KVINDRAGeneDataSelector.C","some options")
-// Root > T->Process("KVINDRAGeneDataSelector.C+")
-//
 
 #include "KVINDRAGeneDataSelector.h"
 #include <TH2.h>
@@ -30,31 +7,7 @@
 
 ClassImp(KVINDRAGeneDataSelector)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRAGeneDataSelector</h2>
-<h4>For analysing INDRA pulser & laser data</h4>
-<p>User analysis classes derived from this one have access to the
-following variables :</p>
-<ul>
-<li>Int_t  RunNumber</li>
-<li>Int_t  EventNumber</li>
-<li><a href="KVINDRATriggerInfo.html">KVINDRATriggerInfo</a> *TriggerInfo</li>
-</ul>
-<p>For each event, the values of the acquisition parameters are read and stored
-in the corresponding KVACQParam objects of the INDRA detectors. Therefore to
-access the value in your Analysis() method, use something like this:</p>
-<pre>gIndra->GetACQParam("CI_0201_PG")->GetCoderData()</pre>
-or
-<pre>gIndra->GetDetector("CI_0201")->GetACQParam("PG")->GetCoderData()</pre>
-<p>Use TriggerInfo to check whether the event corresponds to pulser or laser,
-i.e.</p>
-<pre>if( TriggerInfo->IsLaser() ) { ... }</pre>
-<pre>if( TriggerInfo->IsPulser() ) { ... }</pre>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
+
 
 void KVINDRAGeneDataSelector::Begin(TTree* /*tree*/)
 {
@@ -175,7 +128,7 @@ void KVINDRAGeneDataSelector::Make(const Char_t* kvsname)
    body += "   //KVINDRATriggerInfo* TriggerInfo holds info on INDRA trigger for current event\n";
    body += "   return kTRUE;";
    cf.AddMethodBody("Analysis", body);
-   //endrunù
+   //endrunÃ¹
    body = "   //Method called at end of each run";
    cf.AddMethodBody("EndRun", body);
    //endanalysis

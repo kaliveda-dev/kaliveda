@@ -29,8 +29,9 @@ class KVNucleus;
   \class KVTestEvent
  \brief A simple event generator for testing charged particle array response
  \ingroup Simulation
+ \ingroup NucEvents
 
-Each event consists of N KVNucleus nuclei with randomly drawn atomic number
+Each event consists of N KVSimNucleus nuclei with randomly drawn atomic number
 Z, kinetic energy and direction.
 
 To use, first set the multiplicity:

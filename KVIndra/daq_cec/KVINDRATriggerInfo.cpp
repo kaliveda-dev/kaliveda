@@ -21,22 +21,7 @@ $Id: KVINDRATriggerInfo.cpp,v 1.5 2006/10/19 14:32:43 franklan Exp $
 using namespace std;
 
 ClassImp(KVINDRATriggerInfo)
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Utility class, holds values of the STAT_EVE, R_DEC and CONFIG parameters
-//in raw INDRA data which represent the status of the Selecteur for an event.
-//
-//When reading raw data, the values of the three parameters
-//are filled from the data event by event.
-//For calibrated data, this information is accessible by using
-//      KVINDRAReconEvent::EventTrigger()
-//which returns a KVTriggerInfo object.
-//
-//GetSTAT_EVE(), GetR_DEC(), GetCONFIG() : binary contents of each register
-//PHY_EVT(), MRQ(), GEN_ELEC(), GEN_TST(), GEN_LAS() :  kTRUE/kFALSE depending on state of corresponding bit in STAT_EVE
-//IsGene() : kTRUE if any of the three GEN_xxx bits is set to 1
-//IsPhysics() : kTRUE if PHY_EVT bit = 1 and MRQ bit is not set*
-//(*because if MRQ=1 physical events cannot trigger the acquisition).
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 KVINDRATriggerInfo::KVINDRATriggerInfo()
 {
    //Initialises number of bits (representation) for each register read from Selecteur

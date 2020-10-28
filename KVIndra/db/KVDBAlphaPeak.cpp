@@ -19,12 +19,6 @@ $Id: KVDBAlphaPeak.cpp,v 1.4 2006/10/19 14:32:43 franklan Exp $
 #include "KVDBAlphaPeak.h"
 
 ClassImp(KVDBAlphaPeak)
-///////////////////////////////
-//KVDBAlphaPeak
-//
-//Wrapper for KVDBPeak describing alpha (thoron) peaks for calibration
-//GetEnergy gives the energy of the alpha-peak in MeV.
-///////////////////////////////
 KVDBAlphaPeak::KVDBAlphaPeak()
 {
    //default ctor

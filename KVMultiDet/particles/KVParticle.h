@@ -566,6 +566,12 @@ public:
    {
       return Vect();
    };
+   TVector3 GetTransverseMomentum() const
+   {
+      TVector3 perp = GetMomentum();
+      perp.SetZ(0);
+      return perp;
+   }
    Double_t GetKE() const
    {
       Double_t e = E();

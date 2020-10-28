@@ -14,6 +14,12 @@ $Date: 2006/11/03 08:01:32 $
 class KVOldINDRASelector;
 #include "TEventList.h"
 
+/**
+  \class KVDataSelector
+  \ingroup INDRAnalysis
+  \brief Class handling event lists for KVOldINDRASelector analysis of data chains
+
+ */
 class KVDataSelector: public KVBase {
 
 private:

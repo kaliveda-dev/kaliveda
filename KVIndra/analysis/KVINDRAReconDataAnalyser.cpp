@@ -23,10 +23,7 @@ $Date: 2007/11/15 14:59:45 $
 using namespace std;
 
 ClassImp(KVINDRAReconDataAnalyser)
-////////////////////////////////////////////////////////////////////////////////
-// For analysing reconstructed INDRA data
-//
-////////////////////////////////////////////////////////////////////////////////
+
 KVINDRAReconDataAnalyser::KVINDRAReconDataAnalyser()
    : fSelector(nullptr), fOldSelector(nullptr), theChain(nullptr),
      theRawData(nullptr), theGeneData(nullptr),

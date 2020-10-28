@@ -35,6 +35,13 @@
 #include "TProfile.h"
 #include "KVDalitzPlot.h"
 
+/**
+  \class KVOldINDRASelector
+  \ingroup INDRAnalysis
+  \brief Former base analysis class for INDRA data
+
+Obsolete, kept for backwards compatibility only (very very old analysis classes)
+ */
 class KVOldINDRASelector: public TSelector {
 
 protected:

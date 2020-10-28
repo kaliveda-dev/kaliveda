@@ -22,6 +22,12 @@ class KVIDTelescope;
 class KVDetector;
 class TTree;
 
+/**
+\class KVINDRADstToRootTransfert
+\brief Conversion of INDRA DST file to KaliVeda ROOT format
+\ingroup INDRAnalysis
+*/
+
 class KVINDRADstToRootTransfert : public KVINDRADSTReader {
 
 protected:

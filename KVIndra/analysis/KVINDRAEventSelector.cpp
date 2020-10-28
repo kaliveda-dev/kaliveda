@@ -7,15 +7,6 @@
 
 ClassImp(KVINDRAEventSelector)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRAEventSelector</h2>
-<h4>Base class for analysis of reconstructed INDRA events</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVINDRAEventSelector::KVINDRAEventSelector(TTree* arg1)
    : KVEventSelector(arg1), fCurrentRun(nullptr)
 {

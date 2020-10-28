@@ -18,12 +18,6 @@ $Id: KVDBPeak.cpp,v 1.4 2007/04/02 17:43:38 ebonnet Exp $
 #include "KVDBPeak.h"
 
 ClassImp(KVDBPeak)
-/////////////////////////////////////////////////////////////////////////////////
-//KVDBPeak
-//
-//Wrapper for KVDBParameterSet used as base class for classes
-//handling calibration peaks: KVDBAlphaPeak, KVDBElasticPeak, (KVDBBrhoPeak ?)
-/////////////////////////////////////////////////////////////////////////////////
 void KVDBPeak::init()
 {
    //default initialisations

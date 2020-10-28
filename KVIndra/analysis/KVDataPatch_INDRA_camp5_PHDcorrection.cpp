@@ -9,18 +9,6 @@
 
 ClassImp(KVDataPatch_INDRA_camp5_PHDcorrection)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDataPatch_INDRA_camp5_PHDcorrection</h2>
-<h4>Patch for correcting Silicon PHD on rings 1-9 [INDRA_camp5 before 1.8.10]</h4>
-Particle-level patch applied to all runs of INDRA 5th campaign 'root' data written with KaliVeda
-version <1.8.10 and KVINDRAReconNuc class version < 11.<br>
-Patch is applied to all identified & calibrated nuclei with Z>10 on rings 1-9.
-The particle energy is recalibrated.
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVDataPatch_INDRA_camp5_PHDcorrection::KVDataPatch_INDRA_camp5_PHDcorrection()
 {

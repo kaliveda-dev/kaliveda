@@ -36,14 +36,6 @@ using namespace std;
 
 ClassImp(KVINDRADstToRootTransfert)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRADstToRootTransfert</h2>
-<h4>Conversion of INDRA DST file to KaliVeda ROOT format</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVINDRADstToRootTransfert::KVINDRADstToRootTransfert()
 {

@@ -27,6 +27,21 @@ $Id: KVDBChIoPressures.h,v 1.4 2007/02/14 14:11:15 franklan Exp $
 #include "Riostream.h"
 #include "KVDBRecord.h"
 
+/**
+ \class KVDBChIoPressures
+ \ingroup INDRADB
+ \brief CHIO pressure parameters
+
+ This class handles a set of parameters for ChIo pressures.
+ It can read/write in from/to a stream with following format :
+
+ ChIos 2_3    p1
+ ChIos 4_5    p2
+ ChIos 6_7    p3
+ ChIos 8_12   p4
+ ChIos 13_17  p5
+*/
+
 class KVDBChIoPressures: public KVDBRecord {
 private:
    static UInt_t fSetNumber;

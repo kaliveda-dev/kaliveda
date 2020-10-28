@@ -8,15 +8,6 @@
 
 ClassImp(KVDataPatch_CorrectEtalonModuleIDCode)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDataPatch_CorrectEtalonModuleIDCode</h2>
-<h4>Patch for correcting bad id-code & calibration for particles stopping in CsI member of etalon modules [data written with v1.8.11]</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDataPatch_CorrectEtalonModuleIDCode::KVDataPatch_CorrectEtalonModuleIDCode()
 {
    // Default constructor

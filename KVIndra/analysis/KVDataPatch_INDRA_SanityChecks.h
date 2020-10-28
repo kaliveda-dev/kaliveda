@@ -6,6 +6,25 @@
 
 #include "KVDataPatch.h"
 
+/**
+\class KVDataPatch_INDRA_SanityChecks
+\brief General sanity checks for old INDRA data
+\ingroup INDRADataPatch
+
+  General sanity checks:
+     - any particle with "good" ID codes should have:
+           IsIdentified() = true
+           IsZMeasured() = true
+           GetIdentifyingTelescope() returns pointer to ID telescope
+     - any particle with IsZMeasured()=true should have:
+           1 <= Z <= 92
+     - any particle with 'good' calib codes should have
+           E>0
+     - any particle identified in CsI-RL should have
+           Z<6
+           no 4H, no 5He or 7He
+*/
+
 class KVDataPatch_INDRA_SanityChecks : public KVDataPatch {
 public:
    KVDataPatch_INDRA_SanityChecks();

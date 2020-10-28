@@ -1,13 +1,3 @@
-//
-// D.Cussol
-//
-// 17/04/2001:
-// Creation d'une classe de tri. Cette classe permet d'effectuer un tri et de
-// retourner un nombre entier correspondand a une classe donne. Pour un argument
-// reel donne entre une valeur min et une valeur max, le trieur retourne un
-// nombre compris entre 1 et nb_cases.
-//
-
 #include <math.h>
 #include <stdio.h>
 #include "KVTrieurBloc.h"
@@ -15,98 +5,7 @@
 using namespace std;
 
 ClassImp(KVTrieurBloc)
-//////////////////////////////////////////////////////////////////////////////////
-//          *****     Class for a sorting with detached cells.      ******
-//
-//   This class returns an index determined via a a research in an array of
-// values. The upper limit and the lower limit of a cell are not belonging to
-// any of the other cells. The following methods are provided by this class:
-//      virtual Int_t GetNumCase(Double_t x)   Gives an index corresponding to
-//                                             the value of x. If xmin and xmax
-//                                             are the arrays of nb_cells values,
-//                                             the returned value i is determined
-//                                             following this prescription:
-//
-//                                             xmin[i-1] < x < xmax[i-1]
-//
-//                                             if the x value do not correspond
-//                                             to any of the cells, -1 is
-//                                             returned.
-//
-//      virtual Int_t GetNumCase(void *,...)   return -1,not to use.
-//
-// BEWARE! : the index value ranges between 1 and nb_cells.
-//
-//  For each index, the Xmin and Xmax values can be adjusted with the methods
-//      virtual void SetXmin(Int_t i,Double_t x)
-//      virtual void SetXmax(Int_t i,Double_t x)
-//
-// BEWARE! : the index value ranges between 1 and nb_cells.
-//
-//  The name of the sorting variable can be set withe the method
-//      virtual void SetNomVar(Char_t *s)
-//
-// The number of indexes can be set with the method. This has to be done first
-//      virtual void SetNbCases(Int_t n)
-//
-//  Setting the number of indexes, the name of the sorting variable or the Xmin
-// or Xmax values automatically generates the names for each index.
-//
-//  In a treatment program, this can be used to set histogram titles and to
-// manage efficiently arrays of histograms. Here is an example where the sorting
-// variable is Ekin (calculated using KVEkin class).
-//== Example ==================================================================================================
-// // Declarations and initialisations
-// ...
-// KVEkin Sekin;
-// Sekin.Init();
-// KVZmax Zmax;
-// Zmax.Init();
-// ...
-// KVTrieurBloc sortEkin;
-// sortEkin.SetNbCases(5);        // 5 indexes
-// sortEkin.SetNomVar("E_{kin}"); // name of the sorting variable
-// sortEkin.SetXmin(1,0.);        // minimum value of Ekin for cell 1
-// sortEkin.SetXmax(1,50.);       // maximum value of Ekin for cell 1
-// sortEkin.SetXmin(2,100.);      // minimum value of Ekin for cell 2
-// sortEkin.SetXmax(2,150.);      // maximum value of Ekin for cell 2
-// sortEkin.SetXmin(3,150.);      // minimum value of Ekin for cell 3
-// sortEkin.SetXmax(3,225.);      // maximum value of Ekin for cell 3
-// sortEkin.SetXmin(4,300.);      // minimum value of Ekin for cell 4
-// sortEkin.SetXmax(4,390.);      // maximum value of Ekin for cell 4
-// sortEkin.SetXmin(5,500.);      // minimum value of Ekin for cell 5
-// sortEkin.SetXmax(5,800.);      // maximum value of Ekin for cell 5
-// ...
-// // Declaration of histograms
-// TList *lekin=new TList();      // list to store histograms
-// for(Int_t i=0;i<sortEkin.GetNbCases();i++)
-//  {
-//  TString sname("histo"); // TString for the histogram name
-//  sname+=i;
-//  TString stitle("Z_{max} for "); // TString for the histogram title
-//  stitle+=sortEkin.GetNomCase(i+1);
-//  TH1F *h1=new TH1F(sname.Data(),stitle.Data(),100,0.5,100.5);
-//  lekin->Add(h1); // Add the histogram to the list
-//  }
-// ...
-// // Treatment loop for each event called for each event
-// ...
-// Sekin.Reset();
-// Zmax.Reset();
-// KVINDRAReconNuc *part = 0;
-// while( (part = GetEvent()->GetNextParticle("ok")) ){//loop over particles with correct codes
-//  Sekin.Fill(part);
-//  Zmax.Fill(part);
-// }
-// // Filling the appropriate histogram
-// Int_t index=sortEkin(Sekin());       // Determine the index value according to Sekin()
-// if(index > 0)     // Check if SEkin() is not out of range (<0 or >800)
-//  {
-//  TH1F *h1=(TH1F *)lekin->At(index-1); // retrieve the histogram in the list
-//  h1->Fill(Zmax());                    // fill it!
-//  }
-// ...
-//
+
 Int_t KVTrieurBloc::nb = 0;
 Int_t KVTrieurBloc::nb_crea = 0;
 Int_t KVTrieurBloc::nb_dest = 0;

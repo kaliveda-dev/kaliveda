@@ -17,14 +17,6 @@ using namespace std;
 
 ClassImp(KVINDRAGeneDataAnalyser)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRAGeneDataAnalyser</h2>
-<h4>For analysing INDRA gene data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVINDRAGeneDataAnalyser::KVINDRAGeneDataAnalyser()
 {

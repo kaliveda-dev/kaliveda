@@ -15,18 +15,7 @@ $Date: 2007/05/31 09:59:21 $
 using namespace std;
 
 ClassImp(KVDataSelector)
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDataSelector</h2>
-<h4>KVBase</h4>
-<!-- */
-// --> END_HTML
-//
-// A KVDataSelector class allows to build TEventList's
-//
-////////////////////////////////////////////////////////////////////////////////
-//_____________________________________
+
 KVDataSelector::KVDataSelector()
 {
    //Default constructor

@@ -8,15 +8,6 @@
 
 ClassImp(KVDataPatch_INDRA_SanityChecks)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDataPatch_INDRA_SanityChecks</h2>
-<h4>General sanity checks for old INDRA data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDataPatch_INDRA_SanityChecks::KVDataPatch_INDRA_SanityChecks()
    : KVDataPatch()
 {

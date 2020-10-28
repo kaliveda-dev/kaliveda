@@ -12,11 +12,6 @@ $Id: KVDBTape.cpp,v 1.7 2006/10/19 14:32:43 franklan Exp $
 
 ClassImp(KVDBTape);
 
-///////////////
-//KVDBTape
-//
-//Database entry describing a data storage tape used to store raw data.
-//
 
 KVDBTape::KVDBTape()
 {

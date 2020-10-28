@@ -8,15 +8,6 @@
 
 ClassImp(KVDataPatch_INDRA_CorrectEtalonTrajectories)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDataPatch_INDRA_CorrectEtalonTrajectories</h2>
-<h4>Correct angular distributions for CsI & ChIo-CsI identified particles in etalon telescopes</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDataPatch_INDRA_CorrectEtalonTrajectories::KVDataPatch_INDRA_CorrectEtalonTrajectories()
    : KVDataPatch(), fRandomAngles(false)
 {

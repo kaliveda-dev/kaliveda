@@ -9,6 +9,19 @@ class KVINDRAReconEvent;
 class KVDataPatch_CorrectEtalonModuleIDCode : public KVDataPatch {
    KVINDRAReconEvent* fEvent;//pointer to current event
 
+   /**
+   \class KVDataPatch_CorrectEtalonModuleIDCode
+   \brief Patch for correcting bad id-code & calibration for particles stopping in CsI member of etalon modules [data written with v1.8.11]
+   \ingroup INDRADataPatch
+
+   Correct bad attribution of IDCode & calibration of particles stopping in CsI detectors behind etalon telescopes.
+   Gammas (IDcode=0) and light charged particles (IDcode=2) were given
+   IDcode=5 due to a bug in v1.8.11 (lp:bug#1271634).
+
+   The status of the correction can be obtained from parameter KVDataPatch_CorrectEtalonModuleIDCode:
+   ='correction applied' or 'correction failed'
+
+   */
 public:
    KVDataPatch_CorrectEtalonModuleIDCode();
    virtual ~KVDataPatch_CorrectEtalonModuleIDCode();

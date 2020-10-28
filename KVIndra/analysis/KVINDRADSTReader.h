@@ -4,6 +4,11 @@
 #include "KVDataSetAnalyser.h"
 #include "KVDataSet.h"
 
+/**
+\class KVINDRADSTReader
+\brief Read INDRA DST file and fill a TTree
+\ingroup INDRAnalysis
+*/
 class KVINDRADSTReader : public KVDataSetAnalyser {
 
 protected:

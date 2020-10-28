@@ -13,14 +13,6 @@ using namespace std;
 
 ClassImp(KVDB_BIC_Pressures)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDB_BIC_Pressures</h2>
-<h4>Database entry for BIC pressures (experiment E416A)</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVDB_BIC_Pressures::KVDB_BIC_Pressures()
 {

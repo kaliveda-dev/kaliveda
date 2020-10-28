@@ -16,6 +16,11 @@ $Date: 2007/05/31 09:59:22 $
 #include <KVDataPatchList.h>
 class TChain;
 
+/**
+  \class KVINDRAReconDataAnalyser
+  \ingroup INDRAnalysis
+  \brief Manage analysis of reconstructed INDRA data
+ */
 class KVINDRAReconDataAnalyser: public KVDataSetAnalyser {
 
 protected:

@@ -22,16 +22,6 @@ $Id: KVDBChIoPressures.cpp,v 1.3 2007/02/13 18:18:18 franklan Exp $
 using namespace std;
 
 ClassImp(KVDBChIoPressures);
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//             Class KVDBChIoPressures
-// This class handles a set of parameters for ChIo pressures.
-// It can read/write in from/to a stream with following format :
-// ChIos 2_3    p1
-// ChIos 4_5    p2
-// ChIos 6_7    p3
-// ChIos 8_12   p4
-// ChIos 13_17  p5
-//
 //____________________________________________________________________________
 UInt_t KVDBChIoPressures::fSetNumber = 0;
 //____________________________________________________________________________

@@ -7,15 +7,6 @@
 
 ClassImp(KVDataPatch_Camp2MassID)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVDataPatch_Camp2MassID</h2>
-<h4>Patch to correct 2nd campaign A-identification status</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVDataPatch_Camp2MassID::KVDataPatch_Camp2MassID()
    : KVDataPatch()
 {

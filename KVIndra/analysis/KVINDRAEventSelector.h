@@ -9,6 +9,12 @@
 #include <KVINDRADBRun.h>
 #include <KVINDRAReconEvent.h>
 
+/**
+\class KVINDRAEventSelector
+\brief Base class for analysis of reconstructed INDRA events
+\ingroup INDRAnalysis
+*/
+
 class KVINDRAEventSelector : public KVEventSelector {
 
 protected:

@@ -23,6 +23,14 @@ $Id: KVDBAlphaPeak.h,v 1.4 2006/10/19 14:32:43 franklan Exp $
 #define PEAK_THORON_1 6.062
 #define PEAK_THORON_2 8.785
 
+/**
+  \class KVDBAlphaPeak
+\brief Wrapper for KVDBPeak describing alpha (thoron) peaks for calibration
+\ingroup INDRADB
+
+GetEnergy gives the energy of the alpha-peak in MeV.
+*/
+
 class KVDBAlphaPeak: public KVDBPeak {
 
 public:

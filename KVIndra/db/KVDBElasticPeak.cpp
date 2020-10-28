@@ -19,12 +19,6 @@ $Id: KVDBElasticPeak.cpp,v 1.3 2006/10/19 14:32:43 franklan Exp $
 #include "KVDBElasticPeak.h"
 
 ClassImp(KVDBElasticPeak)
-///////////////////////////////
-//KVDBElasticPeak
-//
-//Wrapper for KVDBPeak describing elastic peaks for calibration.
-//GetEnergy() gives the incident energy of the beam in MeV.
-///////////////////////////////
 void KVDBElasticPeak::init()
 {
    //default initialisations

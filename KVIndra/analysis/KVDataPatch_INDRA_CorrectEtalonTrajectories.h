@@ -6,6 +6,19 @@
 
 #include "KVDataPatch.h"
 
+/**
+\class KVDataPatch_INDRA_CorrectEtalonTrajectories
+\brief Correct angular distributions for CsI & ChIo-CsI identified particles in etalon telescopes
+\ingroup INDRADataPatch
+
+    Apply the following correction to INDRA data:
+       - all particles identified in etalon modules by either CSI_R_L or CI_CSI
+       identification were treated as if they passed through the etalon detectors.
+       - we check the coherency of this with the energy of the particle and
+       correct when necessary
+
+*/
+
 class KVDataPatch_INDRA_CorrectEtalonTrajectories : public KVDataPatch {
    Bool_t fRandomAngles;
 

@@ -6,6 +6,17 @@
 
 #include "KVDataPatch.h"
 
+/**
+\class KVDataPatch_Camp2MassID
+\brief Correct mass identification in 2nd campaign data
+\ingroup INDRADataPatch
+
+Correct bad attribution of isotopic resolution & mass in 2nd campaign data:
+    - all particles identified in Phoswich detectors (Ring 1) were labelled as being isotopically identified.
+    - calculated masses were not consistent: several A for some Z. We give single KVNucleus::kVedaMass A to all
+
+*/
+
 class KVDataPatch_Camp2MassID : public KVDataPatch {
 public:
    KVDataPatch_Camp2MassID();

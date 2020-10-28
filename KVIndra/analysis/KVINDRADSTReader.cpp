@@ -3,15 +3,6 @@
 
 ClassImp(KVINDRADSTReader)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRADSTReader</h2>
-<h4>Read INDRA DST file and fill a TTree</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 void KVINDRADSTReader::InitRun()
 {
    Info("InitRun", "ds InitRun");
@@ -87,14 +78,16 @@ void KVINDRADSTReader::DefineSHELLVariables()
 
       camp1 = kTRUE;
 
-   } else if (fCampNumber == 2) {
+   }
+   else if (fCampNumber == 2) {
 
       shell_var.Form("%s/veda%d/data/", gSystem->ExpandPathName("$THRONG_DIR"), fCampNumber);
       gSystem->Setenv("VEDA_DATA", shell_var.Data());
 
       camp2 = kTRUE;
 
-   } else if (fCampNumber == 4) {
+   }
+   else if (fCampNumber == 4) {
 
       shell_var.Form("%s/veda%d/data/", gSystem->ExpandPathName("$THRONG_DIR"), fCampNumber);
       gSystem->Setenv("VEDA_DATA", shell_var.Data());

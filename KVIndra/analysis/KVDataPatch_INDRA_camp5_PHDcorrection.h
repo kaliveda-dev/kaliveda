@@ -5,6 +5,18 @@
 #define __KVDATAPATCH_INDRA_CAMP5_PHDCORRECTION_H
 
 #include "KVDataPatch.h"
+/**
+\class KVDataPatch_INDRA_camp5_PHDcorrection
+\brief Patch for correcting Silicon PHD on rings 1-9 [INDRA_camp5 before 1.8.10]
+\ingroup INDRADataPatch
+
+Particle-level patch applied to all runs of INDRA 5th campaign 'root' data written with KaliVeda
+version <1.8.10 and KVINDRAReconNuc class version < 11.
+
+Patch is applied to all identified & calibrated nuclei with Z>10 on rings 1-9.
+The particle energy is recalibrated.
+
+*/
 
 class KVDataPatch_INDRA_camp5_PHDcorrection : public KVDataPatch {
 

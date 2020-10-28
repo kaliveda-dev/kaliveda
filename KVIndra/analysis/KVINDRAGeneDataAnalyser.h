@@ -12,6 +12,12 @@ $Date: 2007/06/06 10:13:17 $
 
 #include "KVDataSetAnalyser.h"
 
+/**
+\class KVINDRAGeneDataAnalyser
+\brief For analysing INDRA gene (pulser) data
+\ingroup INDRAnalysis
+*/
+
 class KVINDRAGeneDataAnalyser : public KVDataSetAnalyser {
 protected:
    virtual KVNumberList PrintAvailableRuns(KVString& datatype);

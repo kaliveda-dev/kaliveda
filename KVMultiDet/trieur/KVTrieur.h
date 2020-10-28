@@ -1,12 +1,30 @@
-//
-// D.Cussol
-//
-// 17/04/2001:
-// Creation d'une classe de tri. Cette classe permet d'effectuer un tri et de
-// retourner un nombre entier correspondand a une classe donne. Ceci est une
-// classe virtuelle. La classe contient une methode virtuelle qui devra etre
-// fournie par l'utilisateur lors de son implementation.
-//
+/**
+\class KVTrieur
+\brief Base class for Sorting purposes
+\ingroup Analysis
+
+   This class is a base abstact class for the management of sortings. A
+  sorting class deriving from KVTrieur has to provide the following methods:
+~~~~{.cpp}
+      virtual Int_t GetNumCase(Double_t x)   Gives an index corresponding to
+                                             the value of x.
+      virtual Int_t GetNumCase(void *,...)   Gives an index corresponding to
+                                             the list of arguments.
+~~~~
+  Child classes KVTrieurLin, KVTrieurTranche and KVTrieurBloc provide
+ these methods. A name can be associated to each index value with the method
+~~~~{.cpp}
+      virtual void SetNomCase(Int_t i,Char_t *s)
+~~~~
+ and can be retrieved withe the method
+~~~~{.cpp}
+      virtual const Char_t *GetNomCase(Int_t i)
+~~~~
+ The number of indexes can be set with the method
+~~~~{.cpp}
+      virtual void SetNbCases(Int_t n)
+~~~~
+*/
 
 #ifndef KVTrieur_h
 #define KVTrieur_h
@@ -14,8 +32,6 @@
 #include "Riostream.h"
 #include "KVBase.h"
 #include "TClonesArray.h"
-
-//#define DEBUG_KVTrieur
 
 class KVTrieur: public KVBase {
 public:
