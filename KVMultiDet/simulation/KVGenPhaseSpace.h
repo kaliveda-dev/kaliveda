@@ -8,6 +8,55 @@
 #include "KVNucleus.h"
 #include "KVEvent.h"
 
+/**
+\class KVGenPhaseSpace
+\brief Generate momenta for an event using microcanonical phase space sampling
+\ingroup Simulation
+
+ We use ROOT class TGenPhaseSpace to sample the phase space for each event.
+ This corresponds to sampling the microcanonical phase space for a gas
+ composed of the nuclei of the break-up channel with a given total kinetic
+ energy determined by energy balance.
+
+### Example of use
+
+~~~~{.cpp}
+ // 3-alpha decay of 12C*
+
+ KVNucleus CN(6,12);
+ CN.SetExcitEnergy(20); // minimum = 7.27 MeV
+
+ //  decay products
+ KVEvent decay;
+ KVNucleus* n = decay.AddParticle();
+ n->SetZandA(2,4);
+ n = decay.AddParticle();
+ n->SetZandA(2,4);
+ n = decay.AddParticle();
+ n->SetZandA(2,4);
+
+ KVGenPhaseSpace gps;
+ if(!gps.SetBreakUpChannel(CN, &decay))
+ {
+   printf("Break-up channel is not allowed\n");
+   return;
+ }
+
+ Double_t etot = gps.GetAvailableEnergy();
+ TH1F* h1 = new TH1F("h1","Kinetic energy of alpha particle 3",200,0,etot*2./3.);
+ h1->Sumw2();
+
+ Int_t nevents = 10000;
+ while(nevents--){
+   wgt = gps.Generate();
+   h1->Fill(n->GetKE(),wgt);
+ }
+
+ h1->Draw();
+
+~~~~
+*/
+
 class KVGenPhaseSpace : public KVBase {
 private:
    void init();

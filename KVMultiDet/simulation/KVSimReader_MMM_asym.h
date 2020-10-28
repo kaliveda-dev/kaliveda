@@ -6,6 +6,12 @@
 
 #include "KVSimReader.h"
 
+/**
+\class KVSimReader_MMM_asym
+\brief Read ascii file for asymptotic events of the MMM code after deexcitation
+\ingroup Simulation
+*/
+
 class KVSimReader_MMM_asym : public KVSimReader {
    void init()
    {

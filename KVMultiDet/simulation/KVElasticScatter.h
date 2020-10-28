@@ -23,6 +23,72 @@ class KVTarget;
 class KV2Body;
 class TObjArray;
 
+/**
+   \class KVElasticScatter
+  \brief Calculate elastic scattering spectra in multidetector arrays
+  \ingroup Simulation
+
+
+Use this class to calculate the energy losses of elastically scattered nuclei
+in the detectors of a multidetector array. It is assumed that the following
+global pointers have been initialised before using this class:
+
+<ul>
+   <li><pre>gMultiDetArray</pre> - points to object describing multidetector array</li>
+   <li><pre>gExpDB</pre> - points to database of run-dependent information for experimental dataset</li>
+</ul>
+
+In other words, we assume that the user has chosen a dataset on which she wants
+to work:
+
+<pre>gDataSetManager->GetDataSet("name_of_dataset")->cd()</pre>
+
+and then initialised the description of the experimental configuration for the dataset:
+
+<pre>KVMultiDetArray::MakeMultiDetector(gDataSet->GetName())</pre>
+
+<h3>Setting up the calculation</h3>
+
+Create a new elastic scattering object:
+
+<pre>KVElasticScatter es</pre>
+
+Then call any of the following methods in any order in order to set up the calculation:
+
+<ul>
+   <li><pre>es.SetProjectile(...)</pre></li>
+   <li><pre>es.SetEnergy(...)</pre></li>
+   <li><pre>es.SetDetector(...)</pre></li>
+   <li><pre>es.SetRun(...)</pre></li>
+</ul>
+
+The SetRun(...) method uses the experimental database in order to determine the target
+for the run, detector state (gas pressures etc.).
+
+<h3>Multilayer targets</h3>
+
+When multilayer targets are used, the user can restrict the scattering calculation to one
+specific component of the target, i.e. the scattering takes place between the projectile
+and one of the nuclei of the specified layer. Energy losses before and after the scattering
+in the other layers of the target are of course still taken into account. To set the part of
+the target where scattering takes place use
+
+<pre>es.SetTargetScatteringLayer(...)</pre>
+
+with the name of the layer you require (this is normally the name of the element
+making up the layer - see KVTarget for details).
+
+<h3>Inelastic scattering</h3>
+
+Calculations can also be performed for inelastic scattering i.e. when the target nucleus is left
+in an excited state (N.B. we still use the Rutherford elastic scattering cross-section for
+weighting the energy loss distributions). In order to do this, call
+
+<pre>es.SetTargetExcitedState(...)</pre>
+
+with the energy of the excited state of the target after scattering.
+*/
+
 class KVElasticScatter {
    TH1F* fDepth;                //depth of scattering point in target
    TH1F* fTheta;                //angle of scattered particle

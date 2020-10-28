@@ -6,6 +6,12 @@
 
 #include "KVSimReader.h"
 
+/**
+\class KVSimReader_SMF
+\brief Read ascii file for events of the SMF code after clusterization
+\ingroup Simulation
+*/
+
 class KVSimReader_SMF : public KVSimReader {
 
    void init()

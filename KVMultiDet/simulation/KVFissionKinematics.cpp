@@ -7,15 +7,6 @@
 
 ClassImp(KVFissionKinematics)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVFissionKinematics</h2>
-<h4>Simple calculation of two-body decay</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVFissionKinematics::KVFissionKinematics(const KVNucleus& fis, Int_t Z1, Int_t A1)
    : KVBase(), fFission(2), fMother(fis), fDaughter(Z1, A1)
 {

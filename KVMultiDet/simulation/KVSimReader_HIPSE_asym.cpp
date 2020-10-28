@@ -6,14 +6,7 @@
 
 ClassImp(KVSimReader_HIPSE_asym)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSimReader_HIPSE_asym</h2>
-<h4>Read ascii file for asymptotic events of the HIPSE code after SIMON deexcitation</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
+
 
 KVSimReader_HIPSE_asym::KVSimReader_HIPSE_asym()
 {

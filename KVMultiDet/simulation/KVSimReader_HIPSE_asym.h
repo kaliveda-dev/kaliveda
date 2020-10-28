@@ -11,6 +11,12 @@
 class KVNucleus;
 class TH1F;
 
+/**
+\class KVSimReader_HIPSE_asym
+\brief Read ascii file for asymptotic events of the HIPSE code after SIMON deexcitation
+\ingroup Simulation
+*/
+
 class KVSimReader_HIPSE_asym : public KVSimReader_HIPSE {
    void init()
    {

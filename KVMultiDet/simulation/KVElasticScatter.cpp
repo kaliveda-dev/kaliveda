@@ -20,71 +20,7 @@ $Date: 2007/04/04 10:39:17 $
 using namespace std;
 
 ClassImp(KVElasticScatter)
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVElasticScatter</h2>
-<h4>Calculate elastic scattering spectra in multidetector arrays</h4>
 
-<p>
-Use this class to calculate the energy losses of elastically scattered nuclei
-in the detectors of a multidetector array. It is assumed that the following
-global pointers have been initialised before using this class:
-</p>
-<ul>
-   <li><pre><a href="KVMultiDetArray.html">gMultiDetArray</a></pre> - points to object describing multidetector array</li>
-   <li><pre><a href="KVDataBase.html">gDataBase</a></pre> - points to database of run-dependent information for experimental dataset</li>
-</ul>
-<p>
-In other words, we assume that the user has chosen a dataset on which she wants
-to work:
-</p>
-<pre><a href="KVDataSetManager.html">gDataSetManager</a>-><a href="KVDataSetManager.html#KVDataSetManager:GetDataSet">GetDataSet</a>("name_of_dataset")-><a href="KVDataSet.html#KVDataSet:cd">cd</a>()</pre>
-<p>
-and then initialised the description of the experimental configuration for the dataset:
-</p>
-<pre><a href="KVDataSet.html">gDataSet</a>-><a href="KVDataSet.html#KVDataSet:BuildMultiDetector">BuildMultiDetector</a>()</pre>
-<h3>Setting up the calculation</h3>
-<p>Create a new elastic scattering object:</p>
-<pre>KVElasticScatter* es = new KVElasticScatter</pre>
-<p>
-Then call any of the following methods in any order in order to set up the calculation:</p>
-<ul>
-   <li><pre>es-><a href="#KVElasticScatter:SetProjectile">SetProjectile</a>(...)</pre></li>
-   <li><pre>es-><a href="#KVElasticScatter:SetEnergy">SetEnergy</a>(...)</pre></li>
-   <li><pre>es-><a href="#KVElasticScatter:SetDetector">SetDetector</a>(...)</pre></li>
-   <li><pre>es-><a href="#KVElasticScatter:SetRun">SetRun</a>(...)</pre></li>
-</ul>
-<p>
-The SetRun(...) method uses the experimental database in order to determine the target
-for the run, detector state (gas pressures etc.).
-</p>
-<h3>Multilayer targets</h3>
-<p>
-When multilayer targets are used, the user can restrict the scattering calculation to one
-specific component of the target, i.e. the scattering takes place between the projectile
-and one of the nuclei of the specified layer. Energy losses before and after the scattering
-in the other layers of the target are of course still taken into account. To set the part of
-the target where scattering takes place use
-</p>
-<pre>es-><a href="#KVElasticScatter:SetTargetScatteringLayer">SetTargetScatteringLayer</a>(...)</pre>
-<p>
-with the name of the layer you require (this is normally the name of the element
-making up the layer - see <a href="KVTarget.html">KVTarget</a> for details).
-</p>
-<h3>Inelastic scattering</h3>
-<p>
-Calculations can also be performed for inelastic scattering i.e. when the target nucleus is left
-in an excited state (N.B. we still use the Rutherford elastic scattering cross-section for
-weighting the energy loss distributions). In order to do this, call
-</p>
-<pre>es-><a href="#KVElasticScatter:SetTargetExcitedState">SetTargetExcitedState</a>(...)</pre>
-<p>
-with the energy of the excited state of the target after scattering.
-</p>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 KVElasticScatter::KVElasticScatter(): fBeamDirection(0, 0, 1)
 {
    //Default constructor

@@ -7,6 +7,12 @@
 #include "KVSimReader.h"
 #include "TH1F.h"
 
+/**
+\class KVSimReader_HIPSE
+\brief Read ascii file for events of the HIPSE code after clusterization
+\ingroup Simulation
+*/
+
 class KVSimReader_HIPSE : public KVSimReader {
    void init()
    {

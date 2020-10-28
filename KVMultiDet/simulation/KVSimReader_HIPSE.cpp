@@ -5,14 +5,6 @@
 
 ClassImp(KVSimReader_HIPSE)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSimReader_HIPSE</h2>
-<h4>Read ascii file for events of the HIPSE code after clusterization</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVSimReader_HIPSE::KVSimReader_HIPSE()
 {

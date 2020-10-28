@@ -15,6 +15,37 @@
 
 /*The value ERRCON equals (5/SAFETY) raised to the power (1/PGROW), see use below.*/
 
+/**
+   \class KVRungeKutta
+\brief Adaptive step-size 4th order Runge-Kutta ODE integrator from Numerical Recipes
+\ingroup Simulation
+
+To use, implement a class which inherits from KVRungeKutta and which has AT LEAST
+the following methods:
+~~~~{.cpp}
+    MyClass::MyClass(Int_t N) : KVRungeKutta(N)
+~~~~
+i.e. a constructor which has at least one argument, the number of ODE to be integrated,
+which is passed to the KVRungeKutta(Int_t, Double_t, Double_t) constructor
+(this number is stored in the member variable KVRungeKutta::nvar).
+In this case the default values of precision and minimum step size will be used.
+~~~~{.cpp}
+    void MyClass::CalcDerivs(Double_t X, Double_t* Y, Double_t* DYDX)
+~~~~
+This method must calculate and store the values of the derivatives `DYDX[nvar]`
+given the value of `X` and of the `Y[nvar]` independent variables.
+This method will be called many times during each step of the integration.
+The member variable `fInitialDeriv` is set to `kTRUE` when the method is called for the
+first time of each step.
+
+Then, after filling an array `ystart[nvar]` with the initial values of the independent variables,
+perform the integration from `x1` to `x2` like this:
+~~~~{.cpp}
+    MyClass RKex(10); // integrate 10 0DE's
+    RKex.Integrate(ystart, x1, x2, 0.01); // example initial step-size guess
+~~~~
+*/
+
 class KVRungeKutta : public KVBase {
    static Double_t a2, a3, a4, a5, a6, b21;
    static Double_t b31, b32, b41, b42, b43;

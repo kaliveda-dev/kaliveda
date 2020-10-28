@@ -8,16 +8,6 @@ using namespace std;
 
 ClassImp(KVSimEvent)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSimEvent</h2>
-<h4>Classe dérivée de KVEvent pour la gestion d'événements issus de simulations</h4>
-<!-- */
-// --> END_HTML
-//Cette classe est couplée à KVSimNucleus
-////////////////////////////////////////////////////////////////////////////////
-
 //___________________________
 KVSimEvent::KVSimEvent(Int_t mult, const char* classname): KVEvent(mult, classname)
 {
@@ -56,8 +46,8 @@ Double_t KVSimEvent::GetTotalCoulombEnergy() const
    for (KVEvent::Iterator it = begin(); it != end(); ++it) {
       KVEvent::Iterator it2(it);
       for (++it2; it2 != end(); ++it2) {
-         TVector3 D12 = static_cast<KVSimNucleus&>(*it).GetPosition() -
-                        static_cast<KVSimNucleus&>(*it2).GetPosition();
+         TVector3 D12 = it.get_reference<KVSimNucleus>().GetPosition() -
+                        it2.get_reference<KVSimNucleus>().GetPosition();
          Vtot += (*it).GetZ() * (*it2).GetZ() * KVNucleus::e2 / D12.Mag();
       }
    }

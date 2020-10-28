@@ -7,15 +7,6 @@
 
 ClassImp(KVCoulombPropagator)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVCoulombPropagator</h2>
-<h4>Perform Coulomb propagation of events</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 void KVCoulombPropagator::updateEvent()
 {
    for (int i = 1; i <= fMult; ++i) {

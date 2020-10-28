@@ -1,20 +1,3 @@
-/***************************************************************************
-$Id: KVTestEvent.cpp,v 1.14 2006/10/19 14:32:43 franklan Exp $
-                          kvtestevent.cpp  -  description
-                             -------------------
-    begin                : Sun May 19 2002
-    copyright            : (C) 2002 by J.D. Frankland
-    email                : frankland@ganil.fr
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 #include <iostream>
 #include <string>
 #include <TMath.h>
@@ -28,33 +11,9 @@ using std::endl;
 
 ClassImp(KVTestEvent);
 
-////////////////////////////////////////////////////////////////////////////////
-//KVTestEvent
-//
-//A simple event generator for testing charged particle array response.
-//Each event consists of N KVNucleus nuclei with randomly drawn atomic number
-//Z, kinetic energy and direction.
-//
-//To use, first set the multiplicity:
-//   KVTestEvent::KVTestEvent(UInt_t n, Option_t * t)
-//or KVTestEvent::SetMult(UInt_t mult) ... after default ctor
-//
-//Then set the range in Z and the range in energy for the generated nuclei:
-//KVTestEvent::SetZRange(UInt_t zlo, UInt_t zhi)
-//KVTestEvent::SetERange(Float_t elo, Float_t ehi) (in MeV)
-//or KVTestEvent::SetERangeAMeV with limits in MeV/nucleon
-//
-//The masses of the nuclei are calculated from the Z assuming the valley-
-//of-stability isotope.
-//
-//By default angular ranges cover the full 4pi range, but this can be changed
-//with KVTestEvent::SetThetaRange and KVTestEvent::SetPhiRange.
-//Also by default directions are drawn isotropically within the set angular
-//ranges (Option_t *t="isotropic") but by choosing option "random" this can be
-//replaced with a flat angular distribution (see KVPosition::GetRandomDirection)
-///////////////////////////////////////////////////////////////////////////////
 
-KVTestEvent::KVTestEvent(): KVEvent()
+
+KVTestEvent::KVTestEvent(): KVSimEvent()
 {
    //Default constructor
 
@@ -78,7 +37,7 @@ void KVTestEvent::init()
    strcpy(fOption, "");
 }
 
-KVTestEvent::KVTestEvent(UInt_t mult, Option_t* t): KVEvent(mult)
+KVTestEvent::KVTestEvent(UInt_t mult, Option_t* t): KVSimEvent(mult)
 {
    //Constructor with arguments
    //
@@ -173,8 +132,7 @@ void KVTestEvent::Print(Option_t*) const
 //
 //Print out list of all particles in event
 //
-   cout << "\nKVTestEvent with " << ((KVEvent*) this)->
-        GetMult() << " nuclei:" << endl;
+   cout << "\nKVTestEvent with " << GetMult() << " nuclei:" << endl;
    cout << "----------------------------------------" << endl;
    cout << "Zmin=" << fLower_Limit_Z << " Zmax=" << fUpper_Limit_Z << endl;
    cout << "Emin=" << fLower_Limit_E << " Emax=" << fUpper_Limit_E;
@@ -187,7 +145,9 @@ void KVTestEvent::Print(Option_t*) const
    cout << "Phimin=" << fLower_Limit_phi << " Phimax=" << fUpper_Limit_phi
         << endl;
    cout << "----------------------------------------" << endl;
-   for (Int_t i = 1; i <= ((KVEvent*) this)->GetMult(); i++) {
-      GetParticle(i)->Print();
-   }
+#ifdef WITH_CPP11
+   for (auto& n : *this) n.Print();
+#else
+   for (KVEvent::Iterator it = begin(); it != end(); ++it)(*it).Print();
+#endif
 }

@@ -6,6 +6,11 @@
 
 #include "KVSimReader.h"
 
+/**
+\class KVSimReader_MMM
+\brief Read ascii file for events of the MMM code at Freeze Out
+\ingroup Simulation
+*/
 class KVSimReader_MMM : public KVSimReader {
 
    void init()

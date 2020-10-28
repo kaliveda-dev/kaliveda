@@ -22,6 +22,44 @@
 #include "Riostream.h"
 #include "KVEvent.h"
 
+/**
+\class KVBreakUp
+\brief Permet de casser aleatoirement un nombre entier (ztot) en un nombre (mtot) d'entiers plus petits d'une valeur minimale (zmin)
+donnée. Plusieurs methodes de cassures sont proposees
+\ingroup Simulation
+
+Initialisation :
+ - Méthode SetConditions(Int_t zt,Int_t mt,Int_t zmin=1), définie la taille totale de la partition, le nombre de fragments et la taille minimale de la partition
+ - Méthode DefineBreakUpMethod(KVString bup_method=""), permet de definir la facon de casser la taille initiale
+ Sont implémentées :
+ ~~~~{.cpp}
+      BreakUsingChain (defaut) -> On casse aléatoirement les liens entre charge
+      BreakUsingLine          -> On casse aléatoirement les liens entre charge + "effets de bords"
+      BreakUsingIndividual    -> On tire aleatoirement une taille puis les autres tailles seront tirées a partir de la charge restante
+      BreakUsingPile          -> On distribue 1 par un 1 les charges entre les fragments
+      etc...
+ ~~~~
+  Normalement toutes ces methodes garantissent à chaque tirage, les conditions imposées par SetConditions
+
+ - Méthode RedefineTRandom(KVString TRandom_Method), permet de redefinir la classe de tirage aleatoire voir TRandom et classes filles, la classe par default est TRandom3
+
+Exemple d'utilisation :
+~~~~{.cpp}
+void test{
+
+KVBreakUp* bu = new KVBreakUp();
+bu->SetConditions(80,6,5);
+bu->StorePartitions(kFALSE);
+bu->BreakNtimes(10000);
+
+bu->DrawPanel();
+
+bu->SaveAsTree("essai.root","tree")
+bu->SaveHistos("essai.root","","update")
+
+}
+~~~~
+*/
 
 class KVBreakUp: public KVPartitionList {
 
@@ -30,7 +68,7 @@ protected:
    Int_t Ztotal;
    Int_t Mtotal;
    Int_t Zmin;
-   Int_t* bound;  //[Ztotal] tableau permettant de g�rer les cassures de liens
+   Int_t* bound;  //[Ztotal] tableau permettant de gérer les cassures de liens
    KVString BreakUpMethod, TRandom_Method;
 
    TRandom* alea;
@@ -70,7 +108,7 @@ public:
 
    //Methodes qui devraient etre declaree
    //en privee
-   //mais cel� rend impossible leur utilisation
+   //mais celà rend impossible leur utilisation
    //via TMethodCall
    Int_t BreakUsingChain();
    Int_t BreakUsingPile();

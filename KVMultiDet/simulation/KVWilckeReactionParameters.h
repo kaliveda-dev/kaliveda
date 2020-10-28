@@ -11,6 +11,12 @@
 #include "TPad.h"
 #include <TF2.h>
 
+/**
+\class KVWilckeReactionParameters
+\brief Reaction parameters for heavy-ion collisions from systematics of Wilcke et al
+\ingroup Simulation
+*/
+
 class KVWilckeReactionParameters {
    /* The following variables are exactly copied from pp. 395-400 of Wilcke et al. */
    Int_t ZP, ZT; //Atomic number of the projectile, target

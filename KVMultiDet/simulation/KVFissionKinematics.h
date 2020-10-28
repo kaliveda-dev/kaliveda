@@ -7,6 +7,12 @@
 #include "KVBase.h"
 #include "KVEvent.h"
 
+/**
+\class KVFissionKinematics
+\brief Simple calculation of two-body decay
+\ingroup Simulation
+*/
+
 class KVFissionKinematics : public KVBase {
    KVEvent fFission;       // calculated fission event
    KVNucleus fMother;      // mother nucleus

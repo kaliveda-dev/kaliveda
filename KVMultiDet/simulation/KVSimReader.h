@@ -21,7 +21,39 @@
 #include "TROOT.h"
 #include "TDirectory.h"
 
+/**
+\class KVSimReader
+\brief Base class to read output files for simulation and create tree using KVSimEvent class
+\ingroup Simulation
 
+ Specific classes derived from this one can be used to read a variety of simulation
+ output files and transform them into ROOT files containing a TTree with KVSimEvent
+ objects in a branch called 'Simulated_events'.
+
+ To see the list of available classes/models:
+~~~~{.cpp}
+    kaliveda[0] KVBase::GetListOfPlugins("KVSimReader")
+    (const Char_t *) "KVSimReader_ELIE KVSimReader_ELIE_asym KVSimReader_HIPSE KVSimReader_HIPSE_asym ... "
+~~~~
+ Usually for each model there is a class [XXX] and a class [XXX]_asym.
+ The first one is for reading "primary" events (e.g. before secondary decay),
+ the second one is for converting "asymptotic" events (e.g. just before detection).
+
+To generate an instance of the appropriate reader object, use the static method
+ KVSimReader::MakeReader("[model name]_[asym]")
+
+#### Example 1
+ To convert asymptotic events from an MMM simulation in file "mmm.out", do:
+~~~~{.cpp}
+    kaliveda[0] KVSimReader::MakeReader("MMM_asym")->ConvertAndSaveEventsInFile("mmm.out")
+~~~~
+
+#### Example 2
+ To convert primary events (before secondary decay) from an ELIE simulation in file "elie.out", do:
+~~~~{.cpp}
+    kaliveda[0] KVSimReader::MakeReader("ELIE")->ConvertAndSaveEventsInFile("elie.out")
+~~~~
+*/
 class KVSimReader : public KVFileReader {
 
    void init();

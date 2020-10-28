@@ -10,45 +10,6 @@ using namespace std;
 
 ClassImp(KVBreakUp)
 
-////////////////////////////////////////////////////////////////////////////////
-/*
-BEGIN_HTML
-<h2>KVBreakUp</h2>
-<h4>Permet de casser aleatoirement un nombre entier (ztot) en un nombre (mtot) d'entiers plus petits d'une valeur minimale (zmin)
-donnée. Plusieurs methodes de cassures sont proposees
-</h4>
-END_HTML
-Initialisation :
-- Méthode SetConditions(Int_t zt,Int_t mt,Int_t zmin=1), définie la taille totale de la partition,
-le nombre de fragments et la taille minimale de la partition
-- Méthode DefineBreakUpMethod(KVString bup_method=""), permet de definir la facon de casser la taille initiale
-Sont implémentées :
-      BreakUsingChain (defaut) -> On casse aléatoirement les liens entre charge
-      BreakUsingLine          -> On casse aléatoirement les liens entre charge + "effets de bords"
-      BreakUsingIndividual    -> On tire aleatoirement une taille puis les autres tailles seront tirées a partir de la charge restante
-      BreakUsingPile          -> On distribue 1 par un 1 les charges entre les fragments
-      etc...
-Normalement toutes ces methodes garantissent à chaque tirage, les conditions imposées par SetConditions
-- Méthode RedefineTRandom(KVString TRandom_Method), permet de redefinir la classe de tirage aleatoire voir TRandom et classes filles, la classe
-par default est TRandom3
-Exemple d'utilisation :
-void test{
-
-KVBreakUp* bu = new KVBreakUp();
-bu->SetConditions(80,6,5);
-bu->StorePartitions(kFALSE);
-bu->BreakNtimes(10000);
-
-bu->DrawPanel();
-
-bu->SaveAsTree("essai.root","tree")
-bu->SaveHistos("essai.root","","update")
-
-}
-
-*/
-////////////////////////////////////////////////////////////////////////////////
-
 
 void KVBreakUp::init(void)
 {
@@ -728,7 +689,7 @@ KVHashList* KVBreakUp::GetObjects()
 //_______________________________________________________
 void KVBreakUp::ResetTotalIterations()
 {
-   //Comme c'est écrit
+   //Comme c'est Ã©crit
    niter_tot = 0;
 
 }
@@ -795,7 +756,7 @@ void KVBreakUp::SaveHistos(KVString filename, KVString suff, Option_t* option)
 //_______________________________________________________
 void KVBreakUp::PrintConfig() const
 {
-   // Comme c'est écrit
+   // Comme c'est Ã©crit
    // Why not "Print(Option_t*)" ?
    //   - because TCollection has several 'virtual' Print methods which
    //     are overloaded (i.e. have different arguments): BAD!

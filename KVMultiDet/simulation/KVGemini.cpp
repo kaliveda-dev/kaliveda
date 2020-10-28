@@ -11,28 +11,6 @@
 
 ClassImp(KVGemini)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVGemini</h2>
-<h4>Interface to gemini++</h4>
-<!-- */
-// --> END_HTML
-// You can use this class as an interface to Gemini++ to perform statistical
-// decay of excited nuclei. In case of problems with the decay (CHucleus::abortEvent==1)
-// we throw a standard exception of type gemini_bad_decay. This should be caught
-// in your code when using DecaySingleNucleus or DecayEvent:
-//
-//     KVGemini gem;
-//     KVSimEvent *hot, *cold;
-//     try {
-//        gem.DecayEvent(hot,cold,add_rot);
-//     }
-//     catch (gemini_bad_decay& e) {
-//        // bad event, could not calculate all decays
-//     }
-//
-////////////////////////////////////////////////////////////////////////////////
 
 
 //CYrast * KVGemini::yrast;

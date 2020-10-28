@@ -5,14 +5,6 @@
 
 ClassImp(KVSimReader_MMM_asym)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSimReader_MMM_asym</h2>
-<h4>Read ascii file for asymptotic events of the MMM code after deexcitation</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVSimReader_MMM_asym::KVSimReader_MMM_asym()
 {

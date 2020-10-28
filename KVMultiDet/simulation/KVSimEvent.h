@@ -6,6 +6,11 @@
 
 #include "KVEvent.h"
 
+/**
+  \class KVSimEvent
+  \brief Container class for simulated nuclei, KVSimNucleus
+  \ingroup Simulation
+ */
 class KVSimEvent : public KVEvent {
 public:
 

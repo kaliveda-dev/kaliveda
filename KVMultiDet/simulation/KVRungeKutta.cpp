@@ -6,38 +6,7 @@
 
 ClassImp(KVRungeKutta)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVRungeKutta</h2>
-<h4>Adaptive step-size 4th order Runge-Kutta ODE integrator from Numerical Recipes</h4>
-To use, implement a class which inherits from KVRungeKutta and which has AT LEAST
-the following methods:
 
-    MyClass::MyClass(Int_t N) : KVRungeKutta(N)
-
-i.e. a constructor which has at least one argument, the number of ODE to be integrated,
-which is passed to the `KVRungeKutta(Int_t, Double_t, Double_t)` constructor
-(this number is stored in the member variable `Int_t KVRungeKutta::nvar`).
-In this case the default values of precision and minimum step size will be used.
-
-    void MyClass::CalcDerivs(Double_t X, Double_t* Y, Double_t* DYDX)
-
-This method must calculate and store the values of the derivatives `DYDX[nvar]`
-given the value of `X` and of the `Y[nvar]` independent variables.
-This method will be called many times during each step of the integration.
-The member variable `fInitialDeriv` is set to `kTRUE` when the method is called for the
-first time of each step.
-
-Then, after filling an array `ystart[nvar]` with the initial values of the independent variables,
-perform the integration from `x1` to `x2` like this:
-
-    MyClass RKex(10); // integrate 10 0DE's
-    RKex.Integrate(ystart, x1, x2, 0.01); // example initial step-size guess
-
-*/
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 Double_t KVRungeKutta::a2 = 0.2;
 Double_t KVRungeKutta::a3 = 0.3;

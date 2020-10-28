@@ -7,6 +7,12 @@
 #include "KVRungeKutta.h"
 #include "KVSimEvent.h"
 
+/**
+\class KVCoulombPropagator
+\brief Perform Coulomb propagation of events
+\ingroup Simulation
+*/
+
 class KVCoulombPropagator : public KVRungeKutta {
    KVSimEvent* theEvent;
    Int_t fMult;

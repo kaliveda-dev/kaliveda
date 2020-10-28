@@ -6,15 +6,6 @@
 
 ClassImp(KVSimReader_SMF_asym)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSimReader_SMF_asym</h2>
-<h4>Read ascii file for asymptotic events of the SMF code after SIMON deexcitation</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVSimReader_SMF_asym::KVSimReader_SMF_asym()
 {
    // Default constructor

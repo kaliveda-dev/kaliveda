@@ -7,15 +7,6 @@
 
 ClassImp(KVWilckeReactionParameters)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVWilckeReactionParameters</h2>
-<h4>Reaction parameters for heavy-ion collisions (Wilcke et al)</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 Double_t KVWilckeReactionParameters::e2_Wilcke = 1.438; //e**2
 Double_t KVWilckeReactionParameters::mu_Wilcke = 931.5; //atomic mass unit
 /* Numerical constants from W.D. Myers, Phys. Lett. B 30, 451 (1969) */

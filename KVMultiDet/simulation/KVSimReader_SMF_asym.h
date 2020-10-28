@@ -6,6 +6,12 @@
 
 #include "KVSimReader.h"
 
+/**
+\class KVSimReader_SMF_asym
+\brief Read ascii file for asymptotic events of the SMF code after SIMON deexcitation
+\ingroup Simulation
+*/
+
 class KVSimReader_SMF_asym : public KVSimReader {
 
    void init()

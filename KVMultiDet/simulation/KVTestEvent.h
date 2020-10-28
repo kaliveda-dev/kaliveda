@@ -20,12 +20,39 @@ $Id: KVTestEvent.h,v 1.8 2006/10/19 14:32:43 franklan Exp $
 #ifndef KVTESTEVENT_H
 #define KVTESTEVENT_H
 
-#include "KVEvent.h"
+#include "KVSimEvent.h"
 
 class TRandom3;
 class KVNucleus;
 
-class KVTestEvent: public KVEvent {
+/**
+  \class KVTestEvent
+ \brief A simple event generator for testing charged particle array response
+ \ingroup Simulation
+
+Each event consists of N KVNucleus nuclei with randomly drawn atomic number
+Z, kinetic energy and direction.
+
+To use, first set the multiplicity:
+   KVTestEvent::KVTestEvent(UInt_t n, Option_t * t)
+or KVTestEvent::SetMult(UInt_t mult) ... after default ctor
+
+Then set the range in Z and the range in energy for the generated nuclei:
+KVTestEvent::SetZRange(UInt_t zlo, UInt_t zhi)
+KVTestEvent::SetERange(Float_t elo, Float_t ehi) (in MeV)
+or KVTestEvent::SetERangeAMeV with limits in MeV/nucleon
+
+The masses of the nuclei are calculated from the Z assuming the valley-
+of-stability isotope.
+
+By default angular ranges cover the full 4pi range, but this can be changed
+with KVTestEvent::SetThetaRange and KVTestEvent::SetPhiRange.
+Also by default directions are drawn isotropically within the set angular
+ranges (Option_t *t="isotropic") but by choosing option "random" this can be
+replaced with a flat angular distribution (see KVPosition::GetRandomDirection)
+*/
+
+class KVTestEvent: public KVSimEvent {
 
    UInt_t fUpper_Limit_Z;       //!max Z of nuclei
    UInt_t fLower_Limit_Z;       //! min Z of nuclei

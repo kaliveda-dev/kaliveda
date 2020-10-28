@@ -6,14 +6,6 @@
 
 ClassImp(KVSimReader_SMF)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVSimReader_SMF</h2>
-<h4>Read ascii file for events of the SMF code after clusterization</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 //________________________________________________________________
 KVSimReader_SMF::KVSimReader_SMF()

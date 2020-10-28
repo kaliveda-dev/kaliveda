@@ -29,6 +29,54 @@ $Date: 2009/01/14 15:35:50 $
 #include "KVPosition.h"
 #include "KVParticle.h"
 
+/**
+\class KVElasticScatterEvent
+\brief simulate ElasticScatterEvent and answer of a given (multi-)detector : A + B -> A + B
+\ingroup Simulation
+
+Definition de la voie d'entrée avec les methodes suivantes :
+   - SetSystem(KVDBSystem* sys);
+   - SetSystem(Int_t zp,Int_t ap,Double_t ekin,Int_t zt,Int_t at);
+   - SetTargNucleus(KVNucleus *nuc);
+   - SetProjNucleus(KVNucleus *nuc);
+   - SetTargetMaterial(KVTarget *targ,Bool_t IsRandomized=kTRUE);
+
+La possibilité est donnée d'effectuer des diffusions sur un noyau différent des noyaux de la cible
+
+Ex :  SetTargetNucleus(new KVNucleus("181Ta"));
+      SetTargetMaterial(new KVTarget("40Ca",1.0)) //cible de Ca de 1 mg/cm2
+         Diffusion sur un noyau de Ta et propagation dans une cible de Ca
+Si SetTargetMaterial est appelé et pas SetTargNucleus, le noyau cible est débuit du materiel choisi pour la cible
+
+Definition du domaine angulaire de diffusion et mode de tirage
+   - DefineAngularRange(TObject*) domaine angulaire deilimité par une structure geometrique (KVPosition etc ...)
+   - DefineAngularRange(Double_t tmin, Double_t tmax, Double_t pmin, Double_t pmax) intervalle en theta et phi (degree)
+   - SetDiffNucleus(KVString name) name="PROJ" ou "TARG" determine a quel noyau projectile ou cible
+   est associe le domaine angulaire choisi
+   - SetRandomOption(Option_t* opt); opt="isotropic" ou "random" permet soit un tirage en theta aleatoire ou isotropique
+
+Réalistion des diffusions
+   la méthode Process(Int_t ntimes) permet la réalisation de tous le processus :
+   - propagation du noyau projectile dans la cible jusqu'au point d'intéraction
+   - tirage d'un théta et phi pour la diffusion sur le noyau cible
+   - calcul de la cinématique pour cette direction choisie (réalisé par la classe KV2Body)
+   - si un KVMultiDetArray est défini et que la méthode SetDetectionOn(), détection des projectiles et cibles en voie de sortie
+   - enregistrement des evts diffuses dans un arbre sous forme de KVEvent
+
+Exemple :
+---------
+~~~~{.cpp}
+es = new KVElasticScatterEvent();
+//Defintion de la voie d'entree
+es->SetSystem(54,129,8*129,28,58); 129Xe+58Ni@8MeV/A
+
+es->SetRandomOption("isotropic"); tirage en theta isotrope
+es->DefineAngularRange(6,8.5,12,30); theta 1 a 15 et phi 0 a 360
+
+10000 diffusion
+es->Process(10000);
+~~~~
+*/
 
 class KVElasticScatterEvent : public KVBase {
 

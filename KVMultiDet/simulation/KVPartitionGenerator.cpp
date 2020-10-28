@@ -12,67 +12,7 @@
 
 
 ClassImp(KVPartitionGenerator)
-////////////////////////////////////////////////////////////////////////////////
-/*
-BEGIN_HTML
-<h2>KVPartitionGenerator</h2>
-<h4>Permet de determiner numeriquement et exactement un ensemble de partitions d'entrees
-remplissante certaines conditions</h4>
-END_HTML
-----
-Les differentes recontrees grandeurs sont :
-- Ztot (Zt) -> Charge/Taille totale a repartir au sein de la partition
-- Mtot (Mt) -> Nombre de total d'element (fragment, cluster) de la partition (Zi) i=1,Mtot
-- Zmax (Zm) -> Charge/Taille du plus gros element de la partition
-- Zinf (Zi) -> Charge minimale des elements de la partition (Zi) Zi>=Zinf quelque soit i (tous les calculs necessitent cet argument)
 
-Plusieurs methodes correspondant conditions initiales possibles :
-- BreakUsing_Ztot_Zinf_Criterion (la methode la plus generale), donnant toutes les partitions pour une taille initiale donnee
-- BreakUsing_Ztot_Zinf_Criterion, donnant toutes les partitions pour une taille initiale donnee
-- BreakUsing_Ztot_Zmax_Zinf_Criterion, donnant toutes les partitions pour une taille initiale donnee, avec une contrainte sur Zmax
-- BreakUsing_Mtot_Zmax_Zinf_Criterion, donnant toutes les partitions remplissant les contraintes sur le Zmax et sur le Mtot
-
-Toutes ces methodes utilisent la protected methode MakePartitions() qui calcule les partitions
-pour un couple (Ztot,Mtot) donné qui sauvegarde ces partitions dans un fichier ROOT via un arbre, contenant
-l'information minimum :
-- branche zt
-- branche mt
-- branche tabz [mt], tableau d'entier comprenant les differentes charges (Zi), trie par ordre decroissant
-Le chemin ou les arbres sont ecrits peut etre definis via la methode SetPathForFile, par defaut les arbres seront
-ecrits dans le repertoire courant, attention car pour des nombres importants (Ztot>100) la place necessaire devient
-non negligeable (ex : toutes les partition de Ztot=200 et Zinf=5 -> 20GB environ)
-
-A chaque fois que la methode MakePartitions() est appelle par les methodes BreakUsing...(), on garde
-en memoire l'ensemble des fichiers contenant chacun un arbre, pour a la fin du processus
-ecrire dans un fichier ROOT, une TChain permettant de travailler rapidement et facilement sur les partitions generees
-----
-
-Un petit exemple de routine simple :
-Cette routine produit en sortie un fichier root Partitions_Zf60_Zi1.root
-contenant la TChain de tous les arbres ...
-
-void test{
-
-   KVPartitionGenerator* pg = new KVPartitionGenerator();
-   pg->SetPathForFile("/space/bonnet/");
-   pg->BreakUsing_Ztot_Zinf_Criterion(60,1);
-
-   Info in <BreakUsing_Ztot_Zinf_Criterion>: 966467.000000 partitions crees en 5 seconds
-   delete pg;
-
-}
-----
-
-root Partitions_Zf60_Zi1.root
-Attaching file Partitions_Zf60_Zi1.root as _file0...
-root [2] .ls
-TFile**     Partitions_Zf60_Zi1.root
- TFile*     Partitions_Zf60_Zi1.root
-  KEY: TChain  PartitionTree;1
-root [3] PartitionTree->Draw("tabz")
-
-*/
-////////////////////////////////////////////////////////////////////////////////
 
 //_______________________________________________________
 KVPartitionGenerator::KVPartitionGenerator()
@@ -125,7 +65,7 @@ KVPartitionGenerator::~KVPartitionGenerator()
 void KVPartitionGenerator::SetPathForFile(KVString path)
 {
    // Defini le chemin ou les arbres seront ecris
-   //prevoir des zones pouvant recevoir de gros volumes de données
+   //prevoir des zones pouvant recevoir de gros volumes de donnÃ©es
    //si les calculs de partitions se fait a partir de grosse taille initiale
    kwriting_path = path;
 
@@ -141,15 +81,15 @@ void KVPartitionGenerator::MakePartitions(Int_t Ztot, Int_t Mtot, Int_t Zinf)
    //Defini l'arbre ou seront enregistrees les partitions
    //
    //Determine toute les partitions pour un
-   //couple donné de parametres : (Ztot, Mtot, Zinf)
+   //couple donnÃ© de parametres : (Ztot, Mtot, Zinf)
    //avec :
    // -  Ztot -> taille totale de la partition
-   // -  Mtot -> multiplicité de partition
+   // -  Mtot -> multiplicitÃ© de partition
    // -  Zinf -> taille minimale pour les fragments de la partition
    //--------------------------------
    //Enregistre l arbre et ferme le fichier
    //
-   //Routine centrale de la classe appelée par toutes les methodes de type Break_Using...Criterion()
+   //Routine centrale de la classe appelÃ©e par toutes les methodes de type Break_Using...Criterion()
    //
 
    SetConditions(Ztot, Mtot, Zinf);
@@ -215,10 +155,10 @@ void KVPartitionGenerator::Process(void)
 {
    //protected method
    //Determine toute les partitions pour un
-   //couple donné de parametres : (Ztot, Mtot, Zinf)
+   //couple donnÃ© de parametres : (Ztot, Mtot, Zinf)
    //avec :
    // -  Ztot -> taille totale de la partition
-   // -  Mtot -> multiplicité de partition
+   // -  Mtot -> multiplicitÃ© de partition
    // -  Zinf -> taille minimale pour les fragments de la partition
    //
 
@@ -372,11 +312,11 @@ void KVPartitionGenerator::AfterBreak()
 void KVPartitionGenerator::BreakUsing_Ztot_Zinf_Criterion(Int_t Ztot, Int_t Zinf, KVString chain_name, Int_t min, Int_t max)
 {
    //Determine toutes les partitions pour :
-   // -  une taille totale de la partition donnée (Ztot)
+   // -  une taille totale de la partition donnÃ©e (Ztot)
    // -  une taille minimale pour les fragments de la partition (Zinf)
    // - le nom du fichier ou la TChain recapitulant tous les arbres crees va etre enregistree
    // (par defaut, si chain_name=="", le nom de fichier est formate en fonction des arguments
-   //Les arguments min et max permettent de restreindre le calcul a une plage en multiplicité
+   //Les arguments min et max permettent de restreindre le calcul a une plage en multiplicitÃ©
    // si min==-1 (defaut) -> mfmin=1
    // si max==-1 (defaut) -> mfmax=Ztot/Zinf
    cname = chain_name;
@@ -405,8 +345,8 @@ void KVPartitionGenerator::BreakUsing_Ztot_Zinf_Criterion(Int_t Ztot, Int_t Zinf
 void KVPartitionGenerator::BreakUsing_Ztot_Mtot_Zinf_Criterion(Int_t Ztot, Int_t Mtot, Int_t Zinf, KVString chain_name)
 {
    //Determine toutes les partitions pour :
-   // -  une taille totale de la partition donnée (Ztot)
-   // -  une multiplicité de partition donnée (Mtot)
+   // -  une taille totale de la partition donnÃ©e (Ztot)
+   // -  une multiplicitÃ© de partition donnÃ©e (Mtot)
    // -  une taille minimale pour les fragments de la partition (Zinf)
    // - le nom du fichier ou la TChain recapitulant tous les arbres crees va etre enregistree
    // (par defaut, si chain_name=="", le nom de fichier est formate en fonction des arguments
@@ -425,8 +365,8 @@ void KVPartitionGenerator::BreakUsing_Ztot_Mtot_Zinf_Criterion(Int_t Ztot, Int_t
 void KVPartitionGenerator::BreakUsing_Ztot_Zmax_Zinf_Criterion(Int_t Ztot, Int_t Zmax, Int_t Zinf, KVString chain_name)
 {
    //Determine toutes les partitions pour :
-   // -  une taille totale de la partition donnée (Ztot)
-   // -  une taille donnée du plus gros fragment de la partition (Zmax)
+   // -  une taille totale de la partition donnÃ©e (Ztot)
+   // -  une taille donnÃ©e du plus gros fragment de la partition (Zmax)
    // -  une taille minimale pour les fragments de la partition (Zinf)
    // - le nom du fichier ou la TChain recapitulant tous les arbres crees va etre enregistree
    // (par defaut, si chain_name=="", le nom de fichier est formate en fonction des arguments
@@ -497,8 +437,8 @@ void KVPartitionGenerator::BreakUsing_Ztot_Zmax_Zinf_Criterion(Int_t Ztot, Int_t
 void KVPartitionGenerator::BreakUsing_Mtot_Zmax_Zinf_Criterion(Int_t Mtot, Int_t Zmax, Int_t Zinf, KVString chain_name)
 {
    //Determine toutes les partitions pour :
-   // -  une multiplicité de partition donnée (Mtot)
-   // -  une taille donnée du plus gros fragment de la partition (Zmax)
+   // -  une multiplicitÃ© de partition donnÃ©e (Mtot)
+   // -  une taille donnÃ©e du plus gros fragment de la partition (Zmax)
    // -  une taille minimale pour les fragments de la partition (Zinf)
    // - le nom du fichier ou la TChain recapitulant tous les arbres crees va etre enregistree
    // (par defaut, si chain_name=="", le nom de fichier est formate en fonction des arguments
