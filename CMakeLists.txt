@@ -167,6 +167,8 @@ if(USE_MFM)
 endif()
 
 #---Google Protobuffers for reading FAZIA data
+option(USE_PROTOBUF "Enable support for PROTOBUF needed to read FAZIA acquisition data" ON)
+if(USE_PROTOBUF)
 find_package(Protobuf)
 if(NOT PROTOBUF_FOUND)
    # we may need pkg-config to find installation
@@ -189,7 +191,7 @@ if(PROTOBUF_FOUND)
    set(WITH_PROTOBUF yes)
    include_directories(${PROTOBUF_INCLUDE_DIRS})
 endif(PROTOBUF_FOUND)
-
+endif(USE_PROTOBUF)
 #---Gemini++ interface
 option(USE_GEMINI "Build interface to Gemini++ statistical decay code" ON)
 if(USE_GEMINI)
