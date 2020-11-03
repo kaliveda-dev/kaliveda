@@ -1090,6 +1090,7 @@ void KVMultiDetArray::DetectEvent(KVEvent* event, KVReconstructedEvent* rec_even
                      idt->SetIdentificationStatus(recon_nuc);
                   }
                   else {
+                     recon_nuc->SetAMeasured(kFALSE);
                      idt->SetIDCode(recon_nuc, idt->GetZminCode());
                   }
                   recon_nuc->SetECode(idt->GetECode());
@@ -1117,7 +1118,7 @@ void KVMultiDetArray::DetectEvent(KVEvent* event, KVReconstructedEvent* rec_even
       //for(int i=1;i<=rec_event->GetMult();i++) cout << i << " Z=" << rec_event->GetParticle(i)->GetZ()<<" status="<<rec_event->GetParticle(i)->GetStatus() <<endl;
       do {
          nchanged = FilteredEventCoherencyAnalysis(round++, rec_event);
-         //cout << "Round = " << round-1 << " :  nchanged = " << nchanged << endl;
+//         cout << "Round = " << round-1 << " :  nchanged = " << nchanged << endl;
          nxt_grp.Reset();
          while ((grp_tch = (KVGroup*) nxt_grp())) {
             KVReconstructedNucleus::AnalyseParticlesInGroup(grp_tch);

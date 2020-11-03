@@ -119,33 +119,31 @@ void KVFAZIAIDSiCsI::Initialize()
       SetBit(kReadyForID);
       SetHasMassID();// in principle mass identification always possible
    }
+   fMassIDProb->SetParameters(16.5, .4);
+
 }
 
-void KVFAZIAIDSiCsI::SetIdentificationStatus(KVReconstructedNucleus* n)
-{
-   // For filtering simulations
-   //
-   // Z-dependence of A identification:
-   //    all ok if Z<=14, decreasing probability for 15<=Z<=18
-   //    no A identification for Z>18
-   //
-   // If A is not measured, we make sure the KE of the particle corresponds to the simulated one
-   //
-   // Modified to fit FAZIAPRE identification performances (16.5,0.4) -> (17.7,1.66)
-   // Strict 14-18 limits removed. Were there necessary ?
+//void KVFAZIAIDSiCsI::SetIdentificationStatus(KVReconstructedNucleus* n)
+//{
+//    // For filtering simulations
+//    //
+//    // Z-dependence of A identification:
+//    // fMassIDProb parameters has to set in the Initialize method
 
-   n->SetZMeasured();
-//   fMassIDProb->SetParameters(16.5, .4);
-   fMassIDProb->SetParameters(17.7, 1.66);
-//   Bool_t okmass = (n->GetZ() <= 14) || (n->GetZ() < 19 && gRandom->Uniform() < fMassIDProb->Eval(n->GetZ())); // why ????
-   Bool_t okmass = (gRandom->Uniform() < fMassIDProb->Eval(n->GetZ()));
-   if (okmass) {
-      n->SetAMeasured();
-   }
-   else {
-      n->SetAMeasured(kFALSE);
-      double e = n->GetE();
-      n->SetZ(n->GetZ());
-      n->SetE(e);
-   }
-}
+//   n->SetZMeasured();
+//   Bool_t okmass = (gRandom->Uniform() < fMassIDProb->Eval(n->GetZ()));
+
+//   if (okmass) {
+//       //reset A to the original mass in case of multiple call of this method
+//       if(n->GetParameters()->HasParameter("OriginalMass")) n->SetA(n->GetParameters()->GetIntValue("OriginalMass"));
+//       n->SetAMeasured(kTRUE);
+//   }
+//   else {
+//       //save the original mass in the parameter list in case of multiple call of this method
+//       n->GetParameters()->SetValue("OriginalMass",n->GetA());
+//       double e = n->GetE();
+//       n->SetZ(n->GetZ());
+//       n->SetE(e);
+//       n->SetAMeasured(kFALSE);
+//   }
+//}

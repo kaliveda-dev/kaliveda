@@ -46,7 +46,7 @@ public:
    {
       return fSiThreshold;
    }
-   void SetIdentificationStatus(KVReconstructedNucleus* n);
+//   void SetIdentificationStatus(KVReconstructedNucleus* n);
 
    ClassDef(KVFAZIAIDSiCsI_FAZIASYM, 1) //id telescope to manage identification telescope for FAZIASYM experiment
 };

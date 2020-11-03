@@ -259,7 +259,8 @@ public:
          //debug
          //std::cout << "KVReconstructedNucleus::GetRealZ() returning fRealZ" << std::endl;
          return fRealZ;
-      } else {
+      }
+      else {
          //debug
          //std::cout << "KVReconstructedNucleus::GetRealZ() returning GetZ() because fRealZ=" << fRealZ << std::endl;
          return (Float_t) GetZ();
@@ -302,6 +303,8 @@ public:
    {
       // Call with yes=kTRUE for reconstructed nuclei whose
       // mass number, A, was measured, not calculated
+//       KVString det = GetStoppingDetector()->GetName();
+//       if(det.Contains("CSI")) Info("SetAMeasured","%s::%s Aid=%s",GetStoppingDetector()->GetName(), GetSymbol(),yes?"true":"false");
       SetBit(kAMeasured, yes);
    };
    virtual Bool_t IsZMeasured() const

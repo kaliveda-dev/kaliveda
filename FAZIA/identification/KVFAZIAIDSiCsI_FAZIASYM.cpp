@@ -148,26 +148,30 @@ void KVFAZIAIDSiCsI_FAZIASYM::Initialize()
       SetBit(kReadyForID);
       SetHasMassID();// in principle mass identification always possible
    }
-}
-
-void KVFAZIAIDSiCsI_FAZIASYM::SetIdentificationStatus(KVReconstructedNucleus* n)
-{
-   // For filtering simulations
-   //
-   // Z-dependence of A identification:
-   //    all ok if Z<=14, decreasing probability for 15<=Z<=18
-   //    no A identification for Z>18
-
-   n->SetZMeasured();
    fMassIDProb->SetParameters(17.7, 1.66);
-   Bool_t okmass = (gRandom->Uniform() < fMassIDProb->Eval(n->GetZ()));
-   if (okmass) {
-      n->SetAMeasured();
-   }
-   else {
-      n->SetAMeasured(kFALSE);
-      double e = n->GetE();
-      n->SetZ(n->GetZ());
-      n->SetE(e);
-   }
 }
+
+//void KVFAZIAIDSiCsI_FAZIASYM::SetIdentificationStatus(KVReconstructedNucleus* n)
+//{
+//    // For filtering simulations
+//    //
+//    // Z-dependence of A identification:
+//    // fMassIDProb parameters has to set in the Initialize method
+
+//    n->SetZMeasured();
+//    Bool_t okmass = (gRandom->Uniform() < fMassIDProb->Eval(n->GetZ()));
+
+//    if (okmass) {
+//        //reset the original mass in case of multiple call of this method
+//        if(n->GetParameters()->HasParameter("OriginalMass")) n->SetA(n->GetParameters()->GetIntValue("OriginalMass"));
+//        n->SetAMeasured(kTRUE);
+//    }
+//    else {
+//        //save the original mass in the parameter list in case of multiple call of this method
+//        n->GetParameters()->SetValue("OriginalMass",n->GetA());
+//        double e = n->GetE();
+//        n->SetZ(n->GetZ());
+//        n->SetE(e);
+//        n->SetAMeasured(kFALSE);
+//    }
+//}
