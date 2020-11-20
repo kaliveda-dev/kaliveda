@@ -96,8 +96,8 @@ Bool_t ExampleReconAnalysis::Analysis(void)
 #ifdef WITH_CPP11
    for (auto& n : OKEventIterator(*GetEvent())) {
 #else
-   for (KVEvent::Iterator it = OKEventIterator(*GetEvent()).begin(); it != GetEvent()->end(); ++it) {
-      KVNucleus& n = it.get_reference<KVNucleus>();
+   for (KVReconstructedEvent::Iterator it = KVReconstructedEvent::OKEventIterator(*GetEvent()).begin(); it != GetEvent()->end(); ++it) {
+      KVReconstructedNucleus& n = it.get_reference();
 #endif
       // "OK" particles => using selection criteria of InitRun()
       // fill Z distribution

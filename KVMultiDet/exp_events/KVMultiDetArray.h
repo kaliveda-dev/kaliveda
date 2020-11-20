@@ -23,7 +23,6 @@ class KVIDTelescope;
 class KVReconstructedEvent;
 class KVDetectorEvent;
 class KVGroup;
-class KVEvent;
 class KVNameValueList;
 class KVReconstructedNucleus;
 class KVList;

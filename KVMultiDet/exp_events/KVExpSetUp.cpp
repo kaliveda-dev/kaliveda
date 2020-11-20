@@ -219,7 +219,7 @@ void KVExpSetUp::GetArrayMultiplicities(KVReconstructedEvent* e, KVNameValueList
    // see KVEvent::GetNextParticleIterator(Option_t*).
 
    m.Clear();
-   for (KVEvent::Iterator it = e->GetNextParticleIterator(opt); it != e->end(); ++it) {
+   for (KVReconstructedEvent::Iterator it = e->GetNextParticleIterator(opt); it != e->end(); ++it) {
       m.IncrementValue((*it).GetParameters()->GetStringValue("ARRAY"), 1);
    }
 }

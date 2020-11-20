@@ -12,7 +12,6 @@ using std::endl;
 ClassImp(KVTestEvent);
 
 
-
 KVTestEvent::KVTestEvent(): KVSimEvent()
 {
    //Default constructor

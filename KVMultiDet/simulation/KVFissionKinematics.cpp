@@ -27,7 +27,7 @@ KVFissionKinematics::KVFissionKinematics(const KVNucleus& fis, Int_t Z1, Int_t A
    }
 }
 
-const KVEvent* KVFissionKinematics::Generate()
+const KVSimEvent* KVFissionKinematics::Generate()
 {
    // Generate a fission event
 

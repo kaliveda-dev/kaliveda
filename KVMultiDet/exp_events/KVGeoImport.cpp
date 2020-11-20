@@ -7,7 +7,7 @@
 #include <TGeoBBox.h>
 #include <TPluginManager.h>
 
-#include <KVEvent.h>
+#include <KVTemplateEvent.h>
 #include <KVGroup.h>
 #include <TGeoPhysicalNode.h>
 #include <KVRangeTableGeoNavigator.h>
@@ -79,7 +79,7 @@ void KVGeoImport::ImportGeometry(Double_t dTheta, Double_t dPhi,
 
    Int_t ndets0 = fArray->GetDetectors()->GetEntries();
 
-   unique_ptr<KVEvent> evt(new KVEvent());
+   unique_ptr<KVEvent> evt(KVEvent::Factory("Event"));
    KVNucleus* nuc = evt->AddParticle();
    nuc->SetZAandE(1, 1, 1);
 

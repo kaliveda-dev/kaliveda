@@ -2,7 +2,7 @@
 //Author: John Frankland,,,
 
 #include "KVGeoNavigator.h"
-#include "KVEvent.h"
+#include "KVTemplateEvent.h"
 #include "KV3DGeoTrack.h"
 #include <TGeoManager.h>
 #include <TGeoMatrix.h>

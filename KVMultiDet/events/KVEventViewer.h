@@ -4,7 +4,6 @@
 #ifndef __KVEVENTVIEWER_H
 #define __KVEVENTVIEWER_H
 
-#include "KVBase.h"
 #include "KVEvent.h"
 #include "TGeoManager.h"
 #include "TGeoMaterial.h"

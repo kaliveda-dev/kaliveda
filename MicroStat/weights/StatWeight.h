@@ -4,7 +4,7 @@
 #ifndef __STATWEIGHT_H
 #define __STATWEIGHT_H
 
-#include "KVEvent.h"
+#include "KVTemplateEvent.h"
 
 namespace MicroStat {
 

@@ -20,7 +20,8 @@
 #pragma link C++ class KVGenPhaseSpace+;
 #pragma link C++ class KVPartitionGenerator+;
 #pragma link C++ class KVRungeKutta+;
-#pragma link C++ class KVSimEvent+;
+#pragma link C++ class KVTemplateEvent<KVSimNucleus>;
+#pragma link C++ class KVSimEvent-;
 #pragma link C++ class KVSimReader;
 #pragma link C++ class KVSimReader_DIT;
 #pragma link C++ class KVSimReader_HIPSE;

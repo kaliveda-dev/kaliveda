@@ -9,7 +9,9 @@
 #include "TSystem.h"
 #include "TRandom.h"
 #include "TGLPerspectiveCamera.h"
+#include <KVNucleus.h>
 #include <TBranch.h>
+#include "KVTemplateEvent.h"
 #include "TTree.h"
 
 ClassImp(KVEventViewer)
@@ -212,7 +214,7 @@ void KVEventViewer::ReadEvent()
    // Read an event from input source
 
    if (textInput) {
-      if (!theEvent) theEvent = new KVEvent;
+      if (!theEvent) theEvent = new KVNucleusEvent;
       ReadTextEvent();
    }
    else {

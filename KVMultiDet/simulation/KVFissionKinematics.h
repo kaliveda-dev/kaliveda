@@ -5,7 +5,7 @@
 #define __KVFISSIONKINEMATICS_H
 
 #include "KVBase.h"
-#include "KVEvent.h"
+#include "KVSimEvent.h"
 
 /**
 \class KVFissionKinematics
@@ -14,7 +14,7 @@
 */
 
 class KVFissionKinematics : public KVBase {
-   KVEvent fFission;       // calculated fission event
+   KVSimEvent fFission;       // calculated fission event
    KVNucleus fMother;      // mother nucleus
    KVNucleus fDaughter;    // one of the fission fragments
 
@@ -23,7 +23,7 @@ public:
 
    virtual ~KVFissionKinematics() {}
 
-   const KVEvent* Generate();
+   const KVSimEvent* Generate();
 
    ClassDef(KVFissionKinematics, 1) //Simple calculation of two-body decay
 };

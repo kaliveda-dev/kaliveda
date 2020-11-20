@@ -39,9 +39,7 @@ void KVReconstructedEvent::init()
    fPartSeedCond = "all";
 }
 
-KVReconstructedEvent::KVReconstructedEvent(Int_t mult, const char
-      *classname): KVEvent(mult,
-                              classname)
+KVReconstructedEvent::KVReconstructedEvent(Int_t mult): KVTemplateEvent(mult)
 {
    init();
    CustomStreamer();            //because KVReconstructedNucleus has a customised streamer
@@ -69,8 +67,8 @@ void KVReconstructedEvent::Streamer(TBuffer& R__b)
          gMultiDetArray->SetRawDataFromReconEvent(fParameters);
          //set angles
          KVReconstructedNucleus* par;
-         for (KVEvent::Iterator it = begin(); it != end(); ++it) {
-            par = it.get_pointer<KVReconstructedNucleus>();
+         for (KVReconstructedEvent::Iterator it = begin(); it != end(); ++it) {
+            par = it.get_pointer();
             if (HasMeanAngles())
                par->GetAnglesFromReconstructionTrajectory("mean");
             else
@@ -158,8 +156,8 @@ void KVReconstructedEvent::ls(Option_t*) const
    printf(":::%s   #%07d    M=%03d\n", ClassName(), GetNumber(), GetMult());
    GetParameters()->Print();
    int i(0);
-   for (KVEvent::Iterator it = begin(); it != end(); ++it) {
-      KVReconstructedNucleus& nuc = it.get_reference<KVReconstructedNucleus>();
+   for (KVReconstructedEvent::Iterator it = begin(); it != end(); ++it) {
+      KVReconstructedNucleus& nuc = it.get_reference();
       printf(" %3d", i);
       nuc.ls();
       ++i;

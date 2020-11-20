@@ -24,6 +24,7 @@
 #pragma link C++ class KVReconNucTrajectory+;
 #pragma link C++ class KVReconstructedNucleus-;//customised streamer
 #pragma link C++ class KVDetectorEvent+;
+#pragma link C++ class KVTemplateEvent<KVReconstructedNucleus>;
 #pragma link C++ class KVReconstructedEvent-;//customised streamer
 #pragma link C++ class KVIDTelescope+;
 #pragma link C++ class KVIDCsI+;
@@ -38,5 +39,7 @@
 #pragma link C++ class KVMultiDetArray+;
 #pragma link C++ class KVASMultiDetArray+;
 #pragma link C++ class KVGeoImport+;
+#pragma link C++ class KVDataPatch+;
+#pragma link C++ class KVDataPatchList+;
 #pragma link C++ class KVArrayMult+;
 #endif

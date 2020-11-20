@@ -16,7 +16,7 @@
 #include "TProfile.h"
 #include "KVIntegerList.h"
 #include "KVPartitionList.h"
-#include "KVEvent.h"
+#include "KVTemplateEvent.h"
 #include "TDatime.h"
 #include <cstdlib>
 #include "Riostream.h"

@@ -16,7 +16,7 @@ $Date: 2009/01/14 15:35:50 $
 #include "KVLayer.h"
 #include "KVMaterial.h"
 #include "KVNucleus.h"
-#include "KVEvent.h"
+#include "KVSimEvent.h"
 #include "KV2Body.h"
 #include "KVMultiDetArray.h"
 #include "KVReconstructedNucleus.h"
@@ -87,7 +87,7 @@ protected:
    KVNucleus*              proj;//!->
    KVNucleus*              targ;//!->
    KVReconstructedEvent*   rec_evt;//!
-   KVEvent*                sim_evt; //!
+   KVSimEvent*                sim_evt; //!
 
    KVHashList*             lhisto;//! to store control histogram
    KVHashList*             ltree;//!   to store tree

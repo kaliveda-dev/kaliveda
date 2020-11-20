@@ -12,8 +12,7 @@ $Id: KVTarget.h,v 1.23 2008/12/11 16:39:47 ebonnet Exp $
 
 #include "KVNucleus.h"
 #include "KVMaterial.h"
-
-class KVEvent;
+#include "KVEvent.h"
 
 /**
 \class KVTarget

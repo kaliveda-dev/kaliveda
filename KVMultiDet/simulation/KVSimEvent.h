@@ -4,7 +4,8 @@
 #ifndef __KVSIMEVENT_H
 #define __KVSIMEVENT_H
 
-#include "KVEvent.h"
+#include "KVTemplateEvent.h"
+#include "KVSimNucleus.h"
 
 /**
   \class KVSimEvent
@@ -12,16 +13,18 @@
   \ingroup Simulation
 \ingroup NucEvents
  */
-class KVSimEvent : public KVEvent {
+class KVSimEvent : public KVTemplateEvent<KVSimNucleus> {
 public:
 
-   KVSimEvent(Int_t mult = 50, const char* classname = "KVSimNucleus");
-   virtual ~KVSimEvent();
+   KVSimEvent(Int_t mult = 50)
+      : KVTemplateEvent(mult)
+   {}
+   virtual ~KVSimEvent() {}
    virtual void Print(Option_t* t = "") const;
 
    Double_t GetTotalCoulombEnergy() const;
 
-   ClassDef(KVSimEvent, 3) //Events from simulation
+   ClassDef(KVSimEvent, 5) //Events from simulation
 };
 
 #endif

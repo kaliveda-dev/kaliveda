@@ -88,7 +88,7 @@ void KVDataPatchList::InitializePatchList(TString dataset, TString datatype, Int
    }
 }
 
-void KVDataPatchList::Apply(KVEvent* event)
+void KVDataPatchList::Apply(KVReconstructedEvent* event)
 {
    // Apply all currently active patches to event
 
@@ -102,7 +102,7 @@ void KVDataPatchList::Apply(KVEvent* event)
       // Apply particle-level patches
       TIter nxt(&fActiveParticlePatches);
       KVDataPatch* patch;
-      KVNucleus* particle;
+      KVReconstructedNucleus* particle;
       while ((particle = event->GetNextParticle())) {
          while ((patch = (KVDataPatch*)nxt())) patch->ApplyToParticle(particle);
          nxt.Reset();

@@ -82,7 +82,8 @@ public:
    void SetMult(UInt_t m)
    {
       fGenMult = m;
-   } void Generate();
+   }
+   void Generate();
    virtual void Print(Option_t* t = "") const;
 
    ClassDef(KVTestEvent, 1)     //A simple event generator to test charged particle array response

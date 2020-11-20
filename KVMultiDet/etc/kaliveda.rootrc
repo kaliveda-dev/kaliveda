@@ -404,3 +404,8 @@ Plugin.KVCalibrator: ^LightEnergyCsI$  KVLightEnergyCsI   KVMultiDetcalibration 
 +Plugin.KVCalibrator: ^LightEnergyCsIFull$  KVLightEnergyCsIFull   KVMultiDetcalibration "KVLightEnergyCsIFull()"
 +Plugin.KVCalibrator: PulseHeightDefect  KVPulseHeightDefect   KVMultiDetcalibration "KVPulseHeightDefect()"
 +Plugin.KVCalibrator: Recombination  KVRecombination   KVMultiDetcalibration "KVRecombination()"
+
+# plugins for events
+Plugin.KVEvent: NucEvent  KVNucleusEvent  KVMultiDetevents  "KVNucleusEvent()"
++Plugin.KVEvent: SimEvent  KVSimEvent  KVMultiDetevents  "KVSimEvent()"
++Plugin.KVEvent: ReconEvent  KVReconstructedEvent  KVMultiDetexp_events  "KVReconstructedEvent()"

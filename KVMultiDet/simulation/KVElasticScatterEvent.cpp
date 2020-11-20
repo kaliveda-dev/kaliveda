@@ -305,7 +305,7 @@ void KVElasticScatterEvent::StartEvents()
 {
    //Define the KVEvent and KVReconstructedEvent pointer
    //where are stored the projectile/target nuclei couple after diffusion / detection
-   if (!sim_evt)  sim_evt = new KVEvent();
+   if (!sim_evt)  sim_evt = new KVSimEvent();
    else           sim_evt->Clear();
 
    if (!rec_evt)  rec_evt = new KVReconstructedEvent();
@@ -919,7 +919,7 @@ void KVElasticScatterEvent::DefineTrees()
    TTree* tt = 0;
 
    tt = new TTree("ElasticScatter", IsA()->GetName());
-   KVEvent::MakeEventBranch(tt, "Simulated_evts", "KVEvent", sim_evt);
+   KVEvent::MakeEventBranch(tt, "Simulated_evts", "KVSimEvent", sim_evt);
    ltree->Add(tt);
 }
 

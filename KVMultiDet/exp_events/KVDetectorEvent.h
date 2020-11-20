@@ -22,7 +22,7 @@ $Id: KVDetectorEvent.h,v 1.8 2006/10/19 14:32:43 franklan Exp $
 
 #include "KVBase.h"
 #include "KVUniqueNameList.h"
-#include "KVEvent.h"
+#include "KVTemplateEvent.h"
 #include "KVGroup.h"
 
 /**

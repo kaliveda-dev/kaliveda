@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#include "KVEvent.h"
+#include "KVTemplateEvent.h"
 #include "TRandom.h"
 
 using std::cout;
@@ -13,7 +13,7 @@ bool compareZ(KVNucleus& a, KVNucleus& b)
 
 void iterator_examples()
 {
-   KVEvent Event;
+   KVNucleusEvent Event;
    for (int i = 0; i < 10; ++i) {
       KVNucleus* n = Event.AddParticle();
       n->SetZ(i);
@@ -23,13 +23,13 @@ void iterator_examples()
    }
 
    cout << "Loop over all particles (0-9):" << endl;
-   for (KVEvent::Iterator it = Event.begin(); it != Event.end(); ++it) {
+   for (KVNucleusEvent::Iterator it = Event.begin(); it != Event.end(); ++it) {
       (*it).Print();
    }
 
    cout << "\nNested loops over N*(N-1)/2 pairs of particles:" << endl;
-   for (KVEvent::Iterator it = Event.begin(); it != Event.end(); ++it) {
-      KVEvent::Iterator it2(it);
+   for (KVNucleusEvent::Iterator it = Event.begin(); it != Event.end(); ++it) {
+      KVNucleusEvent::Iterator it2(it);
       for (++it2; it2 != Event.end(); ++it2) {
          cout << (*it).GetZ() << "-" << (*it2).GetZ() << " ";
       }
@@ -44,43 +44,43 @@ void iterator_examples()
 #endif
 
    cout << "\nLoop over OK particles (1,3,5,7,9):" << endl;
-   for (KVEvent::Iterator it = OKEventIterator(Event).begin(); it != Event.end(); ++it) {
+   for (KVNucleusEvent::Iterator it = KVNucleusEvent::OKEventIterator(Event).begin(); it != Event.end(); ++it) {
       (*it).Print();
    }
 
    cout << "\nLoop over GROUP particles (5,6,7,8,9):" << endl;
-   for (KVEvent::Iterator it = GroupEventIterator(Event, "GROUP").begin(); it != Event.end(); ++it) {
+   for (KVNucleusEvent::Iterator it = KVNucleusEvent::GroupEventIterator(Event, "GROUP").begin(); it != Event.end(); ++it) {
       (*it).Print();
    }
 
    cout << "\nPerform two different iterations with the same iterator" << endl;
    cout << "\n1.) Loop over OK particles (1,3,5,7,9):" << endl;
 #ifdef WITH_CPP11
-   KVEvent::Iterator iter(Event, KVEvent::Iterator::Type::OK);
+   KVNucleusEvent::Iterator iter(Event, KVNucleusEvent::Iterator::Type::OK);
 #else
-   KVEvent::Iterator iter(Event, KVEvent::Iterator::OK);
+   KVNucleusEvent::Iterator iter(Event, KVNucleusEvent::Iterator::OK);
 #endif
-   for (; iter != KVEvent::Iterator::End(); ++iter) {
+   for (; iter != KVNucleusEvent::Iterator::End(); ++iter) {
       (*iter).Print();
    }
 
    cout << "\n2.) Loop over GROUP particles (5,6,7,8,9):" << endl;
 #ifdef WITH_CPP11
-   iter.Reset(KVEvent::Iterator::Type::Group, "GROUP");
+   iter.Reset(KVNucleusEvent::Iterator::Type::Group, "GROUP");
 #else
-   iter.Reset(KVEvent::Iterator::Group, "GROUP");
+   iter.Reset(KVNucleusEvent::Iterator::Group, "GROUP");
 #endif
-   for (; iter != KVEvent::Iterator::End(); ++iter) {
+   for (; iter != KVNucleusEvent::Iterator::End(); ++iter) {
       (*iter).Print();
    }
 
 #ifdef WITH_CPP11
    cout << "\nLoop over RANDOM particles [range-based for loop]:" << endl;
-   for (KVNucleus& nuc : GroupEventIterator(Event, "RANDOM")) {
+   for (KVNucleus& nuc : KVNucleusEvent::GroupEventIterator(Event, "RANDOM")) {
       nuc.Print();
    }
    cout << "\nLoop over OK particles [range-based for loop]:" << endl;
-   for (KVNucleus& nuc : OKEventIterator(Event)) {
+   for (KVNucleus& nuc : KVNucleusEvent::OKEventIterator(Event)) {
       nuc.Print();
    }
 #endif
@@ -89,14 +89,14 @@ void iterator_examples()
    KVNucleus boron;
    boron.SetZ(5);
 #if !defined(__ROOTCINT__) && !defined(__ROOTCLING__)
-   KVEvent::Iterator found = std::find(Event.begin(), Event.end(), boron);
+   KVNucleusEvent::Iterator found = std::find(Event.begin(), Event.end(), boron);
    (*found).Print();
 #endif
 
 #if !defined(__APPLE__)
    cout << "\nFind largest Z in RANDOM group using std::max_element:" << endl;
-   GroupEventIterator it(Event, "RANDOM");
-   KVEvent::Iterator maxZ = std::max_element(it.begin(), it.end(), compareZ);
+   KVNucleusEvent::GroupEventIterator it(Event, "RANDOM");
+   KVNucleusEvent::Iterator maxZ = std::max_element(it.begin(), it.end(), compareZ);
    (*maxZ).Print();
 #endif
 

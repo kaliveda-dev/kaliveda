@@ -5,8 +5,7 @@
 #define __KVDATAPATCH_H
 
 #include "KVBase.h"
-class KVEvent;
-class KVNucleus;
+#include "KVReconstructedEvent.h"
 
 /**
 \class KVDataPatch
@@ -63,8 +62,8 @@ public:
                              TString dataseries, Int_t datareleasenumber, const TList* streamerinfolist) = 0;
    virtual Bool_t IsEventPatch() = 0;
    virtual Bool_t IsParticlePatch() = 0;
-   virtual void ApplyToEvent(KVEvent*) = 0;
-   virtual void ApplyToParticle(KVNucleus*) = 0;
+   virtual void ApplyToEvent(KVReconstructedEvent*) = 0;
+   virtual void ApplyToParticle(KVReconstructedNucleus*) = 0;
 
    virtual void PrintPatchInfo() const = 0;
 

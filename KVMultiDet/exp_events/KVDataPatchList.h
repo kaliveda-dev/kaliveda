@@ -6,7 +6,7 @@
 
 #include "KVBase.h"
 #include "KVUniqueNameList.h"
-#include <KVEvent.h>
+#include <KVReconstructedEvent.h>
 
 /**
 \class KVDataPatchList
@@ -32,7 +32,7 @@ public:
 
    void InitializePatchList(TString dataset, TString datatype, Int_t runnumber,
                             TString dataseries, Int_t datareleasenumber, const TList* streamerinfolist);
-   void Apply(KVEvent*);
+   void Apply(KVReconstructedEvent*);
 
    void Print(Option_t* /*option*/ = "") const;
    Bool_t HasActivePatches() const

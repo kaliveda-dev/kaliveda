@@ -11,7 +11,6 @@
 #include <KVNameValueList.h>
 #include <TGeoMatrix.h>
 class KVNucleus;
-class KVEvent;
 class TGeoManager;
 class TGeoVolume;
 class TGeoNode;

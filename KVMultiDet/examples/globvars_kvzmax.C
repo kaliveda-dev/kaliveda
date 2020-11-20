@@ -2,7 +2,7 @@
 #include "TCanvas.h"
 #include "KVZmax.h"
 #include "KVGVList.h"
-#include "KVEvent.h"
+#include "KVSimEvent.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -15,7 +15,7 @@ void zmax_example1()
 
    /* STEP 1: make random event */
    int mult = gRandom->Integer(10) + 5; // random multiplicity 5<=M<15
-   KVEvent event;
+   KVSimEvent event;
    for (int i = 0; i < mult; ++i) {
       // fill event with random nuclei 1<=Z<=50
       event.AddParticle()->SetZ(gRandom->Integer(50) + 1);
@@ -74,7 +74,7 @@ void zmax_example2()
    tree.Print();
 
    // randomly generate 1000 events & fill tree
-   KVEvent event;
+   KVSimEvent event;
    for (int i = 0; i < 1000; ++i) {
 
       // shuffle list of Z

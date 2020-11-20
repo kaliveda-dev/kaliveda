@@ -1,5 +1,5 @@
 #include "KVNucleus.h"
-#include "KVEvent.h"
+#include "KVSimEvent.h"
 #include "KVGenPhaseSpace.h"
 #include "TH1F.h"
 #include "TF1.h"
@@ -32,7 +32,7 @@ void example(double E0 = 50, int nevents = 100000)
    CN.SetExcitEnergy(E0);
 
    // decay products
-   KVEvent decay;
+   KVSimEvent decay;
    KVNucleus* n = decay.AddParticle();
    n->SetZandA(2, 4);
    n = decay.AddParticle();

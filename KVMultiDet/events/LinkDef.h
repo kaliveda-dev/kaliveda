@@ -7,9 +7,7 @@
 #pragma link C++ nestedclasses;
 #pragma link C++ nestedtypedefs;
 #pragma link C++ class KVEvent-;
-#pragma link C++ class KVEvent::Iterator;
-#pragma link C++ enum KVEvent::Iterator::Type;
-#pragma link C++ class iterator<forward_iterator_tag,KVNucleus,long,KVNucleus*,KVNucleus&>;
+#pragma link C++ class KVTemplateEvent<KVNucleus>;
 #ifdef WITH_OPENGL
 #pragma link C++ class KVEventViewer+;
 #pragma link C++ enum KVEventViewer::EHighlightMode;

@@ -35,6 +35,7 @@ $Id: KVDetector.h,v 1.71 2009/05/22 14:45:40 ebonnet Exp $
 #include "KVGeoDetectorNode.h"
 #include "KVUniqueNameList.h"
 #include "KVDetectorSignal.h"
+#include "KVEvent.h"
 
 class KVGeoStrucElement;
 class KVGroup;
@@ -42,7 +43,6 @@ class KVCalibrator;
 class TGeoVolume;
 class TTree;
 class TGraph;
-class KVEvent;
 
 /**
  \class KVDetector
