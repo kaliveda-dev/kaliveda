@@ -42,57 +42,10 @@ $Id: KVEvent.h,v 1.29 2008/12/17 11:23:12 ebonnet Exp $
 
 class KVIntegerList;
 
-
 template <typename Nucleus>
 class KVTemplateEvent: public KVEvent {
 
-#ifdef __WITHOUT_TCA_CONSTRUCTED_AT
-   TObject* ConstructedAt(Int_t idx)
-   {
-      // Get an object at index 'idx' that is guaranteed to have been constructed.
-      // It might be either a freshly allocated object or one that had already been
-      // allocated (and assumingly used).  In the later case, it is the callers
-      // responsability to insure that the object is returned to a known state,
-      // usually by calling the Clear method on the TClonesArray.
-      //
-      // Tests to see if the destructor has been called on the object.
-      // If so, or if the object has never been constructed the class constructor is called using
-      // New().  If not, return a pointer to the correct memory location.
-      // This explicitly to deal with TObject classes that allocate memory
-      // which will be reset (but not deallocated) in their Clear()
-      // functions.
-
-      TObject* obj = (*fParticles)[idx];
-      if (obj && obj->TestBit(TObject::kNotDeleted)) {
-         return obj;
-      }
-      return (fParticles->GetClass()) ? static_cast<TObject*>(fParticles->GetClass()->New(obj)) : 0;
-   }
-   //______________________________________________________________________________
-   TObject* ConstructedAt(Int_t idx, Option_t* clear_options)
-   {
-      // Get an object at index 'idx' that is guaranteed to have been constructed.
-      // It might be either a freshly allocated object or one that had already been
-      // allocated (and assumingly used).  In the later case, the function Clear
-      // will be called and passed the value of 'clear_options'
-      //
-      // Tests to see if the destructor has been called on the object.
-      // If so, or if the object has never been constructed the class constructor is called using
-      // New().  If not, return a pointer to the correct memory location.
-      // This explicitly to deal with TObject classes that allocate memory
-      // which will be reset (but not deallocated) in their Clear()
-      // functions.
-
-      TObject* obj = (*fParticles)[idx];
-      if (obj && obj->TestBit(TObject::kNotDeleted)) {
-         obj->Clear(clear_options);
-         return obj;
-      }
-      return (fParticles->GetClass()) ? static_cast<TObject*>(fParticles->GetClass()->New(obj)) : 0;
-   }
-#endif
 public:
-
    class Iterator {
    public:
       typedef std::forward_iterator_tag iterator_category;
@@ -293,30 +246,11 @@ protected:
    mutable Iterator fIter;//! internal iterator used by GetNextParticle()
 
 public:
-   KVNameValueList* GetParameters() const
-   {
-      return (KVNameValueList*)&fParameters;
-   }
-
    KVTemplateEvent(Int_t mult = 50)
-   {
-      //Initialise KVEvent<Nucleus> to hold mult events of Nucleus objects
-      //(default = KVNucleus).
-      //"mult" is the approximate maximum multiplicity of the events (if too
-      //small, extra space will be allocated automatically by TClonesArray).
-      //
-
-      fParticles = new TClonesArray(Nucleus::Class(), mult);
-      CustomStreamer();//force use of KVEvent::Streamer function for reading/writing
-   }
+      : KVEvent(Nucleus::Class(), mult)
+   {}
    virtual ~ KVTemplateEvent()
-   {
-      //Destructor. Destroys all objects stored in TClonesArray and releases
-      //allocated memory.
-
-      fParticles->Delete();
-      SafeDelete(fParticles);
-   }
+   {}
 
    Nucleus* AddParticle()
    {
@@ -333,7 +267,7 @@ public:
 
       Int_t mult = GetMult();
 #ifdef __WITHOUT_TCA_CONSTRUCTED_AT
-      KVNucleus* tmp = (Nucleus*) ConstructedAt(mult, "C");
+      Nucleus* tmp = (Nucleus*) ConstructedAt(mult, "C");
 #else
       Nucleus* tmp = (Nucleus*) fParticles->ConstructedAt(mult, "C");
 #endif
@@ -364,14 +298,9 @@ public:
       //If opt = "ok" only particles with IsOK()==kTRUE are included.
       //If opt = "name" only particles belonging to group "name" are included.
 
+      if (TString(opt) == "") return KVEvent::GetMult();
       Int_t fMultOK = 0;
-      if (TString(opt) == "") {
-         //get total multiplicity of event
-         return fParticles->GetEntriesFast();
-      }
-      else {
-         for (Iterator it = GetNextParticleIterator(opt); it != end(); ++it) ++fMultOK;
-      }
+      for (Iterator it = GetNextParticleIterator(opt); it != end(); ++it) ++fMultOK;
       return fMultOK;
    }
    Int_t GetMultiplicity(Int_t Z, Int_t A = 0, Option_t* opt = "")
@@ -652,36 +581,6 @@ public:
       for (Iterator it = begin(); it != end(); ++it) {
          (*it).ResetEnergy();
       }
-   }
-
-   virtual Bool_t IsOK() const
-   {
-      // Returns kTRUE if the event is OK for analysis.
-      // This means there must be at least MOKmin particles with IsOK()=kTRUE,
-      // where MOKmin is set by calling SetMinimumOKMultiplicity(Int_t)
-      // (value stored in parameter MIN_OK_MULT)
-
-      return (GetMult("ok") >= GetMinimumOKMultiplicity());
-   }
-   void SetMinimumOKMultiplicity(Int_t x)
-   {
-      // Set minimum number of particles with IsOK()=kTRUE in event for
-      // it to be considered 'good' for analysis
-      SetParameter("MIN_OK_MULT", x);
-   }
-   Int_t GetMinimumOKMultiplicity() const
-   {
-      // Get minimum number of particles with IsOK()=kTRUE in event for
-      // it to be considered 'good' for analysis
-      // NB: if no minimum has been set, we return 1
-      Int_t x = GetParameters()->GetIntValue("MIN_OK_MULT");
-      if (x == -1) return 1;
-      return x;
-   }
-
-   void CustomStreamer()
-   {
-      fParticles->BypassStreamer(kFALSE);
    }
 
    void DefineGroup(const Char_t* groupname, const Char_t* from = "")
@@ -971,30 +870,6 @@ public:
       return partition;
    }
 
-   virtual void MergeEventFragments(TCollection* events, Option_t* opt = "")
-   {
-      // Merge all events in the list into one event (this one)
-      // We also merge/sum the parameter lists of the events
-      // First we clear this event, then we fill it with copies of each particle in each event
-      // in the list.
-      // If option "opt" is given, it is given as argument to each call to
-      // KVEvent::Clear() - this option is then passed on to the Clear()
-      // method of each particle in each event.
-      // NOTE: the events in the list will be empty and useless after this!
-
-      Clear(opt);
-      TIter it(events);
-      KVTemplateEvent* e;
-      while ((e = (KVTemplateEvent*)it())) {
-         Nucleus* n;
-         e->ResetGetNextParticle();
-         while ((n = e->GetNextParticle())) {
-            n->Copy(*AddParticle());
-         }
-         GetParameters()->Merge(*(e->GetParameters()));
-         e->Clear(opt);
-      }
-   }
    void SetFrameName(const KVString& name)
    {
       // Set name of default frame for all particles in event
@@ -1008,14 +883,6 @@ public:
          (*it).SetFrameName(name);
       }
       SetParameter("defaultFrame", name);
-   }
-   const Char_t* GetFrameName() const
-   {
-      // Returns name of default kinematical frame for particles in event, if set
-      // (see KVEvent::SetFrameName)
-
-      return (GetParameters()->HasStringParameter("defaultFrame") ?
-              GetParameters()->GetStringValue("defaultFrame") : "");
    }
 
    struct EventIterator {
