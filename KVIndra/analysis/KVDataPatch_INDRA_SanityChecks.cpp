@@ -16,7 +16,7 @@ KVDataPatch_INDRA_SanityChecks::KVDataPatch_INDRA_SanityChecks()
    SetTitle(Class()->GetTitle());
 }
 
-void KVDataPatch_INDRA_SanityChecks::ApplyToParticle(KVNucleus* N)
+void KVDataPatch_INDRA_SanityChecks::ApplyToParticle(KVReconstructedNucleus* N)
 {
    // General sanity checks:
    //  - any particle with "good" ID codes should have:

@@ -16,7 +16,7 @@ KVDataPatch_INDRA_CorrectEtalonTrajectories::KVDataPatch_INDRA_CorrectEtalonTraj
    SetTitle(Class()->GetTitle());
 }
 
-void KVDataPatch_INDRA_CorrectEtalonTrajectories::ApplyToEvent(KVEvent* e)
+void KVDataPatch_INDRA_CorrectEtalonTrajectories::ApplyToEvent(KVReconstructedEvent* e)
 {
    // Will be called before ApplyToParticle
    //
@@ -25,7 +25,7 @@ void KVDataPatch_INDRA_CorrectEtalonTrajectories::ApplyToEvent(KVEvent* e)
    fRandomAngles = dynamic_cast<KVReconstructedEvent*>(e)->HasRandomAngles();
 }
 
-void KVDataPatch_INDRA_CorrectEtalonTrajectories::ApplyToParticle(KVNucleus* N)
+void KVDataPatch_INDRA_CorrectEtalonTrajectories::ApplyToParticle(KVReconstructedNucleus* N)
 {
    // Apply the following correction to INDRA data:
    //    all particles identified in etalon modules by either CSI_R_L or CI_CSI

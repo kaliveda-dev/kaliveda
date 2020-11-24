@@ -44,8 +44,8 @@ KVReconstructedNucleus* KVINDRAGroupReconstructor::ReconstructTrajectory(const K
 void KVINDRAGroupReconstructor::Identify()
 {
    KVGroupReconstructor::Identify();
-   for (KVEvent::Iterator it = GetEventFragment()->begin(); it != GetEventFragment()->end(); ++it) {
-      KVReconstructedNucleus* d = it.get_pointer<KVReconstructedNucleus>();
+   for (KVReconstructedEvent::Iterator it = GetEventFragment()->begin(); it != GetEventFragment()->end(); ++it) {
+      KVReconstructedNucleus* d = it.get_pointer();
       if (d->IsIdentified() && d->GetStatus() == KVReconstructedNucleus::kStatusStopFirstStage) {
          if (d->GetIdentifyingTelescope()) {
             d->GetIdentifyingTelescope()->SetIDCode(d, kIDCode5);

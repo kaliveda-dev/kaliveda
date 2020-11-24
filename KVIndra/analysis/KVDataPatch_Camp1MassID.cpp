@@ -21,7 +21,7 @@ KVDataPatch_Camp1MassID::~KVDataPatch_Camp1MassID()
    // Destructor
 }
 
-void KVDataPatch_Camp1MassID::ApplyToParticle(KVNucleus* n)
+void KVDataPatch_Camp1MassID::ApplyToParticle(KVReconstructedNucleus* n)
 {
    // Correct the following errors in 1st campagn data:
    //   * ring=1 idcode=2 (phoswich): should have IsAMeasured=kFALSE

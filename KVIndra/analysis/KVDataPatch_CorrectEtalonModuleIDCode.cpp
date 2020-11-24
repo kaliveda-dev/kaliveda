@@ -30,13 +30,13 @@ Bool_t KVDataPatch_CorrectEtalonModuleIDCode::IsRequired(TString dataset, TStrin
            && dataseries == "1.8" && datareleasenumber == 11);
 }
 
-void KVDataPatch_CorrectEtalonModuleIDCode::ApplyToEvent(KVEvent* e)
+void KVDataPatch_CorrectEtalonModuleIDCode::ApplyToEvent(KVReconstructedEvent* e)
 {
    // Just used to set pointer to current event
    fEvent = (KVINDRAReconEvent*)e;
 }
 
-void KVDataPatch_CorrectEtalonModuleIDCode::ApplyToParticle(KVNucleus* n)
+void KVDataPatch_CorrectEtalonModuleIDCode::ApplyToParticle(KVReconstructedNucleus* n)
 {
    // Patch is applied to all identified particles stopping in the CsI member of
    // an etalon module which have general ID code 5.

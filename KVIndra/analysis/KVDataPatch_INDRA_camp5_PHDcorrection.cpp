@@ -33,7 +33,7 @@ Bool_t KVDataPatch_INDRA_camp5_PHDcorrection::IsRequired(TString dataset, TStrin
            && datareleasenumber < 10 && i->GetClassVersion() < 11);
 }
 
-void KVDataPatch_INDRA_camp5_PHDcorrection::ApplyToParticle(KVNucleus* n)
+void KVDataPatch_INDRA_camp5_PHDcorrection::ApplyToParticle(KVReconstructedNucleus* n)
 {
    // Patch is applied to all identified & calibrated nuclei with Z>10 on rings 1-9.
    // The particle energy is recalibrated.

@@ -985,7 +985,7 @@ void KVINDRA::CreateROOTGeometry()
    Info("CreateROOTGeometry", "Scanning geometry shapes and matrices...");
    KVGeoImport gimp(gGeoManager, KVMaterial::GetRangeTable(), this, kFALSE);
    gimp.SetNameCorrespondanceList("INDRA.names");
-   KVEvent* evt = new KVEvent();
+   KVEvent* evt = new KVNucleusEvent;
    KVNucleus* nuc = evt->AddParticle();
    nuc->SetZAandE(1, 1, 1);
    KVINDRADetector* det;

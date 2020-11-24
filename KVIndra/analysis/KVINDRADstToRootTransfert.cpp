@@ -936,7 +936,7 @@ void KVINDRADstToRootTransfert::lire_evt(ifstream& f_in, KVINDRAReconEvent* evt)
                     " z=" << z << " a=" << a << " code=" << code << " ecode=" << ecode << endl;
             }
             else {
-               KVINDRAReconNuc* tmp = evt->AddParticle();
+               KVINDRAReconNuc* tmp = (KVINDRAReconNuc*)evt->AddParticle();
                if (!tmp) {
                   Fatal("lire_evt", "KVINDRAReconEvent::AddParticle() returns NULL pointer.");
                   gSystem->Exit(1);

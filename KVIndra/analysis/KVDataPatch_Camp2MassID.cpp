@@ -22,7 +22,7 @@ KVDataPatch_Camp2MassID::~KVDataPatch_Camp2MassID()
    // Destructor
 }
 
-void KVDataPatch_Camp2MassID::ApplyToParticle(KVNucleus* n)
+void KVDataPatch_Camp2MassID::ApplyToParticle(KVReconstructedNucleus* n)
 {
    KVINDRAReconNuc* irn = dynamic_cast<KVINDRAReconNuc*>(n);
    if (irn->GetRingNumber() == 1) {

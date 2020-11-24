@@ -67,16 +67,9 @@ private:
 
 public:
 
-   KVINDRAReconEvent(Int_t mult = 50, const char* classname =
-                        "KVINDRAReconNuc");
+   KVINDRAReconEvent(Int_t mult = 50);
    void init();
    virtual ~ KVINDRAReconEvent();
-
-
-   KVINDRAReconNuc* AddParticle();
-   KVINDRAReconNuc* GetParticle(Int_t npart) const;
-
-   KVINDRAReconNuc* GetNextParticle(Option_t* opt = "");
 
    virtual void Print(Option_t* option = "") const;
 

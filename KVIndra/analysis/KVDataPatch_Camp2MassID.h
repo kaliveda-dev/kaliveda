@@ -34,8 +34,8 @@ public:
    {
       return kTRUE;
    }
-   virtual void ApplyToEvent(KVEvent*) {}
-   virtual void ApplyToParticle(KVNucleus*);
+   void ApplyToEvent(KVReconstructedEvent*) {}
+   void ApplyToParticle(KVReconstructedNucleus*);
 
    virtual void PrintPatchInfo() const;
 
