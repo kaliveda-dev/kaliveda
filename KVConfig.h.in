@@ -20,6 +20,7 @@
 #cmakedefine WITH_MULTICORE_CPU ${WITH_MULTICORE_CPU}
 #cmakedefine WITH_BOOST
 #cmakedefine CCIN2P3_BUILD
+#define WITH_TEMPLATED_EVENTS
 
 // Info on C++ standard used to compile code
 #if __cplusplus > 199711L
