@@ -175,7 +175,7 @@ void KVFAZIAGroupReconstructor::PostReconstructionProcessing()
    // Copy FPGA energy values to reconstructed particle parameter lists
    // Set values in detectors for identification/calibration procedures
 
-   for (KVEvent::Iterator it = GetEventFragment()->begin(); it != GetEventFragment()->end(); ++it) {
+   for (KVReconstructedEvent::Iterator it = GetEventFragment()->begin(); it != GetEventFragment()->end(); ++it) {
       KVReconstructedNucleus* rnuc = it.get_pointer<KVReconstructedNucleus>();
 
       rnuc->GetReconstructionTrajectory()->IterateFrom();
