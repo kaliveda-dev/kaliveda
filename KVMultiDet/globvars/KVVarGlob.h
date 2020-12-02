@@ -225,6 +225,8 @@ private:
 #ifdef USING_ROOT6
    using LambdaFunc = std::function<bool(const KVVarGlob*)>;
    LambdaFunc fLambdaCondition;// used to select events in analysis based on value of variable
+   using FrameSetter = std::function<void(KVEvent*, const KVVarGlob*)>;
+   FrameSetter fFrameSetter;// used to define a new kinematical frame for event based on variable
 #endif
 
    void init();
@@ -314,7 +316,9 @@ public:
       vgobj.fValueType = fValueType;
       vgobj.fMaxNumBranches = fMaxNumBranches;
       vgobj.fNormalization = fNormalization;
+#ifdef USING_ROOT6
       vgobj.fLambdaCondition = fLambdaCondition;
+#endif
    }
    virtual ~KVVarGlob(void)
    {}
@@ -390,6 +394,8 @@ public:
       // \return value of "name"
       // To override behaviour of this method in child classes,
       // redefine the protected method getvalue_char(const Char_t*)
+      //
+      // If a "Normalization" parameter has been set, it is applied here
 
       return getvalue_char(name) / fNormalization;
    }
@@ -398,6 +404,8 @@ public:
       // \return value with index i
       // To override behaviour of this method in child classes,
       // redefine the protected method getvalue_int(Int_t)
+      //
+      // If a "Normalization" parameter has been set, it is applied here
 
       return getvalue_int(i) / fNormalization;
    }
@@ -406,6 +414,8 @@ public:
       // \return vector of all values calculated by variable. The order of the values in the vector is the
       // same as the indices defined by calls to SetNameIndex(), these indices correspond to those used with
       // GetValue(Int_t)
+      //
+      // If a "Normalization" parameter has been set, it is applied here
 
       std::vector<Double_t> tmp;
       for (int i = 0; i < GetNumberOfValues(); ++i) tmp.push_back(GetValue(i) / fNormalization);
@@ -612,13 +622,27 @@ public:
       // event will be rejected for further analysis.
       fLambdaCondition = f;
    }
-   bool TestEventSelection()
+   bool TestEventSelection() const
    {
       // Called by KVGVList just after calculation of this variable;
       // if the condition is not met, no further variables will be calculated and the
       // event will be rejected for further analysis.
 
       return fLambdaCondition ? fLambdaCondition(this) : true;
+   }
+   void SetUseDefineFrame(const FrameSetter& f)
+   {
+      // Call this method with a lambda expression in order to define a new frame for events
+      // based on the calculated value(s) of this variable.
+      // The signature of the lambda is (the KVVarGlob pointer passed will be 'this')
+      //~~~~{.cpp}
+      // [](KVEvent* e, const KVVarGlob* vg){ e->SetFrame("_frame_name_", ...); }
+      //~~~~
+      fFrameSetter = f;
+   }
+   void DefineFrame(KVEvent* e) const
+   {
+      if (fFrameSetter) fFrameSetter(e, this);
    }
 #endif
 

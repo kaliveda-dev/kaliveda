@@ -292,27 +292,31 @@ void KVFlowTensor::fill(const KVNucleus* n)
    ++fNParts;
 }
 
-const TRotation& KVFlowTensor::GetAziReacPlaneRotation()
+const TRotation& KVFlowTensor::GetAziReacPlaneRotation() const
 {
    // Returns the azimuthal rotation around the beam axis required
    // to put the X-axis in the reaction plane defined by the beam axis
-   // and the major axis (largest eignevalue) of the ellipsoid.
+   // and the major axis (largest eigeevalue) of the ellipsoid.
    // The azimuthal angle of the rotation is that of the major axis
    // in the forward direction.
+   //
+   // Note that this rotation applies to whatever frame was used to calculate
+   // the tensor (default: "CM")
 
-   if (!fCalculated) Calculate();
    return fAziReacPlane;
 }
 
-const TRotation& KVFlowTensor::GetFlowReacPlaneRotation()
+const TRotation& KVFlowTensor::GetFlowReacPlaneRotation() const
 {
    // Returns composition of two rotations:
    //   - around Z-axis to put X-axis in reaction plane (see GetAziReacPlaneRotation)
    //   - around Y-axis to align Z-axis with flow (major) axis
    // In this rotated frame, theta is polar angle with respect to flow axis
    // and phi is azimuthal angle around flow axis (phi=0,180 => in-plane)
+   //
+   // Note that this rotation applies to whatever frame was used to calculate
+   // the tensor (default: "CM")
 
-   if (!fCalculated) Calculate();
    return fFlowReacPlane;
 }
 

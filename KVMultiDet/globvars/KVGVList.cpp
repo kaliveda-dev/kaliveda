@@ -95,13 +95,33 @@ void KVGVList::Calculate()
 void KVGVList::Calculate2()
 {
    // Calculate all 2-body observables after filling
-   fVG2.R__FOR_EACH(KVVarGlob, Calculate)();
+   TIter it(&fVG2);
+   KVVarGlob* vg;
+   while ((vg = (KVVarGlob*)it())) {
+      vg->Calculate();
+#ifdef USING_ROOT6
+      if (!vg->TestEventSelection()) {
+         fAbortEventAnalysis = true;
+         break;
+      }
+#endif
+   }
 }
 
 void KVGVList::CalculateN()
 {
    // Calculate all N-body observables after filling
-   fVGN.R__FOR_EACH(KVVarGlob, Calculate)();
+   TIter it(&fVGN);
+   KVVarGlob* vg;
+   while ((vg = (KVVarGlob*)it())) {
+      vg->Calculate();
+#ifdef USING_ROOT6
+      if (!vg->TestEventSelection()) {
+         fAbortEventAnalysis = true;
+         break;
+      }
+#endif
+   }
 }
 
 void KVGVList::CalculateGlobalVariables(KVEvent* e)
@@ -115,48 +135,72 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
    // the condition is tested as soon as the variable is calculated. If the condition is not satisfied,
    // calculation of the other variable is abandonded and method AbortEventAnalysis() returns kTRUE.
    Reset();
-   if (Has1BodyVariables() || Has2BodyVariables()) {
 
 #ifdef __WITH_TITER_BUG
-      Int_t mult = e->GetMult();
-      for (int it1 = 1; it1 <= mult; ++it1) {
-         KVNucleus* n1 = e->GetParticle(it1);
-         if (!n1->IsOK()) continue;
-         if (Has1BodyVariables()) Fill(n1); // calculate 1-body variables
+   Int_t mult = e->GetMult();
+   for (int it1 = 1; it1 <= mult; ++it1) {
+      KVNucleus* n1 = e->GetParticle(it1);
+      if (!n1->IsOK()) continue;
+      if (Has1BodyVariables()) Fill(n1); // calculate 1-body variables
 
-         if (Has2BodyVariables()) {
-            for (int it2 = it1; it2 <= mult; ++it2) {
-               KVNucleus* n2 = e->GetParticle(it2);
-               if (!n2->IsOK()) continue;
-               // calculate 2-body variables
-               // we use every pair of particles (including identical pairs) in the event
-               Fill2(n1, n2);
-            }
+      if (Has2BodyVariables()) {
+         for (int it2 = it1; it2 <= mult; ++it2) {
+            KVNucleus* n2 = e->GetParticle(it2);
+            if (!n2->IsOK()) continue;
+            // calculate 2-body variables
+            // we use every pair of particles (including identical pairs) in the event
+            Fill2(n1, n2);
          }
       }
+   }
 #else
 
+   if (Has1BodyVariables()) {
+      TIter it(&fVG1);
+      KVVarGlob* vg;
+      while ((vg = (KVVarGlob*)it())) {
 #ifdef WITH_CPP11
-      for (KVEvent::Iterator it1(e, KVEvent::Iterator::Type::OK); it1 != KVEvent::Iterator::End(); ++it1) {
+         for (KVEvent::Iterator it1(e, KVEvent::Iterator::Type::OK); it1 != KVEvent::Iterator::End(); ++it1) {
 #else
-      for (KVEvent::Iterator it1(e, KVEvent::Iterator::OK); it1 != KVEvent::Iterator::End(); ++it1) {
+         for (KVEvent::Iterator it1(e, KVEvent::Iterator::OK); it1 != KVEvent::Iterator::End(); ++it1) {
 #endif
-         if (Has1BodyVariables()) Fill(it1.get_pointer<const KVNucleus>());// calculate 1-body variables
-         if (Has2BodyVariables()) {
+            vg->Fill(it1.get_pointer<const KVNucleus>());
+         }
+         vg->Calculate();
+#ifdef USING_ROOT6
+         if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
+            break;
+         }
+         vg->DefineFrame(e);
+#endif
+      }
+   }
+   if (Has2BodyVariables()) {
+      TIter it(&fVG2);
+      KVVarGlob* vg;
+      while ((vg = (KVVarGlob*)it())) {
+#ifdef WITH_CPP11
+         for (KVEvent::Iterator it1(e, KVEvent::Iterator::Type::OK); it1 != KVEvent::Iterator::End(); ++it1) {
+#else
+         for (KVEvent::Iterator it1(e, KVEvent::Iterator::OK); it1 != KVEvent::Iterator::End(); ++it1) {
+#endif
             for (KVEvent::Iterator it2(it1); it2 != KVEvent::Iterator::End(); ++it2) {
                // calculate 2-body variables
                // we use every pair of particles (including identical pairs) in the event
-               Fill2(it1.get_pointer<const KVNucleus>(), it2.get_pointer<const KVNucleus>());
+               vg->Fill2(it1.get_pointer<const KVNucleus>(), it2.get_pointer<const KVNucleus>());
             }
          }
-      }
-      if (Has1BodyVariables()) {
-         Calculate();
-         if (AbortEventAnalysis()) return;
-      }
-      if (Has2BodyVariables()) Calculate2();
+         vg->Calculate();
+#ifdef USING_ROOT6
+         if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
+            break;
+         }
+         vg->DefineFrame(e);
 #endif
+      }
    }
+#endif
+
    // calculate N-body variables
    if (HasNBodyVariables()) {
       FillN(e);

@@ -139,8 +139,8 @@ private:
    void init_KVFlowTensor();
 public:
    void fill(const KVNucleus* n);
-   const TRotation& GetAziReacPlaneRotation();
-   const TRotation& GetFlowReacPlaneRotation();
+   const TRotation& GetAziReacPlaneRotation() const;
+   const TRotation& GetFlowReacPlaneRotation() const;
 
    KVFlowTensor& operator+=(const KVFlowTensor& other)
    {
