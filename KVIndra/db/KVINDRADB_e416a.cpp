@@ -14,14 +14,6 @@ using namespace std;
 
 ClassImp(KVINDRADB_e416a)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRADB_e416a</h2>
-<h4>Database for E416a experiment</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVINDRADB_e416a::KVINDRADB_e416a(const Char_t* name): KVINDRADB(name)
 {

@@ -6,6 +6,12 @@
 
 #include "KVFAZIA.h"
 
+/**
+   \class KVFAZIETO
+\brief FAZIA 12-block demonstrator
+\ingroup FAZIAGeo
+*/
+
 class KVFAZIETO : public KVFAZIA {
 
    virtual void BuildFAZIA();

@@ -7,7 +7,7 @@
 #pragma link C++ enum EIDCodes;
 #pragma link C++ class KVINDRACodes+;
 #pragma link C++ class KVINDRACodeMask+;
-#pragma link C++ class KVIDGChIoSi-;
+#pragma link C++ class KVIDGChIoSi+;
 #pragma link C++ class KVINDRAIDTelescope+;
 #pragma link C++ class KVIDSiCsI+;
 #pragma link C++ class KVIDSiLiCsI+;

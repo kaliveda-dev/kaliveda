@@ -7,15 +7,6 @@
 
 ClassImp(KVINDRADetector)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRADetector</h2>
-<h4>Detectors of INDRA array</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 const Char_t* KVINDRADetector::GetArrayName()
 {
    // Name of detector given in the form

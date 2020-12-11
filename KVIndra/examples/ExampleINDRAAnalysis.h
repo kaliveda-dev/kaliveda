@@ -7,11 +7,13 @@
 #include "KVINDRAEventSelector.h"
 
 class ExampleINDRAAnalysis : public KVINDRAEventSelector {
-   Int_t Mult;
    Int_t Run;
    Int_t EventNumber;
    Int_t MTensor;
    Int_t Trigger;
+#ifdef USING_ROOT6
+   Int_t current_run_system_ztot;
+#endif
 
 public:
    ExampleINDRAAnalysis() {};

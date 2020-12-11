@@ -11,15 +11,6 @@
 
 ClassImp(KVINDRAUpDater_e613)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRAUpDater_e613</h2>
-<h4>Sets run parameters for INDRA_e613 dataset</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVINDRAUpDater_e613::KVINDRAUpDater_e613()
 {
    // Default constructor

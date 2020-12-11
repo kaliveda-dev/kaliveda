@@ -8,6 +8,12 @@
 
 namespace MicroStat {
 
+   /**
+   \class StatWeight
+   \brief Abstract base class for calculating statistical weights for events
+   \ingroup MicroStat \ingroup Simulation
+   */
+
    class StatWeight : public TObject {
    private:
       void init();

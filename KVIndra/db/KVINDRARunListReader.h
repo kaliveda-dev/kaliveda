@@ -5,6 +5,15 @@
 #include <KVRunListLine.h>
 #include <Riostream.h>
 
+/**
+   \class KVINDRARunListReader
+\brief Utitlity base class for reading INDRA runlist files.
+\ingroup INDRADB
+
+Use multiple inheritance with this class as one base class, then method "GoodRunLine"
+can be overridden to perform implementation-specific tasks.
+*/
+
 class KVINDRARunListReader {
 
 private:

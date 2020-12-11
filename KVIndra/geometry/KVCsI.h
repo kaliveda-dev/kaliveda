@@ -4,6 +4,14 @@
 #include "KVINDRADetector.h"
 #include "KVINDRACsITotLightReconstructor.h"
 
+/**
+\class KVCsI
+\brief CsI(Tl) scintillation detectors of the INDRA multidetector array
+\ingroup INDRAGeometry
+
+Type of detector: "CSI"
+*/
+
 class KVCsI: public KVINDRADetector {
 
    Char_t  fPinLaser;//number of pin laser used to control stability of crystal

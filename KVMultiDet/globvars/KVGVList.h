@@ -4,8 +4,6 @@
 #include "KVUniqueNameList.h"
 #include "TTree.h"
 
-#define MAX_CAP_BRANCHES 100
-
 /**
 \class KVGVList
 \brief Manage a list of global variables
@@ -34,9 +32,6 @@ schematic way to calculate several global variables at once:
       }
 ~~~~~~~~~~~~
 
-The CalculateGlobalVariables() method is optimised to ensure that all one- and two-body variables
-are calculated with a single loop over the particles in each event.
-
 #### Event selection criteria
 Conditions ('cuts') can be set on each variable which
 decide whether or not to retain an event for analysis. If any variable in the list fails the
@@ -50,7 +45,7 @@ must have a value of at least 4 for the event to be retained:
    mtot->SetEventSelection([](const KVVarGlob* v){ return v->GetValue()>=4; });
 ~~~~
 
-Any event selection criterion is tested as soon as each variable has been tested. If the test
+Any event selection criterion is tested as soon as each variable has been calculated. If the test
 fails, no further variables are calculated and the KVGVList goes into 'abort event' mode:
 ~~~~{.cpp}
     KVEvent* event_to_analyse;
@@ -60,11 +55,38 @@ fails, no further variables are calculated and the KVGVList goes into 'abort eve
        ... do further analysis, mtot is >=4
     }
 ~~~~
+
+#### Definition of new kinematical frames
+One or more variables in the list can be used to define new kinematical frames which can in turn be
+used by any variables which occur after them in the list. In order to do so, call method SetNewFrameDefinition()
+for the variable(s) in question with a lambda function having the following signature:
+~~~~{.cpp}
+[](KVEvent* e, const KVVarGlob* vg){ e->SetFrame("_frame_name_", ...); }
+~~~~
+When called (e.g. by KVGVList), the KVVarGlob pointer gives access to the global variable.
+
+As an example of use, imagine that KVZmax is used to find the heaviest (largest Z) fragment in the
+forward CM hemisphere, then the velocity of this fragment is used to define a "QP_FRAME"
+in order to calculate the KVFlowTensor in this frame:
+
+~~~~{.cpp}
+    KVGVList vglist;
+    auto vg = vglist.AddGV("KVZmax", "zmax");
+    vg->SetFrame("CM");
+    vg->SetSelection( {"V>0", [](const KVNucleus* n){ return n->GetVpar()>0; }} );
+    vg->SetNewFrameDefinition(
+                [](KVEvent* e, const KVVarGlob* v){
+        e->SetFrame("QP_FRAME", static_cast<const KVZmax*>(v)->GetZmax(0)->GetVelocity());
+    });
+    vg = AddGV("KVFlowTensor", "qp_tensor");
+    vg->SetFrame("QP_FRAME"); // frame will have been defined before tensor is filled
+~~~~
+
  */
 class KVGVList: public KVUniqueNameList {
 
-   Double_t fBranchVar[MAX_CAP_BRANCHES];//! used for automatic creation & filling of TTree branches
-   Int_t fIBranchVar[MAX_CAP_BRANCHES];//! used for automatic creation & filling of TTree branches
+   std::vector<Double_t> fBranchVar;//! used for automatic creation & filling of TTree branches
+   std::vector<Int_t> fIBranchVar;//! used for automatic creation & filling of TTree branches
    Int_t fNbBranch;
    Int_t fNbIBranch;
    bool fAbortEventAnalysis;// set to false if a global variable fails its own event selection criterion

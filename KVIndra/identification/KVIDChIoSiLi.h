@@ -7,6 +7,11 @@
 #include "KVIDChIoSi.h"
 #include "KVINDRACodes.h"
 
+/**
+  \class KVIDChIoSiLi
+  \ingroup INDRAIdent
+  \brief Identification in ChIo-Si(Li) (etalon) telescopes of INDRA
+ */
 class KVIDChIoSiLi : public KVIDChIoSi {
 
 public:

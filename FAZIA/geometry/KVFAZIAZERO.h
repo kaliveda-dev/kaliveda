@@ -6,6 +6,12 @@
 
 #include "KVFAZIA.h"
 
+/**
+   \class KVFAZIAZERO
+\brief FAZIA setup, FAZIAZERO experiment
+\ingroup FAZIAGeo
+*/
+
 class KVFAZIAZERO : public KVFAZIA {
 
    virtual void BuildFAZIA();

@@ -1,27 +1,3 @@
-//# Calculate 12C*->3-alpha decay & compare alpha KE with exact microcanonical distribution
-//
-// Example of use of MicroStat::mdweight class, which can
-// generate events according to the molecular dynamics ensemble
-// i.e. fixed total energy and zero total momentum.
-// By default, 10**5 events are generated for the 3-alpha decay of
-// a Carbon-12 nucleus with E*=50 MeV.
-// A histogram is filled with the kinetic energy distribution of one of the
-// alpha particles, which is then fitted using the exact microcanonical
-// probability distribution for a classical gas of 3 equal-mass particles.
-//
-// To execute this function, either do
-//
-// $ kaliveda
-// kaliveda[0] .L MicroStat_example.C+
-// kaliveda[1] example()
-//
-// or
-//
-// $ root
-// root[0] KVBase::InitEnvironment()
-// root[0] .L MicroStat_example.C+
-// root[1] example()
-
 #include "KVNucleus.h"
 #include "KVEvent.h"
 #include "mdweight.h"

@@ -28,17 +28,6 @@ $Id: KVINDRAFNL.cpp,v 1.11 2008/12/17 13:01:26 franklan Exp $
 #define CSI_PIEDS "pied_csi_e416a.dat"
 
 ClassImp(KVINDRAFNL)
-////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRAFNL</h2>
-<h4>Describes INDRA as used in FNL experiment E416 (June-July 2003)</h4>
-
-<img src="http://indra.in2p3.fr/KaliVedaDoc/images/indra_e416a.png"><br>
-
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////
 KVINDRAFNL::KVINDRAFNL()
 {
    //Default ctor.

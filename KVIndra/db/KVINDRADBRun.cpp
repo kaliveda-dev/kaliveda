@@ -9,17 +9,6 @@ $Author: franklan $
 #include "KVINDRADB.h"
 
 ClassImp(KVINDRADBRun);
-///////////////////////////////////////////////////
-//KVINDRADBRun
-//
-//Database entry for each run of an INDRA experiment
-//
-//Information available:
-//      all infos from runlists/runsheets (scalers, i.e. gene direct/TM/MRQ, faraday), length of run,
-//      size of run on tape, tape number, multiplicity trigger, etc.
-//
-//Cross-section for a given run can be calculated with GetEventCrossSection()
-//Total measured cross-section for all events in run can be calculated with GetTotalCrossSection()
 
 //____________________________________________________________________________
 

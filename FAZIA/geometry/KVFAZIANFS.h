@@ -6,6 +6,12 @@
 
 #include "KVFAZIA.h"
 
+/**
+   \class KVFAZIANFS
+\brief configuration of FAZIA telescopes for NFS experiments
+\ingroup FAZIAGeo
+*/
+
 class KVFAZIANFS : public KVFAZIA {
 
    virtual void BuildFAZIA();

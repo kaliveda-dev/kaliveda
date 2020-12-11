@@ -6,6 +6,12 @@
 
 #include "KVFAZIA.h"
 
+/**
+\class KVFAZIA_2B
+\brief FAZIA set-up with two blocks used in LNS 2014 commissioning
+\ingroup FAZIAGeo
+*/
+
 class KVFAZIA_2B : public KVFAZIA {
 
    virtual void BuildFAZIA();

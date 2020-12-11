@@ -10,24 +10,6 @@
 
 ClassImp(KVFAZIADetector)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVFAZIADetector</h2>
-<h4>Base class for FAZIA detector</h4>
-<!-- */
-// --> END_HTML
-//
-// DETECTOR NAMES
-// ==============
-// Detector names are assumed to be defined as
-// label-xxx
-// where xxx is computed as follows (see KVFAZIADetector::GetIndex) :
-// 100*block number+10*quartet number+telescope number
-// and label can be SI1, SI2 or CSI
-// For example SI1-123 is the Silicon Si1 of the block 1, the quartet 2 and the telescope 3
-
-////////////////////////////////////////////////////////////////////////////////
 
 //________________________________________________________________
 void KVFAZIADetector::init()

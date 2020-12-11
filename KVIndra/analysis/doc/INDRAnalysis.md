@@ -1,2 +1,2 @@
-\defgroup INDRAnalysis INDRA-specific data analysis tools
+\defgroup INDRAnalysis INDRA-specific Data Analysis Tools
 \brief Tools for analysis specifically of INDRA data

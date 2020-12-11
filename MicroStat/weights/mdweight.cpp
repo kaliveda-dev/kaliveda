@@ -6,15 +6,6 @@
 
 ClassImp(MicroStat::mdweight)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>mdweight</h2>
-<h4>Calculate molecular dynamics ensemble weights for events</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 namespace MicroStat {
 
    Double_t mdweight::edist(Double_t* arg, Double_t* par)
@@ -189,3 +180,49 @@ namespace MicroStat {
    }
 
 }/*  namespace MicroStat */
+
+/**
+  \example MicroStat_example.C
+# Calculate 12C*->3-alpha decay & compare alpha KE with exact microcanonical distribution
+
+ Example of use of MicroStat::mdweight class, which can
+ generate events according to the molecular dynamics ensemble
+ i.e. fixed total energy and zero total momentum.
+
+ By default, 10**5 events are generated for the 3-alpha decay of
+ a Carbon-12 nucleus with E*=50 MeV.
+
+ A histogram is filled with the kinetic energy distribution of one of the
+ alpha particles, which is then fitted using the exact microcanonical
+ probability distribution for a classical gas of 3 equal-mass particles.
+
+ To execute this function do
+~~~~
+ $ kaliveda
+ kaliveda[0] .L MicroStat_example.C+
+ kaliveda[1] example()
+~~~~
+
+*/
+/**
+  \example MicroStat_example2.C
+# Calculate 12C*->2H+4He+6Li & compare with exact microcanonical distributions
+
+ Example of use of MicroStat::mdweight class, which can
+ generate events according to the molecular dynamics ensemble
+ i.e. fixed total energy and zero total momentum.
+
+ By default, 10**5 events are generated for the decay of
+ a Carbon-12 nucleus with E*=50 MeV.
+
+Histograms are filled with the kinetic energy distributions of the
+ three particles, which are then fitted using the exact microcanonical
+ probability distribution for a classical gas of 3 unequal-mass particles.
+
+ To execute this function do
+
+ $ kaliveda
+ kaliveda[0] .L MicroStat_example2.C+
+ kaliveda[1] example()
+*/
+

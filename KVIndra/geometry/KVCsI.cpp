@@ -6,16 +6,6 @@ using namespace std;
 
 ClassImp(KVCsI)
 //_______________________________________________________________________________________
-//
-//Child class of KVINDRADetector, specifically describing the
-//CsI(Tl) scintillation detectors of the INDRA multidetector array.
-//
-//Type of detector: "CSI"
-//
-//Calibration:
-//  Two KVLightEnergyCsI calibrators are used, one for Z=1, the other for Z>1
-
-//_______________________________________________________________________________________
 
 void KVCsI::init()
 {

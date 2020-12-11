@@ -6,6 +6,12 @@
 
 #include "KVFAZIA.h"
 
+/**
+   \class KVFAZIAMidRapExplorer
+\brief FAZIA setup with two belts of 6 blocks
+\ingroup FAZIAGeo
+*/
+
 class KVFAZIAMidRapExplorer : public KVFAZIA {
 
    struct {

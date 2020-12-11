@@ -13,6 +13,11 @@ namespace DAQ {
 }
 #endif
 
+/**
+  \class KVFzDataReader
+  \brief Handle FAZIA protobuf-format raw data files
+  \ingroup DAQ
+ */
 class KVFzDataReader : public KVProtobufDataReader {
 
 #if ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0)

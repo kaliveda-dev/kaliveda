@@ -16,6 +16,12 @@ $Date: 2007/05/31 09:59:22 $
 #include <KVEventSelector.h>
 class TChain;
 
+/**
+\class KVFAZIAReconDataAnalyser
+\brief Pilot analysis of reconstructed FAZIA data
+\ingroup FAZIAnal
+*/
+
 class KVFAZIAReconDataAnalyser: public KVDataSetAnalyser {
 
 protected:

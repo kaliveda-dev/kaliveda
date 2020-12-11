@@ -3,6 +3,12 @@
 
 #include "KVGroupReconstructor.h"
 
+/**
+\class KVFAZIAGroupReconstructor
+\brief Reconstruction of particles detected in FAZIA telescopes
+\ingroup FAZIARecon
+*/
+
 class KVFAZIAGroupReconstructor : public KVGroupReconstructor {
 protected:
 

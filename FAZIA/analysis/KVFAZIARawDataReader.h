@@ -11,9 +11,11 @@
 #include <TROOT.h>
 #include <KVFAZIAReader.h>
 
-// Header file for the classes stored in the TTree if any.
-
-// Fixed size dimensions of array or collections stored in the TTree if any.
+/**
+\class KVFAZIARawDataReader
+\brief Read raw FAZIA data (ROOT format)
+\ingroup FAZIAnal
+*/
 
 class KVFAZIARawDataReader : public KVFAZIAReader {
 public :

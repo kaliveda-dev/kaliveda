@@ -4,6 +4,17 @@
 #include "KVINDRADetector.h"
 #include "KVUnits.h"
 
+/**
+   \class KVSilicon
+   \brief Silicon detectors of the INDRA array
+   \ingroup INDRAGeometry
+
+In order to create a detector, use the KVSilicon::KVSilicon(Float_t thick)
+constructor with "thick" the thickness in microns
+
+Type of detector : "SI"
+*/
+
 class KVSilicon: public KVINDRADetector {
 
    void init();
@@ -40,6 +51,12 @@ public:
    ClassDef(KVSilicon, 9)       //INDRA forward-rings silicon detector
 };
 
+/**
+   \class KVSi75
+   \brief 80um silicon detector for INDRA etalon telescopes
+   \ingroup INDRAGeometry
+*/
+
 class KVSi75: public KVSilicon {
 public:
 
@@ -50,6 +67,12 @@ public:
 
    ClassDef(KVSi75, 1)         //80um silicon detector for INDRA etalon telescopes
 };
+
+/**
+   \class KVSiLi
+   \brief 2mm + 40um dead zone Si(Li) detector for INDRA etalon telescopes
+   \ingroup INDRAGeometry
+*/
 
 class KVSiLi: public KVSilicon {
 public:

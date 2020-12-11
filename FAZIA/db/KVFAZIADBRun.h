@@ -6,6 +6,11 @@
 
 #include "KVDBRun.h"
 
+/**
+  \class KVFAZIADBRun
+  \ingroup FAZIADB
+  \brief Database entry for a run in a FAZIA experiment
+ */
 class KVFAZIADBRun : public KVDBRun {
 
 protected:

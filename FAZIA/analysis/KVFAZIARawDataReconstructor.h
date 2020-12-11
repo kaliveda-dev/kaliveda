@@ -10,6 +10,12 @@
 #include "TTree.h"
 #include "TString.h"
 
+/**
+\class KVFAZIARawDataReconstructor
+\brief Reconstruction of raw FAZIA data
+\ingroup FAZIARecon
+*/
+
 class KVFAZIARawDataReconstructor : public KVFAZIAReader {
 protected:
 

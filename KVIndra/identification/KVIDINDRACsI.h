@@ -19,7 +19,11 @@
 #define KVIDINDRACsI_H
 
 #include "KVINDRAIDTelescope.h"
-
+/**
+  \class KVIDCsI
+  \ingroup INDRAIdent
+  \brief Identification in CsI fast-slow maps for INDRA
+ */
 class KVIDINDRACsI: public KVINDRAIDTelescope {
 
    KVIDGraph* CsIGrid;//! telescope's grid

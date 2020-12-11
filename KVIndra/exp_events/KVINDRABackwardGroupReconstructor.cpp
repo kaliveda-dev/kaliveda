@@ -5,15 +5,6 @@
 
 ClassImp(KVINDRABackwardGroupReconstructor)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRABackwardGroupReconstructor</h2>
-<h4>Reconstruct data in rings 10-17 of INDRA</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 bool KVINDRABackwardGroupReconstructor::DoCoherencyAnalysis(KVReconstructedNucleus& PART)
 {
    // Coherency analysis for backward rings 10-17 of INDRA

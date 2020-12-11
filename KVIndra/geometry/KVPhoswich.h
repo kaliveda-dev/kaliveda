@@ -21,6 +21,17 @@ $Id: KVPhoswich.h,v 1.9 2006/10/19 14:32:43 franklan Exp $
 
 #include "KVINDRADetector.h"
 
+/**
+\class KVPhoswich
+\brief Phoswich detector in the INDRA array (first 3 campaigns)
+\ingroup INDRAGeometry
+
+Built from two layers of plastic, with thicknesses 0.05cm (NE102) and 25cm (NE115).
+Name of detector is PHOS_Telescope-number.
+
+Type of detector: "PHOS"
+*/
+
 class KVPhoswich: public KVINDRADetector {
 public:
    KVPhoswich();

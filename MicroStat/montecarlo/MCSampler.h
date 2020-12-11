@@ -12,6 +12,12 @@
 
 namespace MicroStat {
 
+   /**
+      \class MCSampler
+      \brief Monte-Carlo sampling of events with statistical weights
+      \ingroup MicroStat \ingroup Simulation
+   */
+
    class MCSampler : public KVBase {
    private:
       void init();

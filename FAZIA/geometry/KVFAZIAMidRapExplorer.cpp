@@ -6,15 +6,6 @@
 
 ClassImp(KVFAZIAMidRapExplorer)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVFAZIAMidRapExplorer</h2>
-<h4>FAZIA setup with two belts of 6 blocks</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 void KVFAZIAMidRapExplorer::BuildFAZIA()
 {
    KVFAZIABeltConfig* belt_left =

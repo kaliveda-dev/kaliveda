@@ -20,7 +20,11 @@
 
 #include "KVINDRAIDTelescope.h"
 
-
+/**
+  \class KVIDSi75SiLi
+  \ingroup INDRAIdent
+  \brief Identification in Si75-SiLi (etalon) telescopes of INDRA
+ */
 class KVIDSi75SiLi: public KVINDRAIDTelescope {
 
 public:

@@ -7,7 +7,8 @@
   \class KVMult
   \ingroup GlobalVariables
 
-  \brief Multiplicity of nuclei in event
+  \brief Multiplicity of all nuclei in event (including \f$Z=0\f$)
+
  */
 
 class KVMult : public KVVGSum {

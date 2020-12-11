@@ -14,7 +14,7 @@ cp kaliveda.git/README.md kaliveda.doxygen/
 cp kaliveda.git/doc/doxygen/release_notes.md kaliveda.doxygen/
 
 # documentation for each module (and definition of groups!)
-cp kaliveda.git/*/*/doc/* kaliveda.doxygen/
+cp kaliveda.git/*/*/doc/* kaliveda.git/*/doc/* kaliveda.doxygen/
 
 # KVError.H
 cp kaliveda.git/KVMultiDet/base/KVError.h kaliveda.doxygen/KVMultiDet/base/

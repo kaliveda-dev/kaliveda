@@ -111,31 +111,10 @@ etc. methods of each global variable class actually receive a pointer to each nu
 kinematics those of the frame chosen with SetFrame().
 
 ### Global variable lists
-The KVGVList class handles a list of global variables. A list can be used in the following
-schematic way to calculate several global variables at once:
-
-#### Creation & initialisation
-
-~~~~~~~~~~~~{.cpp}
-      KVVGList VGlist;
-      VGlist.Add( new SomeVarGlob("var1") );    // add variable using explicit call to constructor
-      VGlist.AddGV("SomeOtherVarGlob", "var2"); // add variable using class name
-      ...
-      VGlist.Init(); // initialise all variables
-~~~~~~~~~~~~
-
-#### Treatment of 1 event
-
-~~~~~~~~~~~~{.cpp}
-      VGlist.CalculateGlobalVariables( [event] );          // calculate contribution of each particle to each variable
-      if( !VGlist.AbortEventAnalysis() ) // in case cuts for event selection were set - see KVVarGlob::SetEventSelection()
-      {
-          auto valueOfvar1 = VGlist.GetGV("var1")->GetValue(); // retrieve value of "var1" for event
-      }
-~~~~~~~~~~~~
-
-The KVGVList::CalculateGlobalVariables() method is optimised to ensure that all one- and two-body variables
-are calculated with a single loop over the particles in each event. See KVGVList for more details.
+The KVGVList class handles a list of global variables. The recommended way to use global variables
+is through a list of this type (even if only one). The user analysis classes derived from KVEventSelector
+all have an internal KVGVList for definition and calculation of global variables. See KVGVList and KVEventSelector class
+documentation for more details.
 
 ## Options, parameters, reference frames, particle selection, etc.
 ### Particle selection
@@ -144,8 +123,8 @@ itself by calling method SetSelection().
 
 ### Kinematical reference frames
 To change the reference frame used by the variable to calculate kinematical properties of particles
-(including those used for particle selection), call method SetFrame() (see KVParticle::SetFrame
-and KVEvent::SetFrame for how to define and access different frames).
+(including those used for particle selection), call method SetFrame()
+(see KVEvent::SetFrame() and KVParticle::GetFrame() for how to define and access different frames).
 
 ### Options and parameters
 In order to give greater flexibility to global variable classes without the need to add
@@ -170,7 +149,16 @@ A 'parameter' is a name-value pair, the value is a double-precision float value.
      void     UnsetParameter(const Char_t* par)
 ~~~~~~~~~~~
 
-### Event selection criteria
+### Normalization
+
+The value(s) returned by the variable will all be divided by the normalization factor set with one
+of the following methods:
+~~~~{.cpp}
+SetNormalization(Double_t)
+SetParameter("Normalization", Double_t)
+~~~~
+
+### Definition of event selection criteria [ROOT6]
 When used in a KVGVList of global variables, conditions ('cuts') can be set on each variable which
 decide whether or not to retain an event for analysis. If any variable in the list fails the
 test, processing of the list is abandoned.
@@ -194,7 +182,33 @@ fails, no further variables are calculated and the KVGVList goes into 'abort eve
     }
 ~~~~
 
-This mechanism is implemented in KVEventSelector.
+This mechanism is implemented in KVEventSelector, i.e. in all user analysis classes.
+
+### Definition of new kinematical frames [ROOT6]
+When used in a KVGVList of global variables, a variable can be used to define a new kinematical frame which can in turn be
+used by any variables which occur after them in the list. In order to do so, call method SetNewFrameDefinition() with
+a lambda function having the following signature:
+~~~~{.cpp}
+[](KVEvent* e, const KVVarGlob* vg){ e->SetFrame("_frame_name_", ...); }
+~~~~
+When called (e.g. by KVGVList), the KVVarGlob pointer gives access to the global variable.
+
+As an example of use, imagine that KVZmax is used to find the heaviest (largest Z) fragment in the
+forward CM hemisphere, then the velocity of this fragment is used to define a "QP_FRAME"
+in order to calculate the KVFlowTensor in this frame:
+
+~~~~{.cpp}
+    KVGVList vglist;
+    auto vg = vglist.AddGV("KVZmax", "zmax");
+    vg->SetFrame("CM");
+    vg->SetSelection( {"V>0", [](const KVNucleus* n){ return n->GetVpar()>0; }} );
+    vg->SetNewFrameDefinition(
+                [](KVEvent* e, const KVVarGlob* v){
+        e->SetFrame("QP_FRAME", static_cast<const KVZmax*>(v)->GetZmax(0)->GetVelocity());
+    });
+    vg = AddGV("KVFlowTensor", "qp_tensor");
+    vg->SetFrame("QP_FRAME"); // frame will have been defined before tensor is filled
+~~~~
 
 \authors D. Cussol (LPC Caen), J.D. Frankland (GANIL)
 \date 2004-2020
@@ -223,8 +237,8 @@ private:
    Double_t fNormalization;// optional normalization parameter
 
 #ifdef USING_ROOT6
-   using LambdaFunc = std::function<bool(const KVVarGlob*)>;
-   LambdaFunc fLambdaCondition;// used to select events in analysis based on value of variable
+   using EventSelector = std::function<bool(const KVVarGlob*)>;
+   EventSelector fEventSelector;// used to select events in analysis based on value of variable
    using FrameSetter = std::function<void(KVEvent*, const KVVarGlob*)>;
    FrameSetter fFrameSetter;// used to define a new kinematical frame for event based on variable
 #endif
@@ -317,7 +331,8 @@ public:
       vgobj.fMaxNumBranches = fMaxNumBranches;
       vgobj.fNormalization = fNormalization;
 #ifdef USING_ROOT6
-      vgobj.fLambdaCondition = fLambdaCondition;
+      vgobj.fEventSelector = fEventSelector;
+      vgobj.fFrameSetter = fFrameSetter;
 #endif
    }
    virtual ~KVVarGlob(void)
@@ -493,6 +508,11 @@ public:
       fIsInitialized = kFALSE; //allow re-initialisation
    }
 
+   void SetNormalization(Double_t norm)
+   {
+      fNormalization = norm;
+   }
+
    Bool_t IsParameterSet(const Char_t* par)
    {
       //Returns kTRUE if the parameter 'par' has been set
@@ -505,6 +525,11 @@ public:
       //Returns the value of the parameter 'par'
       if (TString(par) == "Normalization") return fNormalization;
       return fParameters.GetDoubleValue(par);
+   }
+
+   Double_t GetNormalization() const
+   {
+      return fNormalization;
    }
 
    void UnsetParameter(const Char_t* par)
@@ -580,10 +605,12 @@ public:
    }
    virtual Char_t GetValueType(Int_t) const
    {
-      // Returns type of value associated with index i
+      // Returns type of value associated with index i.
+      //
       // This can be either 'I' (integer values) or 'D' (floating-point/double).
       // By default, this method returns the same type (value of member variable
       // fValueType) for all values of i.
+      //
       // This can be overridden in child classes.
 
       return fValueType;
@@ -592,9 +619,11 @@ public:
    {
       // Used for automatic TTree branch creation for multi-valued variables
       // (see KVGVList::MakeBranches).
-      // Normally a branch will be created for each of the N values declared
-      // in the SetNameIndex method, but if this method is called before
-      // analysis begins with n<N, only the first n branches will be used.
+      //
+      // Normally a branch will be created for each of the \f$N\f$ values declared
+      // with the SetNameIndex() method, but if this method is called before
+      // analysis begins with \f$n<N\f$, only the first \f$n\f$ branches will be used.
+      //
       // Note that if SetMaxNumBranches(0) is called, no branch will
       // be created for this variable.
       fMaxNumBranches = (n <= GetNumberOfValues() ? n : -1);
@@ -602,7 +631,7 @@ public:
    void Print(Option_t* = "") const;
 
 #ifdef USING_ROOT6
-   void SetEventSelection(const LambdaFunc& f)
+   void SetEventSelection(const EventSelector& f)
    {
       // Call this method with a lambda expression in order to define an event selection criterion
       // based on the value of this variable. The signature of the lambda is
@@ -620,7 +649,7 @@ public:
       // The condition will be tested by KVGVList just after calculation of this variable;
       // if the condition is not met, no further variables will be calculated and the
       // event will be rejected for further analysis.
-      fLambdaCondition = f;
+      fEventSelector = f;
    }
    bool TestEventSelection() const
    {
@@ -628,20 +657,24 @@ public:
       // if the condition is not met, no further variables will be calculated and the
       // event will be rejected for further analysis.
 
-      return fLambdaCondition ? fLambdaCondition(this) : true;
+      return fEventSelector ? fEventSelector(this) : true;
    }
-   void SetUseDefineFrame(const FrameSetter& f)
+   void SetNewFrameDefinition(const FrameSetter& f)
    {
       // Call this method with a lambda expression in order to define a new frame for events
       // based on the calculated value(s) of this variable.
+      //
       // The signature of the lambda is (the KVVarGlob pointer passed will be 'this')
       //~~~~{.cpp}
       // [](KVEvent* e, const KVVarGlob* vg){ e->SetFrame("_frame_name_", ...); }
       //~~~~
       fFrameSetter = f;
    }
-   void DefineFrame(KVEvent* e) const
+   void DefineNewFrame(KVEvent* e) const
    {
+      // If method SetFrameDefinition() was called with a valid function to define a new
+      // kinematical frame for events, it will be used here to define the frame for all
+      // particles in the event.
       if (fFrameSetter) fFrameSetter(e, this);
    }
 #endif

@@ -19,6 +19,12 @@
       n->SetIDCode(x)
 
 
+/**
+\class KVINDRAGroupReconstructor
+\brief Reconstruct particles in INDRA groups
+\ingroup INDRAReconstruction
+*/
+
 class KVINDRAGroupReconstructor : public KVGroupReconstructor {
 
 protected:

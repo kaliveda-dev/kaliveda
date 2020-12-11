@@ -5,6 +5,11 @@
 #define __KVFAZIASYM_H
 
 #include "KVFAZIA.h"
+/**
+   \class KVFAZIASYM
+\brief FAZIA setup, FAZIASYM experiment
+\ingroup FAZIAGeo
+*/
 
 class KVFAZIASYM : public KVFAZIA {
 

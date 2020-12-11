@@ -57,17 +57,6 @@ $Id: KVINDRA.cpp,v 1.68 2009/01/21 10:05:51 franklan Exp $
 using namespace std;
 
 ClassImp(KVINDRA)
-///////////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRA</h2>
-<h4>INDRA multidetector array, 1st campaign configuration</h4>
-
-<img src="http://indra.in2p3.fr/KaliVedaDoc/images/indra_camp1.png"><br>
-
-<!-- */
-// --> END_HTML
-///////////////////////////////////////////////////////////////////////////////////////
 
 //Use this static array to translate EBaseIndra_type
 //signal type to a string giving the signal type

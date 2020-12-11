@@ -21,6 +21,11 @@
 #include "KVINDRAIDTelescope.h"
 #include "KVIDGChIoSi.h"
 
+/**
+  \class KVIDChIoSi
+  \ingroup INDRAIdent
+  \brief Identification in ChIo-Si telescopes of INDRA
+ */
 class KVIDChIoSi: public KVINDRAIDTelescope {
 
 protected:

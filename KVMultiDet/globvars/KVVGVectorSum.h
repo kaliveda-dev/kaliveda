@@ -6,10 +6,17 @@
 
 /**
  \class KVVGVectorSum
- \brief Global variable calculating sum of vectors
+ \brief Global variable calculating sum of 3-dimensional vectors
  \ingroup GlobalVariables
 
- Write a detailed documentation for your class here, see doxygen manual for help.
+The components of the summed vector can be retrieved either by name
+("Z", "X", "Y") or by index:
+
+Component | index
+--------- | -----
+Z         | 0
+X         | 1
+Y         | 2
 
  \author John Frankland
  \date Sun Aug  9 16:22:24 2020

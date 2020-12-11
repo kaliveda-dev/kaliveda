@@ -2,7 +2,11 @@
 #define KVINDRAIDTelescope_H
 
 #include "KVIDTelescope.h"
-
+/**
+  \class KVINDRAIDTelescope
+  \ingroup INDRAIdent
+  \brief Base class for identification telescopes of INDRA array
+ */
 class KVINDRAIDTelescope: public KVIDTelescope {
 
 protected:

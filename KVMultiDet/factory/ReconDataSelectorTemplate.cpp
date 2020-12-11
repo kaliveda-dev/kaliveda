@@ -34,7 +34,6 @@ void ReconDataSelectorTemplate::InitAnalysis(void)
    AddGV("KVEtransLCP", "et12");                        // total LCP transverse energy
    AddGV("KVFlowTensor", "tensor")->SetOption("weight", "RKE");  // relativistic CM KE tensor
 
-
    /*** DECLARING SOME HISTOGRAMS ***/
    AddHisto(new TH1F("zdist", "Charge distribution", 100, -.5, 99.5));
    AddHisto(new TH2F("zvpar", "Z vs V_{par} in CM", 100, -15., 15., 75, .5, 75.5));
@@ -72,9 +71,17 @@ void ReconDataSelectorTemplate::InitRun(void)
 
    // You can also perform more fine-grained selection of particles using class KVParticleCondition.
    // For example:
+#ifdef USING_ROOT6
+   KVParticleCondition pc_z("z_ok", [](const KVNucleus * n) {
+      n->GetZ() > 0 && n->GetZ() <= 92;
+   });// remove any strange Z identifications
+   KVParticleCondition pc_e("e_ok", [](const KVNucleus * n) {
+      n->GetE() > 0;
+   });               // remove any immobile nuclei
+#else
    KVParticleCondition pc_z("_NUC_->GetZ()>0&&_NUC_->GetZ()<=92");  // remove any strange Z identifications
    KVParticleCondition pc_e("_NUC_->GetE()>0.");                    // remove any immobile nuclei
-
+#endif
    SetParticleConditions(pc_z && pc_e);
 
    // set title of TTree with name of analysed system

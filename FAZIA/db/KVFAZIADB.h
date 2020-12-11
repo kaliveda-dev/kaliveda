@@ -13,6 +13,11 @@
 class KVNumberList;
 class KVDBSystem;
 
+/**
+  \class KVFAZIADB
+  \brief Experiment database for FAZIA
+  \ingroup FAZIADB
+ */
 class KVFAZIADB : public KVExpDB {
 
 protected:

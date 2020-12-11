@@ -26,14 +26,6 @@ using namespace std;
 
 ClassImp(KVINDRAUpDater_e475s)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRAUpDater_e475s</h2>
-<h4>Sets run parameters for INDRA_e475s dataset</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVINDRAUpDater_e475s::KVINDRAUpDater_e475s()
 {

@@ -153,8 +153,6 @@ void KVFlowTensor::Calculate()
 {
    // Calculate eigenvalues & eigenvectors of tensor
 
-   //TMatrixT<double> evectors = fTensor.EigenVectors(fEVal);
-
    TMatrixDSymEigen diagonalize(fTensor);
    TMatrixD evectors = diagonalize.GetEigenVectors();
    fEVal = diagonalize.GetEigenValues();
@@ -295,8 +293,9 @@ void KVFlowTensor::fill(const KVNucleus* n)
 const TRotation& KVFlowTensor::GetAziReacPlaneRotation() const
 {
    // Returns the azimuthal rotation around the beam axis required
-   // to put the X-axis in the reaction plane defined by the beam axis
-   // and the major axis (largest eigeevalue) of the ellipsoid.
+   // to put the \f$x\f$-axis in the reaction plane defined by the beam axis
+   // and the major axis (largest eigenvalue) of the ellipsoid.
+   //
    // The azimuthal angle of the rotation is that of the major axis
    // in the forward direction.
    //
@@ -309,10 +308,11 @@ const TRotation& KVFlowTensor::GetAziReacPlaneRotation() const
 const TRotation& KVFlowTensor::GetFlowReacPlaneRotation() const
 {
    // Returns composition of two rotations:
-   //   - around Z-axis to put X-axis in reaction plane (see GetAziReacPlaneRotation)
-   //   - around Y-axis to align Z-axis with flow (major) axis
-   // In this rotated frame, theta is polar angle with respect to flow axis
-   // and phi is azimuthal angle around flow axis (phi=0,180 => in-plane)
+   //   - around \f$z\f$-axis to put \f$x\f$-axis in reaction plane (see GetAziReacPlaneRotation())
+   //   - around \f$y\f$-axis to align \f$z\f$-axis with flow (major) axis
+   //
+   // In this rotated frame, \f$\theta\f$ is polar angle with respect to flow axis
+   // and \f$\phi\f$ is azimuthal angle around flow axis (\f$\phi\f$=0,180 => in-plane)
    //
    // Note that this rotation applies to whatever frame was used to calculate
    // the tensor (default: "CM")

@@ -12,6 +12,12 @@ $Date: 2007/02/14 14:12:00 $
 
 #include <KVINDRAUpDater.h>
 
+/**
+\class KVINDRAUpDater_e416a
+\brief Sets run parameters for INDRA_e416a dataset
+\ingroup INDRADB
+*/
+
 class KVINDRAUpDater_e416a : public KVINDRAUpDater {
 public:
 

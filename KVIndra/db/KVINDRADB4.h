@@ -24,6 +24,11 @@ $Id: KVINDRADB4.h,v 1.6 2006/10/19 14:32:43 franklan Exp $
 #include "KVDBSystem.h"
 #include "KVDBTape.h"
 
+/**
+  \class KVINDRADB4
+  \ingroup INDRADB
+  \brief DataBase of parameters for 4th campaign of INDRA
+ */
 class KVINDRADB4: public KVINDRADB {
 
 public:

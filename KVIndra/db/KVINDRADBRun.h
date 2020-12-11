@@ -12,6 +12,20 @@ $Author: franklan $
 #include "KVDBRun.h"
 #include "KVDatime.h"
 
+/**
+\class KVINDRADBRun
+\ingroup INDRADB
+\brief Database entry for each run of an INDRA experiment
+
+Information available:
+    - all infos from runlists/runsheets (scalers, i.e. gene direct/TM/MRQ, faraday), length of run,
+    - size of run file, tape number (!), multiplicity trigger, etc.
+
+Cross-section for a given run can be calculated with GetEventCrossSection()
+
+Total measured cross-section for all events in run can be calculated with GetTotalCrossSection()
+*/
+
 class KVINDRADBRun: public KVDBRun {
 
 private:

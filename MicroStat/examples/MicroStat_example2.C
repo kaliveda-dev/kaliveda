@@ -1,27 +1,3 @@
-//# Calculate 12C*->2H+4He+6Li & compare with exact microcanonical distributions
-//
-// Example of use of MicroStat::mdweight class, which can
-// generate events according to the molecular dynamics ensemble
-// i.e. fixed total energy and zero total momentum.
-// By default, 10**5 events are generated for the decay of
-// a Carbon-12 nucleus with E*=50 MeV.
-// Histograms are filled with the kinetic energy distributions of the
-// three particles, which are then fitted using the exact microcanonical
-// probability distribution for a classical gas of 3 unequal-mass particles.
-//
-// To execute this function, either do
-//
-// $ kaliveda
-// kaliveda[0] .L MicroStat_example2.C+
-// kaliveda[1] example()
-//
-// or
-//
-// $ root
-// root[0] KVBase::InitEnvironment()
-// root[0] .L MicroStat_example2.C+
-// root[1] example()
-
 #include "KVNucleus.h"
 #include "KVEvent.h"
 #include "mdweight.h"

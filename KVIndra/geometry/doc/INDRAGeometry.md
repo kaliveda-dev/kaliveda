@@ -1,3 +1,3 @@
-\defgroup INDRAGeometry INDRA Geometry
-\brief Description of INDRA array geometry
+\defgroup INDRAGeometry INDRA Geometry & Detectors
+\brief Description of INDRA array geometry and detectors
 

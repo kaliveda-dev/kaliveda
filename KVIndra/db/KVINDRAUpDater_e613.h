@@ -6,6 +6,12 @@
 
 #include "KVINDRAUpDater.h"
 
+/**
+\class KVINDRAUpDater_e613
+\brief Sets run parameters for INDRA_e613 dataset
+\ingroup INDRADB
+*/
+
 class KVINDRAUpDater_e613 : public KVINDRAUpDater {
 
 public:

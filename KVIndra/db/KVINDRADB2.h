@@ -23,6 +23,12 @@ $Id: KVINDRADB2.h,v 1.6 2006/10/19 14:32:43 franklan Exp $
 #include "KVDBSystem.h"
 #include "KVDBTape.h"
 
+/**
+  \class KVINDRADB2
+  \ingroup INDRADB
+  \brief DataBase of parameters for 2nd campaign of INDRA
+ */
+
 class KVINDRADB2: public KVINDRADB {
 
 public:

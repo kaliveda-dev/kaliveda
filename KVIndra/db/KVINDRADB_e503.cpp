@@ -6,13 +6,6 @@ $Date: 2009/01/22 15:39:26 $
 
 //Created by KVClassFactory on Wed Jan 21 13:44:30 2009
 //Author: Chbihi
-// Updated by A. Chbihi on 20/08/2009
-// In addition to set the VAMOS scalers in the data base using ReadVamosScalers ()  method
-//  it set the Vamos Brho's and angle.
-// The new method of this class is ReadVamosBrhoAndAngle ().
-
-// modified by M. F. Rivet november 2012 - separate files for pedestals Chio/Si
-// and for calibration telescopes
 
 #include "KVINDRADB_e503.h"
 #include "KVDBParameterSet.h"
@@ -21,14 +14,6 @@ using namespace std;
 
 ClassImp(KVINDRADB_e503)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRADB_e503</h2>
-<h4>Database for e503 & e494s experiments with VAMOS</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 void KVINDRADB_e503::init()
 {

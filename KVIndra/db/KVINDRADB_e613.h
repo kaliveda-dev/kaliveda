@@ -6,6 +6,11 @@
 
 #include "KVINDRADB.h"
 
+/**
+  \class KVINDRADB_e613
+  \brief Database for E613 experiment (2011)
+  \ingroup INDRADB
+ */
 class KVINDRADB_e613 : public KVINDRADB {
 
 protected:

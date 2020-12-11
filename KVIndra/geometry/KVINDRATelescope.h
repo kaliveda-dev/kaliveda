@@ -8,6 +8,12 @@
 
 class KVRing;
 
+/**
+  \class KVINDRATelescope
+  \ingroup INDRAGeometry
+  \brief Base class for telescopes in INDRA array
+ */
+
 class KVINDRATelescope : public KVTelescope {
 
 public:

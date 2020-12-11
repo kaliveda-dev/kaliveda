@@ -5,7 +5,11 @@
 #define __KVFAZIABELTCONFIG3X2_H
 
 #include "TGeoVolume.h"
-
+/**
+  \class KVFAZIABeltConfig
+  \ingroup FAZIAGeo
+  \brief A \f$N x M\fM rectangular array of FAZIA blocks
+ */
 class KVFAZIABeltConfig : public TGeoVolumeAssembly {
 
    Double_t fDist;  // distance of centre of belt from target

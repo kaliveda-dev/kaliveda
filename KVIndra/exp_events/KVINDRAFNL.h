@@ -22,6 +22,12 @@ $Id: KVINDRAFNL.h,v 1.7 2007/03/02 14:36:03 franklan Exp $
 
 #include "KVINDRA4.h"
 
+/**
+\class KVINDRAFNL
+\brief Describes INDRA as used in FNL experiment E416 (June-July 2003)
+\ingroup INDRAGeometry
+ */
+
 class KVINDRAFNL: public KVINDRA4 {
 
    virtual void MakeListOfDetectorTypes();

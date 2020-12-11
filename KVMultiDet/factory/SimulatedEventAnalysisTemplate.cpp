@@ -8,10 +8,16 @@ void SimulatedEventAnalysisTemplate::InitAnalysis()
 
    // DEFINITION OF GLOBAL VARIABLES FOR ANALYSIS
 
-   // charged particle multiplicity
-   KVVarGlob* v = AddGV("KVVGSum", "Mcha");
-   v->SetOption("mode", "mult");
-   v->SetSelection(KVParticleCondition("_NUC_->GetZ()>0"));
+   // charged particle multiplicity - unfiltered simulations may include neutrons!
+   KVVarGlob* v = AddGV("KVMult", "Mcha");
+#ifdef USING_ROOT6
+   v->SetSelection({"Z>0", [](const KVNucleus * n)
+   {
+      return n->GetZ() > 0;
+   }));
+#else
+   v->SetSelection("_NUC_->GetZ()>0");
+#endif
 
    ZMAX = (KVZmax*)AddGV("KVZmax", "ZMAX");//fragments sorted by Z
 
@@ -35,30 +41,30 @@ void SimulatedEventAnalysisTemplate::InitAnalysis()
 
    AddTree(t);
 
-}
+   }
 
 //____________________________________________________________________________________
 
-Bool_t SimulatedEventAnalysisTemplate::Analysis()
-{
-   // EVENT BY EVENT ANALYSIS
+   Bool_t SimulatedEventAnalysisTemplate::Analysis()
+   {
+      // EVENT BY EVENT ANALYSIS
 
-   mult = GetEvent()->GetMult();
+      mult = GetEvent()->GetMult();
 
-   for (int i = 0; i < mult; i++) {
-      KVSimNucleus* part = (KVSimNucleus*)ZMAX->GetZmax(i);
-      Z[i] = part->GetZ();
-      A[i] = part->GetA();
-      Vper[i] = part->GetVperp();
-      Vpar[i] = part->GetVpar();
-      E[i] = part->GetEnergy();
-      Theta[i] = part->GetTheta();
-      Phi[i] = part->GetPhi();
+      for (int i = 0; i < mult; i++) {
+         KVSimNucleus* part = (KVSimNucleus*)ZMAX->GetZmax(i);
+         Z[i] = part->GetZ();
+         A[i] = part->GetA();
+         Vper[i] = part->GetVperp();
+         Vpar[i] = part->GetVpar();
+         E[i] = part->GetEnergy();
+         Theta[i] = part->GetTheta();
+         Phi[i] = part->GetPhi();
+      }
+
+      GetGVList()->FillBranches();
+      FillTree();
+
+      return kTRUE;
    }
-
-   GetGVList()->FillBranches();
-   FillTree();
-
-   return kTRUE;
-}
 

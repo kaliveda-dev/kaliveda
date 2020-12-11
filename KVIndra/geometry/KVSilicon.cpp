@@ -21,14 +21,6 @@ $Id: KVSilicon.cpp,v 1.55 2009/04/15 09:49:19 ebonnet Exp $
 
 ClassImp(KVSilicon)
 
-//////////////////////////////////////////////////////////////////
-//KVSilicon
-//
-//Used to describe Silicon detectors of the INDRA array.
-//In order to create a detector, use the KVSilicon::KVSilicon(Float_t thick)
-//constructor with "thick" the thickness in centimetres
-//
-//Type of detector : "SI"
 
 void KVSilicon::init()
 {

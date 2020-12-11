@@ -19,18 +19,6 @@ using namespace std;
 
 ClassImp(INDRAGeometryBuilder)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>INDRAGeometryBuilder</h2>
-<h4>Build INDRA geometry from Huguet CAO infos</h4>
-<!-- */
-// --> END_HTML
-// N.B. - the Ring 1 Si-CsI detectors (>=INDRA_camp4)
-//        are described using the same geometry as for the
-//        1st campaign phoswich detectors (no CAO data available)
-////////////////////////////////////////////////////////////////////////////////
-
 void INDRAGeometryBuilder:: CorrectCoordinates(Double_t* coo, Double_t& offX, Double_t& offY)
 {
    // calculate offset in X and Y

@@ -7,6 +7,12 @@
 #include "KVEventSelector.h"
 #include "KVFAZIARawEvent.h"
 
+/**
+\class KVFAZIASelector
+\brief Analysis of FAZIA data
+\ingroup FAZIAnal
+*/
+
 class KVFAZIASelector : public KVEventSelector {
 
 protected:

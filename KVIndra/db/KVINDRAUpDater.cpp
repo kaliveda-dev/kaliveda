@@ -22,12 +22,6 @@ using namespace std;
 
 
 ClassImp(KVINDRAUpDater)
-//////////////////////////////////////////////////////////////////////////////////
-//
-//KVINDRAUpDater
-//
-//Abstract class implementing necessary methods for setting INDRA parameters
-//for each run, using information stored in the KVINDRADB database.
 KVINDRAUpDater::KVINDRAUpDater()
 {
    //Default ctor for KVINDRAUpDater object.

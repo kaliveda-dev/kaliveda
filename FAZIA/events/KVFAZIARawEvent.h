@@ -10,7 +10,11 @@
 #include "KVSignal.h"
 #include "KVString.h"
 #include "KVNameValueList.h"
-
+/**
+  \class KVFAZIARawEvent
+  \ingroup FAZIAnal
+  \brief Obsolete raw data class for FAZIA
+ */
 class KVFAZIARawEvent : public TObject {
 protected:
    TClonesArray* fSignals;//-> array where signals are storred

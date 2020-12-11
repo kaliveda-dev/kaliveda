@@ -7,15 +7,6 @@
 
 ClassImp(KVFAZIARawDataAnalyser)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVFAZIARawDataAnalyser</h2>
-<h4>Handle analysis for FAZIA data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVFAZIARawDataAnalyser::KVFAZIARawDataAnalyser()
 {
    // Default constructor

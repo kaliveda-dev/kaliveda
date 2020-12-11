@@ -1,8 +1,30 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 21st September 2020
+Last update: 11th December 2020
 
 ## Version 1.11/01 (current development focus)
+
+__Changes 11/12/2020 in__ \ref GlobalVariables
+
+Global variables in a KVGVList can be used to define new kinematical reference frames which are available for
+all variables which come later in the list.
+
+As an example of use, imagine that KVZmax is used to find the heaviest (largest Z) fragment in the
+forward CM hemisphere, then the velocity of this fragment is used to define a "QP_FRAME"
+in order to calculate the KVFlowTensor in this frame:
+
+~~~~{.cpp}
+    KVGVList vglist;
+    auto vg = vglist.AddGV("KVZmax", "zmax");
+    vg->SetFrame("CM");
+    vg->SetSelection( {"V>0", [](const KVNucleus* n){ return n->GetVpar()>0; }} );
+    vg->SetNewFrameDefinition(
+                [](KVEvent* e, const KVVarGlob* v){
+        e->SetFrame("QP_FRAME", static_cast<const KVZmax*>(v)->GetZmax(0)->GetVelocity());
+    });
+    vg = AddGV("KVFlowTensor", "qp_tensor");
+    vg->SetFrame("QP_FRAME"); // frame will have been defined before tensor is filled
+~~~~
 
 __Changes 21/9/2020 in__ \ref GlobalVariables
 

@@ -11,14 +11,6 @@ using namespace std;
 
 ClassImp(KVINDRAEtalonGroupReconstructor)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRAEtalonGroupReconstructor</h2>
-<h4>Reconstruct particles in INDRA groups with etalon telescopes</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 KVReconstructedNucleus* KVINDRAEtalonGroupReconstructor::ReconstructTrajectory(const KVGeoDNTrajectory* traj, const KVGeoDetectorNode* node)
 {

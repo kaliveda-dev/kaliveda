@@ -5,15 +5,6 @@
 
 ClassImp(MicroStat::StatWeight)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>StatWeight</h2>
-<h4>Abstract base class for calculating statistical weights for events</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 namespace MicroStat {
 
    void StatWeight::init()

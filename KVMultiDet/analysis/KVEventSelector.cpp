@@ -110,6 +110,8 @@ void KVEventSelector::SlaveBegin(TTree* /*tree*/)
       gDataAnalyser->RegisterUserClass(this);
       gDataAnalyser->preInitAnalysis();
    }
+   // make sure histo/tree creation are enabled
+   fDisableCreateTreeFile = kFALSE;
    InitAnalysis();              //user initialisations for analysis
    if (gDataAnalyser) gDataAnalyser->postInitAnalysis();
 
@@ -128,6 +130,8 @@ void KVEventSelector::SlaveBegin(TTree* /*tree*/)
          InitFriendTree(fAuxChain, GetOpt("AuxBranchName"));
       }
    }
+   Info("SlaveBegin", "fOutput->ls()");
+   GetOutputList()->ls();
 }
 Bool_t KVEventSelector::CreateTreeFile(const Char_t* filename)
 {
@@ -217,8 +221,9 @@ Bool_t KVEventSelector::Process(Long64_t entry)
    }
 
    Bool_t ok_anal = kTRUE;
-   if (gvlist && !gvlist->AbortEventAnalysis()) {
-      // events are only analysed if no global variables in the list have failed an event selection condition
+   if (!gvlist || (gvlist && !gvlist->AbortEventAnalysis())) {
+      // if global variables are defined, events are only analysed if no global variables
+      // in the list have failed an event selection condition
       ok_anal = Analysis();     //user analysis
       if (gDataAnalyser) gDataAnalyser->postAnalysis();
    }
@@ -273,6 +278,7 @@ void KVEventSelector::SlaveTerminate()
 
    }
 
+   fOutput->ls();
 }
 
 void KVEventSelector::Terminate()
@@ -294,6 +300,7 @@ void KVEventSelector::Terminate()
       TString file1, file2;
       file1.Form("HistoFileFrom%s.root", ClassName());
       file2.Form("TreeFileFrom%s.root", ClassName());
+      GetOutputList()->ls();
       if (GetOutputList()->FindObject("ThereAreHistos")) {
          if (GetOutputList()->FindObject(file2)) {
             Info("Terminate", "both");
@@ -424,7 +431,7 @@ void KVEventSelector::AddHisto(TH1* histo)
    // This method must be called when using PROOF.
 
    if (fDisableCreateTreeFile) return;
-
+   histo->SetDirectory(nullptr);
    lhisto->Add(histo);
    fOutput->Add(histo);
    if (!fOutput->FindObject("ThereAreHistos")) fOutput->Add(new TNamed("ThereAreHistos", "...so save them!"));

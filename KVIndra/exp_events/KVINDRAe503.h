@@ -6,6 +6,12 @@
 
 #include "KVINDRA.h"
 
+/**
+\class KVINDRAe503
+\brief INDRA multidetector array, configuration for experiments E503 & E494S
+\ingroup INDRAGeometry
+*/
+
 class KVINDRAe503: public KVINDRA {
 
 protected:

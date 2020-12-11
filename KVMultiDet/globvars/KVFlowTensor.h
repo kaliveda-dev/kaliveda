@@ -153,7 +153,7 @@ public:
    }
    Double_t GetNormalisedEigenValue(Int_t i)
    {
-      // Return normalised eignevalues
+      // Return normalised eigenvalues
       // \param[in] i index=1,2,3 (i=1 is largest eigenvalue)
 
       return f(i) / sum_val_prop;
@@ -173,7 +173,6 @@ public:
    }
    Char_t GetValueType(Int_t i) const
    {
-      // "Mult" is an integer, return 'I' if i==3
       if (i == 3) return 'I';
       return 'D';
    }

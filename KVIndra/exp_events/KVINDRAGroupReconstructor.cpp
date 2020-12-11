@@ -9,15 +9,6 @@
 
 ClassImp(KVINDRAGroupReconstructor)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRAGroupReconstructor</h2>
-<h4>Reconstruct particles in INDRA groups</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVReconstructedNucleus* KVINDRAGroupReconstructor::ReconstructTrajectory(const KVGeoDNTrajectory* traj, const KVGeoDetectorNode* node)
 {
    // Specialised event reconstruction for INDRA data

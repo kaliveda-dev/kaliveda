@@ -8,6 +8,11 @@
 #include <TVector3.h>
 #include "KVConfig.h"
 
+/**
+  \class KVFAZIABlock
+  \brief Standard geometry of 16-telescope FAZIA block
+  \ingroup FAZIAGeo
+ */
 class KVFAZIABlock : public TGeoVolumeAssembly {
 
    double fTotSidWBld;

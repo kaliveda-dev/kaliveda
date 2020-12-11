@@ -19,15 +19,6 @@ using namespace std;
 
 ClassImp(KVINDRAUpDater_e416a)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRAUpDater_e416a</h2>
-<h4>Sets run parameters for INDRA_e416a dataset</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVINDRAUpDater_e416a::KVINDRAUpDater_e416a()
 {
    //Default constructor

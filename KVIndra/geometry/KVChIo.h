@@ -13,6 +13,19 @@
 #include "KVINDRADetector.h"
 #include "KVUnits.h"
 
+/**
+  \class KVChIo
+  \ingroup INDRAGeometry
+  \brief Ionisation chamber detectors of the INDRA multidetector array
+
+These consist of:
+  -    a 2.5 micron mylar window
+  -    5 cm of C3F8 (pressure varies) ---> active layer
+  -    a 2.5 micron mylar window
+
+Type of detector : "CI"
+*/
+
 class KVChIo: public KVINDRADetector {
 
    void init();

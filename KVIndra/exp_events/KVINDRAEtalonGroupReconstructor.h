@@ -6,6 +6,12 @@
 
 #include "KVINDRABackwardGroupReconstructor.h"
 
+/**
+\class KVINDRAEtalonGroupReconstructor
+\brief Reconstruct particles in INDRA groups with etalon telescopes
+\ingroup INDRAReconstruction
+*/
+
 class KVINDRAEtalonGroupReconstructor : public KVINDRABackwardGroupReconstructor {
 
    Double_t fESi75, fESiLi;

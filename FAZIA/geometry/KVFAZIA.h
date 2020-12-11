@@ -23,6 +23,11 @@ namespace DAQ {
 #endif
 #endif
 
+/**
+  \class KVFAZIA
+  \ingroup FAZIAGeo
+  \brief Description of a FAZIA detector geometry
+ */
 class KVFAZIA : public KVMultiDetArray {
 protected:
    TString fFGeoType;  //type of FAZIA geometry (="compact",...)

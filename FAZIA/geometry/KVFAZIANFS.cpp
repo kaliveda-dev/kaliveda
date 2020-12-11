@@ -94,7 +94,7 @@ void KVFAZIANFS::BuildFAZIA()
    TGeoHMatrix h;
 
    //Six premiers telescopes
-   //25 45 65°
+   //25 45 65Â°
    Int_t nt = 1;
    Double_t ph = pmin;
    Double_t th =  0;

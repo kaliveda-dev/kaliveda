@@ -41,68 +41,7 @@ using namespace std;
 
 ClassImp(KVINDRAReconNuc);
 
-////////////////////////////////////////////////////////////////////////////
-//KVINDRAReconNuc
-//
-//Nuclei reconstructed from data measured in the INDRA array.
-//Most useful methods are already defined in parent classes KVReconstructedNucleus,
-//KVNucleus and KVParticle. Here we add a few useful INDRA-specific methods :
-//
-//   GetRingNumber(), GetModuleNumber()
-//   GetTimeMarker()  -  returns time-marker of detector in which the particle stopped
-//
-//   StoppedInChIo(), StoppedInSi(), StoppedInCsI()  -  information on the detector in
-//                                                      which the particle stopped
-//       ** Note1: to access the detector in question, use GetStoppingDetector() (see KVReconstructedNucleus)
-//       ** Note2: for a general test of the type of detector in which the particle stopped,
-//                 you can do one of the following e.g. to test if it stopped in an
-//                 ionisation chamber (assuming a particle pointer 'part'):
-//
-//        if( !strcmp(part->GetStoppingDetector()->GetType(), "CI") ) { ... }
-//               //test the type of the detector - see INDRA detector classes for the different types
-//        if( part->GetStoppingDetector()->InheritsFrom("KVChIo") ) { ... }
-//               //test the inheritance of the class of the stopping detector
-//
-//    GetChIo(), GetSi(), GetCsI()    -  return pointers to the detectors through which the particle passed
-//    GetEnergyChIo(), GetEnergySi(), GetEnergyCsI()   -  return the calculated contribution of each detector to the
-//                                                                                      particle's energy
-//
-//Identification/Calibration status and codes
-//-------------------------------------------
-//
-//Identified particles have IsIdentified()=kTRUE.
-//Calibrated particles have IsCalibrated()=kTRUE.
-//
-//The KVINDRACodes object fCodes is used to store information on the identification and
-//calibration of the particle. You can access this object using GetCodes() and then use the
-//methods of KVINDRACodes/KVINDRACodeMask to obtain the information.
-//
-//For example, you can obtain the VEDA identification code of a particle 'part' using
-//
-//       part.GetCodes().GetVedaIDCode()  [ = 0, 1, 2, etc.]
-//
-//Information on whether the particle's mass was measured :
-//
-//       part.IsAMeasured()  [ = kTRUE or kFALSE]
-//
-//Information on whether the particle's charge was measured :
-//
-//       part.IsZMeasured()  [ = kTRUE or kFALSE]
-//
-//You can also access information on the status codes returned
-//by the different identification telescopes used to identify the particle:
-//see GetIDSubCode() and GetIDSubCodeString().
-//
-//Masses of reconstructed nuclei
-//------------------------------
-//
-//When the nucleus' A is not measured, we estimate it from the identified Z.
-//By default the mass formula used is that of R.J. Charity (see KVNucleus::GetAFromZ).
-//     ** Note: for data previous to the 5th campaign converted to the KaliVeda format
-//     ** from old DSTs, we keep the masses from the Veda programme, corresponding to
-//     ** KVNucleus mass option kVedaMass.
-//IN ALL CASES THE RETURNED VALUE OF GetA() IS POSITIVE
-//
+
 
 void KVINDRAReconNuc::init()
 {

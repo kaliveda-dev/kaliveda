@@ -6,6 +6,12 @@
 
 #include "KVDataSetAnalyser.h"
 
+/**
+\class KVFAZIARawDataAnalyser
+\brief Pilot analysis of raw FAZIA data
+\ingroup FAZIAnal
+*/
+
 class KVFAZIARawDataAnalyser : public KVDataSetAnalyser {
    TTree* theTree;
    Int_t fRunNumber;             //run number of current file

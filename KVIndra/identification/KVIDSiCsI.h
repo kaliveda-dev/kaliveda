@@ -21,7 +21,11 @@ $Id: KVIDSiCsI.h,v 1.10 2006/10/19 14:32:43 franklan Exp $
 
 #include "KVINDRAIDTelescope.h"
 #include "KVIDCutLine.h"
-
+/**
+  \class KVIDSiCsI
+  \ingroup INDRAIdent
+  \brief Identification in Si-CsI telescopes of INDRA
+ */
 class KVIDSiCsI: public KVINDRAIDTelescope {
 
 protected:

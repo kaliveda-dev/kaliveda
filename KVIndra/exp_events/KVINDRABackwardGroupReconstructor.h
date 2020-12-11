@@ -6,6 +6,12 @@
 
 #include "KVINDRAGroupReconstructor.h"
 
+/**
+\class KVINDRABackwardGroupReconstructor
+\brief Reconstruct data in rings 10-17 of INDRA
+\ingroup INDRAReconstruction
+*/
+
 class KVINDRABackwardGroupReconstructor : public KVINDRAGroupReconstructor {
 protected:
    Bool_t CoherencyChIoCsI(KVReconstructedNucleus& PART);

@@ -28,11 +28,11 @@ void KVSimDirFilterAnalyser::preInitAnalysis()
 {
    // Use options passed to KVEventSelector to initialise dataset used for filter
 
-   if (!gDataSetManager) {
-      gDataSetManager = new KVDataSetManager;
-      gDataSetManager->Init();
-   }
-   if (!gDataSet) gDataSetManager->GetDataSet(fAnalysisClass->GetOpt("DataSet"))->cd();
+//   if (!gDataSetManager) {
+//      gDataSetManager = new KVDataSetManager;
+//      gDataSetManager->Init();
+//   }
+//   if (!gDataSet) gDataSetManager->GetDataSet(fAnalysisClass->GetOpt("DataSet"))->cd();
 }
 
 void KVSimDirFilterAnalyser::preInitRun()
@@ -41,17 +41,17 @@ void KVSimDirFilterAnalyser::preInitRun()
    // and build experimental set-up
 
    KVString system = fAnalysisClass->GetOpt("System");
-   KVDBSystem* sys = gExpDB->GetSystem(system);
-   if (sys) {
-      fKinematics = sys->GetKinematics();
-   }
-   else {
-      fKinematics = new KV2Body(system);
-      fKinematics->SetBit(kCanDelete); // clean up in destructor
-      fKinematics->CalculateKinematics();
-   }
-   KVString run = fAnalysisClass->GetOpt("Run");
-   KVMultiDetArray::MakeMultiDetector(gDataSet->GetName(), run.Atoi());
+//   KVDBSystem* sys = gExpDB->GetSystem(system);
+//   if (sys) {
+//      fKinematics = sys->GetKinematics();
+//   }
+//   else {
+//      fKinematics = new KV2Body(system);
+//      fKinematics->SetBit(kCanDelete); // clean up in destructor
+//      fKinematics->CalculateKinematics();
+//   }
+//   KVString run = fAnalysisClass->GetOpt("Run");
+//   KVMultiDetArray::MakeMultiDetector(gDataSet->GetName(), run.Atoi());
 }
 
 void KVSimDirFilterAnalyser::preAnalysis()
@@ -59,7 +59,7 @@ void KVSimDirFilterAnalyser::preAnalysis()
    // Called by KVEventSelector just after reading new event and just before
    // calling user analysis.
    // Set minimum acceptable multiplicity for event.
-   gMultiDetArray->SetMinimumOKMultiplicity(fAnalysisClass->GetEvent());
+   //gMultiDetArray->SetMinimumOKMultiplicity(fAnalysisClass->GetEvent());
 }
 
 void KVSimDirFilterAnalyser::Make(const Char_t* kvsname)

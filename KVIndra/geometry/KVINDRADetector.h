@@ -7,6 +7,12 @@
 #include "KVDetector.h"
 #include "KVINDRATelescope.h"
 
+/**
+  \class KVINDRADetector
+  \ingroup INDRAGeometry
+  \brief Base class for detectors of INDRA array
+ */
+
 class KVINDRADetector : public KVDetector {
 protected:
    // for silicon and ionisation chamber detectors

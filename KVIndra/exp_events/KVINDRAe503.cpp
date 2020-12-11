@@ -8,18 +8,6 @@
 #endif
 
 ClassImp(KVINDRAe503)
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRAe503</h2>
-<h4>INDRA multidetector array, configuration for experiments E503 & E494S</h4>
-
-<img src="http://indra.in2p3.fr/KaliVedaDoc/images/indra_e503.png"><br>
-
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVINDRAe503::KVINDRAe503()
 {
    //Default constructor

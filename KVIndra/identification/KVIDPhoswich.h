@@ -20,7 +20,11 @@
 
 #include "KVINDRAIDTelescope.h"
 
-
+/**
+  \class KVIDPhoswich
+  \ingroup INDRAIdent
+  \brief Identification in Phoswich telescopes of INDRA
+ */
 class KVIDPhoswich: public KVINDRAIDTelescope {
 
 public:

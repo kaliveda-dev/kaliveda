@@ -16,6 +16,12 @@ $Date: 2007/09/21 07:44:09 $
 #include "Riostream.h"
 #include "TString.h"
 
+/**
+\class KVINDRADB_e475s
+\brief Database for E475s experiment (2006)
+\ingroup INDRADB
+*/
+
 class KVINDRADB_e475s : public KVINDRADB {
    void init();
 

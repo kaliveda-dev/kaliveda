@@ -13,6 +13,19 @@ $Date: 2009/01/22 15:39:26 $
 #include "KVINDRADB.h"
 using namespace std;
 
+/**
+\class KVINDRADB_e503
+\brief Database for INDRA-VAMOS experiments E503 & E494S (2007)
+\ingroup INDRADB
+
+ Updated by A. Chbihi on 20/08/2009
+ In addition to set the VAMOS scalers in the data base using ReadVamosScalers()  method
+  it set the Vamos Brho's and angle.
+ The new method of this class is ReadVamosBrhoAndAngle ().
+
+ modified by M. F. Rivet november 2012 - separate files for pedestals Chio/Si
+ and for calibration telescopes
+*/
 class KVINDRADB_e503 : public KVINDRADB {
 
 protected:

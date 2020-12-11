@@ -11,14 +11,6 @@
 
 ClassImp(KVFAZIAGroupReconstructor)
 
-//////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVFAZIAGroupReconstructor</h2>
-<h4>Reconstruct particles in FAZIA telescopes</h4>
-<!-- */
-// --> END_HTML
-//////////////////////////////////////////////////////////////////////////////////
 void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
 {
    // Perform energy calibration of (previously identified) charged particle

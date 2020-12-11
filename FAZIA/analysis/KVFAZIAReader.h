@@ -15,6 +15,11 @@
 
 // Header file for the classes stored in the TTree if any.
 // Fixed size dimensions of array or collections stored in the TTree if any.
+/**
+\class KVFAZIAReader
+\brief Read FAZIA data
+\ingroup FAZIAnal
+*/
 
 class KVFAZIAReader : public TSelector {
 

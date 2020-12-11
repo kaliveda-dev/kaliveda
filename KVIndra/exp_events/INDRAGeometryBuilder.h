@@ -13,6 +13,15 @@
 #include "KVNameValueList.h"
 
 class TGeoManager;
+/**
+\class INDRAGeometryBuilder
+\brief Build INDRA geometry from Huguet CAO infos
+\ingroup INDRAGeometry
+
+ N.B. - the Ring 1 Si-CsI detectors (>=INDRA_camp4)
+        are described using the same geometry as for the
+        1st campaign phoswich detectors (no CAO data available)
+*/
 
 class INDRAGeometryBuilder : public KVBase {
    TString fDetName;//!name of detector

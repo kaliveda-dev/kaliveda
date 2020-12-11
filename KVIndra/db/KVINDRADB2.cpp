@@ -25,19 +25,7 @@ $Id: KVINDRADB2.cpp,v 1.16 2007/04/26 16:40:58 franklan Exp $
 using namespace std;
 
 ClassImp(KVINDRADB2)
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-//   Base de donnee pour la 2eme campagne INDRA.
-//   Cette base contiendra la liste:
-//         - des runs (unique)
-//         - des systemes (unique)
-//
-//    la mention (unique) signifie que 2 enregistrements ne peuvent avoir
-//    le meme nom
-//    Ce ne peut etre le cas des parametres de calibration puisque plusieurs
-//    peuvent exister pour un meme detecteur et que les parametres portent le nom
-//    du detecteur correspondant
-//
-//
+
 KVINDRADB2::KVINDRADB2(const Char_t* name): KVINDRADB(name)
 {
    //default ctor

@@ -24,6 +24,24 @@ class KVSignal;
       GetDetectorSignal(__KVFD_dcs(sig,type))->SetValue(val); \
    }
 
+/**
+\class KVFAZIADetector
+\brief Base class for FAZIA detectors
+\ingroup FAZIAGeo
+
+### Detector names
+
+ Detector names are assumed to be defined as
+ label-xxx
+ where xxx is computed as follows (see KVFAZIADetector::GetIndex) :
+~~~~
+ 100*block number+10*quartet number+telescope number
+~~~~
+ and label can be SI1, SI2 or CSI
+
+For example SI1-123 is the Silicon Si1 of the block 1, the quartet 2 and the telescope 3
+*/
+
 class KVFAZIADetector : public KVDetector {
 protected:
    KVUniqueNameList fSignals;         //list of electronics signal (current, charge, etc... )

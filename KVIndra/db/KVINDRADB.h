@@ -35,6 +35,26 @@
 
 class KVNumberList;
 
+/**
+  \class KVINDRADB
+  \ingroup INDRADB
+  \brief DataBase of parameters for an INDRA campaign
+
+Database containing information on runs, systems, calibrations etc. for an INDRA
+experiment or set of experiments (dataset).
+
+Each dataset is described by a KVDataSet object which is initialised by the KVDataSetManager.
+
+For each dataset, a directory exists under $KVROOT/KVFiles/name_of_dataset,
+where it is assumed the database for this dataset can be found.
+
+If DataBase.root does not exist, KVDataSet will try to rebuild it using the appropriate
+KVINDRADB class (see Plugins in $KVROOT/KVFiles/.kvrootrc).
+
+By default, KVINDRADB::Build() will read any or all of the standard format files Runlist.csv,
+Systems.dat and ChIoPressures.dat which may be found in the dataset's directory.
+*/
+
 class KVINDRADB: public KVExpDB, public KVINDRARunListReader {
 
 private:

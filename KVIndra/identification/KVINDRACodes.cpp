@@ -6,35 +6,7 @@ $Id: KVINDRACodes.cpp,v 1.3 2008/02/14 10:30:18 franklan Exp $
 
 
 ClassImp(KVINDRACodes)
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-~~~~~~~~~~~~~~~~~
-Describes the identification and calibration status of reconstructed particles.
-Based on the codes figuring in veda_6.incl of the old VEDA programme.
 
-GetVedaIDCode()  -  returns ID code in VEDA format (0 = gamma, 2 = id CsI/Phoswich, etc.)
-GetVedaECode()   -  returns energy calibration code in VEDA format (1 =  calibration sans probleme, etc.)
-
-GetIDStatus()    -  returns a string describing the identification status
-                    e.g. if GetVedaIDCode()=0 then GetIDStatus()="gamma"
-GetEStatus()     -  returns a string describing the calibration status
-                    e.g. if GetVedaECode()=0 then GetEStatus()="Aucun appel a une routine de calibration effectuee"
-
-WARNING: the methods GetIDCode() and GetECode() return the new bit-mask status codes defined in
-         class KVINDRACodeMask.
-If you prefer to use these masks, the best way to test the status of the particles is by
-using KVINDRACodeMask::TestIDCode and KVINDRACodeMask::TestECode
-
-e.g. to test if a particle was identified using CsI R-L you have three choices
-(supposing the particle is referenced by KVINDRAReconNuc* part):
-
-   EITHER   if( part->GetCodes().GetVedaIDCode() == 2 ) { ... }
-   OR       if( part->GetCodes().TestIDCode( kIDCode2 ) ) { ... }
-   OR       if( part->GetCodes().TestIDCode( kIDCode_CsI ) ) { ... ]
-
-Obviously, the third method is to be preferred (it is immediately clear what the instruction means)!!
-~~~~~~~~~~~~~~~~~
-*/
 
 Char_t KVINDRACodes::fCodeGenIdent[14][120] = {
    "gamma",

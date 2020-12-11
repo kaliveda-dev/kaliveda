@@ -6,6 +6,12 @@
 
 #include "KVFAZIA.h"
 
+/**
+\class KVFAZIALNS17
+\brief FAZIA set-up for LNS 2017
+\ingroup FAZIAGeo
+*/
+
 class KVFAZIALNS17 : public KVFAZIA {
 
    virtual void BuildFAZIA();

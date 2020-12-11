@@ -12,15 +12,6 @@ using namespace std;
 
 ClassImp(KVINDRADB_e613)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRADB_e613</h2>
-<h4>Child class for e613 experiment</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 KVINDRADB_e613::KVINDRADB_e613()
 {
    // Default constructor

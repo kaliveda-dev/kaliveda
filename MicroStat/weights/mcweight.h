@@ -8,6 +8,11 @@
 
 namespace MicroStat {
 
+   /**
+   \class mcweight
+   \brief Calculate microcanonical gas statistical weights for events
+   \ingroup MicroStat \ingroup Simulation
+   */
    class mcweight : public StatWeight {
 
    protected:

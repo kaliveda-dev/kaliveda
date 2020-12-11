@@ -20,6 +20,11 @@
 
 #include "KVIDChIoSi.h"
 
+/**
+  \class KVIDChIoSi75
+  \ingroup INDRAIdent
+  \brief Identification in ChIo-Si75 (etalon) telescopes of INDRA
+ */
 
 class KVIDChIoSi75: public KVIDChIoSi {
 

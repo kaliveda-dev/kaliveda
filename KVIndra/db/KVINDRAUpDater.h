@@ -12,6 +12,12 @@ $Author: franklan $
 
 class KVDBRun;
 class KVINDRA;
+
+/**
+\class KVINDRAUpDater
+\brief Class implementing necessary methods for setting INDRA parameters for each run, using information stored in the KVINDRADB database.
+\ingroup INDRADB
+*/
 class KVINDRAUpDater: public KVUpDater {
 
 public:

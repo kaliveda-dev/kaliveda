@@ -6,6 +6,12 @@
 
 #include "KVINDRAGroupReconstructor.h"
 
+/**
+\class KVINDRAForwardGroupReconstructor
+\brief Reconstruct data in rings 1-9 of INDRA
+\ingroup INDRAReconstruction
+*/
+
 class KVINDRAForwardGroupReconstructor : public KVINDRAGroupReconstructor {
 
 protected:

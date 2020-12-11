@@ -7,8 +7,12 @@
  \class KVVGObjectSum
  \brief Global variable calculating sum of objects
  \ingroup GlobalVariables
+ \tparam SumObject type of the objects to be summed
 
- Write a detailed documentation for your class here, see doxygen manual for help.
+This global variable can calculate sums of objects of any type as long as:
+   - the type is DefaultConstructible;
+   - the type is CopyAssignable;
+   - operator+= is defined for the type
 
  \author John Frankland
  \date Sun Aug  9 16:13:10 2020
@@ -17,7 +21,7 @@
 template
 <class SumObject>
 class KVVGObjectSum : public KVVarGlob {
-   SumObject fResult;
+   SumObject fResult;// result of summing objects
 
 protected:
    void Add(const SumObject& obj)
@@ -48,6 +52,7 @@ public:
 
    const SumObject& GetSumObject() const
    {
+      // return const reference to the summed object
       return fResult;
    }
 

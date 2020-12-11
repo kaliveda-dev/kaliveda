@@ -79,7 +79,7 @@ void KVFAZIALNS2016::RutherfordTelescope()
 void KVFAZIALNS2016::BuildFAZIA()
 {
    //Build geometry of FAZIASYM
-   //All telescopes are : Si(300µm)-Si(500µm)-CsI(10cm)
+   //All telescopes are : Si(300Âµm)-Si(500Âµm)-CsI(10cm)
    //No attempt has been made to implement real thicknesses
    //
    Info("BuildFAZIA", "Compact geometry, %f cm from target",

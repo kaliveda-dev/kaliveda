@@ -37,28 +37,6 @@ using namespace std;
 
 ClassImp(KVINDRAReconEvent);
 
-///////////////////////////////////////////////////////////////////////////////
-//Event reconstructed from energy losses in INDRA multidetector.
-//By default this contains a TClonesArray of KVINDRAReconNuc objects.
-//
-//Random vs. mean angles
-//----------------------
-//By default reconstructed particles have randomised angles within the
-//aperture of the detector where they were stopped. To use the mean angles
-//of the detectors, call UseMeanAngles().
-//
-//"OK" & not "OK" particles
-//---------------------------
-//The "OK" status of particles is defined by setting acceptable identification and calibration
-//codes using AcceptIDCodes and AcceptECodes. The comparison of each particle's codes
-//with the "acceptable" codes then determines whether KVParticle::IsOK() is set or not.
-//
-//Trigger Information
-//--------------------
-//Use EventTrigger() to access the KVINDRATriggerInfo object which stores the values
-//of Selecteur registers STAT_EVE, R_DEC and CONFIG for this event.
-///////////////////////////////////////////////////////////////////////////////
-
 void KVINDRAReconEvent::init()
 {
    //default initialisations

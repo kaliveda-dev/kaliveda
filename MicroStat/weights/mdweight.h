@@ -10,6 +10,12 @@
 
 namespace MicroStat {
 
+   /**
+   \class mdweight
+   \brief Calculate molecular dynamics ensemble weights for events
+   \ingroup MicroStat \ingroup Simulation
+   */
+
    class mdweight : public StatWeight {
    private:
       Double_t log2pi, log10twelve;

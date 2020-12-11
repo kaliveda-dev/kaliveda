@@ -5,7 +5,11 @@
 #define __KVFAZIACOR_H
 
 #include "KVFAZIA.h"
-
+/**
+  \class KVFAZIACOR
+  \brief Description of FAZIA geometry for FAZIACOR experiment
+  \ingroup FAZIAGeo
+ */
 class KVFAZIACOR : public KVFAZIA {
 
    virtual void BuildFAZIA();

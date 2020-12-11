@@ -11,12 +11,6 @@ $Id: KVINDRARunListReader.cpp,v 1.8 2007/04/26 16:38:57 franklan Exp $
 using namespace std;
 
 ClassImp(KVINDRARunListReader)
-//////////////////////////////////////////////////////////////
-//KVINDRARunListReader
-//
-//Utitlity base class for reading INDRA runlist files.
-//Use multiple inheritance with this class as one base class, then method "GoodRunLine"
-//can be overridden to perform implementation-specific tasks.
 
 KVINDRARunListReader::KVINDRARunListReader()
 {

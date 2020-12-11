@@ -20,7 +20,11 @@
 
 #include "KVIDSiCsI.h"
 
-
+/**
+  \class KVIDSiLiCsI
+  \ingroup INDRAIdent
+  \brief Identification in SiLi-CsI (etalon) telescopes of INDRA
+ */
 class KVIDSiLiCsI: public KVIDSiCsI {
 
 public:

@@ -12,6 +12,12 @@ $Date: 2007/02/13 18:18:18 $
 
 #include <KVINDRADB.h>
 
+/*
+\class KVINDRADB_e416a
+\brief Database for E416a experiment (2005)
+\ingroup INDRADB
+ */
+
 class KVINDRADB_e416a : public KVINDRADB {
    KVDBTable* fBICPressures;   //-> table of BIC pressures
 public:

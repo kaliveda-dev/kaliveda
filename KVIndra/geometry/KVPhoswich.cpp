@@ -21,14 +21,7 @@ $Id: KVPhoswich.cpp,v 1.14 2007/01/04 16:38:50 franklan Exp $
 
 ClassImp(KVPhoswich);
 
-//_______________________________________________________________________________________
-//KVPhoswich
-//
-//A Phoswich detector in the INDRA array (campagnes 1-3).
-//Built from two layers of plastic, with thicknesses 0.05cm (NE102) and 25cm (NE115).
-//Name of detector is PHOS_Telescope-number.
-//
-//Type of detector: "PHOS"
+
 
 //______________________________________________________________________________
 KVPhoswich::KVPhoswich()

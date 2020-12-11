@@ -14,6 +14,37 @@ $Author: franklan $
 #include "KVDatime.h"
 #include "Riostream.h"
 
+/**
+  \class KVINDRARunSheetReader
+  \brief Read the run sheets produced by the standard INDRA acquisition control program.
+\ingroup INDRADB
+
+For each run, an entry is made in a new database of INDRA runs (KVINDRADB, global
+pointer gIndraDB).
+If required, a TTree can be created and filled with the informations read from the run sheets,
+for drawing histograms etc.
+
+Examples of use:
+~~~~{.cpp}
+KVINDRARunSheetReader r;
+KVINDRARunSheetReader s(kTRUE);// will create and fill a TTree with info from runsheets
+
+r.SetRunSheetDir("/space/eindra/e475s/acquisition/run");// directory containing runsheets
+r.SetFileFormat("RUN_%04d.TXT");// format for file name, including run number. This example works for e.g. RUN_0100.TXT
+
+r.SetMakeTree(kTRUE);// in case you change your mind about the TTree ;-)
+s.SetMakeTree(kFALSE);
+
+r.ReadRunSheet( 100 );// read run sheet for run number 100
+r.ReadAllRunSheets();// read all run sheets in the directory (default: from run 1 to 9999)
+r.ReadAllRunSheets(100, 199);// read all run sheets in the directory from 100 to 199
+
+r.GetTree()->StartViewer();// draw histograms of info stored in the TTree
+
+gIndraDB->GetRuns()->ls();// view runs stored in database
+~~~~
+*/
+
 class KVINDRARunSheetReader {
 
    TString fRunSheetDir;        //full path to directory holding run sheets

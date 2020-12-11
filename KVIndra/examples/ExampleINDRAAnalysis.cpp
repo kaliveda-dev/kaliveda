@@ -20,9 +20,26 @@ void ExampleINDRAAnalysis::InitAnalysis(void)
    /*** ADDING GLOBAL VARIABLES TO THE ANALYSIS ***/
    /* These will be automatically calculated for each event before
       your Analysis() method will be called                        */
-   AddGV("KVZtot", "ztot");                             // total charge
-   AddGV("KVZVtot", "zvtot")->SetMaxNumBranches(1);     // total Z*vpar
+   KVVarGlob* vg = AddGV("KVZtot", "ztot");                             // total charge
+#ifdef USING_ROOT6
+   // define event selection to reject pile-up events
+   vg->SetEventSelection([&](const KVVarGlob * v) {
+      return (v->GetValue() <= current_run_system_ztot + 4);
+   });
+#endif
+
+   vg = AddGV("KVZVtot", "zvtot");                                     // total Z*vpar
+   vg->SetMaxNumBranches(1);
+#ifdef USING_ROOT6
+   // refine event selection to reject pile-up events
+   vg->SetEventSelection([&](const KVVarGlob * v) {
+      return (v->GetValue() < 1.2);
+   });
+#endif
+
+   AddGV("KVMult", "Mult");                 // total mult
    AddGV("KVEtransLCP", "et12");                        // total LCP transverse energy
+
    AddGV("KVFlowTensor", "tensor")->SetOption("weight", "RKE");  // relativistic CM KE tensor
 #ifdef USING_ROOT6
    GetGV("tensor")->SetSelection({"Z>2", [](const KVNucleus * N)
@@ -34,14 +51,14 @@ void ExampleINDRAAnalysis::InitAnalysis(void)
    GetGV("tensor")->SetSelection("_NUC_->GetZ()>2");
 #endif
    GetGV("tensor")->SetMaxNumBranches(2);               // FlowAngle & Sphericity branches
-   AddGV("KVMultLeg", "Mlcp");
+
+   AddGV("KVMultLeg", "Mlcp");           // mult LCP
 
    /*** USING A TREE ***/
    CreateTreeFile();//<--- essential
    TTree* t = new TTree("myTree", "");
    AddTree(t);
    GetGVList()->MakeBranches(t); // store global variable values in branches
-   t->AddVar(Mult, I);
    t->AddVar(MTensor, I);
    t->AddVar(Run, I);
    t->AddVar(Trigger, I);
@@ -70,15 +87,6 @@ void ExampleINDRAAnalysis::InitRun(void)
    //GetEvent()->AcceptIDCodes(kIDCode2 | kIDCode3 | kIDCode4 | kIDCode6);//particle identification codes
    //GetEvent()->AcceptECodes(kECode1 | kECode2);                         //particle calibration codes
 
-   // You can also perform more fine-grained selection of particles using class KVParticleCondition.
-   // For example:
-   KVParticleCondition pc_z("_NUC_->GetZ()>0&&_NUC_->GetZ()<=92");  // remove any strange Z identifications
-   KVParticleCondition pc_e("_NUC_->GetE()>0.");                    // remove any immobile nuclei
-   KVParticleCondition pc_tm("_NUC_->GetTimeMarker()>=80 && _NUC_->GetTimeMarker()<=120");
-   // eliminate random coincidences
-   KVParticleCondition pc = pc_z && pc_e && pc_tm;                  // combine all previous selections
-   SetParticleConditions(pc);
-
    // set title of TTree with name of analysed system
    GetTree("myTree")->SetTitle(GetCurrentRun()->GetSystemName());
 
@@ -87,10 +95,14 @@ void ExampleINDRAAnalysis::InitRun(void)
 
    // set normalisation for KVZVtot: use Z*v of projectile
    const KV2Body* kin = gDataAnalyser->GetKinematics();
-   GetGV("zvtot")->SetParameter("Normalization", kin->GetNucleus(1)->GetVpar()*kin->GetNucleus(1)->GetZ());
+   GetGV("zvtot")->SetNormalization(kin->GetNucleus(1)->GetVpar()*kin->GetNucleus(1)->GetZ());
 
    // store trigger of current run
    Trigger = GetCurrentRun()->GetTrigger();
+
+#ifdef USING_ROOT6
+   current_run_system_ztot = GetCurrentRun()->GetSystem()->GetZtot();
+#endif
 }
 
 //_____________________________________
@@ -104,13 +116,14 @@ Bool_t ExampleINDRAAnalysis::Analysis(void)
    // the acquisition multiplicity trigger
    if (!GetEvent()->IsOK()) return kTRUE;
 
+#ifndef USING_ROOT6
    // avoid pile-up events
    if (GetGV("ztot")->GetValue() > GetCurrentRun()->GetSystem()->GetZtot() + 4
          || GetGV("zvtot")->GetValue() > 1.2) return kTRUE;
+#endif
 
    GetGVList()->FillBranches(); // update values of all global variable branches
 
-   Mult = GetEvent()->GetMult("OK");
    EventNumber = GetEventNumber();
    MTensor = GetGV("tensor")->GetValue("NumberParts");
    // write new results in TTree

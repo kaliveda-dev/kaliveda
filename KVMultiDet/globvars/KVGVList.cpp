@@ -171,7 +171,7 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
          if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
             break;
          }
-         vg->DefineFrame(e);
+         vg->DefineNewFrame(e);
 #endif
       }
    }
@@ -195,7 +195,7 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
          if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
             break;
          }
-         vg->DefineFrame(e);
+         vg->DefineNewFrame(e);
 #endif
       }
    }
@@ -263,7 +263,6 @@ void KVGVList::MakeBranches(TTree* tree)
    // will not be added to the TTree.
 
    if (!tree) return;
-   if (fNbIBranch >= MAX_CAP_BRANCHES && fNbBranch >= MAX_CAP_BRANCHES) return;
 
    // Make sure all variables are initialised before proceeding
    Init();
@@ -281,21 +280,23 @@ void KVGVList::MakeBranches(TTree* tree)
                TString sane_name(ob->GetValueName(i));
                sane_name.ReplaceAll("*", "star");
                if (ob->GetValueType(i) == 'I') {
-                  if (fNbIBranch < MAX_CAP_BRANCHES)  tree->Branch(Form("%s.%s", sane_varname.Data(), sane_name.Data()), &fIBranchVar[ fNbIBranch++ ], Form("%s.%s/I", sane_varname.Data(), sane_name.Data()));
+                  fIBranchVar.push_back(0);
+                  tree->Branch(Form("%s.%s", sane_varname.Data(), sane_name.Data()), &fIBranchVar[ fNbIBranch++ ], Form("%s.%s/I", sane_varname.Data(), sane_name.Data()));
                }
                else {
-                  if (fNbBranch < MAX_CAP_BRANCHES)  tree->Branch(Form("%s.%s", sane_varname.Data(), sane_name.Data()), &fBranchVar[ fNbBranch++ ], Form("%s.%s/D", sane_varname.Data(), sane_name.Data()));
+                  fBranchVar.push_back(0.0);
+                  tree->Branch(Form("%s.%s", sane_varname.Data(), sane_name.Data()), &fBranchVar[ fNbBranch++ ], Form("%s.%s/D", sane_varname.Data(), sane_name.Data()));
                }
-               if (fNbIBranch == MAX_CAP_BRANCHES) break;
-               if (fNbBranch == MAX_CAP_BRANCHES) break;
             }
          }
          else {
             if (ob->GetValueType(0) == 'I') {
-               if (fNbIBranch < MAX_CAP_BRANCHES)   tree->Branch(sane_varname, &fIBranchVar[ fNbIBranch++ ], Form("%s/I", sane_varname.Data()));
+               fIBranchVar.push_back(0);
+               tree->Branch(sane_varname, &fIBranchVar[ fNbIBranch++ ], Form("%s/I", sane_varname.Data()));
             }
             else {
-               if (fNbBranch < MAX_CAP_BRANCHES)    tree->Branch(sane_varname, &fBranchVar[ fNbBranch++ ], Form("%s/D", sane_varname.Data()));
+               fBranchVar.push_back(0.0);
+               tree->Branch(sane_varname, &fBranchVar[ fNbBranch++ ], Form("%s/D", sane_varname.Data()));
             }
          }
       }

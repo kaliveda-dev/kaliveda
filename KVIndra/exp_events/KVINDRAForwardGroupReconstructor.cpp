@@ -11,15 +11,6 @@
 
 ClassImp(KVINDRAForwardGroupReconstructor)
 
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>KVINDRAForwardGroupReconstructor</h2>
-<h4>Reconstruct data in rings 1-9 of INDRA</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
-
 bool KVINDRAForwardGroupReconstructor::DoCoherencyAnalysis(KVReconstructedNucleus& PART)
 {
    // Coherency analysis for forward rings 1-9 of INDRA

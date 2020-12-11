@@ -62,6 +62,12 @@ enum EBaseIndra_typePhos {
    Phos_T,                      //=3
 };
 
+/**
+\class KVINDRA
+\brief INDRA multidetector array geometry
+\ingroup INDRAGeometry
+*/
+
 class KVINDRA: public KVASMultiDetArray {
 
 public:
