@@ -45,6 +45,31 @@ namespace KVImpactParameters {
    };
 
    /**
+   \class KVImpactParameters::BD_kernel
+   \ingroup ImpactParameters
+   \brief Fluctuation kernel using binomial distribution for use with bayesian_estimator
+
+   The distribution of the observable \f$X\f$ is given by the distribution
+   \f[
+   f(X) = \frac{n!}{X!(n-X)!} p^{X}(1-p)^{n-X}
+   \f]
+   with mean value \f$np\f$ and variance \f$np(1-p)\f$.
+
+   \note For this distribution, the reduced variance \f$\sigma^2/\bar{X}<1\f$, greater than Poissonian fluctuations are not allowed.
+
+   */
+   class BD_kernel {
+   public:
+      double operator()(double X, double mean, double reduced_variance)
+      {
+         // return probability of \f$X\f$ for given mean value \f$\bar{X}\f$ and reduced variance \f$\sigma^2/\bar{X}\f$.
+         return ROOT::Math::binomial_pdf(TMath::Nint(X), 1. / reduced_variance, mean / (reduced_variance - 1.));
+      }
+
+      ClassDef(BD_kernel, 0)
+   };
+
+   /**
    \class KVImpactParameters::NBD_kernel
    \ingroup ImpactParameters
    \brief Fluctuation kernel using negative binomial distribution for use with bayesian_estimator
@@ -98,7 +123,7 @@ namespace KVImpactParameters {
    double meanX(double c) const
    double redVar(double c) const
    ~~~~
-   which describe how \f$\bar{X}\f$ and \f$\sigma^2/\bar{X}\f$. depende on centrality.
+   which describe how \f$\bar{X}\f$ and \f$\sigma^2/\bar{X}\f$. depend on centrality.
    It must also provide the following methods:
 
    ~~~~~{.cpp}
@@ -118,6 +143,7 @@ namespace KVImpactParameters {
    \sa KVImpactParameters::algebraic_fitting_function
    \sa KVImpactParameters::rogly_fitting_function
    \sa KVImpactParameters::gamma_kernel
+   \sa KVImpactParameters::BD_kernel
    \sa KVImpactParameters::NBD_kernel
 
    ## Example of use
@@ -132,8 +158,8 @@ namespace KVImpactParameters {
    ~~~~~~~~~{.cpp}
    --/ use 3rd order exponential polynomial function of Rogly et al with gamma kernel:
    KVImpactParameters::bayesian_estimator<KVImpactParameters::rogly_fitting_function<3>,KVImpactParameters::gamma_kernel> ipd;
-   --/ or use algebraic function of Frankland et al with a negative binomial distribution kernel:
-   KVImpactParameters::bayesian_estimator<KVImpactParameters::algebraic_fitting_function, KVImpactParameters::NBD_kernel> ipd;
+   --/ or use algebraic function of Frankland et al with a binomial distribution kernel:
+   KVImpactParameters::bayesian_estimator<KVImpactParameters::algebraic_fitting_function, KVImpactParameters::BD_kernel> ipd;
    ~~~~~~~~~
    See rogly_fitting_function, algebraic_fitting_function, gamma_kernel and NBD_kernel for more details.
 

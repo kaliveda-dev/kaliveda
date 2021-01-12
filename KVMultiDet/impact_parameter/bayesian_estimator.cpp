@@ -6,6 +6,7 @@
 templateClassImp(KVImpactParameters::bayesian_estimator)
 ClassImp(KVImpactParameters::gamma_kernel)
 ClassImp(KVImpactParameters::NBD_kernel)
+ClassImp(KVImpactParameters::BD_kernel)
 
 
 
