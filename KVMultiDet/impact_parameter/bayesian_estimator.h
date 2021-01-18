@@ -159,7 +159,7 @@ namespace KVImpactParameters {
    --/ use 3rd order exponential polynomial function of Rogly et al with gamma kernel:
    KVImpactParameters::bayesian_estimator<KVImpactParameters::rogly_fitting_function<3>,KVImpactParameters::gamma_kernel> ipd;
    --/ or use algebraic function of Frankland et al with a binomial distribution kernel:
-   KVImpactParameters::bayesian_estimator<KVImpactParameters::algebraic_fitting_function_binomial, KVImpactParameters::BD_kernel> ipd;
+   KVImpactParameters::bayesian_estimator<KVImpactParameters::algebraic_fitting_function, KVImpactParameters::BD_kernel> ipd;
    ~~~~~~~~~
    See rogly_fitting_function, algebraic_fitting_function, gamma_kernel and NBD_kernel for more details.
 
