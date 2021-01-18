@@ -22,7 +22,7 @@ namespace KVImpactParameters {
    value of an observable which decreases monotonically with impact parameter.
    */
 
-   template<int PolyDegree>
+   template<unsigned int PolyDegree>
    class rogly_fitting_function {
       ipde_fit_parameter theta_p;///< fluctuation parameter \f$\theta\f$
       ipde_fit_parameter kmax;///< maximum of mean value for \f$b=0\f$
@@ -36,6 +36,30 @@ namespace KVImpactParameters {
          : theta_p(prev_fit.theta_p), kmax(prev_fit.kmax), poly_param(PolyDegree)
       {
          poly_param = prev_fit.poly_param;
+      }
+      rogly_fitting_function(std::initializer_list<double> params)
+         : poly_param(PolyDegree)
+      {
+         // Constructor with initializer list containing (in order): theta, kmax, PolyDegree coefficients
+         //
+         // i.e. with PolyDegree=3 can construct with
+         //~~~~{.cpp}
+         //   rogly_fitting_function<3> fit_result{0.3, 25, -1.3, 0.21, -0.67}
+         //~~~~
+         int i = 0;
+         for (auto param : params) {
+            switch (i) {
+               case 0:
+                  theta_p.value = param;
+                  break;
+               case 1:
+                  kmax.value = param;
+                  break;
+               default:
+                  poly_param[i - 2].value = param;
+            }
+            ++i;
+         }
       }
       constexpr int npar() const
       {
@@ -77,11 +101,11 @@ namespace KVImpactParameters {
          p[1] = kmax.value;
          for (int j = 1; j <= PolyDegree; ++j) p[j + 1] = poly_param[j - 1].value ;
       }
-      double theta() const
-      {
-         // Get value of \f$\theta\f$ parameter
-         return theta_p.value;
-      }
+//      double theta() const
+//      {
+//         // Get value of \f$\theta\f$ parameter
+//         return theta_p.value;
+//      }
       void set_par_names(TF1& f) const
       {
          // Set name of parameters in TF1 object
@@ -103,7 +127,7 @@ namespace KVImpactParameters {
          f.SetParLimits(1, xmin / theta_p.value, xmax / theta_p.value);
          for (int j = 1; j <= PolyDegree; ++j) {
             f.SetParameter(j + 1, gRandom->Uniform(-1, 1));
-            f.SetParLimits(j + 1, -2, 2);
+            f.SetParLimits(j + 1, -5, 5);
          }
       }
       void print_fit_params() const
@@ -149,11 +173,11 @@ namespace KVImpactParameters {
       }
       double meanX(double cb) const
       {
-         return theta() * k_cb(cb);
+         return theta_p.value * k_cb(cb);
       }
-      double redVar(double cb) const
+      double redVar(double) const
       {
-         return theta();
+         return theta_p.value;
       }
 
       ClassDef(rogly_fitting_function, 0) //fit using exponential polynomial
