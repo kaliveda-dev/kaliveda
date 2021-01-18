@@ -20,6 +20,7 @@ namespace KVImpactParameters {
       { I = 1, II, III, IV };
 
    public:
+      participant_spectator_model() {}
       participant_spectator_model(const KVNucleus& PROJ, const KVNucleus& TARG, Bool_t normalize_b = kFALSE, Bool_t normalize_participants = kFALSE)
          : A1(PROJ.GetA()), A2(TARG.GetA()),
            Z1(PROJ.GetZ()), Z2(TARG.GetZ()),
@@ -37,6 +38,19 @@ namespace KVImpactParameters {
       }
       virtual ~participant_spectator_model() {}
 
+      void set(const KVNucleus& PROJ, const KVNucleus& TARG, Bool_t normalize_b = kFALSE, Bool_t normalize_participants = kFALSE)
+      {
+         A1 = PROJ.GetA();
+         A2 = TARG.GetA();
+         Z1 = PROJ.GetZ();
+         Z2 = TARG.GetZ();
+         R1 = 1.2 * pow(PROJ.GetA(), 1. / 3.);
+         R2 = 1.2 * pow(TARG.GetA(), 1. / 3.);
+         _beta = 1. / (R1 + R2);
+         if (normalize_b) _beta = 1;
+         if (normalize_participants) NORM = total_participants(0);
+         else NORM = 1;
+      }
       double  F(double b, bool target = false) const;
       double operator()(double* x, double*)
       {
