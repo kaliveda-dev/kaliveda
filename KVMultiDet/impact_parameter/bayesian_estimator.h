@@ -63,7 +63,7 @@ namespace KVImpactParameters {
       double operator()(double X, double mean, double reduced_variance)
       {
          // return probability of \f$X\f$ for given mean value \f$\bar{X}\f$ and reduced variance \f$\sigma^2/\bar{X}\f$.
-         return ROOT::Math::binomial_pdf(TMath::Nint(X), 1. / reduced_variance, mean / (reduced_variance - 1.));
+         return ROOT::Math::binomial_pdf(TMath::Nint(X), 1. - reduced_variance, mean / (1. - reduced_variance));
       }
 
       ClassDef(BD_kernel, 0)
@@ -159,7 +159,7 @@ namespace KVImpactParameters {
    --/ use 3rd order exponential polynomial function of Rogly et al with gamma kernel:
    KVImpactParameters::bayesian_estimator<KVImpactParameters::rogly_fitting_function<3>,KVImpactParameters::gamma_kernel> ipd;
    --/ or use algebraic function of Frankland et al with a binomial distribution kernel:
-   KVImpactParameters::bayesian_estimator<KVImpactParameters::algebraic_fitting_function, KVImpactParameters::BD_kernel> ipd;
+   KVImpactParameters::bayesian_estimator<KVImpactParameters::algebraic_fitting_function_binomial, KVImpactParameters::BD_kernel> ipd;
    ~~~~~~~~~
    See rogly_fitting_function, algebraic_fitting_function, gamma_kernel and NBD_kernel for more details.
 
@@ -488,10 +488,7 @@ namespace KVImpactParameters {
          // \param[in] color colour to use for drawing function
          // \param[in] opt drawing option if required, e.g. "same"
 
-         Double_t par[theFitter.npar()];
-         theFitter.fill_array_from_params(par);
-         mean_X_vs_cb_function.SetParameters(par);
-         mean_X_vs_cb_function.Draw();
+         GetMeanXvsCb().Draw();
       }
       TF1& GetMeanXvsCb()
       {
