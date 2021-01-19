@@ -171,7 +171,7 @@ must have a value of at least 4 for the event to be retained:
    mtot->SetEventSelection([](const KVVarGlob* v){ return v->GetValue()>=4; });
 ~~~~
 
-Any event selection criterion is tested as soon as each variable has been tested. If the test
+Any event selection criterion is tested as soon as each variable has been calculated. If the test
 fails, no further variables are calculated and the KVGVList goes into 'abort event' mode:
 ~~~~{.cpp}
     KVEvent* event_to_analyse;
@@ -206,7 +206,7 @@ in order to calculate the KVFlowTensor in this frame:
                 [](KVEvent* e, const KVVarGlob* v){
         e->SetFrame("QP_FRAME", static_cast<const KVZmax*>(v)->GetZmax(0)->GetVelocity());
     });
-    vg = AddGV("KVFlowTensor", "qp_tensor");
+    vg = vglist.AddGV("KVFlowTensor", "qp_tensor");
     vg->SetFrame("QP_FRAME"); // frame will have been defined before tensor is filled
 ~~~~
 
@@ -503,7 +503,14 @@ public:
    void SetParameter(const Char_t* par, Double_t value)
    {
       //Set the value for a parameter
-      if (TString(par) == "Normalization") fNormalization = value;
+
+      TString Par(par);
+      // before v1.12, certain global variables used a parameter to select particles
+      // force analysis to abort in case user has not updated an old analysis class
+      if (Par == "Zmin" || Par == "Zmax" || Par == "Vmin" || Par == "Vmax")
+         Fatal("SetParameter", "Particle selection for global variables must be defined using SetSelection(const KVParticleCondition&).\nUpdate the use of variable \"%s\" in your analysis.",
+               GetName());
+      if (Par == "Normalization") fNormalization = value;
       else fParameters.SetValue(par, value);
       fIsInitialized = kFALSE; //allow re-initialisation
    }
