@@ -1,8 +1,8 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 11th December 2020
+Last update: 20th January 2021
 
-## Version 1.11/01 (current development focus)
+## Version 1.12 (Released: ????)
 
 __Changes 11/12/2020 in__ \ref GlobalVariables
 
@@ -126,6 +126,7 @@ vg.SetFrame("CM");
 __Removed classes__ :   KVZboundMean, KVTenseur3, KVTensP, KVTensE, KVTensPCM, KVMultAv, KVMultLegAv,
 KVMultIMFAv, KVZtotAv, KVRisoAv
 
+__ALL EXISTING USER GLOBAL VARIABLES NEED TO BE REWRITTEN TO RESPECT THE NEW FRAMEWORK__
 __________________________
 
 __Changes 7/8/2020 in__ \ref NucEvents
