@@ -36,7 +36,11 @@ void KVReconEventSelector::Make(const Char_t* kvsname)
    // Generate a new recon data analysis selector class
 
    KVClassFactory cf(kvsname, "Analysis of reconstructed events", "",
+#ifdef USING_ROOT6
+                     kTRUE, "ROOT6ReconDataSelectorTemplate");
+#else
                      kTRUE, "ReconDataSelectorTemplate");
+#endif
    cf.AddImplIncludeFile("KVReconstructedNucleus.h");
    cf.AddImplIncludeFile("KVBatchSystem.h");
 
