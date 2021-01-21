@@ -174,7 +174,7 @@ void KVVarGlob::SetNameIndex(const Char_t* name, Int_t index)
    }
    else {
       Warning("SetNameIndex(const Char_t *name,Int_t index)",
-              "No link between \"%s\" and the index %d: the name already exist.",
+              "No link between \"%s\" and the index %d: the name already exists.",
               name, index);
    }
 }

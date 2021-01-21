@@ -253,6 +253,16 @@ protected:
       // Delete previously defined associations between variable name and index
       nameList.Clear();
    }
+   int GetIndexAtListPosition(int pos) const
+   {
+      // return index value stored for 'pos'-th parameter stored in NameIndex list
+      return nameList.GetValue<int>(pos);
+   }
+   TString GetNameAtListPosition(int pos) const
+   {
+      // return name value stored for 'pos'-th parameter stored in NameIndex list
+      return nameList.GetNameAt(pos);
+   }
 
    static void FillMethodBody(KVString& body, int type);
    static void AddInitMethod(KVClassFactory& cf, KVString& body);
@@ -265,7 +275,7 @@ protected:
       // By default, returns value with index 0
       return getvalue_int(0);
    }
-   Double_t getvalue_char(const Char_t* name) const
+   virtual Double_t getvalue_char(const Char_t* name) const
    {
       // By default, this method returns the value of the variable "name"
       // using the name-index table set up with SetNameIndex(const Char_t*,Int_t).
@@ -452,7 +462,7 @@ public:
       return GetValue(i);
    }
 
-   virtual Int_t GetNameIndex(const Char_t* name) const;
+   Int_t GetNameIndex(const Char_t* name) const;
 
    static void MakeClass(const Char_t* classname, const Char_t* classdesc, int type = kOneBody);
 
@@ -467,9 +477,9 @@ public:
       //See KVParticle::GetFrame how to access particle kinematics in different frames.
       fFrame = ref;
    }
-   const Char_t* GetFrame() const
+   const TString& GetFrame() const
    {
-      return fFrame.Data();
+      return fFrame;
    }
 
    void SetOption(const Char_t* option, const Char_t* value)
@@ -601,7 +611,7 @@ public:
       // Note that if SetMaxNumBranches(0) is called, no branch will be created for this variable.
       return (fMaxNumBranches > -1 ? fMaxNumBranches : GetNumberOfValues());
    }
-   TString GetValueName(Int_t i) const
+   virtual TString GetValueName(Int_t i) const
    {
       // Returns name of value associated with index 'i',
       // as defined by using SetNameIndex method.

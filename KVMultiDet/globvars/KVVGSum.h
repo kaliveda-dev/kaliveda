@@ -31,13 +31,41 @@ class KVVGSum: public KVVarGlobMean {
    void init(void);
 
 protected:
-   virtual Double_t getvalue_void(void) const;
+   Double_t getvalue_int(Int_t index) const
+   {
+      // Returns value based on position in name-index list, not the actual index:
+      //~~~~{.cpp}
+      // i.e. mode = mult: getvalue_int(0) returns value of "Mult" (index:4)
+      // i.e. mode = sum:  getvalue_int(0) returns value of "Sum" (index:2)
+      // i.e. mode = mean: getvalue_int(0) returns value of "Mean" (index:0), getvalue_int(1) returns value of "RMS" (index:1)
+      //~~~~
+      return KVVarGlobMean::getvalue_int(GetIndexAtListPosition(index));
+   }
+
+   Double_t getvalue_char(const Char_t* name) const
+   {
+      return KVVarGlobMean::getvalue_int(GetNameIndex(name));
+   }
 
 public:
    ROOT_FULL_SET_WITH_INIT(KVVGSum, KVVarGlobMean)
 
    void Init();
    void fill(const KVNucleus* c);    // Filling method
+
+   virtual TString GetValueName(Int_t i) const
+   {
+      // Returns name of value associated with index 'i':
+      //~~~~{.cpp}
+      // i.e. mode = mult: GetValueName(0) returns "Mult"
+      // i.e. mode = sum:  GetValueName(0) returns "Sum"
+      // i.e. mode = mean: GetValueName(0) returns "Mean", GetValueName(1) returns "RMS"
+      //~~~~
+      if (i < GetNumberOfValues()) {
+         return GetNameAtListPosition(i);
+      }
+      return TString("unknown");
+   }
 
    ClassDef(KVVGSum, 0) //General global variable for calculating sums of various quantities
 };

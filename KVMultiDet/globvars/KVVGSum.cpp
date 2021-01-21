@@ -82,6 +82,7 @@ ClassImp(KVVGSum)
 void KVVGSum::init(void)
 {
    ClearNameIndex();
+   SetMaxNumBranches(-1);
    fClass = nullptr;
    fVal = 0;
 }
@@ -151,24 +152,6 @@ void KVVGSum::Init()
       //     fMethod->GetParams());
       // if we are summing an integer quantity, make automatic TTree branch with integer type
       if (fMethod->ReturnType() == TMethodCall::kLong && TestBit(kSum)) fValueType = 'I';
-      //check if method is defined for KVParticle
-      //if not, we cannot use c->GetFrame()->Method()
-      TClass* cl_par = TClass::GetClass("KVParticle");
-      if (!cl_par->GetMethodAllAny(GetOptionString("method").Data())) SetBit(kNoFrame);
    }
-   //if (TestBit(kNoFrame)) Info("Init", "Quantity is frame-independent");
 }
 
-//_________________________________________________________________
-
-Double_t KVVGSum::getvalue_void() const
-{
-   //If option "mode" = "mult", return the total number of particles counted
-   //If option "mode" = "sum", return the summed property defined by option "method"
-   //If option "mode" = "mean", return the mean value of the property defined by option "method"
-
-   if (TestBit(kMean)) return getvalue_int(0);
-   else if (TestBit(kMult)) return getvalue_int(4);
-   //default: return sum
-   return getvalue_int(2);
-}
