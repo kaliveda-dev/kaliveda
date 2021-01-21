@@ -68,7 +68,6 @@ void KVFlowTensor::Init(void)
    if (wgt == "RKE") weight = kRKE;
    else if (wgt == "ONE" || wgt == "" || wgt == "1") weight = kONE;
    else weight = kNRKE;
-   SetFrame("CM");
 }
 
 //_________________________________________________________________

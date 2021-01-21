@@ -45,11 +45,8 @@ Option          | Name                                 | Weight
 "RKE"           | relativistic KE tensor               | \f$w_{\nu}={1 \over {m_{\nu}(\gamma_{\nu}+1)}}\f$
 "ONE","1",""    | sphericity tensor                    | \f$w=1\f$
 
- To quote Gyulassy et al.:
-   > "We emphasize that event shape analysis makes sense only in the
-   > nucleus-nucleus center of mass system since the eigenvalues of \f$F\f$ specify
-   > an ellipsoid centered at the origin."
-Thus the default frame is "CM".
+ The user must define the frame in which to calculate the tensor with SetFrame(): if not,
+ the default frame used is "CM".
 
  We remind the user also that attempting shape analysis for events where a large proportion of reaction
  products have not been detected is meaningless: some kind of completeness criterion should be applied to
