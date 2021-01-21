@@ -62,17 +62,39 @@ void globvars_test()
    // add global variables to list
    globVars.AddGV("KVEkin", "Etot"); // total energy lab frame
    globVars.AddGV("KVEkin", "Etot_CM")->SetFrame("CM"); // total energy CM frame
-   globVars.AddGV("KVEtransLCP", "Et12"); // total transverse energy LCP
+   globVars.AddGV("KVEtransLCP", "Et12")->SetFrame("CM"); // total transverse energy LCP
    globVars.AddGV("KVMult", "Mult"); // total multiplicity
-   globVars.AddGV("KVMultAv", "Mult_av_CM"); // multiplicity forward CM
+   globVars.AddGV("KVZmean", "MeanZ");
+   globVars.AddGV("KVDirectivity", "Directo"); // FOPI directivity variable
+
+#ifdef USING_ROOT6
+   KVParticleCondition av_CM({"av_CM", [](const KVNucleus * n)
+   {
+      return n->GetVpar() > 0;
+   }
+                             });
+#else
+   KVParticleCondition av_CM("_NUC_->GetVpar()>0");
+#endif
+
+   KVVarGlob* vg = globVars.AddGV("KVMult", "Mult_av_CM"); // multiplicity forward CM
+   vg->SetFrame("CM");
+   vg->SetSelection(av_CM);
+
    globVars.AddGV("KVMultIMF", "MultIMF"); // mult Z>=3
-   globVars.AddGV("KVMultIMFAv", "MultIMF_av_CM"); // mult Z>=3 forward CM
+   vg = globVars.AddGV("KVMultIMF", "MultIMF_av_CM"); // mult Z>=3 forward CM
+   vg->SetFrame("CM");
+   vg->AddSelection(av_CM);  // 'adds' selection to existing "nuc->GetZ()<=2" selection
+
    globVars.AddGV("KVMultLeg", "MultLCP"); // mult Z<=2
-   globVars.AddGV("KVMultLegAv", "MultLCP_av_CM"); // mult Z<=2 forward CM
-   KVVarGlob* vg = globVars.AddGV("KVMultLeg", "MultLCP_back_CM"); // mult Z<=2 backwards CM
+   vg = globVars.AddGV("KVMultLeg", "MultLCP_av_CM"); // mult Z<=2 forward CM
+   vg->SetFrame("CM");
+   vg->AddSelection(av_CM);  // 'adds' selection to existing "nuc->GetZ()<=2" selection
+
+   vg = globVars.AddGV("KVMultLeg", "MultLCP_back_CM"); // mult Z<=2 backwards CM
    vg->SetFrame("CM");
 #ifdef USING_ROOT6
-   // 'adds' selection to existing "_NUC_->GetZ()<=2" selection
+   // 'adds' selection to existing "nuc->GetZ()<=2" selection
    vg->AddSelection({"Vpar<0", [](const KVNucleus * nuc)
    {
       return nuc->GetVpar() < 0;
@@ -82,11 +104,20 @@ void globvars_test()
 #endif
    // initialize all variables
    globVars.Init();
+   for (auto varg : globVars) {
+      auto VARG = dynamic_cast<KVVarGlob*>(varg);
+      std::cout << varg->GetName() << " : " << VARG->GetNumberOfBranches() << " branches, " <<
+                VARG->GetNumberOfValues() << " values. Variable types:" << std::endl;
+      for (int i = 0; i < VARG->GetNumberOfBranches(); ++i) {
+         std::cout << "\t" << i << " : " << VARG->GetValueName(i) << "[" << VARG->GetValueType(i) << "]" << std::endl;
+      }
+   }
 
    // illustrate automatic TTree branch creation
-   TTree test_tree;
-   globVars.MakeBranches(&test_tree);
-   test_tree.GetListOfBranches()->ls();
+   TFile f("globvars_test.root", "recreate");
+   TTree* test_tree = new TTree("test_tree", "globvars_test results");
+   globVars.MakeBranches(test_tree);
+   test_tree->GetListOfBranches()->ls();
 
    // calculate all variables for 1 event
    generate_event(test_event);
@@ -94,10 +125,14 @@ void globvars_test()
    globVars.CalculateGlobalVariables(&test_event);
    // fill values in TTree
    globVars.FillBranches();
-   test_tree.Fill();
+   test_tree->Fill();
+   f.Write();
 
-   globVars.Print();
-   test_tree.Scan("*");
+   test_tree->Scan("*");
 
    cout << "Et12 should be " << 5 * 50 * pow(TMath::Sin(60 * TMath::DegToRad()), 2) + 4 * 100 * pow(TMath::Sin(120 * TMath::DegToRad()), 2) << " MeV" << endl;
+
+   for (auto varg : globVars) {
+      std::cout << varg->GetName() << " = " << ((KVVarGlob*)varg)->GetValue() << std::endl;
+   }
 }

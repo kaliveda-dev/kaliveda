@@ -267,6 +267,11 @@ void KVGVList::MakeBranches(TTree* tree)
    // Make sure all variables are initialised before proceeding
    Init();
 
+   fNbBranch = 0;
+   fNbIBranch = 0;
+   fBranchVar.clear();
+   fIBranchVar.clear();
+
    TIter next(this);
    KVVarGlob* ob;
    while ((ob = (KVVarGlob*)next())) {
@@ -281,22 +286,26 @@ void KVGVList::MakeBranches(TTree* tree)
                sane_name.ReplaceAll("*", "star");
                if (ob->GetValueType(i) == 'I') {
                   fIBranchVar.push_back(0);
-                  tree->Branch(Form("%s.%s", sane_varname.Data(), sane_name.Data()), &fIBranchVar[ fNbIBranch++ ], Form("%s.%s/I", sane_varname.Data(), sane_name.Data()));
+                  tree->Branch(Form("%s.%s", sane_varname.Data(), sane_name.Data()), &fIBranchVar[ fNbIBranch ], Form("%s.%s/I", sane_varname.Data(), sane_name.Data()));
+                  ++fNbIBranch;
                }
                else {
                   fBranchVar.push_back(0.0);
-                  tree->Branch(Form("%s.%s", sane_varname.Data(), sane_name.Data()), &fBranchVar[ fNbBranch++ ], Form("%s.%s/D", sane_varname.Data(), sane_name.Data()));
+                  tree->Branch(Form("%s.%s", sane_varname.Data(), sane_name.Data()), &fBranchVar[ fNbBranch ], Form("%s.%s/D", sane_varname.Data(), sane_name.Data()));
+                  ++fNbBranch;
                }
             }
          }
          else {
             if (ob->GetValueType(0) == 'I') {
                fIBranchVar.push_back(0);
-               tree->Branch(sane_varname, &fIBranchVar[ fNbIBranch++ ], Form("%s/I", sane_varname.Data()));
+               tree->Branch(sane_varname, &fIBranchVar[ fNbIBranch ], Form("%s/I", sane_varname.Data()));
+               ++fNbIBranch;
             }
             else {
                fBranchVar.push_back(0.0);
-               tree->Branch(sane_varname, &fBranchVar[ fNbBranch++ ], Form("%s/D", sane_varname.Data()));
+               tree->Branch(sane_varname, &fBranchVar[ fNbBranch ], Form("%s/D", sane_varname.Data()));
+               ++fNbBranch;
             }
          }
       }
@@ -325,17 +334,35 @@ void KVGVList::FillBranches()
          if (ob->GetNumberOfValues() > 1) {
             // multi-valued variable
             for (int j = 0; j < ob->GetNumberOfBranches(); j++) {
-               if (ob->GetValueType(j) == 'I') fIBranchVar[ INT_index++ ] = (Int_t)ob->GetValue(j);
-               else fBranchVar[ FLT_index++ ] = ob->GetValue(j);
+               if (ob->GetValueType(j) == 'I') {
+                  fIBranchVar[ INT_index ] = (Int_t)ob->GetValue(j);
+                  ++INT_index;
+               }
+               else {
+                  fBranchVar[ FLT_index ] = ob->GetValue(j);
+                  ++FLT_index;
+               }
             }
          }
          else {
-            if (ob->GetValueType(0) == 'I') fIBranchVar[ INT_index++ ] = (Int_t)ob->GetValue();
-            else fBranchVar[ FLT_index++ ] = ob->GetValue();
+            if (ob->GetValueType(0) == 'I') {
+               fIBranchVar[ INT_index ] = (Int_t)ob->GetValue();
+               ++INT_index;
+            }
+            else {
+               fBranchVar[ FLT_index ] = ob->GetValue();
+               ++FLT_index;
+            }
          }
 
       }
    }
+   std::cout << "Contents of float vector now:\n";
+   for (auto v : fBranchVar) std::cout << v << " ";
+   std::cout << std::endl;
+   std::cout << "Contents of int vector now:\n";
+   for (auto v : fIBranchVar) std::cout << v << " ";
+   std::cout << std::endl;
 }
 
 KVVarGlob* KVGVList::AddGV(const Char_t* class_name, const Char_t* name)
