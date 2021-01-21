@@ -104,14 +104,6 @@ void globvars_test()
 #endif
    // initialize all variables
    globVars.Init();
-   for (auto varg : globVars) {
-      auto VARG = dynamic_cast<KVVarGlob*>(varg);
-      std::cout << varg->GetName() << " : " << VARG->GetNumberOfBranches() << " branches, " <<
-                VARG->GetNumberOfValues() << " values. Variable types:" << std::endl;
-      for (int i = 0; i < VARG->GetNumberOfBranches(); ++i) {
-         std::cout << "\t" << i << " : " << VARG->GetValueName(i) << "[" << VARG->GetValueType(i) << "]" << std::endl;
-      }
-   }
 
    // illustrate automatic TTree branch creation
    TFile f("globvars_test.root", "recreate");
@@ -132,7 +124,13 @@ void globvars_test()
 
    cout << "Et12 should be " << 5 * 50 * pow(TMath::Sin(60 * TMath::DegToRad()), 2) + 4 * 100 * pow(TMath::Sin(120 * TMath::DegToRad()), 2) << " MeV" << endl;
 
+#ifdef USING_ROOT6
    for (auto varg : globVars) {
+#else
+   TObject* varg;
+   TIter it(&globVars);
+   while ((varg = it())) {
+#endif
       std::cout << varg->GetName() << " = " << ((KVVarGlob*)varg)->GetValue() << std::endl;
    }
 }

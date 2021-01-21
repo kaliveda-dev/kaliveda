@@ -134,26 +134,8 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
    // For each variable for which an event selection condition was set (see KVVarGlob::SetEventSelection())
    // the condition is tested as soon as the variable is calculated. If the condition is not satisfied,
    // calculation of the other variable is abandonded and method AbortEventAnalysis() returns kTRUE.
+
    Reset();
-
-#ifdef __WITH_TITER_BUG
-   Int_t mult = e->GetMult();
-   for (int it1 = 1; it1 <= mult; ++it1) {
-      KVNucleus* n1 = e->GetParticle(it1);
-      if (!n1->IsOK()) continue;
-      if (Has1BodyVariables()) Fill(n1); // calculate 1-body variables
-
-      if (Has2BodyVariables()) {
-         for (int it2 = it1; it2 <= mult; ++it2) {
-            KVNucleus* n2 = e->GetParticle(it2);
-            if (!n2->IsOK()) continue;
-            // calculate 2-body variables
-            // we use every pair of particles (including identical pairs) in the event
-            Fill2(n1, n2);
-         }
-      }
-   }
-#else
 
    if (Has1BodyVariables()) {
       TIter it(&fVG1);
@@ -169,7 +151,7 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
          vg->Calculate();
 #ifdef USING_ROOT6
          if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
-            break;
+            return;
          }
          vg->DefineNewFrame(e);
 #endif
@@ -193,13 +175,12 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
          vg->Calculate();
 #ifdef USING_ROOT6
          if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
-            break;
+            return;
          }
          vg->DefineNewFrame(e);
 #endif
       }
    }
-#endif
 
    // calculate N-body variables
    if (HasNBodyVariables()) {
@@ -272,8 +253,35 @@ void KVGVList::MakeBranches(TTree* tree)
    fBranchVar.clear();
    fIBranchVar.clear();
 
+   // calculate the number of variables which will be stored in each vector
+   // the space has to be pre-reserved not added by successive "push_back"s, otherwise references to vector elements
+   // are invalidated every time the vector reallocates space
+
    TIter next(this);
    KVVarGlob* ob;
+   while ((ob = (KVVarGlob*)next())) {
+      if (ob->GetNumberOfBranches()) { //skip variables for which KVVarGlob::SetMaxNumBranches(0) was called
+         if (ob->GetNumberOfValues() > 1) {
+            // multi-valued variable
+            for (int i = 0; i < ob->GetNumberOfBranches(); i++) {
+               if (ob->GetValueType(i) == 'I') ++fNbIBranch;
+               else ++fNbBranch;
+            }
+         }
+         else {
+            if (ob->GetValueType(0) == 'I') ++fNbIBranch;
+            else ++fNbBranch;
+         }
+      }
+   }
+
+   fBranchVar.reserve(fNbBranch);
+   fIBranchVar.reserve(fNbIBranch);
+   fNbBranch = 0;
+   fNbIBranch = 0;
+
+   next.Reset();
+
    while ((ob = (KVVarGlob*)next())) {
       if (ob->GetNumberOfBranches()) { //skip variables for which KVVarGlob::SetMaxNumBranches(0) was called
          TString sane_varname = NameSanitizer(ob->GetName());
@@ -285,12 +293,10 @@ void KVGVList::MakeBranches(TTree* tree)
                TString sane_name(ob->GetValueName(i));
                sane_name.ReplaceAll("*", "star");
                if (ob->GetValueType(i) == 'I') {
-                  fIBranchVar.push_back(0);
                   tree->Branch(Form("%s.%s", sane_varname.Data(), sane_name.Data()), &fIBranchVar[ fNbIBranch ], Form("%s.%s/I", sane_varname.Data(), sane_name.Data()));
                   ++fNbIBranch;
                }
                else {
-                  fBranchVar.push_back(0.0);
                   tree->Branch(Form("%s.%s", sane_varname.Data(), sane_name.Data()), &fBranchVar[ fNbBranch ], Form("%s.%s/D", sane_varname.Data(), sane_name.Data()));
                   ++fNbBranch;
                }
@@ -298,12 +304,10 @@ void KVGVList::MakeBranches(TTree* tree)
          }
          else {
             if (ob->GetValueType(0) == 'I') {
-               fIBranchVar.push_back(0);
                tree->Branch(sane_varname, &fIBranchVar[ fNbIBranch ], Form("%s/I", sane_varname.Data()));
                ++fNbIBranch;
             }
             else {
-               fBranchVar.push_back(0.0);
                tree->Branch(sane_varname, &fBranchVar[ fNbBranch ], Form("%s/D", sane_varname.Data()));
                ++fNbBranch;
             }
@@ -357,12 +361,6 @@ void KVGVList::FillBranches()
 
       }
    }
-   std::cout << "Contents of float vector now:\n";
-   for (auto v : fBranchVar) std::cout << v << " ";
-   std::cout << std::endl;
-   std::cout << "Contents of int vector now:\n";
-   for (auto v : fIBranchVar) std::cout << v << " ";
-   std::cout << std::endl;
 }
 
 KVVarGlob* KVGVList::AddGV(const Char_t* class_name, const Char_t* name)
