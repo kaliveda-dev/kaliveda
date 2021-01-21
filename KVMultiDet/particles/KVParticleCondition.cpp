@@ -125,9 +125,6 @@ KVParticleCondition::~KVParticleCondition()
 
 //_____________________________________________________________________________//
 
-
-//_____________________________________________________________________________//
-
 void KVParticleCondition::Copy(TObject& obj) const
 {
    //Copy this to obj
@@ -206,41 +203,41 @@ KVParticleCondition& KVParticleCondition::operator=(const KVString& sel)
 }
 
 #ifdef USING_ROOT6
-KVParticleCondition::KVParticleCondition(KVParticleCondition&& other) noexcept :
-   KVBase(other),
-#ifdef WITH_CPP14
-   fNUsing(std::exchange(other.fNUsing, 0)),
-#endif
-   fLambdaCondition(std::move(other.fLambdaCondition)),
-   fSavedLambda1(std::move(other.fSavedLambda1)),
-   fSavedLambda2(std::move(other.fSavedLambda2)),
-   fOpType(other.fOpType),
-   fCondition(std::move(other.fCondition)),
-   fCondition_brackets(std::move(other.fCondition_brackets)),
-#ifdef WITH_CPP14
-   fOptimal(std::exchange(other.fOptimal, nullptr)),
-#endif
-   fClassName(std::move(other.fClassName)),
-#ifdef WITH_CPP14
-   cf(std::exchange(other.cf, nullptr)),
-#endif
-   fOptimizedClassName(std::move(other.fOptimizedClassName))
-#ifdef WITH_CPP14
-   , fOptOK(std::exchange(other.fOptOK, false))
-#endif
-{
-   // Move constructor
-#ifndef WITH_CPP14
-   fNUsing = other.fNUsing;
-   other.fNUsing = 0;
-   fOptimal = other.fOptimal;
-   other.fOptimal = nullptr;
-   cf = other.cf;
-   other.cf = nullptr;
-   fOptOK = other.fOptOK;
-   other.fOptOK = false;
-#endif
-}
+//KVParticleCondition::KVParticleCondition(KVParticleCondition&& other) noexcept :
+//   KVBase(other),
+//#ifdef WITH_CPP14
+//   fNUsing(std::exchange(other.fNUsing, 0)),
+//#endif
+//   fLambdaCondition(std::move(other.fLambdaCondition)),
+//   fSavedLambda1(std::move(other.fSavedLambda1)),
+//   fSavedLambda2(std::move(other.fSavedLambda2)),
+//   fOpType(other.fOpType),
+//   fCondition(std::move(other.fCondition)),
+//   fCondition_brackets(std::move(other.fCondition_brackets)),
+//#ifdef WITH_CPP14
+//   fOptimal(std::exchange(other.fOptimal, nullptr)),
+//#endif
+//   fClassName(std::move(other.fClassName)),
+//#ifdef WITH_CPP14
+//   cf(std::exchange(other.cf, nullptr)),
+//#endif
+//   fOptimizedClassName(std::move(other.fOptimizedClassName))
+//#ifdef WITH_CPP14
+//   , fOptOK(std::exchange(other.fOptOK, false))
+//#endif
+//{
+//   // Move constructor
+//#ifndef WITH_CPP14
+//   fNUsing = other.fNUsing;
+//   other.fNUsing = 0;
+//   fOptimal = other.fOptimal;
+//   other.fOptimal = nullptr;
+//   cf = other.cf;
+//   other.cf = nullptr;
+//   fOptOK = other.fOptOK;
+//   other.fOptOK = false;
+//#endif
+//}
 
 KVParticleCondition& KVParticleCondition::operator=(const LambdaFunc& f)
 {
@@ -249,44 +246,44 @@ KVParticleCondition& KVParticleCondition::operator=(const LambdaFunc& f)
    return (*this);
 }
 
-KVParticleCondition& KVParticleCondition::operator=(KVParticleCondition&& other) noexcept
-{
-   // Move assignment operator
-   KVBase::operator=(other);
-#ifdef WITH_CPP14
-   fNUsing = std::exchange(other.fNUsing, 0);
-#else
-   fNUsing = other.fNUsing;
-   other.fNUsing = 0;
-#endif
-   fLambdaCondition = std::move(other.fLambdaCondition);
-   fSavedLambda1 = std::move(other.fSavedLambda1);
-   fSavedLambda2 = std::move(other.fSavedLambda2);
-   fOpType = other.fOpType;
-   fCondition = std::move(other.fCondition);
-   fCondition_brackets = std::move(other.fCondition_brackets);
-#ifdef WITH_CPP14
-   fOptimal = std::exchange(other.fOptimal, nullptr);
-#else
-   fOptimal = other.fOptimal;
-   other.fOptimal = nullptr;
-#endif
-   fClassName = std::move(other.fClassName);
-#ifdef WITH_CPP14
-   cf = std::exchange(other.cf, nullptr);
-#else
-   cf = other.cf;
-   other.cf = nullptr;
-#endif
-   fOptimizedClassName = std::move(other.fOptimizedClassName);
-#ifdef WITH_CPP14
-   fOptOK = std::exchange(other.fOptOK, false);
-#else
-   fOptOK = other.fOptOK;
-   other.fOptOK = false;
-#endif
-   return (*this);
-}
+//KVParticleCondition& KVParticleCondition::operator=(KVParticleCondition&& other) noexcept
+//{
+//   // Move assignment operator
+//   KVBase::operator=(other);
+//#ifdef WITH_CPP14
+//   fNUsing = std::exchange(other.fNUsing, 0);
+//#else
+//   fNUsing = other.fNUsing;
+//   other.fNUsing = 0;
+//#endif
+//   fLambdaCondition = std::move(other.fLambdaCondition);
+//   fSavedLambda1 = std::move(other.fSavedLambda1);
+//   fSavedLambda2 = std::move(other.fSavedLambda2);
+//   fOpType = other.fOpType;
+//   fCondition = std::move(other.fCondition);
+//   fCondition_brackets = std::move(other.fCondition_brackets);
+//#ifdef WITH_CPP14
+//   fOptimal = std::exchange(other.fOptimal, nullptr);
+//#else
+//   fOptimal = other.fOptimal;
+//   other.fOptimal = nullptr;
+//#endif
+//   fClassName = std::move(other.fClassName);
+//#ifdef WITH_CPP14
+//   cf = std::exchange(other.cf, nullptr);
+//#else
+//   cf = other.cf;
+//   other.cf = nullptr;
+//#endif
+//   fOptimizedClassName = std::move(other.fOptimizedClassName);
+//#ifdef WITH_CPP14
+//   fOptOK = std::exchange(other.fOptOK, false);
+//#else
+//   fOptOK = other.fOptOK;
+//   other.fOptOK = false;
+//#endif
+//   return (*this);
+//}
 #endif
 
 //_____________________________________________________________________________//

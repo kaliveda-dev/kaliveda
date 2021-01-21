@@ -172,8 +172,8 @@ public:
       // \returns true if this condition is defined using a lambda expression
       return (bool)fLambdaCondition || ((bool)fSavedLambda1 && (bool)fSavedLambda2);
    }
-   KVParticleCondition(KVParticleCondition&& other) noexcept;
-   KVParticleCondition& operator=(KVParticleCondition&& other) noexcept;
+//   KVParticleCondition(KVParticleCondition&& other) noexcept;
+//   KVParticleCondition& operator=(KVParticleCondition&& other) noexcept;
 #endif
    virtual ~KVParticleCondition();
 #ifdef USING_ROOT6
