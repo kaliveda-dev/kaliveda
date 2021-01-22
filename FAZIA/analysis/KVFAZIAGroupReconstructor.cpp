@@ -61,24 +61,15 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
    // - first try using detectors behind to calculated DeltaE from Eres,
    // all detector behind have to be calibrated
    // - then try with the detector in front to calculate Eres from DeltaE (less accurate)
+   Double_t ebehind = 0.;
    if (ndet != ndet_calib) {
       PART->GetReconstructionTrajectory()->IterateFrom();
       while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
          det = (KVFAZIADetector*)node->GetDetector();
-         if (!det->IsCalibrated()) {
-            KVFAZIADetector* det_behind  = 0;
-            Double_t ebehind = 0.;
-            // compute the sum of energy loss in all layers behind the detector
-            // if one of them is not calibrated, we try with the detector in front
-            TIter it(PART->GetStoppingDetector()->GetNode()->GetDetectorsBehind());
-            while ((det_behind = (KVFAZIADetector*)it())) {
-               if (det_behind->GetEnergyLoss() <= 0.) {
-                  ebehind = -1.;
-                  break;
-               }
-               ebehind += det_behind->GetEnergyLoss();
-            }
-            KVFAZIADetector* det_infront = (KVFAZIADetector*)PART->GetStoppingDetector()->GetNode()->GetDetectorsInFront()->First();
+         // store energy loss behind for latter DeltaE from Eres calculations
+         if (det->IsCalibrated()) ebehind += det->GetEnergyLoss();
+         else {
+            KVFAZIADetector* det_infront = (KVFAZIADetector*)det->GetNode()->GetDetectorsInFront()->First();
             if (ebehind > 0.) {
                // calculate energy loss from residual energy
                ee = det->GetDeltaEFromERes(PART->GetZ(), PART->GetA(), ebehind);
@@ -86,6 +77,7 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
                etot += ee;
                ndet_calib++;
                calculated = kTRUE;
+               ebehind += ee;
             }
             else if (det_infront && det_infront->GetEnergyLoss()) {
                // calculate energy loss from Delta E and check this energy in lower than
@@ -97,6 +89,7 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
                etot += ee;
                ndet_calib++;
                calculated = kTRUE;
+               ebehind += ee;
             }
          }
       }
