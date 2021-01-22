@@ -21,130 +21,133 @@ ClassImp(KVFAZIAGroupReconstructor)
 //////////////////////////////////////////////////////////////////////////////////
 void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
 {
-//   // Perform energy calibration of (previously identified) particle
+   // Perform energy calibration of (previously identified) particle
 
+   // check that the particle crossed at least one detector layer
+   if (PART->GetReconstructionTrajectory()->GetN() < 1) return;
 
-   KVNucleus avatar;
-   //printf("start Calibrate\n");
-   Int_t ntot = PART->GetReconstructionTrajectory()->GetN();
-   if (ntot < 1)
-      return;
+   Int_t ndet       = 0;
+   Int_t ndet_calib = 0;
+   Double_t ee      = 0.;
+   Double_t etot    = 0.;
+
    Bool_t punch_through = kFALSE;
    Bool_t incoherency = kFALSE;
-   Bool_t pileup = kFALSE;
-   Bool_t check_error = kFALSE;
-
-//   double error_si1(0), error_si2(0); // error_csi=0;
-   std::vector<Double_t> eloss(ntot);
-   for (Int_t ii = 0; ii < ntot; ii += 1) eloss[ii] = 0;
+   Bool_t calculated = kFALSE;
 
    KVFAZIADetector* det = 0;
-   Int_t ndet = 0;
-   Int_t ndet_calib = 0;
-   Double_t etot = 0;
-   Double_t fESI1, fESI2, fECSI;
-   fESI1 = fESI2 = fECSI = 0;
+   PART->SetEnergy(0.);
+   PART->SetECode(0);
 
+   // loop over crossed detectors
+   // compute energy if the detector is calibrated
    PART->GetReconstructionTrajectory()->IterateFrom();
    KVGeoDetectorNode* node;
    KVNameValueList part_id(Form("Z=%d,A=%d", PART->GetZ(), PART->GetA()));
    while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
       det = (KVFAZIADetector*)node->GetDetector();
-
       if (det->IsCalibrated()) {
-         eloss[ntot - ndet - 1] = det->GetDetectorSignalValue("Energy", part_id);
-         if (det->GetIdentifier() == KVFAZIADetector::kSI1) {
-            fESI1 = eloss[ntot - ndet - 1];
-         }
-         else if (det->GetIdentifier() == KVFAZIADetector::kSI2) {
-            fESI2 = eloss[ntot - ndet - 1];
-         }
-         else if (det->GetIdentifier() == KVFAZIADetector::kCSI) {
-            fECSI = eloss[ntot - ndet - 1];
-         }
-         // set calibrated energy loss in detector
-         det->SetEnergyLoss(eloss[ntot - ndet - 1]);
-         etot += eloss[ntot - ndet - 1];
-         ndet_calib += 1;
+         ee = det->GetDetectorSignalValue("Energy", part_id);
+         det->SetEnergyLoss(ee);
+         etot += ee;
+         ndet_calib++;
       }
-      ndet += 1;
+      ndet++;
    }
-   if (ndet == ndet_calib) {
-      Double_t E_targ = 0;
-      PART->SetEnergy(etot);
 
-      if (PART->IsAMeasured()) {
-         Double_t etot_avatar = 0;
-         Double_t chi2 = 0;
-         avatar.SetZAandE(PART->GetZ(), PART->GetA(), PART->GetKE());
-         for (Int_t nn = ntot - 1; nn >= 0; nn -= 1) {
-            det = (KVFAZIADetector*)PART->GetDetector(nn);
-            Double_t temp = det->GetELostByParticle(&avatar);
-            etot_avatar += temp;
-            chi2 += TMath::Power((eloss[ntot - 1 - nn] - temp) / eloss[ntot - 1 - nn], 2.);
-            avatar.SetKE(avatar.GetKE() - temp);
-         }
 
-         chi2 /= ndet;
-         if (avatar.GetKE() > 0) {
-            //Warning("Calibrate", "Incoherence energie residuelle %lf (PUNCH THROUGH) %s", avatar.GetKE(),GetStoppingDetector()->GetName());
-            punch_through = kTRUE;
-            //         } else if (TMath::Abs(etot - etot_avatar) > 1e-3) {
-         }
-         else if (chi2 > 10.) {
-            //Warning("Calibrate", "Incoherence %lf != %lf", etot, etot_avatar);
-            incoherency = kTRUE;
-         }
-      }
-
-      if (PART->GetZ() && PART->GetEnergy() > 0) {
-         E_targ = gMultiDetArray->GetTargetEnergyLossCorrection(PART);
-         PART->SetTargetEnergyLoss(E_targ);
-      }
-
-      Double_t E_tot = PART->GetEnergy() + E_targ;
-      PART->SetEnergy(E_tot);
-      // set particle momentum from telescope dimensions (random)
-      PART->GetAnglesFromReconstructionTrajectory();
-      PART->SetECode(0);
-      if (punch_through)   PART->SetECode(2);
-      if (incoherency)     PART->SetECode(3);
-      if (check_error)     PART->SetECode(5); //
-      if (pileup)          PART->SetECode(4); //
-
-      PART->SetIsCalibrated();
-   }
-   else {
-      // this case is stupid : fESI1 is never calculated (=0) so fECSI is also always 0
-      // to be rewritten when INDRAFAZIA.E789 calibration will be available !
-      if (((KVFAZIADetector*)PART->GetStoppingDetector())->GetIdentifier() == KVFAZIADetector::kCSI
-            && !(PART->GetStoppingDetector()->IsCalibrated()) && ndet_calib == 2) {
-         if (PART->GetZ() > 0) {
-//            if (!PART->IsAMeasured()) {
-//               if (GetZ() == 1)       SetA(1);
-//               else if (GetZ() == 2)  SetA(4);
-//               else if (GetZ() == 20) SetA(48);
-//               else {
-//                  SetA(1.04735 + 1.99941 * GetZ() + 0.00683224 * TMath::Power(GetZ(), 2.));
-//               }
-//            }
-
-            Double_t E_targ = 0;
-            fECSI = ((KVDetector*)PART->GetStoppingDetector()->GetNode()->GetDetectorsInFront()->First())->GetEResFromDeltaE(PART->GetZ(), PART->GetA(), fESI2);
-            PART->SetEnergy(fECSI + fESI1 + fESI2);
-
-            E_targ = ((KVMultiDetArray*)GetGroup()->GetArray())->GetTargetEnergyLossCorrection(PART);
-            Double_t E_tot = PART->GetEnergy() + E_targ;
-            PART->SetECode(1);
-            PART->SetIsCalibrated();
-            PART->SetEnergy(E_tot);
-            PART->GetAnglesFromReconstructionTrajectory();
+   // loop again over crossed detectors
+   // calculate the energy if not calibrated:
+   // - first try using detectors behind to calculated DeltaE from Eres,
+   // all detector behind have to be calibrated
+   // - then try with the detector in front to calculate Eres from DeltaE (less accurate)
+   if (ndet != ndet_calib) {
+      PART->GetReconstructionTrajectory()->IterateFrom();
+      while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
+         det = (KVFAZIADetector*)node->GetDetector();
+         if (!det->IsCalibrated()) {
+            KVFAZIADetector* det_behind  = 0;
+            Double_t ebehind = 0.;
+            // compute the sum of energy loss in all layers behind the detector
+            // if one of them is not calibrated, we try with the detector in front
+            TIter it(PART->GetStoppingDetector()->GetNode()->GetDetectorsBehind());
+            while ((det_behind = (KVFAZIADetector*)it())) {
+               if (det_behind->GetEnergyLoss() <= 0.) {
+                  ebehind = -1.;
+                  break;
+               }
+               ebehind += det_behind->GetEnergyLoss();
+            }
+            KVFAZIADetector* det_infront = (KVFAZIADetector*)PART->GetStoppingDetector()->GetNode()->GetDetectorsInFront()->First();
+            if (ebehind > 0.) {
+               // calculate energy loss from residual energy
+               ee = det->GetDeltaEFromERes(PART->GetZ(), PART->GetA(), ebehind);
+               det->SetEnergyLoss(ee);
+               etot += ee;
+               ndet_calib++;
+               calculated = kTRUE;
+            }
+            else if (det_infront && det_infront->GetEnergyLoss()) {
+               // calculate energy loss from Delta E and check this energy in lower than
+               // punch through energy since it doesn't work if the particle crossed det
+               // (trying to calculate Si2 energy in case only Si1 calibrated)
+               ee = det_infront->GetEResFromDeltaE(PART->GetZ(), PART->GetA(), det_infront->GetEnergyLoss());
+               if (ee > det->GetPunchThroughEnergy(PART->GetZ(), PART->GetA())) continue;
+               det->SetEnergyLoss(ee);
+               etot += ee;
+               ndet_calib++;
+               calculated = kTRUE;
+            }
          }
       }
    }
 
-//   if(PART->IsCalibrated()) Info("CalibrateParticle","calibrate particle (%d,%d) E = %lf MeV/A",PART->GetZ(),PART->GetA(), PART->GetKE()/PART->GetA());
+   // In case at least one detector has still no calibrated or calculated energy
+   // the particle is considered as not calibrated
+   if (ndet != ndet_calib) return;
+   PART->SetEnergy(etot);
 
+   // Now check that energy losses are coherent with particle identification and total energy
+   // Create a dummy particle with same total energy
+   KVNucleus avatar;
+   avatar.SetZAandE(PART->GetZ(), PART->GetA(), PART->GetKE());
+
+   Double_t chi2 = 0.;
+
+   // iterating over detectors starting from the target
+   // compute the theoretical energy loss of the avatar
+   // compare to the calibrated/calculated energy
+   // remove this energy from the avatar energy
+   PART->GetReconstructionTrajectory()->IterateBackFrom();
+   while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
+      det = (KVFAZIADetector*)node->GetDetector();
+      Double_t temp = det->GetELostByParticle(&avatar);
+      chi2 += ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss()) * ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss());
+      avatar.SetKE(avatar.GetKE() - temp);
+   }
+   chi2 /= ndet;
+
+   // in case the avatar still has energy (+- epsilon ?) we consider it as punch through particle
+   // if chi2>10, the calibration is incoherent with calculated energy losses (why 10 ??? to be checked)
+   // question : do we really need these two distinct cases ?
+   if (avatar.GetKE() > 0) punch_through = kTRUE;
+   else if (chi2 > 10.)    incoherency = kTRUE;
+
+   // add energy loss in the target
+   Double_t E_targ = gMultiDetArray->GetTargetEnergyLossCorrection(PART);
+   PART->SetTargetEnergyLoss(E_targ);
+   PART->SetEnergy(PART->GetEnergy() + E_targ);
+
+   // set particle momentum from telescope dimensions (random)
+   PART->GetAnglesFromReconstructionTrajectory();
+
+   // set calibration code (set to 0:not_calibrated at the beginning)
+   if (punch_through)    PART->SetECode(3);
+   else if (incoherency) PART->SetECode(4);
+   else if (calculated)  PART->SetECode(2);
+   else                  PART->SetECode(1);
+
+   PART->SetIsCalibrated();
 }
 
 void KVFAZIAGroupReconstructor::PostReconstructionProcessing()
@@ -194,22 +197,22 @@ void KVFAZIAGroupReconstructor::PostReconstructionProcessing()
                }
             }
          }
-
       }
    }
 }
 
 void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
 {
-   // Check for gammas identified in CsI which hide another particle stopping in Si2 or Si1
 
    KVGroupReconstructor::IdentifyParticle(PART);
+
+   // Check for gammas identified in CsI which hide another particle stopping in Si2 or Si1
    if (partID.IsType("CsI") && partID.IDquality == KVIDGCsI::kICODE10) {
       // look at Si1-Si2 identification
       std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
       if (si1si2 != id_by_type.end()) {
          if (si1si2->second->IDattempted && si1si2->second->IDquality < KVIDZAGrid::kICODE4) {
-//            Info("IdentifyParticle", "Gamma identified in %s replaced with Si1-Si2 identification:", PART.GetStoppingDetector()->GetName());
+            //            Info("IdentifyParticle", "Gamma identified in %s replaced with Si1-Si2 identification:", PART.GetStoppingDetector()->GetName());
             si1si2->second->Print();
             partID = *(si1si2->second);
             identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("CsI");
