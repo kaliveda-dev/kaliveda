@@ -159,10 +159,6 @@ you need to do the following:
 class KVEventSelector : public TSelector {
 
 protected :
-   enum {
-      kDeleteGVList = BIT(14),
-   };
-
    TTree*          fChain;   //!pointer to the analyzed TTree or TChain
    TTree*          fAuxChain;//![optional] pointer to another TTree or TChain which may be used during analysis
 
@@ -174,7 +170,7 @@ protected :
    TBranch*        b_Event;   //!
 
    //List of global variables
-   KVGVList* gvlist;            //!
+   KVGVList gvlist;            //!
 
    KVString fBranchName; //name of branch which contains events to analyse
 
@@ -213,7 +209,7 @@ public:
 
    virtual void ParseOptions();
 
-   KVEventSelector(TTree* /*tree*/ = 0) : fChain(0), fAuxChain(0), gvlist(0), fBranchName("data"), fFirstEvent(kTRUE),
+   KVEventSelector(TTree* /*tree*/ = 0) : fChain(0), fAuxChain(0), fBranchName("data"), fFirstEvent(kTRUE),
       fEventsRead(0), fEventsReadInterval(100), fNotifyCalled(kFALSE), fDisableCreateTreeFile(kFALSE)
    {
       lhisto = new KVHashList();
@@ -221,12 +217,6 @@ public:
    }
    virtual ~KVEventSelector()
    {
-      //delete global variable list if it belongs to us, i.e. if created by a call to GetGVList
-      if (TestBit(kDeleteGVList)) {
-         delete gvlist;
-         gvlist = 0;
-         ResetBit(kDeleteGVList);
-      }
       lhisto->Clear();
       delete lhisto;
       lhisto = 0;
@@ -319,26 +309,17 @@ public:
    {
       AbstractMethod("EndAnalysis");
    }
-   //handling global variables for analysis
-   virtual void SetGVList(KVGVList* list)
-   {
-      //Use a user-defined list of global variables for the analysis.
-      //In this case it is the user's responsibility to delete the list
-      //at the end of the analysis.
-      gvlist = list;
-   }
-   virtual KVGVList* GetGVList(void) const
+   KVGVList* GetGVList(void)
    {
       //Access to the internal list of global variables
-      //If the list does not exist, it is created.
-      //In this case it will be automatically deleted with the KVSelector object.
-      if (!gvlist) {
-         const_cast < KVEventSelector*>(this)->gvlist = new KVGVList;
-         const_cast < KVEventSelector*>(this)->SetBit(kDeleteGVList);
-      }
-      return gvlist;
+      return &gvlist;
    }
-   virtual void AddGV(KVVarGlob* vg)
+   const KVGVList* GetGVList(void) const
+   {
+      //Access to the internal list of global variables
+      return &gvlist;
+   }
+   void AddGV(KVVarGlob* vg)
    {
       //Add the global variable "vg" to the list of variables for the analysis.
       //This is equivalent to GetGVList()->Add( vg ).
@@ -347,8 +328,8 @@ public:
       else
          GetGVList()->Add(vg);
    }
-   virtual KVVarGlob* AddGV(const Char_t* class_name, const Char_t* name);
-   virtual KVVarGlob* GetGV(const Char_t* name) const
+   KVVarGlob* AddGV(const Char_t* class_name, const Char_t* name);
+   KVVarGlob* GetGV(const Char_t* name) const
    {
       //Access the global variable with name "name" in the list of variables
       //for the analysis.

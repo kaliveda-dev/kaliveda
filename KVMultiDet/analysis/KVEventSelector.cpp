@@ -213,15 +213,15 @@ Bool_t KVEventSelector::Process(Long64_t entry)
       SetAnalysisFrame();//let user define any necessary reference frames for OK particles
 
       // initialise global variables at first event
-      if (fFirstEvent && gvlist) {
-         gvlist->Init();
+      if (fFirstEvent && !gvlist.IsEmpty()) {
+         gvlist.Init();
          fFirstEvent = kFALSE;
       }
       RecalculateGlobalVariables();
    }
 
    Bool_t ok_anal = kTRUE;
-   if (!gvlist || (gvlist && !gvlist->AbortEventAnalysis())) {
+   if (gvlist.IsEmpty() || !gvlist.AbortEventAnalysis()) {
       // if global variables are defined, events are only analysed if no global variables
       // in the list have failed an event selection condition
       ok_anal = Analysis();     //user analysis
@@ -379,7 +379,7 @@ void KVEventSelector::RecalculateGlobalVariables()
    //this calculation, make sure that at the END of Analysis() you reset the selection
    //criteria.
 
-   if (gvlist) gvlist->CalculateGlobalVariables(GetEvent());
+   if (!gvlist.IsEmpty()) gvlist.CalculateGlobalVariables(GetEvent());
 }
 
 //____________________________________________________________________________
