@@ -38,4 +38,5 @@
 #pragma link C++ class KVMultiDetArray+;
 #pragma link C++ class KVASMultiDetArray+;
 #pragma link C++ class KVGeoImport+;
+#pragma link C++ class KVArrayMult+;
 #endif

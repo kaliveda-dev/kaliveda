@@ -1,8 +1,17 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 20th January 2021
+Last update: 22nd January 2021
 
 ## Version 1.12 (Released: ????)
+
+__Changes 22/1/2021 in__ \ref GlobalVariables
+
+Modification required to plugin declaration for any user-defined global variable classes,
+constructor with `const char*` argument (variable name) must be used, like so:
+
+~~~~{.cpp}
++Plugin.KVVarGlob:    MyNewVarGlob    MyNewVarGlob     MyNewVarGlob.cpp+   "MyNewVarGlob(const char*)"
+~~~~
 
 __Changes 11/12/2020 in__ \ref GlobalVariables
 

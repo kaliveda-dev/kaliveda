@@ -190,7 +190,7 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
 }
 
 //_________________________________________________________________
-KVVarGlob* KVGVList::GetGV(const Char_t* nom)
+KVVarGlob* KVGVList::GetGV(const Char_t* nom) const
 {
    //Return pointer to global variable in list with name 'nom'
 
@@ -390,12 +390,13 @@ KVVarGlob* KVGVList::AddGV(const Char_t* class_name, const Char_t* name)
    //  2. for each user-defined class, add a line to $HOME/.kvrootrc to define a "plugin". E.g. for a class called MyNewVarGlob,
    //
    //~~~~~~~~~~~~~~~
-   //              +Plugin.KVVarGlob:    MyNewVarGlob    MyNewVarGlob     MyNewVarGlob.cpp+   "MyNewVarGlob()"
+   //              +Plugin.KVVarGlob:    MyNewVarGlob    MyNewVarGlob     MyNewVarGlob.cpp+   "MyNewVarGlob(const char*)"
    //~~~~~~~~~~~~~~~
    //
    //  It is assumed that `MyNewVarGlob.h` and `MyNewVarGlob.cpp` will be found in `$HOME/myVarGlobs` (in this example).
+   // The constructor taking a single character string argument (name of the variable) must be defined in the class.
 
-   KVVarGlob* vg = 0;
+   KVVarGlob* vg = nullptr;
    TClass* clas = TClass::GetClass(class_name);
    if (!clas) {
       //class not in dictionary - user-defined class ? Look for plugin.
@@ -408,19 +409,25 @@ KVVarGlob* KVGVList::AddGV(const Char_t* class_name, const Char_t* name)
          return 0;
       }
       else {
-         vg = (KVVarGlob*) ph->ExecPlugin(0);
+         vg = (KVVarGlob*) ph->ExecPlugin(1, name);
       }
    }
    else if (!clas->InheritsFrom("KVVarGlob")) {
       Error("AddGV(const Char_t*,const Char_t*)",
             "%s is not a valid class deriving from KVVarGlob.",
             class_name);
-      return 0;
+      return nullptr;
    }
    else {
-      vg = (KVVarGlob*) clas->New();
+      // need to use plugins to create even known classes, in order to call ctor with name
+      TPluginHandler* ph = KVBase::LoadPlugin("KVVarGlob", class_name);
+      if (!ph) {
+         // define plugin handler for known class
+         gPluginMgr->AddHandler("KVVarGlob", class_name, class_name, "KVMultiDetglobvars", Form("%s(const char*)", class_name));
+         ph = KVBase::LoadPlugin("KVVarGlob", class_name);
+      }
+      vg = (KVVarGlob*) ph->ExecPlugin(1, name);
    }
-   vg->SetName(name);
    Add(vg);
    return vg;
 }

@@ -128,7 +128,7 @@ public:
 
    void CalculateGlobalVariables(KVEvent* e);
 
-   KVVarGlob* GetGV(const Char_t* nom);         //find global variable with name 'nom'
+   KVVarGlob* GetGV(const Char_t* nom) const;         //find global variable with name 'nom'
 
    //Returns first global variable in list with given class
    KVVarGlob* GetGVType(const Char_t* class_name)
