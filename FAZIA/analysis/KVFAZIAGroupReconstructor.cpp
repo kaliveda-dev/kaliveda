@@ -55,7 +55,6 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
       ndet++;
    }
 
-
    // loop again over crossed detectors
    // calculate the energy if not calibrated:
    // - first try using detectors behind to calculated DeltaE from Eres,
@@ -80,7 +79,7 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
                ebehind += ee;
             }
             else if (det_infront && det_infront->GetEnergyLoss()) {
-               // calculate energy loss from Delta E and check this energy in lower than
+               // calculate energy loss from Delta E and check this energy is lower than
                // punch through energy since it doesn't work if the particle crossed det
                // (trying to calculate Si2 energy in case only Si1 calibrated)
                ee = det_infront->GetEResFromDeltaE(PART->GetZ(), PART->GetA(), det_infront->GetEnergyLoss());
@@ -100,31 +99,46 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
    if (ndet != ndet_calib) return;
    PART->SetEnergy(etot);
 
-   // Now check that energy losses are coherent with particle identification and total energy
-   // Create a dummy particle with same total energy
-   KVNucleus avatar;
-   avatar.SetZAandE(PART->GetZ(), PART->GetA(), PART->GetKE());
+//   // Now check that energy losses are coherent with particle identification and total energy
+//   // Create a dummy particle with same total energy
+//   KVNucleus avatar;
+//   avatar.SetZAandE(PART->GetZ(), PART->GetA(), PART->GetKE());
 
-   Double_t chi2 = 0.;
+//   Double_t chi2 = 0.;
 
-   // iterating over detectors starting from the target
-   // compute the theoretical energy loss of the avatar
-   // compare to the calibrated/calculated energy
-   // remove this energy from the avatar energy
-   PART->GetReconstructionTrajectory()->IterateBackFrom();
-   while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
-      det = (KVFAZIADetector*)node->GetDetector();
-      Double_t temp = det->GetELostByParticle(&avatar);
-      chi2 += ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss()) * ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss());
-      avatar.SetKE(avatar.GetKE() - temp);
+//   // iterating over detectors starting from the target
+//   // compute the theoretical energy loss of the avatar
+//   // compare to the calibrated/calculated energy
+//   // remove this energy from the avatar energy
+//   PART->GetReconstructionTrajectory()->IterateBackFrom();
+//   while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
+//      det = (KVFAZIADetector*)node->GetDetector();
+//      Double_t temp = det->GetELostByParticle(&avatar);
+//      chi2 += ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss()) * ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss());
+//      avatar.SetKE(avatar.GetKE() - temp);
+//   }
+//   chi2 /= ndet;
+
+//   // in case the avatar still has energy (+- epsilon ?) we consider it as punch through particle
+//   // if chi2>10, the calibration is incoherent with calculated energy losses (why 10 ??? to be checked)
+//   // question : do we really need these two distinct cases ?
+//   if (avatar.GetKE() > 0) punch_through = kTRUE;
+//   else if (chi2 > 10.)    incoherency = kTRUE;
+
+   // checking for CsI punch through
+   det = (KVFAZIADetector*)PART->GetStoppingDetector();
+   if (det->GetIdentifier() == KVFAZIADetector::kCSI) {
+
+      KVDetector* SI2 = PART->GetDetector(1);
+      KVDetector* SI1 = PART->GetDetector(2);
+
+      int Z = PART->GetZ();
+      int A = PART->GetA();
+
+      KVDetector SI1SI2("Si", SI1->GetThickness() + SI2->GetThickness());
+      if (SI1->GetEnergyLoss() + SI1->GetEnergyLoss() < SI1SI2.GetDeltaEFromERes(Z, A, det->GetPunchThroughEnergy(Z, A))) punch_through = kTRUE;
    }
-   chi2 /= ndet;
 
-   // in case the avatar still has energy (+- epsilon ?) we consider it as punch through particle
-   // if chi2>10, the calibration is incoherent with calculated energy losses (why 10 ??? to be checked)
-   // question : do we really need these two distinct cases ?
-   if (avatar.GetKE() > 0) punch_through = kTRUE;
-   else if (chi2 > 10.)    incoherency = kTRUE;
 
    // add energy loss in the target
    Double_t E_targ = gMultiDetArray->GetTargetEnergyLossCorrection(PART);
@@ -135,8 +149,8 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
    PART->GetAnglesFromReconstructionTrajectory();
 
    // set calibration code (set to 0:not_calibrated at the beginning)
-   if (punch_through)    PART->SetECode(3);
-   else if (incoherency) PART->SetECode(4);
+   if (punch_through)    PART->SetECode(3); // never set
+   else if (incoherency) PART->SetECode(4); // never set
    else if (calculated)  PART->SetECode(2);
    else                  PART->SetECode(1);
 
