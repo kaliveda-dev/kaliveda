@@ -68,7 +68,6 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
          // store energy loss behind for latter DeltaE from Eres calculations
          if (det->IsCalibrated()) ebehind += det->GetEnergyLoss();
          else {
-            KVFAZIADetector* det_infront = (KVFAZIADetector*)det->GetNode()->GetDetectorsInFront()->First();
             if (ebehind > 0.) {
                // calculate energy loss from residual energy
                ee = det->GetDeltaEFromERes(PART->GetZ(), PART->GetA(), ebehind);
@@ -78,17 +77,20 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
                calculated = kTRUE;
                ebehind += ee;
             }
-            else if (det_infront && det_infront->GetEnergyLoss()) {
-               // calculate energy loss from Delta E and check this energy is lower than
-               // punch through energy since it doesn't work if the particle crossed det
-               // (trying to calculate Si2 energy in case only Si1 calibrated)
-               ee = det_infront->GetEResFromDeltaE(PART->GetZ(), PART->GetA(), det_infront->GetEnergyLoss());
-               if (ee > det->GetPunchThroughEnergy(PART->GetZ(), PART->GetA())) continue;
-               det->SetEnergyLoss(ee);
-               etot += ee;
-               ndet_calib++;
-               calculated = kTRUE;
-               ebehind += ee;
+            else if (det->GetNode()->GetNDetsInFront()) {
+               KVFAZIADetector* det_infront = (KVFAZIADetector*)det->GetNode()->GetDetectorsInFront()->First();
+               if (det_infront && det_infront->GetEnergyLoss()) {
+                  // calculate energy loss from Delta E and check this energy is lower than
+                  // punch through energy since it doesn't work if the particle crossed det
+                  // (trying to calculate Si2 energy in case only Si1 calibrated)
+                  ee = det_infront->GetEResFromDeltaE(PART->GetZ(), PART->GetA(), det_infront->GetEnergyLoss());
+                  if (ee > det->GetPunchThroughEnergy(PART->GetZ(), PART->GetA())) continue;
+                  det->SetEnergyLoss(ee);
+                  etot += ee;
+                  ndet_calib++;
+                  calculated = kTRUE;
+                  ebehind += ee;
+               }
             }
          }
       }
@@ -264,7 +266,6 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
             PART.SetIdentification(&partID, identifying_telescope);
          }
       }
-
    }
 }
 
