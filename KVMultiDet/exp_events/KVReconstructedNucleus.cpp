@@ -320,6 +320,14 @@ void KVReconstructedNucleus::AddDetector(KVDetector* det)
 
 }
 
+void KVReconstructedNucleus::ModifyReconstructionTrajectory(const KVReconNucTrajectory* t)
+{
+   // this method modifies the reconstructed trajectory
+   // probably called during the identification coherency check
+   fReconTraj = t;
+   fDetNames = t->GetPathString();//to store/retrieve reconstruction trajectory on file
+}
+
 void KVReconstructedNucleus::SetReconstructionTrajectory(const KVReconNucTrajectory* t)
 {
    // Method called in initial reconstruction of particle.

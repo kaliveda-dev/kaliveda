@@ -99,31 +99,31 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
    if (ndet != ndet_calib) return;
    PART->SetEnergy(etot);
 
-//   // Now check that energy losses are coherent with particle identification and total energy
-//   // Create a dummy particle with same total energy
-//   KVNucleus avatar;
-//   avatar.SetZAandE(PART->GetZ(), PART->GetA(), PART->GetKE());
+   //   // Now check that energy losses are coherent with particle identification and total energy
+   //   // Create a dummy particle with same total energy
+   //   KVNucleus avatar;
+   //   avatar.SetZAandE(PART->GetZ(), PART->GetA(), PART->GetKE());
 
-//   Double_t chi2 = 0.;
+   //   Double_t chi2 = 0.;
 
-//   // iterating over detectors starting from the target
-//   // compute the theoretical energy loss of the avatar
-//   // compare to the calibrated/calculated energy
-//   // remove this energy from the avatar energy
-//   PART->GetReconstructionTrajectory()->IterateBackFrom();
-//   while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
-//      det = (KVFAZIADetector*)node->GetDetector();
-//      Double_t temp = det->GetELostByParticle(&avatar);
-//      chi2 += ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss()) * ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss());
-//      avatar.SetKE(avatar.GetKE() - temp);
-//   }
-//   chi2 /= ndet;
+   //   // iterating over detectors starting from the target
+   //   // compute the theoretical energy loss of the avatar
+   //   // compare to the calibrated/calculated energy
+   //   // remove this energy from the avatar energy
+   //   PART->GetReconstructionTrajectory()->IterateBackFrom();
+   //   while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
+   //      det = (KVFAZIADetector*)node->GetDetector();
+   //      Double_t temp = det->GetELostByParticle(&avatar);
+   //      chi2 += ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss()) * ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss());
+   //      avatar.SetKE(avatar.GetKE() - temp);
+   //   }
+   //   chi2 /= ndet;
 
-//   // in case the avatar still has energy (+- epsilon ?) we consider it as punch through particle
-//   // if chi2>10, the calibration is incoherent with calculated energy losses (why 10 ??? to be checked)
-//   // question : do we really need these two distinct cases ?
-//   if (avatar.GetKE() > 0) punch_through = kTRUE;
-//   else if (chi2 > 10.)    incoherency = kTRUE;
+   //   // in case the avatar still has energy (+- epsilon ?) we consider it as punch through particle
+   //   // if chi2>10, the calibration is incoherent with calculated energy losses (why 10 ??? to be checked)
+   //   // question : do we really need these two distinct cases ?
+   //   if (avatar.GetKE() > 0) punch_through = kTRUE;
+   //   else if (chi2 > 10.)    incoherency = kTRUE;// never set
 
    // checking for CsI punch through
    det = (KVFAZIADetector*)PART->GetStoppingDetector();
@@ -149,8 +149,8 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
    PART->GetAnglesFromReconstructionTrajectory();
 
    // set calibration code (set to 0:not_calibrated at the beginning)
-   if (punch_through)    PART->SetECode(3); // never set
-   else if (incoherency) PART->SetECode(4); // never set
+   if (punch_through)    PART->SetECode(3);
+   else if (incoherency) PART->SetECode(4); // never set for now...
    else if (calculated)  PART->SetECode(2);
    else                  PART->SetECode(1);
 
@@ -183,7 +183,7 @@ void KVFAZIAGroupReconstructor::PostReconstructionProcessing()
             sig->GetPSAResult(det);
          }
 
-         // now copy all detector signals to reconstructed particle parameter list...
+         // now copy all detector signals to reconstructed particle paramet// never seter list...
          // they are stored with format "[detname].[signal_name]" except for
          // DetTag and GTTag which are the same for all detectors of the same telescope
          // and so are only stored once with name "DetTag" or "GTTag".
@@ -211,21 +211,76 @@ void KVFAZIAGroupReconstructor::PostReconstructionProcessing()
 void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
 {
 
+
+   // first idea :
+   // try all possible identification, starting from the stopping ID tel
+   // do not stop when a good one is found: the coherency between different
+   // ID telescope could then be used latter.
+   // The procedure is based on KVGroupReconstructor::IdentifyParticle(PART);
+   // with some modifications.
+
    KVGroupReconstructor::IdentifyParticle(PART);
 
+
+   // 8He dans CsI-PSA -> 8Be pour E789
+
+
    // Check for gammas identified in CsI which hide another particle stopping in Si2 or Si1
-   if (partID.IsType("CsI") && partID.IDquality == KVIDGCsI::kICODE10) {
-      // look at Si1-Si2 identification
+   if (partID.IsType("CsI")) {
+      if (partID.IDquality == KVIDGCsI::kICODE10) {
+         // look at Si1-Si2 identification
+         std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
+         if (si1si2 != id_by_type.end()) {
+            if (si1si2->second->IDattempted && si1si2->second->IDquality < KVIDZAGrid::kICODE4) {
+               ChangeReconstructedTrajectory(PART, "SI2");
+               partID = *(si1si2->second);
+               identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
+               PART.SetIdentifyingTelescope(identifying_telescope);
+               PART.SetIdentification(&partID, identifying_telescope);
+            }
+         }
+      }
+      else {
+         std::map<std::string, KVIdentificationResult*>::iterator si2csi = id_by_type.find("Si-CsI");
+         if (si2csi != id_by_type.end()) {
+            if (si2csi->second->IDattempted && si2csi->second->IDquality < KVIDZAGrid::kICODE4) {
+               partID = *(si2csi->second);
+               identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-CsI");
+               PART.SetIdentifyingTelescope(identifying_telescope);
+               PART.SetIdentification(&partID, identifying_telescope);
+            }
+         }
+      }
+   }
+   else if (partID.IsType("Si-CsI")) {
+      int zz = PART.GetZ();
       std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
       if (si1si2 != id_by_type.end()) {
-         if (si1si2->second->IDattempted && si1si2->second->IDquality < KVIDZAGrid::kICODE4) {
-            //            Info("IdentifyParticle", "Gamma identified in %s replaced with Si1-Si2 identification:", PART.GetStoppingDetector()->GetName());
-            si1si2->second->Print();
+         if (si1si2->second->IDattempted && si1si2->second->IDquality < KVIDZAGrid::kICODE4 && zz < si1si2->second->Z) {
+            ChangeReconstructedTrajectory(PART, "SI2");
             partID = *(si1si2->second);
-            identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("CsI");
+            identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
             PART.SetIdentifyingTelescope(identifying_telescope);
             PART.SetIdentification(&partID, identifying_telescope);
          }
       }
+
    }
+}
+
+void KVFAZIAGroupReconstructor::ChangeReconstructedTrajectory(KVReconstructedNucleus& PART, const char* det)
+{
+   // set detector channel to zero (peut-etre)
+   // change recon trajectory
+   // modify stopping detector
+
+   PART.GetReconstructionTrajectory()->IterateFrom();
+   PART.GetReconstructionTrajectory()->GetNextNode();
+   KVGeoDetectorNode* node = PART.GetReconstructionTrajectory()->GetNextNode();
+
+   KVGroup* group = PART.GetGroup();
+   KVGeoDNTrajectory* traj = (KVGeoDNTrajectory*)node->GetTrajectories()->First();
+
+   const KVReconNucTrajectory* newtraj = (const KVReconNucTrajectory*)group->GetTrajectoryForReconstruction(traj, node);
+   PART.ModifyReconstructionTrajectory(newtraj);
 }

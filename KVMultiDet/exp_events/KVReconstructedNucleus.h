@@ -466,6 +466,7 @@ public:
       return fReconTraj;
    }
    void SetReconstructionTrajectory(const KVReconNucTrajectory* t);
+   void ModifyReconstructionTrajectory(const KVReconNucTrajectory* t);
    void CopyAndMoveReferences(const KVReconstructedNucleus*);
    void PrintStatusString() const;
 
