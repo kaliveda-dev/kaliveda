@@ -694,7 +694,14 @@ void KVEventSelector::UnsetOpt(const Char_t* opt)
 
    fOptionList.RemoveParameter(opt);
 }
-
+#ifdef USING_ROOT6
+void KVEventSelector::SetTriggerConditionsForRun(int run)
+{
+   // Call this method in your InitRun() method with the current run number in order to
+   // automatically reject events which are not consistent with the acquisition trigger.
+   gDataAnalyser->SetTriggerConditionsForRun(run);
+}
+#endif
 void KVEventSelector::ParseOptions()
 {
    // Analyse comma-separated list of options given to TTree::Process

@@ -14,6 +14,7 @@
 #include "TProof.h"
 
 #include <KVClassFactory.h>
+#include <KVTriggerConditions.h>
 
 using namespace std;
 
@@ -218,6 +219,30 @@ TEnv* KVReconDataAnalyser::GetReconDataTreeInfos() const
 {
    return (TEnv*)theChain->GetTree()->GetUserInfo()->FindObject("TEnv");
 }
+
+#ifdef USING_ROOT6
+void KVReconDataAnalyser::SetTriggerConditionsForRun(int run)
+{
+   // When called from the InitRun() method of a user's analysis class, this method will ensure that only data
+   // compatible with the experimental trigger will be provided for analysis in the user's Analysis() method.
+   //
+   // This will be done by searching for a KVTriggerConditions plugin class defined for the currently-analysed
+   // dataset, defined like so:
+   //
+   //~~~~
+   //+Plugin.KVTriggerConditions:   [dataset]   [classname]  [libname]   "[default constructor]()"
+   //~~~~
+
+   TPluginHandler* ph = KVBase::LoadPlugin("KVVarGlob", GetDataSet()->GetName());
+   if (!ph) {
+      Info("SetTriggerConditionsForRun",
+           "No definition of trigger conditions available for this dataset");
+      return;
+   }
+   std::unique_ptr<KVTriggerConditions> trig((KVTriggerConditions*) ph->ExecPlugin(0));
+   trig->SetTriggerConditionsForRun(fSelector, run);
+}
+#endif
 
 void KVReconDataAnalyser::PrintTreeInfos()
 {

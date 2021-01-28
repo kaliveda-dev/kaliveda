@@ -19,6 +19,7 @@ $Date: 2007/11/15 14:59:45 $
 #include "KVAvailableRunsFile.h"
 #include "KVINDRA.h"
 #include "TProof.h"
+#include "KVINDRATriggerConditions.h"
 
 using namespace std;
 
@@ -307,6 +308,14 @@ KVReconstructedEvent* KVINDRAReconDataAnalyser::GetReconstructedEvent()
 {
    return (fSelector ? fSelector->GetEvent() : fOldSelector->GetEvent());
 }
+
+#ifdef USING_ROOT6
+void KVINDRAReconDataAnalyser::SetTriggerConditionsForRun(int run)
+{
+   KVINDRATriggerConditions trig;
+   trig.SetTriggerConditionsForRun(fSelector, run);
+}
+#endif
 
 void KVINDRAReconDataAnalyser::preAnalysis()
 {

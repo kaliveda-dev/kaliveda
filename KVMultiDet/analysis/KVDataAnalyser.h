@@ -368,7 +368,9 @@ public:
    {
       return nullptr;
    }
-
+#ifdef USING_ROOT6
+   virtual void SetTriggerConditionsForRun(int) {}
+#endif
    ClassDef(KVDataAnalyser, 0)  //For submitting & performing data analysis tasks
 };
 

@@ -108,7 +108,9 @@ public:
    void SetSelectorCurrentRun(KVINDRADBRun* CurrentRun);
    Long64_t GetRawEntryNumber();
    KVReconstructedEvent* GetReconstructedEvent();
-
+#ifdef USING_ROOT6
+   void SetTriggerConditionsForRun(int);
+#endif
    ClassDef(KVINDRAReconDataAnalyser, 0) //For analysing reconstructed INDRA data
 };
 

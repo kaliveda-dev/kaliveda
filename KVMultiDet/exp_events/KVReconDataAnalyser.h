@@ -74,6 +74,9 @@ public:
    {
       return fDataReleaseNum;
    }
+#ifdef USING_ROOT6
+   virtual void SetTriggerConditionsForRun(int);
+#endif
 
    ClassDef(KVReconDataAnalyser, 0) //For analysing reconstructed data
 };

@@ -412,7 +412,9 @@ public:
       else
          SetCombinedOutputFile(filename);
    }
-
+#ifdef USING_ROOT6
+   void SetTriggerConditionsForRun(int);
+#endif
    ClassDef(KVEventSelector, 0)//General purpose analysis class for TTrees containing KVEvent objects
 };
 
