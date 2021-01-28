@@ -348,22 +348,27 @@ public:
    virtual ~KVVarGlob(void)
    {}
 
-   Bool_t IsOneBody()
+   Bool_t IsOneBody() const
    {
       // \returns kTRUE for variables of one-body type for which Fill(KVNucleus*) method must be defined
       return fType == kOneBody;
    }
 
-   Bool_t IsTwoBody()
+   Bool_t IsTwoBody() const
    {
       // \returns kTRUE for variables of two-body type for which Fill2(KVNucleus*,KVNucleus*) method must be defined
       return fType == kTwoBody;
    }
 
-   Bool_t IsNBody()
+   Bool_t IsNBody() const
    {
       // \returns kTRUE for variables of N-body type for which FillN(KVEvent*) method must be defined
       return fType == kNBody;
+   }
+
+   virtual Bool_t IsGlobalVariable() const
+   {
+      return kTRUE;
    }
 
    void ListInit()
@@ -674,7 +679,9 @@ public:
       // if the condition is not met, no further variables will be calculated and the
       // event will be rejected for further analysis.
 
-      return fEventSelector ? fEventSelector(this) : true;
+      if (!fEventSelector) return true;
+      bool result = fEventSelector(this);
+      return result;
    }
    void SetNewFrameDefinition(const FrameSetter& f)
    {

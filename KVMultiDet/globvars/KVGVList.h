@@ -3,6 +3,7 @@
 #include "KVVarGlob.h"
 #include "KVUniqueNameList.h"
 #include "TTree.h"
+#include "KVEventClassifier.h"
 
 /**
 \class KVGVList
@@ -102,6 +103,7 @@ class KVGVList: public KVUniqueNameList {
       _s.ReplaceAll("=", "_");
       return _s;
    }
+   KVVarGlob* prepareGVforAdding(const Char_t* class_name, const Char_t* name);
 
 protected:
    void init_KVGVList(void);
@@ -122,6 +124,7 @@ public:
    virtual ~ KVGVList(void) {}
 
    KVVarGlob* AddGV(const Char_t* class_name, const Char_t* name);
+   KVVarGlob* AddGVFirst(const Char_t* class_name, const Char_t* name);
 
    void Init(void);     // methode d'initialisation des variables globales
    void Reset(void);    // Remise a zero avant le
@@ -136,6 +139,7 @@ public:
       return (KVVarGlob*)FindObjectByClass(class_name);
    }
    virtual void      Add(TObject* obj) ;
+   virtual void      AddFirst(TObject* obj) ;
 
    // returns kTRUE if list contains 1-body variables
    Bool_t Has1BodyVariables()
@@ -162,6 +166,7 @@ public:
    {
       return fAbortEventAnalysis;
    }
+   KVEventClassifier* AddEventClassifier(const TString& varname);
 
    ClassDef(KVGVList, 3)       // List of global variables
 };

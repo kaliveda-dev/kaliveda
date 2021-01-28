@@ -127,65 +127,41 @@ void KVGVList::CalculateN()
 void KVGVList::CalculateGlobalVariables(KVEvent* e)
 {
    // This method will calculate all global variables defined in the list for the event 'e'.
-   // - all 1-body variables will be calculated in a single loop over the particles;
-   // - all 2-body variables will be calculated in a single loop over particle pairs;
-   // - all N-body variables will be calculated
+   //
+   // Note that for 2-body variables, the Fill2 method will be called for each distinct pair of particles
+   // in the event, plus each pair made up of a particle and itself.
    //
    // For each variable for which an event selection condition was set (see KVVarGlob::SetEventSelection())
    // the condition is tested as soon as the variable is calculated. If the condition is not satisfied,
-   // calculation of the other variable is abandonded and method AbortEventAnalysis() returns kTRUE.
+   // calculation of the other variables is abandonded and method AbortEventAnalysis() returns kTRUE.
 
    Reset();
 
-   if (Has1BodyVariables()) {
-      TIter it(&fVG1);
-      KVVarGlob* vg;
-      while ((vg = (KVVarGlob*)it())) {
-#ifdef WITH_CPP11
-         for (KVEvent::Iterator it1(e, KVEvent::Iterator::Type::OK); it1 != KVEvent::Iterator::End(); ++it1) {
-#else
-         for (KVEvent::Iterator it1(e, KVEvent::Iterator::OK); it1 != KVEvent::Iterator::End(); ++it1) {
-#endif
-            vg->Fill(it1.get_pointer<const KVNucleus>());
-         }
-         vg->Calculate();
-#ifdef USING_ROOT6
-         if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
-            return;
-         }
-         vg->DefineNewFrame(e);
-#endif
-      }
-   }
-   if (Has2BodyVariables()) {
-      TIter it(&fVG2);
-      KVVarGlob* vg;
-      while ((vg = (KVVarGlob*)it())) {
-#ifdef WITH_CPP11
-         for (KVEvent::Iterator it1(e, KVEvent::Iterator::Type::OK); it1 != KVEvent::Iterator::End(); ++it1) {
-#else
-         for (KVEvent::Iterator it1(e, KVEvent::Iterator::OK); it1 != KVEvent::Iterator::End(); ++it1) {
-#endif
-            for (KVEvent::Iterator it2(it1); it2 != KVEvent::Iterator::End(); ++it2) {
-               // calculate 2-body variables
-               // we use every pair of particles (including identical pairs) in the event
-               vg->Fill2(it1.get_pointer<const KVNucleus>(), it2.get_pointer<const KVNucleus>());
+   TIter it(this);
+   KVVarGlob* vg;
+   while ((vg = (KVVarGlob*)it())) {
+
+      if (vg->IsGlobalVariable()) {
+         if (vg->IsNBody()) vg->FillN(e);
+         else {
+            for (KVEvent::Iterator it1 = OKEventIterator(*e).begin(); it1 != KVEvent::Iterator::End(); ++it1) {
+               if (vg->IsTwoBody()) {
+                  for (KVEvent::Iterator it2(it1); it2 != KVEvent::Iterator::End(); ++it2) {
+                     // we use every distinct pair of particles (including identical pairs) in the event
+                     vg->Fill2(it1.get_pointer<const KVNucleus>(), it2.get_pointer<const KVNucleus>());
+                  }
+               }
+               else {
+                  vg->Fill(it1.get_pointer<const KVNucleus>());
+               }
             }
          }
-         vg->Calculate();
-#ifdef USING_ROOT6
-         if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
-            return;
-         }
-         vg->DefineNewFrame(e);
-#endif
       }
-   }
-
-   // calculate N-body variables
-   if (HasNBodyVariables()) {
-      FillN(e);
-      CalculateN();
+      vg->Calculate();
+      if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
+         return;
+      }
+      vg->DefineNewFrame(e);
    }
 }
 
@@ -213,6 +189,33 @@ void KVGVList::Add(TObject* obj)
       Warning("Add", "Only the first variable added to the list will be used: name=%s class=%s",
               GetGV(obj->GetName())->GetName(), GetGV(obj->GetName())->ClassName());
       Warning("Add", "The following global variable (the one you tried to add) will be ignored:");
+      printf("\n");
+      obj->Print();
+      return;
+   }
+   if (obj->InheritsFrom("KVVarGlob")) {
+      // put global variable pointer in appropriate list
+      KVVarGlob* vg = (KVVarGlob*)obj;
+      if (vg->IsOneBody()) fVG1.Add(vg);
+      else if (vg->IsTwoBody()) fVG2.Add(vg);
+      else if (vg->IsNBody()) fVGN.Add(vg);
+   }
+}
+void KVGVList::AddFirst(TObject* obj)
+{
+   // Overrides KVUniqueNameList::AddFirst(TObject*) so that global variable pointers are sorted
+   // between the 3 lists used for 1-body, 2-body & N-body variables.
+   //
+   // We also print a warning in case the user tries to add a global variable with the
+   // same name as one already in the list. In the case we retain only the first global variable,
+   // any others with the same name are ignored
+
+   KVUniqueNameList::AddFirst(obj);   // add object to main list, check duplicates
+   if (!ObjectAdded()) {
+      Warning("AddFirst", "You tried to add a global variable with the same name as one already in the list");
+      Warning("AddFirst", "Only the first variable added to the list will be used: name=%s class=%s",
+              GetGV(obj->GetName())->GetName(), GetGV(obj->GetName())->ClassName());
+      Warning("AddFirst", "The following global variable (the one you tried to add) will be ignored:");
       printf("\n");
       obj->Print();
       return;
@@ -363,6 +366,43 @@ void KVGVList::FillBranches()
    }
 }
 
+KVEventClassifier* KVGVList::AddEventClassifier(const TString& varname)
+{
+   // Add an event classification object to the list, based on the named global variable
+   // (which must already be in the list).
+   //
+   // Returns a pointer to the object, in order to add cuts like so:
+   //
+   //~~~~{.cpp}
+   //  KVGVList list;
+   //  list.AddGV("KVMult", "mtot");
+   //  auto mtot_cuts = list.AddEventClassifier("mtot");
+   //  mtot_cuts->AddCut(31.7);
+   //  mtot_cuts->AddCut(26.3);
+   //  mtot_cuts->AddCut(17.7);
+   //  mtot_cuts->AddCut(9.7);
+   //~~~~
+   //
+   // This will class events into 5 bins with following numbers:
+   //
+   // | mtot           |   bin   |
+   // +----------------+---------+
+   // |  >31.7         |    4    |
+   // |  >26.3,  <31.7 |    3    |
+   // |  >17.7,  <26.3 |    2    |
+   // |  >9.7,   <17.7 |    1    |
+   // |           <9.7 |    0    |
+   //
+
+   KVVarGlob* gv = GetGV(varname);
+   if (!gv) {
+      Warning("AddEventClassifier", "Variable %s not found in list. No classification possible.", varname.Data());
+   }
+   KVEventClassifier* ec = new KVEventClassifier(gv);
+   Add(ec);
+   return ec;
+}
+
 KVVarGlob* KVGVList::AddGV(const Char_t* class_name, const Char_t* name)
 {
    //Add a global variable to the list.
@@ -396,6 +436,13 @@ KVVarGlob* KVGVList::AddGV(const Char_t* class_name, const Char_t* name)
    //  It is assumed that `MyNewVarGlob.h` and `MyNewVarGlob.cpp` will be found in `$HOME/myVarGlobs` (in this example).
    // The constructor taking a single character string argument (name of the variable) must be defined in the class.
 
+   KVVarGlob* vg = prepareGVforAdding(class_name, name);
+   if (vg) Add(vg);
+   return vg;
+}
+
+KVVarGlob* KVGVList::prepareGVforAdding(const Char_t* class_name, const Char_t* name)
+{
    KVVarGlob* vg = nullptr;
    TClass* clas = TClass::GetClass(class_name);
    if (!clas) {
@@ -428,6 +475,16 @@ KVVarGlob* KVGVList::AddGV(const Char_t* class_name, const Char_t* name)
       }
       vg = (KVVarGlob*) ph->ExecPlugin(1, name);
    }
-   Add(vg);
+   return vg;
+}
+
+KVVarGlob* KVGVList::AddGVFirst(const Char_t* class_name, const Char_t* name)
+{
+   // Add a global variable at the beginning of the list.
+   //
+   // See AddGV() for details.
+
+   KVVarGlob* vg = prepareGVforAdding(class_name, name);
+   if (vg) AddFirst(vg);
    return vg;
 }
