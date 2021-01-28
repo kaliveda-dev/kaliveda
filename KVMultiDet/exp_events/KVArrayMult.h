@@ -9,6 +9,8 @@
  \brief Calculate multiplicity in given array
  \ingroup GlobalVariables
 
+Only use with reconstructed (experimental or filtered) data!
+
 The initial name given to the variable (i.e. in the constructor or as argument to KVGVList::AddGV())
 is the name of the array in which the multiplicity is to be calculated.
 
@@ -23,6 +25,8 @@ public:
    KVArrayMult(const Char_t* name)
       : KVMult(Form("Mult_%s", name))
    {
+      // \param[in] name name of array for which to calculate multiplcity
+
       SetTitle(name);
 #ifdef USING_ROOT6
       SetSelection({Form("Mult_%s", name), [&](const KVNucleus * n)

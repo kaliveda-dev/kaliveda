@@ -164,7 +164,7 @@ void KVReconstructedNucleus::PrintStatusString() const
 Bool_t KVReconstructedNucleus::InArray(const TString& name) const
 {
    // Returns kTRUE if particle was detected in array with given name
-   return GetParameters()->IsValue("ARRAY", name.Data());
+   return GetArrayName() == name;
 }
 
 TString KVReconstructedNucleus::GetArrayName() const
