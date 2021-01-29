@@ -1,4 +1,4 @@
-void SimulatedEventAnalysisTemplate::InitAnalysis()
+void ROOT6SimulatedEventAnalysisTemplate::InitAnalysis()
 {
    // INITIALISATION PERFORMED AT BEGINNING OF ANALYSIS
    // Here you define:
@@ -8,7 +8,10 @@ void SimulatedEventAnalysisTemplate::InitAnalysis()
 
    // DEFINITION OF GLOBAL VARIABLES FOR ANALYSIS
    AddGV("KVMult", "mult");   // total multiplicity of each event
-   AddGV("KVMult", "Mcha")->SetSelection("_NUC_->GetZ()>0"); // charged particle multiplicity
+   AddGV("KVMult", "Mcha")->SetSelection({"Z>0", [](const KVNucleus * n)
+   {
+      return n->GetZ() > 0;
+   }}); // charged particle multiplicity
 
    // for sorting events according to multiplicity
    KVEventClassifier* ec = GetGVList()->AddEventClassifier("mult");
@@ -37,16 +40,15 @@ void SimulatedEventAnalysisTemplate::InitAnalysis()
 
 //____________________________________________________________________________________
 
-Bool_t SimulatedEventAnalysisTemplate::Analysis()
+Bool_t ROOT6SimulatedEventAnalysisTemplate::Analysis()
 {
    // EVENT BY EVENT ANALYSIS
 
    Int_t EC = GetGV("mult_EC")->GetValue(); // event class according to mult
 
-   KVSimNucleus* part;
-   while ((part = (KVSimNucleus*)GetEvent()->GetNextParticle())) {
-      if (part->IsIsotope(2, 4)) FillHisto(Form("VparVper_alphas_%d", EC),
-                                              part->GetVpar(), part->GetVperp());
+   for (auto& part : *GetEvent()) {
+      if (part.IsIsotope(2, 4)) FillHisto(Form("VparVper_alphas_EC%d", EC),
+                                             part.GetVpar(), part.GetVperp());
    }
 
    GetGVList()->FillBranches();

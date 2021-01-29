@@ -1,6 +1,6 @@
 #include "KVDataAnalyser.h"
 
-void KVINDRAEventSelectorTemplate::InitAnalysis(void)
+void ROOT6KVINDRAEventSelectorTemplate::InitAnalysis(void)
 {
    // Declaration of histograms, global variables, etc.
    // Called at the beginning of the analysis
@@ -26,11 +26,11 @@ void KVINDRAEventSelectorTemplate::InitAnalysis(void)
    GetGVList()->MakeBranches(t); // store global variable values in branches
 
    /*** DEFINE WHERE TO SAVE THE RESULTS ***/
-   SetJobOutputFileName("KVINDRAEventSelectorTemplate_results.root");
+   SetJobOutputFileName("ROOT6KVINDRAEventSelectorTemplate_results.root");
 }
 
 //_____________________________________
-void KVINDRAEventSelectorTemplate::InitRun(void)
+void ROOT6KVINDRAEventSelectorTemplate::InitRun(void)
 {
    // Initialisations for each run
    // Called at the beginning of each run
@@ -42,28 +42,28 @@ void KVINDRAEventSelectorTemplate::InitRun(void)
 
    // set title of TTree with name of analysed system
    GetTree("myTree")->SetTitle(GetCurrentRun()->GetSystemName());
+
+   // Do not remove the following line - reject events with less identified particles than
+   // the acquisition multiplicity trigger
+   SetTriggerConditionsForRun(GetCurrentRun()->GetNumber());
 }
 
 //_____________________________________
-Bool_t KVINDRAEventSelectorTemplate::Analysis(void)
+Bool_t ROOT6KVINDRAEventSelectorTemplate::Analysis(void)
 {
    // Analysis method called event by event.
    // The current event can be accessed by a call to method GetEvent().
    // See KVINDRAReconEvent documentation for the available methods.
 
-   // Do not remove the following line - reject events with less identified particles than
-   // the acquisition multiplicity trigger
-   if (!GetEvent()->IsOK()) return kTRUE;
-
    GetGVList()->FillBranches(); // update values of all global variable branches
 
    /*** LOOP OVER PARTICLES OF EVENT ***/
-   KVINDRAReconNuc* particle;
-   while ((particle = GetEvent()->GetNextParticle("OK"))) {  // "OK" => using selection criteria of InitRun()
+   for (auto& particle : OKEventIterator(*GetEvent())) {
+      // "OK" => using selection criteria of InitRun()
       // fill Z distribution
-      FillHisto("zdist", particle->GetZ());
+      FillHisto("zdist", particle.GetZ());
       // fill Z-Vpar(cm)
-      FillHisto("zvpar", particle->GetFrame("CM")->GetVpar(), particle->GetZ());
+      FillHisto("zvpar", particle.GetFrame("CM")->GetVpar(), particle.GetZ());
    }
 
    // write new results in TTree

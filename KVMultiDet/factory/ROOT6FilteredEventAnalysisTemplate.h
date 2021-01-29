@@ -2,13 +2,15 @@
 #include "KVZmax.h"
 #include "KVDataAnalyser.h"
 
-class FilteredEventAnalysisTemplate : public KVEventSelector {
+class ROOT6FilteredEventAnalysisTemplate : public KVEventSelector {
+
+   double ZVproj;
 
    Bool_t link_to_unfiltered_simulation;
 
 public:
-   FilteredEventAnalysisTemplate() {}
-   virtual ~FilteredEventAnalysisTemplate() {}
+   ROOT6FilteredEventAnalysisTemplate() {}
+   virtual ~ROOT6FilteredEventAnalysisTemplate() {}
 
    void InitAnalysis();
    void InitRun();
@@ -22,5 +24,5 @@ public:
       GetEvent()->SetFrame("CM", gDataAnalyser->GetKinematics()->GetCMVelocity());
    }
 
-   ClassDef(FilteredEventAnalysisTemplate, 1) //event analysis class
+   ClassDef(ROOT6FilteredEventAnalysisTemplate, 1) //event analysis class
 };

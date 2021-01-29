@@ -83,16 +83,6 @@ void ROOT6ReconDataSelectorTemplate::InitRun(void)
    // which will be used in your analysis, they are automatically selected using the default
    // values in variables *.ReconstructedNuclei.AcceptID/ECodes.
 
-   // You can also perform more fine-grained selection of particles using class KVParticleCondition.
-   // For example:
-   KVParticleCondition pc_z("z_ok", [](const KVNucleus * n) {
-      return (n->GetZ() > 0 && n->GetZ() <= 92);
-   });// remove any strange Z identifications
-   KVParticleCondition pc_e("e_ok", [](const KVNucleus * n) {
-      return n->GetE() > 0;
-   });               // remove any immobile nuclei
-   SetParticleConditions(pc_z && pc_e);
-
    // set title of TTree with name of analysed system
    GetTree("myTree")->SetTitle(GetCurrentRun()->GetSystemName());
 
@@ -100,6 +90,9 @@ void ROOT6ReconDataSelectorTemplate::InitRun(void)
    const KV2Body* kin = gDataAnalyser->GetKinematics();
    zvtot_sys = kin->GetNucleus(1)->GetVpar() * kin->GetNucleus(1)->GetZ();
    ztot_sys = GetCurrentRun()->GetSystem()->GetZtot();
+
+   // reject reconstructed events which are not consistent with the DAQ trigger
+   SetTriggerConditionsForRun(GetCurrentRun()->GetNumber());
 }
 
 //_____________________________________
@@ -108,10 +101,6 @@ Bool_t ROOT6ReconDataSelectorTemplate::Analysis(void)
    // Analysis method called event by event.
    // The current event can be accessed by a call to method GetEvent().
    // See KVReconstructedEvent documentation for the available methods.
-
-   // Do not remove the following line - reject events with less identified particles than
-   // the acquisition multiplicity trigger
-   if (!GetEvent()->IsOK()) return kTRUE;
 
    GetGVList()->FillBranches(); // update values of all global variable branches
    FillTree(); // write new results in TTree

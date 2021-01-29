@@ -1,21 +1,3 @@
-// This class is derived from the KaliVeda class KVEventSelector.
-// It is to be used for analysis of reconstructed data.
-//
-// The following members functions are called by the TTree::Process() functions:
-//
-//    InitRun():       called everytime a run starts
-//    EndRun():        called everytime a run ends
-//    InitAnalysis():  called at the beginning of the analysis
-//                     a convenient place to create your histograms.
-//    Analysis():      called for each event. In this function you
-//                     fill your histograms.
-//    EndAnalysis():   called at the end of a loop on the tree,
-//                     a convenient place to draw/fit your histograms.
-//
-// Modify these methods as you wish in order to create your analysis class.
-// Don't forget that for every class used in the analysis, you must put a
-// line '#include' at the beginning of this file.
-
 #include "KVDataAnalyser.h"
 #include "KVMultiDetArray.h"
 #include "KVFlowTensor.h"

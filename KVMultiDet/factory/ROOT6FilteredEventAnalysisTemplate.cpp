@@ -1,6 +1,6 @@
 #include "KVMultiDetArray.h"
 
-void FilteredEventAnalysisTemplate::InitAnalysis()
+void ROOT6FilteredEventAnalysisTemplate::InitAnalysis()
 {
    // INITIALISATION PERFORMED AT BEGINNING OF ANALYSIS
    // Here you define:
@@ -13,7 +13,14 @@ void FilteredEventAnalysisTemplate::InitAnalysis()
 
    // DEFINITION OF GLOBAL VARIABLES FOR ANALYSIS
    AddGV("KVMult", "mult");    // total multiplicity of each event
-   AddGV("KVZVtot", "ZVTOT");  // total pseudo-momentum
+   auto zvtot = AddGV("KVZVtot", "ZVTOT");  // total pseudo-momentum
+   // Rejection of less-well measured events:
+   //   here we require reconstruction of at least 80% of projectile quasi-momentum
+   zvtot->SetEventSelection([&](const KVVarGlob * vg) {
+      return vg->GetValue() > 0.8 * ZVproj;
+   });
+   // ZVproj = projectile quasi-momentum, will be defined in InitRun()
+
 
    // DEFINITION OF HISTOGRAMS
    AddHisto(new TH2F("Z_Vpar", "Z vs V_{par} [cm/ns] in CM", 250, -10, 10, 75, .5, 75.5));
@@ -35,7 +42,7 @@ void FilteredEventAnalysisTemplate::InitAnalysis()
 
 //____________________________________________________________________________________
 
-void FilteredEventAnalysisTemplate::InitRun()
+void ROOT6FilteredEventAnalysisTemplate::InitRun()
 {
    // INITIALISATION PERFORMED JUST BEFORE ANALYSIS
    // In this method the multidetector array/setup used to filter
@@ -43,34 +50,31 @@ void FilteredEventAnalysisTemplate::InitRun()
    // The kinematics of the reaction is available (KV2Body*)
    // using gDataAnalyser->GetKinematics()
 
-   // normalize ZVtot to projectile Z*v
+   // retrieve projectile quasi-momentum for run
    const KV2Body* kin = gDataAnalyser->GetKinematics();
-   GetGV("ZVTOT")->SetNormalization(kin->GetNucleus(1)->GetVpar()*kin->GetNucleus(1)->GetZ());
+   ZVproj = kin->GetNucleus(1)->GetVpar() * kin->GetNucleus(1)->GetZ();
+
+   // reject reconstructed events which are not consistent with the DAQ trigger
+   SetTriggerConditionsForRun(gMultiDetArray->GetCurrentRunNumber());
 }
 
 //____________________________________________________________________________________
 
-Bool_t FilteredEventAnalysisTemplate::Analysis()
+Bool_t ROOT6FilteredEventAnalysisTemplate::Analysis()
 {
    // EVENT BY EVENT ANALYSIS
-
-   // Rejection of less-well measured events:
-   //   here we require reconstruction of at least 80% of projectile quasi-momentum
-   if (GetGV("ZVTOT")->GetValue() < 0.8) return kTRUE;
 
    // if we can access the events of the unfiltered simulation, read in the event corresponding
    // to the currently analysed reconstructed event
    if (link_to_unfiltered_simulation) GetFriendTreeEntry(GetEvent()->GetParameters()->GetIntValue("SIMEVENT_TREE_ENTRY"));
 
-   for (KVEvent::Iterator it = OKEventIterator(*GetEvent()).begin();
-         it != KVEvent::Iterator::End(); ++it) {
-      KVReconstructedNucleus* part = it.get_pointer<KVReconstructedNucleus>();
+   for (auto& part : OKEventIterator(*GetEvent())) {
       // if we can access the events of the unfiltered simulation, and if Gemini++ was used
       // to decay events before filtering, this is how you can access the "parent" nucleus
       // of the current detected decay product
-      // KVSimNucleus* papa = (KVSimNucleus*)GetFriendEvent()->GetParticle( part->GetParameters()->GetIntValue("GEMINI_PARENT_INDEX") );
+      // KVSimNucleus* papa = (KVSimNucleus*)GetFriendEvent()->GetParticle( part.GetParameters()->GetIntValue("GEMINI_PARENT_INDEX") );
 
-      FillHisto("Z_Vpar", part->GetFrame("CM")->GetVpar(), part->GetZ());
+      FillHisto("Z_Vpar", part.GetFrame("CM")->GetVpar(), part.GetZ());
    }
 
    GetGVList()->FillBranches();
