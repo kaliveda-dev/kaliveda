@@ -689,3 +689,8 @@ INDRA_camp4.GDir.Freq: 185.6*(x<4500)+(184.462+(x-4500)*0.00331259)*(x>4500 && x
 # in fact there appear to be (at least) 2 regimes, with the other (minoritaire) having a very wide distribution
 # around 160-170Hz.
 INDRA_camp5.GDir.Freq: 186.2
+
+# TRIGGER CONDITION PLUGINS
+# used in analysis class KVEventSelector::SetTriggerConditionsForRun in order to exclude reconstructed data
+# which is not consistent with the online DAQ trigger (multiplicity)
++Plugin.KVTriggerConditions: ^INDRA_$*  KVINDRATriggerConditions KVIndraanalysis "KVINDRATriggerConditions()"

@@ -8,7 +8,11 @@
  \brief Set trigger conditions for analysis of reconstructed INDRA data
 \ingroup INDRAnalysis
 
- Write a detailed documentation for your class here, see doxygen manual for help.
+ Implements rejection of reconstructed events with a number of correctly-identified particles
+ which is less than the on-line acquisition multiplicity trigger for the run.
+
+ To use, put in the InitRun() method of your analysis class a call to KVEventSelector::SetTriggerConditionsForRun()
+ with the current run number as argument.
 
  \author John Frankland
  \date Thu Jan 28 16:49:21 2021

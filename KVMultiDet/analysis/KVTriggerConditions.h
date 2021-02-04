@@ -8,7 +8,10 @@ class KVEventSelector;
  \brief Set trigger conditions for analysis of reconstructed data
 \ingroup Analysis
 
- Write a detailed documentation for your class here, see doxygen manual for help.
+ Implements rejection of reconstructed events which are not consistent with the on-line acquisition trigger for the run.
+
+ To use, put in the InitRun() method of your analysis class a call to KVEventSelector::SetTriggerConditionsForRun()
+ with the current run number as argument.
 
  \author John Frankland
  \date Thu Jan 28 16:32:51 2021

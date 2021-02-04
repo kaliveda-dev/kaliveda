@@ -233,10 +233,11 @@ void KVReconDataAnalyser::SetTriggerConditionsForRun(int run)
    //+Plugin.KVTriggerConditions:   [dataset]   [classname]  [libname]   "[default constructor]()"
    //~~~~
 
-   TPluginHandler* ph = KVBase::LoadPlugin("KVVarGlob", GetDataSet()->GetName());
+   TPluginHandler* ph = KVBase::LoadPlugin("KVTriggerConditions", GetDataSet()->GetName());
    if (!ph) {
       Info("SetTriggerConditionsForRun",
-           "No definition of trigger conditions available for this dataset");
+           "No definition of trigger conditions available for dataset %s",
+           GetDataSet()->GetName());
       return;
    }
    std::unique_ptr<KVTriggerConditions> trig((KVTriggerConditions*) ph->ExecPlugin(0));
