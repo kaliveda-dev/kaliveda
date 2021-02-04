@@ -181,6 +181,8 @@ INDRAFAZIA.E789.HasCalibIdentInfos:   yes
 INDRAFAZIA.E789.ActiveIdentifications:      INDRA.CSI INDRA.SI-CSI FAZIA.Si-Si FAZIA.Si-CsI FAZIA.Si FAZIA.CsI
 INDRAFAZIA.E789.SI-CSI.MassID: yes
 INDRAFAZIA.E789.SI-CSI.MassID.Validity:  Z<=6
+INDRAFAZIA.E789.FAZIA.ReconstructedNuclei.AcceptECodes: 1-2
+
 
 +Plugin.KVMultiDetArray:    INDRAFAZIA.E789    KVExpSetUp    KVMultiDetexp_events    "KVExpSetUp()"
 +Plugin.KVExpDB:   INDRAFAZIA.E789    KVExpSetUpDB     KVMultiDetexp_events   "KVExpSetUpDB(const Char_t*)"

@@ -226,8 +226,6 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
 
    // 8He dans CsI-PSA -> 8Be pour E789
 
-
-   // Check for gammas identified in CsI which hide another particle stopping in Si2 or Si1
    if (partID.IsType("CsI")) {
       if (partID.IDquality == KVIDGCsI::kICODE10) {
          // look at Si1-Si2 identification
