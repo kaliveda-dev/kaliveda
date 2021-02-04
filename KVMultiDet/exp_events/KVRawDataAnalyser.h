@@ -62,6 +62,17 @@ protected:
       h3->Fill(one, two, three, four);
    }
 
+   void SetCombinedOutputFile(const KVString& filename)
+   {
+      // Call in InitAnalysis() to set the name of the single output file
+      // containing all histograms and TTrees produced by analysis.
+      // This is equivalent to running the analysis with option
+      //    CombinedOutputFile=[filename]
+      // but setting this option in InitAnalysis() will not work.
+      // Note that if this method is not called/the option is not given,
+      // histograms and TTrees will be written in separate files.
+      fCombinedOutputFile = filename;
+   }
    /*** END: Methods copied from KVEventSelector ***/
 
 public:
@@ -143,16 +154,24 @@ public:
    }
 
    virtual void SaveHistos(const Char_t* filename = "", Option_t* option = "recreate", Bool_t onlyfilled = kFALSE);
-   void SetCombinedOutputFile(const KVString& filename)
+   void SetJobOutputFileName(const TString& filename)
    {
       // Call in InitAnalysis() to set the name of the single output file
       // containing all histograms and TTrees produced by analysis.
-      // This is equivalent to running the analysis with option
-      //    CombinedOutputFile=[filename]
-      // but setting this option in InitAnalysis() will not work.
-      // Note that if this method is not called/the option is not given,
-      // histograms and TTrees will be written in separate files.
-      fCombinedOutputFile = filename;
+      //
+      // For interactive jobs or jos using PROOF, filename will be used for
+      // the ROOT file. For jobs using a batch system to execute many
+      // jobs in parallel, we use the job name with the '.root' extension.
+
+#ifdef WITH_CPP11
+      if (IsRunningBatchAnalysis() && (GetProofMode() == KVDataAnalyser::EProofMode::None))
+#else
+      if (IsRunningBatchAnalysis() && (GetProofMode() == KVDataAnalyser::None))
+#endif
+         SetCombinedOutputFile(Form("%s.root", GetBatchSystem()->GetJobName()));
+
+      else
+         SetCombinedOutputFile(filename);
    }
    Bool_t CreateTreeFile(const Char_t* filename = "");
 
