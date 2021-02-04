@@ -39,6 +39,7 @@ $Id: KVBase.cpp,v 1.57 2009/04/22 09:38:39 franklan Exp $
 #include "TGMimeTypes.h"
 #include "TGClient.h"
 #include "TContextMenu.h"
+#include <TH1.h>
 #include <TKey.h>
 #include "TTree.h"
 
@@ -1102,8 +1103,26 @@ void KVBase::CombineFiles(const Char_t* file1, const Char_t* file2, const Char_t
       }
    }
    TFile* newfile = new TFile(newfilename, "recreate");
-   objL1.Execute("Write", "");
-   objL2.Execute("Write", "");
+   {
+      TIter next(&objL1);
+      TObject* obj;
+      while ((obj = next())) {
+         if (obj->InheritsFrom("TH1")) {
+            dynamic_cast<TH1*>(obj)->SetDirectory(newfile);
+         }
+         obj->Write();
+      }
+   }
+   {
+      TIter next(&objL2);
+      TObject* obj;
+      while ((obj = next())) {
+         if (obj->InheritsFrom("TH1")) {
+            dynamic_cast<TH1*>(obj)->SetDirectory(newfile);
+         }
+         obj->Write();
+      }
+   }
    if (treeL1.GetEntries()) {
       TIter nxtT(&treeL1);
       TTree* t;
