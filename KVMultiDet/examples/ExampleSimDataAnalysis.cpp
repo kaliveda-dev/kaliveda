@@ -1,20 +1,8 @@
-//Created by KVClassFactory on Tue Mar 27 21:24:44 2018
-//Author: John Frankland,,,
-
 #include "ExampleSimDataAnalysis.h"
 #include "KVSimNucleus.h"
 #include "KVBatchSystem.h"
 
 ClassImp(ExampleSimDataAnalysis)
-
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>ExampleSimDataAnalysis</h2>
-<h4>Analysis of simulated events</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 void ExampleSimDataAnalysis::InitAnalysis()
 {
@@ -25,13 +13,25 @@ void ExampleSimDataAnalysis::InitAnalysis()
    //   - trees
 
    // DEFINITION OF GLOBAL VARIABLES FOR ANALYSIS
+   AddGV("KVMult", "mult");   // total multiplicity of each event
+   AddGV("KVMult", "Mcha")->SetSelection({"Z>0", [](const KVNucleus * n)
+   {
+      return n->GetZ() > 0;
+   }}); // charged particle multiplicity
 
-   // charged particle multiplicity
-   KVVarGlob* v = AddGV("KVVGSum", "Mcha");
-   v->SetOption("mode", "mult");
-   v->SetSelection(KVParticleCondition("_NUC_->GetZ()>0"));
+   // for sorting events according to multiplicity
+   KVEventClassifier* ec = GetGVList()->AddEventClassifier("mult");
+   ec->AddCut(5);
+   ec->AddCut(10);
+   ec->AddCut(15);
+   ec->AddCut(20);
+   ec->AddCut(25);
 
-   ZMAX = (KVZmax*)AddGV("KVZmax", "ZMAX");//fragments sorted by Z
+   // DEFINITION OF HISTOGRAMS
+   for (int EC = 0; EC <= 5; ++EC)
+      AddHisto(new TH2F(Form("VparVper_alphas_EC%d", EC),
+                        Form("#alpha particle velocities EC=%d", EC),
+                        250, -15, 15, 250, -15, 15));
 
    // DEFINITION OF TREE USED TO STORE RESULTS
    CreateTreeFile();
@@ -41,18 +41,7 @@ void ExampleSimDataAnalysis::InitAnalysis()
    // add a branch to tree for each defined global variable
    GetGVList()->MakeBranches(t);
 
-   // add branches to be filled by user
-   t->Branch("mult", &mult);
-   t->Branch("Z", Z, "Z[mult]/I");
-   t->Branch("A", A, "A[mult]/I");
-   t->Branch("Vper", Vper, "Vper[mult]/D");
-   t->Branch("Vpar", Vpar, "Vpar[mult]/D");
-   t->Branch("E", E, "E[mult]/D");
-   t->Branch("Theta", Theta, "Theta[mult]/D");
-   t->Branch("Phi", Phi, "Phi[mult]/D");
-
    AddTree(t);
-
 }
 
 //____________________________________________________________________________________
@@ -61,20 +50,17 @@ Bool_t ExampleSimDataAnalysis::Analysis()
 {
    // EVENT BY EVENT ANALYSIS
 
-   mult = GetEvent()->GetMult();
+   Int_t EC = GetGV("mult_EC")->GetValue(); // event class according to mult
 
-   for (int i = 0; i < mult; i++) {
-      KVSimNucleus* part = (KVSimNucleus*)ZMAX->GetZmax(i);
-      Z[i] = part->GetZ();
-      A[i] = part->GetA();
-      Vper[i] = part->GetVperp();
-      Vpar[i] = part->GetVpar();
-      E[i] = part->GetEnergy();
-      Theta[i] = part->GetTheta();
-      Phi[i] = part->GetPhi();
+   for (auto& part : *GetEvent()) {
+      if (part.IsIsotope(2, 4)) { //cout << EC << " alpha" << endl;
+         FillHisto(Form("VparVper_alphas_EC%d", EC),
+                   part.GetVpar(), part.GetVperp());
+      }
    }
 
    GetGVList()->FillBranches();
+
    FillTree();
 
    return kTRUE;

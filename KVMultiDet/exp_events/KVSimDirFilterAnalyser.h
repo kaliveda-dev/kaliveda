@@ -38,7 +38,9 @@ public:
    void preAnalysis();
 
    static void Make(const Char_t* kvsname = "MyFilteredAnalysis");
-
+#ifdef USING_ROOT6
+   void SetTriggerConditionsForRun(int run);
+#endif
    ClassDef(KVSimDirFilterAnalyser, 1) //Analysis of filtered simulations
 };
 

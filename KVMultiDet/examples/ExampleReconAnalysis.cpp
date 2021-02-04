@@ -1,20 +1,8 @@
-//Created by KVClassFactory on Tue Sep 17 11:54:19 2019
-//Author: John Frankland,,,
-
 #include "ExampleReconAnalysis.h"
 #include "KVReconstructedNucleus.h"
 #include "KVBatchSystem.h"
 
 ClassImp(ExampleReconAnalysis)
-
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>ExampleReconAnalysis</h2>
-<h4>Analysis of reconstructed events</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 // This class is derived from the KaliVeda class KVEventSelector.
 // It is to be used for analysis of reconstructed data.
@@ -36,6 +24,7 @@ ClassImp(ExampleReconAnalysis)
 
 #include "KVDataAnalyser.h"
 #include "KVMultiDetArray.h"
+#include "KVFlowTensor.h"
 
 void ExampleReconAnalysis::InitAnalysis(void)
 {
@@ -47,37 +36,47 @@ void ExampleReconAnalysis::InitAnalysis(void)
    /*** ADDING GLOBAL VARIABLES TO THE ANALYSIS ***/
    /* These will be automatically calculated for each event before
       your Analysis() method will be called                        */
-   AddGV("KVZtot", "ztot");                             // total charge
-   AddGV("KVZVtot", "zvtot")->SetMaxNumBranches(1);     // total Z*vpar
-   AddGV("KVEtransLCP", "et12");                        // total LCP transverse energy
-   AddGV("KVFlowTensor", "tensor")->SetOption("weight", "RKE");  // relativistic CM KE tensor
+   auto ztot = AddGV("KVZtot", "ztot");                 // total charge
+   // complete event selection: total charge
+   ztot->SetEventSelection([&](const KVVarGlob * var) {
+      return var->GetValue() >= 0.8 * ztot_sys;
+   });
 
+   auto zvtot = AddGV("KVZVtot", "zvtot");              // total Z*vpar
+   zvtot->SetMaxNumBranches(1);    // only write "Z" component in TTree
+   // complete event selection: total pseudo-momentum
+   zvtot->SetEventSelection([&](const KVVarGlob * var) {
+      return var->GetValue() >= 0.8 * zvtot_sys
+             && var->GetValue() <= 1.1 * zvtot_sys;
+   });
+   AddGV("KVMult", "mtot");                             // total multiplicity
+   AddGV("KVEtransLCP", "et12");                        // total LCP transverse energy
+   auto gv = AddGV("KVFlowTensor", "tensor");
+   gv->SetOption("weight", "RKE");
+   gv->SetFrame("CM");// optional - this is the default frame
+   gv->SetSelection({"Z>4", [](const KVNucleus * n)
+   {
+      return n->GetZ() > 4;
+   }});   // relativistic CM KE tensor for fragments
+   // Define ellipsoid frame (wrt axes of flow tensor ellipsoid)
+   gv->SetNewFrameDefinition([](KVEvent * e, const KVVarGlob * vg) {
+      e->SetFrame("EL", "CM", ((KVFlowTensor*)vg)->GetFlowReacPlaneRotation());
+   });
 
    /*** DECLARING SOME HISTOGRAMS ***/
    AddHisto(new TH1F("zdist", "Charge distribution", 100, -.5, 99.5));
-   AddHisto(new TH2F("zvpar", "Z vs V_{par} in CM", 100, -15., 15., 75, .5, 75.5));
+   AddHisto(new TH2F("zvpar", "Z vs V_{par} in ellipsoid", 100, -15., 15., 75, .5, 75.5));
 
    /*** USING A TREE ***/
    CreateTreeFile();//<--- essential
    TTree* t = new TTree("myTree", "");
    AddTree(t);
    GetGVList()->MakeBranches(t); // store global variable values in branches
-   t->Branch("Mult", &Mult, "Mult/I");
-   t->Branch("Z", Z, "Z[Mult]/I");
-   t->Branch("A", A, "A[Mult]/I");
-   t->Branch("E", E, "E[Mult]/D");
-   t->Branch("Theta", Theta, "Theta[Mult]/D");
-   t->Branch("Phi", Phi, "Phi[Mult]/D");
-   t->Branch("Vx", Vx, "Vx[Mult]/D");
-   t->Branch("Vy", Vy, "Vy[Mult]/D");
-   t->Branch("Vz", Vz, "Vz[Mult]/D");
 
    /*** DEFINE WHERE TO SAVE THE RESULTS ***/
-   // When running in batch/PROOF mode, we use the job name
-   if (gDataAnalyser->GetBatchSystem())
-      SetCombinedOutputFile(Form("%s.root", gDataAnalyser->GetBatchSystem()->GetJobName()));
-   else
-      SetCombinedOutputFile(Form("ExampleReconAnalysis_results.root"));
+   // This filename will be used for interactive and PROOFlite jobs.
+   // When running in batch mode, this will automatically use the job name.
+   SetJobOutputFileName("ExampleReconAnalysis_results.root");
 }
 
 //_____________________________________
@@ -90,15 +89,16 @@ void ExampleReconAnalysis::InitRun(void)
    // which will be used in your analysis, they are automatically selected using the default
    // values in variables *.ReconstructedNuclei.AcceptID/ECodes.
 
-   // You can also perform more fine-grained selection of particles using class KVParticleCondition.
-   // For example:
-   KVParticleCondition pc_z("_NUC_->GetZ()>0&&_NUC_->GetZ()<=92");  // remove any strange Z identifications
-   KVParticleCondition pc_e("_NUC_->GetE()>0.");                    // remove any immobile nuclei
-
-   SetParticleConditions(pc_z && pc_e);
-
    // set title of TTree with name of analysed system
    GetTree("myTree")->SetTitle(GetCurrentRun()->GetSystemName());
+
+   // retrieve system parameters for complete event selection
+   const KV2Body* kin = gDataAnalyser->GetKinematics();
+   zvtot_sys = kin->GetNucleus(1)->GetVpar() * kin->GetNucleus(1)->GetZ();
+   ztot_sys = GetCurrentRun()->GetSystem()->GetZtot();
+
+   // reject reconstructed events which are not consistent with the DAQ trigger
+   SetTriggerConditionsForRun(GetCurrentRun()->GetNumber());
 }
 
 //_____________________________________
@@ -108,28 +108,17 @@ Bool_t ExampleReconAnalysis::Analysis(void)
    // The current event can be accessed by a call to method GetEvent().
    // See KVReconstructedEvent documentation for the available methods.
 
-   // Do not remove the following line - reject events with less identified particles than
-   // the acquisition multiplicity trigger
-   if (!GetEvent()->IsOK()) return kTRUE;
-
    GetGVList()->FillBranches(); // update values of all global variable branches
+   FillTree(); // write new results in TTree
 
    /*** LOOP OVER PARTICLES OF EVENT ***/
-   for (KVEvent::Iterator it = OKEventIterator(*GetEvent()).begin(); it != GetEvent()->end(); ++it) {
-      // "OK" => using selection criteria of InitRun()
-      KVReconstructedNucleus& n = it.get_reference<KVReconstructedNucleus>();
+   for (auto& n : OKEventIterator(*GetEvent())) {
+      // "OK" particles => using selection criteria of InitRun() + any KVParticleConditions
       // fill Z distribution
       FillHisto("zdist", n.GetZ());
-      // fill Z-Vpar(cm)
-      FillHisto("zvpar", n.GetFrame("CM")->GetVpar(), n.GetZ());
+      // fill Z-Vpar(ellipsoid)
+      FillHisto("zvpar", n.GetFrame("EL")->GetVpar(), n.GetZ());
    }
-
-   // fill arrays with particle properties for TTree
-   GetEvent()->FillArraysEThetaPhi(Mult, Z, A, E, Theta, Phi, "CM", "OK");
-   GetEvent()->FillArraysV(Mult, Z, A, Vx, Vy, Vz, "CM", "OK");
-
-   // write new results in TTree
-   FillTree();
 
    return kTRUE;
 }

@@ -48,7 +48,11 @@ void KVINDRAEventSelector::Make(const Char_t* kvsname)
 {
    // Automatic generation of KVINDRAEventSelector-derived class for KaliVeda analysis
 
-   KVClassFactory cf(kvsname, "User analysis class", "KVINDRAEventSelector", kTRUE);
+#ifdef USING_ROOT6
+   KVClassFactory cf(kvsname, "User analysis class", "", kTRUE, "ROOT6KVINDRAEventSelectorTemplate");
+#else
+   KVClassFactory cf(kvsname, "User analysis class", "", kTRUE, "KVINDRAEventSelectorTemplate");
+#endif
    cf.AddImplIncludeFile("KVINDRAReconNuc.h");
    cf.AddImplIncludeFile("KVBatchSystem.h");
    cf.AddImplIncludeFile("KVINDRA.h");

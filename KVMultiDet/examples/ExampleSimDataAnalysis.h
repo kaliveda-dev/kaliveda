@@ -1,18 +1,19 @@
-//Created by KVClassFactory on Tue Mar 27 21:24:44 2018
-//Author: John Frankland,,,
-
 #ifndef __EXAMPLESIMDATAANALYSIS_H
 #define __EXAMPLESIMDATAANALYSIS_H
 
+/**
+ \class ExampleSimDataAnalysis
+ \brief Analysis of simulated events
+
+ Write a detailed documentation for your class here, see doxygen manual for help.
+
+ \author John Frankland
+ \date Fri Jan 29 12:20:14 2021
+*/
+
 #include "KVEventSelector.h"
-#include "KVZmax.h"
 
 class ExampleSimDataAnalysis : public KVEventSelector {
-
-protected:
-   Int_t mult, Z[200], A[200];
-   Double_t Vpar[200], Vper[200], E[200], Theta[200], Phi[200];
-   KVZmax* ZMAX;
 
 public:
    ExampleSimDataAnalysis() {}
@@ -26,6 +27,5 @@ public:
 
    ClassDef(ExampleSimDataAnalysis, 1) //Analysis of simulated events
 };
-
 
 #endif

@@ -233,8 +233,13 @@ void KVSimDirAnalyser::Make(const Char_t* kvsname)
 {
    // Generate a new simulated analysis selector class
 
+#ifndef USING_ROOT6
    KVClassFactory cf(kvsname, "Analysis of simulated events", "",
                      kTRUE, "SimulatedEventAnalysisTemplate");
+#else
+   KVClassFactory cf(kvsname, "Analysis of simulated events", "",
+                     kTRUE, "ROOT6SimulatedEventAnalysisTemplate");
+#endif
    cf.AddImplIncludeFile("KVSimNucleus.h");
    cf.AddImplIncludeFile("KVBatchSystem.h");
 

@@ -1,8 +1,15 @@
-//Created by KVClassFactory on Tue Mar 27 21:25:05 2018
-//Author: John Frankland,,,
-
 #ifndef __EXAMPLEFILTEREDSIMDATAANALYSIS_H
 #define __EXAMPLEFILTEREDSIMDATAANALYSIS_H
+
+/**
+ \class ExampleFilteredSimDataAnalysis
+ \brief Analysis of filtered simulated events
+
+ Write a detailed documentation for your class here, see doxygen manual for help.
+
+ \author John Frankland
+ \date Fri Jan 29 15:57:03 2021
+*/
 
 #include "KVEventSelector.h"
 #include "KVZmax.h"
@@ -10,10 +17,7 @@
 
 class ExampleFilteredSimDataAnalysis : public KVEventSelector {
 
-protected:
-   Int_t mult, Z[200], A[200], idcode[200], ecode[200], Ameasured[200], array[200];
-   Double_t Vpar[200], Vper[200], ELab[200], ThetaLab[200], PhiLab[200];
-   KVZmax* ZMAX;
+   double ZVproj;
 
    Bool_t link_to_unfiltered_simulation;
 
@@ -35,6 +39,5 @@ public:
 
    ClassDef(ExampleFilteredSimDataAnalysis, 1) //Analysis of filtered simulated events
 };
-
 
 #endif

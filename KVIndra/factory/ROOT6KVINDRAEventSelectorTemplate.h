@@ -1,3 +1,5 @@
+#include "KVINDRAEventSelector.h"
+
 class ROOT6KVINDRAEventSelectorTemplate : public KVINDRAEventSelector {
 
 public:

@@ -5,6 +5,7 @@
 #include <KVClassFactory.h>
 #include <KVDataSetManager.h>
 #include <KVExpDB.h>
+#include <KVTriggerConditions.h>
 #include "KVMultiDetArray.h"
 
 ClassImp(KVSimDirFilterAnalyser)
@@ -67,12 +68,40 @@ void KVSimDirFilterAnalyser::Make(const Char_t* kvsname)
    // Generate a new filtered analysis selector class
 
    KVClassFactory cf(kvsname, "Analysis of filtered simulated events", "",
+#ifndef USING_ROOT6
                      kTRUE, "FilteredEventAnalysisTemplate");
+#else
+                     kTRUE, "ROOT6FilteredEventAnalysisTemplate");
+#endif
    cf.AddImplIncludeFile("KVReconstructedNucleus.h");
    cf.AddImplIncludeFile("KVBatchSystem.h");
 
    cf.GenerateCode();
 }
 
+#ifdef USING_ROOT6
+void KVSimDirFilterAnalyser::SetTriggerConditionsForRun(int run)
+{
+   // When called from the InitRun() method of a user's analysis class, this method will ensure that only data
+   // compatible with the experimental trigger will be provided for analysis in the user's Analysis() method.
+   //
+   // This will be done by searching for a KVTriggerConditions plugin class defined for the currently-analysed
+   // dataset, defined like so:
+   //
+   //~~~~
+   //+Plugin.KVTriggerConditions:   [dataset]   [classname]  [libname]   "[default constructor]()"
+   //~~~~
+
+   TPluginHandler* ph = KVBase::LoadPlugin("KVTriggerConditions", gDataSet->GetName());
+   if (!ph) {
+      Info("SetTriggerConditionsForRun",
+           "No definition of trigger conditions available for dataset %s",
+           gDataSet->GetName());
+      return;
+   }
+   std::unique_ptr<KVTriggerConditions> trig((KVTriggerConditions*) ph->ExecPlugin(0));
+   trig->SetTriggerConditionsForRun(fAnalysisClass, run);
+}
+#endif
 //____________________________________________________________________________//
 

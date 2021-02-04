@@ -1,16 +1,21 @@
-//Created by KVClassFactory on Tue Sep 17 11:54:19 2019
-//Author: John Frankland,,,
-
 #ifndef __EXAMPLERECONANALYSIS_H
 #define __EXAMPLERECONANALYSIS_H
+
+/**
+ \class ExampleReconAnalysis
+ \brief Analysis of reconstructed events
+
+ Write a detailed documentation for your class here, see doxygen manual for help.
+
+ \author John Frankland
+ \date Fri Jan 29 16:43:01 2021
+*/
 
 #include "KVReconEventSelector.h"
 
 class ExampleReconAnalysis : public KVReconEventSelector {
-   int Mult;
-   int Z[1000], A[1000];//!
-   double E[1000], Theta[1000], Phi[1000]; //!
-   double Vx[1000], Vy[1000], Vz[1000]; //!
+
+   double ztot_sys, zvtot_sys;
 
 public:
    ExampleReconAnalysis() {}
@@ -24,6 +29,5 @@ public:
 
    ClassDef(ExampleReconAnalysis, 1) //Analysis of reconstructed events
 };
-
 
 #endif

@@ -127,13 +127,7 @@ satisfy all conditions the Analysis() method will __not__ be called.
 
 ### Histograms & TTrees in the same output file
  If you want all results of your analysis to be written in a single file
- containing both histos and trees, put the following in the list of options:
-
-~~~~~~~~~~~~~~~~
-      CombinedOutputFile=myResults.root
-~~~~~~~~~~~~~~~~
-
- or call method SetCombinedOutputFile() with the required filename in your InitAnalysis() method;
+ containing both histos and trees, call method SetJobOutputFileName() with the required filename in your InitAnalysis() method;
 
  - do not call SaveHistos() in EndAnalysis(), and make sure you call CreateTreeFile() without giving a name (the
  resulting intermediate file will have a default name allowing it to be found at the end of the analysis)
@@ -201,7 +195,24 @@ protected :
    void FillTH3(TH3* h3, Double_t one, Double_t two, Double_t three, Double_t four);
 
    void SetUpAuxEventChain();
-
+   void SetCombinedOutputFile(const TString& filename)
+   {
+      // Call in InitAnalysis() to set the name of the single output file
+      // containing all histograms and TTrees produced by analysis (but see also
+      // SetJobOutputFileName).
+      //
+      // This is equivalent to running the analysis with option
+      //
+      //~~~~~~~~~~~~~~~
+      //    CombinedOutputFile=[filename]
+      //~~~~~~~~~~~~~~~
+      //
+      // but setting this option in InitAnalysis() will not work.
+      //
+      // Note that if this method is not called/the option is not given,
+      // histograms and TTrees will be written in separate files.
+      fCombinedOutputFile = filename;
+   }
 public:
    TFile* writeFile;//!
    TProofOutputFile* mergeFile;//! for merging with PROOF
@@ -375,24 +386,7 @@ public:
       //if user wants to read additional branches of the tree
       //
    }
-   void SetCombinedOutputFile(const TString& filename)
-   {
-      // Call in InitAnalysis() to set the name of the single output file
-      // containing all histograms and TTrees produced by analysis (but see also
-      // SetJobOutputFileName).
-      //
-      // This is equivalent to running the analysis with option
-      //
-      //~~~~~~~~~~~~~~~
-      //    CombinedOutputFile=[filename]
-      //~~~~~~~~~~~~~~~
-      //
-      // but setting this option in InitAnalysis() will not work.
-      //
-      // Note that if this method is not called/the option is not given,
-      // histograms and TTrees will be written in separate files.
-      fCombinedOutputFile = filename;
-   }
+
    void SetJobOutputFileName(const TString& filename)
    {
       // Call in InitAnalysis() to set the name of the single output file
