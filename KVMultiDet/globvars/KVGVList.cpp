@@ -371,28 +371,46 @@ KVEventClassifier* KVGVList::AddEventClassifier(const TString& varname)
    // Add an event classification object to the list, based on the named global variable
    // (which must already be in the list).
    //
-   // Returns a pointer to the object, in order to add cuts like so:
+   // Returns a pointer to the object, in order to add either cuts or bins like so:
    //
+   // #### Using cuts
    //~~~~{.cpp}
-   //  KVGVList list;
-   //  list.AddGV("KVMult", "mtot");
-   //  auto mtot_cuts = list.AddEventClassifier("mtot");
-   //  mtot_cuts->AddCut(31.7);
-   //  mtot_cuts->AddCut(26.3);
-   //  mtot_cuts->AddCut(17.7);
-   //  mtot_cuts->AddCut(9.7);
+   //        mtot_cuts->AddCut(5);
+   //        mtot_cuts->AddCut(10);
+   //        mtot_cuts->AddCut(15);
+   //        mtot_cuts->AddCut(20);
+   //        mtot_cuts->AddCut(25);
+   //        mtot_cuts->AddCut(30);
    //~~~~
+   //   This will class events according to:
+   //   | mtot       | mtot_EC |
+   //   |------------|---------|
+   //   |         <5 |    0    |
+   //   |  [5, 9]    |    1    |
+   //   |  [10, 14]  |    2    |
+   //   |  [15, 19]  |    3    |
+   //   |  [20, 24]  |    4    |
+   //   |  [25, 29]  |    5    |
+   //   |  >=30      |    6    |
    //
-   // This will class events into 5 bins with following numbers:
+   // `mtot_EC` is the default name for an event classification based on `mtot` and will be
+   // used for the branch added to the user's analysis TTree by method MakeBranches().
    //
-   // | mtot           |   bin   |
-   // +----------------+---------+
-   // |  >31.7         |    4    |
-   // |  >26.3,  <31.7 |    3    |
-   // |  >17.7,  <26.3 |    2    |
-   // |  >9.7,   <17.7 |    1    |
-   // |           <9.7 |    0    |
+   // #### Using bins
+   // ~~~~{.cpp}
+   //              mtot_cuts->AddBin(5,10);
+   //              mtot_cuts->AddBin(15,20);
+   //              mtot_cuts->AddBin(25,30);
+   //~~~~
+   //This will class events according to the 2 bins with the following numbers:
+   // | mtot     |   mtot_EC   |
+   // |----------|-------------|
+   // |  [5, 9]  |    0        |
+   // | [15, 19] |    1        |
+   // | [25, 29] |    2        |
+   // | other    |    -1       |
    //
+   // Note that in this case, any value outside of a defined bin is unclassified.
 
    KVVarGlob* gv = GetGV(varname);
    if (!gv) {

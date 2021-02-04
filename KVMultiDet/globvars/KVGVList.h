@@ -33,6 +33,27 @@ schematic way to calculate several global variables at once:
       }
 ~~~~~~~~~~~~
 
+#### Automatic TTree branch creation and filling
+One or more branches can be added to a TTree and filled with the values of all or some of the global variables in
+the list using method MakeBranches(TTree*). For each single-valued variable a branch with name
+~~~~
+[varName]
+~~~~
+will be added. For multi-valued variables (those for which KVVarGlob::GetNumberOfValues() returns >1) we
+add
+~~~~
+[varName].[value0_name]
+[varName].[value1_name]
+...
+[varName].[valueN_name]
+~~~~
+branches for each named value defined for the variable (see KVFlowTensor for an example of a multi-valued variable).
+The total number of branches added is determined by KVVarGlob::SetMaxNumBranches(): calling this method with argument `0`
+will prevent any branch being added for the variable in question.
+
+Once variables have been calculated, calling FillBranches() will prepare the TTree for filling. Note that you have to
+call TTree::Fill() after calling this method.
+
 #### Event selection criteria
 Conditions ('cuts') can be set on each variable which
 decide whether or not to retain an event for analysis. If any variable in the list fails the
@@ -83,6 +104,19 @@ in order to calculate the KVFlowTensor in this frame:
     vg->SetFrame("QP_FRAME"); // frame will have been defined before tensor is filled
 ~~~~
 
+#### Event classification
+Event classifier (KVEventClassifier) objects can be defined for any global variable
+in the list using method AddEventClassifier():
+
+~~~~{.cpp}
+AddGV("KVMult", "mtot");
+auto mt_cuts = AddEventClassifier("mtot");
+~~~~
+
+which returns a pointer to the event classifier, in order to set up either cuts or bins.
+
+`mtot_EC` is the default name for an event classification based on `mtot` and will be
+used for the branch added to the user's analysis TTree by method MakeBranches().
  */
 class KVGVList: public KVUniqueNameList {
 
