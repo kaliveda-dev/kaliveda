@@ -669,29 +669,27 @@ void KVDataSetAnalyser::set_up_analyser_for_task(KVDataAnalyser* the_analyser)
    t_a->SetRuns(fRunList, kFALSE);
 }
 
-const Char_t* KVDataSetAnalyser::SystemBatchName()
+TString KVDataSetAnalyser::SystemBatchName() const
 {
    // Private method used by ExpandAutoBatchName to build name for current system
    // to be used in batch job name
    // Also used by KVDataAnalysisLauncher::SystemBatchName for batch job names
    // and for writing resources in .KVDataAnalysisGUIrc file
 
-   static KVString tmp;
-   tmp = "Unknown";
-   if (!fSystem) return tmp.Data();
+   KVString tmp = "Unknown";
+   if (!fSystem) return tmp;
    return fSystem->GetBatchName();
 }
 
-const Char_t* KVDataSetAnalyser::ExpandAutoBatchName(const Char_t* format)
+TString KVDataSetAnalyser::ExpandAutoBatchName(const Char_t* format) const
 {
    //Replace any 'special' symbols in "format" with their current values
    //
    //  $System  :  name of system to be analysed
 
-   static KVString tmp;
-   tmp = KVDataAnalyser::ExpandAutoBatchName(format);
+   KVString tmp = KVDataAnalyser::ExpandAutoBatchName(format);
    tmp.ReplaceAll("$System", SystemBatchName());
-   return tmp.Data();
+   return tmp;
 }
 
 const Char_t* KVDataSetAnalyser::GetRecognisedAutoBatchNameKeywords() const

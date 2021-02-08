@@ -111,6 +111,9 @@ KV2Body::KV2Body(const Char_t* systemname) : fNuclei(5), fEDiss(0)
          fNuclei[2] = nnuc2;
       }
    }
+   if (!IsZombie()) {
+      SetTitle(Form("%s + %s %.1f MeV/A", fNuclei[1].GetSymbol(), fNuclei[2].GetSymbol(), ee));
+   }
 }
 
 KV2Body::KV2Body(KVNucleus*, KVNucleus* cib, KVNucleus* proj_out, Double_t): fNuclei(5), fEDiss(0)
@@ -180,6 +183,7 @@ KV2Body::KV2Body(const KVNucleus& proj, const KVNucleus& targ, double Ediss):
    init();
    fNuclei[1] = proj;
    fNuclei[2] = targ;
+   SetTitle(Form("%s + %s %.1f MeV/A", fNuclei[1].GetSymbol(), fNuclei[2].GetSymbol(), fNuclei[1].GetAMeV()));
 }
 
 KV2Body::KV2Body(const KVNucleus& proj, const KVNucleus& targ, const KVNucleus& outgoing, double Ediss):
@@ -206,6 +210,7 @@ KV2Body::KV2Body(const KVNucleus& proj, const KVNucleus& targ, const KVNucleus& 
    fNuclei[2] = targ;
    if (outgoing.GetExcitEnergy() > 0) fEDiss += outgoing.GetExcitEnergy();
    SetOutgoing(outgoing);
+   SetTitle(Form("%s + %s %.1f MeV/A", fNuclei[1].GetSymbol(), fNuclei[2].GetSymbol(), fNuclei[1].GetAMeV()));
 }
 
 void KV2Body::SetTarget(const KVNucleus& targ)
@@ -267,6 +272,7 @@ void KV2Body::SetOutgoing(const KVNucleus& proj_out)
    //
    // The properties of the outgoing target-like nucleus will be deduced from mass, charge and momentum/energy conservation.
 
+   SetTitle(Form("%s + %s %.1f MeV/A", fNuclei[1].GetSymbol(), fNuclei[2].GetSymbol(), fNuclei[1].GetAMeV()));
    fSetOutgoing = kTRUE;
    fNuclei[3] = proj_out;
    Set4thNucleus();

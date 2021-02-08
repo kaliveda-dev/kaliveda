@@ -52,7 +52,7 @@ protected:
    virtual void set_up_analyser_for_task(KVDataAnalyser* the_analyser);
 
 public:
-   const Char_t* SystemBatchName();
+   TString SystemBatchName() const;
    KVDataSetAnalyser();
    virtual ~KVDataSetAnalyser();
 
@@ -137,7 +137,7 @@ public:
    }
    void WriteBatchEnvFile(const Char_t* jobname, Bool_t save = kTRUE);
    Bool_t ReadBatchEnvFile(const Char_t* filename);
-   virtual const Char_t* ExpandAutoBatchName(const Char_t* format);
+   TString ExpandAutoBatchName(const Char_t* format) const;
    virtual void AddJobDescriptionList(TList*);
    KVString GetRootDirectoryOfDataToAnalyse() const;
    const Char_t* GetRecognisedAutoBatchNameKeywords() const;

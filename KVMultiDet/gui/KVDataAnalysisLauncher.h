@@ -161,7 +161,7 @@ protected:
    void DisableUserClassList();
    void EnableUserClassList();
    void GenerateNewUserClass();
-   const Char_t* SystemBatchName();
+   TString SystemBatchName();
 
    UInt_t fMainGuiWidth;//width of main window in pixels
    UInt_t fMainGuiHeight;//heigth of main window in pixels

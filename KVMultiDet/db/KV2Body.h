@@ -20,7 +20,7 @@ $Id: KV2Body.h,v 1.5 2009/02/02 13:52:29 ebonnet Exp $
 #ifndef KV2BODY_H
 #define KV2BODY_H
 
-#include "TObject.h"
+#include "KVBase.h"
 #include <vector>
 #include "TVector3.h"
 #include "KVNucleus.h"
@@ -162,7 +162,7 @@ For a general print-out of the reaction characteristics:
 
 */
 
-class KV2Body: public TObject {
+class KV2Body: public KVBase {
 
    std::vector<KVNucleus> fNuclei; //nuclei involved in calculation
    Double_t fEDiss;             //dissipated energy, 0 means elastic scattering

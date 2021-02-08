@@ -228,6 +228,18 @@ void KVSimDirAnalyser::BuildChain()
    }
 }
 
+void KVSimDirAnalyser::GetInfosForJobNameFromFiles()
+{
+   // Use first file in list to analyse to obtain information for generating
+   // automatic batch job names (name of model, eventually info on simulated reaction,
+   // etc.)
+
+   KVSimFile* sf = dynamic_cast<KVSimFile*>(fListOfSimFiles->First());
+   // name of TTree is (usually) name of model
+   fModel = sf->GetTreeName();
+   if (fModel == "dit_events") fModel = "DIT"; // except for DIT
+}
+
 
 void KVSimDirAnalyser::Make(const Char_t* kvsname)
 {
@@ -244,4 +256,16 @@ void KVSimDirAnalyser::Make(const Char_t* kvsname)
    cf.AddImplIncludeFile("KVBatchSystem.h");
 
    cf.GenerateCode();
+}
+
+TString KVSimDirAnalyser::ExpandAutoBatchName(const Char_t* format) const
+{
+   // Replace any special symbols in auto-format jobname with current values
+
+   TString tmp = KVSimDirAnalyser::ExpandAutoBatchName(format);
+   tmp.ReplaceAll("KVEventFiltering",
+                  Form("%s_%s_FILTER_%s", fModel.Data(), fFilterSystem.Data(), fFilterDataSet.Data()));
+   tmp.ReplaceAll(" ", "");
+   tmp.ReplaceAll("/+@", "_");
+   return tmp;
 }

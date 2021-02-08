@@ -171,7 +171,7 @@ void KVSimReader_DIT::FillEvent()
 
 void KVSimReader_DIT::InitReader()
 {
-   tree_name = "dit_events";
+   tree_name = "DIT";
    tree_title = "dit_events";
    branch_name = "DITKVSimEvents";
    root_file_name = Form("DIT_%s+%s@%.1fMeV.root", projectile.Data(), target.Data(), energy);

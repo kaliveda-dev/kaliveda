@@ -23,6 +23,10 @@ class KVSimDirAnalyser : public KVDataAnalyser {
    KVSimDir* fSimDir;//!         used for batch analysis
    Bool_t fCopyFilesToWorkDir;//! if true, files to be analysed are copied to working directory first
 
+   TString fModel;//! name of model used for simulation
+   TString fFilterSystem;//! name of system to be used for filtering the simulation
+   TString fFilterDataSet;//! name of dataset to be used for filtering the simulation
+
 private:
    void DeleteSimFilesListIfOurs();
    void DeleteAuxFilesListIfOurs();
@@ -33,6 +37,7 @@ protected:
    {
       return !(fListOfSimFiles && fListOfSimFiles->GetEntries());
    }
+   void GetInfosForJobNameFromFiles();
 
 public:
    KVSimDirAnalyser();
@@ -41,6 +46,7 @@ public:
    void SetFileList(TList* l)
    {
       fListOfSimFiles = l;
+      GetInfosForJobNameFromFiles();
    }
    void SetAuxFileList(TList* l)
    {
@@ -70,6 +76,15 @@ public:
    Bool_t IsCopyFilesToWorkDir() const
    {
       return fCopyFilesToWorkDir;
+   }
+   TString ExpandAutoBatchName(const Char_t* format) const;
+   void SetDataSetForFilter(const TString& f)
+   {
+      fFilterDataSet = f;
+   }
+   void SetSystemForFilter(const TString& f)
+   {
+      fFilterSystem = f;
    }
 
    ClassDef(KVSimDirAnalyser, 1) //Analysis of trees containing simulated events

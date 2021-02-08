@@ -295,7 +295,7 @@ public:
    virtual Bool_t ReadBatchEnvFile(const Char_t*);
    virtual void WriteBatchEnvFile(const Char_t*, Bool_t sav = kTRUE);
 
-   virtual const Char_t* ExpandAutoBatchName(const Char_t* format);
+   virtual TString ExpandAutoBatchName(const Char_t* format) const;
 
    /* methods which can be used to customise analysis class behaviour.
       they can be called from the analysis class using the global

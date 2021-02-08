@@ -732,7 +732,7 @@ void KVDataAnalyser::SubmitTask()
 
 //__________________________________________________________________________________//
 
-const Char_t* KVDataAnalyser::ExpandAutoBatchName(const Char_t* format)
+TString KVDataAnalyser::ExpandAutoBatchName(const Char_t* format) const
 {
    //Replace any 'special' symbols in "format" with their current values
    //
@@ -740,8 +740,7 @@ const Char_t* KVDataAnalyser::ExpandAutoBatchName(const Char_t* format)
    //  $User  :  name of user
    //  $UserClass  :  name of user's analysis class
 
-   static KVString tmp;
-   tmp = format;
+   KVString tmp = format;
    TDatime now;
    KVString stDate = now.AsSQLString();
    stDate.ReplaceAll(" ", "-");
@@ -749,7 +748,7 @@ const Char_t* KVDataAnalyser::ExpandAutoBatchName(const Char_t* format)
    if (fUserClass.Length()) tmp.ReplaceAll("$UserClass", fUserClass.Data());
    else if (fTask) tmp.ReplaceAll("$UserClass", fTask->GetDataAnalyser());
    tmp.ReplaceAll("$User", gSystem->GetUserInfo()->fUser.Data());
-   return tmp.Data();
+   return tmp;
 }
 
 const Char_t* KVDataAnalyser::GetRecognisedAutoBatchNameKeywords() const

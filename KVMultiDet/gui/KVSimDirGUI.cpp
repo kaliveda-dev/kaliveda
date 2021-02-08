@@ -874,6 +874,12 @@ void KVSimDirGUI::RunAnalysis(const TString& type)
    else
       gDataAnalyser->SetNbEventToRead(0);
    Bool_t cancel_batch_job = kFALSE;
+   if (type == "filter") {
+      // set extra infos in kvsimdiranalyser for auto jobname
+      KVSimDirAnalyser* simda = dynamic_cast<KVSimDirAnalyser*>(gDataAnalyser);
+      simda->SetDataSetForFilter(fDataset);
+      simda->SetSystemForFilter(fSystem);
+   }
    if (fWithPROOF) {
       gBatchSystem->Clear();
       KVNameValueList batchParams;

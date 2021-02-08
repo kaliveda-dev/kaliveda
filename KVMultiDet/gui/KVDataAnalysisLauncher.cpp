@@ -1413,7 +1413,7 @@ const Char_t* KVDataAnalysisLauncher::GetSavedResource(const Char_t* name, const
 
 //____________________________________________________________________________________________________
 
-const Char_t* KVDataAnalysisLauncher::SystemBatchName(void)
+TString KVDataAnalysisLauncher::SystemBatchName(void)
 {
    // Get the system name for the batch name
 
@@ -1511,7 +1511,7 @@ void KVDataAnalysisLauncher::BuildResourceName(const Char_t* name, TString& cur_
       }
       else if (!strcmp(resource->GetName(), "System")) {
          // use SystemBatchName
-         res.Form(".%s", SystemBatchName());
+         res.Form(".%s", SystemBatchName().Data());
       }
       else if (!strcmp(resource->GetName(), "Trigger")) {
          // turn "M > 4" into "M4"
