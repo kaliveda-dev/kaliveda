@@ -35,7 +35,6 @@ public:
    }
    void Init(TTree* tree);
 
-   void SetAnalysisFrame();
    Int_t GetEventNumber()
    {
       // returns number of currently analysed event

@@ -287,6 +287,11 @@ public:
    }
    virtual void SetAnalysisFrame()
    {
+      // If this analysis class is used in a context where the events correspond to a known
+      // reaction for which the kinematics have been defined, we can define the centre of mass
+      // ("CM") frame for the particles in the event.
+      if (gDataAnalyser->GetKinematics())
+         GetEvent()->SetFrame("CM", gDataAnalyser->GetKinematics()->GetCMVelocity());
    }
 
    KVEvent* GetEvent() const

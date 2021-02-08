@@ -22,15 +22,6 @@ void KVReconEventSelector::Init(TTree* tree)
    }
 }
 
-void KVReconEventSelector::SetAnalysisFrame()
-{
-   // Define the CM frame for the current event
-   //calculate momenta of particles in reaction cm frame
-   if (fCurrentRun->GetSystem() && fCurrentRun->GetSystem()->GetKinematics()) {
-      GetEvent()->SetFrame("CM", fCurrentRun->GetSystem()->GetKinematics()->GetCMVelocity());
-   }
-}
-
 void KVReconEventSelector::Make(const Char_t* kvsname)
 {
    // Generate a new recon data analysis selector class

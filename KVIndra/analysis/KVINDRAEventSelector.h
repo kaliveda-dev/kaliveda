@@ -35,7 +35,6 @@ public:
       return fCurrentRun;
    }
 
-   void SetAnalysisFrame();
    Int_t GetEventNumber()
    {
       // returns number of currently analysed event

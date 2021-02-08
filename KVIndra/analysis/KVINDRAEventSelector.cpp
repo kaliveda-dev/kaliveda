@@ -35,15 +35,6 @@ void KVINDRAEventSelector::Init(TTree* tree)
    }
 }
 
-void KVINDRAEventSelector::SetAnalysisFrame()
-{
-   // Define the CM frame for the current event
-   //calculate momenta of particles in reaction cm frame
-   if (fCurrentRun->GetSystem() && fCurrentRun->GetSystem()->GetKinematics()) {
-      GetEvent()->SetFrame("CM", fCurrentRun->GetSystem()->GetKinematics()->GetCMVelocity());
-   }
-}
-
 void KVINDRAEventSelector::Make(const Char_t* kvsname)
 {
    // Automatic generation of KVINDRAEventSelector-derived class for KaliVeda analysis

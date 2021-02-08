@@ -16,11 +16,5 @@ public:
    void EndRun() {}
    void EndAnalysis() {}
 
-   void SetAnalysisFrame()
-   {
-      // Calculate centre of mass kinematics
-      GetEvent()->SetFrame("CM", gDataAnalyser->GetKinematics()->GetCMVelocity());
-   }
-
    ClassDef(FilteredEventAnalysisTemplate, 1) //event analysis class
 };
