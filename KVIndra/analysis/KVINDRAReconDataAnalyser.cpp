@@ -272,6 +272,7 @@ void KVINDRAReconDataAnalyser::preInitRun()
    Int_t run = GetRunNumberFromFileName(theChain->GetCurrentFile()->GetName());
    gIndra->SetParameters(run);
    KVINDRADBRun* CurrentRun = gIndraDB->GetRun(run);
+   SetCurrentRun(CurrentRun);
    SetSelectorCurrentRun(CurrentRun);
    cout << endl << " ===================  New Run  =================== " <<
         endl << endl;

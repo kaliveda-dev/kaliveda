@@ -6,6 +6,8 @@
 
 #include "KVSimDirAnalyser.h"
 #include <KV2Body.h>
+#include <KVDBRun.h>
+#include <KVDBSystem.h>
 #include <KVEventSelector.h>
 
 /**
@@ -18,6 +20,8 @@ class KVSimDirFilterAnalyser : public KVSimDirAnalyser {
 protected:
    KVEventSelector* fAnalysisClass;   // user analysis class
    KV2Body*         fKinematics;      // kinematics of reaction
+   KVDBSystem*      fSystem;          // currently analysed system
+   KVDBRun*         fRun;             // currently analysed run
 
 public:
    KVSimDirFilterAnalyser();
@@ -38,10 +42,19 @@ public:
    void preAnalysis();
 
    static void Make(const Char_t* kvsname = "MyFilteredAnalysis");
+
+   KVDBSystem* GetAnalysedSystem() const
+   {
+      return fSystem;
+   }
+   KVDBRun* GetAnalysedRun() const
+   {
+      return fRun;
+   }
 #ifdef USING_ROOT6
    void SetTriggerConditionsForRun(int run);
 #endif
-   ClassDef(KVSimDirFilterAnalyser, 1) //Analysis of filtered simulations
+ ClassDef(KVSimDirFilterAnalyser, 1) //Analysis of filtered simulations
 };
 
 #endif

@@ -18,6 +18,7 @@ class KVDBSystem;
 class KVDataSetAnalyser : public KVDataAnalyser {
 private:
    KVDBSystem* fSystem;         //system chosen by user
+   KVDBRun* fRun;               //currently analysed run
    KVNumberList fRunList;       //list of runs to analyse
    KVNumberList fFullRunList;   //list of all runs for the analysis task
    KVDataSet* fDataSet;         //dataset chosen by user
@@ -28,6 +29,10 @@ private:
    Bool_t fChoozRuns;           //set to kTRUE when user wants to choose runs
 
 protected:
+   void SetCurrentRun(KVDBRun* r)
+   {
+      fRun = r;
+   }
    virtual KVNumberList PrintAvailableRuns(KVString& datatype);
    virtual void set_dataset_pointer(KVDataSet* ds);
    virtual void set_dataset_name(const Char_t* name);
@@ -143,6 +148,14 @@ public:
    const Char_t* GetRecognisedAutoBatchNameKeywords() const;
 
    const KV2Body* GetKinematics() const;
+   KVDBSystem* GetAnalysedSystem() const
+   {
+      return fSystem;
+   }
+   KVDBRun* GetAnalysedRun() const
+   {
+      return fRun;
+   }
 
    ClassDef(KVDataSetAnalyser, 1) //Analysis of data in datasets
 };

@@ -189,6 +189,7 @@ void KVReconDataAnalyser::preInitRun()
    Int_t run = GetRunNumberFromFileName(theChain->GetCurrentFile()->GetName());
    gMultiDetArray->SetParameters(run);
    KVDBRun* CurrentRun = gExpDB->GetDBRun(run);
+   SetCurrentRun(CurrentRun);
    fSelector->SetCurrentRun(CurrentRun);
 
    cout << endl << " ===================  New Run  =================== " <<
