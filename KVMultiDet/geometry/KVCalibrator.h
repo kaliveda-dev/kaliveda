@@ -79,6 +79,8 @@ class KVCalibrator: public KVBase {
    TString     fInputSignal;        //  type of signal used as input
    TString     fOutputSignal;       //  type of output calibrated signal
    Bool_t      fUseInverseFunction; // true if inverse i.e. TF1::GetX should be used for Compute()
+   Double_t    fInputMin;           // required minimum input signal for inverse calibration
+   Double_t    fInputMax;           // required maximum input signal for inverse calibration
 
 protected:
    void SetCalibFunction(TF1* f)
@@ -101,6 +103,7 @@ protected:
       Double_t res = fCalibFunc->GetX(x);
       if (TMath::IsNaN(res)) {
          // check that TF1::GetX() actually worked!
+         Info("do_inversion", "Failed for x=%f", x);
          Print();
          fCalibFunc->Print();
          return 0;
@@ -115,9 +118,9 @@ protected:
    void adjust_range_of_inverse_calibration();
 public:
    KVCalibrator()
-      : KVBase("Calibrator", "KVCalibrator"), fDetector(nullptr), fCalibFunc(nullptr), fReady(kFALSE), fUseInverseFunction(kFALSE) {}
+      : KVBase("Calibrator", "KVCalibrator"), fDetector(nullptr), fCalibFunc(nullptr), fReady(kFALSE), fUseInverseFunction(kFALSE), fInputMin(99), fInputMax(-1) {}
    KVCalibrator(const KVString& formula, const KVString& type)
-      : KVBase("Calibrator", type), fDetector(nullptr), fCalibFunc(new TF1("KVCalibrator::fCalibFunc", formula)), fReady(kFALSE), fUseInverseFunction(kFALSE)
+      : KVBase("Calibrator", type), fDetector(nullptr), fCalibFunc(new TF1("KVCalibrator::fCalibFunc", formula)), fReady(kFALSE), fUseInverseFunction(kFALSE), fInputMin(99), fInputMax(-1)
    {
       // Set up calibrator using mathematical formula
    }

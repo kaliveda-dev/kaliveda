@@ -246,6 +246,12 @@ public:
    }
    Bool_t HasIntParameter(const Char_t* name) const
    {
+      // Returns kTRUE if the list contains a parameter with given name and type Int.
+      //
+      // WARNING: only returns kTRUE if paramete is STRICTLY of type Int,
+      // will return false for Double parameter.
+      //
+      // \sa HasNumericParameter()
       return HasParameter<int>(name);
    }
    Bool_t HasBoolParameter(const Char_t* name) const
@@ -254,11 +260,27 @@ public:
    }
    Bool_t HasDoubleParameter(const Char_t* name) const
    {
+      // Returns kTRUE if the list contains a parameter with given name and type Double.
+      //
+      // WARNING: only returns kTRUE if paramete is STRICTLY of type Double,
+      // will return false for Int parameter.
+      //
+      // \sa HasNumericParameter()
       return HasParameter<double>(name);
    }
    Bool_t HasStringParameter(const Char_t* name) const
    {
       return HasParameter<TString>(name);
+   }
+   Bool_t HasNumericParameter(const Char_t* name) const
+   {
+      // Returns kTRUE if the list contains a parameter with given name and it is of numeric type,
+      // i.e. either Int or Double. Even if the parameter is actually of String type, if the
+      // string it contains corresponds to a numeric value, this method returns kTRUE.
+      //
+      // This is to avoid ambiguity with HasDoubleParameter() and HasIntParameter() which only
+      // return kTRUE if the parameter is _strictly_ of the given type.
+      return (HasIntParameter(name) || HasDoubleParameter(name)) || (HasStringParameter(name) && GetTStringValue(name).IsFloat());
    }
    Int_t GetNameIndex(const Char_t* name);
    const Char_t* GetNameAt(Int_t idx) const;
