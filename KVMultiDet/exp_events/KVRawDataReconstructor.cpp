@@ -69,6 +69,7 @@ Bool_t KVRawDataReconstructor::Analysis()
       fEvRecon->ReconstructEvent(gMultiDetArray->GetFiredDataParameters());
       fEvRecon->GetEvent()->SetNumber(GetEventNumber());
       fRecTree->Fill();
+      fEvRecon->GetEvent()->Print();
       fEvRecon->GetEvent()->Clear();
    }
 
