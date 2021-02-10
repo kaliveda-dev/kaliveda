@@ -255,7 +255,7 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
       }
    }
    else if (partID.IsType("Si-CsI")) {
-      int zz = partID.GetZ();
+      int zz = partID.Z;
       KVIdentificationResult* si1si2 = PART.GetIdentificationResult("Si-Si");
 //      std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
       if (si1si2) {
