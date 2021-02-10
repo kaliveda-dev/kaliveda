@@ -78,7 +78,7 @@ class KVCalibrator: public KVBase {
    Bool_t      fReady;              //  = kTRUE if calibration formula & parameters have been set up
    TString     fInputSignal;        //  type of signal used as input
    TString     fOutputSignal;       //  type of output calibrated signal
-   Bool_t      fUseInverseFunction; //true if inverse i.e. TF1::GetX should be used for Compute()
+   Bool_t      fUseInverseFunction; // true if inverse i.e. TF1::GetX should be used for Compute()
 
 protected:
    void SetCalibFunction(TF1* f)
@@ -93,11 +93,26 @@ protected:
    }
    Double_t do_inversion(Double_t x) const
    {
-      Double_t xmin, xmax;
-      fCalibFunc->GetRange(xmin, xmax);
-      return fCalibFunc->GetX(x, xmin, xmax);
-   }
+      // Invert calibration function to find input value corresponding to output value x.
+      //
+      // In case of problems with the inversion (x not included in the range of values of the
+      // function) we print some infos and return 0.
 
+      Double_t res = fCalibFunc->GetX(x);
+      if (TMath::IsNaN(res)) {
+         // check that TF1::GetX() actually worked!
+         Print();
+         fCalibFunc->Print();
+         return 0;
+      }
+      return res;
+   }
+   bool in_range(double X, double Xmin, double Xmax)
+   {
+      // return true if X is within the given range
+      return (X >= Xmin) && (X <= Xmax);
+   }
+   void adjust_range_of_inverse_calibration();
 public:
    KVCalibrator()
       : KVBase("Calibrator", "KVCalibrator"), fDetector(nullptr), fCalibFunc(nullptr), fReady(kFALSE), fUseInverseFunction(kFALSE) {}
@@ -127,6 +142,9 @@ public:
    void SetStatus(Bool_t ready)
    {
       fReady = ready;
+      if (ready)
+         if (IsUseInverseFunction())
+            adjust_range_of_inverse_calibration();
    }
    Bool_t GetStatus() const
    {

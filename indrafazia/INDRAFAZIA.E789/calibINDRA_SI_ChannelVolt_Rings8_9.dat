@@ -3,7 +3,7 @@
 SignalIn:                                PG
 SignalOut:                               Volts
 CalibType:                               ChannelVolt
-CalibOptions:                            func=pol3,min=0,max=1,inverse=true
+CalibOptions:                            func=pol3,min=-1,max=4096,inverse=true
 SI_0801:                                 71.9228,3979.44,32.1727,-27.9312
 SI_0802:                                 70.9138,3978.88,31.5155,-27.9611
 SI_0803:                                 71.7485,3940.32,25.0456,-21.1089
