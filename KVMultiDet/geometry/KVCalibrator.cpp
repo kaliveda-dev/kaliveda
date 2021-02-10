@@ -130,9 +130,9 @@ void KVCalibrator::adjust_range_of_inverse_calibration()
    // set range of function so that [min,max] values correspond to those given in option
    fCalibFunc->SetRange(fXmin, fXmax);
 
-   Info("adjust_range_of_inverse_function", "After adjustment: %s", GetName());
-   Info("adjust_range_of_inverse_function", "After adjustment: %s INPUT-range = [%f, %f]", GetInputSignalType().Data(), fInputMin, fInputMax);
-   Info("adjust_range_of_inverse_function", "After adjustment: %s OUTPUT-range = [%f, %f]", GetOutputSignalType().Data(), fXmin, fXmax);
+//   Info("adjust_range_of_inverse_function", "After adjustment: %s", GetName());
+//   Info("adjust_range_of_inverse_function", "After adjustment: %s INPUT-range = [%f, %f]", GetInputSignalType().Data(), fInputMin, fInputMax);
+//   Info("adjust_range_of_inverse_function", "After adjustment: %s OUTPUT-range = [%f, %f]", GetOutputSignalType().Data(), fXmin, fXmax);
 }
 
 void KVCalibrator::Print(Option_t*) const
