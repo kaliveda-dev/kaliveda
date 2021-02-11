@@ -223,18 +223,20 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
 
    KVGroupReconstructor::IdentifyParticle(PART);
 
-
-   // 8He dans CsI-PSA -> 8Be pour E789
+   Info("IdentifyParticle", "List of id attempted");
+   for (auto& id : id_by_type) {
+      id.second->Print();
+   }
 
    if (partID.IsType("CsI")) {
       if (partID.IDquality == KVIDGCsI::kICODE10) {
          // look at Si1-Si2 identification
-         KVIdentificationResult* si1si2 = PART.GetIdentificationResult("Si-Si");
-//         std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
-         if (si1si2) {
-            if (si1si2->IDattempted && si1si2->IDquality < KVIDZAGrid::kICODE4) {
+//         KVIdentificationResult* si1si2 = PART.GetIdentificationResult("Si-Si");
+         std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
+         if (si1si2 != id_by_type.end()) {
+            if (si1si2->second->IDattempted && si1si2->second->IDquality < KVIDZAGrid::kICODE4) {
                ChangeReconstructedTrajectory(PART, "SI2");
-               partID = *(si1si2);
+               partID = *(si1si2->second);
                identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
                PART.SetIdentifyingTelescope(identifying_telescope);
                PART.SetIdentification(&partID, identifying_telescope);
@@ -242,11 +244,11 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
          }
       }
       else {
-         KVIdentificationResult* si2csi = PART.GetIdentificationResult("Si-CsI");
-//         std::map<std::string, KVIdentificationResult*>::iterator si2csi = id_by_type.find("Si-CsI");
-         if (si2csi) {
-            if (si2csi->IDattempted && si2csi->IDquality < KVIDZAGrid::kICODE4) {
-               partID = *(si2csi);
+//         KVIdentificationResult* si2csi = PART.GetIdentificationResult("Si-CsI");
+         std::map<std::string, KVIdentificationResult*>::iterator si2csi = id_by_type.find("Si-CsI");
+         if (si2csi != id_by_type.end()) {
+            if (si2csi->second->IDattempted && si2csi->second->IDquality < KVIDZAGrid::kICODE4) {
+               partID = *(si2csi->second);
                identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-CsI");
                PART.SetIdentifyingTelescope(identifying_telescope);
                PART.SetIdentification(&partID, identifying_telescope);
@@ -256,12 +258,12 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
    }
    else if (partID.IsType("Si-CsI")) {
       int zz = partID.Z;
-      KVIdentificationResult* si1si2 = PART.GetIdentificationResult("Si-Si");
-//      std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
-      if (si1si2) {
-         if (si1si2->IDattempted && si1si2->IDquality < KVIDZAGrid::kICODE4 && zz < si1si2->Z) {
+//      KVIdentificationResult* si1si2 = PART.GetIdentificationResult("Si-Si");
+      std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
+      if (si1si2 != id_by_type.end()) {
+         if (si1si2->second->IDattempted && si1si2->second->IDquality < KVIDZAGrid::kICODE4 && zz < si1si2->second->Z) {
             ChangeReconstructedTrajectory(PART, "SI2");
-            partID = *(si1si2);
+            partID = *(si1si2->second);
             identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
             PART.SetIdentifyingTelescope(identifying_telescope);
             PART.SetIdentification(&partID, identifying_telescope);
