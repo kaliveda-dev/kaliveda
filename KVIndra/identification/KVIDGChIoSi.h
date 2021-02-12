@@ -57,7 +57,7 @@ public:
       return (fEmaxSi);
    };
 
-   virtual Bool_t IsIdentifiable(Double_t x, Double_t y) const;
+   virtual Bool_t IsIdentifiable(Double_t x, Double_t y, TString* rejected_by = nullptr) const;
    virtual void Identify(Double_t x, Double_t y, KVIdentificationResult*) const;
 
    virtual void Initialize();

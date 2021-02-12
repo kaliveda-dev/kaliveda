@@ -55,7 +55,7 @@ KVIDGCsI::~KVIDGCsI()
 
 //______________________________________________________________________________________________________//
 
-Bool_t KVIDGCsI::IsIdentifiable(Double_t x, Double_t y) const
+Bool_t KVIDGCsI::IsIdentifiable(Double_t x, Double_t y, TString* reject) const
 {
    //Performs rejection of gammas - returns kTRUE if point above gamma line
    //(note - position w.r.t. IMF line is not considered)
@@ -66,8 +66,8 @@ Bool_t KVIDGCsI::IsIdentifiable(Double_t x, Double_t y) const
    else if ((x < GammaLine->GetX()[0]) && (x < GammaLine->GetX()[GammaLine->GetN() - 1])) return kTRUE;
    else if (GammaLine->WhereAmI(x, y, "above")) return kTRUE;
 
+   if (reject) *reject = GammaLine->GetName();
    return kFALSE;
-//   return (GammaLine ? (GammaLine->WhereAmI(x, y, "above")) : kTRUE);
 }
 
 //_______________________________________________________________________________________________//

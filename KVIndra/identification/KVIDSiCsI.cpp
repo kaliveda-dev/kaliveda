@@ -54,13 +54,10 @@ Bool_t KVIDSiCsI::Identify(KVIdentificationResult* idr, Double_t x, Double_t y)
 
    Bool_t ok = KVINDRAIDTelescope::Identify(idr, x, y);
 
-   Double_t de, e;
-   GetIDGridCoords(e, de, GetIDGrid(), x, y);
-
    // check if silicon is in pedestal region (possible neutron)
    if (fPIEDESTAL) {
-      if (fPIEDESTAL->TestPoint(e, de)) idr->deltaEpedestal = KVIdentificationResult::deltaEpedestal_NO;
-      else idr->deltaEpedestal = KVIdentificationResult::deltaEpedestal_YES;
+      if (idr->Rejecting_Cut == "PIEDESTAL") idr->deltaEpedestal = KVIdentificationResult::deltaEpedestal_YES;
+      else idr->deltaEpedestal = KVIdentificationResult::deltaEpedestal_NO;
    }
    else {
       idr->deltaEpedestal = KVIdentificationResult::deltaEpedestal_UNKNOWN;

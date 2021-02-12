@@ -944,16 +944,25 @@ KVIDGraph* KVIDGraph::AddGraphs(KVIDGraph* g1, Int_t id1_min, Int_t id1_max,
 
 //___________________________________________________________________________________
 
-Bool_t KVIDGraph::IsIdentifiable(Double_t x, Double_t y) const
+Bool_t KVIDGraph::IsIdentifiable(Double_t x, Double_t y, TString* rejected_by) const
 {
    // Default method for deciding if point (x,y) corresponds to an identifiable
    // particle or not: we loop over the list of cuts and test the
-   // point with the method TestPoint(x,y). If the point is accepted
-   // by all cuts, then (x,y) is identifiable (return kTRUE).
+   // point with the method TestPoint(x,y).
+   //
+   // If the point is accepted by all cuts, then (x,y) is identifiable (return kTRUE).
+   //
+   // If the point is rejected by a cut we return kFALSE.
+   // If rejected_by contains a valid pointer, we set it to the name of the rejecting cut.
 
    TIter next(fCuts);
    KVIDentifier* id = 0;
-   while ((id = (KVIDentifier*)next())) if (!id->TestPoint(x, y)) return kFALSE;
+   while ((id = (KVIDentifier*)next())) {
+      if (!id->TestPoint(x, y)) {
+         if (rejected_by) *rejected_by = id->GetName();
+         return kFALSE;
+      }
+   }
    return kTRUE;
 }
 

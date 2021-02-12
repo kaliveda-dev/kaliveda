@@ -87,7 +87,7 @@ public:
 #endif
    virtual void Identify(Double_t /*x*/, Double_t /*y*/, KVIdentificationResult*) const = 0;
    virtual void Initialize() = 0;
-   virtual Bool_t IsIdentifiable(Double_t /*x*/, Double_t /*y*/) const;
+   virtual Bool_t IsIdentifiable(Double_t /*x*/, Double_t /*y*/, TString* rejected_by = nullptr) const;
 
    static void SetAutoAdd(Bool_t yes = kTRUE)
    {

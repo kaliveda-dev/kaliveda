@@ -83,7 +83,7 @@ KVIDGChIoSi::~KVIDGChIoSi()
 
 //______________________________________________________________________________________________________//
 
-Bool_t KVIDGChIoSi::IsIdentifiable(Double_t x, Double_t y) const
+Bool_t KVIDGChIoSi::IsIdentifiable(Double_t x, Double_t y, TString* rejected_by) const
 {
    // Sets fStatus for particle depending on its position in the grid.
    //
@@ -102,6 +102,7 @@ Bool_t KVIDGChIoSi::IsIdentifiable(Double_t x, Double_t y) const
       can_id = fSeuil->WhereAmI(x, y, "right");
       if (!can_id) {
          const_cast < KVIDGChIoSi* >(this)->fICode = k_BelowSeuilSi;
+         if (rejected_by) *rejected_by = fSeuil->GetName();
          return kFALSE;
       };
    }
@@ -110,6 +111,7 @@ Bool_t KVIDGChIoSi::IsIdentifiable(Double_t x, Double_t y) const
       can_id =  fEmaxSi->WhereAmI(x, y, "left");
       if (!can_id) {
          const_cast < KVIDGChIoSi* >(this)->fICode = k_RightOfEmaxSi;
+         if (rejected_by) *rejected_by = fEmaxSi->GetName();
          return kFALSE;
       };
    }
