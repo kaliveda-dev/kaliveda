@@ -399,20 +399,19 @@ Bool_t KVIDTelescope::Identify(KVIdentificationResult* idr, Double_t x, Double_t
    //the grids will be tried in the order they were found in the file containing the grids for this
    //telescope.
 
-   idr->SetIDType(GetType());
-   idr->IDattempted = kTRUE;
-
    KVIDGraph* grid;
    TIter it(GetListOfIDGrids());
    while ((grid = (KVIDGraph*)it())) { //loop over grids in order given by [Dataset].[Array Name].[ID type].GridOrder:
       Double_t de, e;
       GetIDGridCoords(e, de, grid, x, y);
       idr->SetGridName(grid->GetName());
-      if (grid->IsIdentifiable(e, de)) {
+      TString reject_cut;
+      if (grid->IsIdentifiable(e, de, &idr->Rejecting_Cut)) {
          grid->Identify(e, de, idr);
          if (idr->IDOK) break; // stop on first successful identification
       }
       else {
+         // particle rejected by cut in grid. idr->Rejecting_Cut contains its name.
          idr->IDOK = kFALSE;
          idr->IDquality = KVIDZAGrid::kICODE8;
       }
