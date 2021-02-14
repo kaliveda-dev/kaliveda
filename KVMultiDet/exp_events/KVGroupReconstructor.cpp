@@ -256,17 +256,16 @@ void KVGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
 {
    // Try to identify this nucleus by calling the Identify() function of each
    // ID telescope crossed by it, starting with the telescope where the particle stopped, in order
-   //      -  only telescopes which have been correctly initialised for the current run are used,
-   //         i.e. those for which KVIDTelescope::IsReadyForID() returns kTRUE.
+   //   -  only telescopes which have been correctly initialised for the current run are used,
+   //      i.e. those for which KVIDTelescope::IsReadyForID() returns kTRUE.
+   //
    // This continues until a successful identification is achieved or there are no more ID telescopes to try.
+   //
    // The identification code corresponding to the identifying telescope is set as the identification code of the particle.
 
    const KVSeqCollection* idt_list = PART.GetReconstructionTrajectory()->GetIDTelescopes();
    identifying_telescope = nullptr;
    id_by_type.clear();
-
-   Info("IdentifyParticle", "list of telescopes to try:");
-   idt_list->ls();
 
    if (idt_list->GetEntries() > 0) {
 
@@ -276,10 +275,9 @@ void KVGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
       Int_t n_success_id = 0;//number of successful identifications
       while ((idt = (KVIDTelescope*) next())) {
          KVIdentificationResult* IDR = PART.GetIdentificationResult(idnumber++);
-         id_by_type[IDR->GetType()] = IDR;
-         Info("IdentifyParticle", "Trying ID %s", IDR->GetType());
-
+         IDR->SetIDType(idt->GetType());// without this, the identification type is never set!
          if (idt->IsReadyForID()) { // is telescope able to identify for this run ?
+            id_by_type[IDR->GetIDType()] = IDR;// map contains only attempted identifications
             IDR->IDattempted = kTRUE;
             idt->Identify(IDR);
 
@@ -374,6 +372,19 @@ void KVGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
 
 //_________________________________________________________________________________
 
+void KVGroupReconstructor::TreatStatusStopFirstStage(KVReconstructedNucleus& d)
+{
+   // particles stopped in first member of a telescope
+   // estimation of Z (minimum) from energy loss (if detector is calibrated)
+   Int_t zmin = d.GetStoppingDetector()->FindZmin(-1., d.GetMassFormula());
+   if (zmin) {
+      d.SetZ(zmin);
+      d.SetIsIdentified();
+      KVGeoDNTrajectory* t = (KVGeoDNTrajectory*)d.GetStoppingDetector()->GetNode()->GetTrajectories()->First();
+      d.SetIdentifyingTelescope((KVIDTelescope*) t->GetIDTelescopes()->Last());
+   }
+}
+
 void KVGroupReconstructor::Identify()
 {
    // All particles which have not been previously identified (IsIdentified=kFALSE), and which
@@ -392,13 +403,7 @@ void KVGroupReconstructor::Identify()
          else if (d.GetStatus() == KVReconstructedNucleus::kStatusStopFirstStage) {
             // particles stopped in first member of a telescope
             // estimation of Z (minimum) from energy loss (if detector is calibrated)
-            Int_t zmin = d.GetStoppingDetector()->FindZmin(-1., d.GetMassFormula());
-            if (zmin) {
-               d.SetZ(zmin);
-               d.SetIsIdentified();
-               KVGeoDNTrajectory* t = (KVGeoDNTrajectory*)d.GetStoppingDetector()->GetNode()->GetTrajectories()->First();
-               d.SetIdentifyingTelescope((KVIDTelescope*) t->GetIDTelescopes()->Last());
-            }
+            TreatStatusStopFirstStage(d);
          }
       }
    }
