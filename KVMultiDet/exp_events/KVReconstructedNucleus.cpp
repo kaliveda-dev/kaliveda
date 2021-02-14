@@ -231,7 +231,6 @@ void KVReconstructedNucleus::Print(Option_t*) const
    }
    cout << "RECONSTRUCTION STATUS : " << endl;
    PrintStatusString();
-   cout << "NSegDet = " << GetNSegDet() << endl;
    if (fReconTraj) fReconTraj->ls();
    if (GetParameters()->GetNpar()) GetParameters()->Print();
 }
@@ -739,3 +738,20 @@ void KVReconstructedNucleus::SubtractEnergyFromAllDetectors()
    }
 }
 
+void KVReconstructedNucleus::ls(Option_t*) const
+{
+   printf(" A:%6s", GetParameters()->GetStringValue("ARRAY"));
+   if (GetStoppingDetector()) printf("  D:%10s", GetStoppingDetector()->GetName());
+   printf(" IDCODE=%2d", GetIDCode());
+   if (IsIdentified()) {
+      if (GetIdentifyingTelescope()) printf(" ID:%15s", GetIdentifyingTelescope()->GetName());
+      if (IsZMeasured()) printf(" Z=%2d", GetZ());
+      else printf("     ");
+      if (IsAMeasured()) printf(" A=%3d  : ", GetA());
+      else printf("        : ");
+      if (IsCalibrated()) printf(" E=%g MeV", GetEnergy());
+      if (GetParameters()->IsValue("Coherent", false)) printf("/not coherent/");
+      if (GetParameters()->IsValue("Pileup", true)) printf("/pileup/");
+   }
+   printf("\n");
+}

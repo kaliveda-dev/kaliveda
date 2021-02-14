@@ -181,20 +181,7 @@ void KVReconstructedEvent::ls(Option_t*) const
    for (KVEvent::Iterator it = begin(); it != end(); ++it) {
       KVReconstructedNucleus& nuc = it.get_reference<KVReconstructedNucleus>();
       printf(" %3d", i);
-      printf(" A:%6s", nuc.GetParameters()->GetStringValue("ARRAY"));
-      printf("  D:%10s", nuc.GetStoppingDetector()->GetName());
-      printf(" IDCODE=%2d", nuc.GetIDCode());
-      if (nuc.IsIdentified()) {
-         if (nuc.GetIdentifyingTelescope()) printf(" ID:%15s", nuc.GetIdentifyingTelescope()->GetName());
-         if (nuc.IsZMeasured()) printf(" Z=%2d", nuc.GetZ());
-         else printf("     ");
-         if (nuc.IsAMeasured()) printf(" A=%3d  : ", nuc.GetA());
-         else printf("        : ");
-         if (nuc.IsCalibrated()) printf(" E=%g MeV", nuc.GetEnergy());
-         if (nuc.GetParameters()->IsValue("Coherent", false)) printf("/not coherent/");
-         if (nuc.GetParameters()->IsValue("Pileup", true)) printf("/pileup/");
-      }
-      printf("\n");
+      nuc.ls();
       ++i;
    }
 }

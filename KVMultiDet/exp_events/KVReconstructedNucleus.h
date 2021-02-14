@@ -472,6 +472,7 @@ public:
 
    Bool_t InArray(const TString&) const;
    TString GetArrayName() const;
+   void ls(Option_t* = "") const;
 
    ClassDef(KVReconstructedNucleus, 17)  //Nucleus detected by multidetector array
 };
