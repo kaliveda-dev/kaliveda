@@ -1,5 +1,7 @@
 #include "KVCsI.h"
 
+#include <KVCalibratedSignal.h>
+
 using namespace std;
 
 ClassImp(KVCsI)
@@ -111,12 +113,19 @@ Double_t KVCsI::GetCorrectedEnergy(KVNucleus* nuc, Double_t lum, Bool_t)
    // Calculate calibrated energy loss for a nucleus (Z,A) giving total light output "lum".
    // By default we use the current value of the detector's `TotLight` signal.
 
+   if (!(GetDetectorSignalValue("TotLight") > 0)) return -1;
+
    Int_t Z = nuc->GetZ();
    Int_t A = nuc->GetA();
 
    Double_t eloss;
    if (lum > -1) eloss = GetDetectorSignalValue("Energy", Form("INPUT=%g,Z=%d,A=%d", lum, Z, A));
    else eloss = GetDetectorSignalValue("Energy", Form("Z=%d,A=%d", Z, A));
+   if (((KVCalibratedSignal*)GetDetectorSignal("Energy"))->InversionFailure()) {
+      Info("GetCorrectedEnergy", "Failed to invert Light-Energy calibration for %s with Z=%d A=%d LIGHT=%f",
+           GetName(), Z, A, GetDetectorSignalValue("TotLight"));
+      return -1;
+   }
 
    if (GetDetectorSignal("TotLight")->GetStatus("LightIsGood")) {
       SetEnergy(eloss);
