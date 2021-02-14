@@ -21,142 +21,125 @@ ClassImp(KVFAZIAGroupReconstructor)
 //////////////////////////////////////////////////////////////////////////////////
 void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
 {
-   // Perform energy calibration of (previously identified) particle
+   // Perform energy calibration of (previously identified) charged particle
+   //
+   // "Gamma" particles identified in CsI are given the equivalent energy of proton,
+   // if the CsI detector is calibrated
 
-   // check that the particle crossed at least one detector layer
-   if (PART->GetReconstructionTrajectory()->GetN() < 1) return;
+   KVFAZIADetector* det = (KVFAZIADetector*)PART->GetStoppingDetector();
 
-   Int_t ndet       = 0;
-   Int_t ndet_calib = 0;
-   Double_t ee      = 0.;
-   Double_t etot    = 0.;
-
-   Bool_t punch_through = kFALSE;
-   Bool_t incoherency = kFALSE;
-   Bool_t calculated = kFALSE;
-
-   KVFAZIADetector* det = 0;
-   PART->SetEnergy(0.);
-   PART->SetECode(0);
-
-   // loop over crossed detectors
-   // compute energy if the detector is calibrated
-   PART->GetReconstructionTrajectory()->IterateFrom();
-   KVGeoDetectorNode* node;
-   KVNameValueList part_id(Form("Z=%d,A=%d", PART->GetZ(), PART->GetA()));
-   while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
-      det = (KVFAZIADetector*)node->GetDetector();
+   if (det->IsType("CsI") && PART->GetIDCode() == 0) { // gammas
       if (det->IsCalibrated()) {
-         ee = det->GetDetectorSignalValue("Energy", part_id);
-         det->SetEnergyLoss(ee);
-         etot += ee;
-         ndet_calib++;
+         double Ep = det->GetDetectorSignalValue("Energy", "Z=1,A=1");
+         PART->SetEnergy(Ep);
+         PART->SetIsCalibrated();
+         PART->SetECode(1);
+         PART->SetParameter("FAZIA.ECSI", Ep);
       }
-      ndet++;
    }
 
-   // loop again over crossed detectors
-   // calculate the energy if not calibrated:
-   // - first try using detectors behind to calculated DeltaE from Eres,
-   // all detector behind have to be calibrated
-   // - then try with the detector in front to calculate Eres from DeltaE (less accurate)
-   Double_t ebehind = 0.;
-   if (ndet != ndet_calib) {
-      PART->GetReconstructionTrajectory()->IterateFrom();
-      while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
-         det = (KVFAZIADetector*)node->GetDetector();
-         // store energy loss behind for latter DeltaE from Eres calculations
-         if (det->IsCalibrated()) ebehind += det->GetEnergyLoss();
-         else {
-            if (ebehind > 0.) {
-               // calculate energy loss from residual energy
-               ee = det->GetDeltaEFromERes(PART->GetZ(), PART->GetA(), ebehind);
-               det->SetEnergyLoss(ee);
-               etot += ee;
-               ndet_calib++;
-               calculated = kTRUE;
-               ebehind += ee;
+   if (PART->GetIDCode() == 5) { // stopped in SI1, no PSA identification
+      if (det->IsCalibrated()) {
+         double Ep = det->GetEnergy();
+         PART->SetEnergy(Ep);
+         PART->SetIsCalibrated();
+         PART->SetECode(1);
+         PART->SetParameter("FAZIA.ESI1", Ep);
+      }
+   }
+
+   // particle identified in Si1 PSA, detector is calibrated
+   if (PART->GetIDCode() == 11) {
+      KVFAZIADetector* si1 = (KVFAZIADetector*)PART->GetIdentifyingTelescope()->GetDetector(1);
+      if (si1->IsCalibrated()) {
+         double e1 = si1->GetCorrectedEnergy(PART, -1., kFALSE);
+         if (e1 <= 0) {
+            Warning("CalibrateParticle",
+                    "IDCODE=11 Z=%d A=%d calibrated SI1 E=%f",
+                    PART->GetZ(), PART->GetA(), e1);
+            return;
+         }
+         PART->SetParameter("FAZIA.ESI1", e1);
+         PART->SetEnergy(e1);
+         PART->SetIsCalibrated();
+         PART->SetECode(1);
+      }
+   }
+
+   // particle identified in Si1-Si2
+   if (PART->GetIDCode() == 12) {
+      KVFAZIADetector* si1 = (KVFAZIADetector*)PART->GetIdentifyingTelescope()->GetDetector(1);
+      KVFAZIADetector* si2 = (KVFAZIADetector*)PART->GetIdentifyingTelescope()->GetDetector(2);
+      if (si1->IsCalibrated() && si2->IsCalibrated()) { //  with both detectors calibrated
+         double e1(-1), e2(-1);
+         bool calc_e1(false), calc_e2(false);
+         if ((e2 = si2->GetEnergy()) > 0) {
+            if (!((e1 = si1->GetEnergy()) > 0)) { // if SI1 not fired, we calculate from SI2 energy
+               e1 = si1->GetDeltaEFromERes(PART->GetZ(), PART->GetA(), e2);
+               calc_e1 = true;
             }
-            else if (det->GetNode()->GetNDetsInFront()) {
-               KVFAZIADetector* det_infront = (KVFAZIADetector*)det->GetNode()->GetDetectorsInFront()->First();
-               if (det_infront && det_infront->GetEnergyLoss()) {
-                  // calculate energy loss from Delta E and check this energy is lower than
-                  // punch through energy since it doesn't work if the particle crossed det
-                  // (trying to calculate Si2 energy in case only Si1 calibrated)
-                  ee = det_infront->GetEResFromDeltaE(PART->GetZ(), PART->GetA(), det_infront->GetEnergyLoss());
-                  if (ee > det->GetPunchThroughEnergy(PART->GetZ(), PART->GetA())) continue;
-                  det->SetEnergyLoss(ee);
-                  etot += ee;
-                  ndet_calib++;
-                  calculated = kTRUE;
-                  ebehind += ee;
-               }
-            }
+         }
+         else if ((e1 = si1->GetEnergy()) > 0) {
+            // if SI2 not fired, we calculate from SI1 energy
+            e2 = si1->GetEResFromDeltaE(PART->GetZ(), PART->GetA());
+            calc_e2 = true;
+         }
+
+         PART->SetParameter("FAZIA.ESI1", (calc_e1 ? -e1 : e1));
+         PART->SetParameter("FAZIA.ESI2", (calc_e2 ? -e2 : e2));
+         if (e1 > 0 && e2 > 0) {
+            PART->SetEnergy(e1 + e2);
+            PART->SetIsCalibrated();
+            PART->SetECode((calc_e1 || calc_e2) ? 2 : 1);
          }
       }
    }
 
-   // In case at least one detector has still no calibrated or calculated energy
-   // the particle is considered as not calibrated
-   if (ndet != ndet_calib) return;
-   PART->SetEnergy(etot);
+   // particle identified in Si2-CsI or CsI
+   if (PART->GetIDCode() == 23 || PART->GetIDCode() == 33) {
+      KVFAZIADetector* si2 = (KVFAZIADetector*)PART->GetReconstructionTrajectory()->GetDetector("SI2");
+      KVFAZIADetector* csi = (KVFAZIADetector*)PART->GetStoppingDetector();
+      KVFAZIADetector* si1 = (KVFAZIADetector*)PART->GetReconstructionTrajectory()->GetDetector("SI1");
 
-   //   // Now check that energy losses are coherent with particle identification and total energy
-   //   // Create a dummy particle with same total energy
-   KVNucleus avatar;
-   avatar.SetZAandE(PART->GetZ(), PART->GetA(), PART->GetKE());
-
-   Double_t chi2 = 0.;
-
-   // iterating over detectors starting from the target
-   // compute the theoretical energy loss of the avatar
-   // compare to the calibrated/calculated energy
-   // remove this energy from the avatar energy
-   PART->GetReconstructionTrajectory()->IterateBackFrom();
-   while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
-      det = (KVFAZIADetector*)node->GetDetector();
-      Double_t temp = det->GetELostByParticle(&avatar);
-      chi2 += ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss()) * ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss());
-      avatar.SetKE(avatar.GetKE() - temp);
-   }
-   chi2 /= ndet;
-
-   // in case the avatar still has energy (+- epsilon ?) we consider it as punch through particle
-   // if chi2>10, the calibration is incoherent with calculated energy losses (why 10 ??? to be checked)
-   // question : do we really need these two distinct cases ?
-   if (avatar.GetKE() > 0) incoherency = kTRUE;
-   else if (chi2 > 10.)    incoherency = kTRUE;// never set
-
-   // checking for CsI punch through
-   det = (KVFAZIADetector*)PART->GetStoppingDetector();
-   if (det->GetIdentifier() == KVFAZIADetector::kCSI) {
-
-      KVDetector* SI2 = PART->GetDetector(1);
-      KVDetector* SI1 = PART->GetDetector(2);
-
-      int Z = PART->GetZ();
-      int A = PART->GetA();
-
-      KVDetector SI1SI2("Si", SI1->GetThickness() + SI2->GetThickness());
-      if (SI1->GetEnergyLoss() + SI2->GetEnergyLoss() < SI1SI2.GetDeltaEFromERes(Z, A, det->GetPunchThroughEnergy(Z, A))) punch_through = kTRUE;
+      if (!(si1 && si2 && csi)) {
+         Error("CalibrateParticle",
+               "IDCODE=23 si1=%s si2=%s csi=%s",
+               (si1 ? si1->GetName() : "?"), (si2 ? si2->GetName() : "?"), (csi ? csi->GetName() : "?"));
+      }
+      // treat case of uncalibrated CsI detector
+      if (!csi->IsCalibrated()) {
+         // case where SI1 && SI2 are calibrated & present in event
+         // (STRICTLY SPEAKING, FIRST NEED TO CHECK THAT NOTHING ELSE STOPPED IN SI1 (for Si2-CsI id) or SI2 (for CsI id)):
+         // THIS SHOULD BE DONE IN IDENTIFICATION COHERENCY CHECKS
+         if (si1->IsCalibrated() && si1->GetEnergy() && si2->IsCalibrated() && si2->GetEnergy()) {
+            // calculate total delta-E in (SI1+SI2) then use to calculate CsI energy
+            double deltaE = si1->GetEnergy() + si2->GetEnergy();
+            KVDetector si1si2("Si", si1->GetThickness() + si2->GetThickness());
+            double ecsi = si1si2.GetEResFromDeltaE(PART->GetZ(), PART->GetA(), deltaE);
+            PART->SetParameter("FAZIA.ESI1", si1->GetEnergy());
+            PART->SetParameter("FAZIA.ESI2", si2->GetEnergy());
+            PART->SetParameter("FAZIA.ECSI", -ecsi);
+            PART->SetEnergy(deltaE + ecsi);
+            PART->SetIsCalibrated();
+            PART->SetECode(2); // CsI energy calculated
+            //PART->ls();
+         }
+      }
    }
 
-
-   // add energy loss in the target
-   Double_t E_targ = gMultiDetArray->GetTargetEnergyLossCorrection(PART);
-   PART->SetTargetEnergyLoss(E_targ);
-   PART->SetEnergy(PART->GetEnergy() + E_targ);
-
-   // set particle momentum from telescope dimensions (random)
-   PART->GetAnglesFromReconstructionTrajectory();
-
-   // set calibration code (set to 0:not_calibrated at the beginning)
-   if (punch_through)    PART->SetECode(3);
-   else if (incoherency) PART->SetECode(4); // never set for now...
-   else if (calculated)  PART->SetECode(2);
-   else                  PART->SetECode(1);
-
-   PART->SetIsCalibrated();
+   if (PART->IsCalibrated()) {
+      //add correction for target energy loss - moving charged particles only!
+      Double_t E_targ = 0.;
+      if (PART->GetZ() && PART->GetEnergy() > 0) {
+         E_targ = GetTargetEnergyLossCorrection(PART);
+         PART->SetTargetEnergyLoss(E_targ);
+      }
+      Double_t E_tot = PART->GetEnergy() + E_targ;
+      PART->SetEnergy(E_tot);
+      // set particle momentum from telescope dimensions (random)
+      PART->GetAnglesFromReconstructionTrajectory();
+      //PART->ls();
+   }
 }
 
 void KVFAZIAGroupReconstructor::PostReconstructionProcessing()
@@ -212,71 +195,96 @@ void KVFAZIAGroupReconstructor::PostReconstructionProcessing()
 
 void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
 {
-
-
-   // first idea :
-   // try all possible identification, starting from the stopping ID tel
-   // do not stop when a good one is found: the coherency between different
-   // ID telescope could then be used latter.
-   // The procedure is based on KVGroupReconstructor::IdentifyParticle(PART);
-   // with some modifications.
-
    KVGroupReconstructor::IdentifyParticle(PART);
 
-   Info("IdentifyParticle", "List of id attempted");
-   for (auto& id : id_by_type) {
-      id.second->Print();
+   // check for failed PSA identification for particles stopped in Si1
+   // change status => KVReconstructedNucleus::kStatusStopFirstStage
+   // estimation of minimum Z from energy loss (if Si1 calibrated)
+   // IDCODE = 5
+   if (PART.GetStoppingDetector()->IsLabelled("SI1") && !PART.IsIdentified()) {
+      PART.SetStatus(KVReconstructedNucleus::kStatusStopFirstStage);
+      TreatStatusStopFirstStage(PART);
+      PART.SetIDCode(5);
+      return;
    }
 
-   if (partID.IsType("CsI")) {
-      if (partID.IDquality == KVIDGCsI::kICODE10) {
-         // look at Si1-Si2 identification
-//         KVIdentificationResult* si1si2 = PART.GetIdentificationResult("Si-Si");
+   // Coherency checks for identifications
+   if (PART.IsIdentified()) {
+      if (partID.IsType("CsI")) {
+         if (partID.IDcode == 0) { // gammas
+            // look at Si1-Si2 identification.
+            // if a correct identification was obtained, we ignore the gamma in CsI and change to Si1-Si2
+#ifndef WITH_CPP11
+            std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
+#else
+            auto si1si2 = id_by_type.find("Si-Si");
+#endif
+            if (si1si2 != id_by_type.end()) {
+               if (si1si2->second->IDOK && si1si2->second->IDquality < KVIDZAGrid::kICODE4) {
+                  //               Info("IdentifyParticle","Got GAMMA in CsI, changing to Si1Si2 identification [Z=%d A=%d]",
+                  //                    si1si2->second->Z, si1si2->second->A);
+                  ChangeReconstructedTrajectory(PART);
+                  partID = *(si1si2->second);
+                  identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
+                  PART.SetIdentifyingTelescope(identifying_telescope);
+                  PART.SetIdentification(&partID, identifying_telescope);
+                  //PART.Print();
+               }
+            }
+         }
+         else {
+            // As a general rule, we prefer Si-CsI identification to CsI identification, if both
+            // are available and both were successful
+            // THIS SHOULD ONLY BE DONE IF WE ARE SURE THAT A 2ND PARTICLE DID NOT STOP IN SI2
+            // I.E. AFTER CHECKING THAT CSI & SI-CSI IDENTIFICATIONS ARE COHERENT
+            // BUT IF THIS IS THE CASE, WHY CHANGE ?
+#ifndef WITH_CPP11
+            std::map<std::string, KVIdentificationResult*>::iterator si2csi = id_by_type.find("Si-CsI");
+#else
+            auto si2csi = id_by_type.find("Si-CsI");
+#endif
+            if (si2csi != id_by_type.end()) {
+               if (si2csi->second->IDOK && si2csi->second->IDquality < KVIDZAGrid::kICODE4) {
+
+                  // To be coherent, Si-CsI identification should not give
+                  //    1) same Z but larger A
+                  //    2) larger Z
+                  //Info("IdentifyParticle","Prefer SiCsI identification over CSI [Z=%d A=%d]",PART.GetZ(),PART.GetA());
+                  partID = *(si2csi->second);
+                  identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-CsI");
+                  PART.SetIdentifyingTelescope(identifying_telescope);
+                  PART.SetIdentification(&partID, identifying_telescope);
+                  //PART.Print();
+               }
+            }
+         }
+      }
+      else if (partID.IsType("Si-CsI")) {
+         int zz = partID.Z;
+#ifndef WITH_CPP11
          std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
+#else
+         auto si1si2 = id_by_type.find("Si-Si");
+#endif
          if (si1si2 != id_by_type.end()) {
-            if (si1si2->second->IDattempted && si1si2->second->IDquality < KVIDZAGrid::kICODE4) {
-               ChangeReconstructedTrajectory(PART, "SI2");
+            if (si1si2->second->IDOK && si1si2->second->IDquality < KVIDZAGrid::kICODE4 && zz < si1si2->second->Z) {
+               //            Info("IdentifyParticle","SiCsI identification [Z=%d A=%d] changed to SiSi identification [Z=%d A=%d]",
+               //                 PART.GetZ(),PART.GetA(),si1si2->second->Z,si1si2->second->A);
+               ChangeReconstructedTrajectory(PART);
                partID = *(si1si2->second);
                identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
                PART.SetIdentifyingTelescope(identifying_telescope);
                PART.SetIdentification(&partID, identifying_telescope);
+               //PART.Print();
             }
-         }
-      }
-      else {
-//         KVIdentificationResult* si2csi = PART.GetIdentificationResult("Si-CsI");
-         std::map<std::string, KVIdentificationResult*>::iterator si2csi = id_by_type.find("Si-CsI");
-         if (si2csi != id_by_type.end()) {
-            if (si2csi->second->IDattempted && si2csi->second->IDquality < KVIDZAGrid::kICODE4) {
-               partID = *(si2csi->second);
-               identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-CsI");
-               PART.SetIdentifyingTelescope(identifying_telescope);
-               PART.SetIdentification(&partID, identifying_telescope);
-            }
-         }
-      }
-   }
-   else if (partID.IsType("Si-CsI")) {
-      int zz = partID.Z;
-//      KVIdentificationResult* si1si2 = PART.GetIdentificationResult("Si-Si");
-      std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
-      if (si1si2 != id_by_type.end()) {
-         if (si1si2->second->IDattempted && si1si2->second->IDquality < KVIDZAGrid::kICODE4 && zz < si1si2->second->Z) {
-            ChangeReconstructedTrajectory(PART, "SI2");
-            partID = *(si1si2->second);
-            identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
-            PART.SetIdentifyingTelescope(identifying_telescope);
-            PART.SetIdentification(&partID, identifying_telescope);
          }
       }
    }
 }
 
-void KVFAZIAGroupReconstructor::ChangeReconstructedTrajectory(KVReconstructedNucleus& PART, const char* det)
+void KVFAZIAGroupReconstructor::ChangeReconstructedTrajectory(KVReconstructedNucleus& PART)
 {
-   // set detector channel to zero (peut-etre)
-   // change recon trajectory
-   // modify stopping detector
+   // change recon trajectory (modifies stopping detector)
 
    PART.GetReconstructionTrajectory()->IterateFrom();
    PART.GetReconstructionTrajectory()->GetNextNode();
