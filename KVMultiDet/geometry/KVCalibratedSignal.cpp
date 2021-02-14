@@ -24,9 +24,14 @@ Double_t KVCalibratedSignal::GetValue(const KVNameValueList& params) const
    //
    // *if a parameter `INPUT` is given, its value is used instead of the input signal.
 
+   fInversionFail = false;
+   double result;
    if (params.HasParameter("INPUT"))
-      return fCalibrator->Compute(params.GetDoubleValue("INPUT"), params);
-   return fCalibrator->Compute(fInputSignal->GetValue(), params);
+      result = fCalibrator->Compute(params.GetDoubleValue("INPUT"), params);
+   else
+      result = fCalibrator->Compute(fInputSignal->GetValue(), params);
+   fInversionFail = fCalibrator->InversionFailure();
+   return result;
 }
 
 Double_t KVCalibratedSignal::GetInverseValue(Double_t out_val, const TString& in_sig, const KVNameValueList& params) const
