@@ -65,9 +65,6 @@ Bool_t KVIDINDRACsI::Identify(KVIdentificationResult* IDR, Double_t x, Double_t 
 {
    //Particle identification and code setting using identification grid KVIDGCsI* fGrid.
 
-   IDR->SetIDType(GetType());
-   IDR->IDattempted = kTRUE;
-
    //perform identification
    Double_t csir, csil;
    GetIDGridCoords(csil, csir, CsIGrid, x, y);
