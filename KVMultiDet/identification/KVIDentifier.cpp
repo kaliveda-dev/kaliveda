@@ -417,7 +417,7 @@ Int_t KVIDentifier::InsertPoint()
    }
 
    Int_t px = gPad->GetEventX();
-   Int_t py = gPad->GetEventY();
+   //Int_t py = gPad->GetEventY();
 
 //   Info("InsertPoint", "x=%d y=%d", px, py);
    Int_t ifound = -1;
