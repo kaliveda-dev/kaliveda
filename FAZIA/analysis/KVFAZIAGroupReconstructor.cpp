@@ -128,6 +128,37 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
    }
 
    if (PART->IsCalibrated()) {
+      // check for energy loss coherency
+      KVNucleus avatar;
+      avatar.SetZAandE(PART->GetZ(), PART->GetA(), PART->GetKE());
+
+      Double_t chi2 = 0.;
+      int ndet = 0;
+      const char* detnames[] = {"SI1", "SI2", "CSI"};
+      KVGeoDetectorNode* node = 0;
+      // iterating over detectors starting from the target
+      // compute the theoretical energy loss of the avatar
+      // compare to the calibrated/calculated energy
+      // remove this energy from the avatar energy
+      PART->GetReconstructionTrajectory()->IterateBackFrom();
+      while ((node = PART->GetReconstructionTrajectory()->GetNextNode())) {
+         det = (KVFAZIADetector*)node->GetDetector();
+         Double_t temp = det->GetELostByParticle(&avatar);
+         PART->SetParameter(Form("FAZIA.avatar.E%s", detnames[det->GetIdentifier()]), temp);
+         chi2 += ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss()) * ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss());
+         avatar.SetKE(avatar.GetKE() - temp);
+         ndet++;
+      }
+      chi2 /= ndet;
+
+      // stores avatar energy loss and chi2 in particle parameter list for further checks
+      PART->SetParameter("FAZIA.avatar.chi2", chi2);
+
+      // in case the avatar still has energy (+- epsilon ?) we consider it as punch through particle
+      // if chi2>10, the calibration is incoherent with calculated energy losses (why 10 ??? to be checked)
+      // question : do we really need these two distinct cases ?
+      if (avatar.GetKE() > 0 || chi2 > 10.) PART->SetECode(4);
+
       //add correction for target energy loss - moving charged particles only!
       Double_t E_targ = 0.;
       if (PART->GetZ() && PART->GetEnergy() > 0) {
