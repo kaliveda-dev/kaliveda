@@ -289,10 +289,11 @@ void KVBase::InitEnvironment()
       //generate new seed from system clock
       gRandom->SetSeed(0);
 
-#ifdef USING_ROOT6
-      // enable implicit multithreading
-      ROOT::EnableImplicitMT();
-#endif
+//#ifdef USING_ROOT6
+//      // enable implicit multithreading
+//      // comment because not compatible with CC batch system
+//      ROOT::EnableImplicitMT();
+//#endif
 
       // initialisation has been performed
       fEnvIsInit = kTRUE;
