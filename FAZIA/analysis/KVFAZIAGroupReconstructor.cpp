@@ -157,7 +157,7 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
       // in case the avatar still has energy (+- epsilon ?) we consider it as punch through particle
       // if chi2>10, the calibration is incoherent with calculated energy losses (why 10 ??? to be checked)
       // question : do we really need these two distinct cases ?
-      if (avatar.GetKE() > 0 || chi2 > 10.) PART->SetECode(4);
+//      if (avatar.GetKE() > 0 || chi2 > 10.) PART->SetECode(4);
 
       //add correction for target energy loss - moving charged particles only!
       Double_t E_targ = 0.;
