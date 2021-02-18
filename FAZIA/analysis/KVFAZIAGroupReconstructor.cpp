@@ -291,6 +291,10 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
          }
       }
       else if (partID.IsType("Si-CsI")) {
+         // ions correctly identified in Si2-CsI should have coherent identification in Si1-Si2: as the particle punches
+         // through Si2 the Si1-Si2 identification should underestimate the A and/or Z of the ion, i.e. either the A
+         // or the Z from Si1-Si2 identification should be smaller than from Si2-CsI identification.
+         // Unless of course some other particle stops in Si1 at the same time... (check PSA?)
          int zz = partID.Z;
 #ifndef WITH_CPP11
          std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
@@ -298,15 +302,41 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
          auto si1si2 = id_by_type.find("Si-Si");
 #endif
          if (si1si2 != id_by_type.end()) {
-            if (si1si2->second->IDOK && si1si2->second->IDquality < KVIDZAGrid::kICODE4 && zz < si1si2->second->Z) {
-               //            Info("IdentifyParticle","SiCsI identification [Z=%d A=%d] changed to SiSi identification [Z=%d A=%d]",
-               //                 PART.GetZ(),PART.GetA(),si1si2->second->Z,si1si2->second->A);
+            KVIdentificationResult* idr_si1si2 = si1si2->second;
+            if (idr_si1si2->IDOK && idr_si1si2->IDquality < KVIDZAGrid::kICODE4) {
+               if (zz < idr_si1si2->Z) {
+//               Info("IdentifyParticle","SiCsI identification [Z=%d A=%d] changed to SiSi identification [Z=%d A=%d]",
+//                    PART.GetZ(),PART.GetA(),si1si2->second->Z,si1si2->second->A);
+                  ChangeReconstructedTrajectory(PART);
+                  partID = *(si1si2->second);
+                  identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
+                  PART.SetIdentifyingTelescope(identifying_telescope);
+                  PART.SetIdentification(&partID, identifying_telescope);
+                  //PART.Print();
+               }
+            }
+         }
+      }
+   }
+   else {
+      // particle not identified, stopped in CsI, with good Si1-Si2 identification?
+      if (PART.GetStoppingDetector()->IsLabelled("CSI")) {
+#ifndef WITH_CPP11
+         std::map<std::string, KVIdentificationResult*>::iterator si1si2 = id_by_type.find("Si-Si");
+#else
+         auto si1si2 = id_by_type.find("Si-Si");
+#endif
+         if (si1si2 != id_by_type.end()) {
+
+            if (si1si2->second->IDOK && si1si2->second->IDquality < KVIDZAGrid::kICODE4) {
+               // stopping detector becomes Si2, identification Si1-Si2 accepted
+//               Info("IdentifyParticle","Unidentified, stopped in CsI, good Si1Si2 identification [Z=%d A=%d]",
+//                   si1si2->second->Z,si1si2->second->A);
                ChangeReconstructedTrajectory(PART);
                partID = *(si1si2->second);
                identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
                PART.SetIdentifyingTelescope(identifying_telescope);
                PART.SetIdentification(&partID, identifying_telescope);
-               //PART.Print();
             }
          }
       }
