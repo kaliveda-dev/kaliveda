@@ -25,7 +25,7 @@ class KVINDRAReconDataAnalyser: public KVDataSetAnalyser {
 
 protected:
    virtual KVNumberList PrintAvailableRuns(KVString& datatype);
-   KVINDRAEventSelector* fSelector;// the data analysis class
+   KVEventSelector* fSelector;// the data analysis class
    KVOldINDRASelector* fOldSelector;// backwards compatibility
    TTree* theChain;//chain of TTrees to be analysed
    TTree* theRawData;//raw data TTree in recon file
@@ -75,9 +75,9 @@ public:
    void preInitRun();
    virtual void RegisterUserClass(TObject* obj)
    {
-      // The user class may inherit from KVINDRAEventSelector or KVOldINDRASelector
+      // The user class may inherit from KVEventSelector or KVOldINDRASelector
       // Only one of the two pointers will be valid
-      fSelector = dynamic_cast<KVINDRAEventSelector*>(obj);
+      fSelector = dynamic_cast<KVEventSelector*>(obj);
       fOldSelector = dynamic_cast<KVOldINDRASelector*>(obj);
    }
    void PrintTreeInfos();

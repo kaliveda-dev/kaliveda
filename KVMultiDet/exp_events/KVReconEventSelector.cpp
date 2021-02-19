@@ -18,7 +18,7 @@ void KVReconEventSelector::Init(TTree* tree)
 #else
    if (tree && gDataAnalyser->GetProofMode() != KVDataAnalyser::None) {
 #endif
-      dynamic_cast<KVReconDataAnalyser*>(gDataAnalyser)->SetTree(tree);
+      dynamic_cast<KVDataSetAnalyser*>(gDataAnalyser)->SetTree(tree);
    }
 }
 

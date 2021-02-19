@@ -388,7 +388,7 @@ Bool_t KVDataAnalyser::CheckIfUserClassIsValid(const KVString& alternative_base_
    //
    //If the user's class may in fact be derived from an alternative base class, rather
    //than the base class defined for this analysis task (see KVDataAnalysisTask::SetUserBaseClass)
-   //you can supply the name of this class.
+   //you can supply the name of this class (or a comma-separated list of base classes).
 
    TObject* o = GetInstanceOfUserClass(alternative_base_class);
    if (o) {
@@ -441,7 +441,7 @@ TObject* KVDataAnalyser::GetInstanceOfUserClass(const KVString& alternative_base
    //Once compiled, we check that the user's class is indeed derived from the base
    //class defined for this analysis task (see KVDataAnalysisTask::SetUserBaseClass).
    //If the user's class may in fact be derived from an alternative base class, you
-   //can supply the name of this class.
+   //can supply the name of this class (or comma-separated list of base classes).
 
    // make sure any required plugin library defining base class for user's analysis class is loaded
    if (!fTask->CheckUserBaseClassIsLoaded()) return 0x0;
@@ -476,15 +476,33 @@ TObject* KVDataAnalyser::GetInstanceOfUserClass(const KVString& alternative_base
          return 0;
       }
       if (!cl->GetBaseClass(fTask->GetUserBaseClass())) {
-         //class does not inherit from correct base
-         if (alternative_base_class == "" || !cl->GetBaseClass(alternative_base_class)) {
-            if (alternative_base_class != "")
-               Info("GetInstanceOfUserClass", "Class %s does not inherit from correct base class (%s or %s), or compilation of class %s failed. Correct the mistakes and try again",
-                    fUserClass.Data(), fTask->GetUserBaseClass(), alternative_base_class.Data(), fUserClass.Data());
-            else
-               Info("GetInstanceOfUserClass", "Class %s does not inherit from correct base class (%s), or compilation of class %s failed. Correct the mistakes and try again",
-                    fUserClass.Data(), fTask->GetUserBaseClass(), fUserClass.Data());
+         // class does not inherit from base class defined by analysis task
+         if (alternative_base_class == "") { // no alternative base classes provided
+            Info("GetInstanceOfUserClass", "Class %s does not inherit from correct base class (%s), or compilation of class %s failed. Correct the mistakes and try again",
+                 fUserClass.Data(), fTask->GetUserBaseClass(), fUserClass.Data());
             return nullptr;
+         }
+         else {
+            // check alternative base class(es) - it may still be good!
+            bool got_good_base = false;
+            TString good_base = "";
+            alternative_base_class.Begin(",");
+            while (!alternative_base_class.End()) {
+               good_base = alternative_base_class.Next(kTRUE);
+               if (cl->GetBaseClass(good_base)) {
+                  got_good_base = true;
+                  break;
+               }
+            }
+            if (got_good_base) {
+               Info("GetInstanceOfUserClass", "Class %s inherits from alternative base class %s: OK!",
+                    fUserClass.Data(), good_base.Data());
+            }
+            else {
+               Info("GetInstanceOfUserClass", "Class %s does not inherit from task-defined base class (%s) or any provided alternative base classes (%s), or compilation of class %s failed. Correct the mistakes and try again",
+                    fUserClass.Data(), fTask->GetUserBaseClass(), alternative_base_class.Data(), fUserClass.Data());
+               return nullptr;
+            }
          }
       }
       //EVERYTHING OK!! now instanciate an object of the new class

@@ -16,10 +16,9 @@ $Author: franklan $
 #include "KVNumberList.h"
 #include "TEnv.h"
 #include "KV2Body.h"
-
+#include "KVDBSystem.h"
+#include "KVDBRun.h"
 class KVDataAnalysisTask;
-class KVDBSystem;
-class KVDBRun;
 
 /** \class KVDataAnalyser
 \brief Manager class which sets up and runs data analysis tasks

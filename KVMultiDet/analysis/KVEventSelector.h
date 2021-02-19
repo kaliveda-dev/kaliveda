@@ -302,6 +302,14 @@ public:
    {
       Event = e;
    }
+   Int_t GetEventNumber() const
+   {
+      if (!GetEvent()) {
+         Error("GetEventNumber", "No event defined!!!");
+         return -1;
+      }
+      return GetEvent()->GetNumber();
+   }
 
    /* user entry points */
    virtual void InitAnalysis()

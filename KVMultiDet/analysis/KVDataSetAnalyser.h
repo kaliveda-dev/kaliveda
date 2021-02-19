@@ -5,10 +5,7 @@
 #define __KVDATASETANALYSER_H
 
 #include "KVDataAnalyser.h"
-
 #include "KVDataSet.h"
-#include "KVDBSystem.h"
-#include "KVDBRun.h"
 
 /**
 \class KVDataSetAnalyser
@@ -157,6 +154,7 @@ public:
    {
       return fRun;
    }
+   virtual void SetTree(TTree*) {}
 
    ClassDef(KVDataSetAnalyser, 1) //Analysis of data in datasets
 };

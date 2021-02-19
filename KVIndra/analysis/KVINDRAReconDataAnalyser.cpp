@@ -21,6 +21,8 @@ $Date: 2007/11/15 14:59:45 $
 #include "TProof.h"
 #include "KVINDRATriggerConditions.h"
 
+#include <KVReconEventSelector.h>
+
 using namespace std;
 
 ClassImp(KVINDRAReconDataAnalyser)
@@ -145,7 +147,8 @@ void KVINDRAReconDataAnalyser::SubmitTask()
 
    // for backwards compatibility, we allow user class to inherit from
    // KVOldINDRASelector instead of KVINDRAEventSelector
-   TObject* new_selector = GetInstanceOfUserClass("KVOldINDRASelector");
+   // for forwards compatibility, we allow it to inherit from KVReconEventSelector too!
+   TObject* new_selector = GetInstanceOfUserClass("KVOldINDRASelector,KVReconEventSelector");
 
    if (!new_selector || !new_selector->InheritsFrom("TSelector")) {
       cout << "The selector \"" << GetUserClass() << "\" is not valid." << endl;
@@ -236,7 +239,7 @@ KVNumberList KVINDRAReconDataAnalyser::PrintAvailableRuns(KVString& datatype)
 
 void KVINDRAReconDataAnalyser::preInitAnalysis()
 {
-   // Called by currently-processed KVSelector before user's InitAnalysis() method.
+   // Called by currently-processed KVEventSelector before user's InitAnalysis() method.
    // We build the multidetector for the current dataset in case informations on
    // detector are needed e.g. to define histograms in InitAnalysis().
    // Note that at this stage we are not analysing a given run, so the parameters
@@ -248,13 +251,21 @@ void KVINDRAReconDataAnalyser::preInitAnalysis()
    if (!gProof || !gProof->IsMaster()) {
       if (!gIndra) KVMultiDetArray::MakeMultiDetector(GetDataSet()->GetName());
    }
+   // in case data is being analysed with a "vanilla" KVReconEventSelector, we need
+   // to set the correct branch name for reconstructed INDRA data which is "INDRAReconEvent"
+   // instead of the default "ReconEvent"
+   if (fSelector) fSelector->SetBranchName("INDRAReconEvent");
+   else Warning("preInitAnalysis", "could not set branch name correctly");
 }
-
 
 void KVINDRAReconDataAnalyser::SetSelectorCurrentRun(KVINDRADBRun* CurrentRun)
 {
    if (fSelector) {
-      fSelector->SetCurrentRun(CurrentRun);
+      if (fSelector->InheritsFrom("KVINDRAEventSelector"))
+         dynamic_cast<KVINDRAEventSelector*>(fSelector)->SetCurrentRun(CurrentRun);
+      // WARNING - horrible kludge...
+      else if (fSelector->InheritsFrom("KVReconEventSelector"))
+         dynamic_cast<KVReconEventSelector*>(fSelector)->SetCurrentRun(CurrentRun);
    }
    else {
       fOldSelector->SetCurrentRun(CurrentRun);
@@ -307,7 +318,7 @@ Long64_t KVINDRAReconDataAnalyser::GetRawEntryNumber()
 
 KVReconstructedEvent* KVINDRAReconDataAnalyser::GetReconstructedEvent()
 {
-   return (fSelector ? fSelector->GetEvent() : fOldSelector->GetEvent());
+   return (fSelector ? dynamic_cast<KVReconstructedEvent*>(fSelector->GetEvent()) : fOldSelector->GetEvent());
 }
 
 #ifdef USING_ROOT6
@@ -444,8 +455,10 @@ void KVINDRAReconDataAnalyser::CloneRawAndGeneTrees()
 
 Bool_t KVINDRAReconDataAnalyser::CheckIfUserClassIsValid(const KVString&)
 {
-   // Override KVDataAnalyser method, for backwards compatibility
-   // User class may derive from KVOldINDRASelector (aka KVSelector)
-   // instead of KVINDRAEventSelector
-   return KVDataAnalyser::CheckIfUserClassIsValid("KVOldINDRASelector");
+   // Overrides KVDataAnalyser method, for backwards & forwards compatibility.
+   //
+   // Old user analysis classes may derive from KVOldINDRASelector (aka KVSelector) instead of KVINDRAEventSelector.
+   //
+   // It is also possible to analyse data with a "vanilla" KVReconEventSelector analysis class.
+   return KVDataAnalyser::CheckIfUserClassIsValid("KVOldINDRASelector,KVReconEventSelector");
 }

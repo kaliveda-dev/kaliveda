@@ -751,7 +751,7 @@ void KVEventSelector::Init(TTree* tree)
    // (once per file to be processed).
 
    // Set object pointer
-   Event = 0;
+   Event = nullptr;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -760,6 +760,10 @@ void KVEventSelector::Init(TTree* tree)
    if (strcmp(GetBranchName(), "")  && fChain->GetBranch(GetBranchName())) {
       Info("Init", "Analysing data in branch : %s", GetBranchName());
       fChain->SetBranchAddress(GetBranchName(), &Event, &b_Event);
+   }
+   else {
+      Error("Init", "Failed to link KVEvent object with a branch. Expected branch name=%s",
+            GetBranchName());
    }
    //user additional branches addressing
    SetAdditionalBranchAddress();

@@ -34,13 +34,6 @@ public:
    {
       return fCurrentRun;
    }
-
-   Int_t GetEventNumber()
-   {
-      // returns number of currently analysed event
-      // N.B. this may be different to the TTree/TChain entry number etc.
-      return GetEvent()->GetNumber();
-   }
    KVINDRAReconEvent* GetEvent() const
    {
       return (KVINDRAReconEvent*)KVEventSelector::GetEvent();
