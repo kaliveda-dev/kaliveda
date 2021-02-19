@@ -6,8 +6,9 @@
 
 #include "KVDataAnalyser.h"
 
-class KVDataSet;
-class KVDBSystem;
+#include "KVDataSet.h"
+#include "KVDBSystem.h"
+#include "KVDBRun.h"
 
 /**
 \class KVDataSetAnalyser
