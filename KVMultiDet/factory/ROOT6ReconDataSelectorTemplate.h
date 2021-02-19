@@ -2,8 +2,6 @@
 
 class ROOT6ReconDataSelectorTemplate : public KVReconEventSelector {
 
-   double ztot_sys, zvtot_sys;
-
 public:
    ROOT6ReconDataSelectorTemplate() {}
    virtual ~ROOT6ReconDataSelectorTemplate() {}

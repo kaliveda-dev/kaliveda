@@ -2,6 +2,8 @@
 
 class ROOT6KVINDRAEventSelectorTemplate : public KVINDRAEventSelector {
 
+   double ztot_sys, zvtot_sys;
+
 public:
    ROOT6KVINDRAEventSelectorTemplate() {};
    virtual ~ROOT6KVINDRAEventSelectorTemplate() {};

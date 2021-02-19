@@ -30,6 +30,7 @@ protected:
    void SetCurrentRun(KVDBRun* r)
    {
       fRun = r;
+      fSystem = r->GetSystem();
    }
    virtual KVNumberList PrintAvailableRuns(KVString& datatype);
    virtual void set_dataset_pointer(KVDataSet* ds);

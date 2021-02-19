@@ -51,8 +51,7 @@ Bool_t KVINDRAEventSelectorTemplate::Analysis(void)
    // The current event can be accessed by a call to method GetEvent().
    // See KVINDRAReconEvent documentation for the available methods.
 
-   // Do not remove the following line - reject events with less identified particles than
-   // the acquisition multiplicity trigger
+   // Reject events with less identified particles than the acquisition multiplicity trigger
    if (!GetEvent()->IsOK()) return kTRUE;
 
    GetGVList()->FillBranches(); // update values of all global variable branches

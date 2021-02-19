@@ -1,6 +1,3 @@
-//Created by KVClassFactory on Mon Feb 19 14:32:51 2018
-//Author: John Frankland
-
 #include "ExampleINDRAAnalysis.h"
 #include "KVINDRAReconNuc.h"
 #include "KVBatchSystem.h"
@@ -9,6 +6,7 @@
 ClassImp(ExampleINDRAAnalysis)
 
 #include "KVDataAnalyser.h"
+#include "KVFlowTensor.h"
 
 void ExampleINDRAAnalysis::InitAnalysis(void)
 {
@@ -20,56 +18,45 @@ void ExampleINDRAAnalysis::InitAnalysis(void)
    /*** ADDING GLOBAL VARIABLES TO THE ANALYSIS ***/
    /* These will be automatically calculated for each event before
       your Analysis() method will be called                        */
-   KVVarGlob* vg = AddGV("KVZtot", "ztot");                             // total charge
-#ifdef USING_ROOT6
-   // define event selection to reject pile-up events
-   vg->SetEventSelection([&](const KVVarGlob * v) {
-      return (v->GetValue() <= current_run_system_ztot + 4);
+   auto ztot = AddGV("KVZtot", "ztot");                 // total charge
+   // complete event selection: total charge
+   ztot->SetEventSelection([&](const KVVarGlob * var) {
+      return var->GetValue() >= 0.8 * ztot_sys; // ztot_sys will be set in InitRun
    });
-#endif
 
-   vg = AddGV("KVZVtot", "zvtot");                                     // total Z*vpar
-   vg->SetMaxNumBranches(1);
-#ifdef USING_ROOT6
-   // refine event selection to reject pile-up events
-   vg->SetEventSelection([&](const KVVarGlob * v) {
-      return (v->GetValue() < 1.2);
+   auto zvtot = AddGV("KVZVtot", "zvtot");              // total Z*vpar
+   zvtot->SetMaxNumBranches(1);    // only write "Z" component in TTree
+   // complete event selection: total pseudo-momentum
+   zvtot->SetEventSelection([&](const KVVarGlob * var) {
+      return var->GetValue() >= 0.8 * zvtot_sys
+             && var->GetValue() <= 1.1 * zvtot_sys; // zvtot_sys will be set in InitRun
    });
-#endif
-
-   AddGV("KVMult", "Mult");                 // total mult
+   AddGV("KVMult", "mtot");                             // total multiplicity
    AddGV("KVEtransLCP", "et12");                        // total LCP transverse energy
-
-   AddGV("KVFlowTensor", "tensor")->SetOption("weight", "RKE");  // relativistic CM KE tensor
-#ifdef USING_ROOT6
-   GetGV("tensor")->SetSelection({"Z>2", [](const KVNucleus * N)
+   auto gv = AddGV("KVFlowTensor", "tensor");
+   gv->SetOption("weight", "RKE");
+   gv->SetFrame("CM");// optional - this is the default frame
+   gv->SetSelection({"Z>4", [](const KVNucleus * n)
    {
-      return N->GetZ() > 2;
-   }
-                                 });
-#else
-   GetGV("tensor")->SetSelection("_NUC_->GetZ()>2");
-#endif
-   GetGV("tensor")->SetMaxNumBranches(2);               // FlowAngle & Sphericity branches
+      return n->GetZ() > 4;
+   }});   // relativistic CM KE tensor for fragments
+   // Define ellipsoid frame (wrt axes of flow tensor ellipsoid)
+   gv->SetNewFrameDefinition([](KVEvent * e, const KVVarGlob * vg) {
+      e->SetFrame("EL", "CM", ((KVFlowTensor*)vg)->GetFlowReacPlaneRotation());
+   });
 
-   AddGV("KVMultLeg", "Mlcp");           // mult LCP
+   /*** DECLARING SOME HISTOGRAMS ***/
+   AddHisto(new TH1F("zdist", "Charge distribution", 100, -.5, 99.5));
+   AddHisto(new TH2F("zvpar", "Z vs V_{par} in ellipsoid", 100, -15., 15., 75, .5, 75.5));
 
    /*** USING A TREE ***/
    CreateTreeFile();//<--- essential
    TTree* t = new TTree("myTree", "");
    AddTree(t);
    GetGVList()->MakeBranches(t); // store global variable values in branches
-   t->AddVar(MTensor, I);
-   t->AddVar(Run, I);
-   t->AddVar(Trigger, I);
-   t->AddVar(EventNumber, I);
 
    /*** DEFINE WHERE TO SAVE THE RESULTS ***/
-   // When running in batch/PROOF mode, we use the job name
-   if (gDataAnalyser->GetBatchSystem())
-      SetCombinedOutputFile(Form("%s.root", gDataAnalyser->GetBatchSystem()->GetJobName()));
-   else
-      SetCombinedOutputFile(Form("ExampleINDRAAnalysis_results.root"));
+   SetJobOutputFileName("ExampleINDRAAnalysis_results.root");
 }
 
 //_____________________________________
@@ -81,28 +68,25 @@ void ExampleINDRAAnalysis::InitRun(void)
    // You no longer need to define the correct identification/calibration codes for particles
    // which will be used in your analysis, they are automatically selected using the default
    // values in variables INDRA.ReconstructedNuclei.AcceptID/ECodes.
-   // However, if you want to change the default settings, it can be done here.
-   // The following example is the standard definition for INDRA data.
-   // See classes KVINDRACodes/KVINDRACodeMask for more details.
-   //GetEvent()->AcceptIDCodes(kIDCode2 | kIDCode3 | kIDCode4 | kIDCode6);//particle identification codes
-   //GetEvent()->AcceptECodes(kECode1 | kECode2);                         //particle calibration codes
+   //
+   // You can change the selection (or deactivate it) here by doing:
+   // gMultiDetArray->AcceptECodes(""); => accept all calibration codes
+   // gMultiDetArray->AcceptIDCodes("12,33"); => accept only ID codes in list
+   //
+   // If the experiment used a combination of arrays, codes have to be set for
+   // each array individually:
+   // gMultiDetArray->GetArray("[name]")->Accept.. => setting for array [name]
 
    // set title of TTree with name of analysed system
    GetTree("myTree")->SetTitle(GetCurrentRun()->GetSystemName());
 
-   // store current run number
-   Run = GetCurrentRun()->GetNumber();
+   // Reject events with less identified particles than the acquisition multiplicity trigger
+   SetTriggerConditionsForRun(GetCurrentRun()->GetNumber());
 
-   // set normalisation for KVZVtot: use Z*v of projectile
+   // retrieve system parameters for complete event selection
    const KV2Body* kin = gDataAnalyser->GetKinematics();
-   GetGV("zvtot")->SetNormalization(kin->GetNucleus(1)->GetVpar()*kin->GetNucleus(1)->GetZ());
-
-   // store trigger of current run
-   Trigger = GetCurrentRun()->GetTrigger();
-
-#ifdef USING_ROOT6
-   current_run_system_ztot = GetCurrentRun()->GetSystem()->GetZtot();
-#endif
+   zvtot_sys = kin->GetNucleus(1)->GetVpar() * kin->GetNucleus(1)->GetZ();
+   ztot_sys = GetCurrentRun()->GetSystem()->GetZtot();
 }
 
 //_____________________________________
@@ -112,20 +96,17 @@ Bool_t ExampleINDRAAnalysis::Analysis(void)
    // The current event can be accessed by a call to method GetEvent().
    // See KVINDRAReconEvent documentation for the available methods.
 
-   // Do not remove the following line - reject events with less identified particles than
-   // the acquisition multiplicity trigger
-   if (!GetEvent()->IsOK()) return kTRUE;
-
-#ifndef USING_ROOT6
-   // avoid pile-up events
-   if (GetGV("ztot")->GetValue() > GetCurrentRun()->GetSystem()->GetZtot() + 4
-         || GetGV("zvtot")->GetValue() > 1.2) return kTRUE;
-#endif
-
    GetGVList()->FillBranches(); // update values of all global variable branches
 
-   EventNumber = GetEventNumber();
-   MTensor = GetGV("tensor")->GetValue("NumberParts");
+   /*** LOOP OVER PARTICLES OF EVENT ***/
+   for (auto& particle : OKEventIterator(*GetEvent())) {
+      // "OK" => using selection criteria of InitRun()
+      // fill Z distribution
+      FillHisto("zdist", particle.GetZ());
+      // fill Z-Vpar(ellipsoid)
+      FillHisto("zvpar", particle.GetFrame("EL")->GetVpar(), particle.GetZ());
+   }
+
    // write new results in TTree
    FillTree();
 

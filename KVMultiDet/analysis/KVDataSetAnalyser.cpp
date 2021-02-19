@@ -703,6 +703,7 @@ const KV2Body* KVDataSetAnalyser::GetKinematics() const
 {
    // Return pointer to kinematics of analysed system if defined
    if (fSystem) return fSystem->GetKinematics();
+   Error("GetKinematics", "No system defined for kinematic calculations");
    return nullptr;
 }
 

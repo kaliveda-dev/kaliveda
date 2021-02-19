@@ -8,14 +8,12 @@
  Write a detailed documentation for your class here, see doxygen manual for help.
 
  \author John Frankland
- \date Fri Jan 29 16:43:01 2021
+ \date Fri Feb 19 13:46:59 2021
 */
 
 #include "KVReconEventSelector.h"
 
 class ExampleReconAnalysis : public KVReconEventSelector {
-
-   double ztot_sys, zvtot_sys;
 
 public:
    ExampleReconAnalysis() {}

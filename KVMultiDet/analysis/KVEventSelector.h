@@ -292,6 +292,8 @@ public:
       // ("CM") frame for the particles in the event.
       if (gDataAnalyser->GetKinematics())
          GetEvent()->SetFrame("CM", gDataAnalyser->GetKinematics()->GetCMVelocity());
+      else
+         Error("SetAnalysisFrame", "No kinematics available for reaction");
    }
 
    KVEvent* GetEvent() const

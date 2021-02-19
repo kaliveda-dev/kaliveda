@@ -1,4 +1,5 @@
 #include "KVDataAnalyser.h"
+#include "KVFlowTensor.h"
 
 void ROOT6KVINDRAEventSelectorTemplate::InitAnalysis(void)
 {
@@ -10,14 +11,36 @@ void ROOT6KVINDRAEventSelectorTemplate::InitAnalysis(void)
    /*** ADDING GLOBAL VARIABLES TO THE ANALYSIS ***/
    /* These will be automatically calculated for each event before
       your Analysis() method will be called                        */
-   AddGV("KVZtot", "ztot");                             // total charge
-   AddGV("KVZVtot", "zvtot")->SetMaxNumBranches(1);     // total Z*vpar
+   auto ztot = AddGV("KVZtot", "ztot");                 // total charge
+   // complete event selection: total charge
+   ztot->SetEventSelection([&](const KVVarGlob * var) {
+      return var->GetValue() >= 0.8 * ztot_sys; // ztot_sys will be set in InitRun
+   });
+
+   auto zvtot = AddGV("KVZVtot", "zvtot");              // total Z*vpar
+   zvtot->SetMaxNumBranches(1);    // only write "Z" component in TTree
+   // complete event selection: total pseudo-momentum
+   zvtot->SetEventSelection([&](const KVVarGlob * var) {
+      return var->GetValue() >= 0.8 * zvtot_sys
+             && var->GetValue() <= 1.1 * zvtot_sys; // zvtot_sys will be set in InitRun
+   });
+   AddGV("KVMult", "mtot");                             // total multiplicity
    AddGV("KVEtransLCP", "et12");                        // total LCP transverse energy
-   AddGV("KVFlowTensor", "tensor")->SetOption("weight", "RKE");  // relativistic CM KE tensor
+   auto gv = AddGV("KVFlowTensor", "tensor");
+   gv->SetOption("weight", "RKE");
+   gv->SetFrame("CM");// optional - this is the default frame
+   gv->SetSelection({"Z>4", [](const KVNucleus * n)
+   {
+      return n->GetZ() > 4;
+   }});   // relativistic CM KE tensor for fragments
+   // Define ellipsoid frame (wrt axes of flow tensor ellipsoid)
+   gv->SetNewFrameDefinition([](KVEvent * e, const KVVarGlob * vg) {
+      e->SetFrame("EL", "CM", ((KVFlowTensor*)vg)->GetFlowReacPlaneRotation());
+   });
 
    /*** DECLARING SOME HISTOGRAMS ***/
    AddHisto(new TH1F("zdist", "Charge distribution", 100, -.5, 99.5));
-   AddHisto(new TH2F("zvpar", "Z vs V_{par} in CM", 100, -15., 15., 75, .5, 75.5));
+   AddHisto(new TH2F("zvpar", "Z vs V_{par} in ellipsoid", 100, -15., 15., 75, .5, 75.5));
 
    /*** USING A TREE ***/
    CreateTreeFile();//<--- essential
@@ -38,14 +61,25 @@ void ROOT6KVINDRAEventSelectorTemplate::InitRun(void)
    // You no longer need to define the correct identification/calibration codes for particles
    // which will be used in your analysis, they are automatically selected using the default
    // values in variables INDRA.ReconstructedNuclei.AcceptID/ECodes.
-   // However, if you want to change the default settings, it can be done here.
+   //
+   // You can change the selection (or deactivate it) here by doing:
+   // gMultiDetArray->AcceptECodes(""); => accept all calibration codes
+   // gMultiDetArray->AcceptIDCodes("12,33"); => accept only ID codes in list
+   //
+   // If the experiment used a combination of arrays, codes have to be set for
+   // each array individually:
+   // gMultiDetArray->GetArray("[name]")->Accept.. => setting for array [name]
 
    // set title of TTree with name of analysed system
    GetTree("myTree")->SetTitle(GetCurrentRun()->GetSystemName());
 
-   // Do not remove the following line - reject events with less identified particles than
-   // the acquisition multiplicity trigger
+   // Reject events with less identified particles than the acquisition multiplicity trigger
    SetTriggerConditionsForRun(GetCurrentRun()->GetNumber());
+
+   // retrieve system parameters for complete event selection
+   const KV2Body* kin = gDataAnalyser->GetKinematics();
+   zvtot_sys = kin->GetNucleus(1)->GetVpar() * kin->GetNucleus(1)->GetZ();
+   ztot_sys = GetCurrentRun()->GetSystem()->GetZtot();
 }
 
 //_____________________________________
@@ -62,8 +96,8 @@ Bool_t ROOT6KVINDRAEventSelectorTemplate::Analysis(void)
       // "OK" => using selection criteria of InitRun()
       // fill Z distribution
       FillHisto("zdist", particle.GetZ());
-      // fill Z-Vpar(cm)
-      FillHisto("zvpar", particle.GetFrame("CM")->GetVpar(), particle.GetZ());
+      // fill Z-Vpar(ellipsoid)
+      FillHisto("zvpar", particle.GetFrame("EL")->GetVpar(), particle.GetZ());
    }
 
    // write new results in TTree

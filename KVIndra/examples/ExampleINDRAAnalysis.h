@@ -1,19 +1,21 @@
-//Created by KVClassFactory on Mon Feb 19 14:32:51 2018
-//Author: John Frankland
+#ifndef __EXAMPLEINDRAANALYSIS_H
+#define __EXAMPLEINDRAANALYSIS_H
 
-#ifndef __ExampleINDRAAnalysis_H
-#define __ExampleINDRAAnalysis_H
+/**
+ \class ExampleINDRAAnalysis
+ \brief User analysis class
+
+ Write a detailed documentation for your class here, see doxygen manual for help.
+
+ \author John Frankland
+ \date Fri Feb 19 13:41:03 2021
+*/
 
 #include "KVINDRAEventSelector.h"
 
 class ExampleINDRAAnalysis : public KVINDRAEventSelector {
-   Int_t Run;
-   Int_t EventNumber;
-   Int_t MTensor;
-   Int_t Trigger;
-#ifdef USING_ROOT6
-   Int_t current_run_system_ztot;
-#endif
+
+   double ztot_sys, zvtot_sys;
 
 public:
    ExampleINDRAAnalysis() {};
@@ -27,6 +29,5 @@ public:
 
    ClassDef(ExampleINDRAAnalysis, 1) //User analysis class
 };
-
 
 #endif
