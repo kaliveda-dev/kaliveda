@@ -157,7 +157,54 @@ corresponding to the first three values of this global variable.
 Calling `KVVarGlob::SetMaxNumBranches`{.cpp} with argument 0 (zero) will effectively prevent the creation
 of any branches for a given global variable. This can be used both for multi- and single-valued global
 variables.
+
+### Definition of new kinematical frames [v1.12 with ROOT6]
+Starting from version 1.12 of KaliVeda, global variables used in data analysis
+can be used to define new kinematical frames which can in turn be
+used by any variables which occur after it in the list.
+
+In order to do so, call method KVVarGlob::SetNewFrameDefinition() with
+a lambda function having the following signature:
+
+~~~~{.cpp}
+[](KVEvent* e, const KVVarGlob* vg){ e->SetFrame("_frame_name_", ...); }
+~~~~
+
+When called (e.g. by [KVGVList]), the [KVVarGlob] pointer gives access to the global variable.
+
+As an example of use, imagine that [KVZmax] is used to find the heaviest (largest Z) fragment in the
+forward CM hemisphere, then the velocity of this fragment is used to define a "QP_FRAME"
+in order to calculate the [KVFlowTensor] in this frame:
+
+~~~~{.cpp}
+    auto vg = AddGV("KVZmax", "zmax");
+    vg->SetFrame("CM");
+    vg->SetSelection( {"V>0", [](const KVNucleus* n){ return n->GetVpar()>0; }} );
+    vg->SetNewFrameDefinition(
+                [](KVEvent* e, const KVVarGlob* v){
+        e->SetFrame("QP_FRAME", static_cast<const KVZmax*>(v)->GetZmax(0)->GetVelocity());
+    });
+    vg = AddGV("KVFlowTensor", "qp_tensor");
+    vg->SetFrame("QP_FRAME"); // frame will have been defined before tensor is filled
+~~~~
 	
+### Definition of event selection criteria [v1.12 with ROOT6]
+Starting from version 1.12 of KaliVeda, conditions ('cuts') can be set on each variable which
+decide whether or not to retain an event for analysis. If any variable in the list fails the
+test, processing of the list is abandoned.
+
+Selection criteria are set using lambda expressions. In this example, the variable "mtot"
+must have a value of at least 4 for the event to be retained:
+
+~~~~{.cpp}
+   auto mtot = AddGV("KVMult","mtot");
+   mtot->SetEventSelection([](const KVVarGlob* v){ return v->GetValue()>=4; });
+~~~~
+
+Any event selection criterion is tested as soon as each variable has been calculated. If the test
+fails, no further variables in the list will be calculated, __and the current event will not be processed further:__
+the user's Analysis() method will __NOT__ be called.
+
 ## Using your own global variable classes ##
 
 If you want to implement a new global variable, there are two possibilities. 
@@ -266,6 +313,7 @@ auto myvg = dynamical_cast<MyClassName*>(AddGV("MyClassName", "myVarGlob"));
 [KVNucleus]: http://indra.in2p3.fr/kaliveda/doc/master/classKVNucleus.html
 [KVVarGlob]: http://indra.in2p3.fr/kaliveda/doc/master/classKVVarGlob.html
 [KVZtot]: http://indra.in2p3.fr/kaliveda/doc/master/classKVZtot.html
+[KVZmax]: http://indra.in2p3.fr/kaliveda/doc/master/classKVZmax.html
 [KVVarGlob1]: http://indra.in2p3.fr/kaliveda/doc/master/classKVVarGlob1.html
 [KVVarGlobMean]: http://indra.in2p3.fr/kaliveda/doc/master/classKVVarGlobMean.html
 [KVVGSum]: http://indra.in2p3.fr/kaliveda/doc/master/classKVVGSum.html

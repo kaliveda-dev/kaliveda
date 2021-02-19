@@ -2,19 +2,14 @@
 
 # KaliVeda version
 The E789 data can only be analysed with KV built from the `master` branch on [github][github-master].
-Current version returned by `kaliveda-config --version` for this version is `1.11/00`. Class reference
+Current version returned by `kaliveda-config --version` for this version is `1.11/01`. Class reference
 for `1.11 (master)` version is available [here][classdoc-master] or from the menu on the [website][kvweb].
 
 This is the only version which contains the `INDRAFAZIA.E789` dataset which defines the set-up
 INDRA-FAZIA as used in the experiment.
 
-Note that for the moment compatibility of this version with previous data is not guaranteed,
+Note that for the moment backwards compatibility of this version with all previous data is not guaranteed,
 and its sole aim for the moment is the reduction and analysis of E789 data.
-
-## ROOT version
-Although both `master` and `1.10` versions of KaliVeda can be compiled with ROOT version 6,
-a memory leak occurs when reading/analysing reconstructed data which has yet to be understood.
-Therefore we do not use ROOT 6 at CCIN2P3 (see below).
 
 ## CCIN2P3
 On Computing Centre (Lyon) machines, you need to be logged in as a member of the `fazia` group,
@@ -30,11 +25,12 @@ if [ -n "$THRONG_DIR" ];then
 fi
 ~~~~~~~~~
 
-You should add the following line just before this part, like so:
+You should add the following lines just before this part, like so:
 
 ~~~~~~~~~{.bash}
 # comment the next line to go back to default KV version
 export KV_GIT_BRANCH=master
+export USER_ROOT_VERSION=6.18.00
 
 if [ -n "$THRONG_DIR" ];then
    if [ -r $THRONG_DIR/group_profile ];then
@@ -43,10 +39,8 @@ if [ -n "$THRONG_DIR" ];then
 fi
 ~~~~~~~~~
 
-The next time you log in, you will have the correct version of KV.
-
-Do not change the default version of ROOT (5.34/38) (see previous subsection): in other words,
-make sure that the variable `USER_ROOT_VERSION` is not defined in your `$HOME/.profile`.
+The next time you log in, you will have the correct version of KV and the
+recommended version 6 of ROOT.
 
 # Notes on reconstructed (`recon`) data
 Reconstructed data means events containing nuclei. Each 'nucleus' in an event is reconstructed
@@ -281,6 +275,9 @@ For FAZIA, the defaults for 'good' particles are:
    | --- | --- |
    |    0   |  All OK |
    |    1   |  Calibration OK, some contributions calculated |
+   
+The ECODE values for FAZIA will change in the next generation of data to have similar values
+to those used by INDRA (i.e. the "good" codes will become 1 and 2).
 
 ### Changing the default selection of identification/calibration codes
 This can be done in the `InitRun()` method of your analysis class, using the
@@ -366,6 +363,19 @@ as long as you take into account the fact that in the first example `n` is a ref
 in the second it is a pointer, therefore method calls such as `n.GetZ()` with the first example
 have to be changed to `n->GetZ()`.
 
+As we are using ROOT6 (or should be - see introduction), C++11 is fully supported, so you can
+also use the much simpler syntax
+
+~~~~~~~~~~~{.cpp}
+for (auto& n : OKEventIterator(*GetEvent()))
+{
+   KVReconstructedNucleus& recon_nuc = dynamic_cast<KVReconstructedNucleus&>(n);
+~~~~~~~~~~~
+
+although it should be noted that in this case the 'auto' reference variable will be a `KVNucleus`
+reference; thus if you need to access methods specific to `KVReconstructedNucleus` an upcast
+is required as shown.
+
 You do not have to loop over only `"OK"` particles: you can simply loop over all reconstructed
 particles in the event without taking into account any preselections:
 
@@ -375,6 +385,12 @@ for (KVEvent::Iterator it = GetEvent()->begin(); it != GetEvent()->end(); ++it)
 
 // 'old' (deprecated) style loop over all particles
 while( (n = GetEvent()->GetNextParticle()) )
+~~~~~~~~~~~
+
+Again with ROOT6 and C++11 you can also use the much simpler syntax
+
+~~~~~~~~~~~{.cpp}
+for (auto& n : *GetEvent())
 ~~~~~~~~~~~
 
 See [here][event-iterator-examples] for lots of examples of how to loop over the particles in events.

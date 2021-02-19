@@ -90,8 +90,8 @@ The user's analysis class can acces the `KVDataAnalyser` object which is running
 ### Defining histograms, trees, global variables: `InitAnalysis()`
 
 This is the place to create/open any ROOT files, histograms, trees etc. you require in order to store the output of your analysis.
-Also the place to define any [Global Variables] needed for the analysis.
-See the examples given and comments in the example analysis classes.
+Also the place to define any [Global Variables] needed for the analysis: see the dedicated chapter for more details.
+Also see the examples given and comments in the example analysis classes.
 
 If you are analysing reconstructed experimental/simulated data, do **not** try to access the experimental set-up (`gMultiDetArray`, etc.) associated with the data you want to analyse here - it will not be defined until `InitRun()`.
 
@@ -126,8 +126,7 @@ when iterating over the event).
 The first selection applied is to consider "OK" only those particles which have
 acceptable identification codes (`KVReconstructedNucleus::GetIDCode()`) and calibration
 codes (`KVReconstructedNucleus::GetECode()`). For each multidetector array,
-the default values of the acceptable codes can be defined using the configuration
-variables
+default values of the acceptable codes are defined using configuration variables such as
 
 ~~~~~~~~~~~
 [dataset].[name].ReconstructedNuclei.AcceptIDCodes: 2-4,6
@@ -137,8 +136,8 @@ variables
 where `[name]` is the name of the array and optionally the values can be dataset
 dependent.
 
-To change the default acceptable codes for particles reconstructed by a given array,
-use
+To change the default acceptable codes for particles reconstructed by a given array
+to be used in your analysis, use
 
 ~~~~~~~~~{.cpp}
    gMultiDetArray->AcceptIDCodes(const KVNumberList&)
@@ -166,7 +165,7 @@ all particles which passed the identification/calibration code selections.
 > Note that you cannot 'retrieve' a particle which has been excluded due to bad
 > identification or calibration codes using a [KVParticleCondition] selection
 
-These selections are then added to the analysis using the `SetParticleConditions()` method:
+These selections are then added to the analysis selection criteria using the `SetParticleConditions()` method:
 
 ~~~~~~~~~{.cpp}
 #ifdef USING_ROOT6
@@ -210,4 +209,4 @@ There is usually no need to implement these methods.
 [KVGroupReconstructor]: http://indra.in2p3.fr/kaliveda/doc/master/classKVGroupReconstructor.html
 [KVParticleCondition]: http://indra.in2p3.fr/kaliveda/doc/master/classKVParticleCondition.html
 [here]: events.html#iterating-over-particles-in-events
-[Global Variables]: globalvariables.html#iterating-over-particles-in-events
+[Global Variables]: globalvariables.html
