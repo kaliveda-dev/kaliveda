@@ -1,8 +1,36 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 22nd January 2021
+Last update: 19th February 2021
 
-## Version 1.12 (Released: ????)
+## Version 1.12/01 (Released: 19/2/2021)
+
+__Changes 19/2/2021 in__ \ref Analysis : __Reusable analysis classes__
+
+As part of ongoing efforts to make analysis classes more flexible and efficient, it is now possible to use the same analysis class to analyse several different types of data.
+Any analysis derived from KVReconEventSelector (generic reconstructed event analysis class) can now be used:
+ 
+  * analyse generic reconstructed data [this was already the case];
+  
+  * analyse reconstructed INDRA data [previously only possible with a specific class derived from KVINDRAEventSelector];
+  
+  * analyse filtered simulated data
+  
+__Changes 28/1/2021 in__ \ref Analysis : __Rejecting events based on DAQ trigger conditions__
+
+Rejection of reconstructed events which are not consistent with the online DAQ trigger of each run
+is now handled by a new class KVTriggerConditions. This is in order to be able to handle situations which
+are more complicated than a simple minimum global multiplicity.
+
+In analysis classes, the rejection is handled by calling KVEventSelector::SetTriggerConditionsForRun() in the InitRun() method of the analysis class.
+This replaces the condition
+
+~~~{.cpp}
+if( !GetEvent()->IsOK() ) return kFALSE;
+~~~
+
+which was previously used at the beginning of the Analysis() method. The new mechanism is implemented by
+default in the new examples and templates for automatically-generated user analysis classes. For the moment, trigger conditions for INDRA data
+are handled; the implementation for INDRA-FAZIA data will follow shortly.
 
 __Changes 22/1/2021 in__ \ref GlobalVariables
 
@@ -13,7 +41,7 @@ constructor with `const char*` argument (variable name) must be used, like so:
 +Plugin.KVVarGlob:    MyNewVarGlob    MyNewVarGlob     MyNewVarGlob.cpp+   "MyNewVarGlob(const char*)"
 ~~~~
 
-__Changes 11/12/2020 in__ \ref GlobalVariables
+__Changes 11/12/2020 in__ \ref GlobalVariables : __Definition of new frames using global variables__
 
 Global variables in a KVGVList can be used to define new kinematical reference frames which are available for
 all variables which come later in the list.
@@ -35,10 +63,13 @@ in order to calculate the KVFlowTensor in this frame:
     vg->SetFrame("QP_FRAME"); // frame will have been defined before tensor is filled
 ~~~~
 
-__Changes 21/9/2020 in__ \ref GlobalVariables
+__Changes 21/9/2020 in__ \ref GlobalVariables : __Event selection using global variables__
 
 Event selection can be performed automatically based on the values of the global variables in a KVGVList.
-This is implemented for example in KVEventSelector, the base class for all analysis classes.
+This is implemented for example in KVEventSelector, the base class for all analysis classes. This can
+improve the speed of analyses, as the conditions are tested for each global variable as soon as they
+are calculated, and processing of the event aborted if it fails. Variables used for event selection should
+added to the list of gobal variables before any others in order to optimise the speed of analysis.
 
 For example, to retain for analysis only events with a total measured charge in the forward c.m.
 hemisphere which is at least equal to 80% of the charge of the projectile:
@@ -146,7 +177,7 @@ member types from std::iterator. Names of methods changed to KVEvent::Iterator::
 
 __________________________
 
-__Changes 27/7/2020 in__ \ref Analysis
+__Changes 27/7/2020 in__ \ref Analysis : __Particle selection using lambda captures (C++11..)__
 
 KVParticleCondition has been extended to use lambda expressions (if KaliVeda is compiled with ROOT
 version 6 or later)
