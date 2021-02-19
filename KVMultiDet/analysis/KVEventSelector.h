@@ -295,6 +295,7 @@ public:
       else
          Error("SetAnalysisFrame", "No kinematics available for reaction");
    }
+   virtual void SetCurrentRun(KVDBRun*) {}
 
    KVEvent* GetEvent() const
    {

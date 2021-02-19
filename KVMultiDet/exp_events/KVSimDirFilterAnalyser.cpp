@@ -42,9 +42,9 @@ void KVSimDirFilterAnalyser::preInitRun()
    // and build experimental set-up
 
    KVString system = fAnalysisClass->GetOpt("System");
-   KVDBSystem* sys = gExpDB->GetSystem(system);
-   if (sys) {
-      fKinematics = sys->GetKinematics();
+   fSystem = gExpDB->GetSystem(system);
+   if (fSystem) {
+      fKinematics = fSystem->GetKinematics();
    }
    else {
       fKinematics = new KV2Body(system);
@@ -52,6 +52,8 @@ void KVSimDirFilterAnalyser::preInitRun()
       fKinematics->CalculateKinematics();
    }
    KVString run = fAnalysisClass->GetOpt("Run");
+   fRun = gExpDB->GetDBRun(run.Atoi());
+   fAnalysisClass->SetCurrentRun(fRun);
    KVMultiDetArray::MakeMultiDetector(gDataSet->GetName(), run.Atoi());
 }
 

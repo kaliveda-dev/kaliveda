@@ -26,9 +26,9 @@ public:
 
    void Init(TTree* tree);
 
-   void SetCurrentRun(KVINDRADBRun* r)
+   void SetCurrentRun(KVDBRun* r)
    {
-      fCurrentRun = r;
+      fCurrentRun = (KVINDRADBRun*)r;
    }
    KVINDRADBRun* GetCurrentRun() const
    {
