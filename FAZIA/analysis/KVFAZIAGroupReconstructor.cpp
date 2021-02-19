@@ -259,6 +259,7 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
                   identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
                   PART.SetIdentifyingTelescope(identifying_telescope);
                   PART.SetIdentification(&partID, identifying_telescope);
+                  PART.GetParameters()->SetValue("CCode", 1);
                   //PART.Print();
                }
             }
@@ -285,6 +286,7 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
                   identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-CsI");
                   PART.SetIdentifyingTelescope(identifying_telescope);
                   PART.SetIdentification(&partID, identifying_telescope);
+                  PART.GetParameters()->SetValue("CCode", 2);
                   //PART.Print();
                }
             }
@@ -312,6 +314,8 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
                   identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
                   PART.SetIdentifyingTelescope(identifying_telescope);
                   PART.SetIdentification(&partID, identifying_telescope);
+                  PART.GetParameters()->SetValue("CCode", 3);
+
                   //PART.Print();
                }
             }
@@ -337,6 +341,7 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
                identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
                PART.SetIdentifyingTelescope(identifying_telescope);
                PART.SetIdentification(&partID, identifying_telescope);
+               PART.GetParameters()->SetValue("CCode", 4);
             }
          }
       }
