@@ -1,5 +1,5 @@
 RunList:                                 16000-44103 83000-122093
-SignalIn:			Q3.Amplitude
+SignalIn:			Q3.FPGAEnergy
 SignalOut:			Energy
 CalibType:			ChannelEnergyQ3
 CalibClass:			LightEnergyCsI
