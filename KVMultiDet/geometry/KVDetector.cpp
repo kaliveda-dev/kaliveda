@@ -547,6 +547,16 @@ Bool_t KVDetector::ReplaceCalibrator(const Char_t* type, KVCalibrator* cal, cons
    return AddCalibrator(cal, opts);
 }
 
+Bool_t KVDetector::IsCalibrated(const KVNameValueList& params) const
+{
+   // A detector is considered to be calibrated if it has
+   // a signal "Energy" available and if depending on the supplied parameters
+   // this signal can be calculated
+
+   KVCalibratedSignal* e_sig = dynamic_cast<KVCalibratedSignal*>(GetDetectorSignal("Energy"));
+   return (e_sig && e_sig->IsCalibratedFor(params));
+}
+
 //_______________________________________________________________________________
 void KVDetector::AddACQParam(KVACQParam* par)
 {
