@@ -145,6 +145,7 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
          det = (KVFAZIADetector*)node->GetDetector();
          Double_t temp = det->GetELostByParticle(&avatar);
          PART->SetParameter(Form("FAZIA.avatar.E%s", detnames[det->GetIdentifier()]), temp);
+         if (det->GetEnergyLoss()) PART->SetParameter(Form("FAZIA.avatar.DE%s", detnames[det->GetIdentifier()]), (temp - det->GetEnergyLoss()) / det->GetEnergyLoss());
          chi2 += ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss()) * ((det->GetEnergyLoss() - temp) / det->GetEnergyLoss());
          avatar.SetKE(avatar.GetKE() - temp);
          ndet++;
@@ -227,6 +228,13 @@ void KVFAZIAGroupReconstructor::PostReconstructionProcessing()
 void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
 {
    KVGroupReconstructor::IdentifyParticle(PART);
+
+   // Coherency codes (CCode):
+   // -1 no modification du to coherency checks
+   // 1 CsI id = gamma + good in Si-Si -> Si-Si
+   // 2 CsI id -> Si-CsI id
+   // 3 Si-CsI id -> Si-Si id because Z(sicsi)<Z(sisi)
+   // 4 stopped in CsI (no id) + good id Si-Si -> Si-Si
 
    // check for failed PSA identification for particles stopped in Si1
    // change status => KVReconstructedNucleus::kStatusStopFirstStage
