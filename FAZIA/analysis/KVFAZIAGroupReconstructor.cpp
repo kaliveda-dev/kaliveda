@@ -114,7 +114,7 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
          // treat case of all detectors calibrated
          double esi1 = si1->GetEnergy();
          double esi2 = si2->GetEnergy();
-         double ecsi = csi->GetDetectorSignalValue("Energy", params.Data());
+         double ecsi = csi->GetDetectorSignalValue("Energy", part_id);
          PART->SetParameter("FAZIA.ESI1", esi1);
          PART->SetParameter("FAZIA.ESI2", esi2);
          PART->SetParameter("FAZIA.ECSI", ecsi);
