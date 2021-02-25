@@ -128,7 +128,7 @@ void KVVarGlob::AddFillMethod(KVClassFactory& cf, int type)
          break;
       case kNBody:
          cf.AddMethod("FillN", "void");
-         cf.AddMethodArgument("FillN", "KVEvent*", "e");
+         cf.AddMethodArgument("FillN", "const KVEvent*", "e");
          cf.AddHeaderIncludeFile("KVEvent.h");
          break;
       default:

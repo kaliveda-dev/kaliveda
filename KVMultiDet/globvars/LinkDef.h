@@ -35,4 +35,5 @@
 #pragma link C++ class KVFlowTensor;
 #pragma link C++ class KVDirectivity;
 #pragma link C++ class KVEventClassifier;
+#pragma link C++ class KVEventParameter;
 #endif
