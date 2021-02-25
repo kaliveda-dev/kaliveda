@@ -103,14 +103,14 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
       KVFAZIADetector* csi = (KVFAZIADetector*)PART->GetStoppingDetector();
       KVFAZIADetector* si1 = (KVFAZIADetector*)PART->GetReconstructionTrajectory()->GetDetector("SI1");
 
-      KVString params = Form("Z=%d,A=%d", PART->GetZ(),  PART->GetA());
+      KVNameValueList part_id(Form("Z=%d,A=%d", PART->GetZ(), PART->GetA()));
 
       if (!(si1 && si2 && csi)) {
          Error("CalibrateParticle",
                "IDCODE=23 si1=%s si2=%s csi=%s",
                (si1 ? si1->GetName() : "?"), (si2 ? si2->GetName() : "?"), (csi ? csi->GetName() : "?"));
       }
-      if (csi->IsCalibrated(params.Data()) && si1->IsCalibrated() && si2->IsCalibrated()) {
+      if (csi->IsCalibrated(part_id) && si1->IsCalibrated() && si2->IsCalibrated()) {
          // treat case of all detectors calibrated
          double esi1 = si1->GetEnergy();
          double esi2 = si2->GetEnergy();
