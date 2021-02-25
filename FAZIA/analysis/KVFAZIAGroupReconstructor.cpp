@@ -31,10 +31,12 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
    if (det->IsType("CsI") && PART->GetIDCode() == 0) { // gammas
       if (det->IsCalibrated()) {
          double Ep = det->GetDetectorSignalValue("Energy", "Z=1,A=1");
-         PART->SetEnergy(Ep);
-         PART->SetIsCalibrated();
-         PART->SetECode(1);
-         PART->SetParameter("FAZIA.ECSI", Ep);
+         if (Ep > 0) {
+            PART->SetEnergy(Ep);
+            PART->SetIsCalibrated();
+            PART->SetECode(1);
+            PART->SetParameter("FAZIA.ECSI", Ep);
+         }
       }
    }
 
@@ -101,13 +103,27 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
       KVFAZIADetector* csi = (KVFAZIADetector*)PART->GetStoppingDetector();
       KVFAZIADetector* si1 = (KVFAZIADetector*)PART->GetReconstructionTrajectory()->GetDetector("SI1");
 
+      KVString params = Form("Z=%d,A=%d", PART->GetZ(),  PART->GetA());
+
       if (!(si1 && si2 && csi)) {
          Error("CalibrateParticle",
                "IDCODE=23 si1=%s si2=%s csi=%s",
                (si1 ? si1->GetName() : "?"), (si2 ? si2->GetName() : "?"), (csi ? csi->GetName() : "?"));
       }
-      // treat case of uncalibrated CsI detector
-      if (!csi->IsCalibrated()) {
+      if (csi->IsCalibrated(params.Data()) && si1->IsCalibrated() && si2->IsCalibrated()) {
+         // treat case of all detectors calibrated
+         double esi1 = si1->GetEnergy();
+         double esi2 = si2->GetEnergy();
+         double ecsi = csi->GetDetectorSignalValue("Energy", params.Data());
+         PART->SetParameter("FAZIA.ESI1", esi1);
+         PART->SetParameter("FAZIA.ESI2", esi2);
+         PART->SetParameter("FAZIA.ECSI", ecsi);
+         PART->SetEnergy(esi1 + esi2 + ecsi);
+         PART->SetIsCalibrated();
+         PART->SetECode(1); // all energies calibrated
+      }
+      else {
+         // treat case of uncalibrated CsI detector
          // case where SI1 && SI2 are calibrated & present in event
          // (STRICTLY SPEAKING, FIRST NEED TO CHECK THAT NOTHING ELSE STOPPED IN SI1 (for Si2-CsI id) or SI2 (for CsI id)):
          // THIS SHOULD BE DONE IN IDENTIFICATION COHERENCY CHECKS
@@ -158,7 +174,7 @@ void KVFAZIAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
       // in case the avatar still has energy (+- epsilon ?) we consider it as punch through particle
       // if chi2>10, the calibration is incoherent with calculated energy losses (why 10 ??? to be checked)
       // question : do we really need these two distinct cases ?
-//      if (avatar.GetKE() > 0 || chi2 > 10.) PART->SetECode(4);
+      //      if (avatar.GetKE() > 0 || chi2 > 10.) PART->SetECode(4);
 
       //add correction for target energy loss - moving charged particles only!
       Double_t E_targ = 0.;
@@ -315,8 +331,8 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
             KVIdentificationResult* idr_si1si2 = si1si2->second;
             if (idr_si1si2->IDOK && idr_si1si2->IDquality < KVIDZAGrid::kICODE4) {
                if (zz < idr_si1si2->Z) {
-//               Info("IdentifyParticle","SiCsI identification [Z=%d A=%d] changed to SiSi identification [Z=%d A=%d]",
-//                    PART.GetZ(),PART.GetA(),si1si2->second->Z,si1si2->second->A);
+                  //               Info("IdentifyParticle","SiCsI identification [Z=%d A=%d] changed to SiSi identification [Z=%d A=%d]",
+                  //                    PART.GetZ(),PART.GetA(),si1si2->second->Z,si1si2->second->A);
                   ChangeReconstructedTrajectory(PART);
                   partID = *(si1si2->second);
                   identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
@@ -342,8 +358,8 @@ void KVFAZIAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
 
             if (si1si2->second->IDOK && si1si2->second->IDquality < KVIDZAGrid::kICODE4) {
                // stopping detector becomes Si2, identification Si1-Si2 accepted
-//               Info("IdentifyParticle","Unidentified, stopped in CsI, good Si1Si2 identification [Z=%d A=%d]",
-//                   si1si2->second->Z,si1si2->second->A);
+               //               Info("IdentifyParticle","Unidentified, stopped in CsI, good Si1Si2 identification [Z=%d A=%d]",
+               //                   si1si2->second->Z,si1si2->second->A);
                ChangeReconstructedTrajectory(PART);
                partID = *(si1si2->second);
                identifying_telescope = (KVIDTelescope*)PART.GetReconstructionTrajectory()->GetIDTelescopes()->FindObjectByType("Si-Si");
