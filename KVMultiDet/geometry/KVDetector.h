@@ -283,11 +283,11 @@ public:
    {
       return fCalibrators;
    }
-   virtual Bool_t IsCalibrated() const
+   virtual Bool_t IsCalibrated(const KVNameValueList& params = "") const
    {
       // A detector is considered to be calibrated if it has
       // a signal "Energy" available
-      return HasDetectorSignalValue("Energy");
+      return (HasDetectorSignalValue("Energy") && (GetDetectorSignalValue("Energy", params) > 0));
    }
 
    virtual void Clear(Option_t* opt = "");
