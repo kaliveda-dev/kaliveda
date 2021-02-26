@@ -36,11 +36,9 @@ public:
    KVChIo(Float_t pressure, Float_t thick = 5.0 * KVUnits::cm);
    virtual ~ KVChIo();
 
-   void SetACQParams();
+   //void SetACQParams();
 
    Double_t GetELossMylar(UInt_t z, UInt_t a, Double_t egas = -1.0, Bool_t stopped = kFALSE);
-
-   virtual Short_t GetCalcACQParam(KVACQParam*, Double_t) const;
 
    virtual void SetPressure(Double_t P /* mbar */)
    {

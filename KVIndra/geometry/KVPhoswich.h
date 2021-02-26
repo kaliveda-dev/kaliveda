@@ -42,7 +42,7 @@ public:
    //void Print(Option_t * opt="") const;
    Double_t GetEnergy() const;
    void SetEnergy(Double_t e) const;
-   void SetACQParams();
+   //void SetACQParams();
 
    ClassDef(KVPhoswich, 2)     //Phoswich telescopes of the INDRA array
 };

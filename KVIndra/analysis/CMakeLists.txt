@@ -1,4 +1,4 @@
-set(excluded_classes KVReconIdent_e475s)
+set(excluded_classes KVReconIdent_e475s KVINDRADstToRootTransfert)
 
 if(NOT WITH_BUILTIN_GRU)
         set(excluded_classes ${excluded_classes} KVINDRADstToRootTransfert KVINDRADSTReader)

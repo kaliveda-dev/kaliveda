@@ -54,16 +54,16 @@ void KVChIo::SetMylarThicknesses(Float_t thickF, Float_t thickB)
    if (thickF > 0.)((KVMaterial*)fAbsorbers->At(2))->SetThickness(thickB * KVUnits::um);
 }
 
-void KVChIo::SetACQParams()
-{
-   //Setup acquistion parameters for this ChIo.
-   //Do not call before ChIo name has been set.
+//void KVChIo::SetACQParams()
+//{
+//   //Setup acquistion parameters for this ChIo.
+//   //Do not call before ChIo name has been set.
 
-   AddACQParamType("GG");
-   AddACQParamType("PG");
-   AddACQParamType("T");
+//   AddACQParamType("GG");
+//   AddACQParamType("PG");
+//   AddACQParamType("T");
 
-}
+//}
 
 //__________________________________________________________________________________________________________________________
 
@@ -93,15 +93,15 @@ Double_t KVChIo::GetELossMylar(UInt_t z, UInt_t a, Double_t egas, Bool_t stopped
 
 //______________________________________________________________________________
 
-Short_t KVChIo::GetCalcACQParam(KVACQParam*, Double_t) const
-{
-   // Calculates & returns value of given acquisition parameter corresponding to
-   // given calculated energy loss in the detector
-   // Returns -1 if detector is not calibrated
+//Short_t KVChIo::GetCalcACQParam(KVACQParam*, Double_t) const
+//{
+//   // Calculates & returns value of given acquisition parameter corresponding to
+//   // given calculated energy loss in the detector
+//   // Returns -1 if detector is not calibrated
 
-   AbstractMethod("GetCalcACQParam");
-   return -1;
-}
+//   AbstractMethod("GetCalcACQParam");
+//   return -1;
+//}
 
 //______________________________________________________________________________
 

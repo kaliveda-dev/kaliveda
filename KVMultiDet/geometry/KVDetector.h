@@ -31,7 +31,6 @@ $Id: KVDetector.h,v 1.71 2009/05/22 14:45:40 ebonnet Exp $
 #include "KVPosition.h"
 #include "KVList.h"
 #include "KVNucleus.h"
-#include "KVACQParam.h"
 #include "Binary_t.h"
 #include "KVGeoDetectorNode.h"
 #include "KVUniqueNameList.h"
@@ -185,8 +184,6 @@ private:
       return KVPosition::GetMisalignmentAngle();
    }
 
-   TString fKVDetectorFiredACQParameterListFormatString;//!
-
    KVUniqueNameList fDetSignals;//! list of signals associated with detector
 
    void remove_signal_for_calibrator(KVCalibrator* K);
@@ -195,7 +192,6 @@ protected:
 
    TString fFName;              //!dynamically generated full name of detector
    KVList* fCalibrators;        //list of associated calibrator objects
-   KVList* fACQParams;          //list of raw data parameters read from coders
    KVList* fParticles;         //!list of particles hitting detector in an event
    KVList* fAbsorbers;          //->list of absorbers making up the detector
    UShort_t fSegment;           //used in particle reconstruction
@@ -204,8 +200,6 @@ protected:
 
    Double_t fTotThickness; //! used to store value calculated by GetTotalThicknessInCM
    Double_t fDepthInTelescope; //! used to store depth of detector in parent telescope
-
-   Binary8_t  fFiredMask;//bitmask used by Fired to determine which parameters to take into account
 
    Double_t ELossActive(Double_t* x, Double_t* par);
    Double_t EResDet(Double_t* x, Double_t* par);
@@ -223,8 +217,6 @@ protected:
    Bool_t fDetecting;//! =kTRUE if detector is "detecting", =kFALSE if not
 
    Bool_t fSingleLayer;//! =kTRUE if detector has a single absorber layer
-
-   void SetKVDetectorFiredACQParameterListFormatString();
 
 public:
    KVDetector();
@@ -337,16 +329,6 @@ public:
                                           -1., Bool_t transmission = kTRUE);
    virtual Int_t FindZmin(Double_t ELOSS = -1., Char_t mass_formula = -1);
 
-   void AddACQParam(KVACQParam*);
-   virtual KVACQParam* GetACQParam(const Char_t* /*name*/) const;
-   KVList* GetACQParamList() const
-   {
-      return fACQParams;
-   }
-   virtual Float_t GetACQData(const Char_t* /*name*/) const;
-   virtual Float_t GetPedestal(const Char_t* /*name*/) const;
-   virtual void SetPedestal(const Char_t* /*name*/, Float_t);
-
    Bool_t AddCalibrator(KVCalibrator* cal, const KVNameValueList& opts = "");
    Bool_t ReplaceCalibrator(const Char_t* type, KVCalibrator* cal, const KVNameValueList& opts = "");
    KVCalibrator* GetCalibrator(const Char_t* name,
@@ -420,7 +402,6 @@ public:
    inline virtual Bool_t Fired(Option_t* opt = "any") const;
    inline virtual Bool_t FiredP(Option_t* opt = "any") const;
 
-   virtual void SetACQParams();
    virtual void RemoveCalibrators();
 
    Double_t GetDetectorSignalValue(const TString& type, const KVNameValueList& params = "") const
@@ -532,25 +513,6 @@ public:
       return GetMatrix();
    }
 
-   virtual void SetFiredBitmask(KVString&);
-   Binary8_t GetFiredBitmask() const
-   {
-      return fFiredMask;
-   }
-   virtual const Char_t* GetFiredACQParameterListFormatString() const
-   {
-      return fKVDetectorFiredACQParameterListFormatString.Data();
-   }
-   virtual Short_t GetCalcACQParam(KVACQParam*, Double_t) const
-   {
-      // Calculates & returns value of given acquisition parameter corresponding to
-      // given calculated energy loss in the detector
-      // Returns -1 if detector is not calibrated
-      //
-      // This method should be redefined in child classes i.e. for specific
-      // detector implementations: this version just returns -1.
-      return -1;
-   }
    virtual Double_t GetMaxDeltaE(Int_t Z, Int_t A);
    virtual Double_t GetEIncOfMaxDeltaE(Int_t Z, Int_t A);
    virtual Double_t GetDeltaE(Int_t Z, Int_t A, Double_t Einc);
@@ -782,8 +744,6 @@ inline Double_t KVDetector::GetGain() const
    return fGain;
 }
 
-//_________________________________________________________________________________
-
 Bool_t KVDetector::Fired(Option_t* opt) const
 {
    // Returns kTRUE if detector was hit (fired) in an event
@@ -813,25 +773,13 @@ Bool_t KVDetector::Fired(Option_t* opt) const
    //   in its constructor.
    // See KVDetector::SetFiredBitmask() for more details.
 
+   Warning("Fired", "needs reimplement");
    if (!IsDetecting()) return kFALSE; //detector not working, no answer at all
    if (IsSimMode()) return (GetActiveLayer()->GetEnergyLoss() > 0.); // simulation mode: detector fired if energy lost in active layer
 
    if (opt[0] == 'P') return FiredP(opt + 1);
 
-   Binary8_t event; // bitmask for event
-   TIter next(fACQParams);
-   KVACQParam* par;
-   Int_t id = 0;
-   while ((par = (KVACQParam*)next())) {
-      if (par->Fired()) event.SetBit(id);
-      else event.ResetBit(id);
-      id++;
-   }
-   Binary8_t ok = ((Binary8_t)fFiredMask) & event;
-   // "all" considered parameters fired if ok == mask
-   // "any" considered parameters fired if ok != 0
-   if (!strcmp(opt, "all"))  return (ok == fFiredMask);
-   return (ok != "0");
+   return false;
 }
 //_________________________________________________________________________________
 
@@ -851,22 +799,10 @@ Bool_t KVDetector::FiredP(Option_t* opt) const
    //   in its constructor.
    // See KVDetector::SetFiredBitmask() for more details.
 
+   Warning("FiredP", "needs reimplementing");
    if (!IsDetecting()) return kFALSE; //detector not working, no answer at all
 
-   Binary8_t event; // bitmask for event
-   TIter next(fACQParams);
-   KVACQParam* par;
-   Int_t id = 0;
-   while ((par = (KVACQParam*)next())) {
-      if (par->Fired("P")) event.SetBit(id);
-      else event.ResetBit(id);
-      id++;
-   }
-   Binary8_t ok = ((Binary8_t)fFiredMask) & event;
-   // "all" considered parameters fired if ok == mask
-   // "any" considered parameters fired if ok != 0
-   if (!strcmp(opt, "all"))  return (ok == fFiredMask);
-   return (ok != "0");
+   return false;
 }
 
 #endif

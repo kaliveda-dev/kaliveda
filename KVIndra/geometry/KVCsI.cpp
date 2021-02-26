@@ -70,12 +70,7 @@ void KVCsI::Print(Option_t* option) const
       cout << ((KVCsI*) this)->GetName() << " -- H=" << ((KVCsI*) this)->
            GetDetectorSignalValue("TotLight") << " -- E=" << ((KVCsI*) this)->
            GetEnergy() << "  ";
-      TIter next(fACQParams);
-      KVACQParam* acq;
-      while ((acq = (KVACQParam*) next())) {
-         cout << acq->GetName() << "=" << (Short_t) acq->
-              GetCoderData() << "/" << TMath::Nint(acq->GetPedestal()) << "  ";
-      }
+
       if (BelongsToUnidentifiedParticle())
          cout << "(Belongs to an unidentified particle)";
       cout << endl;
@@ -85,16 +80,16 @@ void KVCsI::Print(Option_t* option) const
    }
 }
 
-void KVCsI::SetACQParams()
-{
-   // Set acquisition parameters for this CsI.
-   // Do not call before detector's name has been set.
-   // Initialises member pointers fACQ_R & fACQ_L for (fast) direct access.
+//void KVCsI::SetACQParams()
+//{
+//   // Set acquisition parameters for this CsI.
+//   // Do not call before detector's name has been set.
+//   // Initialises member pointers fACQ_R & fACQ_L for (fast) direct access.
 
-   AddACQParamType("R");
-   AddACQParamType("L");
-   AddACQParamType("T");
-}
+//   AddACQParamType("R");
+//   AddACQParamType("L");
+//   AddACQParamType("T");
+//}
 
 //______________________________________________________________________________
 

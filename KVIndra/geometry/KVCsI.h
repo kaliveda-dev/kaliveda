@@ -28,7 +28,7 @@ public:
 
    virtual void Print(Option_t* option = "") const;
 
-   void SetACQParams();
+   //void SetACQParams();
 
    Double_t GetCorrectedEnergy(KVNucleus*, Double_t lum = -1., Bool_t transmission = kTRUE);
 

@@ -91,7 +91,7 @@ void KVINDRAUpDater::SetCalibrationParameters(UInt_t run)
       }
    }
    SetCalibParameters(kvrun);
-   SetPedestals(kvrun);
+   //SetPedestals(kvrun);
    SetPHDs(kvrun);
 }
 
@@ -152,30 +152,30 @@ void KVINDRAUpDater::CheckStatusOfDetectors(KVDBRun* kvrun)
          }
          //Test du bon fonctionnement ou non des parametres d acquisition
          if (det->IsDetecting()) {
-            TIter next_acq(det->GetACQParamList());
-            if (!oooacq) {
-               while ((acq = (KVACQParam*)next_acq())) {
-                  acq->SetWorking();
-               }
-            }
-            else {
-               Int_t noff = 0;
-               while ((acq = (KVACQParam*)next_acq())) {
-                  if (oooacq->FindObject(acq->GetName(), "OoO ACQPar")) {
-                     acq->SetWorking(kFALSE);
-                     noff += 1;
-                     nacq_ooo += 1;
-                  }
-                  else {
-                     acq->SetWorking();
-                  }
-               }
-               if (noff == 3) {
-                  det->SetDetecting(kFALSE);
-                  ndet_ooo += 1;
-                  nacq_ooo -= 3;
-               }
-            }
+//            TIter next_acq(det->GetACQParamList());
+//            if (!oooacq) {
+//               while ((acq = (KVACQParam*)next_acq())) {
+//                  acq->SetWorking();
+//               }
+//            }
+//            else {
+//               Int_t noff = 0;
+//               while ((acq = (KVACQParam*)next_acq())) {
+//                  if (oooacq->FindObject(acq->GetName(), "OoO ACQPar")) {
+//                     acq->SetWorking(kFALSE);
+//                     noff += 1;
+//                     nacq_ooo += 1;
+//                  }
+//                  else {
+//                     acq->SetWorking();
+//                  }
+//               }
+//               if (noff == 3) {
+//                  det->SetDetecting(kFALSE);
+//                  ndet_ooo += 1;
+//                  nacq_ooo -= 3;
+//               }
+//            }
          }
       }
    }
@@ -397,14 +397,14 @@ void KVINDRAUpDater::SetCalibParameters(KVDBRun* run)
 
 //____________________________________________________________________________________
 
-void KVINDRAUpDater::SetPedestals(KVDBRun* kvrun)
-{
-   //Set pedestals for this run
+//void KVINDRAUpDater::SetPedestals(KVDBRun* kvrun)
+//{
+//   //Set pedestals for this run
 
-   SetChIoSiPedestals(kvrun);
-   SetCsIPedestals(kvrun);
+//   SetChIoSiPedestals(kvrun);
+//   SetCsIPedestals(kvrun);
 
-}
+//}
 
 //______________________________________________________________________________
 
@@ -440,8 +440,8 @@ void KVINDRAUpDater::SetCsIGainCorrectionParameters(KVDBRun* kvrun)
          // the name of the parameter set should be the name of the detector;
          // however, it may be the name of an acquisition parameter associated with
          // the detector!
-         KVACQParam* a = fArray->GetACQParam(dbps->GetName());
-         if (a) csi = (KVCsI*)a->GetDetector();
+//         KVACQParam* a = fArray->GetACQParam(dbps->GetName());
+//         if (a) csi = (KVCsI*)a->GetDetector();
          // still no good ?
          if (!csi) {
             Warning("SetCsIGainCorrectionParameters",
@@ -530,156 +530,156 @@ void KVINDRAUpDater::SetLitEnergyCsIParameters(KVDBRun* kvrun)
 
 //______________________________________________________________________________
 
-void KVINDRAUpDater::SetChIoSiPedestals(KVDBRun* kvrun)
-{
-   //read Chio-Si-Etalons pedestals
+//void KVINDRAUpDater::SetChIoSiPedestals(KVDBRun* kvrun)
+//{
+//   //read Chio-Si-Etalons pedestals
 
-   if (!kvrun->GetKey("Pedestals"))
-      return;
-   if (!kvrun->GetKey("Pedestals")->GetLinks())
-      return;
-   if (!kvrun->GetKey("Pedestals")->GetLinks()->At(0))
-      return;
+//   if (!kvrun->GetKey("Pedestals"))
+//      return;
+//   if (!kvrun->GetKey("Pedestals")->GetLinks())
+//      return;
+//   if (!kvrun->GetKey("Pedestals")->GetLinks()->At(0))
+//      return;
 
-   ifstream file_pied_chiosi;
-   if (!KVBase::
-         SearchAndOpenKVFile(kvrun->GetKey("Pedestals")->GetLinks()->At(0)->
-                             GetName(), file_pied_chiosi, fDataSet.Data())) {
-      Error("SetPedestals", "Problem opening file %s",
-            kvrun->GetKey("Pedestals")->GetLinks()->At(0)->GetName());
-      return;
-   }
-   cout << "--> Setting Pedestals" << endl;
-   cout << "    ChIo/Si/Etalons: " << kvrun->GetKey("Pedestals")->
-        GetLinks()->At(0)->GetName() << endl;
+//   ifstream file_pied_chiosi;
+//   if (!KVBase::
+//         SearchAndOpenKVFile(kvrun->GetKey("Pedestals")->GetLinks()->At(0)->
+//                             GetName(), file_pied_chiosi, fDataSet.Data())) {
+//      Error("SetPedestals", "Problem opening file %s",
+//            kvrun->GetKey("Pedestals")->GetLinks()->At(0)->GetName());
+//      return;
+//   }
+//   cout << "--> Setting Pedestals" << endl;
+//   cout << "    ChIo/Si/Etalons: " << kvrun->GetKey("Pedestals")->
+//        GetLinks()->At(0)->GetName() << endl;
 
-   //skip first 5 lines - header
-   TString line;
-   for (int i = 5; i; i--) {
-      line.ReadLine(file_pied_chiosi);
-   }
+//   //skip first 5 lines - header
+//   TString line;
+//   for (int i = 5; i; i--) {
+//      line.ReadLine(file_pied_chiosi);
+//   }
 
-   int cou, mod, type, n_phys, n_gene;
-   float ave_phys, sig_phys, ave_gene, sig_gene;
+//   int cou, mod, type, n_phys, n_gene;
+//   float ave_phys, sig_phys, ave_gene, sig_gene;
 
-   while (file_pied_chiosi.good()) {
+//   while (file_pied_chiosi.good()) {
 
-      file_pied_chiosi >> cou >> mod >> type >> n_phys >> ave_phys >>
-                       sig_phys >> n_gene >> ave_gene >> sig_gene;
+//      file_pied_chiosi >> cou >> mod >> type >> n_phys >> ave_phys >>
+//                       sig_phys >> n_gene >> ave_gene >> sig_gene;
 
-      KVDetector* det = GetINDRA()->GetDetectorByType(cou, mod, type);
-      if (det) {
-         switch (type) {
+//      KVDetector* det = GetINDRA()->GetDetectorByType(cou, mod, type);
+//      if (det) {
+//         switch (type) {
 
-            case ChIo_GG:
+//            case ChIo_GG:
 
-               det->SetPedestal("GG", ave_gene);
-               break;
+//               det->SetPedestal("GG", ave_gene);
+//               break;
 
-            case ChIo_PG:
+//            case ChIo_PG:
 
-               det->SetPedestal("PG", ave_gene);
-               break;
+//               det->SetPedestal("PG", ave_gene);
+//               break;
 
-            case Si_GG:
+//            case Si_GG:
 
-               det->SetPedestal("GG", ave_gene);
-               break;
+//               det->SetPedestal("GG", ave_gene);
+//               break;
 
-            case Si_PG:
+//            case Si_PG:
 
-               det->SetPedestal("PG", ave_gene);
-               break;
+//               det->SetPedestal("PG", ave_gene);
+//               break;
 
-            case SiLi_GG:
+//            case SiLi_GG:
 
-               det->SetPedestal("GG", ave_gene);
-               break;
+//               det->SetPedestal("GG", ave_gene);
+//               break;
 
-            case SiLi_PG:
+//            case SiLi_PG:
 
-               det->SetPedestal("PG", ave_gene);
-               break;
+//               det->SetPedestal("PG", ave_gene);
+//               break;
 
-            case Si75_GG:
+//            case Si75_GG:
 
-               det->SetPedestal("GG", ave_gene);
-               break;
+//               det->SetPedestal("GG", ave_gene);
+//               break;
 
-            case Si75_PG:
+//            case Si75_PG:
 
-               det->SetPedestal("PG", ave_gene);
-               break;
+//               det->SetPedestal("PG", ave_gene);
+//               break;
 
-            default:
+//            default:
 
-               break;
-         }
-      }
-   }
-   file_pied_chiosi.close();
-}
+//               break;
+//         }
+//      }
+//   }
+//   file_pied_chiosi.close();
+//}
 
-//______________________________________________________________________________
+////______________________________________________________________________________
 
-void KVINDRAUpDater::SetCsIPedestals(KVDBRun* kvrun)
-{
-   if (!kvrun->GetKey("Pedestals"))
-      return;
-   if (!kvrun->GetKey("Pedestals")->GetLinks())
-      return;
-   if (!kvrun->GetKey("Pedestals")->GetLinks()->At(1))
-      return;
+//void KVINDRAUpDater::SetCsIPedestals(KVDBRun* kvrun)
+//{
+//   if (!kvrun->GetKey("Pedestals"))
+//      return;
+//   if (!kvrun->GetKey("Pedestals")->GetLinks())
+//      return;
+//   if (!kvrun->GetKey("Pedestals")->GetLinks()->At(1))
+//      return;
 
-   //read CsI pedestals
-   ifstream file_pied_csi;
-   if (!KVBase::
-         SearchAndOpenKVFile(kvrun->GetKey("Pedestals")->GetLinks()->At(1)->
-                             GetName(), file_pied_csi, fDataSet.Data())) {
-      Error("SetPedestals", "Problem opening file %s",
-            kvrun->GetKey("Pedestals")->GetLinks()->At(1)->GetName());
-      return;
-   }
-   cout << "--> Setting Pedestals" << endl;
-   cout << "    CsI            : " << kvrun->GetKey("Pedestals")->
-        GetLinks()->At(1)->GetName() << endl;
+//   //read CsI pedestals
+//   ifstream file_pied_csi;
+//   if (!KVBase::
+//         SearchAndOpenKVFile(kvrun->GetKey("Pedestals")->GetLinks()->At(1)->
+//                             GetName(), file_pied_csi, fDataSet.Data())) {
+//      Error("SetPedestals", "Problem opening file %s",
+//            kvrun->GetKey("Pedestals")->GetLinks()->At(1)->GetName());
+//      return;
+//   }
+//   cout << "--> Setting Pedestals" << endl;
+//   cout << "    CsI            : " << kvrun->GetKey("Pedestals")->
+//        GetLinks()->At(1)->GetName() << endl;
 
-   int cou, mod, type, n_phys, n_gene;
-   float ave_phys, sig_phys, ave_gene, sig_gene;
-   TString line;
+//   int cou, mod, type, n_phys, n_gene;
+//   float ave_phys, sig_phys, ave_gene, sig_gene;
+//   TString line;
 
-   //skip first 5 lines - header
-   for (int i = 5; i; i--) {
-      line.ReadLine(file_pied_csi);
-   }
+//   //skip first 5 lines - header
+//   for (int i = 5; i; i--) {
+//      line.ReadLine(file_pied_csi);
+//   }
 
-   while (file_pied_csi.good()) {
+//   while (file_pied_csi.good()) {
 
-      file_pied_csi >> cou >> mod >> type >> n_phys >> ave_phys >> sig_phys
-                    >> n_gene >> ave_gene >> sig_gene;
+//      file_pied_csi >> cou >> mod >> type >> n_phys >> ave_phys >> sig_phys
+//                    >> n_gene >> ave_gene >> sig_gene;
 
-      KVDetector* det = GetINDRA()->GetDetectorByType(cou, mod, type);
-      if (det) {
-         switch (type) {
+//      KVDetector* det = GetINDRA()->GetDetectorByType(cou, mod, type);
+//      if (det) {
+//         switch (type) {
 
-            case CsI_R:
+//            case CsI_R:
 
-               det->SetPedestal("R", ave_gene);
-               break;
+//               det->SetPedestal("R", ave_gene);
+//               break;
 
-            case CsI_L:
+//            case CsI_L:
 
-               det->SetPedestal("L", ave_gene);
-               break;
+//               det->SetPedestal("L", ave_gene);
+//               break;
 
-            default:
+//            default:
 
-               break;
-         }
-      }
-   }
-   file_pied_csi.close();
-}
+//               break;
+//         }
+//      }
+//   }
+//   file_pied_csi.close();
+//}
 
 KVINDRA* KVINDRAUpDater::GetINDRA()
 {

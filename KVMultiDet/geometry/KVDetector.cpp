@@ -18,7 +18,6 @@
 #include "TGeoBBox.h"
 #include "TGeoArb8.h"
 #include "TGeoTube.h"
-#include "KVACQParamSignal.h"
 #include "KVCalibratedSignal.h"
 #include "KVDetectorSignalExpression.h"
 #include "KVZDependentCalibratedSignal.h"
@@ -38,50 +37,28 @@ void KVDetector::init()
 {
    //default initialisations
    fCalibrators = 0;
-   fACQParams = 0;
    fParticles = 0;
-   fSegment = 0;
-   fGain = 1.;
    fCalWarning = 0;
    fAbsorbers = new KVList;
    fActiveLayer = nullptr;
    fIDTelescopes = new KVList(kFALSE);
    fIDTelescopes->SetCleanup(kTRUE);
-   fIDTelAlign = new KVList(kFALSE);
-   fIDTelAlign->SetCleanup(kTRUE);
-   fIDTele4Ident = 0;
    fIdentP = fUnidentP = 0;
    fTotThickness = 0.;
    fDepthInTelescope = 0.;
-   fFiredMask.Set("0");
    fELossF = fEResF = fRangeF = 0;
    fEResforEinc = -1.;
-   fAlignedDetectors[0] = 0;
-   fAlignedDetectors[1] = 0;
    fSimMode = kFALSE;
    fPresent = kTRUE;
    fDetecting = kTRUE;
    fParentStrucList.SetCleanup();
    fSingleLayer = kTRUE;
    fNode.SetDetector(this);
-   SetKVDetectorFiredACQParameterListFormatString();
    // detector owns any signals which are defined for it
    fDetSignals.SetOwner();
    // adding a new signal with the same name as an existing one
    // will delete the existing signal and replace it
    fDetSignals.ReplaceObjects();
-}
-
-void KVDetector::SetKVDetectorFiredACQParameterListFormatString()
-{
-   // Set the value of fKVDetectorFiredACQParameterListFormatString to be
-   //    [classname].Fired.ACQParameterList.%s
-   // where [classname] is the name of the class of whatever object
-   // is calling this method
-
-   fKVDetectorFiredACQParameterListFormatString.Form("%s.Fired.ACQParameterList.",
-         ClassName());
-   fKVDetectorFiredACQParameterListFormatString += "%s";
 }
 
 KVDetector::KVDetector()
@@ -149,17 +126,9 @@ KVDetector::~KVDetector()
    SafeDelete(fCalibrators);
    SafeDelete(fParticles);
    delete fAbsorbers;
-   SafeDelete(fACQParams);
    SafeDelete(fELossF);
    SafeDelete(fEResF);
    SafeDelete(fRangeF);
-   fIDTelAlign->Clear();
-   SafeDelete(fIDTelAlign);
-   SafeDelete(fIDTele4Ident);
-   if (fAlignedDetectors[0]) fAlignedDetectors[0]->Clear("nodelete");
-   SafeDelete(fAlignedDetectors[0]);
-   if (fAlignedDetectors[1]) fAlignedDetectors[1]->Clear("nodelete");
-   SafeDelete(fAlignedDetectors[1]);
 }
 
 //________________________________________________________________
@@ -324,13 +293,6 @@ void KVDetector::Print(Option_t* opt) const
            GetName() << " -- E=" << ((KVDetector*) this)->
            GetEnergy();
       cout << "  ";
-      TIter next(fACQParams);
-      KVACQParam* acq;
-      while ((acq = (KVACQParam*) next())) {
-         cout << acq->GetName() << "=" << (Short_t) acq->
-              GetCoderData() << "/" << TMath::Nint(acq->GetPedestal());
-         cout << "  ";
-      }
       if (BelongsToUnidentifiedParticle())
          cout << "(Belongs to an unidentified particle)";
       cout << endl;
@@ -352,7 +314,6 @@ void KVDetector::Print(Option_t* opt) const
          if (GetActiveLayer() == abs)
             cout << " #################### " << endl;
       }
-      cout << option << "Gain:      " << GetGain() << endl;
       if (fParticles) {
          cout << option << " --- Detected particles:" << endl;
          fParticles->Print();
@@ -360,14 +321,6 @@ void KVDetector::Print(Option_t* opt) const
       if (fIDTelescopes) {
          cout << option << " --- Detector belongs to the following Identification Telescopes:" << endl;
          fIDTelescopes->ls();
-      }
-      if (fIDTelAlign) {
-         cout << option << " --- Identification Telescopes in front of detector:" << endl;
-         fIDTelAlign->ls();
-      }
-      if (fIDTele4Ident) {
-         cout << option << " --- Identification Telescopes used to identify particles stopping in this detector:" << endl;
-         fIDTele4Ident->ls();
       }
    }
    else {
@@ -488,66 +441,6 @@ Bool_t KVDetector::IsCalibrated(const KVNameValueList& params) const
    return (e_sig && e_sig->IsCalibratedFor(params));
 }
 
-//_______________________________________________________________________________
-void KVDetector::AddACQParam(KVACQParam* par)
-{
-   // Add given acquisition parameter to this detector.
-
-   if (!fACQParams) {
-      fACQParams = new KVList;
-      fACQParams->SetName(Form("List of acquisition parameters for detector %s", GetName()));
-   }
-   par->SetDetector(this);
-   fACQParams->Add(par);
-   fDetSignals.Add(new KVACQParamSignal(par));
-}
-
-//________________________________________________________________________________
-KVACQParam* KVDetector::GetACQParam(const Char_t* name) const
-{
-   // Look for acquisition parameter with given name in list
-   // of parameters associated with this detector.
-
-   if (!fACQParams) {
-      return 0;
-   }
-   return ((KVACQParam*) fACQParams->FindObject(name));
-}
-
-//__________________________________________________________________________________
-Float_t KVDetector::GetACQData(const Char_t* name) const
-{
-   // Access acquisition data value associated to parameter with given name.
-   // Returns value as a floating-point number which is the raw channel number
-   // read from the coder plus a random number in the range [-0.5,+0.5].
-   // If the detector has no DAQ parameter of the given type,
-   // or if the raw channel number = 0, the value returned is -1.
-
-   KVACQParam* par = GetACQParam(name);
-   return (par ? par->GetData() :  -1.);
-}
-
-//__________________________________________________________________________________
-Float_t KVDetector::GetPedestal(const Char_t* name) const
-{
-   // Access pedestal value associated to parameter with given name.
-
-   KVACQParam* par = GetACQParam(name);
-   return (par ? par->GetPedestal() : 0);
-}
-
-//__________________________________________________________________________________
-void KVDetector::SetPedestal(const Char_t* name, Float_t ped)
-{
-   // Set value of pedestal associated to parameter with given name.
-
-   KVACQParam* par = GetACQParam(name);
-   if (par) {
-      par->SetPedestal(ped);
-   }
-}
-
-//_______________________________________________________________
 
 void KVDetector::Clear(Option_t* opt)
 {
@@ -559,13 +452,6 @@ void KVDetector::Clear(Option_t* opt)
    ResetBit(kIdentifiedParticle);
    ResetBit(kUnidentifiedParticle);
    if (strncmp(opt, "N", 1)) {
-      if (fACQParams) {
-         TIter next(fACQParams);
-         KVACQParam* par;
-         while ((par = (KVACQParam*) next())) {
-            par->Clear();
-         }
-      }
       TIter it(&GetListOfDetectorSignals());
       KVDetectorSignal* ds;
       while ((ds = (KVDetectorSignal*)it())) {
@@ -619,14 +505,6 @@ KVMaterial* KVDetector::GetAbsorber(Int_t i) const
    return (KVMaterial*) fAbsorbers->At(i);
 }
 
-void KVDetector::SetACQParams()
-{
-   //Attribute acquisition parameters to this detector.
-   //This method does nothing; it should be overridden in child classes to attribute
-   //parameters specific to each detector.
-   ;
-}
-
 void KVDetector::remove_signal_for_calibrator(KVCalibrator* K)
 {
    // Used when a calibrator object is removed or replaced
@@ -665,44 +543,6 @@ void KVDetector::AddIDTelescope(TObject* idt)
    //Add ID telescope to list of telescopes to which detector belongs
    fIDTelescopes->Add(idt);
 }
-
-KVList* KVDetector::GetAlignedIDTelescopes()
-{
-   // Return list of all ID telescopes containing detectors placed in front of
-   // this one.
-
-   // temporary kludge during transition to trajectory-based reconstruction
-   // ROOT-geometry-based detectors will not have fIDTelAlign filled
-   if (ROOTGeo() && !fIDTelAlign->GetEntries()) {
-      const KVGeoDNTrajectory* Rtr = GetGroup()->GetTrajectoryForReconstruction(
-                                        (KVGeoDNTrajectory*)GetNode()->GetTrajectories()->First(),
-                                        GetNode()
-                                     );
-      if (Rtr) fIDTelAlign->AddAll(Rtr->GetIDTelescopes());
-   }
-   return fIDTelAlign;
-}
-
-//___________________________________________________________________________//
-
-TList* KVDetector::GetTelescopesForIdentification()
-{
-   //Returns list of identification telescopes to be used in order to try to identify
-   //particles stopping in this detector. This is the same as GetAlignedIDTelescopes
-   //but only including the telescopes of which this detector is a member.
-   if (fIDTele4Ident) return fIDTele4Ident;
-   if (!fIDTelescopes || !fIDTelAlign) return 0;
-   fIDTele4Ident = new TList;
-   TIter next(GetAlignedIDTelescopes());
-   TObject* idt;
-   while ((idt = next())) {
-      if (fIDTelescopes->FindObject(idt)) fIDTele4Ident->Add(idt);
-   }
-   return fIDTele4Ident;
-}
-
-
-//______________________________________________________________________________//
 
 Double_t KVDetector::GetCorrectedEnergy(KVNucleus* nuc, Double_t e, Bool_t transmission)
 {
@@ -1127,52 +967,12 @@ void KVDetector::AddToGeometry()
    gGeoManager->GetTopVolume()->AddNode(vol, 1, ph);
 }
 
-void KVDetector::SetFiredBitmask(KVString& lpar)
-{
-   // Set bitmask used to determine which acquisition parameters are
-   // taken into account by KVDetector::Fired based on the environment variables
-   //          [dataset].KVACQParam.[par name].Working:    NO
-   //          [dataset].[classname].Fired.ACQParameterList.[type]: PG,GG,T
-   //   where [classname]=KVDetector by default, or the name of some class
-   //   derived from KVDetector which calls the method KVDetector::SetKVDetectorFiredACQParameterListFormatString()
-   //   in its constructor.
-   // The first allows to define certain acquisition parameters as not functioning;
-   // they will not be taken into account.
-   // The second allows to "fine-tune" what is meant by "all" or "any" acquisition parameters
-   // (i.e. when using Fired("all"), Fired("any"), Fired("Pall", etc.).
-   // For each detector type, give a comma-separated list of the acquisition
-   // parameter types to be taken into account in the KVDetector::Fired method.
-   // Only those parameters which appear in the list will be considered:
-   //  then "all" means => all parameters in the list
-   //  and  "any" means => any of the parameters in the list
-   // These lists are read during construction of multidetector arrays (KVMultiDetArray::Build),
-   // the method KVMultiDetArray::SetACQParams uses them to define a mask for each detector
-   // of the array.
-   // Bits are set/reset in the order of the acquisition parameter list of the detector.
-   // If no variable [dataset].[classname].Fired.ACQParameterList.[type] exists,
-   // we set a bitmask authorizing all acquisition parameters of the detector, e.g.
-   // if the detector has 3 acquisition parameters the bitmask will be "111"
-
-   TObjArray* toks = lpar.Tokenize(",");
-   TIter next(fACQParams);
-   Bool_t no_variable_defined = (toks->GetEntries() == 0);
-   KVACQParam* par;
-   Int_t id = 0;
-   while ((par = (KVACQParam*)next())) {
-      if (!par->IsWorking()) fFiredMask.ResetBit(id);  // ignore non-working parameters
-      else {
-         if (no_variable_defined || toks->FindObject(par->GetType())) fFiredMask.SetBit(id);
-         else fFiredMask.ResetBit(id);
-      }
-      id++;
-   }
-   delete toks;
-}
-
-void printvec(TVector3& v)
+#ifndef WITH_CPP11
+void printvec(const TVector3& v)
 {
    cout << "(" << v.X() << "," << v.Y() << "," << v.Z() << ")";
 };
+#endif
 
 Double_t KVDetector::GetEntranceWindowSurfaceArea()
 {
@@ -1192,6 +992,11 @@ Double_t KVDetector::GetEntranceWindowSurfaceArea()
       fDepthInTelescope = fTelescope->GetDepthInCM(fTelescope->GetDetectorRank(this));
 
    TVector3 coords[4];
+#ifdef WITH_CPP11
+   auto printvec = [](const TVector3 & v) {
+      cout << "(" << v.X() << "," << v.Y() << "," << v.Z() << ")";
+   };
+#endif
 
    if (fTelescope) fTelescope->GetCornerCoordinates(coords, fDepthInTelescope);
    else GetCornerCoordinates(coords, 0);
@@ -1503,40 +1308,6 @@ void KVDetector::ReadDefinitionFromFile(const Char_t* envrc)
    }
 }
 
-//_________________________________________________________________________________________//
-
-TList* KVDetector::GetAlignedDetectors(UInt_t direction)
-{
-   // Returns list of detectors (including this one) which are in geometrical aligment
-   // with respect to the target position (assuming this detector is part of a multidetector
-   // array described by KVMultiDetArray).
-   //
-   // By default the list is in the order starting from this detector and going towards the target
-   // (direction=KVGroup::kBackwards).
-   // Call with argument direction=KVGroup::kForwards to have the list of detectors in the order
-   // "seen" by a particle flying out from the target and arriving in this detector.
-   //
-   // If this detector is not part of a KVMultiDetArray (i.e. we have no information on
-   // its geometrical relation to other detectors), we return 0x0.
-   //
-   // The list pointers are stored in member variable fAlignedDetectors[] for rapid retrieval,
-   // the lists will be deleted with this detector.
-   //
-   // See KVGroup::GetAlignedDetectors for more details.
-
-   if (!GetGroup() || direction > 1) return 0x0;
-   if (fAlignedDetectors[direction]) return fAlignedDetectors[direction];
-   return (fAlignedDetectors[direction] = GetGroup()->GetAlignedDetectors(this, direction));
-}
-
-//_________________________________________________________________________________________//
-
-void KVDetector::ResetAlignedDetectors(UInt_t direction)
-{
-   if (!GetGroup() || direction > 1) return;
-   if (fAlignedDetectors[direction]) fAlignedDetectors[direction] = 0;
-}
-
 Double_t KVDetector::GetRange(Int_t Z, Int_t A, Double_t Einc)
 {
    // WARNING: SAME AS KVDetector::GetLinearRange
@@ -1639,28 +1410,6 @@ KVGeoStrucElement* KVDetector::GetParentStructure(const Char_t* type, const Char
    return el;
 }
 
-/* KVGeoDNTrajectory* KVDetector::GetTrajectoryForReconstruction()
-{
-    // Return pointer to trajectory to be used for reconstruction of a
-    // particle stopping in this detector.
-    // If only one trajectory going forwards from this detector exists,
-    // it is returned by default.
-    // If there are more than one possible trajectories, a choice is made:
-    //  - we choose the trajectory with the least 'unfired' detectors
-
-    if(!GetNode()->GetNTraj()) return 0x0;
-    Int_t ntrajfor = GetNode()->GetNTrajForwards();
-    if(ntrajfor>1){
-        KVGeoDNTrajectory* tr = GetNode()->GetForwardTrajectoryWithLeastUnfiredDetectors();
-        if(!tr) tr = GetNode()->GetForwardTrajectoryWithMostFiredDetectors();
-        return tr;
-    }
-    else if(ntrajfor==1){
-        return (KVGeoDNTrajectory*)GetNode()->GetForwardTrajectories()->First();
-    }
-    return (KVGeoDNTrajectory*)GetNode()->GetTrajectories()->First();
-}
- */
 void KVDetector::SetActiveLayerMatrix(const TGeoHMatrix* m)
 {
    // Set ROOT geometry global matrix transformation to coordinate frame of active layer volume

@@ -76,13 +76,13 @@ public:
 
 private:
    UChar_t fTrigger;           //multiplicity trigger used for acquisition
-   KVList fOwnedACQParams;     //! to clean up acquisition parameters belonging to the array, not to detectors
+   //KVList fOwnedACQParams;     //! to clean up acquisition parameters belonging to the array, not to detectors
 
-   void AddArrayACQParam(KVACQParam* p)
-   {
-      fOwnedACQParams.Add(p);
-      AddACQParam(p);
-   }
+//   void AddArrayACQParam(KVACQParam* p)
+//   {
+//      fOwnedACQParams.Add(p);
+//      AddACQParam(p);
+//   }
 
 protected:
    KVHashList* fChIo;              //->List Of ChIo of INDRA
@@ -100,8 +100,8 @@ protected:
    virtual void BuildGeometry();
    virtual void SetGroupsAndIDTelescopes();
    void FillListsOfDetectorsByType();
-   void SetGGtoPGConversionFactors();
-   void LinkToCodeurs();
+   //void SetGGtoPGConversionFactors();
+   //void LinkToCodeurs();
    void BuildLayer(const Char_t* name);
    KVRing* BuildRing(Int_t number, const Char_t* prefix);
    KVINDRATelescope* BuildTelescope(const Char_t* prefix, Int_t mod);
@@ -157,9 +157,8 @@ public:
    }
 
    void SetPinLasersForCsI();
-   virtual TGraph* GetPedestals(const Char_t* det_signal, const Char_t* det_type, Int_t ring_number, Int_t run_number = -1);
 
-   void SetArrayACQParams();
+   //void SetArrayACQParams();
    virtual void GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollection* fired_params = 0);
 
    KVINDRATriggerInfo* GetTriggerInfo()

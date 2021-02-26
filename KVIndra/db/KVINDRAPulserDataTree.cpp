@@ -146,7 +146,7 @@ void KVINDRAPulserDataTree::CreateTree()
 
    if (!gIndra) KVMultiDetArray::MakeMultiDetector(gDataSet->GetName());
 
-   const KVSeqCollection* acq_pars = gIndra->GetACQParams();
+   const KVSeqCollection* acq_pars = nullptr;//gIndra->GetACQParams();
 
    fTab_siz = acq_pars->GetEntries() + 20;
    fVal = new Float_t[fTab_siz];

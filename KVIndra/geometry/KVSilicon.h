@@ -25,13 +25,12 @@ public:
    KVSilicon(Float_t thick /* um */);
    virtual ~ KVSilicon();
 
-   void SetACQParams();
+   //void SetACQParams();
 
    Double_t GetPHD(Double_t dE, UInt_t Z);
 
    void SetMoultonPHDParameters(Double_t a1, Double_t a2, Double_t b1, Double_t b2);
 
-   virtual Short_t GetCalcACQParam(KVACQParam*, Double_t) const;
    virtual TF1* GetELossFunction(Int_t Z, Int_t A);
 
    void SetThickness(Double_t thick /* um */)

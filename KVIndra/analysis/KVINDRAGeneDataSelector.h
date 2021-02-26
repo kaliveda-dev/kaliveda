@@ -170,11 +170,11 @@ void KVINDRAGeneDataSelector::SetBranchAddresses()
    }
 
    //set branch addresses
-   TIter next_acqpar(gIndra->GetACQParams());
-   KVACQParam* acqpar;
-   while ((acqpar = (KVACQParam*)next_acqpar())) {
-      fChain->SetBranchAddress(acqpar->GetName(), (Short_t**)acqpar->GetDataAddress());
-   }
+//   TIter next_acqpar(gIndra->GetACQParams());
+//   KVACQParam* acqpar;
+//   while ((acqpar = (KVACQParam*)next_acqpar())) {
+//      fChain->SetBranchAddress(acqpar->GetName(), (Short_t**)acqpar->GetDataAddress());
+//   }
    fChain->SetBranchAddress("RunNumber", &RunNumber, &b_RunNumber);
    fChain->SetBranchAddress("EventNumber", &EventNumber, &b_EventNumber);
    fChain->SetBranchAddress("TriggerInfo", &TriggerInfo, &b_TriggerInfo);

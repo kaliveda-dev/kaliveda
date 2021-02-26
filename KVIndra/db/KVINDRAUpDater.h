@@ -36,15 +36,15 @@ public:
    virtual void CheckStatusOfDetectors(KVDBRun*);
    virtual void SetCalibParameters(KVDBRun*);
    virtual void SetChIoPressures(KVDBRun*);
-   virtual void SetPedestals(KVDBRun*);
+   //virtual void SetPedestals(KVDBRun*);
 
    virtual void SetChVoltParameters(KVDBRun*);
    virtual void SetLitEnergyCsIParameters(KVDBRun*);
    virtual void SetCsIGainCorrectionParameters(KVDBRun*);
    virtual void SetVoltEnergyChIoSiParameters(KVDBRun*);
    virtual void SetPHDs(KVDBRun*);
-   virtual void SetChIoSiPedestals(KVDBRun*);
-   virtual void SetCsIPedestals(KVDBRun*);
+//   virtual void SetChIoSiPedestals(KVDBRun*);
+//   virtual void SetCsIPedestals(KVDBRun*);
 
    KVINDRA* GetINDRA();
 

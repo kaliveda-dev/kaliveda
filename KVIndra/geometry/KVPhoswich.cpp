@@ -83,12 +83,12 @@ const Char_t* KVPhoswich::GetArrayName()
    return fFName.Data();
 }
 
-void KVPhoswich::SetACQParams()
-{
-   //Set acquisition parameters for this phoswich.
-   //Do not call before detector's name has been set.
+//void KVPhoswich::SetACQParams()
+//{
+//   //Set acquisition parameters for this phoswich.
+//   //Do not call before detector's name has been set.
 
-   AddACQParamType("R");
-   AddACQParamType("L");
-   AddACQParamType("T");
-}
+//   AddACQParamType("R");
+//   AddACQParamType("L");
+//   AddACQParamType("T");
+//}

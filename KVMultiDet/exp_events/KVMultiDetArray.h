@@ -18,7 +18,7 @@ class KVIDGraph;
 class KVTarget;
 class KVTelescope;
 class KVIDTelescope;
-class KVACQParam;
+//class KVACQParam;
 class KVReconstructedEvent;
 class KVDetectorEvent;
 class KVGroup;
@@ -39,6 +39,7 @@ class MFMMergeFrameManager;
 class KVMFMDataFileReader;
 class MFMEbyedatFrame;
 class MFMBufferReader;
+class MFMMesytecMDPPFrame;
 #endif
 #ifdef WITH_PROTOBUF
 class KVProtobufDataReader;
@@ -82,7 +83,7 @@ protected:
 
    KVDetectorEvent* fHitGroups;          //!   list of hit groups in simulation
    KVSeqCollection* fIDTelescopes;       //->deltaE-E telescopes in groups
-   KVSeqCollection* fACQParams;          //list of data acquisition parameters associated to detectors
+   //KVSeqCollection* fACQParams;          //list of data acquisition parameters associated to detectors
    KVUniqueNameList fFiredACQParams;     //! list of fired acquisition parameters after reading raw data event
 
    TString fDataSet;            //!name of associated dataset, used with MakeMultiDetector()
@@ -114,7 +115,7 @@ protected:
       AbstractMethod("BuildGeometry");
    }
    virtual void MakeListOfDetectors();
-   virtual void SetACQParams();
+   //virtual void SetACQParams();
 
    virtual Int_t GetIDTelescopes(KVDetector*, KVDetector*, TCollection* list);
 
@@ -147,6 +148,11 @@ protected:
    virtual Bool_t handle_raw_data_event_mfmmergeframe(const MFMMergeFrameManager&);
    virtual Bool_t handle_raw_data_event_mfmframe(const MFMCommonFrame&);
    virtual Bool_t handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame&);
+   virtual Bool_t handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPPFrame&)
+   {
+      AbstractMethod("handle_raw_data_event_mfmframe_mesytec_mdpp");
+      return false;
+   }
 #endif
 #ifdef WITH_PROTOBUF
    virtual Bool_t handle_raw_data_event_protobuf(KVProtobufDataReader&);
@@ -233,11 +239,11 @@ public:
    void RemoveGroup(const Char_t*);
    void ReplaceDetector(const Char_t* name, KVDetector* new_kvd);
 
-   void AddACQParam(KVACQParam*);
-   const KVSeqCollection* GetACQParams() const
-   {
-      return fACQParams;
-   }
+//   void AddACQParam(KVACQParam*);
+//   const KVSeqCollection* GetACQParams() const
+//   {
+//      return fACQParams;
+//   }
 
    /// Returns list of acquisition parameters (KVACQParam objects) fired in last read raw event
    const KVSeqCollection* GetFiredDataParameters() const
@@ -245,12 +251,7 @@ public:
       return &fFiredACQParams;
    }
 
-   KVACQParam* GetACQParam(const Char_t* name) const
-   {
-      if (fACQParams) return fACQParams->get_object<KVACQParam>(name);
-      return nullptr;
-   }
-   virtual void SetArrayACQParams();
+   //virtual void SetArrayACQParams();
 
    virtual void DetectEvent(KVEvent* event, KVReconstructedEvent* rec_event, const Char_t* detection_frame = "");
    virtual Int_t FilteredEventCoherencyAnalysis(Int_t round, KVReconstructedEvent* rec_event);

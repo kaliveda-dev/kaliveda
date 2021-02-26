@@ -212,7 +212,7 @@ void KVINDRADstToRootTransfert::ProcessRun()
    // we can now delete it
    delete raw_data;
    // get list of all acquisition parameters
-   params = gIndra->GetACQParams();
+   //params = gIndra->GetACQParams();
    // internal data member pointers are pointing to internal array of GTGanilData object
    // used by now deleted KVGANILDataReader. need to set them to internal fData member.
    TIter nextparam(params);

@@ -55,16 +55,16 @@ KVSilicon::~KVSilicon()
 {
 }
 
-void KVSilicon::SetACQParams()
-{
-   //Setup acquistion parameters for this Silicon.
-   //Do not call before ChIo name has been set.
+//void KVSilicon::SetACQParams()
+//{
+//   //Setup acquistion parameters for this Silicon.
+//   //Do not call before ChIo name has been set.
 
-   AddACQParamType("GG");
-   AddACQParamType("PG");
-   AddACQParamType("T");
+//   AddACQParamType("GG");
+//   AddACQParamType("PG");
+//   AddACQParamType("T");
 
-}
+//}
 
 //__________________________________________________________________________________________
 
@@ -98,15 +98,15 @@ void KVSilicon::SetMoultonPHDParameters(Double_t, Double_t, Double_t, Double_t)
 
 //______________________________________________________________________________
 
-Short_t KVSilicon::GetCalcACQParam(KVACQParam*, Double_t) const
-{
-   // Calculates & returns value of given acquisition parameter corresponding to
-   // given calculated energy loss in the detector
-   // Returns -1 if detector is not calibrated
+//Short_t KVSilicon::GetCalcACQParam(KVACQParam*, Double_t) const
+//{
+//   // Calculates & returns value of given acquisition parameter corresponding to
+//   // given calculated energy loss in the detector
+//   // Returns -1 if detector is not calibrated
 
-   AbstractMethod("GetCalcACQParam");
-   return -1;
-}
+//   AbstractMethod("GetCalcACQParam");
+//   return -1;
+//}
 
 //______________________________________________________________________________
 

@@ -52,6 +52,7 @@
 #ifdef WITH_MFM
 #include "KVMFMDataFileReader.h"
 #include "MFMEbyedatFrame.h"
+#include "MFMMesytecMDPPFrame.h"
 #endif
 #ifdef WITH_PROTOBUF
 #include "KVProtobufDataReader.h"
@@ -106,7 +107,7 @@ void KVMultiDetArray::init()
 
    fHitGroups = 0;
 
-   fACQParams = 0;
+   //fACQParams = 0;
    fTarget = 0;
    fCurrentRun = 0;
 
@@ -146,11 +147,11 @@ KVMultiDetArray::~KVMultiDetArray()
    fIDTelescopes = 0;
 
    //clear list of acquisition parameters
-   if (fACQParams && fACQParams->TestBit(kNotDeleted)) {
-      fACQParams->Clear();
-      delete fACQParams;
-   }
-   fACQParams = 0;
+//   if (fACQParams && fACQParams->TestBit(kNotDeleted)) {
+//      fACQParams->Clear();
+//      delete fACQParams;
+//   }
+//   fACQParams = 0;
 
    if (fTarget) {
       delete fTarget;
@@ -1319,94 +1320,94 @@ void KVMultiDetArray::Clear(Option_t*)
 }
 
 //_________________________________________________________________________________________
-void KVMultiDetArray::AddACQParam(KVACQParam* par)
-{
-   //Add an acquisition parameter corresponding to a detector of the array.
-   //The fACQParams list is added to the list of cleanups (gROOT->GetListOfCleanups).
-   //Each acq-param has its kMustCleanup bit set.
-   //Thus, if the acq-param is deleted (e.g. by the detector which owns it), it is
-   //automatically removed from the fACQParams list by ROOT.
+//void KVMultiDetArray::AddACQParam(KVACQParam* par)
+//{
+//   //Add an acquisition parameter corresponding to a detector of the array.
+//   //The fACQParams list is added to the list of cleanups (gROOT->GetListOfCleanups).
+//   //Each acq-param has its kMustCleanup bit set.
+//   //Thus, if the acq-param is deleted (e.g. by the detector which owns it), it is
+//   //automatically removed from the fACQParams list by ROOT.
 
-   if (!fACQParams) {
-      fACQParams = new KVHashList;
-      fACQParams->SetName(Form("List of acquisition parameters for multidetector array %s", GetName()));
-      fACQParams->SetOwner(kFALSE);
-      fACQParams->SetCleanup(kTRUE);
-   }
-   if (par) {
-      fACQParams->Add(par);
-   }
-   else
-      Warning("AddACQParam", "Null pointer passed as argument");
-}
+//   if (!fACQParams) {
+//      fACQParams = new KVHashList;
+//      fACQParams->SetName(Form("List of acquisition parameters for multidetector array %s", GetName()));
+//      fACQParams->SetOwner(kFALSE);
+//      fACQParams->SetCleanup(kTRUE);
+//   }
+//   if (par) {
+//      fACQParams->Add(par);
+//   }
+//   else
+//      Warning("AddACQParam", "Null pointer passed as argument");
+//}
 
 //_________________________________________________________________________________________
 
-void KVMultiDetArray::SetACQParams()
-{
-   // Set up acquisition parameters in all detectors of the array + any acquisition parameters which are not
-   // directly related to a detector.
-   //
-   // Override the method SetArrayACQParams() in order to add any acquisition parameters not directly
-   // related to a detector.
-   //
-   // For the detector acquisition parameters, we loop over all detectors of the array and call each detector's
-   // SetACQParams() method, if it has not already been done (i.e. if the detector has no associated parameters).
-   // Each specific implementation of a KVDetector class should redefine the KVDetector::SetACQParams()
-   // method in order to give the detector in question the necessary acquisition parameters (KVACQParam objects).
-   //
-   // The list of acquisition parameters of each detector is then used to
-   //   1) add to fACQParams list of all acquisition parameters of the array
-   //   2) set as "not working" the acquisition parameters for which environment variables such as
-   //        [dataset name].KVACQParam.[acq par name].Working:    NO
-   //       are set in a .kvrootrc file.
-   //   3) set bitmask for each detector used to determine which acquisition parameters are
-   //       taken into account by KVDetector::Fired based on the environment variables
-   //          [classname].Fired.ACQParameterList.[type]: PG,GG,T
-   //   where [classname]=KVDetector by default, or the name of some class
-   //   derived from KVDetector which calls the method KVDetector::SetKVDetectorFiredACQParameterListFormatString()
-   //   in its constructor.
+//void KVMultiDetArray::SetACQParams()
+//{
+//   // Set up acquisition parameters in all detectors of the array + any acquisition parameters which are not
+//   // directly related to a detector.
+//   //
+//   // Override the method SetArrayACQParams() in order to add any acquisition parameters not directly
+//   // related to a detector.
+//   //
+//   // For the detector acquisition parameters, we loop over all detectors of the array and call each detector's
+//   // SetACQParams() method, if it has not already been done (i.e. if the detector has no associated parameters).
+//   // Each specific implementation of a KVDetector class should redefine the KVDetector::SetACQParams()
+//   // method in order to give the detector in question the necessary acquisition parameters (KVACQParam objects).
+//   //
+//   // The list of acquisition parameters of each detector is then used to
+//   //   1) add to fACQParams list of all acquisition parameters of the array
+//   //   2) set as "not working" the acquisition parameters for which environment variables such as
+//   //        [dataset name].KVACQParam.[acq par name].Working:    NO
+//   //       are set in a .kvrootrc file.
+//   //   3) set bitmask for each detector used to determine which acquisition parameters are
+//   //       taken into account by KVDetector::Fired based on the environment variables
+//   //          [classname].Fired.ACQParameterList.[type]: PG,GG,T
+//   //   where [classname]=KVDetector by default, or the name of some class
+//   //   derived from KVDetector which calls the method KVDetector::SetKVDetectorFiredACQParameterListFormatString()
+//   //   in its constructor.
 
-   if (fACQParams) {
-      fACQParams->Clear();
-   }
+//   if (fACQParams) {
+//      fACQParams->Clear();
+//   }
 
-   SetArrayACQParams();
+//   SetArrayACQParams();
 
-   TIter next(GetDetectors());
-   KVDetector* det;
-   while ((det = (KVDetector*) next())) {
-      KVSeqCollection* l = det->GetACQParamList();
-      if (!l) {
-         //detector has no acq params
-         //set up acqparams in detector
-         det->SetACQParams();
-         l = det->GetACQParamList();
-      }
-      //loop over acqparams and add them to fACQParams list, checking
-      //their status (working or not working ?)
-      TIter next_par(l);
-      KVACQParam* par;
-      while ((par = (KVACQParam*) next_par())) {
-         AddACQParam(par);
-         par->SetWorking(gDataSet->GetDataSetEnv(Form("KVACQParam.%s.Working", par->GetName()), kTRUE));
-      }
-      // set bitmask
-      KVString inst;
-      inst.Form(det->GetFiredACQParameterListFormatString(), det->GetType());
-      KVString lpar = gDataSet->GetDataSetEnv(inst);
-      det->SetFiredBitmask(lpar);
-   }
-}
+//   TIter next(GetDetectors());
+//   KVDetector* det;
+//   while ((det = (KVDetector*) next())) {
+//      KVSeqCollection* l = det->GetACQParamList();
+//      if (!l) {
+//         //detector has no acq params
+//         //set up acqparams in detector
+//         det->SetACQParams();
+//         l = det->GetACQParamList();
+//      }
+//      //loop over acqparams and add them to fACQParams list, checking
+//      //their status (working or not working ?)
+//      TIter next_par(l);
+//      KVACQParam* par;
+//      while ((par = (KVACQParam*) next_par())) {
+//         AddACQParam(par);
+//         par->SetWorking(gDataSet->GetDataSetEnv(Form("KVACQParam.%s.Working", par->GetName()), kTRUE));
+//      }
+//      // set bitmask
+//      KVString inst;
+//      inst.Form(det->GetFiredACQParameterListFormatString(), det->GetType());
+//      KVString lpar = gDataSet->GetDataSetEnv(inst);
+//      det->SetFiredBitmask(lpar);
+//   }
+//}
 
 //_________________________________________________________________________________
 
-void KVMultiDetArray::SetArrayACQParams()
-{
-   // Method called by SetACQParams() in order to define any acquisition parameters which are not
-   // directly related to any detectors of the array.
-   // This implementation does nothing: override it in derived classes if needed.
-}
+//void KVMultiDetArray::SetArrayACQParams()
+//{
+//   // Method called by SetACQParams() in order to define any acquisition parameters which are not
+//   // directly related to any detectors of the array.
+//   // This implementation does nothing: override it in derived classes if needed.
+//}
 
 void KVMultiDetArray::SetCalibratorParameters(KVDBRun* r, const TString& myname)
 {
@@ -2907,8 +2908,9 @@ void KVMultiDetArray::InitialiseRawDataReading(KVRawDataReader* r)
    // Call this method just after opening a raw data file in order to perform any
    // necessary initialisations, depending on the type of data
 
+   Warning("InitialiseRawDataReading", "method needs reimplementing");
 #ifdef WITH_BUILTIN_GRU
-   if (r->GetDataFormat() == "EBYEDAT") dynamic_cast<KVGANILDataReader*>(r)->ConnectRawDataParameters(GetACQParams());
+//   if (r->GetDataFormat() == "EBYEDAT") dynamic_cast<KVGANILDataReader*>(r)->ConnectRawDataParameters(GetACQParams());
 #endif
 }
 
@@ -3009,9 +3011,10 @@ Bool_t KVMultiDetArray::handle_raw_data_event_ebyedat(KVGANILDataReader&)
 void KVMultiDetArray::prepare_to_handle_new_raw_data()
 {
    // reset acquisition parameters etc. before reading new raw data event
-   TIter it(GetACQParams());
-   KVACQParam* acqpar;
-   while ((acqpar = (KVACQParam*)it())) acqpar->Clear();
+   Warning("prepare_to_handle_new_raw_data", "method needs reimplmeenting");
+//   TIter it(GetACQParams());
+//   KVACQParam* acqpar;
+//   while ((acqpar = (KVACQParam*)it())) acqpar->Clear();
    fReconParameters.Clear();
    fFiredACQParams.Clear();
    fHandledRawData = false;
@@ -3035,13 +3038,14 @@ void KVMultiDetArray::SetReconParametersInEvent(KVReconstructedEvent* e) const
 
 void KVMultiDetArray::copy_fired_parameters_to_recon_param_list()
 {
-   TIter it(GetFiredDataParameters());
-   TObject* o;
-   while ((o = it())) {
-      if (o->InheritsFrom("KVACQParam") && GetACQParam(o->GetName())) {
-         fReconParameters.SetValue(Form("ACQPAR.%s.%s", GetName(), o->GetName()), (Int_t)((KVACQParam*)o)->GetCoderData());
-      }
-   }
+   Warning("copy_fired_parameters_to_recon_param_list", "method to be reimplemented");
+//   TIter it(GetFiredDataParameters());
+//   TObject* o;
+//   while ((o = it())) {
+//      if (o->InheritsFrom("KVACQParam") && GetACQParam(o->GetName())) {
+//         fReconParameters.SetValue(Form("ACQPAR.%s.%s", GetName(), o->GetName()), (Int_t)((KVACQParam*)o)->GetCoderData());
+//      }
+//   }
 }
 
 Bool_t KVMultiDetArray::HandleRawDataEvent(KVRawDataReader* rawdata)
@@ -3102,18 +3106,19 @@ void KVMultiDetArray::SetRawDataFromReconEvent(KVNameValueList& l)
    // Take values 'ACQPAR.[array_name].[par_name]' in the parameter list and use them to set
    // values of raw acquisition parameters (EBYEDAT)
 
-   int N = l.GetNpar();
-   for (int i = 0; i < N; ++i) {
-      KVNamedParameter* np = l.GetParameter(i);
-      KVString name(np->GetName());
-      name.Begin(".");
-      if (name.Next() == "ACQPAR") {
-         if (name.Next() == GetName()) {
-            KVACQParam* par = GetACQParam(name.Next());
-            if (par) par->SetData((UShort_t)np->GetInt());
-         }
-      }
-   }
+   Warning("SetRawDataFromReconEvent", "method needs reimplementing");
+//   int N = l.GetNpar();
+//   for (int i = 0; i < N; ++i) {
+//      KVNamedParameter* np = l.GetParameter(i);
+//      KVString name(np->GetName());
+//      name.Begin(".");
+//      if (name.Next() == "ACQPAR") {
+//         if (name.Next() == GetName()) {
+//            KVACQParam* par = GetACQParam(name.Next());
+//            if (par) par->SetData((UShort_t)np->GetInt());
+//         }
+//      }
+//   }
 }
 
 void KVMultiDetArray::MakeCalibrationTables(KVExpDB* db)
@@ -3346,8 +3351,8 @@ Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe(const MFMCommonFrame& mfm
    //
    // Return kTRUE if raw data was treated
 
-   if (!fACQParams) return kFALSE;// no (ebyedat) acquisition parameters defined for array
-
+   if (mfmframe.GetFrameType() == MFM_MESYTEC_MDPP_FRAME_TYPE)
+      return handle_raw_data_event_mfmframe_mesytec_mdpp((const MFMMesytecMDPPFrame&)mfmframe);
    if (mfmframe.GetFrameType() == MFM_EBY_EN_FRAME_TYPE
          || mfmframe.GetFrameType() == MFM_EBY_TS_FRAME_TYPE
          || mfmframe.GetFrameType() == MFM_EBY_EN_TS_FRAME_TYPE)
@@ -3367,21 +3372,22 @@ Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatF
    // has been defined) are written in the fReconParameters list with names
    //    "ACQPAR.[array name].[parameter name]"
 
+   Warning("handle_raw_data_event_mfmframe_ebyedat", "method needs reimplementing");
    uint16_t val;
    string lab;
    KVACQParam* acqpar;
    Bool_t ok = false;
 
-   for (int i = 0; i < ebyframe.GetNbItems(); ++i) {
-      ebyframe.GetDataItem(i, lab, val);
-      if ((acqpar = GetACQParam(lab.c_str()))) {
-         acqpar->SetData(val);
-         fFiredACQParams.Add(acqpar);
-         ok = kTRUE;
-      }
-      else
-         fReconParameters.SetValue(Form("ACQPAR.%s.%s", GetName(), lab.c_str()), val);
-   }
+//   for (int i = 0; i < ebyframe.GetNbItems(); ++i) {
+//      ebyframe.GetDataItem(i, lab, val);
+//      if ((acqpar = GetACQParam(lab.c_str()))) {
+//         acqpar->SetData(val);
+//         fFiredACQParams.Add(acqpar);
+//         ok = kTRUE;
+//      }
+//      else
+//         fReconParameters.SetValue(Form("ACQPAR.%s.%s", GetName(), lab.c_str()), val);
+//   }
 
    return ok;
 }

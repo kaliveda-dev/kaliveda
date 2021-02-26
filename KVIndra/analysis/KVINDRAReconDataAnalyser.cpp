@@ -338,17 +338,17 @@ void KVINDRAReconDataAnalyser::preAnalysis()
    // all recon events are numbered 1, 2, ... : therefore entry number is N-1
    Long64_t rawEntry = GetRawEntryNumber();
 
-   TIter it(gIndra->GetACQParams());
-   KVACQParam* a;
-   while ((a = (KVACQParam*)it())) a->Clear();
+//   TIter it(gIndra->GetACQParams());
+//   KVACQParam* a;
+//   while ((a = (KVACQParam*)it())) a->Clear();
 
-   theRawData->GetEntry(rawEntry);
-   for (int i = 0; i < NbParFired; i++) {
-      KVACQParam* par = gIndra->GetACQParam((*parList)[ParNum[i]]->GetName());
-      if (par) {
-         par->SetData(ParVal[i]);
-      }
-   }
+//   theRawData->GetEntry(rawEntry);
+//   for (int i = 0; i < NbParFired; i++) {
+//      KVACQParam* par = gIndra->GetACQParam((*parList)[ParNum[i]]->GetName());
+//      if (par) {
+//         par->SetData(ParVal[i]);
+//      }
+//   }
    gIndra->SetMinimumOKMultiplicity(GetReconstructedEvent());
 
    // as rustines often depend on a knowledge of the original raw data,
