@@ -113,8 +113,11 @@ namespace MicroStat {
       // using the given partition and available energy
 
       massTot0 = 0;
-      for (auto e : *partition) massTot0 += e.GetMass();
-//      massTot0 = partition->GetSum("GetMass");
+#ifdef WITH_CPP11
+      for (auto& e : *partition) massTot0 += e.GetMass();
+#else
+      for (KVEvent::Iterator it = partition->begin(); it != partition->end(); ++it) massTot0 += (*it).GetMass();
+#endif
       resetGenerateEvent();
    }
 

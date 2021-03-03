@@ -139,7 +139,7 @@ void KVVGSum::Init()
    //SET UP METHOD CALL
    if (IsOptionGiven("class")) fClass = TClass::GetClass(GetOptionString("class"));
    else fClass = TClass::GetClass("KVNucleus");
-   fMethod = 0;
+
    if (!fClass) {
       Fatal("Init", "Failed to load class requested as option: %s", GetOptionString("class").Data());
    }
