@@ -3,6 +3,7 @@
 
 #include "KVedaLossInverseRangeFunction.h"
 #include "TF1.h"
+#include "TMath.h"
 
 #define LOG(x) TMath::Log(x)
 #define EXP(x) TMath::Exp(x)
@@ -46,7 +47,11 @@ KVedaLossInverseRangeFunction::KVedaLossInverseRangeFunction(TF1* range_func,
       e_vs_range.SetPoint(i, R, loge);
    }
 
+#ifdef USING_ROOT5
+   fInterpol = new TSpline3(range_func->GetTitle(), &e_vs_range);
+#else
    fInterpol.reset(new TSpline3(range_func->GetTitle(), &e_vs_range));
+#endif
 }
 
 Double_t KVedaLossInverseRangeFunction::GetEnergyPerNucleon(Double_t range, Double_t riso)

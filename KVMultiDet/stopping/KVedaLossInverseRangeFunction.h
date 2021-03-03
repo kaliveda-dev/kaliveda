@@ -22,15 +22,28 @@ class TF1;
  */
 class KVedaLossInverseRangeFunction : public TObject {
 
+#ifdef USING_ROOT5
+   TSpline3* fInterpol;//!interpolation of inverse range-energy curve
+#else
    std::unique_ptr<TSpline3> fInterpol;//interpolation of inverse range-energy curve
+#endif
 
 public:
-   KVedaLossInverseRangeFunction() {}
+   KVedaLossInverseRangeFunction()
+#ifdef USING_ROOT5
+      : fInterpol(nullptr)
+#endif
+   {}
    KVedaLossInverseRangeFunction(TF1* range_func,
                                  Int_t A,
                                  Double_t riso,
                                  Int_t ninter = 50);
-   virtual ~KVedaLossInverseRangeFunction() {}
+   virtual ~KVedaLossInverseRangeFunction()
+   {
+#ifdef USING_ROOT5
+      SafeDelete(fInterpol);
+#endif
+   }
 
    Double_t GetEnergyPerNucleon(Double_t range, Double_t riso);
 

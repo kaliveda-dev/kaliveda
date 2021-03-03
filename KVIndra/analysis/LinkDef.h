@@ -19,5 +19,7 @@
 #pragma link C++ class KVDataPatch_INDRA_CorrectEtalonTrajectories+;
 #pragma link C++ class KVDataPatch_Camp2MassID+;
 #pragma link C++ class KVDataPatch_Camp1MassID+;
+#ifdef USING_ROOT6
 #pragma link C++ class KVINDRATriggerConditions+;
+#endif
 #endif

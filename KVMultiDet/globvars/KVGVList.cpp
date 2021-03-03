@@ -158,10 +158,12 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
          }
       }
       vg->Calculate();
+#ifdef USING_ROOT6
       if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
          return;
       }
       vg->DefineNewFrame(e);
+#endif
    }
 }
 

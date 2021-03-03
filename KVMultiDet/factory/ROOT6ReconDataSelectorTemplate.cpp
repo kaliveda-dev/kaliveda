@@ -10,19 +10,19 @@ void ROOT6ReconDataSelectorTemplate::InitAnalysis(void)
    /*** ADDING GLOBAL VARIABLES TO THE ANALYSIS ***/
    /* These will be automatically calculated for each event before
       your Analysis() method will be called                        */
-   auto ztot = AddGV("KVZtot", "ztot");                 // total charge
+   AddGV("KVZtot", "ztot");                             // total charge
    auto zvtot = AddGV("KVZVtot", "zvtot");              // total Z*vpar
    zvtot->SetMaxNumBranches(1);    // only write "Z" component in TTree
 
    AddGV("KVMult", "mtot"); // total multiplicity
    // total multiplicity in forward CM hemisphere
    auto gv = AddGV("KVMult", "mtot_av");
-   gv->SetSelection(
-   {"Vcm>0", [](const KVNucleus * n)
+   gv->SetSelection( {
+      "Vcm>0", [](const KVNucleus * n)
       {
          return n->GetVpar() > 0;
       }}
-   );
+                   );
    gv->SetFrame("CM");
 
    /*** DECLARING SOME HISTOGRAMS ***/
