@@ -16,6 +16,7 @@
 #pragma link C++ class Binary_t<Long64_t>+;
 #pragma link C++ class KVString+;
 #pragma link C++ class Hexa_t+;
+#pragma link C++ class KVNamedParameter+;
 #pragma link C++ class KVNameValueList+;
 #pragma link C++ class KVNameValueList::Iterator+;
 #pragma link C++ class KVBase-;//customised streamer
@@ -34,7 +35,6 @@
 #pragma link C++ class KVUniqueNameList+;
 #pragma link C++ class KVList-;
 #pragma link C++ class KVLockfile+;
-#pragma link C++ class KVNamedParameter+;
 #pragma link C++ class KVLogReader+;
 #pragma link C++ class KVGELogReader+;
 #pragma link C++ class KVMemoryChunk+;
