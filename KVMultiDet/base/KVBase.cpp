@@ -289,9 +289,14 @@ void KVBase::InitEnvironment()
       //generate new seed from system clock
       gRandom->SetSeed(0);
 
+//#ifdef USING_ROOT6
+//      // enable implicit multithreading
+//      // comment because not compatible with CC batch system
+//      ROOT::EnableImplicitMT();
+//#endif
+
       // initialisation has been performed
       fEnvIsInit = kTRUE;
-
    }
 }
 
@@ -1321,6 +1326,41 @@ Bool_t KVBase::GetDataSetEnv(const Char_t* dataset, const Char_t* type, Bool_t d
    temp.Form("%s.%s", dataset, type);
    if (gEnv->Defined(temp.Data())) return gEnv->GetValue(temp.Data(), kFALSE);
    return gEnv->GetValue(type, defval);
+}
+
+Double_t KVBase::ProtectedGetX(const TF1* func, Double_t val, int& status, Double_t xmin, Double_t xmax) const
+{
+   // Since ROOT6, the TF1::GetX() method can no longer be used without precaution.
+   //
+   // In ROOT5, if the value val was larger or smaller than the maximum or minimum value of
+   // the function (within its defined range) then TF1::GetX() would return X of the
+   // maximum or minimum, respectively.
+   //
+   // In ROOT6, TF1::GetX() has been reimplemented so that, in the above case, it
+   // prints out 3 warning messages and returns a TMath::QuietNaN()! Therefore we provide this
+   // function in order to replicate the previous behaviour.
+   //
+   // The status = 0 if the value is within the limits of the function.
+   // status = +1 if value is above the maximum, or status = -1 if value is below the minimum
+   //
+   // When compiled with ROOT5, this method just calls TF1::GetX() (and status = 0 always).
+
+#ifdef USING_ROOT6
+   status = 0;
+   if (val > func->GetMaximum(xmin, xmax)) {
+      status = 1;
+      return func->GetMaximumX(xmin, xmax);
+   }
+   else if (val < func->GetMinimum(xmin, xmax)) {
+      status = -1;
+      return func->GetMinimumX(xmin, xmax);
+   }
+   else
+      return func->GetX(val, xmin, xmax);
+#else
+   status = 0;
+   return func->GetX(val, xmin, xmax);
+#endif
 }
 
 

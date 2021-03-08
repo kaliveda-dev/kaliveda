@@ -94,7 +94,7 @@ void KVINDRAForwardGroupReconstructor::DoCalibration(KVReconstructedNucleus* PAR
    KVCsI* csi = GetCsI(PART);
    if (csi) {
       stopped_in_silicon = kFALSE;
-      if (csi->IsCalibrated()) {
+      if (csi->IsCalibrated() && csi->GetDetectorSignalValue("TotLight") > 0) {
          /* CSI ENERGY CALIBRATION */
          if (PART->GetIDCode() == 2 && PART->IsIsotope(4, 8)) {
             fECsI = DoBeryllium8Calibration(PART);
@@ -132,6 +132,7 @@ void KVINDRAForwardGroupReconstructor::DoCalibration(KVReconstructedNucleus* PAR
          fESi = si->GetCorrectedEnergy(PART, -1., si_transmission);
          if (fESi <= 0) {
             // problem with silicon calibration
+            print_part = true;
             if (!stopped_in_silicon && (TMath::Abs(fECsI) > 0.0)) {
                if (!CalculateSiliconDEFromResidualEnergy(PART, si)) return;
             }

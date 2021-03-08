@@ -547,6 +547,16 @@ Bool_t KVDetector::ReplaceCalibrator(const Char_t* type, KVCalibrator* cal, cons
    return AddCalibrator(cal, opts);
 }
 
+Bool_t KVDetector::IsCalibrated(const KVNameValueList& params) const
+{
+   // A detector is considered to be calibrated if it has
+   // a signal "Energy" available and if depending on the supplied parameters
+   // this signal can be calculated
+
+   KVCalibratedSignal* e_sig = dynamic_cast<KVCalibratedSignal*>(GetDetectorSignal("Energy"));
+   return (e_sig && e_sig->IsCalibratedFor(params));
+}
+
 //_______________________________________________________________________________
 void KVDetector::AddACQParam(KVACQParam* par)
 {
@@ -828,6 +838,10 @@ Double_t KVDetector::GetCorrectedEnergy(KVNucleus* nuc, Double_t e, Bool_t trans
       // measured dE !
    }
    EINC = GetIncidentEnergy(z, a, e, solution);
+   if (EINC < 0) {
+      SetEResAfterDetector(-1.);
+      return EINC;
+   }
    ERES = GetERes(z, a, EINC);
 
    SetEResAfterDetector(-1.);
@@ -1433,7 +1447,24 @@ Double_t KVDetector::GetIncidentEnergy(Int_t Z, Int_t A, Double_t delta_e, enum 
          e1 = GetEIncOfMaxDeltaE(Z, A);
          break;
    }
-   return dE->GetX(DE, e1, e2);
+   int status;
+   Double_t EINC = ProtectedGetX(dE, DE, status, e1, e2);
+   if (status != 0) {
+//      Warning("GetIncidentEnergy",
+//              "In %s : Called for Z=%d A=%d with dE=%f sol_type %d",
+//              GetName(), Z, A, DE, type);
+//      Warning("GetIncidentEnergy",
+//              "Max DeltaE in this case is %f MeV",
+//              GetMaxDeltaE(Z, A));
+//      Warning("GetIncidentEnergy",
+//              "Between Einc limits [%f,%f] no solution found",
+//              e1,e2);
+//      Warning("GetIncidentEnergy",
+//              "Returned value is -Einc for %s dE, %f",
+//              (status>0 ? "maximum" : "minimum"), EINC);
+      return -EINC;
+   }
+   return EINC;
 }
 
 Double_t KVDetector::GetDeltaEFromERes(Int_t Z, Int_t A, Double_t Eres)

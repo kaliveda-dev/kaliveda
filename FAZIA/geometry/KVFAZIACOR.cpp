@@ -82,9 +82,6 @@ void KVFAZIACOR::BuildFAZIA()
 
    TGeoVolume* top = gGeoManager->GetTopVolume();
 
-   Double_t distance_block_cible = fFDist * KVUnits::cm;
-   Double_t thick_si1 = 300 * KVUnits::um;
-
    KVFAZIABlock* block = new KVFAZIABlock;
    // "Real" geometry of the FAZIA setup - from the various measurements done with the goniometer
    Double_t dist_target_block0 = (80.0 + block->GetBrassCollimatorDepth()) * KVUnits::cm ;

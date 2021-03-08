@@ -23,46 +23,29 @@ KVFAZIAIDCsI::KVFAZIAIDCsI()
    // Default constructor
    SetType("CsI");
    set_id_code(kCsI);
-//   CsIGrid = 0;
-//   fCsI = 0;
    /* in principle all CsI R-L telescopes can identify mass & charge */
    SetHasMassID(kTRUE);
 }
 
-KVFAZIAIDCsI::~KVFAZIAIDCsI()
+Bool_t KVFAZIAIDCsI::Identify(KVIdentificationResult* IDR, Double_t x, Double_t y)
 {
-   // Destructor
+   // Particle identification and code setting using identification grid
+   //
+   // To enable use of either KVIDGCsI (fast-slow grid a la INDRA) or KVIDZAGrid
+   // (a la Valdre style), we override KVIDTelescope::Identify in order to correctly
+   // label particles identified as gammas.
+
+   Bool_t ok = KVFAZIAIDTelescope::Identify(IDR, x, y);
+
+   // did we just see a gamma ?
+   if (IDR->IDquality == KVIDGCsI::kICODE10
+         || (IDR->IDquality == KVIDZAGrid::kICODE8 && IDR->Rejecting_Cut == "gamma_line")) {
+      IDR->IDOK = true;
+      IDR->IDcode = 0;
+      ok = kTRUE;
+      IDR->IDquality = KVIDGCsI::kICODE10;
+      IDR->Z = 0;
+      IDR->A = 1;
+   }
+   return ok;
 }
-
-//Bool_t KVFAZIAIDCsI::Identify(KVIdentificationResult* IDR, Double_t x, Double_t y)
-//{
-//   //Particle identification and code setting using identification grid KVIDGCsI* fGrid.
-
-//   Bool_t ok = KVFAZIAIDTelescope::Identify(IDR, x, y);
-
-//   // general ID code for gammas
-//   if (IDR->IDquality == KVIDGCsI::kICODE10)
-//      IDR->IDcode = 0;
-
-//   return ok;
-
-//}
-
-//void KVFAZIAIDCsI::Initialize()
-//{
-//   // Initialisation of telescope before identification.
-//   // This method MUST be called once before any identification is attempted.
-//   // Initialisation of grid is performed here.
-//   // IsReadyForID() will return kTRUE if a grid is associated to this telescope for the current run.
-
-//   CsIGrid = (KVIDGCsI*) GetIDGrid();
-//   fCsI = (KVFAZIADetector*)GetDetector(1);
-//   if (CsIGrid) {
-//      CsIGrid->Initialize();
-//      SetBit(kReadyForID);
-//   }
-//   else {
-//      ResetBit(kReadyForID);
-//   }
-//   if (!gDataSet->HasCalibIdentInfos()) SetBit(kReadyForID);
-//}

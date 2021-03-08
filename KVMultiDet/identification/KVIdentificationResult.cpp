@@ -52,6 +52,7 @@ void KVIdentificationResult::Copy(TObject& obj) const
    id.A = A;
    id.PID = PID;
    id.deltaEpedestal = deltaEpedestal;
+   id.Rejecting_Cut = Rejecting_Cut;
 }
 
 void KVIdentificationResult::Clear(Option_t*)
@@ -70,6 +71,7 @@ void KVIdentificationResult::Clear(Option_t*)
    A = -1;
    PID = -1.0;
    deltaEpedestal = deltaEpedestal_UNKNOWN;
+   Rejecting_Cut = "";
 }
 
 void KVIdentificationResult::Print(Option_t*) const
@@ -82,12 +84,14 @@ void KVIdentificationResult::Print(Option_t*) const
    if (IDOK) printf("   => SUCCESS\n");
    else printf("   => FAILURE\n");
    printf("  Grid used: %s\n", GetGridName());
+   if (Rejecting_Cut != "") printf("   rejected by cut : %s", Rejecting_Cut.Data());
    printf("  Quality code = %d (%s)\n", IDquality, GetLabel());
    if (Zident) printf("  Z identified = %d", Z);
    else printf("  Z returned = %d", Z);
    if (Aident) printf("    A identified = %d", A);
    else printf("  A returned = %d", A);
-   if (Zident || Aident) printf("    PID = %f\n", PID);
+   if (Zident || Aident) printf("    PID = %f", PID);
+   printf("\n");
    switch (deltaEpedestal) {
 
       case deltaEpedestal_NO:

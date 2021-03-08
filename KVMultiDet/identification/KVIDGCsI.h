@@ -43,7 +43,7 @@ public:
    virtual void Identify(Double_t x, Double_t y,
                          KVIdentificationResult*) const;
 
-   virtual Bool_t IsIdentifiable(Double_t x, Double_t y) const;
+   virtual Bool_t IsIdentifiable(Double_t x, Double_t y, TString* = nullptr) const;
 
    KVIDZALine* GetZALine(Int_t z, Int_t a, Int_t&) const;
    KVIDZALine* GetZLine(Int_t z, Int_t&) const;

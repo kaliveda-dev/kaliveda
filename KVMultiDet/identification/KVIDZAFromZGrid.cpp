@@ -317,6 +317,7 @@ void KVIDZAFromZGrid::Identify(Double_t x, Double_t y, KVIdentificationResult* i
          // therefore although the Z identification was good, we cannot consider this
          // particle to be identified
          const_cast<KVIDZAFromZGrid*>(this)->fICode = kICODE4;
+         idr->IDquality = fICode; // otherwise identfication result quality code is not coherent with comment (see below)
       }
       idr->IDOK = (fICode < kICODE4);
    }

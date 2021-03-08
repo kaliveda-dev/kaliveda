@@ -127,8 +127,11 @@ void KVINDRAGroupReconstructor::IdentifyParticle(KVReconstructedNucleus& PART)
 
       /*** general ID code for non-identified particles ***/
       SETINDRAIDCODE((&PART), 14);
-
+#ifndef WITH_CPP11
       std::map<std::string, KVIdentificationResult*>::iterator csirl = id_by_type.find("CSI_R_L");
+#else
+      auto csirl = id_by_type.find("CSI_R_L");
+#endif
       if (csirl != id_by_type.end()) {
          //Particles remaining unidentified are checked: if their identification in CsI R-L gave subcodes 6 or 7
          //(Zmin) then they are relabelled "Identified" with IDcode = 9 (ident. incomplete dans CsI ou Phoswich (Z.min))
@@ -160,11 +163,16 @@ void KVINDRAGroupReconstructor::CalculateChIoDEFromResidualEnergy(KVReconstructe
 
 void KVINDRAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
 {
-   // Calculate and set the energy of a (previously identified) reconstructed particle.
+   // Calculate and set the energy of a (previously identified) reconstructed particle
+   //
+   // This is only possible for correctly identified particles.
+   // We exclude IDCODE9 particles (Zmin in CsI-RL)
 
    fEChIo = fESi = fECsI = 0;
 
-   DoCalibration(PART);
+   print_part = false;
+
+   if (PART->GetIDCode() != 9) DoCalibration(PART);
 
    PART->SetIsCalibrated();
    PART->SetParameter("INDRA.ECHIO", fEChIo);
@@ -181,6 +189,8 @@ void KVINDRAGroupReconstructor::CalibrateParticle(KVReconstructedNucleus* PART)
    // set particle momentum from telescope dimensions (random)
    PART->GetAnglesFromReconstructionTrajectory();
    CheckCsIEnergy(PART);
+
+   //if(print_part) PART->Print();
 }
 
 double KVINDRAGroupReconstructor::DoBeryllium8Calibration(KVReconstructedNucleus* n)

@@ -1460,7 +1460,17 @@ void KVMultiDetArray::SetCalibratorParameters(KVDBRun* r, const TString& myname)
       }
       KVCalibrator* cal = KVCalibrator::MakeCalibrator(dbps->GetStringParameter("CalibClass"));
       cal->SetType(dbps->GetTitle());
-      if (clop != "") cal->SetOptions(class_options);
+      if (clop != "") {
+         try {
+            cal->SetOptions(class_options);
+         }
+         catch (std::exception& e) {
+            Error("SetCalibratorParameters",
+                  "Problem for %s [%s] : %s", det->GetName(), cal->GetType(), e.what());
+            delete cal;
+            continue;
+         }
+      }
       cal->SetInputSignalType(dbps->GetStringParameter("SignalIn"));
       cal->SetOutputSignalType(dbps->GetStringParameter("SignalOut"));
       if (!det->AddCalibrator(cal, dbps->GetParameters())) {

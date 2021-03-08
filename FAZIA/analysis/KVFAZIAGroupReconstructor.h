@@ -10,6 +10,8 @@ protected:
    void PostReconstructionProcessing();
    void IdentifyParticle(KVReconstructedNucleus& PART);
 
+   void  ChangeReconstructedTrajectory(KVReconstructedNucleus& PART);
+
 public:
    KVFAZIAGroupReconstructor() {}
    virtual ~KVFAZIAGroupReconstructor() {}

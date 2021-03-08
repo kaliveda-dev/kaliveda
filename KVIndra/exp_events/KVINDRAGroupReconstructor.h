@@ -24,6 +24,7 @@ class KVINDRAGroupReconstructor : public KVGroupReconstructor {
 protected:
    KVChIo* theChio;                 // the ChIo of the group
    Double_t fECsI, fESi, fEChIo;
+   bool print_part;//debug
 
    void SetBadCalibrationStatus(KVReconstructedNucleus* n)
    {

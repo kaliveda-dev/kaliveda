@@ -43,10 +43,40 @@ public:
 
    void AddSignal(KVCalibratedSignal* sig, const KVNumberList& zrange);
 
-   Double_t GetValue(const KVNameValueList& params = "") const;
-   Double_t GetInverseValue(Double_t out_val, const TString& in_sig, const KVNameValueList& params = "") const;
+   Double_t GetValue(const KVNameValueList& params = "") const
+   {
+      KVCalibratedSignal* sig = GetSignal(params);
+      return (sig ? sig->GetValue(params) : -1);
+   }
+   Double_t GetInverseValue(Double_t out_val, const TString& in_sig, const KVNameValueList& params = "") const
+   {
+      KVCalibratedSignal* sig = GetSignal(params);
+      return (sig ? sig->GetInverseValue(out_val, in_sig, params) : -1);
+   }
 
-   KVCalibratedSignal* GetSignal(const KVNameValueList&) const;
+   KVCalibratedSignal* GetSignal(const KVNameValueList& params) const
+   {
+      // Based on the value of the parameter "Z=..." (which must be present)
+      // find the right calibrated signal
+
+      if (!params.HasIntParameter("Z")) {
+         Error("GetSignal", "No Z parameter given in KVNameValueList!");
+         return nullptr;
+      }
+      KVCalibratedSignal* sig = fSignalMap[params.GetIntValue("Z")];
+      if (!sig) {
+         //Error("GetSignal", "No calibration for Z=%d for detector %s", params.GetIntValue("Z"), GetDetector()->GetName());
+      }
+      return sig;
+   }
+
+   Bool_t IsCalibratedFor(const KVNameValueList& params) const
+   {
+      // Returns true if a calibration is defined for the "Z=..." parameter value in the list
+
+      if (!params.HasIntParameter("Z")) return false;
+      return fSignalMap[params.GetIntValue("Z")] != nullptr;
+   }
 
    ClassDef(KVZDependentCalibratedSignal, 1) //Handle several calibrations valid for different Z ranges
 };

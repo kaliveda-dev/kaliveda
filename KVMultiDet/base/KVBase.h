@@ -20,7 +20,7 @@ $Id: KVBase.h,v 1.42 2009/03/12 13:59:40 franklan Exp $
 #include "Riostream.h"
 #include "TPluginManager.h"
 #include "TFile.h"
-
+#include "TF1.h"
 class KVString;
 
 class KVBase: public TNamed {
@@ -183,6 +183,7 @@ public:
    static Double_t GetDataSetEnv(const Char_t* dataset, const Char_t* type, Double_t defval);
    static Bool_t GetDataSetEnv(const Char_t* dataset, const Char_t* type, Bool_t defval);
 
+   Double_t ProtectedGetX(const TF1* func, Double_t val, int& status, Double_t xmin = 0.0, Double_t xmax = 0.0) const;
 
    ClassDef(KVBase, 4)          //Base class for all KaliVeda objects
 };

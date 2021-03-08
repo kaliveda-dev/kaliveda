@@ -57,7 +57,7 @@ void KVINDRABackwardGroupReconstructor::DoCalibration(KVReconstructedNucleus* PA
    KVCsI* csi = GetCsI(PART);
    if (csi) {
       stopped_in_chio = kFALSE;
-      if (csi->IsCalibrated()) {
+      if (csi->IsCalibrated() && csi->GetDetectorSignalValue("TotLight") > 0) {
          /* CSI ENERGY CALIBRATION */
          if (PART->GetIDCode() == 2 && PART->IsIsotope(4, 8)) {
             fECsI = DoBeryllium8Calibration(PART);

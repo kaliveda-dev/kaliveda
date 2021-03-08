@@ -466,11 +466,13 @@ public:
       return fReconTraj;
    }
    void SetReconstructionTrajectory(const KVReconNucTrajectory* t);
+   void ModifyReconstructionTrajectory(const KVReconNucTrajectory* t);
    void CopyAndMoveReferences(const KVReconstructedNucleus*);
    void PrintStatusString() const;
 
    Bool_t InArray(const TString&) const;
    TString GetArrayName() const;
+   void ls(Option_t* = "") const;
 
    ClassDef(KVReconstructedNucleus, 17)  //Nucleus detected by multidetector array
 };
