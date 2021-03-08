@@ -48,6 +48,15 @@ public:
    {
       return fInversionFail;
    }
+   virtual Bool_t IsCalibratedFor(const KVNameValueList&) const
+   {
+      // Can be used in derived classes to determine if a calibration is effectively
+      // available based on the extra parameters in the KVNameValueList.
+      //
+      // Default behaviour is to return kTRUE in all cases.
+
+      return kTRUE;
+   }
 
    ClassDef(KVCalibratedSignal, 1) //Detector signal produced by a calibrator
 };
