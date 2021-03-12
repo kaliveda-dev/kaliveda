@@ -112,6 +112,7 @@ namespace KVImpactParameters {
       // Fit impact parameter distribution given in histogram.
       // \param[in] h histogram containing impact parameter distribution
 
+      fHisto = h;
       Double_t minb = h->GetXaxis()->GetBinLowEdge(1);
       Double_t maxb = h->GetXaxis()->GetBinUpEdge(h->GetXaxis()->GetNbins());
       Double_t maxy = h->GetMaximum();

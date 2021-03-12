@@ -83,7 +83,11 @@ namespace KVImpactParameters {
       TF1& GetIPDist()
       {
          // \returns reference to TF1 implementing impact parameter distribution
-         // (actually the differential cross-section in [mb fm\f${}^{-1}\f$])
+         //
+         // \note this should be the differential cross-section in [mb fm\f${}^{-1}\f$],
+         // but if an un-normalized histogram was fitted to find the parameters of the distribution,
+         // this function includes an arbitrary normalization depending on the integral of
+         // the histogram
          return fIPdist;
       }
       void Draw(Option_t* opt = "")
@@ -110,7 +114,7 @@ namespace KVImpactParameters {
       {
          // Changes impact parameter distribution from differential cross-section to probability distribution \f$P(b)\f$
 
-         fIPdist.SetParameter(0, 1. / GetCrossSection());
+         fIPdist.SetParameter(0, 10.*TMath::TwoPi() / GetCrossSection());
       }
 
       Double_t GetRelativeCrossSection(double b) const
@@ -118,6 +122,26 @@ namespace KVImpactParameters {
          // \return differential cross-section relative to \f$2\pi b\f$
          if (b > 0) return fIPdist.Eval(b) / (b * fIPdist.GetParameter(0));
          return 0;
+      }
+
+      Double_t GetDifferentialCrossSection(double b) const
+      {
+         // \return differential cross-section for impact parameter \f$b\f$ in [mb fm\f${}^{-1}\f$]
+
+         if (b > 0) {
+            return fIPdist.Eval(b) / fIPdist.GetParameter(0) * 10 * TMath::TwoPi();
+         }
+         return 0;
+      }
+      void MakeDifferentialCrossSection()
+      {
+         // Call this method to ensure that the distribution returned by GetIPDist() is indeed
+         // the differential cross-section in [mb fm\f${}^{-1}\f$].
+         //
+         // This is normally the default if parameters like \f$b_0\f$ or \f$\Delta b\f$ are set by hand,
+         // but not if the parameters were deduced from a fit to a histogram: in this case the
+         // distribution has an arbitrary normalization factor in order to fit the histogram.
+         fIPdist.SetParameter(0, 10 * TMath::TwoPi());
       }
 
       ClassDef(impact_parameter_distribution, 1) //Realistic impact parameter distribution with smooth fall-off at large b
