@@ -218,6 +218,22 @@ if(PROTOBUF_FOUND)
 endif(PROTOBUF_FOUND)
 endif(USE_PROTOBUF)
 
+#---software for reading Mesytec data (new INDRA DAQ)
+option(USE_MESYTEC
+                "Enable support for reading Mesytec DAQ data"
+                ON)
+add_feature_info(mesytec USE_MESYTEC "Enable support for reading Mesytec DAQ data")
+if(USE_MESYTEC)
+    find_package(mesytec_data QUIET)
+    if(mesytec_data_FOUND)
+       include_directories(${mesytec_data_INCLUDE_DIRS})
+       set(WITH_MESYTEC yes)
+       list(APPEND EXTRA_ROOT_INCLUDE_PATH ${mesytec_data_INCLUDE_DIRS})
+    else(mesytec_data_FOUND)
+       set(USE_MESYTEC OFF CACHE BOOL "" FORCE)
+    endif(mesytec_data_FOUND)
+endif()
+
 #---optional support for zeroMQ sockets
 find_package(ZMQ)
 if(ZMQ_FOUND)

@@ -7,6 +7,7 @@
 #cmakedefine WITH_GNU_INSTALL
 #cmakedefine WITH_GEMINI
 #cmakedefine WITH_MFM
+#cmakedefine WITH_MESYTEC
 #cmakedefine WITH_ZMQ
 #cmakedefine ADD_DYN_PATH "${ADD_DYN_PATH}"
 #cmakedefine WITH_DATAFLOW
