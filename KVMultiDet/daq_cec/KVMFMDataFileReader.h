@@ -7,7 +7,9 @@
 #include "KVRawDataReader.h"
 #include "MFMFileReader.h"
 #include "KVNameValueList.h"
-
+#ifdef WITH_MESYTEC
+#include "mesytec_buffer_reader.h"
+#endif
 /**
 \class KVMFMDataFileReader
 \brief Read MFM format acquisition data
@@ -18,6 +20,10 @@ This class uses the mfmlib package available from: https://gitlab.in2p3.fr/jdfco
 */
 
 class KVMFMDataFileReader : public KVRawDataReader, public MFMFileReader {
+
+#ifdef WITH_MESYTEC
+   mutable mesytec::buffer_reader MTEC_bufrdr;
+#endif
 
 public:
    KVMFMDataFileReader(const Char_t* filepath);
@@ -46,6 +52,14 @@ public:
    Int_t GetRunNumberReadFromFile() const;
 
    TString GetPathToLastEbyedatActionsFile();
+
+#ifdef WITH_MESYTEC
+   void InitialiseMesytecConfig(const std::string& crate, const std::string& channels);
+   mesytec::buffer_reader& GetMesytecBufferReader() const
+   {
+      return MTEC_bufrdr;
+   }
+#endif
 
    ClassDef(KVMFMDataFileReader, 0) //Read MFM format acquisition data
 };

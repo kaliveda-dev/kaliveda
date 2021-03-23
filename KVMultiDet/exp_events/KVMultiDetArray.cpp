@@ -53,6 +53,9 @@
 #include "KVMFMDataFileReader.h"
 #include "MFMEbyedatFrame.h"
 #include "MFMMesytecMDPPFrame.h"
+#ifdef WITH_MESYTEC
+#include "mesytec_buffer_reader.h"
+#endif
 #endif
 #ifdef WITH_PROTOBUF
 #include "KVProtobufDataReader.h"
@@ -130,6 +133,7 @@ void KVMultiDetArray::init()
    //all detectors belong to us
    SetOwnsDetectors();
 
+   fRawDataReader = nullptr;
    fHandledRawData = false;
 }
 
@@ -3058,6 +3062,7 @@ Bool_t KVMultiDetArray::HandleRawDataEvent(KVRawDataReader* rawdata)
    // All fired acquisition parameters are written in the fReconParameters list,
    // ready to be copied to the reconstructed event
 
+   fRawDataReader = rawdata;
    prepare_to_handle_new_raw_data();
    if (rawdata->GetDataFormat() == "MFM") {
 #ifdef WITH_MFM
@@ -3345,12 +3350,15 @@ Bool_t KVMultiDetArray::handle_raw_data_event_mfmmergeframe(const MFMMergeFrameM
 Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe(const MFMCommonFrame& mfmframe)
 {
    // Method used to treat raw data in MFM format read by KVMFMDataFileReader
-   // A generic method is provided to treat MFM-encapsulated ebyedat data
-   //   - see handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame&)
-   // Treatment of other frame types will need to be implemented in child classes.
+   //
+   // Here we dispatch two types of frame - MFMEbyedatFrame & MFMMesytecMDPPFrame -
+   // to specific methods - handle_raw_data_event_mfmframe_ebyedat() and
+   // handle_raw_data_event_mfmframe_mesytec_mdpp()
+   // which need to be implemented in child classes for specific arrays which
+   // use these data formats.
    //
    // Return kTRUE if raw data was treated
-
+   Info("handle_raw_data_event_mfmframe", "called");
    if (mfmframe.GetFrameType() == MFM_MESYTEC_MDPP_FRAME_TYPE)
       return handle_raw_data_event_mfmframe_mesytec_mdpp((const MFMMesytecMDPPFrame&)mfmframe);
    if (mfmframe.GetFrameType() == MFM_EBY_EN_FRAME_TYPE
@@ -3361,35 +3369,45 @@ Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe(const MFMCommonFrame& mfm
    return kFALSE;
 }
 
-Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame& ebyframe)
+Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame&)
 {
-   // General method for reading raw data in MFM-encapsulated ebyedat format
-   // Values of all KVACQParam objects appearing in the event are updated
-   // Fills list of hit acquisition parameters.
-   // Returns kTRUE if at least one parameter belonging to the array is present.
-   //
-   // Any unknown parameters in the event (i.e. ones for which no KVACQParam object
-   // has been defined) are written in the fReconParameters list with names
-   //    "ACQPAR.[array name].[parameter name]"
+   AbstractMethod("handle_raw_data_event_mfmframe_ebyedat");
+   return kFALSE;
+}
 
-   Warning("handle_raw_data_event_mfmframe_ebyedat", "method needs reimplementing");
-   uint16_t val;
-   string lab;
-   KVACQParam* acqpar;
-   Bool_t ok = false;
-
-//   for (int i = 0; i < ebyframe.GetNbItems(); ++i) {
-//      ebyframe.GetDataItem(i, lab, val);
-//      if ((acqpar = GetACQParam(lab.c_str()))) {
-//         acqpar->SetData(val);
-//         fFiredACQParams.Add(acqpar);
-//         ok = kTRUE;
-//      }
-//      else
-//         fReconParameters.SetValue(Form("ACQPAR.%s.%s", GetName(), lab.c_str()), val);
-//   }
-
-   return ok;
+Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPPFrame& f)
+{
+   Info("handle_raw_data_event_mfmframe_mesytec_mdpp", "called");
+#ifdef WITH_MESYTEC
+   Info("handle_raw_data_event_mfmframe_mesytec_mdpp", "reading buffer");
+   auto mfmfilereader = dynamic_cast<KVMFMDataFileReader*>(fRawDataReader);
+   mfmfilereader->GetMesytecBufferReader().read_buffer(
+      (const uint8_t*)f.GetPointUserData(), f.GetBlobSize(),
+   [&](const mesytec::mdpp::event & evt) {
+      auto& setup = mfmfilereader->GetMesytecBufferReader().get_setup();
+      // loop over module data in event, set data in detectors when possible
+      for (auto& mdat : evt.modules) {
+         auto mod_id = mdat.module_id;
+         for (auto& voie : mdat.data) {
+            auto detname = setup.get_detector(mod_id, voie.channel);
+            auto detector = GetDetector(detname.c_str());
+            if (detector) {
+               auto det_signal = detector->GetDetectorSignal(voie.data_type);
+               if (!det_signal) {
+                  det_signal = new KVDetectorSignal(voie.data_type.c_str(), detector);
+                  detector->AddDetectorSignal(det_signal);
+               }
+               det_signal->SetValue(voie.data);
+               detector->GetListOfDetectorSignals().ls();
+            }
+         }
+      }
+   }
+   );
+   return kTRUE;
+#else
+   return false;
+#endif
 }
 #endif
 

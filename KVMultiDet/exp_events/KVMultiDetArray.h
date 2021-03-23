@@ -40,6 +40,13 @@ class KVMFMDataFileReader;
 class MFMEbyedatFrame;
 class MFMBufferReader;
 class MFMMesytecMDPPFrame;
+#ifdef WITH_MESYTEC
+namespace mesytec {
+   namespace mdpp {
+      struct event;
+   }
+}
+#endif
 #endif
 #ifdef WITH_PROTOBUF
 class KVProtobufDataReader;
@@ -105,6 +112,7 @@ protected:
 
    TString fPartSeedCond;//! condition for seeding new reconstructed particles
 
+   KVRawDataReader* fRawDataReader;//! last raw data reader object used in call to HandleRawData
    Bool_t fHandledRawData;//! set to true if multidetector handles data in last call to HandleRawData
 
    KVNameValueList fReconParameters;//! general purpose list of parameters for storing information on data reconstruction
@@ -148,11 +156,7 @@ protected:
    virtual Bool_t handle_raw_data_event_mfmmergeframe(const MFMMergeFrameManager&);
    virtual Bool_t handle_raw_data_event_mfmframe(const MFMCommonFrame&);
    virtual Bool_t handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame&);
-   virtual Bool_t handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPPFrame&)
-   {
-      AbstractMethod("handle_raw_data_event_mfmframe_mesytec_mdpp");
-      return false;
-   }
+   virtual Bool_t handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPPFrame&);
 #endif
 #ifdef WITH_PROTOBUF
    virtual Bool_t handle_raw_data_event_protobuf(KVProtobufDataReader&);

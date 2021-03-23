@@ -80,3 +80,16 @@ TString KVMFMDataFileReader::GetPathToLastEbyedatActionsFile()
    // Returns full path to last ACTIONS file used to decode Ebyedat parameters
    return GetFrameLibrary().GetLastEbyedatActionsFile().c_str();
 }
+
+#ifdef WITH_MESYTEC
+void KVMFMDataFileReader::InitialiseMesytecConfig(const std::string& crate, const std::string& channels)
+{
+   // Read the two files whose full paths are given as argument in order to set up the
+   // Mesytec crate config and module-channel-detector correspondence
+
+   mesytec::experimental_setup exp;
+   exp.read_crate_map(crate);
+   exp.read_detector_correspondence(channels);
+   MTEC_bufrdr.define_setup(exp);
+}
+#endif

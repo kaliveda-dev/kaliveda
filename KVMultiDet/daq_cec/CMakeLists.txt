@@ -19,6 +19,9 @@ if(WITH_ZMQ)
 else(WITH_ZMQ)
     set(excluded_classes ${excluded_classes} KVZMQMessage)
 endif(WITH_ZMQ)
+if(WITH_MESYTEC)
+    set(libs_to_link ${libs_to_link} ${mesytec_data_LIBRARIES})
+endif(WITH_MESYTEC)
 
 BUILD_KALIVEDA_MODULE(daq_cec
 	PARENT ${KVSUBPROJECT}

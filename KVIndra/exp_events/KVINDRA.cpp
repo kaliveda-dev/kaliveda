@@ -625,14 +625,41 @@ void KVINDRA::PerformClosedROOTGeometryOperations()
 #ifdef WITH_MFM
 Bool_t KVINDRA::handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame& f)
 {
-   // Override base method to retrieve CENTRUM timestamp from data if present.
+   // General method for reading raw data in MFM-encapsulated ebyedat format
+   // Values of all KVACQParam objects appearing in the event are updated
+   // Fills list of hit acquisition parameters.
+   // Returns kTRUE if at least one parameter belonging to the array is present.
+   //
+   // Any unknown parameters in the event (i.e. ones for which no KVACQParam object
+   // has been defined) are written in the fReconParameters list with names
+   //    "ACQPAR.[array name].[parameter name]"
+   //
+   // Retrieve CENTRUM timestamp from data if present.
    // It will be added to fReconParameters as a 64-bit value "INDRA.TS" (if != 0)
    // Event number is retrieved and stored as "INDRA.EN" (if != 0)
    // Any parameter which appears as [name] and [name]_UP is an unsigned 32-bit value
    // split into two 16-bit words. We replace the two parameters with a 64-bit
    // value (to hold correctly all unsigned 32-bit values) with [name].
 
-   if (!KVMultiDetArray::handle_raw_data_event_mfmframe_ebyedat(f)) return kFALSE;
+   Warning("handle_raw_data_event_mfmframe_ebyedat", "method needs reimplementing");
+   uint16_t val;
+   string lab;
+   KVACQParam* acqpar;
+   Bool_t ok = false;
+
+//   for (int i = 0; i < ebyframe.GetNbItems(); ++i) {
+//      ebyframe.GetDataItem(i, lab, val);
+//      if ((acqpar = GetACQParam(lab.c_str()))) {
+//         acqpar->SetData(val);
+//         fFiredACQParams.Add(acqpar);
+//         ok = kTRUE;
+//      }
+//      else
+//         fReconParameters.SetValue(Form("ACQPAR.%s.%s", GetName(), lab.c_str()), val);
+//   }
+
+   if (!ok) return kFALSE;
+
    ULong64_t ts = f.GetCENTRUMTimestamp();
    if (ts != 0) fReconParameters.SetValue64bit("INDRA.TS", ts);
    ULong64_t en = f.GetEventNumber();
