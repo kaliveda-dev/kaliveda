@@ -286,13 +286,26 @@ Double_t KVDetector::GetParticleEIncFromERes(KVNucleus* kvp, TVector3* norm)
 void KVDetector::Print(Option_t* opt) const
 {
    //Print info on this detector
-   //if option="data" the energy loss and coder channel data are displayed
+   //if option="data" the energy loss and raw data are displayed
 
    if (!strcmp(opt, "data")) {
-      cout << ((KVDetector*) this)->
-           GetName() << " -- E=" << ((KVDetector*) this)->
-           GetEnergy();
-      cout << "  ";
+      cout << GetName() << " -- ";
+      // print raw data signals
+      KVDetectorSignal* sig;
+      TIter it(&GetListOfDetectorSignals());
+      while ((sig = (KVDetectorSignal*)it())) {
+         if (sig->IsRaw()) {
+            std::cout << sig->GetName() << "=" << sig->GetValue() << " | ";
+         }
+      }
+      // print calibrated data
+      it.Reset();
+      while ((sig = (KVDetectorSignal*)it())) {
+         if (!sig->IsRaw() && !sig->GetValueNeedsExtraParameters()) {
+            std::cout << sig->GetName() << "=" << sig->GetValue() << " | ";
+         }
+      }
+      cout << " ";
       if (BelongsToUnidentifiedParticle())
          cout << "(Belongs to an unidentified particle)";
       cout << endl;

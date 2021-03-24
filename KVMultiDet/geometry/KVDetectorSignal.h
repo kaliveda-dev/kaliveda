@@ -83,6 +83,12 @@ public:
       return kFALSE;
    }
 
+   virtual Bool_t GetValueNeedsExtraParameters() const
+   {
+      // Returns kTRUE if GetValue() must be called with extra parameters
+      // in order to calculate the correct value
+      return kFALSE;
+   }
    void ls(Option_t* = "") const;
 
    virtual Int_t GetStatus(const TString&) const;

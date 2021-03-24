@@ -26,8 +26,6 @@ public:
 
    void SetAlThickness(Float_t thickAl /* um */);
 
-   virtual void Print(Option_t* option = "") const;
-
    //void SetACQParams();
 
    Double_t GetCorrectedEnergy(KVNucleus*, Double_t lum = -1., Bool_t transmission = kTRUE);

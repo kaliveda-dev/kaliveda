@@ -61,24 +61,6 @@ KVCsI::~KVCsI()
 {
 }
 
-void KVCsI::Print(Option_t* option) const
-{
-   //Print info on this detector - redefinition of KVDetector::Print for option="data" to include total light
-   //if option="data" the energy loss, total light and coder channel data are displayed
-
-   if (!strcmp(option, "data")) {
-      cout << ((KVCsI*) this)->GetName() << " -- H=" << ((KVCsI*) this)->
-           GetDetectorSignalValue("TotLight") << " -- E=" << ((KVCsI*) this)->
-           GetEnergy() << "  ";
-
-      if (BelongsToUnidentifiedParticle())
-         cout << "(Belongs to an unidentified particle)";
-      cout << endl;
-   }
-   else {
-      KVDetector::Print(option);
-   }
-}
 
 //void KVCsI::SetACQParams()
 //{
