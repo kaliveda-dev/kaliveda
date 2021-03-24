@@ -3381,11 +3381,13 @@ Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMes
 #ifdef WITH_MESYTEC
    Info("handle_raw_data_event_mfmframe_mesytec_mdpp", "reading buffer");
    auto mfmfilereader = dynamic_cast<KVMFMDataFileReader*>(fRawDataReader);
-   mfmfilereader->GetMesytecBufferReader().read_buffer(
+   mfmfilereader->GetMesytecBufferReader().read_event_in_buffer(
       (const uint8_t*)f.GetPointUserData(), f.GetBlobSize(),
    [&](const mesytec::mdpp::event & evt) {
+      Info("lambda_callback", "being called now");
       auto& setup = mfmfilereader->GetMesytecBufferReader().get_setup();
       // loop over module data in event, set data in detectors when possible
+      KVUniqueNameList hit_detectors;
       for (auto& mdat : evt.modules) {
          auto mod_id = mdat.module_id;
          for (auto& voie : mdat.data) {
@@ -3398,10 +3400,11 @@ Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMes
                   detector->AddDetectorSignal(det_signal);
                }
                det_signal->SetValue(voie.data);
-               detector->GetListOfDetectorSignals().ls();
+               hit_detectors.Add(detector);
             }
          }
       }
+      hit_detectors.Print("data");
    }
    );
    return kTRUE;
