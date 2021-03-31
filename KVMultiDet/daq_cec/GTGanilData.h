@@ -84,7 +84,7 @@ public:
    void            DumpEvent(void) const;
    void            DumpParameterName(void) const;
    void            Connect(const Int_t index, UShort_t** p) const;
-   Bool_t          Connect(const TString parName, UShort_t** p) const;
+   void            ConnectFired(const Int_t index, Bool_t** p) const;
    bool            Next(void);
    void            MakeTree(const TString filename = "", UInt_t nEvents = kMaxUInt);
    inline bool     IsScalerBuffer(void) const
@@ -149,6 +149,7 @@ protected:
    Int_t          fRunNumber;     // current file run number
    char           fHeader[9];     // Buffer header
    UShort_t*      fDataArray;     //! Physical data array
+   Bool_t*        fFired;         //! fired parameters in each event
    Int_t          fDataArraySize; // Data array size
    Int_t          fEventNumber;   // Local event number in current buffer (should be renamed)
    Int_t          fEventCount;    // Our event counter

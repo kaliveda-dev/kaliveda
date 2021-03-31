@@ -45,7 +45,6 @@ public:
    virtual ~KVProtobufDataReader();
 
    Bool_t GetNextEvent();
-   KVSeqCollection* GetFiredDataParameters() const;
    TString GetDataFormat() const
    {
       return "PROTOBUF";

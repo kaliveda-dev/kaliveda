@@ -90,6 +90,7 @@ GTGanilData::~GTGanilData(void)
    if (fBuffer)delete   fBuffer;
    if (fStructEvent)delete[] fStructEvent;
    if (fDataArray) delete[] fDataArray;
+   if (fFired) delete[] fFired;
    if (fEventBrut) delete[] fEventBrut;
    if (fEventCtrl) delete[] fEventCtrl;
 }
@@ -116,6 +117,7 @@ void GTGanilData::InitDefault(const Int_t argc, char** argv)
    fIsCtrl         = false;
    fIsScalerBuffer = false;
    fDataArray      = 0;
+   fFired          = nullptr;
 
    fDevice         = new gan_tape_desc;
    fBuffer         = new in2p3_buffer_struct;
@@ -253,8 +255,9 @@ void GTGanilData::ReadParameters(void)
    while (strcmp(fHeader, PARAM_Id) == 0);
 
    fDataArray = new UShort_t[fDataArraySize + 1]; // Data buffer is allocated
+   fFired     = new Bool_t[fDataArraySize + 1]; // Data buffer is allocated
    for (Int_t i = 1; i <= fDataArraySize; i++) {
-      fDataArray[i] = (Short_t) - 1;
+      fFired[i] = false;
    }
 }
 
@@ -272,17 +275,16 @@ void GTGanilData::Connect(const Int_t index, UShort_t** p) const
 }
 
 //______________________________________________________________________________
-Bool_t GTGanilData::Connect(const TString parName, UShort_t** p) const
+void GTGanilData::ConnectFired(const Int_t index, Bool_t** p) const
 {
-   // Connect a pointer to a data to a given parameter name in the Data Array
+   // Connect a pointer to a data to the defined index in the Data Array
 
-   Int_t index = fDataParameters->GetIndex(parName);
-   if (index < 0) {
-      //parameter not found
-      return kFALSE;
+   if ((index < 1) || (index > fDataArraySize)) {
+      cout << "Invalid connexion:" << index << ". Valid only in 1<=index<="
+           << fDataArraySize << endl;
+      return;
    }
-   Connect(index, p);
-   return kTRUE;
+   *p = &(fFired[index]);
 }
 
 //______________________________________________________________________________
@@ -505,19 +507,13 @@ bool GTGanilData::EventUnravelling(CTRL_EVENT* pCtrlEvent)
    //printf("EventUnravelling :  eventLength=%d sizeof(CTRL_EVENT)=%d\n",eventLength,sizeof(CTRL_EVENT));
 
    for (Int_t i = 1; i <= fDataArraySize; i++) {
-      fDataArray[i] = (Short_t) - 1;
+      fFired[i] = false;
    }
 
    for (Int_t i = 0; i < eventLength; i += 2) {
-      //cout << dec << i+1 << " -- " << hex << brutData[i] << " = " << brutData[i+1] << endl;
       if (brutData[i] <= fDataArraySize && brutData[i] >= 1) {
          fDataArray[brutData[i]] = brutData[i + 1];
-      }
-      else {   // More on error handling would be cool
-         /*      cout << "Index overflow : Parameter index "<<i<<" is "<<brutData[i]<<
-               " but fDataArraySize is " << fDataArraySize<<endl;
-               return(false);
-         */
+         fFired[brutData[i]] = true;
       }
    }
    return (true);
@@ -534,7 +530,7 @@ void GTGanilData::DumpEvent(void) const
    cout << "--------- DUMPING EVENT ----------------------------" << endl;
    cout << "------- number:" << fEventCount << endl;
    for (Int_t i = 1; i <= fDataArraySize; i++) {
-      if ((Short_t)fDataArray[i] > -1) cout << "index :" << i << " " << fDataParameters->GetParName(i) << " : " << fDataArray[i] << endl;
+      if (fFired[i]) cout << "index :" << i << " " << fDataParameters->GetParName(i) << " : " << fDataArray[i] << endl;
    }
    cout << "--------- END           ----------------------------" << endl;
 }

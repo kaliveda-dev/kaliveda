@@ -23,7 +23,6 @@ $Date: 2007/06/08 15:49:10 $
 Classes derived from this one must implement the methods
 
   - Bool_t GetNextEvent();
-  - KVSeqCollection* GetFiredDataParameters() const;
   - TString GetDataFormat() const;
   - Int_t GetRunNumberReadFromFile() const;
 */
@@ -38,17 +37,7 @@ public:
    KVRawDataReader();
    virtual ~KVRawDataReader();
 
-   virtual const KVSeqCollection* GetUnknownParameters() const
-   {
-      return 0;
-   }
-   virtual const KVSeqCollection* GetRawDataParameters() const
-   {
-      return 0;
-   }
    virtual Bool_t GetNextEvent() = 0;
-   virtual KVSeqCollection* GetFiredDataParameters() const = 0;
-
    virtual Int_t GetStatus() const
    {
       return 0;

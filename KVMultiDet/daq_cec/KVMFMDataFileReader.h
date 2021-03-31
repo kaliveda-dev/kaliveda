@@ -35,10 +35,6 @@ public:
       bool ok = ReadNextFrame();
       return ok;
    }
-   KVSeqCollection* GetFiredDataParameters() const
-   {
-      return nullptr;
-   }
 
    static KVMFMDataFileReader* Open(const Char_t* filepath, Option_t* = "");
 

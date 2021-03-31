@@ -30,34 +30,21 @@ KVGANILDataReader::KVGANILDataReader(const Char_t* file, Option_t* dataset)
 KVGANILDataReader::~KVGANILDataReader()
 {
    // Destructor
-   if (fGanilData) {
-      delete fGanilData;
-      fGanilData = 0;
-   }
-   fParameters->Clear();
-   delete fParameters;
-   if (fExtParams) {
-      fExtParams->Delete("slow");
-      delete fExtParams;
-   }
-   delete fFired;
    if (ParVal) delete [] ParVal;
    if (ParNum) delete [] ParNum;
+   if (fGanilData) delete fGanilData;
 }
 
 void KVGANILDataReader::init()
 {
    //default initialisations
 
-   fExtParams = 0;
-   fParameters = new KVHashList;
-   fParameters->SetCleanup(kTRUE);
-   fGanilData = 0;
-   fUserTree = 0;
-   fFired = new KVHashList;
-   ParVal = 0;
-   ParNum = 0;
+   fParameters.SetOwner();
+   fUserTree = nullptr;
+   ParVal = nullptr;
+   ParNum = nullptr;
    make_arrays = make_leaves = kFALSE;
+   fGanilData = nullptr;
 }
 
 void KVGANILDataReader::SetUserTree(TTree* T, Option_t* opt)
@@ -140,7 +127,7 @@ void KVGANILDataReader::SetUserTree(TTree* T, Option_t* opt)
 
    fUserTree = T;
    if (make_arrays) {
-      Int_t maxParFired = GetRawDataParameters()->GetEntries();
+      Int_t maxParFired = GetRawDataParameters().GetEntries();
       ParVal = new UShort_t[maxParFired];
       ParNum = new UInt_t[maxParFired];
       fUserTree->Branch("NbParFired", &NbParFired, "NbParFired/I");
@@ -148,7 +135,7 @@ void KVGANILDataReader::SetUserTree(TTree* T, Option_t* opt)
       fUserTree->Branch("ParVal", ParVal, "ParVal[NbParFired]/s");
    }
    if (make_leaves) {
-      TIter next_rawpar(GetRawDataParameters());
+      TIter next_rawpar(&GetRawDataParameters());
       KVACQParam* acqpar;
       while ((acqpar = (KVACQParam*)next_rawpar())) {
          TString leaf;
@@ -173,7 +160,7 @@ void KVGANILDataReader::SetUserTree(TTree* T, Option_t* opt)
    // TObjArray has to be as big as the largest parameter number in the list
    // of raw data parameters. So first loop over parameters to find max param number.
    UInt_t maxpar = 0;
-   TIter next(GetRawDataParameters());
+   TIter next(&GetRawDataParameters());
    KVACQParam* par;
    while ((par = (KVACQParam*)next())) if (par->GetNumber() > maxpar) maxpar = par->GetNumber();
 
@@ -204,11 +191,7 @@ void KVGANILDataReader::OpenFile(const Char_t* file, Option_t* dataset)
    //The basename of the file (excluding any path) can be obtained using GetName()
    //The full pathname of the file can be obtained using GetTitle()
 
-   if (fGanilData) {
-      delete fGanilData;
-      fGanilData = 0;
-   }
-
+   if (fGanilData) delete fGanilData;
    fGanilData = NewGanTapeInterface(dataset);
 
    fGanilData->SetFileName(file);
@@ -253,18 +236,11 @@ void KVGANILDataReader::OpenFile(const Char_t* file, Option_t* dataset)
 
 //__________________________________________________________________________
 
-void KVGANILDataReader::ConnectRawDataParameters(const TSeqCollection* list_acq_params)
+void KVGANILDataReader::ConnectRawDataParameters()
 {
-   //Call this method in order to initialise links between data in file and KVACQParam
-   //objects associated with detectors if defined. Call with no argument in order to
-   //generate all required KVACQParam objects corresponding to parameters in file
-   //(case where no KVMultiDetArray is defined).
+   //Generate all required KVACQParam objects corresponding to parameters in file
    //
    //fParameters is filled with a KVACQParam for every acquisition parameter in the file.
-   //The list contains all KVACQParams defined for the detectors of a multidetector array.
-   //For any parameters for which no KVACQParam is found in the list we create new KVACQParam
-   //objects which will be deleted with this KVGANILDataReader (these objects can be accessed from the list
-   //returned by GetUnknownParameters()).
    //
    //To access the full list of data parameters in the file after this method has been
    //called (i.e. after the file is opened), use GetRawDataParameters().
@@ -273,35 +249,13 @@ void KVGANILDataReader::ConnectRawDataParameters(const TSeqCollection* list_acq_
    KVACQParam* par;
    GTDataPar* daq_par;
    while ((daq_par = (GTDataPar*) next())) {//loop over all parameters
-      par = CheckACQParam(list_acq_params, daq_par->GetName());
-      fGanilData->Connect(par->GetName(), par->ConnectData());
+      par = new KVACQParam(daq_par->GetName());
       par->SetNumber(daq_par->Index());
       par->SetNbBits(daq_par->Bits());
-      fParameters->Add(par);
+      fParameters.Add(par);
+      fGanilData->Connect(daq_par->Index(), par->ConnectData());
+      fGanilData->ConnectFired(daq_par->Index(), par->ConnectFired());
    }
-}
-
-//___________________________________________________________________________
-
-KVACQParam* KVGANILDataReader::CheckACQParam(const TSeqCollection* list_acq_params, const Char_t* par_name)
-{
-   //Check the named acquisition parameter.
-   //We look for a corresponding parameter in the list of acq params belonging to
-   //the current KVMultiDetArray (if one exists).
-   //If none is found, we create a new acq param which is added to the list of "unknown parameters"
-
-   KVACQParam* par;
-   if (!list_acq_params || !(par = (KVACQParam*)list_acq_params->FindObject(par_name))) {
-      //create new unknown parameter
-      par = new KVACQParam;
-      par->SetName(par_name);
-      if (!fExtParams) {
-         fExtParams = new KVHashList;
-         fExtParams->SetOwner(kTRUE);
-      }
-      fExtParams->Add(par);
-   }
-   return par;
 }
 
 //___________________________________________________________________________
@@ -319,12 +273,12 @@ Bool_t KVGANILDataReader::GetNextEvent()
    FillFiredParameterList();
    if (fUserTree) {
       if (make_arrays) {
-         NbParFired = fFired->GetEntries();
-         TIter next(fFired);
+         NbParFired = fFired.GetEntries();
+         TIter next(&fFired);
          KVACQParam* par;
          int i = 0;
          while ((par = (KVACQParam*)next())) {
-            ParVal[i] = par->GetCoderData();
+            ParVal[i] = par->GetData();
             ParNum[i] = par->GetNumber();
             i++;
          }
@@ -373,10 +327,10 @@ KVGANILDataReader* KVGANILDataReader::Open(const Char_t* filename, Option_t* dat
 void KVGANILDataReader::FillFiredParameterList()
 {
    // clears and then fills list fFired with all fired acquisition parameters in event
-   fFired->Clear();
-   TIter next(fParameters);
+   fFired.Clear();
+   TIter next(&fParameters);
    KVACQParam* par;
-   while ((par = (KVACQParam*)next())) if (par->Fired()) fFired->Add(par);
+   while ((par = (KVACQParam*)next())) if (par->Fired()) fFired.Add(par);
 }
 
 //____________________________________________________________________________

@@ -7,7 +7,7 @@
 #include "KVRawDataReader.h"
 #include "KVBase.h"
 #include "KVACQParam.h"
-#include "KVHashList.h"
+#include "KVUniqueNameList.h"
 #include "TTree.h"
 class GTGanilData;
 
@@ -65,12 +65,10 @@ protected:
    Bool_t make_arrays;
    Bool_t make_leaves;
 
-   KVHashList* fParameters;//list of all data parameters contained in file
-   KVHashList* fExtParams;//list of data parameters in file not defined by gMultiDetArray
-   KVHashList* fFired;//list of fired parameters in one event
+   KVUniqueNameList fParameters;//list of all data parameters contained in file
+   KVUniqueNameList fFired;//list of fired parameters in one event
 
-   virtual GTGanilData* NewGanTapeInterface(Option_t* dataset);
-   virtual KVACQParam* CheckACQParam(const TSeqCollection*, const Char_t*);
+   GTGanilData* NewGanTapeInterface(Option_t* dataset);
 
    void FillFiredParameterList();
 
@@ -81,7 +79,7 @@ public:
    }
    KVGANILDataReader(const Char_t*, Option_t*);
    void OpenFile(const Char_t*, Option_t* dataset);
-   void ConnectRawDataParameters(const TSeqCollection* list_acq_params = nullptr);
+   void ConnectRawDataParameters();
    virtual ~KVGANILDataReader();
 
    void init();
@@ -90,18 +88,14 @@ public:
 
    virtual void SetUserTree(TTree*, Option_t* = "arrays");
 
-   const KVSeqCollection* GetUnknownParameters() const
-   {
-      return fExtParams;
-   }
-   const KVSeqCollection* GetRawDataParameters() const
+   const KVSeqCollection& GetRawDataParameters() const
    {
       return fParameters;
    }
 
-   KVSeqCollection* GetFiredDataParameters() const
+   const KVSeqCollection& GetFiredDataParameters() const
    {
-      // returns pointer to list of fired acquisition parameters of current event.
+      // returns list of fired acquisition parameters of current event.
       // this list is filled automatically when GetNextEvent() is called.
       return fFired;
    }

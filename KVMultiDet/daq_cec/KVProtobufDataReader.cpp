@@ -143,11 +143,6 @@ KVProtobufDataReader::~KVProtobufDataReader()
 #endif
 }
 
-KVSeqCollection* KVProtobufDataReader::GetFiredDataParameters() const
-{
-   return nullptr;
-}
-
 Int_t KVProtobufDataReader::GetRunNumberReadFromFile() const
 {
    return 0;
