@@ -399,9 +399,46 @@ public:
    {
       SetBit(kIsAnalysed, b);
    }
-   inline virtual Bool_t Fired(Option_t* opt = "any") const;
-   inline virtual Bool_t FiredP(Option_t* opt = "any") const;
+   Bool_t Fired(Option_t* opt = "any") const
+   {
+      // Returns kTRUE if detector was hit (fired) in an event
+      //
+      // The actual meaning of hit/fired depends on the context and the option string opt.
+      //
+      // If the detector is in "simulation mode", i.e. if SetSimMode(kTRUE) has been called,
+      // this method returns kTRUE if the calculated energy loss in the active layer is > 0.
+      //
+      // In "experimental mode" (i.e. IsSimMode() returns kFALSE), depending on the option:
+      //
+      //opt="any" (default):
+      //Returns true if ANY of the raw parameters associated with the detector were present in the last handled event
+      //opt="all" :
+      //Returns true if ALL of the raw parameters associated with the detector were present in the last handled event
+      //
 
+      if (!IsDetecting()) return kFALSE; //detector not working, no answer at all
+      if (IsSimMode()) return (GetActiveLayer()->GetEnergyLoss() > 0.); // simulation mode: detector fired if energy lost in active layer
+
+      TString OPT(opt);
+      OPT.ToLower();
+      Bool_t all = (OPT == "all");
+
+      TIter raw_it(&GetListOfDetectorSignals());
+      KVDetectorSignal* ds;
+      int count_raw = 0;
+      while ((ds = (KVDetectorSignal*)raw_it())) {
+         if (ds->IsRaw()) {
+            ++count_raw;
+            if (ds->IsFired()) {
+               if (!all) return kTRUE;
+            }
+            else {
+               if (all) return kFALSE;
+            }
+         }
+      }
+      return all && count_raw;
+   }
    virtual void RemoveCalibrators();
 
    Double_t GetDetectorSignalValue(const TString& type, const KVNameValueList& params = "") const
@@ -743,66 +780,4 @@ inline Double_t KVDetector::GetGain() const
 {
    return fGain;
 }
-
-Bool_t KVDetector::Fired(Option_t* opt) const
-{
-   // Returns kTRUE if detector was hit (fired) in an event
-   //
-   // The actual meaning of hit/fired depends on the context and the option string opt.
-   //
-   // If the detector is in "simulation mode", i.e. if SetSimMode(kTRUE) has been called,
-   // this method returns kTRUE if the calculated energy loss in the active layer is > 0.
-   //
-   // In "experimental mode" (i.e. IsSimMode() returns kFALSE), depending on the option:
-   //
-   //opt="any" (default):
-   //Returns true if ANY* of the working acquisition parameters associated with the detector were fired in an event
-   //opt="all" :
-   //Returns true if ALL* of the working acquisition parameters associated with the detector were fired in an event
-   //opt="Pany" :
-   //Returns true if ANY* of the working acquisition parameters associated with the detector were fired in an event
-   //and have a value greater than their pedestal value
-   //opt="Pall" :
-   //Returns true if ALL* of the working acquisition parameters associated with the detector were fired in an event
-   //and have a value greater than their pedestal value
-   //
-   // *the actual parameters taken into account can be fine tuned using environment variables such as
-   //          [classname].Fired.ACQParameterList.[type]: PG,GG,T
-   //   where [classname]=KVDetector by default, or the name of some class
-   //   derived from KVDetector which calls the method KVDetector::SetKVDetectorFiredACQParameterListFormatString()
-   //   in its constructor.
-   // See KVDetector::SetFiredBitmask() for more details.
-
-   Warning("Fired", "needs reimplement");
-   if (!IsDetecting()) return kFALSE; //detector not working, no answer at all
-   if (IsSimMode()) return (GetActiveLayer()->GetEnergyLoss() > 0.); // simulation mode: detector fired if energy lost in active layer
-
-   if (opt[0] == 'P') return FiredP(opt + 1);
-
-   return false;
-}
-//_________________________________________________________________________________
-
-Bool_t KVDetector::FiredP(Option_t* opt) const
-{
-   //opt="any" :
-   //Returns true if ANY* of the working acquisition parameters associated with the detector were fired in an event
-   //and have a value greater than their pedestal value
-   //opt="all" :
-   //Returns true if ALL* of the working acquisition parameters associated with the detector were fired in an event
-   //and have a value greater than their pedestal value
-   //
-   // *the actual parameters taken into account can be fine tuned using environment variables such as
-   //          [classname].Fired.ACQParameterList.[type]: PG,GG,T
-   //   where [classname]=KVDetector by default, or the name of some class
-   //   derived from KVDetector which calls the method KVDetector::SetKVDetectorFiredACQParameterListFormatString()
-   //   in its constructor.
-   // See KVDetector::SetFiredBitmask() for more details.
-
-   Warning("FiredP", "needs reimplementing");
-   if (!IsDetecting()) return kFALSE; //detector not working, no answer at all
-
-   return false;
-}
-
 #endif
