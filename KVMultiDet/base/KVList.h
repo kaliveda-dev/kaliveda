@@ -29,7 +29,7 @@ class KVList: public KVSeqCollection {
 public:
 
    KVList(Bool_t owner = kTRUE);
-   virtual ~ KVList();
+   virtual ~ KVList() {}
 
    void Sort(Bool_t order = kSortAscending)
    {

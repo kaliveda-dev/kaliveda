@@ -2,17 +2,11 @@
 
 ClassImp(KVList)
 
-
-
 KVList::KVList(Bool_t owner) : KVSeqCollection("TList")
 {
    // Default ctor.
    // By default, a KVList owns its objects.
    SetOwner(owner);
-}
-
-KVList::~KVList()
-{
 }
 
 #include "Riostream.h"

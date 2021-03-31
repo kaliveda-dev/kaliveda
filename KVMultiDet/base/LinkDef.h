@@ -34,6 +34,7 @@
 #pragma link C++ class KVHashList+;
 #pragma link C++ class KVUniqueNameList+;
 #pragma link C++ class KVList-;
+#pragma link C++ class KVUnownedList+;
 #pragma link C++ class KVLockfile+;
 #pragma link C++ class KVLogReader+;
 #pragma link C++ class KVGELogReader+;
