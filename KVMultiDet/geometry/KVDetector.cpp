@@ -7,7 +7,6 @@
 #include "KVTelescope.h"
 #include "KVGroup.h"
 #include "KVCalibrator.h"
-#include "KVACQParam.h"
 #include "TPluginManager.h"
 #include "TObjString.h"
 #include "TClass.h"
@@ -24,7 +23,6 @@
 
 #include <TGeoPhysicalNode.h>
 #include <TGraph.h>
-//#include <KVGeoDNTrajectory.h>
 
 using namespace std;
 
@@ -371,8 +369,9 @@ Bool_t KVDetector::AddCalibrator(KVCalibrator* cal, const KVNameValueList& opts)
    //
    // Also sets calibrator's name to [detname]_[caltype]
    //
-   // If the input signal required by the calibrator is not defined for the detector,
-   // this method returns kFALSE and the calibrator will be deleted.
+   // As raw data signals may not be created until some raw data is actually read,
+   // here we have to handle the case where the input signal required by the calibrator
+   // is not yet available to us. In this case, we create it and add it to the detector.
    //
    // The (optional) KVNameValueList argument can be used to pass any extra parameters/options.
    // For example, if it contains a parameter `ZRange`:
@@ -386,13 +385,12 @@ Bool_t KVDetector::AddCalibrator(KVCalibrator* cal, const KVNameValueList& opts)
    // of atomic numbers)
 
    if (!cal) return kFALSE;
-   // check for input signal
+   // look for input signal
    KVDetectorSignal* in  = GetDetectorSignal(cal->GetInputSignalType());
+   // if 'in' is a raw data parameter, it may not yet exist (only created when data is read)
    if (!in) {
-      Warning("AddCalibrator", "%s : input signal %s not found for calibrator %s. No output signal created.",
-              GetName(), cal->GetInputSignalType().Data(), cal->GetType());
-      delete cal;
-      return kFALSE;
+      AddDetectorSignal(in = new KVDetectorSignal(cal->GetInputSignalType(), this));
+      Info("AddCalibrator", "Adding new raw detector signal: %s", in->GetTitle());
    }
    if (!fCalibrators)
       fCalibrators = new KVList();
@@ -410,10 +408,10 @@ Bool_t KVDetector::AddCalibrator(KVCalibrator* cal, const KVNameValueList& opts)
          // If 'ZRange' parameter is given we need to find the KVZDependentCalibratedSignal
          // and add a new signal to it.
          KVDetectorSignal* sig = GetDetectorSignal(cal->GetOutputSignalType());
-         if (!sig) sig = new_cal_sig = new KVZDependentCalibratedSignal(in, cal->GetOutputSignalType());
-         dynamic_cast<KVZDependentCalibratedSignal*>(sig)->AddSignal(
-            new KVCalibratedSignal(in, cal), opts.GetStringValue("ZRange")
-         );
+         if (!sig) {
+            new_cal_sig = sig = new KVZDependentCalibratedSignal(in, cal->GetOutputSignalType());
+         }
+         dynamic_cast<KVZDependentCalibratedSignal*>(sig)->AddSignal(new KVCalibratedSignal(in, cal), opts.GetStringValue("ZRange"));
       }
       else {
          new_cal_sig = new KVCalibratedSignal(in, cal);
@@ -1474,7 +1472,7 @@ void KVDetector::SetThickness(Double_t thick)
       }
       if (newshape) {
          pn->Align(nullptr, newshape);
-         Info("SetThickness", "Modified ROOT geometry for %s: new thickness=%g cm", GetName(), thick);
+         //Info("SetThickness", "Modified ROOT geometry for %s: new thickness=%g cm", GetName(), thick);
          gGeoManager->RefreshPhysicalNodes(kFALSE);
       }
    }
