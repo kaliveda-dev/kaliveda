@@ -5,9 +5,8 @@
 #include "KVDBParameterSet.h"
 #include "KVINDRA.h"
 #include "KVDetector.h"
-#include "KVACQParam.h"
 #include "KVCalibrator.h"
-#include "KVChannelVolt.h"
+//#include "KVChannelVolt.h"
 
 ClassImp(KVINDRAUpDater_e613)
 
@@ -83,25 +82,25 @@ void KVINDRAUpDater_e613::SetPedestals(KVDBRun* kvrun)
    Info("SetPedestals", "Loop on %d acquisition parameter : ...", ndets);
 
    Int_t nchange = 0;
-   KVACQParam* acq = 0;
+   KVEBYEDAT_ACQParam* acq = 0;
    KVDBParameterSet* dbps = 0;
    Float_t oldped;
    TString list;
    for (Int_t i = 0; i < ndets; i++) {
       dbps = (KVDBParameterSet*) ped_list->At(i);
-      acq = gIndra->GetACQParam(dbps->GetName());
+      acq = nullptr; // gIndra->GetACQParam(dbps->GetName());
       if (!acq) {
          //Error("SetPedestals","ACQ Parameter not defined %s",dbps->GetName());
       }
       else {
-         oldped = acq->GetPedestal();
-         if (oldped != Float_t(dbps->GetParameter(0))) {
-            acq->SetPedestal(Float_t(dbps->GetParameter(0)));
+//         oldped = acq->GetPedestal();
+//         if (oldped != Float_t(dbps->GetParameter(0))) {
+//            acq->SetPedestal(Float_t(dbps->GetParameter(0)));
 
-            list += acq->GetName();
-            list += ",";
-            nchange += 1;
-         }
+//            list += acq->GetName();
+//            list += ",";
+//            nchange += 1;
+//         }
       }
    }
    if (nchange == 0)
@@ -149,7 +148,7 @@ void KVINDRAUpDater_e613::SetChVoltParameters(KVDBRun* kvrun)
             //Prise en compte du gain du detecteur quand la rampe gene a ete faite
             //pour ponderation des coef dans KVChannelVolt
             Double_t gain_ref = kvps->GetParameter(kvc->GetNumberParams());
-            ((KVChannelVolt*)kvc)->SetGainRef(gain_ref);
+            //((KVChannelVolt*)kvc)->SetGainRef(gain_ref);
             for (Int_t i = 0; i < kvc->GetNumberParams(); i++) {
                kvc->SetParameter(i, kvps->GetParameter(i));
             }
@@ -169,28 +168,28 @@ void KVINDRAUpDater_e613::SetParameters(UInt_t run)
    //     parameters so that correct data are associated to each detector
 
    // inversion cables CsI 2.9 & 3.10
-   if (run < 559) {
-      KVDetector* d = gIndra->GetDetector("CSI_0209");
-      d->GetACQParam("R")->SetName("CSI_0310_R");
-      d->GetACQParam("L")->SetName("CSI_0310_L");
-      d->GetACQParam("T")->SetName("CSI_0310_T");
-      d = gIndra->GetDetector("CSI_0310");
-      d->GetACQParam("R")->SetName("CSI_0209_R");
-      d->GetACQParam("L")->SetName("CSI_0209_L");
-      d->GetACQParam("T")->SetName("CSI_0209_T");
-      ((KVHashList*)gIndra->GetACQParams())->Rehash();
-   }
-   else {
-      KVDetector* d = gIndra->GetDetector("CSI_0209");
-      d->GetACQParam("R")->SetName("CSI_0209_R");
-      d->GetACQParam("L")->SetName("CSI_0209_L");
-      d->GetACQParam("T")->SetName("CSI_0209_T");
-      d = gIndra->GetDetector("CSI_0310");
-      d->GetACQParam("R")->SetName("CSI_0310_R");
-      d->GetACQParam("L")->SetName("CSI_0310_L");
-      d->GetACQParam("T")->SetName("CSI_0310_T");
-      ((KVHashList*)gIndra->GetACQParams())->Rehash();
-   }
+//   if (run < 559) {
+//      KVDetector* d = gIndra->GetDetector("CSI_0209");
+//      d->GetACQParam("R")->SetName("CSI_0310_R");
+//      d->GetACQParam("L")->SetName("CSI_0310_L");
+//      d->GetACQParam("T")->SetName("CSI_0310_T");
+//      d = gIndra->GetDetector("CSI_0310");
+//      d->GetACQParam("R")->SetName("CSI_0209_R");
+//      d->GetACQParam("L")->SetName("CSI_0209_L");
+//      d->GetACQParam("T")->SetName("CSI_0209_T");
+//      ((KVHashList*)gIndra->GetACQParams())->Rehash();
+//   }
+//   else {
+//      KVDetector* d = gIndra->GetDetector("CSI_0209");
+//      d->GetACQParam("R")->SetName("CSI_0209_R");
+//      d->GetACQParam("L")->SetName("CSI_0209_L");
+//      d->GetACQParam("T")->SetName("CSI_0209_T");
+//      d = gIndra->GetDetector("CSI_0310");
+//      d->GetACQParam("R")->SetName("CSI_0310_R");
+//      d->GetACQParam("L")->SetName("CSI_0310_L");
+//      d->GetACQParam("T")->SetName("CSI_0310_T");
+//      ((KVHashList*)gIndra->GetACQParams())->Rehash();
+//   }
    KVINDRAUpDater::SetParameters(run);
 }
 

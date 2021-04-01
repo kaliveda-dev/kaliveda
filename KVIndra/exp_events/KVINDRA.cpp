@@ -46,6 +46,9 @@ $Id: KVINDRA.cpp,v 1.68 2009/01/21 10:05:51 franklan Exp $
 #include <KVASGroup.h>
 #include "TROOT.h"
 #include "KVGeoNavigator.h"
+#ifdef WITH_BUILTIN_GRU
+#include <KVGANILDataReader.h>
+#endif
 #include <KVGeoImport.h>
 #include <KVRangeTableGeoNavigator.h>
 #include <KVRawDataReader.h>
@@ -320,7 +323,6 @@ void KVINDRA::Build(Int_t run)
 {
    // Overrides KVASMultiDetArray::Build
    // Correspondance between CsI detectors and pin lasers is set up if known.
-   //Correspondance between Si and ChIo detectors and nunmber of the QDC is made
 
    if (run != -1) {
       fCurrentRun = run;
@@ -333,8 +335,6 @@ void KVINDRA::Build(Int_t run)
 
    SetNamesOfIDTelescopes();
 
-   //SetACQParams();
-
    SetDetectorThicknesses();
 
    SetIdentifications();
@@ -344,7 +344,24 @@ void KVINDRA::Build(Int_t run)
 
    SetPinLasersForCsI();
 
-   //LinkToCodeurs();
+   // link EBYEDAT parameter names to detectors
+   TIter next_det(GetDetectors());
+   KVDetector* det;
+   while ((det = (KVDetector*)next_det())) {
+      TString det_name(det->GetName());
+      if (det_name.BeginsWith("CI") || det_name.BeginsWith("SI")) {
+         fEbyedatParamDetMap.SetValue(det_name + "_PG", det_name);
+         fEbyedatParamDetMap.SetValue(det_name + "_GG", det_name);
+      }
+      else if (det_name.BeginsWith("CSI")) {
+         fEbyedatParamDetMap.SetValue(det_name + "_R", det_name);
+         fEbyedatParamDetMap.SetValue(det_name + "_L", det_name);
+      }
+      // handle change of "time marker" parameter type for certain experiments
+      TString time_marker_type = gDataSet->GetDataSetEnv(Form("KVACQParam.%s.T", det_name.Data()), "T");
+      time_marker_type.Prepend("_");
+      fEbyedatParamDetMap.SetValue(det_name + time_marker_type, det_name);
+   }
 }
 
 //void KVINDRA::SetArrayACQParams()
@@ -622,11 +639,58 @@ void KVINDRA::PerformClosedROOTGeometryOperations()
    CreateROOTGeometry();
 }
 
+void KVINDRA::handle_ebyedat_raw_data_parameter(const char* param_name, uint16_t val)
+{
+   std::string lab(param_name);
+
+   // use look-up table parname => detectorname
+   if (fEbyedatParamDetMap.HasParameter(param_name)) {
+      KVDetector* det = GetDetector(fEbyedatParamDetMap.GetStringValue(lab.c_str()));
+      // parameter type given by whatever comes after final '_'
+      TString partype = lab.substr(lab.rfind('_') + 1);
+      KVDetectorSignal* det_signal = det->GetDetectorSignal(partype);
+      if (!det_signal) {
+         det_signal = new KVDetectorSignal(partype, det);
+         det->AddDetectorSignal(det_signal);
+      }
+      det_signal->SetValue(val);
+      det_signal->SetFired();
+      fFiredSignals.Add(det_signal);
+      fFiredDetectors.Add(det);
+   }
+   else { // no detector associated to parameter
+      auto det_signal = fExtraRawDataSignals.get_object<KVDetectorSignal>(lab.c_str());
+      if (!det_signal) {
+         det_signal = new KVDetectorSignal(lab.c_str());
+         fExtraRawDataSignals.Add(det_signal);
+      }
+      det_signal->SetValue(val);
+      det_signal->SetFired();
+      fFiredSignals.Add(det_signal);
+   }
+}
+
+#ifdef WITH_BUILTIN_GRU
+Bool_t KVINDRA::handle_raw_data_event_ebyedat(KVGANILDataReader& rdr)
+{
+   // Set raw data in detectors/array coming from a GANIL EBYEDAT format
+   // acquisition file.
+
+   // loop over fired data parameters
+   TIter nxt_frd(&rdr.GetFiredDataParameters());
+   KVEBYEDAT_ACQParam* eby_par;
+   while ((eby_par = (KVEBYEDAT_ACQParam*)nxt_frd())) {
+      handle_ebyedat_raw_data_parameter(eby_par->GetName(), eby_par->GetData());
+   }
+
+   return kTRUE;
+}
+#endif
+
 #ifdef WITH_MFM
 Bool_t KVINDRA::handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame& f)
 {
    // General method for reading raw data in MFM-encapsulated ebyedat format
-   // Values of all KVACQParam objects appearing in the event are updated
    // Fills list of hit acquisition parameters.
    // Returns kTRUE if at least one parameter belonging to the array is present.
    //
@@ -641,24 +705,13 @@ Bool_t KVINDRA::handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame& f)
    // split into two 16-bit words. We replace the two parameters with a 64-bit
    // value (to hold correctly all unsigned 32-bit values) with [name].
 
-   Warning("handle_raw_data_event_mfmframe_ebyedat", "method needs reimplementing");
    uint16_t val;
-   string lab;
-   KVACQParam* acqpar;
-   Bool_t ok = false;
+   std::string lab;
 
-//   for (int i = 0; i < ebyframe.GetNbItems(); ++i) {
-//      ebyframe.GetDataItem(i, lab, val);
-//      if ((acqpar = GetACQParam(lab.c_str()))) {
-//         acqpar->SetData(val);
-//         fFiredACQParams.Add(acqpar);
-//         ok = kTRUE;
-//      }
-//      else
-//         fReconParameters.SetValue(Form("ACQPAR.%s.%s", GetName(), lab.c_str()), val);
-//   }
-
-   if (!ok) return kFALSE;
+   for (int i = 0; i < f.GetNbItems(); ++i) {
+      f.GetDataItem(i, lab, val);
+      handle_ebyedat_raw_data_parameter(lab.c_str(), val);
+   }
 
    ULong64_t ts = f.GetCENTRUMTimestamp();
    if (ts != 0) fReconParameters.SetValue64bit("INDRA.TS", ts);
@@ -810,16 +863,16 @@ void KVINDRA::SetPinLasersForCsI()
 
 //_____________________________________________________________________________
 
-void KVINDRA::GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollection* fired_params)
+void KVINDRA::GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollection* fired_dets)
 {
    // Overrides KVASMultiDetArray::GetDetectorEvent.
-   // If the list of fired acquisition parameters is given (meaning we are reading raw data)
+   // If the list of fired detectors is given (meaning we are reading raw data)
    // then we check that what we have read is in fact an INDRA event
    // (see KVINDRATriggerInfo::IsINDRAEvent()) : if not, we do not try to find the hit groups.
 
-   if (((fired_params && fired_params->GetEntries()) || fFiredACQParams.GetEntries())
+   if (((fired_dets && fired_dets->GetEntries()) || fFiredDetectors.GetEntries())
          && !GetTriggerInfo()->IsINDRAEvent()) return;
-   KVASMultiDetArray::GetDetectorEvent(detev, fired_params);
+   KVASMultiDetArray::GetDetectorEvent(detev, fired_dets);
 }
 
 //_______________________________________________________________________________
@@ -1028,4 +1081,16 @@ void KVINDRA::SetReconParametersInEvent(KVReconstructedEvent* e) const
    if (GetReconParameters().HasValue64bit("INDRA.EN")) e->SetNumber(GetReconParameters().GetValue64bit("INDRA.EN"));
 }
 
+void KVINDRA::InitialiseRawDataReading(KVRawDataReader*)
+{
+   // Call this method just after opening a raw data file in order to perform any
+   // necessary initialisations, depending on the type of data
 
+#ifdef WITH_MESYTEC
+   // in case Mesytec data is to be read, we tweak the parameter names
+   mesytec::set_data_type_alias("qdc_long", "TotLight"); // => CsI
+   mesytec::set_data_type_alias("qdc_short", "R"); // => like old CsI 'R' (rapide) parameter
+   mesytec::set_data_type_alias("tdc", "T"); // => like old 'marqueur de temps' parameters
+   mesytec::set_data_type_alias("adc", "ADC"); // => Si or ChIo signals
+#endif
+}

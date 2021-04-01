@@ -7,7 +7,7 @@
 ClassImp(KVDetectorSignal)
 
 KVDetectorSignal::KVDetectorSignal(const Char_t* type, const KVDetector* det)
-   : KVBase(type), fDetector(det), fValue(0)
+   : KVBase(type), fDetector(det), fValue(0), fFired(false)
 {
    if (det) SetTitle(Form("Signal %s of detector %s", type, det->GetName()));
    else SetTitle(Form("Detector signal %s", type));

@@ -61,18 +61,6 @@ KVCsI::~KVCsI()
 {
 }
 
-
-//void KVCsI::SetACQParams()
-//{
-//   // Set acquisition parameters for this CsI.
-//   // Do not call before detector's name has been set.
-//   // Initialises member pointers fACQ_R & fACQ_L for (fast) direct access.
-
-//   AddACQParamType("R");
-//   AddACQParamType("L");
-//   AddACQParamType("T");
-//}
-
 //______________________________________________________________________________
 
 Double_t KVCsI::GetCorrectedEnergy(KVNucleus* nuc, Double_t lum, Bool_t)

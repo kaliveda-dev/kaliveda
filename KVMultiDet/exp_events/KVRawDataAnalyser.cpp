@@ -62,6 +62,10 @@ void KVRawDataAnalyser::ProcessRun()
    KVMultiDetArray::MakeMultiDetector(gDataSet->GetName(), fRunNumber);
    fCurrentRun = gExpDB->GetDBRun(fRunNumber);
 
+   // perform any initialisations which may be required, dependent on the
+   // format of the data, the multidetector, etc.
+   gMultiDetArray->InitialiseRawDataReading(fRunFile);
+
    fEventNumber = 1; //event number
 
    Long64_t nevents = GetNbEventToRead();

@@ -109,10 +109,6 @@ public:
       return fCurrentRun;
    }
 
-   virtual Bool_t FileHasUnknownParameters() const
-   {
-      return (fRunFile->GetUnknownParameters()->GetSize() > 0);
-   }
    void SubmitTask();
    static void Make(const Char_t* kvsname = "MyOwnRawDataAnalyser");
 

@@ -24,7 +24,6 @@ $Id: KVINDRA.h,v 1.43 2009/01/21 10:05:51 franklan Exp $
 #include "KVASMultiDetArray.h"
 #include "KVList.h"
 #include "KVHashList.h"
-#include "KVACQParam.h"
 #include "KVDBSystem.h"
 #include "KVUpDater.h"
 #include "KVDataSetManager.h"
@@ -76,13 +75,6 @@ public:
 
 private:
    UChar_t fTrigger;           //multiplicity trigger used for acquisition
-   //KVList fOwnedACQParams;     //! to clean up acquisition parameters belonging to the array, not to detectors
-
-//   void AddArrayACQParam(KVACQParam* p)
-//   {
-//      fOwnedACQParams.Add(p);
-//      AddACQParam(p);
-//   }
 
 protected:
    KVHashList* fChIo;              //->List Of ChIo of INDRA
@@ -95,6 +87,8 @@ protected:
    KVINDRATriggerInfo* fSelecteur;//infos from DAQ trigger (le Selecteur)
 
    TEnv fStrucInfos;//! file containing structure of array
+
+   KVNameValueList fEbyedatParamDetMap;//! maps EBYEDAT parameter names to detectors
 
    virtual void MakeListOfDetectors();
    virtual void BuildGeometry();
@@ -110,9 +104,14 @@ protected:
    void SetNamesOfIDTelescopes() const;
 
    void PerformClosedROOTGeometryOperations();
+#ifdef WITH_BUILTIN_GRU
+   virtual Bool_t handle_raw_data_event_ebyedat(KVGANILDataReader&);
+#endif
 #ifdef WITH_MFM
    Bool_t handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame&);
 #endif
+   void handle_ebyedat_raw_data_parameter(const char* param_name, uint16_t val);
+
 public:
    KVINDRA();
    virtual ~ KVINDRA();
@@ -158,8 +157,8 @@ public:
 
    void SetPinLasersForCsI();
 
-   //void SetArrayACQParams();
-   virtual void GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollection* fired_params = 0);
+   void InitialiseRawDataReading(KVRawDataReader*);
+   virtual void GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollection* fired_dets = 0);
 
    KVINDRATriggerInfo* GetTriggerInfo()
    {
