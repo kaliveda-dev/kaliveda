@@ -14,6 +14,7 @@
 
 #include <KVFileReader.h>
 #include <KVGeoDNTrajectory.h>
+#include <KVUnownedList.h>
 class KVIDGraph;
 class KVTarget;
 class KVTelescope;
@@ -90,9 +91,9 @@ protected:
 
    KVDetectorEvent* fHitGroups;          //!   list of hit groups in simulation
    KVSeqCollection* fIDTelescopes;       //->deltaE-E telescopes in groups
-   //KVSeqCollection* fACQParams;          //list of data acquisition parameters associated to detectors
-   KVUniqueNameList fFiredACQParams;     //! list of fired acquisition parameters after reading raw data event
-
+   KVUniqueNameList fFiredDetectors;     //! list of fired detectors after reading raw data event
+   KVUniqueNameList fExtraRawDataSignals;    //! any signals read from raw data not associated with a detector
+   KVUnownedList fFiredSignals;          //! list of fired signals after reading raw data event
    TString fDataSet;            //!name of associated dataset, used with MakeMultiDetector()
    UInt_t fCurrentRun;          //Number of the current run used to call SetParameters
    KVUpDater* fUpDater;          //!used to set parameters for multidetector
@@ -243,19 +244,23 @@ public:
    void RemoveGroup(const Char_t*);
    void ReplaceDetector(const Char_t* name, KVDetector* new_kvd);
 
-//   void AddACQParam(KVACQParam*);
-//   const KVSeqCollection* GetACQParams() const
-//   {
-//      return fACQParams;
-//   }
-
-   /// Returns list of acquisition parameters (KVACQParam objects) fired in last read raw event
-   const KVSeqCollection* GetFiredDataParameters() const
+   /// Returns list of detectors fired in last read raw event
+   const KVSeqCollection* GetFiredDetectors() const
    {
-      return &fFiredACQParams;
+      return &fFiredDetectors;
    }
 
-   //virtual void SetArrayACQParams();
+   /// Returns list of raw data parameters fired in last read raw event
+   const KVSeqCollection* GetFiredSignals() const
+   {
+      return &fFiredSignals;
+   }
+
+   /// Returns list of any raw data parameters added to array after reading raw data
+   const KVSeqCollection* GetExtraRawDataSignals() const
+   {
+      return &fExtraRawDataSignals;
+   }
 
    virtual void DetectEvent(KVEvent* event, KVReconstructedEvent* rec_event, const Char_t* detection_frame = "");
    virtual Int_t FilteredEventCoherencyAnalysis(Int_t round, KVReconstructedEvent* rec_event);
@@ -478,7 +483,7 @@ public:
       return glist->GetEntries();
    }
 
-   void InitialiseRawDataReading(KVRawDataReader*);
+   virtual void InitialiseRawDataReading(KVRawDataReader*);
    Bool_t HandleRawDataEvent(KVRawDataReader*);
 #ifdef WITH_MFM
    Bool_t HandleRawDataBuffer(MFMBufferReader&);

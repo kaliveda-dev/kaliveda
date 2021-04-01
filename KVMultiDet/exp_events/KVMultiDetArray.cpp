@@ -8,7 +8,6 @@
 #include "KVDetectorEvent.h"
 #include "KVReconstructedEvent.h"
 #include "KVReconstructedNucleus.h"
-#include "KVACQParam.h"
 #include "KVRList.h"
 #include "KVLayer.h"
 #include "KVEvent.h"
@@ -93,11 +92,6 @@ void KVMultiDetArray::init()
    //groups list fGroups, identification telescopes list
    //fIDTelescopes
    //
-   //Cleanups
-   //The fDetectors and fACQParams lists contain references to objects which are
-   //referenced & owned by other objects. We use the ROOT automatic garbage collection
-   //to make sure that any object deleted elsewhere is removed automatically from these lists.
-   //
    //The fGroups & fIDTelescopes lists contain objects owned by the multidetector array,
    //but which may be deleted by other objects (or as a result of the deletion of other
    //objects: i.e. if all the detectors in a group are deleted, the group itself is destroyed).
@@ -110,7 +104,6 @@ void KVMultiDetArray::init()
 
    fHitGroups = 0;
 
-   //fACQParams = 0;
    fTarget = 0;
    fCurrentRun = 0;
 
@@ -121,7 +114,6 @@ void KVMultiDetArray::init()
    fROOTGeometry = gEnv->GetValue("KVMultiDetArray.ROOTGeometry", kTRUE);
    fFilterType = kFilterType_Full;
 
-//   fGeoManager = 0;
    fNavigator = 0;
    fUpDater = 0;
 
@@ -135,6 +127,9 @@ void KVMultiDetArray::init()
 
    fRawDataReader = nullptr;
    fHandledRawData = false;
+
+   // any extra raw data signals created when reading data belong to us
+   fExtraRawDataSignals.SetOwner(kTRUE);
 }
 
 //___________________________________________________________________________________
@@ -149,13 +144,6 @@ KVMultiDetArray::~KVMultiDetArray()
       delete fIDTelescopes;
    }
    fIDTelescopes = 0;
-
-   //clear list of acquisition parameters
-//   if (fACQParams && fACQParams->TestBit(kNotDeleted)) {
-//      fACQParams->Clear();
-//      delete fACQParams;
-//   }
-//   fACQParams = 0;
 
    if (fTarget) {
       delete fTarget;
@@ -1492,32 +1480,29 @@ void KVMultiDetArray::SetCalibratorParameters(KVDBRun* r, const TString& myname)
    }
 }
 
-void KVMultiDetArray::GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollection* fired_params)
+void KVMultiDetArray::GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollection* fired_dets)
 {
    // First step in event reconstruction based on current status of detectors in array.
    // Fills the given KVDetectorEvent with the list of all groups which have fired.
    // i.e. loop over all groups of the array and test whether KVGroup::Fired() returns true or false.
    //
-   // If the list of fired acquisition parameters 'fired_params' is given, then we use this list
+   // If the list of fired detectors 'fired_dets' is given, then we use this list
    // to find, first, the associated fired detectors, then, the associated groups. If not given,
    // or if it is empty, we may use the internal fFiredACQParams list.
    //
    // Call method detev->Clear() before reading another event in order to reset all of the hit groups
    // (including all detectors etc.) and emptying the list.
 
-   if (!fired_params || !fired_params->GetEntries()) {
-      if (fFiredACQParams.GetEntries()) fired_params = &fFiredACQParams;
+   if (!fired_dets || !fired_dets->GetEntries()) {
+      if (fFiredDetectors.GetEntries()) fired_dets = &fFiredDetectors;
    }
-   if (fired_params && fired_params->GetEntries()) {
+   if (fired_dets && fired_dets->GetEntries()) {
       // list of fired acquisition parameters given
-      TIter next_par(fired_params);
-      KVACQParam* par = 0;
+      TIter next_det(fired_dets);
       KVDetector* det = 0;
       KVGroup* grp = 0;
-      while ((par = (KVACQParam*)next_par())) {
-         if ((det = par->GetDetector())) {
-            if ((grp = det->GetGroup()) && grp->GetParents()->Contains(this)) detev->AddGroup(grp);
-         }
+      while ((det = (KVDetector*)next_det())) {
+         if ((grp = det->GetGroup()) && grp->GetParents()->Contains(this)) detev->AddGroup(grp);
       }
    }
    else {
@@ -2912,9 +2897,9 @@ void KVMultiDetArray::InitialiseRawDataReading(KVRawDataReader* r)
    // Call this method just after opening a raw data file in order to perform any
    // necessary initialisations, depending on the type of data
 
-   Warning("InitialiseRawDataReading", "method needs reimplementing");
 #ifdef WITH_BUILTIN_GRU
-//   if (r->GetDataFormat() == "EBYEDAT") dynamic_cast<KVGANILDataReader*>(r)->ConnectRawDataParameters(GetACQParams());
+   if (r->GetDataFormat() == "EBYEDAT")
+      dynamic_cast<KVGANILDataReader*>(r)->ConnectRawDataParameters();
 #endif
 }
 
@@ -3006,7 +2991,6 @@ void KVMultiDetArray::SetMinimumOKMultiplicity(KVEvent* e) const
 Bool_t KVMultiDetArray::handle_raw_data_event_ebyedat(KVGANILDataReader&)
 {
    // General method for reading raw data in old GANIL ebyedat format
-   // Values of all KVACQParam objects appearing in the event are updated
    AbstractMethod("handle_raw_data_event_ebyedat");
    return kFALSE;
 }
@@ -3015,13 +2999,15 @@ Bool_t KVMultiDetArray::handle_raw_data_event_ebyedat(KVGANILDataReader&)
 void KVMultiDetArray::prepare_to_handle_new_raw_data()
 {
    // reset acquisition parameters etc. before reading new raw data event
-   Warning("prepare_to_handle_new_raw_data", "method needs reimplmeenting");
-//   TIter it(GetACQParams());
-//   KVACQParam* acqpar;
-//   while ((acqpar = (KVACQParam*)it())) acqpar->Clear();
+
    fReconParameters.Clear();
-   fFiredACQParams.Clear();
+   fFiredDetectors.Clear();
    fHandledRawData = false;
+   // reset fired signals
+   TIter nxt(&fFiredSignals);
+   KVDetectorSignal* ds;
+   while ((ds = (KVDetectorSignal*)nxt())) ds->SetFired(false);
+   fFiredSignals.Clear();
 }
 
 void KVMultiDetArray::PerformClosedROOTGeometryOperations()
@@ -3042,14 +3028,18 @@ void KVMultiDetArray::SetReconParametersInEvent(KVReconstructedEvent* e) const
 
 void KVMultiDetArray::copy_fired_parameters_to_recon_param_list()
 {
-   Warning("copy_fired_parameters_to_recon_param_list", "method to be reimplemented");
-//   TIter it(GetFiredDataParameters());
-//   TObject* o;
-//   while ((o = it())) {
-//      if (o->InheritsFrom("KVACQParam") && GetACQParam(o->GetName())) {
-//         fReconParameters.SetValue(Form("ACQPAR.%s.%s", GetName(), o->GetName()), (Int_t)((KVACQParam*)o)->GetCoderData());
-//      }
-//   }
+   // values of fired raw data signals (acquisition parameters) from last read raw event
+   // are copied to the fReconParameters list of parameters to be stored with the
+   // reconstructed event.
+
+   TIter it(GetFiredSignals());
+   KVDetectorSignal* o;
+   while ((o = (KVDetectorSignal*)it())) {
+      if (o->GetDetector())
+         fReconParameters.SetValue(Form("ACQPAR.%s.%s.%s", GetName(), o->GetDetector()->GetName(), o->GetName()), o->GetValue());
+      else
+         fReconParameters.SetValue(Form("ACQPAR.%s.%s", GetName(), o->GetName()), o->GetValue());
+   }
 }
 
 Bool_t KVMultiDetArray::HandleRawDataEvent(KVRawDataReader* rawdata)
@@ -3358,7 +3348,6 @@ Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe(const MFMCommonFrame& mfm
    // use these data formats.
    //
    // Return kTRUE if raw data was treated
-   Info("handle_raw_data_event_mfmframe", "called");
    if (mfmframe.GetFrameType() == MFM_MESYTEC_MDPP_FRAME_TYPE)
       return handle_raw_data_event_mfmframe_mesytec_mdpp((const MFMMesytecMDPPFrame&)mfmframe);
    if (mfmframe.GetFrameType() == MFM_EBY_EN_FRAME_TYPE
@@ -3369,25 +3358,29 @@ Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe(const MFMCommonFrame& mfm
    return kFALSE;
 }
 
-Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame&)
+Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame& ebyframe)
 {
+   // Read a raw data event from a EBYEDAT MFM Frame.
+
    AbstractMethod("handle_raw_data_event_mfmframe_ebyedat");
    return kFALSE;
 }
 
 Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPPFrame& f)
 {
-   Info("handle_raw_data_event_mfmframe_mesytec_mdpp", "called");
+   // Read a raw data event from a Mesytec MFM Frame.
+   //
+   // All data is transferred to KVDetectorSignal objects, either associated to detectors of the
+   // array (if they can be identified), either associated more globally with the array/event
+   // itself. The latter are created as needed and go into the fExtraRawDataSignals list.
+
 #ifdef WITH_MESYTEC
-   Info("handle_raw_data_event_mfmframe_mesytec_mdpp", "reading buffer");
    auto mfmfilereader = dynamic_cast<KVMFMDataFileReader*>(fRawDataReader);
    mfmfilereader->GetMesytecBufferReader().read_event_in_buffer(
       (const uint8_t*)f.GetPointUserData(), f.GetBlobSize(),
    [&](const mesytec::mdpp::event & evt) {
-      Info("lambda_callback", "being called now");
       auto& setup = mfmfilereader->GetMesytecBufferReader().get_setup();
       // loop over module data in event, set data in detectors when possible
-      KVUniqueNameList hit_detectors;
       for (auto& mdat : evt.modules) {
          auto mod_id = mdat.module_id;
          for (auto& voie : mdat.data) {
@@ -3400,11 +3393,24 @@ Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMes
                   detector->AddDetectorSignal(det_signal);
                }
                det_signal->SetValue(voie.data);
-               hit_detectors.Add(detector);
+               det_signal->SetFired();
+               fFiredSignals.Add(det_signal);
+               fFiredDetectors.Add(detector);
+            }
+            else {
+               // raw data not associated with a detector
+               TString sig_name = Form("%s.%s", detname.c_str(), voie.data_type.c_str());
+               auto det_signal = fExtraRawDataSignals.get_object<KVDetectorSignal>(sig_name);
+               if (!det_signal) {
+                  det_signal = new KVDetectorSignal(sig_name);
+                  fExtraRawDataSignals.Add(det_signal);
+               }
+               det_signal->SetValue(voie.data);
+               det_signal->SetFired();
+               fFiredSignals.Add(det_signal);
             }
          }
       }
-      hit_detectors.Print("data");
    }
    );
    return kTRUE;
