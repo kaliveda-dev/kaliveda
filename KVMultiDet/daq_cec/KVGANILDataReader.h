@@ -6,7 +6,7 @@
 
 #include "KVRawDataReader.h"
 #include "KVBase.h"
-#include "KVACQParam.h"
+#include "KVEBYEDAT_ACQParam.h"
 #include "KVUniqueNameList.h"
 #include "TTree.h"
 class GTGanilData;

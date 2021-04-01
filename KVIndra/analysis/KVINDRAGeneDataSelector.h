@@ -14,7 +14,7 @@
 #include "KVINDRATriggerInfo.h"
 #include "Riostream.h"
 #include "KVINDRA.h"
-#include "KVACQParam.h"
+#include "KVEBYEDAT_ACQParam.h"
 
 /**
 \class KVINDRAGeneDataSelector

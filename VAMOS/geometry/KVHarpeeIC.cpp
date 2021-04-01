@@ -200,10 +200,10 @@ UInt_t KVHarpeeIC::GetFiredSegNumber(Option_t* opt)
    // their value above the pedestal.
 
    TIter next(GetACQParamList());
-   KVACQParam* par = NULL;
+   KVEBYEDAT_ACQParam* par = NULL;
    UInt_t num = 0;
 
-   while ((par = (KVACQParam*)next())) {
+   while ((par = (KVEBYEDAT_ACQParam*)next())) {
       if (par->Fired(opt)) {
          if (num && (num != par->GetNumber())) return 0;
          num = par->GetNumber();
@@ -311,7 +311,7 @@ void KVHarpeeIC::SetACQParams()
    for (Int_t num = 1; num <= ARPEEIC_NSEG; num++) {
 //    for(Int_t i = 0; i<3; i++){
       for (Int_t i = 0; i < 1; i++) {
-         KVACQParam* par = new KVACQParam;
+         KVEBYEDAT_ACQParam* par = new KVEBYEDAT_ACQParam;
          name.Form("E%s_%c_%d", GetType(), idx[i], num);
          par->SetName(name);
          par->SetType("E");

@@ -21,7 +21,7 @@ $Id: KVMultiDetArray.cpp,v 1.91 2009/04/06 11:54:54 franklan Exp $
 #include "KVDetector.h"
 #include "KVDetectorEvent.h"
 #include "KVReconstructedEvent.h"
-#include "KVACQParam.h"
+#include "KVEBYEDAT_ACQParam.h"
 #include "KVRList.h"
 #include "KVLayer.h"
 #include "KVEvent.h"

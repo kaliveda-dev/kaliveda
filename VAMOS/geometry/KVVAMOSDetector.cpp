@@ -136,8 +136,8 @@ Bool_t KVVAMOSDetector::Fired(Option_t* opt, Option_t* optP)
    UChar_t id;
    TIter next(GetACQParamList());
    TIter next_t(GetTACQParamList());
-   KVACQParam* par;
-   while (keep_up.Value() && ((par = (KVACQParam*)next()) || (par = (KVACQParam*)next_t()))) {
+   KVEBYEDAT_ACQParam* par;
+   while (keep_up.Value() && ((par = (KVEBYEDAT_ACQParam*)next()) || (par = (KVEBYEDAT_ACQParam*)next_t()))) {
       if (par->IsWorking() && par->Fired(optP)) {
          id = GetACQParamTypeIdxFromID(par->GetUniqueID());
          event.SetBit(id + 3);
@@ -176,12 +176,12 @@ void KVVAMOSDetector::SetCalibrators()
 
    TIter nextpar(GetACQParamList());
 
-   KVACQParam* par   = NULL;
+   KVEBYEDAT_ACQParam* par   = NULL;
    Double_t    maxch = 16384.;       // 14 bits
 
    TString  calibtype("ERROR");
 
-   while ((par = (KVACQParam*)nextpar())) {
+   while ((par = (KVEBYEDAT_ACQParam*)nextpar())) {
       Bool_t isTparam = kFALSE;
 
       if (par->IsType("E")) {
@@ -222,7 +222,7 @@ void KVVAMOSDetector::SetCalibrators()
    // to gVamos
    if (gVamos) {
       TIter next_vacq(gVamos->GetVACQParams());
-      while ((par = (KVACQParam*)next_vacq())) {
+      while ((par = (KVEBYEDAT_ACQParam*)next_vacq())) {
          if ((par->GetType()[0] == 'T') && IsStartForT(par->GetName() + 1)) {
             if (!fTlist) fTlist = new TList;
             fTlist->Add(par);
@@ -375,7 +375,7 @@ Float_t KVVAMOSDetector::GetT(const Char_t* type)
    // or type is not correct, this method returns -1;
 
    if (!IsStartForT(type) || !gVamos) return -1;
-   KVACQParam* par = gVamos->GetACQParam(Form("T%s", type));
+   KVEBYEDAT_ACQParam* par = gVamos->GetACQParam(Form("T%s", type));
    return (par ? par->GetData() : -1);
 }
 //________________________________________________________________

@@ -137,9 +137,9 @@ void KVIVUpDater::SetPedestalCorrections(KVDBRun* run)
 
       // Initializing each ACQ parameter pedestal correction for
       // all detectors
-      KVACQParam* acqpar = NULL;
+      KVEBYEDAT_ACQParam* acqpar = NULL;
       TIter next_acqp(det->GetACQParamList());
-      while ((acqpar = (KVACQParam*)next_acqp()))
+      while ((acqpar = (KVEBYEDAT_ACQParam*)next_acqp()))
          acqpar->SetDeltaPedestal(0.);
 
       // Set the pedestal correction if a value exists for

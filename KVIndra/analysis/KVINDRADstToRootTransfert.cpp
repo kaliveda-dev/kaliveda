@@ -216,8 +216,8 @@ void KVINDRADstToRootTransfert::ProcessRun()
    // internal data member pointers are pointing to internal array of GTGanilData object
    // used by now deleted KVGANILDataReader. need to set them to internal fData member.
    TIter nextparam(params);
-   KVACQParam* acqpar;
-   while ((acqpar = (KVACQParam*)nextparam())) acqpar->UseInternalDataMember();
+   KVEBYEDAT_ACQParam* acqpar;
+   while ((acqpar = (KVEBYEDAT_ACQParam*)nextparam())) acqpar->UseInternalDataMember();
    // reset addresses of branches which were pointing to internal members of deleted KVGANILDataReader.
    rawtree->SetBranchAddress("NbParFired", &NbParFired);
    rawtree->SetBranchAddress("ParVal", ParVal);
@@ -1048,8 +1048,8 @@ void KVINDRADstToRootTransfert::FillRawTree()
 
    NbParFired = 0;
    TIter next(params);
-   KVACQParam* par = 0;
-   while ((par = (KVACQParam*)next())) {
+   KVEBYEDAT_ACQParam* par = 0;
+   while ((par = (KVEBYEDAT_ACQParam*)next())) {
       if (par->Fired()) {
          ParVal[NbParFired] = par->GetCoderData();
          ParNum[NbParFired++] = par->GetNumber();

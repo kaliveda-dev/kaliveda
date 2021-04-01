@@ -5,7 +5,7 @@
 #include "KVIDSi75SiLi_e494s.h"
 #include "KVIdentificationResult.h"
 #include "KVDataSet.h"
-#include "KVACQParam.h"
+#include "KVEBYEDAT_ACQParam.h"
 
 
 ClassImp(KVIDSi75SiLi_e494s)
@@ -132,7 +132,7 @@ Bool_t KVIDSi75SiLi_e494s::Identify(KVIdentificationResult* IDR, Double_t x, Dou
    // set general ID code
    IDR->IDcode = GetIDCode();
 
-   KVACQParam* pmt = (KVACQParam*)fSiLi->GetACQParam("T");  // MFR
+   KVEBYEDAT_ACQParam* pmt = (KVEBYEDAT_ACQParam*)fSiLi->GetACQParam("T");  // MFR
    Short_t MTSiLi = pmt->GetCoderData();                    // MFR
 
    const Bool_t inRange = (fThresholdX < X) && (X < 4090.) && (fThresholdY < Y) && (Y < 4090.) && (MTSiLi > 0); // MFR

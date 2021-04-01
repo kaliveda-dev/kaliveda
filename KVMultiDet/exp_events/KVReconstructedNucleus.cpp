@@ -3,7 +3,7 @@
 #include "KVIDTelescope.h"
 #include "KVGroup.h"
 #include "KVMultiDetArray.h"
-#include "KVACQParam.h"
+#include "KVEBYEDAT_ACQParam.h"
 
 using namespace std;
 

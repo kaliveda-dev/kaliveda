@@ -154,10 +154,10 @@ void KVINDRAPulserDataTree::CreateTree()
    fIndex->SetOwner(kTRUE);
 
    TIter nxtACQ(acq_pars);
-   KVACQParam* ap = 0;
+   KVEBYEDAT_ACQParam* ap = 0;
    Int_t ap_num = 0;
    KVBase* iob;
-   while ((ap = (KVACQParam*)nxtACQ())) {
+   while ((ap = (KVEBYEDAT_ACQParam*)nxtACQ())) {
 
       TString ap_name(ap->GetName());
       TString ap_type(ap->GetType());

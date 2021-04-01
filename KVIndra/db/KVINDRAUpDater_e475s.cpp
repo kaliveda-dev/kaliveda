@@ -16,7 +16,7 @@ $Date: 2009/04/15 09:52:45 $
 #include "KVSilicon_e475s.h"
 #include "KVChIo_e475s.h"
 #include "KVCsI_e475s.h"
-#include "KVACQParam.h"
+#include "KVEBYEDAT_ACQParam.h"
 #include "KVINDRADB.h"
 
 #include "TList.h"
@@ -67,8 +67,8 @@ void KVINDRAUpDater_e475s::SetCalibrationParameters(UInt_t run)
          if (kvd->GetListOfCalibrators()) {
             kvd->RemoveCalibrators();
             TIter lacq(kvd->GetACQParamList());
-            KVACQParam* acq = 0;
-            while ((acq = (KVACQParam*)lacq())) {
+            KVEBYEDAT_ACQParam* acq = 0;
+            while ((acq = (KVEBYEDAT_ACQParam*)lacq())) {
                acq->SetPedestal(0);
             }
          }

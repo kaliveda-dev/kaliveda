@@ -76,7 +76,7 @@ void KVIVReconDataAnalyser::preAnalysis()
 
    theRawData->GetEntry(rawEntry);
    for (int i = 0; i < NbParFired; i++) {
-      KVACQParam* par = gMultiDetArray->GetACQParam((*parList)[ParNum[i]]->GetName());
+      KVEBYEDAT_ACQParam* par = gMultiDetArray->GetACQParam((*parList)[ParNum[i]]->GetName());
       if (par) {
          par->SetData(ParVal[i]);
       }

@@ -5,8 +5,6 @@
 #pragma link off all functions;
 #pragma link C++ nestedclasses;
 #pragma link C++ nestedtypedefs;
-#pragma link C++ class KVACQParam+;
-#pragma link C++ class KVACQParamSignal+;
 #pragma link C++ class KVCalibrator+;
 #pragma link C++ class KVDetector+;
 #pragma link C++ class KVDetectorSignal+;

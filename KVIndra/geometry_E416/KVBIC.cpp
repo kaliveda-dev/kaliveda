@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "KVBIC.h"
-#include "KVACQParam.h"
+#include "KVEBYEDAT_ACQParam.h"
 #include "KVLinCal.h"
 #include "TClass.h"
 
@@ -122,7 +122,7 @@ void KVBIC::AddACQParam(const Char_t* type)
 
    if (!fACQParams)
       fACQParams = new KVList();
-   KVACQParam* par = new KVACQParam();
+   KVEBYEDAT_ACQParam* par = new KVEBYEDAT_ACQParam();
    TString name;
    name.Form("CI_16%02d_%s", GetTelescope()->GetNumber(), type);
    par->SetName(name);
@@ -133,7 +133,7 @@ void KVBIC::AddACQParam(const Char_t* type)
 
 //________________________________________________________________________________
 
-KVACQParam* KVBIC::GetACQParam(const Char_t* type) const
+KVEBYEDAT_ACQParam* KVBIC::GetACQParam(const Char_t* type) const
 {
    //
    //Access acquisition parameter of given type
@@ -145,7 +145,7 @@ KVACQParam* KVBIC::GetACQParam(const Char_t* type) const
    }
    TString name;
    name.Form("CI_16%02d_%s", GetTelescope()->GetNumber(), type);
-   return ((KVACQParam*) fACQParams->FindObjectWithNameAndType(name, type));
+   return ((KVEBYEDAT_ACQParam*) fACQParams->FindObjectWithNameAndType(name, type));
 }
 
 //__________________________________________________________________________________

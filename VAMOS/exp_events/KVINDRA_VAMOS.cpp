@@ -105,7 +105,7 @@ void KVINDRA_VAMOS::Build(Int_t run)
    TIter next_v(vamos->GetACQParams());
    TObject* obj;
    while ((obj = next_i()) || (obj = next_v()))
-      AddACQParam((KVACQParam*)obj);
+      AddACQParam((KVEBYEDAT_ACQParam*)obj);
 
    fDetectors.AddAll(indra->GetDetectors());
    fDetectors.AddAll(vamos->GetDetectors());
@@ -144,7 +144,8 @@ KVNameValueList* KVINDRA_VAMOS::DetectParticle(KVNucleus* part)
 
    if (IsROOTGeometry()) {
       return DetectParticle_TGEO(part);
-   } else {
+   }
+   else {
       gIndra->SetROOTGeometry(kFALSE);
       return gIndra->DetectParticle(part);
    }
@@ -230,7 +231,8 @@ void KVINDRA_VAMOS::DetectEvent(KVEvent* event, KVReconstructedEvent* rec_event,
          // its detection in INDRA
          part->Clear();
 
-      } else _part->SetMomentum(*_part->GetPInitial());
+      }
+      else _part->SetMomentum(*_part->GetPInitial());
 
       SafeDelete(nvl);
    }     //fin de loop over particles

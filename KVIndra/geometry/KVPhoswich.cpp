@@ -17,7 +17,7 @@ $Id: KVPhoswich.cpp,v 1.14 2007/01/04 16:38:50 franklan Exp $
  ***************************************************************************/
 #include "Riostream.h"
 #include "KVPhoswich.h"
-#include "KVACQParam.h"
+#include "KVEBYEDAT_ACQParam.h"
 
 ClassImp(KVPhoswich);
 

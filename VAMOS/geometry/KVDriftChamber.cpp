@@ -210,7 +210,7 @@ void KVDriftChamber::SetACQParams()
 
    // Charge ACQ parameters
    TString name, title;
-   KVACQParam* par = NULL;
+   KVEBYEDAT_ACQParam* par = NULL;
    Int_t Nstrips =  _DC_N_STRIPS_;
    const Char_t* extraname[]  = {    "raw", "calib",        "clean"};
    const Char_t* extratitle[] = {       "",     "", "without noise"};
@@ -218,7 +218,7 @@ void KVDriftChamber::SetACQParams()
    for (Int_t i = 0; i < 2; i++) { // loop over row
       Int_t c_num = i + 1;
       for (Int_t num = 1; num <= Nstrips; num++) { // loop over strips
-         par = new KVACQParam;
+         par = new KVEBYEDAT_ACQParam;
          name.Form("STR_%d%d_%02d", GetNumber(), c_num, num);
          par->SetName(name);
          par->SetType("Q");
@@ -241,7 +241,7 @@ void KVDriftChamber::SetACQParams()
    }
 
    // Energy ACQ Parameters
-   par = new KVACQParam;
+   par = new KVEBYEDAT_ACQParam;
    par->SetName(GetEBaseName());
    par->SetType("E");
    par->SetNumber(GetNumber());
@@ -249,7 +249,7 @@ void KVDriftChamber::SetACQParams()
    AddACQParam(par);
 
    // Electron drift time ACQ Parameters
-   par = new KVACQParam;
+   par = new KVEBYEDAT_ACQParam;
    par->SetName(Form("TFIL_%d", GetNumber()));
    par->SetType("T_FIL");
    par->SetLabel("T_FIL");
@@ -306,8 +306,8 @@ TH1F* KVDriftChamber::GetQrawHisto(Int_t c_num)
    fQ[0][i]->Reset();
    TIter next(GetACQParamList());
 
-   KVACQParam* par  = NULL;
-   while ((par = (KVACQParam*)next())) {
+   KVEBYEDAT_ACQParam* par  = NULL;
+   while ((par = (KVEBYEDAT_ACQParam*)next())) {
 
       if ((par->GetLabel()[1] != Char_t('1' + i)) || !par->Fired("P")) continue;
 
@@ -333,7 +333,7 @@ TH1F* KVDriftChamber::GetQHisto(Int_t c_num)
    TIter next(GetListOfCalibrators());
 
    KVCalibrator* cal  = NULL;
-   KVACQParam*   par  = NULL;
+   KVEBYEDAT_ACQParam*   par  = NULL;
 
    Int_t NcalOK = 0;
    while ((cal = (KVCalibrator*)next())) {

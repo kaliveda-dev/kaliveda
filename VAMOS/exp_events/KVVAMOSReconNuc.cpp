@@ -1209,7 +1209,7 @@ Bool_t KVVAMOSReconNuc::CalculateCorrFlightDistanceAndTime(Double_t& dist, Doubl
    dist = tof = 0.;
    nHF = 0;
 
-   KVACQParam* par = gVamos->GetVACQParam(tof_name);
+   KVEBYEDAT_ACQParam* par = gVamos->GetVACQParam(tof_name);
    if (!par) {
       Error("GetCorrFlightDistanceAndTime", "No time %s is measured in VAMOS", tof_name);
       return kFALSE;

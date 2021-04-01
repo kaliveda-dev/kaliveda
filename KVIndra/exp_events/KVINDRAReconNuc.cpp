@@ -29,7 +29,7 @@ $Id: KVINDRAReconNuc.cpp,v 1.61 2009/04/03 14:28:37 franklan Exp $
 #include "KVIDTelescope.h"
 #include "TCollection.h"
 #include "KVChIo.h"
-#include "KVACQParam.h"
+#include "KVEBYEDAT_ACQParam.h"
 #include "KVSilicon.h"
 #include "KVCsI.h"
 /******* for Identify **********/

@@ -269,8 +269,8 @@ TH1F* KVSeD::GetQrawHisto(Char_t dir)
    fQ[0][i]->Reset();
    TIter next(GetACQParamList());
 
-   KVACQParam* par  = NULL;
-   while ((par = (KVACQParam*)next())) {
+   KVEBYEDAT_ACQParam* par  = NULL;
+   while ((par = (KVEBYEDAT_ACQParam*)next())) {
 
       if ((par->GetLabel()[0] != dir) || !par->Fired("P")) continue;
 
@@ -294,7 +294,7 @@ TH1F* KVSeD::GetQHisto(Char_t dir)
    TIter next(GetListOfCalibrators());
 
    KVCalibrator* cal  = NULL;
-   KVACQParam*   par  = NULL;
+   KVEBYEDAT_ACQParam*   par  = NULL;
    Int_t num;
 
    Int_t NcalOK = 0;
@@ -389,14 +389,14 @@ void KVSeD::SetACQParams()
 
    // Charge ACQ parameters
    TString name, title;
-   KVACQParam* par = NULL;
+   KVEBYEDAT_ACQParam* par = NULL;
    Int_t Nstrips[] = { 128,  48 };
    const Char_t* extraname[]  = {    "raw", "calib",        "clean"};
    const Char_t* extratitle[] = {       "",     "", "without noise"};
    const Char_t* units[]      = {"channel", "Volt",         "Volt"};
    for (Int_t i = 0; i < 2; i++) {
       for (Int_t num = 1; num <= Nstrips[i]; num++) {
-         par = new KVACQParam;
+         par = new KVEBYEDAT_ACQParam;
          name.Form("%s_%c_%03d", GetArrayName(), DIRECTION(i), num);
          par->SetName(name);
          par->SetType("Q");
@@ -445,11 +445,11 @@ void KVSeD::SetCalibrators()
    // loop over Time ACQ-parameters associated to this detector
    // to build Xf-corrector of T0
    TIter nextpar(fTlist);
-   KVACQParam* par   = NULL;
+   KVEBYEDAT_ACQParam* par   = NULL;
    Double_t    maxch = 130.;       // Xf correction (128 strips)
    TString  calibtype("ERROR");
 
-   while ((par = (KVACQParam*)nextpar())) {
+   while ((par = (KVEBYEDAT_ACQParam*)nextpar())) {
       calibtype = "Xf-correction of T0";
       calibtype.Append(" ");
       calibtype.Append(par->GetName());

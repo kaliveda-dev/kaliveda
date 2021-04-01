@@ -323,7 +323,7 @@ void KVHarpeeSi::SetACQParams()
 // This parameter has the name of the detector and has the type 'E'
 // (for energy).
 //
-   KVACQParam* par = new KVACQParam;
+   KVEBYEDAT_ACQParam* par = new KVEBYEDAT_ACQParam;
    par->SetName(GetEBaseName());
    par->SetType("E");
    par->SetNumber(GetNumber());

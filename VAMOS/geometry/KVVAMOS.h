@@ -15,7 +15,7 @@
 
 using namespace std;
 
-class KVACQParam;
+class KVEBYEDAT_ACQParam;
 class KVVAMOSDetector;
 class TGeoVolume;
 class TEnv;
@@ -89,7 +89,7 @@ public:
 
    void init();
 
-   void     AddACQParam(KVACQParam* par, Bool_t owner);
+   void     AddACQParam(KVEBYEDAT_ACQParam* par, Bool_t owner);
    Bool_t   AddCalibrator(KVCalibrator* cal, Bool_t owner = kFALSE);
    virtual void     Build(Int_t run = -1);
    virtual Bool_t   Calibrate(KVReconstructedNucleus* nuc);
@@ -138,7 +138,7 @@ public:
    KVMaterial*   GetStripFoil()                        const;
    Double_t      GetStripFoilPosition()                const;
    Int_t         GetTrigger()                          const;
-   KVACQParam*   GetVACQParam(const Char_t* name);
+   KVEBYEDAT_ACQParam*   GetVACQParam(const Char_t* name);
    KVList*       GetVACQParams()                       const;
    KVCalibrator* GetVCalibrator(const Char_t* type) const;
    Bool_t        IsGeoModified()                       const;
@@ -271,9 +271,9 @@ inline Int_t       KVVAMOS::GetTrigger()             const
    return 1;
 }
 
-inline KVACQParam* KVVAMOS::GetVACQParam(const Char_t* name)
+inline KVEBYEDAT_ACQParam* KVVAMOS::GetVACQParam(const Char_t* name)
 {
-   return (KVACQParam*) fVACQParams->FindObject(name);
+   return (KVEBYEDAT_ACQParam*) fVACQParams->FindObject(name);
 }
 
 inline KVList* KVVAMOS::GetVACQParams() const

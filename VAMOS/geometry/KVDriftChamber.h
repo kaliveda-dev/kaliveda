@@ -27,7 +27,7 @@ protected:
    Double_t   fERawPosX[3]; //! Error of measured X raw position for both Chambers
    Double_t   fRawPosY; //!  Measured Y raw position
    Double_t   fERawPosY; //! Error of measured Y raw position
-   KVACQParam* fTfilPar;   //! TFIL acquisition parameter
+   KVEBYEDAT_ACQParam* fTfilPar;   //! TFIL acquisition parameter
    Float_t     fDriftV;    //! Electron drift velocity in cm/us
    KVFunctionCal* fTfilCal;//! Calibrator of the  TFIL acquisition parameter
    Float_t     fStripWidth;//! X-Strip width

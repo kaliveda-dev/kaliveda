@@ -136,8 +136,8 @@ void KVGANILDataReader::SetUserTree(TTree* T, Option_t* opt)
    }
    if (make_leaves) {
       TIter next_rawpar(&GetRawDataParameters());
-      KVACQParam* acqpar;
-      while ((acqpar = (KVACQParam*)next_rawpar())) {
+      KVEBYEDAT_ACQParam* acqpar;
+      while ((acqpar = (KVEBYEDAT_ACQParam*)next_rawpar())) {
          TString leaf;
          leaf.Form("%s/S", acqpar->GetName());
          // for parameters with <=8 bits only use 1 byte for storage
@@ -161,14 +161,14 @@ void KVGANILDataReader::SetUserTree(TTree* T, Option_t* opt)
    // of raw data parameters. So first loop over parameters to find max param number.
    UInt_t maxpar = 0;
    TIter next(&GetRawDataParameters());
-   KVACQParam* par;
-   while ((par = (KVACQParam*)next())) if (par->GetNumber() > maxpar) maxpar = par->GetNumber();
+   KVEBYEDAT_ACQParam* par;
+   while ((par = (KVEBYEDAT_ACQParam*)next())) if (par->GetNumber() > maxpar) maxpar = par->GetNumber();
 
    TObjArray* parlist = new TObjArray(maxpar, 1);
    parlist->SetName("ParameterList");
 
    next.Reset();
-   while ((par = (KVACQParam*)next())) {
+   while ((par = (KVEBYEDAT_ACQParam*)next())) {
       parlist->AddAt(new TNamed(par->GetName(), Form("index=%d", par->GetNumber())), par->GetNumber());
       if (make_arrays) {
          fUserTree->SetAlias(par->GetName(), Form("Sum$((ParNum==%d)*ParVal)", par->GetNumber()));
@@ -238,18 +238,18 @@ void KVGANILDataReader::OpenFile(const Char_t* file, Option_t* dataset)
 
 void KVGANILDataReader::ConnectRawDataParameters()
 {
-   //Generate all required KVACQParam objects corresponding to parameters in file
+   //Generate all required KVEBYEDAT_ACQParam objects corresponding to parameters in file
    //
-   //fParameters is filled with a KVACQParam for every acquisition parameter in the file.
+   //fParameters is filled with a KVEBYEDAT_ACQParam for every acquisition parameter in the file.
    //
    //To access the full list of data parameters in the file after this method has been
    //called (i.e. after the file is opened), use GetRawDataParameters().
 
    TIter next(fGanilData->GetListOfDataParameters());
-   KVACQParam* par;
+   KVEBYEDAT_ACQParam* par;
    GTDataPar* daq_par;
    while ((daq_par = (GTDataPar*) next())) {//loop over all parameters
-      par = new KVACQParam(daq_par->GetName());
+      par = new KVEBYEDAT_ACQParam(daq_par->GetName());
       par->SetNumber(daq_par->Index());
       par->SetNbBits(daq_par->Bits());
       fParameters.Add(par);
@@ -275,9 +275,9 @@ Bool_t KVGANILDataReader::GetNextEvent()
       if (make_arrays) {
          NbParFired = fFired.GetEntries();
          TIter next(&fFired);
-         KVACQParam* par;
+         KVEBYEDAT_ACQParam* par;
          int i = 0;
-         while ((par = (KVACQParam*)next())) {
+         while ((par = (KVEBYEDAT_ACQParam*)next())) {
             ParVal[i] = par->GetData();
             ParNum[i] = par->GetNumber();
             i++;
@@ -329,8 +329,8 @@ void KVGANILDataReader::FillFiredParameterList()
    // clears and then fills list fFired with all fired acquisition parameters in event
    fFired.Clear();
    TIter next(&fParameters);
-   KVACQParam* par;
-   while ((par = (KVACQParam*)next())) if (par->Fired()) fFired.Add(par);
+   KVEBYEDAT_ACQParam* par;
+   while ((par = (KVEBYEDAT_ACQParam*)next())) if (par->Fired()) fFired.Add(par);
 }
 
 //____________________________________________________________________________

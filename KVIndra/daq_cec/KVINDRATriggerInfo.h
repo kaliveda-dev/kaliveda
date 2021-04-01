@@ -19,7 +19,7 @@ $Id: KVINDRATriggerInfo.h,v 1.7 2007/06/28 16:00:49 franklan Exp $
 #define  __KVINDRATriggerInfo_H
 
 #include "Binary_t.h"
-#include "KVACQParam.h"
+#include "KVEBYEDAT_ACQParam.h"
 
 //bit numbers in STAT_EVE register
 #define BIT_PHY_EVT 3
@@ -60,9 +60,9 @@ class KVINDRATriggerInfo {
    Binary16_t fSTAT_EVE;        // value of register STAT_EVE for event
    Binary16_t fR_DEC;           // value of register R_DEC for event
    Binary16_t fVXCONFIG;        // value of register VXCONFIG for event
-   KVACQParam* fSTAT_EVE_PAR;   // STAT_EVE parameter read from raw data
-   KVACQParam* fR_DEC_PAR;      // R_DEC parameter read from raw data
-   KVACQParam* fVXCONFIG_PAR;   // VXCONFIG parameter read from raw data
+   KVEBYEDAT_ACQParam* fSTAT_EVE_PAR;   // STAT_EVE parameter read from raw data
+   KVEBYEDAT_ACQParam* fR_DEC_PAR;      // R_DEC parameter read from raw data
+   KVEBYEDAT_ACQParam* fVXCONFIG_PAR;   // VXCONFIG parameter read from raw data
 
 public:
 
@@ -71,15 +71,15 @@ public:
    {
    };
 
-   void SetSTAT_EVE_PAR(KVACQParam* p)
+   void SetSTAT_EVE_PAR(KVEBYEDAT_ACQParam* p)
    {
       fSTAT_EVE_PAR = p;
    };
-   void SetR_DEC_PAR(KVACQParam* p)
+   void SetR_DEC_PAR(KVEBYEDAT_ACQParam* p)
    {
       fR_DEC_PAR = p;
    };
-   void SetVXCONFIG_PAR(KVACQParam* p)
+   void SetVXCONFIG_PAR(KVEBYEDAT_ACQParam* p)
    {
       fVXCONFIG_PAR = p;
    };
@@ -135,19 +135,19 @@ public:
 inline Binary16_t KVINDRATriggerInfo::GetSTAT_EVE()
 {
    //Returns value of STAT_EVE read from raw data
-   fSTAT_EVE = fSTAT_EVE_PAR->GetCoderData();
+   fSTAT_EVE = fSTAT_EVE_PAR->GetData();
    return fSTAT_EVE;
 }
 inline Binary16_t KVINDRATriggerInfo::GetR_DEC()
 {
    //Returns value of R_DEC read from raw data
-   fR_DEC = fR_DEC_PAR->GetCoderData();
+   fR_DEC = fR_DEC_PAR->GetData();
    return fR_DEC;
 }
 inline Binary16_t KVINDRATriggerInfo::GetCONFIG()
 {
    //Returns value of CONFIG read from raw data
-   fVXCONFIG = fVXCONFIG_PAR->GetCoderData();
+   fVXCONFIG = fVXCONFIG_PAR->GetData();
    return fVXCONFIG;
 }
 

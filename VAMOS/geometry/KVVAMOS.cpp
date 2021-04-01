@@ -458,13 +458,13 @@ void KVVAMOS::SetArrayACQParams()
    TObject* obj = NULL;
    Info("SetArrayACQParams", "List of ACQ Parameters belonging to %s:", GetName());
 
-   KVACQParam* par = NULL;
+   KVEBYEDAT_ACQParam* par = NULL;
    Short_t num = 1;
    while ((obj = nextparam())) {
       TString param(obj->GetName());
       cout << param.Data() << " ";
       // VAMOS is the owner of the acq param. (kTRUE)
-      par = new KVACQParam(param.Data());
+      par = new KVEBYEDAT_ACQParam(param.Data());
       par->SetNumber(num++);
       if (param.BeginsWith("T")) {
          if (param.EndsWith("HF")) {
@@ -508,12 +508,12 @@ void KVVAMOS::SetCalibrators()
    // Their calibrator will have 'channel->ns' type.
 
    TString calibtype;
-   KVACQParam*    par  = NULL;
+   KVEBYEDAT_ACQParam*    par  = NULL;
    KVFunctionCal* c    = NULL;
    TF1*           func = NULL;
 
    TIter nextpar(fVACQParams);
-   while ((par = (KVACQParam*)nextpar())) {
+   while ((par = (KVEBYEDAT_ACQParam*)nextpar())) {
       if ((*par->GetType()) != 'T') continue;
       calibtype = "channel->ns";
       calibtype.Append(" ");
@@ -612,7 +612,7 @@ void KVVAMOS::UpdateGeometry()
 }
 //________________________________________________________________
 
-void KVVAMOS::AddACQParam(KVACQParam* par, Bool_t owner)
+void KVVAMOS::AddACQParam(KVEBYEDAT_ACQParam* par, Bool_t owner)
 {
    // Add an acquisition parameter corresponding to a detector
    // at the focal plane of the spectrometer. The fACQParams and fVACQParams
@@ -714,8 +714,8 @@ void KVVAMOS::Clear(Option_t* opt)
 
    if (fVACQParams) {
       TIter next(fVACQParams);
-      KVACQParam* par = NULL;
-      while ((par = (KVACQParam*) next())) par->Clear();
+      KVEBYEDAT_ACQParam* par = NULL;
+      while ((par = (KVEBYEDAT_ACQParam*) next())) par->Clear();
    }
 }
 //________________________________________________________________
@@ -1170,7 +1170,7 @@ void KVVAMOS::SetPedestal(const Char_t* name, Float_t ped)
 {
    // Set value of pedestal associated to parameter with given name.
 
-   KVACQParam* par = GetACQParam(name);
+   KVEBYEDAT_ACQParam* par = GetACQParam(name);
    if (par) {
       par->SetPedestal(ped);
    }
