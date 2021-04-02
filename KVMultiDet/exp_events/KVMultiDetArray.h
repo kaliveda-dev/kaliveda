@@ -165,7 +165,7 @@ protected:
 #ifdef WITH_BUILTIN_GRU
    virtual Bool_t handle_raw_data_event_ebyedat(KVGANILDataReader&);
 #endif
-   virtual void prepare_to_handle_new_raw_data();
+   void prepare_to_handle_new_raw_data();
 
    virtual void PerformClosedROOTGeometryOperations();
 
@@ -484,7 +484,7 @@ public:
    }
 
    virtual void InitialiseRawDataReading(KVRawDataReader*);
-   Bool_t HandleRawDataEvent(KVRawDataReader*);
+   virtual Bool_t HandleRawDataEvent(KVRawDataReader*);
 #ifdef WITH_MFM
    Bool_t HandleRawDataBuffer(MFMBufferReader&);
 #endif

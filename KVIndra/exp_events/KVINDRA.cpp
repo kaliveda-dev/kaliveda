@@ -1088,9 +1088,9 @@ void KVINDRA::InitialiseRawDataReading(KVRawDataReader*)
 
 #ifdef WITH_MESYTEC
    // in case Mesytec data is to be read, we tweak the parameter names
-   mesytec::set_data_type_alias("qdc_long", "TotLight"); // => CsI
-   mesytec::set_data_type_alias("qdc_short", "R"); // => like old CsI 'R' (rapide) parameter
-   mesytec::set_data_type_alias("tdc", "T"); // => like old 'marqueur de temps' parameters
-   mesytec::set_data_type_alias("adc", "ADC"); // => Si or ChIo signals
+   mesytec::module::set_data_type_alias("qdc_long", "TotLight"); // => CsI
+   mesytec::module::set_data_type_alias("qdc_short", "R"); // => like old CsI 'R' (rapide) parameter
+   mesytec::module::set_data_type_alias("tdc", "T"); // => like old 'marqueur de temps' parameters
+   mesytec::module::set_data_type_alias("adc", "ADC"); // => Si or ChIo signals
 #endif
 }

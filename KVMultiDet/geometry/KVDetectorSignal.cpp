@@ -24,3 +24,12 @@ Int_t KVDetectorSignal::GetStatus(const TString&) const
    return -1;
 }
 
+TString KVDetectorSignal::GetFullName() const
+{
+   // Return full name of detector signal, i.e. [detector].[signal-type] if
+   // associated to a detector, or [signal-type] if not.
+   if (fDetector)
+      return Form("%s.%s", fDetector->GetName(), GetName());
+   return GetName();
+}
+

@@ -3035,10 +3035,7 @@ void KVMultiDetArray::copy_fired_parameters_to_recon_param_list()
    TIter it(GetFiredSignals());
    KVDetectorSignal* o;
    while ((o = (KVDetectorSignal*)it())) {
-      if (o->GetDetector())
-         fReconParameters.SetValue(Form("ACQPAR.%s.%s.%s", GetName(), o->GetDetector()->GetName(), o->GetName()), o->GetValue());
-      else
-         fReconParameters.SetValue(Form("ACQPAR.%s.%s", GetName(), o->GetName()), o->GetValue());
+      fReconParameters.SetValue(Form("ACQPAR.%s.%s", GetName(), o->GetFullName().Data()), o->GetValue());
    }
 }
 
@@ -3101,7 +3098,6 @@ void KVMultiDetArray::SetRawDataFromReconEvent(KVNameValueList& l)
    // Take values 'ACQPAR.[array_name].[par_name]' in the parameter list and use them to set
    // values of raw acquisition parameters (EBYEDAT)
 
-   Warning("SetRawDataFromReconEvent", "method needs reimplementing");
 //   int N = l.GetNpar();
 //   for (int i = 0; i < N; ++i) {
 //      KVNamedParameter* np = l.GetParameter(i);

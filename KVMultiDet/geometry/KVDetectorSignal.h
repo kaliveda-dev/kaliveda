@@ -105,6 +105,8 @@ public:
 
    virtual Int_t GetStatus(const TString&) const;
 
+   TString GetFullName() const;
+
    ClassDef(KVDetectorSignal, 1) //Data produced by a detector
 };
 

@@ -245,6 +245,16 @@ void KVExpSetUp::SetCalibratorParameters(KVDBRun* r, const TString&)
    }
 }
 
+void KVExpSetUp::InitialiseRawDataReading(KVRawDataReader* R)
+{
+   // Calls InitialiseRawDataReading() for each array of the setup in turn
+   TIter next_array(&fMDAList);
+   KVMultiDetArray* mda;
+   while ((mda = (KVMultiDetArray*)next_array())) {
+      mda->InitialiseRawDataReading(R);
+   }
+}
+
 #ifdef WITH_MFM
 Bool_t KVExpSetUp::handle_raw_data_event_mfmframe(const MFMCommonFrame& mfmframe)
 {
@@ -257,7 +267,6 @@ Bool_t KVExpSetUp::handle_raw_data_event_mfmframe(const MFMCommonFrame& mfmframe
    KVMultiDetArray* mda;
    while ((mda = (KVMultiDetArray*)next_array())) {
       if (mda->handle_raw_data_event_mfmframe(mfmframe)) {
-         //Info("handle_raw_data_event_mfmframe", "Handled frame for %s", mda->GetName());
          mda->fHandledRawData = true;
          return kTRUE;
       }
@@ -266,16 +275,18 @@ Bool_t KVExpSetUp::handle_raw_data_event_mfmframe(const MFMCommonFrame& mfmframe
 }
 #endif
 
-
-void KVExpSetUp::prepare_to_handle_new_raw_data()
+Bool_t KVExpSetUp::HandleRawDataEvent(KVRawDataReader* rawdata)
 {
-   // clear all acquisition parameters etc of each array before reading new raw data event
-   KVMultiDetArray::prepare_to_handle_new_raw_data();
+   // Set fRawDataReader pointer in each sub-array and call prepare_to_handle_new_raw_data()
+   // for each sub-array, before treating raw data.
+
    TIter next_array(&fMDAList);
    KVMultiDetArray* mda;
    while ((mda = (KVMultiDetArray*)next_array())) {
+      mda->fRawDataReader = rawdata;
       mda->prepare_to_handle_new_raw_data();
    }
+   return KVMultiDetArray::HandleRawDataEvent(rawdata);
 }
 
 void KVExpSetUp::copy_fired_parameters_to_recon_param_list()
