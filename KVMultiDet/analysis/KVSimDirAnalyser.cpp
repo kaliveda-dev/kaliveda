@@ -262,10 +262,12 @@ TString KVSimDirAnalyser::ExpandAutoBatchName(const Char_t* format) const
 {
    // Replace any special symbols in auto-format jobname with current values
 
-   TString tmp = KVSimDirAnalyser::ExpandAutoBatchName(format);
+   TString tmp = KVDataAnalyser::ExpandAutoBatchName(format);
    tmp.ReplaceAll("KVEventFiltering",
                   Form("%s_%s_FILTER_%s", fModel.Data(), fFilterSystem.Data(), fFilterDataSet.Data()));
    tmp.ReplaceAll(" ", "");
-   tmp.ReplaceAll("/+@", "_");
+   tmp.ReplaceAll("@", "_");
+   tmp.ReplaceAll("+", "_");
+   tmp.ReplaceAll("/", "_");
    return tmp;
 }

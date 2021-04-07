@@ -493,13 +493,7 @@ void KV_CCIN2P3_GE::GetBatchSystemParameterList(KVNameValueList& nl)
    nl.SetValue("RunsPerJob", fRunsPerJob);
    nl.SetValue("EMailOnStart", kFALSE);
    nl.SetValue("EMailOnEnd", kFALSE);
-   TString email = gSystem->GetFromPipe("email");
-   if (email.Index('=') > -1) {
-      email.Remove(0, email.Index('=') + 2);
-      nl.SetValue("EMailAddress", email);
-   }
-   else
-      nl.SetValue("EMailAddress", "");
+   nl.SetValue("EMailAddress", "");
 }
 
 void KV_CCIN2P3_GE::SetBatchSystemParameters(const KVNameValueList& nl)
