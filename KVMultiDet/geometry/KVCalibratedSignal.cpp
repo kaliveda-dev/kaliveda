@@ -13,6 +13,9 @@ Double_t KVCalibratedSignal::GetValue(const KVNameValueList& params) const
    // Any additional parameters required by the calibration can be passed as a
    // comma-separated list of `parameter=value` pairs
    //
+   // In case a problem occurs with the calculation [in case of an inverted calibration function],
+   // InversionFailure() will return kTRUE.
+   //
    // *if a parameter `INPUT` is given, its value is used instead of the input signal.
 
    fInversionFail = false;
@@ -32,6 +35,8 @@ Double_t KVCalibratedSignal::GetInverseValue(Double_t out_val, const TString& in
    //
    // Note that "in_sig" may not be the name/type of the direct input signal for this signal,
    // in which case the chain of signals/calibrators is followed back to the required signal.
+   //
+   // In case a problem occurs with the calculation, InversionFailure() will return kTRUE.
    //
    // Any additional parameters required by the calibration can be passed as a
    // comma-separated list of 'parameter=value' pairs
