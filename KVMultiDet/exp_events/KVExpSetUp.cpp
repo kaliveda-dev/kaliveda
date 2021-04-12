@@ -279,14 +279,22 @@ Bool_t KVExpSetUp::HandleRawDataEvent(KVRawDataReader* rawdata)
 {
    // Set fRawDataReader pointer in each sub-array and call prepare_to_handle_new_raw_data()
    // for each sub-array, before treating raw data.
-
+   Info("KVExpSetUp::HandleRawDataEvent", "called");
    TIter next_array(&fMDAList);
    KVMultiDetArray* mda;
    while ((mda = (KVMultiDetArray*)next_array())) {
       mda->fRawDataReader = rawdata;
       mda->prepare_to_handle_new_raw_data();
    }
-   return KVMultiDetArray::HandleRawDataEvent(rawdata);
+   if (KVMultiDetArray::HandleRawDataEvent(rawdata)) {
+      // copy fired signals & detectors of sub-arrays to main list
+      while ((mda = (KVMultiDetArray*)next_array())) {
+         fFiredDetectors.AddAll(&mda->fFiredDetectors);
+         fFiredSignals.AddAll(&mda->fFiredSignals);
+      }
+      return true;
+   }
+   return false;
 }
 
 void KVExpSetUp::copy_fired_parameters_to_recon_param_list()
