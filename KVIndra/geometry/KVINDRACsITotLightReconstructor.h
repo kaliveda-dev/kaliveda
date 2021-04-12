@@ -118,6 +118,14 @@ public:
    }
    Int_t GetStatus(const TString&) const;
 
+   Bool_t IsRaw() const
+   {
+      // Override KVDetectorSignal method. Althought this class does not derive from KVCalibratedSignal,
+      // it should not be considered as a raw parameter - it is calculated from pedestal-corrected
+      // fast & slow components of CsI light output.
+      return kFALSE;
+   }
+
    ClassDef(KVINDRACsITotLightReconstructor, 1) //Calculation of light output from fast and slow components for INDRA CsI detectors
 };
 
