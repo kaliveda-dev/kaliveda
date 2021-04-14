@@ -694,3 +694,22 @@ INDRA_camp5.GDir.Freq: 186.2
 # used in analysis class KVEventSelector::SetTriggerConditionsForRun in order to exclude reconstructed data
 # which is not consistent with the online DAQ trigger (multiplicity)
 +Plugin.KVTriggerConditions: ^INDRA_$*  KVINDRATriggerConditions KVIndraanalysis "KVINDRATriggerConditions()"
+
+###############################################################################
+# Test T21-03
+#
++DataSet:	  INDRA.T21-03
+INDRA.T21-03.DataSet.Title:  T21-03 (April 2021)
+INDRA.T21-03.DataSet.RepositoryDir:	INDRA/T21-03
+INDRA.T21-03.DataSet.RunFileName.raw:    run_%R.dat.%D.%I
+INDRA.T21-03.DataSet.RunFileIndexMultiplier.raw:    1000
+INDRA.T21-03.DataSet.RunFile.DoNotDelete: raw
+INDRA.T21-03.DataSet.RunFileClass.raw:    MFM
+INDRA.T21-03.MesytecCrateConf:   mesytec_crate.conf
+INDRA.T21-03.MesytecChannelsConf:   mesytec_voies_conf.dat
+INDRA.T21-03.EventReconstruction.DoCalibration: no
+INDRA.T21-03.EventReconstruction.DoIdentification: no
+
++Plugin.KVMultiDetArray:    INDRA.T21-03    KVINDRA    KVIndraexp_events    "KVINDRA()"
++Plugin.KVExpDB:   INDRA.T21-03    KVExpSetUpDB     KVMultiDetexp_events   "KVExpSetUpDB(const Char_t*)"
+

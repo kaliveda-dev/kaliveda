@@ -91,7 +91,7 @@ KVINDRA::KVINDRA()
    fTrigger = 0;
    gIndra = this;
    fPHDSet = kFALSE;
-   fSelecteur = 0;
+   fSelecteur = nullptr;
    // unlike a normal multidetector, INDRA does not own its detectors
    // they are owned by the TELESCOPE structures
    SetOwnsDetectors(kFALSE);
@@ -871,7 +871,7 @@ void KVINDRA::GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollection* fir
    // (see KVINDRATriggerInfo::IsINDRAEvent()) : if not, we do not try to find the hit groups.
 
    if (((fired_dets && fired_dets->GetEntries()) || fFiredDetectors.GetEntries())
-         && !GetTriggerInfo()->IsINDRAEvent()) return;
+         && (GetTriggerInfo() && !GetTriggerInfo()->IsINDRAEvent())) return;
    KVASMultiDetArray::GetDetectorEvent(detev, fired_dets);
 }
 
@@ -1081,7 +1081,7 @@ void KVINDRA::SetReconParametersInEvent(KVReconstructedEvent* e) const
    if (GetReconParameters().HasValue64bit("INDRA.EN")) e->SetNumber(GetReconParameters().GetValue64bit("INDRA.EN"));
 }
 
-void KVINDRA::InitialiseRawDataReading(KVRawDataReader*)
+void KVINDRA::InitialiseRawDataReading(KVRawDataReader* r)
 {
    // Call this method just after opening a raw data file in order to perform any
    // necessary initialisations, depending on the type of data
@@ -1092,5 +1092,45 @@ void KVINDRA::InitialiseRawDataReading(KVRawDataReader*)
    mesytec::module::set_data_type_alias("qdc_short", "R"); // => like old CsI 'R' (rapide) parameter
    mesytec::module::set_data_type_alias("tdc", "T"); // => like old 'marqueur de temps' parameters
    mesytec::module::set_data_type_alias("adc", "ADC"); // => Si or ChIo signals
+
+#ifdef WITH_MFM
+   if (r->GetDataFormat() == "MFM") {
+      TString crate = gDataSet->GetDataSetEnv("MesytecCrateConf", "");
+      if (crate != "") {
+         Info("InitialiseRawDataReading", "Setting Mesytec crate config for run %d, raw run number=%d",
+              GetCurrentRunNumber(), r->GetRunNumberReadFromFile());
+
+         TString channel_conf_list = gDataSet->GetDataSetEnv("MesytecChannelsConf", "");
+         if (channel_conf_list != "") {
+            TEnv conf_list;
+            if (conf_list.ReadFile(gDataSet->GetFullPathToDataSetFile(channel_conf_list), kEnvUser) == -1) {
+               Fatal("InitialiseRawDataReading",
+                     "Could not open file containing names of Mesytec channel config for each run: %s",
+                     gDataSet->GetFullPathToDataSetFile(channel_conf_list).Data());
+            }
+            KVString files = conf_list.GetValue("File", "");
+            files.Begin(" ");
+            while (!files.End()) {
+               KVString next_file = files.Next(kTRUE);
+               KVNumberList runlist = conf_list.GetValue(Form("%s.RunList", next_file.Data()), "");
+               if (runlist.Contains(r->GetRunNumberReadFromFile())) {
+                  // found file for this run
+                  Info("InitialiseRawDataReading", "Using file %s for raw run number %d",
+                       next_file.Data(), r->GetRunNumberReadFromFile());
+                  dynamic_cast<KVMFMDataFileReader*>(r)->InitialiseMesytecConfig(
+                     gDataSet->GetFullPathToDataSetFile(crate).Data(),
+                     gDataSet->GetFullPathToDataSetFile(next_file).Data()
+                  );
+               }
+            }
+         }
+         else {
+            Fatal("InitialiseRawDataReading",
+                  "Name of file containing names of Mesytec channel config for each run should be defined in dataset variable %s.MesytecChannelsConf",
+                  GetDataSet().Data());
+         }
+      }
+   }
+#endif
 #endif
 }

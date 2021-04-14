@@ -1487,8 +1487,7 @@ void KVMultiDetArray::GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollect
    // i.e. loop over all groups of the array and test whether KVGroup::Fired() returns true or false.
    //
    // If the list of fired detectors 'fired_dets' is given, then we use this list
-   // to find, first, the associated fired detectors, then, the associated groups. If not given,
-   // or if it is empty, we may use the internal fFiredACQParams list.
+   // to find the associated groups. If not given, or if it is empty, we may use the internal fFiredDetectors list.
    //
    // Call method detev->Clear() before reading another event in order to reset all of the hit groups
    // (including all detectors etc.) and emptying the list.
@@ -1497,7 +1496,7 @@ void KVMultiDetArray::GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollect
       if (fFiredDetectors.GetEntries()) fired_dets = &fFiredDetectors;
    }
    if (fired_dets && fired_dets->GetEntries()) {
-      // list of fired acquisition parameters given
+      // list of fired detectorsgiven
       TIter next_det(fired_dets);
       KVDetector* det = 0;
       KVGroup* grp = 0;

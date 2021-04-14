@@ -1,7 +1,7 @@
 #---list of datasets
 #file(GLOB datasets RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} INDRA_*)
 #list(APPEND datasets t10_02)
-set(datasets INDRA_camp1 INDRA_camp2 INDRA_camp4 INDRA_camp5 INDRA_e613)
+set(datasets INDRA_camp1 INDRA_camp2 INDRA_camp4 INDRA_camp5 INDRA_e613 INDRA.T21-03)
 set(ignore_datasets INDRA_e416a INDRA_e475s INDRA_e494s INDRA_e503 INDRA_e494s_woVAMOS INDRA_e503_woVAMOS t10_02)
 set(ignore_dirs INDRA2ROOT)
 set(ignore_geo_dirs geometry_E416 geometry_E475S geometry_E494S) 
