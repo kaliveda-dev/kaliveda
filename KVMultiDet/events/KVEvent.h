@@ -469,7 +469,8 @@ public:
 
 // avoid breaking code with the change of the following interface
 #define KVEVENT_MAKE_EVENT_BRANCH_NO_VOID_PTR 1
-   static void MakeEventBranch(TTree* tree, const TString& branchname, const TString& classname, KVEvent* event, Int_t bufsize = 10000000)
+   template<typename T>
+   static void MakeEventBranch(TTree* tree, const TString& branchname, const TString& classname, T& event, Int_t bufsize = 10000000)
    {
       // Use this method when adding a branch to a TTree to store KVEvent-derived objects.
       //
@@ -479,7 +480,7 @@ public:
       // \param[in] event pointer to a valid (constructed) KVEvent-derived object
       // \param[in] bufsize size of buffer to use for branch [default: 10000000]
 
-      tree->Branch(branchname, classname, (void*)&event, bufsize, 0)->SetAutoDelete(kFALSE);
+      tree->Branch(branchname, classname, &event, bufsize, 0)->SetAutoDelete(kFALSE);
    }
 
    virtual void MergeEventFragments(TCollection*, Option_t* opt = "");
