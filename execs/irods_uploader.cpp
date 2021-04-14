@@ -47,6 +47,7 @@ class file_helper {
 public:
    KVString scan_dir, dataset;
    KVString file_format;
+   KVString working_directory;
    int index_multiplier;
 
    bool file_has_index_number(const KVString& name, int& index)
@@ -176,31 +177,33 @@ public:
       infos.SetValue64bit("Events", events);
       infos.Print();
 
-      TFile f(Form("%s/indrafazia/%s/runinfos.root", KVBase::GetKVSourceDir(), dataset.Data()), "update");
+      TFile f(Form("%s/runinfos.root", working_directory.Data()), "update");
       infos.Write();
-
-      // copy ACTIONS file to source directory
-      gSystem->CopyFile(reader.GetPathToLastEbyedatActionsFile(), Form("%s/indrafazia/%s/ebyedat/%s", KVBase::GetKVSourceDir(), dataset.Data(), gSystem->BaseName(reader.GetPathToLastEbyedatActionsFile())));
    }
 };
 
 int main(int argc, char* argv[])
 {
    if (argc < 3 || argc > 7) {
-      cout << "Usage: irods_uploader [-D][-A][-r firstrun] [directory to scan] [dataset]" << endl << endl;
-      cout << "  options: -D  - if given, delete each file which has been successfully transferred" << endl;
+      cout << "Usage: irods_uploader [-I][-D][-A][-r firstrun] [directory to scan] [dataset]" << endl << endl;
+      cout << "  options: -I  - do not upload, only extract run infos (fill runinfos.root)" << endl;
+      cout << "           -D  - if given, delete each file which has been successfully transferred" << endl;
       cout << "           -A  - if given, treat last file found (only use when data taking is finished)" << endl;
       cout << "           -r firstrun  - if given, start from given run number" << endl;
       exit(1);
    }
+
    file_helper FILE_H;
-   bool delete_files(false), all_files(false);
+   FILE_H.working_directory = gSystem->WorkingDirectory();
+
+   bool delete_files(false), all_files(false), do_upload(true);
    int firstrun = 0;
    int iarg = 1;
    if (argc > 3) {
       // look for optional arguments
       while (iarg < argc - 2) {
-         if (!strcmp(argv[iarg], "-D")) delete_files = true;
+         if (!strcmp(argv[iarg], "-I")) do_upload = false;
+         else if (!strcmp(argv[iarg], "-D")) delete_files = true;
          else if (!strcmp(argv[iarg], "-A")) all_files = true;
          else if (!strcmp(argv[iarg], "-r")) {
             ++iarg;
@@ -209,17 +212,25 @@ int main(int argc, char* argv[])
          ++iarg;
       }
    }
+   if (!do_upload) {
+      // not uploading, just extracting infos
+      // by default: DO NOT DELETE FILES, TREAT ALL FILES
+      delete_files = false;
+      all_files = true;
+   }
    FILE_H.scan_dir = argv[iarg];
    FILE_H.dataset = argv[iarg + 1];
 
    cout << "Directory to scan: " << FILE_H.scan_dir << "  dataset: " << FILE_H.dataset << endl;
+   if (do_upload) cout << "Files will be uploaded to IRODS server at cca.in2p3.fr" << endl;
+   cout << "Informations extracted from files will be written in runinfos.root" << endl;
    if (delete_files) cout << "Any transferred files will be deleted from local disk" << endl;
    if (all_files) cout << "All files including the last one will be treated (data-taking is finished)" << endl;
    if (firstrun) cout << "Starting scan from run " << firstrun << endl;
 
    KVDataRepositoryManager drm;
    drm.Init();
-   drm.GetRepository("ccali")->cd();
+   if (do_upload) drm.GetRepository("ccali")->cd();
    KVDataSet* dataset = gDataSetManager->GetDataSet(FILE_H.dataset);
    FILE_H.file_format = dataset->GetDataSetEnv("DataSet.RunFileName.raw", "");
    FILE_H.index_multiplier = dataset->GetDataSetEnv("DataSet.RunFileIndexMultiplier.raw", -1.);
@@ -236,42 +247,49 @@ int main(int argc, char* argv[])
              || all_files) {
          totalsleep = 0;
 
-         // check if current run has been uploaded
-         FileStat_t fs;
-         if (gDataRepository->GetFileInfo(dataset, "raw", current_file.name, fs)) {
-            // check size of uploaded file
-            if (fs.fSize == current_file.size) {
-               cout << "File " << current_file.name << " has been uploaded successfully & ";
-               if (delete_files) {
-                  cout << "will be deleted" << endl;
-                  KVString path;
-                  path.Form("%s/%s", FILE_H.scan_dir.Data(), current_file.name.Data());
-                  gSystem->Unlink(path);
-                  cout << "File deleted: " << path << endl;
+         cout << got_next_file << " " << current_file.name << " " << current_run << " " << current_index << endl;
+
+         if (do_upload) {
+            // check if current run has been uploaded
+            FileStat_t fs;
+            if (gDataRepository->GetFileInfo(dataset, "raw", current_file.name, fs)) {
+               // check size of uploaded file
+               if (fs.fSize == current_file.size) {
+                  cout << "File " << current_file.name << " has been uploaded successfully & ";
+                  if (delete_files) {
+                     cout << "will be deleted" << endl;
+                     KVString path;
+                     path.Form("%s/%s", FILE_H.scan_dir.Data(), current_file.name.Data());
+                     gSystem->Unlink(path);
+                     cout << "File deleted: " << path << endl;
+                  }
+                  else
+                     cout << "can be deleted" << endl;
                }
-               else
-                  cout << "can be deleted" << endl;
+               else {
+                  cout << "File " << current_file.name << " partially uploaded, size IRODS=" << fs.fSize << " size local disk=" << current_file.size << endl;
+               }
             }
             else {
-               cout << "File " << current_file.name << " partially uploaded, size IRODS=" << fs.fSize << " size local disk=" << current_file.size << endl;
+               cout << "File " << current_file.name << " ready for upload [next file: " << next_file.name << "]" << endl;
+               FILE_H.read_and_store_infos_on_file(current_file);
+               if (gDataRepository->CopyFileToRepository(
+                        Form("%s/%s", FILE_H.scan_dir.Data(), current_file.name.Data()),
+                        dataset, "raw", current_file.name.Data()
+                     ) == 0) {
+                  // successful transfer
+                  cout << "File upload successful" << endl;
+                  continue;
+               }
+               else {
+                  cout << "            *************** ERROR uploading file *************** " << endl;
+               }
             }
          }
          else {
-            cout << "File " << current_file.name << " ready for upload [next file: " << next_file.name << "]" << endl;
+            // no upload - just read & store run infos
             FILE_H.read_and_store_infos_on_file(current_file);
-            if (gDataRepository->CopyFileToRepository(
-                     Form("%s/%s", FILE_H.scan_dir.Data(), current_file.name.Data()),
-                     dataset, "raw", current_file.name.Data()
-                  ) == 0) {
-               // successful transfer
-               cout << "File upload successful" << endl;
-               continue;
-            }
-            else {
-               cout << "            *************** ERROR uploading file *************** " << endl;
-            }
          }
-
          if (all_files && !got_next_file) { //last file has been treated
             exit(0);
          }
@@ -281,8 +299,10 @@ int main(int argc, char* argv[])
          first_call = false;
       }
       first_call = false;
-      cout << "Waiting " << totalsleep << " sec. for next file after " << current_file.name << " ... " << endl;
-      sleep(sleeptime);
-      totalsleep += sleeptime;
+      if (do_upload) {
+         cout << "Waiting " << totalsleep << " sec. for next file after " << current_file.name << " ... " << endl;
+         sleep(sleeptime);
+         totalsleep += sleeptime;
+      }
    }
 }
