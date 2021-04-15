@@ -41,13 +41,6 @@ class KVMFMDataFileReader;
 class MFMEbyedatFrame;
 class MFMBufferReader;
 class MFMMesytecMDPPFrame;
-#ifdef WITH_MESYTEC
-namespace mesytec {
-   namespace mdpp {
-      struct event;
-   }
-}
-#endif
 #endif
 #ifdef WITH_PROTOBUF
 class KVProtobufDataReader;

@@ -52,9 +52,6 @@
 #include "KVMFMDataFileReader.h"
 #include "MFMEbyedatFrame.h"
 #include "MFMMesytecMDPPFrame.h"
-#ifdef WITH_MESYTEC
-#include "mesytec_buffer_reader.h"
-#endif
 #endif
 #ifdef WITH_PROTOBUF
 #include "KVProtobufDataReader.h"
@@ -3030,6 +3027,14 @@ void KVMultiDetArray::copy_fired_parameters_to_recon_param_list()
    // values of fired raw data signals (acquisition parameters) from last read raw event
    // are copied to the fReconParameters list of parameters to be stored with the
    // reconstructed event.
+   //
+   // the format for each signal is:
+   //
+   //   ACQPAR.[array].[detector].[signal]
+   //   ACQPAR.[array].[signal]
+   //
+   // in the first case for signals associated with detectors, in the latter case signals
+   // which are not associated with a detector
 
    TIter it(GetFiredSignals());
    KVDetectorSignal* o;
@@ -3094,21 +3099,55 @@ Bool_t KVMultiDetArray::HandleRawDataBuffer(MFMBufferReader& bufrdr)
 
 void KVMultiDetArray::SetRawDataFromReconEvent(KVNameValueList& l)
 {
-   // Take values 'ACQPAR.[array_name].[par_name]' in the parameter list and use them to set
-   // values of raw acquisition parameters (EBYEDAT)
+   // Take values 'ACQPAR.[array_name].[detname].[signal]' or 'ACQPAR.[array_name].[signal]'
+   // in the parameter list and use them to set values of raw acquisition parameters.
+   //
+   // Any detector signals which don't already exist will be created
 
-//   int N = l.GetNpar();
-//   for (int i = 0; i < N; ++i) {
-//      KVNamedParameter* np = l.GetParameter(i);
-//      KVString name(np->GetName());
-//      name.Begin(".");
-//      if (name.Next() == "ACQPAR") {
-//         if (name.Next() == GetName()) {
-//            KVACQParam* par = GetACQParam(name.Next());
-//            if (par) par->SetData((UShort_t)np->GetInt());
-//         }
-//      }
-//   }
+   prepare_to_handle_new_raw_data(); // clear previous fired parameters/detectors
+   int N = l.GetNpar();
+   for (int i = 0; i < N; ++i) {
+      KVNamedParameter* np = l.GetParameter(i);
+
+      KVString name(np->GetName());
+      if (name.BeginsWith("ACQPAR")) {
+         // 3 '.' => 4 values means associated detector
+         // 2 '.' => 3 values means no detector
+         int dots = name.GetNValues(".");
+         bool with_det = (dots == 4);
+         assert(with_det || (dots == 3)); // sanity check
+         name.Begin(".");
+         name.Next(); // "ACQPAR"
+         if (name.Next() != GetName()) continue; // check name of array - somebody else's parameter ?
+         KVDetectorSignal* ds = nullptr;
+         if (with_det) {
+            KVString det_name = name.Next();
+            KVString signal = name.Next();
+            KVDetector* det = GetDetector(det_name);
+            if (det) {
+               ds = det->GetDetectorSignal(signal);
+               if (!ds) {
+                  ds = new KVDetectorSignal(signal, det);
+                  det->AddDetectorSignal(ds);
+               }
+               fFiredDetectors.Add(det);
+            }
+         }
+         else {
+            KVString signal = name.Next();
+            ds = fExtraRawDataSignals.get_object<KVDetectorSignal>(signal);
+            if (!ds) {
+               ds = new KVDetectorSignal(signal);
+               fExtraRawDataSignals.Add(ds);
+            }
+         }
+         if (!ds) continue;
+         ds->SetFired();
+         fFiredSignals.Add(ds);
+
+         ds->SetValue(np->GetDouble());
+      }
+   }
 }
 
 void KVMultiDetArray::MakeCalibrationTables(KVExpDB* db)
@@ -3361,57 +3400,12 @@ Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatF
    return kFALSE;
 }
 
-Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPPFrame& f)
+Bool_t KVMultiDetArray::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPPFrame&)
 {
    // Read a raw data event from a Mesytec MFM Frame.
-   //
-   // All data is transferred to KVDetectorSignal objects, either associated to detectors of the
-   // array (if they can be identified), either associated more globally with the array/event
-   // itself. The latter are created as needed and go into the fExtraRawDataSignals list.
 
-#ifdef WITH_MESYTEC
-   auto mfmfilereader = dynamic_cast<KVMFMDataFileReader*>(fRawDataReader);
-   mfmfilereader->GetMesytecBufferReader().read_event_in_buffer(
-      (const uint8_t*)f.GetPointUserData(), f.GetBlobSize(),
-   [&](const mesytec::mdpp::event & evt) {
-      auto& setup = mfmfilereader->GetMesytecBufferReader().get_setup();
-      // loop over module data in event, set data in detectors when possible
-      for (auto& mdat : evt.modules) {
-         auto mod_id = mdat.module_id;
-         for (auto& voie : mdat.data) {
-            auto detname = setup.get_detector(mod_id, voie.channel);
-            auto detector = GetDetector(detname.c_str());
-            if (detector) {
-               auto det_signal = detector->GetDetectorSignal(voie.data_type);
-               if (!det_signal) {
-                  det_signal = new KVDetectorSignal(voie.data_type.c_str(), detector);
-                  detector->AddDetectorSignal(det_signal);
-               }
-               det_signal->SetValue(voie.data);
-               det_signal->SetFired();
-               fFiredSignals.Add(det_signal);
-               fFiredDetectors.Add(detector);
-            }
-            else {
-               // raw data not associated with a detector
-               TString sig_name = Form("%s.%s", detname.c_str(), voie.data_type.c_str());
-               auto det_signal = fExtraRawDataSignals.get_object<KVDetectorSignal>(sig_name);
-               if (!det_signal) {
-                  det_signal = new KVDetectorSignal(sig_name);
-                  fExtraRawDataSignals.Add(det_signal);
-               }
-               det_signal->SetValue(voie.data);
-               det_signal->SetFired();
-               fFiredSignals.Add(det_signal);
-            }
-         }
-      }
-   }
-   );
-   return kTRUE;
-#else
-   return false;
-#endif
+   AbstractMethod("handle_raw_data_event_mfmframe_mesytec_mdpp");
+   return kFALSE;
 }
 #endif
 

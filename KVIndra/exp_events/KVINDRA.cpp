@@ -55,6 +55,10 @@ $Id: KVINDRA.cpp,v 1.68 2009/01/21 10:05:51 franklan Exp $
 #ifdef WITH_MFM
 #include "KVMFMDataFileReader.h"
 #include "MFMEbyedatFrame.h"
+#include "MFMMesytecMDPPFrame.h"
+#ifdef WITH_MESYTEC
+#include "mesytec_buffer_reader.h"
+#endif
 #endif
 
 using namespace std;
@@ -95,6 +99,8 @@ KVINDRA::KVINDRA()
    // unlike a normal multidetector, INDRA does not own its detectors
    // they are owned by the TELESCOPE structures
    SetOwnsDetectors(kFALSE);
+   fMesytecData = kFALSE;
+   fEbyedatData = kFALSE;
 }
 
 //_________________________________________________________________________________
@@ -670,12 +676,27 @@ void KVINDRA::handle_ebyedat_raw_data_parameter(const char* param_name, uint16_t
    }
 }
 
+void KVINDRA::copy_fired_parameters_to_recon_param_list()
+{
+   // Put values of all fired detector signals into the parameter list which will be copied
+   // into the reconstructed event.
+   //
+   // If Mesytec data is being read, we set the parameter "INDRA.MESYTEC", or if Ebyedat data, "INDRA.EBYEDAT".
+   // Note that in old reconstructed data these parameters did not exist, therefore in their
+   // absence EBYEDAT is assumed.
+
+   if (fMesytecData) fReconParameters.SetValue("INDRA.MESYTEC", kTRUE);
+   else if (fEbyedatData) fReconParameters.SetValue("INDRA.EBYEDAT", kTRUE);
+   KVASMultiDetArray::copy_fired_parameters_to_recon_param_list();
+}
+
 #ifdef WITH_BUILTIN_GRU
 Bool_t KVINDRA::handle_raw_data_event_ebyedat(KVGANILDataReader& rdr)
 {
    // Set raw data in detectors/array coming from a GANIL EBYEDAT format
    // acquisition file.
 
+   fEbyedatData = kTRUE;
    // loop over fired data parameters
    TIter nxt_frd(&rdr.GetFiredDataParameters());
    KVEBYEDAT_ACQParam* eby_par;
@@ -704,6 +725,8 @@ Bool_t KVINDRA::handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame& f)
    // Any parameter which appears as [name] and [name]_UP is an unsigned 32-bit value
    // split into two 16-bit words. We replace the two parameters with a 64-bit
    // value (to hold correctly all unsigned 32-bit values) with [name].
+
+   fEbyedatData = kTRUE;
 
    uint16_t val;
    std::string lab;
@@ -1081,18 +1104,36 @@ void KVINDRA::SetReconParametersInEvent(KVReconstructedEvent* e) const
    if (GetReconParameters().HasValue64bit("INDRA.EN")) e->SetNumber(GetReconParameters().GetValue64bit("INDRA.EN"));
 }
 
+void KVINDRA::SetRawDataFromReconEvent(KVNameValueList& l)
+{
+   // Overrides base method in KVMultiDetArray.
+   //
+   // If we are reading old reconstructed data with EBYEDAT parameters, we need special
+   // treatment to decode the detector name & signal type.
+
+   if (!l.GetBoolValue("INDRA.MESYTEC") && !l.GetBoolValue("INDRA.EBYEDAT")) {
+      // implement
+      fMesytecData = kFALSE;
+      fEbyedatData = kTRUE;
+      prepare_to_handle_new_raw_data();
+   }
+   else {
+      fMesytecData = l.GetBoolValue("INDRA.MESYTEC");
+      fEbyedatData = l.GetBoolValue("INDRA.EBYEDAT");
+      KVASMultiDetArray::SetRawDataFromReconEvent(l);
+   }
+}
+
 void KVINDRA::InitialiseRawDataReading(KVRawDataReader* r)
 {
    // Call this method just after opening a raw data file in order to perform any
    // necessary initialisations, depending on the type of data
 
-#ifdef WITH_MESYTEC
-   // in case Mesytec data is to be read, we tweak the parameter names
-   mesytec::module::set_data_type_alias("qdc_long", "TotLight"); // => CsI
-   mesytec::module::set_data_type_alias("qdc_short", "R"); // => like old CsI 'R' (rapide) parameter
-   mesytec::module::set_data_type_alias("tdc", "T"); // => like old 'marqueur de temps' parameters
-   mesytec::module::set_data_type_alias("adc", "ADC"); // => Si or ChIo signals
+   KVASMultiDetArray::InitialiseRawDataReading(r);
 
+   fMesytecData = kFALSE;
+   fEbyedatData = kFALSE;
+#ifdef WITH_MESYTEC
 #ifdef WITH_MFM
    if (r->GetDataFormat() == "MFM") {
       TString crate = gDataSet->GetDataSetEnv("MesytecCrateConf", "");
@@ -1134,3 +1175,69 @@ void KVINDRA::InitialiseRawDataReading(KVRawDataReader* r)
 #endif
 #endif
 }
+
+#ifdef WITH_MFM
+Bool_t KVINDRA::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPPFrame& f)
+{
+   // Read a raw data event from a Mesytec MFM Frame.
+   //
+   // All data is transferred to KVDetectorSignal objects, either associated to detectors of the
+   // array (if they can be identified), either associated more globally with the array/event
+   // itself. The latter are created as needed and go into the fExtraRawDataSignals list.
+
+#ifdef WITH_MESYTEC
+   if (!fMesytecData) {
+      // first time we read data, we tweak the parameter names
+      mesytec::module::set_data_type_alias("qdc_long", "TotLight"); // => CsI
+      mesytec::module::set_data_type_alias("qdc_short", "R"); // => like old CsI 'R' (rapide) parameter
+      mesytec::module::set_data_type_alias("tdc", "T"); // => like old 'marqueur de temps' parameters
+      mesytec::module::set_data_type_alias("adc", "ADC"); // => Si or ChIo signals
+
+      fMesytecData = kTRUE;
+   }
+   auto mfmfilereader = dynamic_cast<KVMFMDataFileReader*>(fRawDataReader);
+   mfmfilereader->GetMesytecBufferReader().read_event_in_buffer(
+      (const uint8_t*)f.GetPointUserData(), f.GetBlobSize(),
+   [&](const mesytec::mdpp::event & evt) {
+      auto& setup = mfmfilereader->GetMesytecBufferReader().get_setup();
+      // loop over module data in event, set data in detectors when possible
+      for (auto& mdat : evt.modules) {
+         auto mod_id = mdat.module_id;
+         for (auto& voie : mdat.data) {
+            auto detname = setup.get_detector(mod_id, voie.channel);
+            auto detector = GetDetector(detname.c_str());
+            if (detector) {
+               auto det_signal = detector->GetDetectorSignal(voie.data_type);
+               if (!det_signal) {
+                  det_signal = new KVDetectorSignal(voie.data_type.c_str(), detector);
+                  detector->AddDetectorSignal(det_signal);
+               }
+               det_signal->SetValue(voie.data);
+               det_signal->SetFired();
+               fFiredSignals.Add(det_signal);
+               fFiredDetectors.Add(detector);
+            }
+            else {
+               // raw data not associated with a detector
+               TString sig_name;
+               if (detname != "") sig_name = Form("%s.%s", detname.c_str(), voie.data_type.c_str());
+               else sig_name = voie.data_type;
+               auto det_signal = fExtraRawDataSignals.get_object<KVDetectorSignal>(sig_name);
+               if (!det_signal) {
+                  det_signal = new KVDetectorSignal(sig_name);
+                  fExtraRawDataSignals.Add(det_signal);
+               }
+               det_signal->SetValue(voie.data);
+               det_signal->SetFired();
+               fFiredSignals.Add(det_signal);
+            }
+         }
+      }
+   }
+   );
+   return kTRUE;
+#else
+   return false;
+#endif
+}
+#endif

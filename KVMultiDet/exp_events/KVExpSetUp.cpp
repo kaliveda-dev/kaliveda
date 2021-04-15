@@ -187,6 +187,7 @@ KVGroupReconstructor* KVExpSetUp::GetReconstructorForGroup(const KVGroup* g) con
 
 void KVExpSetUp::SetRawDataFromReconEvent(KVNameValueList& l)
 {
+   prepare_to_handle_new_raw_data();
    TIter next_array(&fMDAList);
    KVMultiDetArray* mda;
    while ((mda = (KVMultiDetArray*)next_array())) {

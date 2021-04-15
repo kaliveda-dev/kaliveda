@@ -51,9 +51,14 @@ KVReconstructedEvent::KVReconstructedEvent(Int_t mult, const char
 
 void KVReconstructedEvent::Streamer(TBuffer& R__b)
 {
-   //Stream an object of class KVReconstructedEvent.
-   //We set the particles' angles depending on whether mean or random angles
-   //are wanted (fMeanAngles = kTRUE or kFALSE)
+   // Stream an object of class KVReconstructedEvent.
+   //
+   // If the KVMultiDetArray corresponding to the event has been built, we:
+   //
+   //  - set the values of raw data parameters in the corresponding detectors
+   //
+   //  - set the particles' angles depending on whether mean or random angles
+   //    are wanted (fMeanAngles = kTRUE or kFALSE)
 
    if (R__b.IsReading()) {
       R__b.ReadClassBuffer(KVReconstructedEvent::Class(), this);

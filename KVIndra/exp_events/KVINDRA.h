@@ -90,6 +90,9 @@ protected:
 
    KVNameValueList fEbyedatParamDetMap;//! maps EBYEDAT parameter names to detectors
 
+   Bool_t fEbyedatData;//! set to true when VME/VXI acquisition system is used
+   Bool_t fMesytecData;//! set to true when Mesytec acquisition system is used
+
    virtual void MakeListOfDetectors();
    virtual void BuildGeometry();
    virtual void SetGroupsAndIDTelescopes();
@@ -109,8 +112,10 @@ protected:
 #endif
 #ifdef WITH_MFM
    Bool_t handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame&);
+   virtual Bool_t handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPPFrame&);
 #endif
    void handle_ebyedat_raw_data_parameter(const char* param_name, uint16_t val);
+   void copy_fired_parameters_to_recon_param_list();
 
 public:
    KVINDRA();
@@ -171,6 +176,7 @@ public:
    void SetMinimumOKMultiplicity(KVEvent*) const;
    KVGroupReconstructor* GetReconstructorForGroup(const KVGroup*) const;
    void SetReconParametersInEvent(KVReconstructedEvent*) const;
+   void SetRawDataFromReconEvent(KVNameValueList&);
 
    ClassDef(KVINDRA, 6)        //class describing the materials and detectors etc. to build an INDRA multidetector array
 };
