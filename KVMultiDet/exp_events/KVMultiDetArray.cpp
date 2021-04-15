@@ -3097,6 +3097,45 @@ Bool_t KVMultiDetArray::HandleRawDataBuffer(MFMBufferReader& bufrdr)
 }
 #endif
 
+void KVMultiDetArray::add_and_set_detector_signal(KVDetector* detector, KVString detname, Double_t sig_data, KVString sig_type)
+{
+   // Given a pointer to a detector (may be nullptr) try to set the data sig_data in the associated signal
+   // of the given type, sig_typ.
+   //
+   // If the signal does not exist for the detector, it will be created.
+   //
+   // If detector pointer is null, the signal will be looked for in fExtraRawDataSignals
+   // and created if necessary.
+   //
+   // All fired detectors and signals are added to the lists fFiredDetectors and fFiredSignals.
+
+   KVDetectorSignal* det_signal = nullptr;
+   if (detector) {
+      det_signal = detector->GetDetectorSignal(sig_type);
+      if (!det_signal) {
+         det_signal = new KVDetectorSignal(sig_type, detector);
+         detector->AddDetectorSignal(det_signal);
+      }
+      fFiredDetectors.Add(detector);
+   }
+   else {
+      // raw data not associated with a detector
+      TString sig_name;
+      if (detname != "") sig_name = Form("%s.%s", detname.Data(), sig_type.Data());
+      else sig_name = sig_type;
+      det_signal = fExtraRawDataSignals.get_object<KVDetectorSignal>(sig_name);
+      if (!det_signal) {
+         det_signal = new KVDetectorSignal(sig_name);
+         fExtraRawDataSignals.Add(det_signal);
+      }
+   }
+   if (det_signal) {
+      det_signal->SetValue(sig_data);
+      det_signal->SetFired();
+      fFiredSignals.Add(det_signal);
+   }
+}
+
 void KVMultiDetArray::SetRawDataFromReconEvent(KVNameValueList& l)
 {
    // Take values 'ACQPAR.[array_name].[detname].[signal]' or 'ACQPAR.[array_name].[signal]'
@@ -3120,32 +3159,18 @@ void KVMultiDetArray::SetRawDataFromReconEvent(KVNameValueList& l)
          name.Next(); // "ACQPAR"
          if (name.Next() != GetName()) continue; // check name of array - somebody else's parameter ?
          KVDetectorSignal* ds = nullptr;
+         KVString det_name;
+         KVString sig_type;
+         KVDetector* det = nullptr;
          if (with_det) {
-            KVString det_name = name.Next();
-            KVString signal = name.Next();
-            KVDetector* det = GetDetector(det_name);
-            if (det) {
-               ds = det->GetDetectorSignal(signal);
-               if (!ds) {
-                  ds = new KVDetectorSignal(signal, det);
-                  det->AddDetectorSignal(ds);
-               }
-               fFiredDetectors.Add(det);
-            }
+            det_name = name.Next();
+            sig_type = name.Next();
+            det = GetDetector(det_name);
          }
          else {
-            KVString signal = name.Next();
-            ds = fExtraRawDataSignals.get_object<KVDetectorSignal>(signal);
-            if (!ds) {
-               ds = new KVDetectorSignal(signal);
-               fExtraRawDataSignals.Add(ds);
-            }
+            sig_type = name.Next();
          }
-         if (!ds) continue;
-         ds->SetFired();
-         fFiredSignals.Add(ds);
-
-         ds->SetValue(np->GetDouble());
+         add_and_set_detector_signal(det, det_name, np->GetDouble(), sig_type);
       }
    }
 }

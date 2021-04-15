@@ -647,33 +647,21 @@ void KVINDRA::PerformClosedROOTGeometryOperations()
 
 void KVINDRA::handle_ebyedat_raw_data_parameter(const char* param_name, uint16_t val)
 {
-   std::string lab(param_name);
-
+   KVString detname;
+   KVDetector* det = nullptr;
+   KVString sig_type;
    // use look-up table parname => detectorname
    if (fEbyedatParamDetMap.HasParameter(param_name)) {
-      KVDetector* det = GetDetector(fEbyedatParamDetMap.GetStringValue(lab.c_str()));
+      det = GetDetector(fEbyedatParamDetMap.GetStringValue(param_name));
+      detname = det->GetName();
       // parameter type given by whatever comes after final '_'
-      TString partype = lab.substr(lab.rfind('_') + 1);
-      KVDetectorSignal* det_signal = det->GetDetectorSignal(partype);
-      if (!det_signal) {
-         det_signal = new KVDetectorSignal(partype, det);
-         det->AddDetectorSignal(det_signal);
-      }
-      det_signal->SetValue(val);
-      det_signal->SetFired();
-      fFiredSignals.Add(det_signal);
-      fFiredDetectors.Add(det);
+      std::string lab(param_name);
+      sig_type = lab.substr(lab.rfind('_') + 1);
    }
    else { // no detector associated to parameter
-      auto det_signal = fExtraRawDataSignals.get_object<KVDetectorSignal>(lab.c_str());
-      if (!det_signal) {
-         det_signal = new KVDetectorSignal(lab.c_str());
-         fExtraRawDataSignals.Add(det_signal);
-      }
-      det_signal->SetValue(val);
-      det_signal->SetFired();
-      fFiredSignals.Add(det_signal);
+      sig_type = param_name;
    }
+   add_and_set_detector_signal(det, detname, val, sig_type);
 }
 
 void KVINDRA::copy_fired_parameters_to_recon_param_list()
@@ -1112,10 +1100,39 @@ void KVINDRA::SetRawDataFromReconEvent(KVNameValueList& l)
    // treatment to decode the detector name & signal type.
 
    if (!l.GetBoolValue("INDRA.MESYTEC") && !l.GetBoolValue("INDRA.EBYEDAT")) {
-      // implement
+      // assume we are reading old recon data with parameters in list such as "ACQPAR.INDRA.SI_0201_PG"
       fMesytecData = kFALSE;
       fEbyedatData = kTRUE;
       prepare_to_handle_new_raw_data();
+
+      int N = l.GetNpar();
+      for (int i = 0; i < N; ++i) {
+         KVNamedParameter* np = l.GetParameter(i);
+
+         KVString name(np->GetName());
+         if (name.BeginsWith("ACQPAR")) {
+            // 2 '.' => 3 values
+            int dots = name.GetNValues(".");
+            assert(dots == 3); // sanity check
+            name.Begin(".");
+            name.Next(); // "ACQPAR"
+            if (name.Next() != "INDRA") continue; // check name of array - somebody else's parameter ?
+            std::string parname(name.Next());
+            KVString detname;
+            KVString sig_type;
+            KVDetector* det = nullptr;
+            if (parname.find('_') != kNPOS) {
+               // try to split into '[detname]_[partype]'
+               detname = parname.substr(0, parname.rfind('_'));
+               sig_type = parname.substr(parname.rfind('_') + 1);
+               det = GetDetector(detname);
+            }
+            else {
+               sig_type = parname;
+            }
+            add_and_set_detector_signal(det, detname, np->GetDouble(), sig_type);
+         }
+      }
    }
    else {
       fMesytecData = l.GetBoolValue("INDRA.MESYTEC");
@@ -1204,33 +1221,10 @@ Bool_t KVINDRA::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPP
       for (auto& mdat : evt.modules) {
          auto mod_id = mdat.module_id;
          for (auto& voie : mdat.data) {
-            auto detname = setup.get_detector(mod_id, voie.channel);
-            auto detector = GetDetector(detname.c_str());
-            if (detector) {
-               auto det_signal = detector->GetDetectorSignal(voie.data_type);
-               if (!det_signal) {
-                  det_signal = new KVDetectorSignal(voie.data_type.c_str(), detector);
-                  detector->AddDetectorSignal(det_signal);
-               }
-               det_signal->SetValue(voie.data);
-               det_signal->SetFired();
-               fFiredSignals.Add(det_signal);
-               fFiredDetectors.Add(detector);
-            }
-            else {
-               // raw data not associated with a detector
-               TString sig_name;
-               if (detname != "") sig_name = Form("%s.%s", detname.c_str(), voie.data_type.c_str());
-               else sig_name = voie.data_type;
-               auto det_signal = fExtraRawDataSignals.get_object<KVDetectorSignal>(sig_name);
-               if (!det_signal) {
-                  det_signal = new KVDetectorSignal(sig_name);
-                  fExtraRawDataSignals.Add(det_signal);
-               }
-               det_signal->SetValue(voie.data);
-               det_signal->SetFired();
-               fFiredSignals.Add(det_signal);
-            }
+            KVString detname(setup.get_detector(mod_id, voie.channel));
+            KVString sig_type(voie.data_type);
+            Double_t sig_data = voie.data;
+            add_and_set_detector_signal(GetDetector(detname), detname, sig_data, sig_type);
          }
       }
    }
