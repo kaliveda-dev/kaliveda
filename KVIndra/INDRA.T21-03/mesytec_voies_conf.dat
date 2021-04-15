@@ -1,5 +1,2 @@
 File: mesytec_voies.conf.1
-mesytec_voies.conf.1.RunList: 1-2 5
-
-+File: mesytec_voies.conf.2
-mesytec_voies.conf.2.RunList: 3-4 6
+mesytec_voies.conf.1.RunList: 1
