@@ -1,1 +1,7 @@
-Run 1: alpha source & cosmic
+run=1000 | alpha source & cosmic (Interrupt)
+run=2000 | alpha source & cosmic (MVLC I/O)
+run=3000 | Ar+Sn Si OU CsI trigger
+run=4000 | Ar+Sn Si OU CsI trigger
+run=5000 | Ar+Sn Si OU CsI trigger
+run=6000 | Ar+Sn Only Si trigger
+run=7000 | Ar+Sn Only CsI trigger

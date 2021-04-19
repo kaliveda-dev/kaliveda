@@ -98,7 +98,7 @@ void KVDataSetManager::ReadUserGroups()
    //UserGroups env var contains whitespace-separated list of group names
    TString groups = gEnv->GetValue("UserGroup", "");
    if (groups == "") {
-      cout << "No value for UserGroup" << endl;
+      //cout << "No value for UserGroup" << endl;
       return;
    }
    //split into array of group names
