@@ -5,3 +5,4 @@ run=4000 | Ar+Sn Si OU CsI trigger
 run=5000 | Ar+Sn Si OU CsI trigger
 run=6000 | Ar+Sn Only Si trigger
 run=7000 | Ar+Sn Only CsI trigger
+run=8000 | Alpha+Cosmic Rays
