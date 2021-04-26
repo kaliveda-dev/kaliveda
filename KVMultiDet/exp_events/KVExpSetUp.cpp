@@ -306,3 +306,12 @@ void KVExpSetUp::copy_fired_parameters_to_recon_param_list()
       if (mda->HandledRawData()) mda->copy_fired_parameters_to_recon_param_list();
    }
 }
+
+void KVExpSetUp::SetExpectedDetectorSignalNames()
+{
+   TIter next_array(&fMDAList);
+   KVMultiDetArray* mda;
+   while ((mda = (KVMultiDetArray*)next_array())) {
+      mda->SetExpectedDetectorSignalNames();
+   }
+}

@@ -27,7 +27,7 @@ KVDetectorSignalExpression::KVDetectorSignalExpression(const Char_t* type, const
          fSignals.push_back(ds);
          if (!ds->IsRaw()) fRaw = kFALSE;
          expr.ReplaceAll(ds->GetName(), Form("[%d]", nsigs));
-         ++nsigs;
+         if (expr.CompareTo(_expr) != 0) ++nsigs; // a replacement was made => a signal was found
       }
    }
    if (nsigs) {

@@ -117,7 +117,8 @@ protected:
       AbstractMethod("BuildGeometry");
    }
    virtual void MakeListOfDetectors();
-   //virtual void SetACQParams();
+
+   virtual void SetExpectedDetectorSignalNames();
 
    virtual Int_t GetIDTelescopes(KVDetector*, KVDetector*, TCollection* list);
 

@@ -33,6 +33,8 @@ protected:
 #endif
    void copy_fired_parameters_to_recon_param_list();
 
+   virtual void SetExpectedDetectorSignalNames();
+
 public:
 
    KVExpSetUp();

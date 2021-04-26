@@ -1477,6 +1477,37 @@ void KVMultiDetArray::SetCalibratorParameters(KVDBRun* r, const TString& myname)
    }
 }
 
+void KVMultiDetArray::SetExpectedDetectorSignalNames()
+{
+   // Detector signals corresponding to raw data acquisition parameters are typically only created and
+   // added to detectors when some raw data has been read including those parameters.
+   //
+   // However, when reconstructing data, we may define identification matrices or calibration formulae
+   // which use these signals before starting to read data. Therefore we need to know beforehand what
+   // detector signals are expected to be available once data has been read.
+   //
+   // These are defined, according to detector types, by variables of the form
+   //
+   //~~~~
+   // [dataset].[array].[detector-type].ExpectedDetectorSignals: [comma-separated list of signal names]
+   //~~~~
+   //
+   // where [dataset] is optionally used to provide dataset-specific definitions.
+   //
+   // Here we add a detector signal of each expected type to each detector of the array
+
+   TIter it(GetDetectors());
+   KVDetector* det;
+   while ((det = (KVDetector*)it())) {
+      KVString s = KVBase::GetDataSetEnv(fDataSet.Data(), Form("%s.%s.ExpectedDetectorSignals", GetName(), det->GetType()), "");
+      if (s.IsNull()) continue;
+      s.Begin(",");
+      while (!s.End()) {
+         det->AddDetectorSignal(new KVDetectorSignal(s.Next(kTRUE), det));
+      }
+   }
+}
+
 void KVMultiDetArray::GetDetectorEvent(KVDetectorEvent* detev, const TSeqCollection* fired_dets)
 {
    // First step in event reconstruction based on current status of detectors in array.

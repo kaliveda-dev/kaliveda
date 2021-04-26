@@ -381,10 +381,6 @@ Bool_t KVDetector::AddCalibrator(KVCalibrator* cal, const KVNameValueList& opts)
    //
    // Also sets calibrator's name to [detname]_[caltype]
    //
-   // As raw data signals may not be created until some raw data is actually read,
-   // here we have to handle the case where the input signal required by the calibrator
-   // is not yet available to us. In this case, we create it and add it to the detector.
-   //
    // The (optional) KVNameValueList argument can be used to pass any extra parameters/options.
    // For example, if it contains a parameter `ZRange`:
    //
@@ -399,10 +395,10 @@ Bool_t KVDetector::AddCalibrator(KVCalibrator* cal, const KVNameValueList& opts)
    if (!cal) return kFALSE;
    // look for input signal
    KVDetectorSignal* in  = GetDetectorSignal(cal->GetInputSignalType());
-   // if 'in' is a raw data parameter, it may not yet exist (only created when data is read)
+   // input signal must exist
    if (!in) {
-      AddDetectorSignal(in = new KVDetectorSignal(cal->GetInputSignalType(), this));
-      Info("AddCalibrator", "Adding new raw detector signal: %s", in->GetTitle());
+      Error("AddCalibrator", "No known detector signal: %s", in->GetTitle());
+      return kFALSE;
    }
    if (!fCalibrators)
       fCalibrators = new KVList();

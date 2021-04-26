@@ -350,6 +350,8 @@ void KVINDRA::Build(Int_t run)
 
    SetPinLasersForCsI();
 
+   SetExpectedDetectorSignalNames();
+
    // link EBYEDAT parameter names to detectors
    TIter next_det(GetDetectors());
    KVDetector* det;
