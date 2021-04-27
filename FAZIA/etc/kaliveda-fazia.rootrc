@@ -228,7 +228,7 @@ FAZIAT2103.DataSet.RunFileClass.raw:    FZDATA
 FAZIAT2103.DataSet.RunFile.DoNotDelete: raw
 FAZIAT2103.DataSet.RunFileName.raw:    run%R
 FAZIAT2103.KVDataSet.DataType.Subdir.raw:  raw
-FAZIAT2103.KVDataSet.DataType.Subdir.recon:  recon_test
+FAZIAT2103.KVDataSet.DataType.Subdir.recon:  recon
 FAZIAT2103.EventReconstruction.DoCalibration: no
 FAZIAT2103.EventReconstruction.DoIdentification: no
 FAZIAT2103.ReconIdent.DataAnalysisTask.Prereq:     xxx
