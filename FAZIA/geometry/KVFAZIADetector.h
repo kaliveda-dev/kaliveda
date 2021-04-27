@@ -19,9 +19,12 @@ class KVSignal;
    { \
       return GetDetectorSignalValue(__KVFD_dcs(sig,type)); \
    } \
-   void __KVFD_setmethname(sig,type)(Double_t val) \
+   KVDetectorSignal* __KVFD_setmethname(sig,type)(Double_t val) \
    { \
-      GetDetectorSignal(__KVFD_dcs(sig,type))->SetValue(val); \
+      KVDetectorSignal* ds = GetDetectorSignal(__KVFD_dcs(sig,type)); \
+      ds->SetValue(val); \
+      ds->SetFired(); \
+      return ds; \
    }
 
 /**
@@ -79,7 +82,7 @@ public:
 
    static const Char_t* GetNewName(KVString oldname);
 
-   virtual Bool_t Fired(Option_t* opt = "any") const;
+   Bool_t Fired(Option_t* opt = "any") const;
 
    void SetSignal(TGraph* signal, const Char_t* signal_name);
    Bool_t HasSignal() const;
@@ -90,7 +93,7 @@ public:
    const KVSeqCollection* GetListOfSignals() const;
    void ComputePSA();
 
-   void SetFPGAEnergy(int sigid, Int_t idx /* Si: alway 0, CsI: 0=max 1=fast */, Double_t energy);
+   KVDetectorSignal* SetFPGAEnergy(int sigid, Int_t idx /* Si: alway 0, CsI: 0=max 1=fast */, Double_t energy);
 
    Int_t GetIdentifier() const
    {

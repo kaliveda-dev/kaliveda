@@ -361,24 +361,27 @@ void KVFAZIADetector::ComputePSA()
    }
 }
 
-void KVFAZIADetector::SetFPGAEnergy(int sigid, Int_t idx, Double_t energy)
+KVDetectorSignal* KVFAZIADetector::SetFPGAEnergy(int sigid, Int_t idx, Double_t energy)
 {
+   // Set FPGA energy value in appropriate KVDetectorSignal of detector and set its state
+   // to 'fired'. Returns address of the signal which was set.
+
    switch (sigid) {
       case KVSignal::kQH1:
-         if (idx == 0) SetQH1FPGAEnergy(energy);
+         if (idx == 0) return SetQH1FPGAEnergy(energy);
          break;
       case KVSignal::kI1:
          break;
       case KVSignal::kQL1:
          break;
       case KVSignal::kQ2:
-         if (idx == 0) SetQ2FPGAEnergy(energy);
+         if (idx == 0) return SetQ2FPGAEnergy(energy);
          break;
       case KVSignal::kI2:
          break;
       case KVSignal::kQ3:
-         if (idx == 0) SetQ3FPGAEnergy(energy);
-         if (idx == 1) SetQ3FastFPGAEnergy(energy);
+         if (idx == 0) return SetQ3FPGAEnergy(energy);
+         if (idx == 1) return SetQ3FastFPGAEnergy(energy);
          break;
    }
 }

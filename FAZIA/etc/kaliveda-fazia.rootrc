@@ -80,6 +80,12 @@ FAZIETO.BlockNumbers:        0,1,2,3,4,5,6,7,8,9,10,11
 FAZIETO.BlockPositions:      0,1,2,3,4,5,6,7,8,9,10,11
 FAZIETO.InterBlockPadding:   0.41
 
+# default parameters for KVFAZIETO i.e. the 12-block FAZIA demonstrator
+FAZIAT2103.FAZIETO.GeoType:             compact
+FAZIAT2103.FAZIETO.NBlocks:             8
+FAZIAT2103.FAZIETO.BlockNumbers:        1,2,3,4,5,9,10,11
+FAZIAT2103.FAZIETO.BlockPositions:      1,2,3,4,0,8,10,6
+
 +DataSet:   LNS_2014
 LNS_2014.DataSet.Title:    FAZIA commissioning at LNS (2014)
 LNS_2014.DataSet.RepositoryDir:   LNS_2014
@@ -214,6 +220,23 @@ FAZIADEM.DataSet.RunFile.DoNotDelete: bin
 FAZIADEM.HasCalibIdentInfos:   no
 FAZIADEM.ActiveIdentifications:      Si-Si Si-CsI Si CsI
 
++DataSet:   FAZIAT2103
+FAZIAT2103.DataSet.Title:   FAZIA test at GANIL (2021)
+FAZIAT2103.DataSet.RepositoryDir:   FAZIAT2103
+FAZIAT2103.ReconstructedEventClassName:	KVReconstructedEvent
+FAZIAT2103.DataSet.RunFileClass.raw:    FZDATA
+FAZIAT2103.DataSet.RunFile.DoNotDelete: raw
+FAZIAT2103.DataSet.RunFileName.raw:    run%R
+FAZIAT2103.KVDataSet.DataType.Subdir.raw:  raw
+FAZIAT2103.KVDataSet.DataType.Subdir.recon:  recon_test
+FAZIAT2103.EventReconstruction.DoCalibration: no
+FAZIAT2103.EventReconstruction.DoIdentification: no
+FAZIAT2103.ReconIdent.DataAnalysisTask.Prereq:     xxx
+FAZIAT2103.IdentRoot.DataAnalysisTask.Prereq:     xxx
+FAZIAT2103.ReconRoot.DataAnalysisTask.Prereq:     xxx
+FAZIAT2103.GeneAnalysis.DataAnalysisTask.Prereq:     xxx
+
+
 #DataBase
 
 +Plugin.KVExpDB:    LNS_2014    KVFAZIADB     FAZIAdb    "KVFAZIADB(const Char_t*)"
@@ -227,6 +250,7 @@ FAZIADEM.ActiveIdentifications:      Si-Si Si-CsI Si CsI
 +Plugin.KVExpDB:    FAZIAZERO    KVFAZIADB     FAZIAdb    "KVFAZIADB(const Char_t*)"
 +Plugin.KVExpDB:    TETLNS17    KVFAZIADB     FAZIAdb    "KVFAZIADB(const Char_t*)"
 +Plugin.KVExpDB:    FAZIADEM    KVFAZIADB     FAZIAdb    "KVFAZIADB(const Char_t*)"
++Plugin.KVExpDB:    FAZIAT2103  KVFAZIADB     FAZIAdb    "KVFAZIADB(const Char_t*)"
 
 # Default name for file containing runlist for each dataset.
 FAZIADB.Runlist:     runlist.dat
@@ -249,6 +273,7 @@ ISOFAZIA.FAZIADB.Runlist:     Runlist.csv
 +Plugin.KVMultiDetArray:    FAZIAZERO    KVFAZIAZERO    FAZIAgeometry    "KVFAZIAZERO()"
 +Plugin.KVMultiDetArray:    TESTLNS17    KVFAZIALNS17    FAZIAgeometry    "KVFAZIALNS17()"
 +Plugin.KVMultiDetArray:    FAZIADEM    KVFAZIETO    FAZIAgeometry    "KVFAZIETO()"
++Plugin.KVMultiDetArray:    FAZIAT2103    KVFAZIETO    FAZIAgeometry    "KVFAZIETO()"
 
 # Plugins for reconstruction of particles from data/simulation
 +Plugin.KVGroupReconstructor:   FAZIA KVFAZIAGroupReconstructor FAZIAanalysis "KVFAZIAGroupReconstructor()"
@@ -274,6 +299,7 @@ FAZIA.ReconstructedNuclei.AcceptECodes: 0-1
 +Plugin.KVUpDater:    FAZIAZERO    KVFAZIAUpDater     FAZIAdb    "KVFAZIAUpDater()"
 +Plugin.KVUpDater:    TESTLNS17   KVFAZIAUpDater     FAZIAdb    "KVFAZIAUpDater()"
 +Plugin.KVUpDater:    FAZIADEM    KVFAZIAUpDater     FAZIAdb    "KVFAZIAUpDater()"
++Plugin.KVUpDater:    FAZIAT2103    KVFAZIAUpDater     FAZIAdb    "KVFAZIAUpDater()"
 
 ############
 # Plugin to use for detectors in FAZIA
@@ -702,6 +728,65 @@ FAZIAPRE-MAY2018.Q3.slow.FPGARiseTime:      2.
 FAZIAPRE-MAY2018.SI1.IsFiredFromSignal:  1
 FAZIAPRE-MAY2018.SI2.IsFiredFromSignal:  1
 FAZIAPRE-MAY2018.CSI.IsFiredFromSignal:  1
+
+
+###
+#	FAZIAT2103
+###
+
+FAZIAT2103.QL1.BaseLineLength:            100
+FAZIAT2103.QL1.TauRC:                     250
+FAZIAT2103.QL1.ChannelWidth:               4
+FAZIAT2103.QL1.ShaperRiseTime:            2
+FAZIAT2103.QL1.ShaperFlatTop:             2
+FAZIAT2103.QL1.PZCorrection:              0
+
+FAZIAT2103.QH1.BaseLineLength:            100
+FAZIAT2103.QH1.TauRC:                     40
+FAZIAT2103.QH1.ChannelWidth:               10
+FAZIAT2103.QH1.ShaperRiseTime:            2
+FAZIAT2103.QH1.ShaperFlatTop:             2
+FAZIAT2103.QH1.PZCorrection:              0
+
+FAZIAT2103.I1.BaseLineLength:             50
+FAZIAT2103.I1.ChannelWidth:               4
+FAZIAT2103.I1.Interpolation:              1
+FAZIAT2103.I1.InterpolatedChannelWidth:   0.2
+
+FAZIAT2103.Q2.BaseLineLength:             100
+FAZIAT2103.Q2.TauRC:                      40
+FAZIAT2103.Q2.ChannelWidth:               10
+FAZIAT2103.Q2.ShaperRiseTime:             2
+FAZIAT2103.Q2.ShaperFlatTop:              2
+FAZIAT2103.Q2.PZCorrection:               0
+
+FAZIAT2103.I2.BaseLineLength:             50
+FAZIAT2103.I2.ChannelWidth:               4
+FAZIAT2103.I2.Interpolation:              1
+FAZIAT2103.I2.InterpolatedChannelWidth:   0.2
+
+FAZIAT2103.Q3.BaseLineLength:             100
+FAZIAT2103.Q3.TauRC:                      40
+FAZIAT2103.Q3.ChannelWidth:               10
+FAZIAT2103.Q3.ShaperRiseTime:             2
+FAZIAT2103.Q3.ShaperFlatTop:              10
+FAZIAT2103.Q3.PZCorrection:               0
+FAZIAT2103.Q3.FastShaperRiseTime:         2
+FAZIAT2103.Q3.FastShaperFlatTop:          0.5
+
+FAZIAT2103.QH1.FPGARiseTime:          2
+FAZIAT2103.Q2.FPGARiseTime:           2
+FAZIAT2103.Q3.fast.FPGARiseTime:      2
+FAZIAT2103.Q3.slow.FPGARiseTime:      2
+
+FAZIAT2103.QL1.MinimumAmplitude:          2
+FAZIAT2103.Q2.MinimumAmplitude:           2
+FAZIAT2103.QH1.MinimumAmplitude:          2
+FAZIAT2103.Q3.MinimumAmplitude:           3
+
+FAZIAT2103.SI1.IsFiredFromSignal:  0
+FAZIAT2103.SI2.IsFiredFromSignal:  0
+FAZIAT2103.CSI.IsFiredFromSignal:  0
 
 
 ###

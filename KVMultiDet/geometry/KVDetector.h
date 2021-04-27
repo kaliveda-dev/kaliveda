@@ -399,7 +399,7 @@ public:
    {
       SetBit(kIsAnalysed, b);
    }
-   Bool_t Fired(Option_t* opt = "any") const
+   virtual Bool_t Fired(Option_t* opt = "any") const
    {
       // Returns kTRUE if detector was hit (fired) in an event
       //

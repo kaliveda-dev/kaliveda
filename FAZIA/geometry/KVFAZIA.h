@@ -71,6 +71,16 @@ protected:
 #ifdef WITH_MFM
    Bool_t handle_raw_data_event_mfmframe(const MFMCommonFrame&);
 #endif
+   void copy_fired_parameters_to_recon_param_list()
+   {
+      // override KVMultiDetArray method.
+      // raw data signals are not copied to the general (event) parameter list,
+      // they are stored in the lists of the individual particles and reset in the
+      // detectors when the particles are read back.
+      //
+      // the formatting of the signal names is not compatible with the code in KVReconstructedEvent::Streamer,
+      // hence the FAZIA-specific treatment which is handled by KVFAZIA::FillDetectorList.
+   }
 
    void PerformClosedROOTGeometryOperations();
 
