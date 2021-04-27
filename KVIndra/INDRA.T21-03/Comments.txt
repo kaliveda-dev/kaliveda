@@ -1,8 +1,8 @@
-run=1000 | alpha source & cosmic (Interrupt)
-run=2000 | alpha source & cosmic (MVLC I/O)
-run=3000 | Ar+Sn Si OU CsI trigger
-run=4000 | Ar+Sn Si OU CsI trigger
-run=5000 | Ar+Sn Si OU CsI trigger
-run=6000 | Ar+Sn Only Si trigger
-run=7000 | Ar+Sn Only CsI trigger
-run=8000 | Alpha+Cosmic Rays
+run=1000 | trigger/readout: Interrupt
+run=2000 | trigger/readout: MVLC I/O
+run=3000 | Si OU CsI trigger
+run=4000 | Si OU CsI trigger
+run=5000 | Si OU CsI trigger
+run=6000 | Only Si trigger
+run=7000 | Only CsI trigger
+run=8000 | High intensity source
