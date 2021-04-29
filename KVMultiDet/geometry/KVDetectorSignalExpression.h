@@ -39,9 +39,9 @@ public:
    }
    Bool_t IsRaw() const
    {
-      // Return kTRUE if expression only uses raw data i.e. does not
-      // depend on any calibrated signals
-      return fRaw;
+      // This is not a raw data parameter, in the sense it cannot be used to decide whether
+      // the detector fired in the last read raw data
+      return kFALSE;
    }
    Bool_t IsExpression() const
    {

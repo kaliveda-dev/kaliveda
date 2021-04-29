@@ -250,9 +250,9 @@ void KVReconstructedEvent::MergeEventFragments(TCollection* events, Option_t* op
          while ((n = e->GetNextParticle())) {
             AddParticle()->CopyAndMoveReferences(n);
          }
-         GetParameters()->Merge(*(e->GetParameters()));
-         e->Clear(opt);
       }
+      GetParameters()->Merge(*(e->GetParameters()));
+      e->Clear(opt);
    }
 }
 
