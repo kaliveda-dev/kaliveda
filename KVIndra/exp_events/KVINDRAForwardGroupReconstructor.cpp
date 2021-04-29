@@ -275,39 +275,39 @@ Bool_t KVINDRAForwardGroupReconstructor::CoherencySiCsI(KVReconstructedNucleus& 
       // band around the Si pedestal for low energies (energies where proton dE is significantly larger than
       // the pedestal).
       if ((IDcsi->Z == 1 || IDcsi->Z == 2) && IDsicsi->IDattempted) {
-         if (IDsicsi->deltaEpedestal == KVIdentificationResult::deltaEpedestal_UNKNOWN) {
-            // no explicit treatment of 'neutron-like' particles with a cut in Si-CsI id grid
-            // First we check that we are in the domain where proton dE can be distinguished from pedestal.
-            // If so, if the measured dE is below [ped + factor*(dE_exp - ped)], then we label the particle as a neutron.
-            // 'factor' depends on the Si-CsI telescope: if it has mass identification, factor=0.3; if not, factor=0.1
-            // (these empirical values correspond to 5th campaign data)
-            if (idt_sicsi) {
-               Double_t ped = idt_sicsi->GetPedestalY();
-               Int_t status;
-               Double_t dE_exp = idt_sicsi->GetMeanDEFromID(status, 1, 1);
-               if (status == KVIDTelescope::kMeanDE_OK) { // proton/Z=1 line exists, and we are in its energy range
-                  if (dE_exp > ped + 5.) { // arbitrary choice, must have expected dE at least 5 channels above pedestal
+//         if (IDsicsi->deltaEpedestal == KVIdentificationResult::deltaEpedestal_UNKNOWN) {
+//            // no explicit treatment of 'neutron-like' particles with a cut in Si-CsI id grid
+//            // First we check that we are in the domain where proton dE can be distinguished from pedestal.
+//            // If so, if the measured dE is below [ped + factor*(dE_exp - ped)], then we label the particle as a neutron.
+//            // 'factor' depends on the Si-CsI telescope: if it has mass identification, factor=0.3; if not, factor=0.1
+//            // (these empirical values correspond to 5th campaign data)
+//            if (idt_sicsi) {
+//               Double_t ped = idt_sicsi->GetPedestalY();
+//               Int_t status;
+//               Double_t dE_exp = idt_sicsi->GetMeanDEFromID(status, 1, 1);
+//               if (status == KVIDTelescope::kMeanDE_OK) { // proton/Z=1 line exists, and we are in its energy range
+//                  if (dE_exp > ped + 5.) { // arbitrary choice, must have expected dE at least 5 channels above pedestal
 
-                     // if Si-CsI has no isotopic identification, reduce factor
-                     Double_t factor = (idt_sicsi->HasMassID() ? 0.3 : 0.1);
-                     if (idt_sicsi->GetIDMapY() < (ped + factor * (dE_exp - ped))) {
-                        partID = *IDsicsi;
-                        identifying_telescope = idt_sicsi;
-                        partID.IDOK = kTRUE;
-                        partID.Zident = kTRUE;
-                        partID.Aident = kTRUE;
-                        partID.Z = 0;
-                        partID.A = 1;
-                        partID.IDcode = kIDCode1; // general code for neutrons
-                        PART.SetParameter("Coherent", fCoherent);
-                        PART.SetParameter("Pileup", fPileup);
-                        return kTRUE;
-                     }
-                  }
-               }
-            }
-         }
-         else if (IDsicsi->deltaEpedestal == KVIdentificationResult::deltaEpedestal_YES) {
+//                     // if Si-CsI has no isotopic identification, reduce factor
+//                     Double_t factor = (idt_sicsi->HasMassID() ? 0.3 : 0.1);
+//                     if (idt_sicsi->GetIDMapY() < (ped + factor * (dE_exp - ped))) {
+//                        partID = *IDsicsi;
+//                        identifying_telescope = idt_sicsi;
+//                        partID.IDOK = kTRUE;
+//                        partID.Zident = kTRUE;
+//                        partID.Aident = kTRUE;
+//                        partID.Z = 0;
+//                        partID.A = 1;
+//                        partID.IDcode = kIDCode1; // general code for neutrons
+//                        PART.SetParameter("Coherent", fCoherent);
+//                        PART.SetParameter("Pileup", fPileup);
+//                        return kTRUE;
+//                     }
+//                  }
+//               }
+//            }
+//         }
+         /*else*/ if (IDsicsi->deltaEpedestal == KVIdentificationResult::deltaEpedestal_YES) {
             // explicit treatment of 'neutron-like' particles with a cut in Si-CsI id grid
             partID = *IDsicsi;
             identifying_telescope = idt_sicsi;
