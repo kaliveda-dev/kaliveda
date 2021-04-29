@@ -844,13 +844,10 @@ void KVDataAnalyser::DoStatusUpdate(Long64_t nevents) const
    cout << " +++ " << nevents << " events processed +++ " << endl;
    ProcInfo_t pid;
    if (gSystem->GetProcInfo(&pid) == 0) {
-      KVString du = gSystem->GetFromPipe("du -sh");
-      du.Begin("\t");
-      KVString disk = du.Next();
       cout << "     ------------- Process infos -------------" << endl;
-      printf(" CpuSys = %f  s.    CpuUser = %f s.    ResMem = %f MB     VirtMem = %f MB      DiskUsed = %s\n",
+      printf(" CpuSys = %f  s.    CpuUser = %f s.    ResMem = %f MB     VirtMem = %f MB\n",
              pid.fCpuSys,  pid.fCpuUser, pid.fMemResident / 1024.,
-             pid.fMemVirtual / 1024., disk.Data());
+             pid.fMemVirtual / 1024.);
    }
 }
 

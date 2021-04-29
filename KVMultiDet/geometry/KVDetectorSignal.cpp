@@ -15,7 +15,7 @@ KVDetectorSignal::KVDetectorSignal(const Char_t* type, const KVDetector* det)
 
 void KVDetectorSignal::ls(Option_t*) const
 {
-   printf(" %s \t\t %s \t\t %s \t\t [%lf]\n", ClassName(), GetName(), GetType(), GetValue());
+   printf(" %s \t\t %s \t\t %s \t\t [%lf] %s\n", ClassName(), GetName(), GetType(), GetValue(), IsFired() ? "*FIRED*" : "");
 }
 
 Int_t KVDetectorSignal::GetStatus(const TString&) const

@@ -49,6 +49,7 @@ INDRA_camp1.DataSet.RunFile.DoNotDelete: raw dst
 INDRA_camp1.DataSet.RunFileClass.raw:    GANIL
 INDRA_camp1.ReconAnalysis.DataAnalysisTask.Analyser:     INDRAReconData
 INDRA_camp1.ReconAnalysis.DataAnalysisTask.UserClass.Base:     INDRASelector/TSelector
+INDRA_camp1.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +DataSet:    INDRA_camp2
 INDRA_camp2.DataSet.Title:    2nd INDRA campaign (1994)
@@ -60,6 +61,7 @@ INDRA_camp2.DataSet.RunFile.DoNotDelete: raw dst
 INDRA_camp2.DataSet.RunFileClass.raw:    GANIL
 INDRA_camp2.ReconAnalysis.DataAnalysisTask.Analyser:     INDRAReconData
 INDRA_camp2.ReconAnalysis.DataAnalysisTask.UserClass.Base:     INDRASelector/TSelector
+INDRA_camp2.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +DataSet:    INDRA_camp4
 INDRA_camp4.DataSet.Title:    4th INDRA campaign (1998/9)
@@ -72,6 +74,7 @@ INDRA_camp4.DataSet.RunFile.DoNotDelete: raw dst
 INDRA_camp4.DataSet.RunFileClass.raw:    GANIL
 INDRA_camp4.ReconAnalysis.DataAnalysisTask.Analyser:     INDRAReconData
 INDRA_camp4.ReconAnalysis.DataAnalysisTask.UserClass.Base:     INDRASelector/TSelector
+INDRA_camp4.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +DataSet:    INDRA_camp5
 INDRA_camp5.DataSet.Title:    5th INDRA campaign (2001)
@@ -82,6 +85,7 @@ INDRA_camp5.DataSet.RunFile.DoNotDelete: raw
 INDRA_camp5.DataSet.RunFileClass.raw:    GANIL
 INDRA_camp5.ReconAnalysis.DataAnalysisTask.Analyser:     INDRAReconData
 INDRA_camp5.ReconAnalysis.DataAnalysisTask.UserClass.Base:     INDRASelector/TSelector
+INDRA_camp5.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +DataSet:    INDRA_e416a
 INDRA_e416a.DataSet.Title:    Fission lifetimes of SHE (E416a) (2005)
@@ -94,6 +98,7 @@ INDRA_e416a.KVMultiDetArray.ROOTGeometry:  no
 INDRA_e416a.DataSet.RunFileClass.raw:    GANIL
 INDRA_e416a.ReconAnalysis.DataAnalysisTask.Analyser:     INDRAReconData
 INDRA_e416a.ReconAnalysis.DataAnalysisTask.UserClass.Base:     INDRASelector/TSelector
+INDRA_e416a.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +DataSet:    INDRA_e475s
 INDRA_e475s.DataSet.Title:    Isospin dependence of the emission of complex fragments (E475S) (2006)
@@ -105,6 +110,7 @@ INDRA_e475s.DataSet.RunFile.DoNotDelete: raw
 INDRA_e475s.DataSet.RunFileClass.raw:    GANIL
 INDRA_e475s.ReconAnalysis.DataAnalysisTask.Analyser:     INDRAReconData
 INDRA_e475s.ReconAnalysis.DataAnalysisTask.UserClass.Base:     INDRASelector/TSelector
+INDRA_e475s.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +DataSet:   t10_02
 t10_02.DataSet.Title:    Test INDRA T10_02 (Nov.-Dec. 2010)
@@ -115,6 +121,7 @@ t10_02.DataSet.RunFile.DoNotDelete: raw
 t10_02.DataSet.RunFileClass.raw:    GANIL
 t10_02.ReconAnalysis.DataAnalysisTask.Analyser:     INDRAReconData
 t10_02.ReconAnalysis.DataAnalysisTask.UserClass.Base:     INDRASelector/TSelector
+t10_02.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +DataSet:   INDRA_e613
 INDRA_e613.DataSet.Title:    The Last Experiment (Ever)
@@ -125,6 +132,7 @@ INDRA_e613.DataSet.RunFile.DoNotDelete: raw
 INDRA_e613.DataSet.RunFileClass.raw:    GANIL
 INDRA_e613.ReconAnalysis.DataAnalysisTask.Analyser:     INDRAReconData
 INDRA_e613.ReconAnalysis.DataAnalysisTask.UserClass.Base:     INDRASelector/TSelector
+INDRA_e613.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +DataSet:    INDRA_e494s_woVAMOS
 INDRA_e494s_woVAMOS.DataSet.Title:   Isospin dependence of level density parameter (E494S) (2007)
@@ -136,6 +144,7 @@ INDRA_e494s_woVAMOS.DataSet.RunFile.DoNotDelete: raw
 INDRA_e494s_woVAMOS.DataSet.RunFileClass.raw:    GANIL
 INDRA_e494s_woVAMOS.ReconAnalysis.DataAnalysisTask.Analyser:     INDRAReconData
 INDRA_e494s_woVAMOS.ReconAnalysis.DataAnalysisTask.UserClass.Base:     INDRASelector/TSelector
+INDRA_e494s_woVAMOS.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +DataSet:    INDRA_e503_woVAMOS
 INDRA_e503_woVAMOS.DataSet.Title:   Symmetry energy of nuclear EOS (E503) (2007)
@@ -145,8 +154,9 @@ INDRA_e503_woVAMOS.ReconstructedEventClassName:   KVINDRAReconEvent
 INDRA_e503_woVAMOS.HasCalibIdentInfos:   no
 INDRA_e503_woVAMOS.DataSet.RunFile.DoNotDelete: raw
 INDRA_e503_woVAMOS.DataSet.RunFileClass.raw:    GANIL
-INDRA_e494s_woVAMOS.ReconAnalysis.DataAnalysisTask.Analyser:     INDRAReconData
-INDRA_e494s_woVAMOS.ReconAnalysis.DataAnalysisTask.UserClass.Base:     INDRASelector/TSelector
+INDRA_e503_woVAMOS.ReconAnalysis.DataAnalysisTask.Analyser:     INDRAReconData
+INDRA_e503_woVAMOS.ReconAnalysis.DataAnalysisTask.UserClass.Base:     INDRASelector/TSelector
+INDRA_e503_woVAMOS.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 # Experience e613
 # The marqueuers de temps for silicon detectors from SI_0101 to SI_0324
@@ -695,9 +705,9 @@ INDRA_camp5.GDir.Freq: 186.2
 # which is not consistent with the online DAQ trigger (multiplicity)
 +Plugin.KVTriggerConditions: ^INDRA_$*  KVINDRATriggerConditions KVIndraanalysis "KVINDRATriggerConditions()"
 
-###############################################################################
-# Test T21-03
-#
+################################################################################
+### Test T21-03
+###
 +DataSet:	  INDRA.T21-03
 INDRA.T21-03.DataSet.Title:  T21-03 (April 2021)
 INDRA.T21-03.DataSet.RepositoryDir:	INDRA/T21-03
@@ -708,7 +718,7 @@ INDRA.T21-03.DataSet.RunFileClass.raw:    MFM
 INDRA.T21-03.MesytecCrateConf:   mesytec_crate.conf
 INDRA.T21-03.MesytecChannelsConf:   mesytec_voies_conf.dat
 INDRA.T21-03.EventReconstruction.DoCalibration: no
-INDRA.T21-03.EventReconstruction.DoIdentification: no
+INDRA.T21-03.EventReconstruction.DoIdentification: yes
 
 +Plugin.KVMultiDetArray:    INDRA.T21-03    KVINDRA    KVIndraexp_events    "KVINDRA()"
 +Plugin.KVExpDB:   INDRA.T21-03    KVExpSetUpDB     KVMultiDetexp_events   "KVExpSetUpDB(const Char_t*)"
@@ -716,3 +726,7 @@ INDRA.T21-03.EventReconstruction.DoIdentification: no
 INDRA.T21-03.INDRA.CSI.ExpectedDetectorSignals: TotLight,R,T
 INDRA.T21-03.INDRA.SI.ExpectedDetectorSignals: ADC,T
 
+INDRA.T21-03.HasCalibIdentInfos:   yes
+INDRA.T21-03.ActiveIdentifications:      INDRA.CSI
+
+INDRA.T21-03.IdentificationParameterFile.INDRA.CSI:       IDGridsINDRA_CSI.dat

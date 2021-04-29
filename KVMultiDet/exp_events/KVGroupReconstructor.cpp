@@ -139,8 +139,10 @@ KVReconstructedNucleus* KVGroupReconstructor::ReconstructTrajectory(const KVGeoD
          && (node->GetNTraj() == 1 ||
              (traj->GetNodeInFront(node) &&
               traj->GetNodeInFront(node)->GetDetector()->Fired()))) {
+
       return GetEventFragment()->AddParticle();
    }
+
    return nullptr;
 }
 

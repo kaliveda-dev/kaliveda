@@ -11,6 +11,7 @@ INDRAFAZIA.HasCalibIdentInfos:   no
 INDRAFAZIA.ActiveIdentifications:      CSI SI-CSI CI-SI CI-CSI Si-Si Si-CsI Si CsI
 INDRAFAZIA.SI-CSI.MassID: yes
 INDRAFAZIA.SI-CSI.MassID.Validity:  Z<=8
+INDRAFAZIA.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +Plugin.KVMultiDetArray:    INDRAFAZIA    KVExpSetUp    KVMultiDetexp_events    "KVExpSetUp()"
 +Plugin.KVExpDB:   INDRAFAZIA    KVExpSetUpDB     KVMultiDetexp_events   "KVExpSetUpDB(const Char_t*)"
@@ -36,6 +37,7 @@ INDRAFAZIA.T18_02.ReconIdent.DataAnalysisTask.Prereq:     xxx
 INDRAFAZIA.T18_02.IdentRoot.DataAnalysisTask.Prereq:     xxx
 INDRAFAZIA.T18_02.ReconRoot.DataAnalysisTask.Prereq:     xxx
 INDRAFAZIA.T18_02.GeneAnalysis.DataAnalysisTask.Prereq:     xxx
+INDRAFAZIA.T18_02.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +Plugin.KVMultiDetArray:    INDRAFAZIA.T18_02    KVExpSetUp    KVMultiDetexp_events    "KVExpSetUp()"
 +Plugin.KVExpDB:   INDRAFAZIA.T18_02    KVExpSetUpDB     KVMultiDetexp_events   "KVExpSetUpDB(const Char_t*)"
@@ -84,6 +86,7 @@ INDRAFAZIA.E789_test.GeneAnalysis.DataAnalysisTask.Prereq:     xxx
 INDRAFAZIA.E789_test.ActiveIdentifications:      CSI SI-CSI Si-Si Si-CsI Si CsI
 INDRAFAZIA.E789_test.SI-CSI.MassID: yes
 INDRAFAZIA.E789_test.SI-CSI.MassID.Validity:  Z<=6
+INDRAFAZIA.E789_test.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 +Plugin.KVMultiDetArray:    INDRAFAZIA.E789_test    KVExpSetUp    KVMultiDetexp_events    "KVExpSetUp()"
 +Plugin.KVExpDB:   INDRAFAZIA.E789_test    KVExpSetUpDB     KVMultiDetexp_events   "KVExpSetUpDB(const Char_t*)"
@@ -182,6 +185,7 @@ INDRAFAZIA.E789.ActiveIdentifications:      INDRA.CSI INDRA.SI-CSI FAZIA.Si-Si F
 INDRAFAZIA.E789.SI-CSI.MassID: yes
 INDRAFAZIA.E789.SI-CSI.MassID.Validity:  Z<=6
 INDRAFAZIA.E789.FAZIA.ReconstructedNuclei.AcceptECodes: 1-2
+INDRAFAZIA.E789.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 
 
 +Plugin.KVMultiDetArray:    INDRAFAZIA.E789    KVExpSetUp    KVMultiDetexp_events    "KVExpSetUp()"

@@ -341,7 +341,6 @@ Bool_t KVIDTelescope::Identify(KVIdentificationResult* idr, Double_t x, Double_t
       Double_t de, e;
       GetIDGridCoords(e, de, grid, x, y);
       idr->SetGridName(grid->GetName());
-      TString reject_cut;
       if (grid->IsIdentifiable(e, de, &idr->Rejecting_Cut)) {
          grid->Identify(e, de, idr);
          if (idr->IDOK) break; // stop on first successful identification

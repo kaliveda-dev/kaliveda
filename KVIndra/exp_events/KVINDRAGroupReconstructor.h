@@ -27,10 +27,13 @@
 
 class KVINDRAGroupReconstructor : public KVGroupReconstructor {
 
+   friend class KVINDRA;
+
 protected:
    KVChIo* theChio;                 // the ChIo of the group
    Double_t fECsI, fESi, fEChIo;
    bool print_part;//debug
+   static TString CSI_ID_TYPE;
 
    void SetBadCalibrationStatus(KVReconstructedNucleus* n)
    {

@@ -57,6 +57,7 @@ $Id: KVINDRA.cpp,v 1.68 2009/01/21 10:05:51 franklan Exp $
 #include "MFMEbyedatFrame.h"
 #include "MFMMesytecMDPPFrame.h"
 #ifdef WITH_MESYTEC
+#include "KVINDRAGroupReconstructor.h"
 #include "mesytec_buffer_reader.h"
 #endif
 #endif
@@ -620,9 +621,22 @@ void KVINDRA::SetNamesOfIDTelescopes() const
       KVString de_type = N.Next();
       KVString de_number = N.Next();
       if (idt->GetSize() == 1) {
-         // PHOS_R_L_MM or CSI_R_L_RRMM
-         idt->SetName(Form("%s_R_L_%s", de_type.Data(), de_number.Data()));
-         idt->SetType(Form("%s_R_L", de_type.Data()));
+         if (de_type == "PHOS") {
+            idt->SetName(Form("%s_R_L_%s", de_type.Data(), de_number.Data()));
+            idt->SetType(Form("%s_R_L", de_type.Data()));
+         }
+         else {
+            // CsI identification telescopes are called either CSI_R_L_RRMM (before 2021)
+            // or CSI_RRMM (for datasets from 2021 onwards)
+            TString csi_id_name_fmt = KVBase::GetDataSetEnv(fDataSet, "INDRA.CSI.IDTelescopeNameFormat", "CSI_%s");
+            idt->SetName(Form(csi_id_name_fmt, de_number.Data()));
+            // similarly, the type of CSI identifications was CSI_R_L before 2021, CSI from 2021 onwards
+            if (csi_id_name_fmt.Contains("R_L")) {
+               idt->SetType("CSI_R_L");
+               KVINDRAGroupReconstructor::CSI_ID_TYPE = "CSI_R_L";
+            }
+            else idt->SetType("CSI");
+         }
       }
       else {
          N = idt->GetDetector(2)->GetName();
