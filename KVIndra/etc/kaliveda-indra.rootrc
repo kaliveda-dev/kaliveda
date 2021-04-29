@@ -727,6 +727,7 @@ INDRA.T21-03.INDRA.CSI.ExpectedDetectorSignals: TotLight,R,T
 INDRA.T21-03.INDRA.SI.ExpectedDetectorSignals: ADC,T
 
 INDRA.T21-03.HasCalibIdentInfos:   yes
-INDRA.T21-03.ActiveIdentifications:      INDRA.CSI
+INDRA.T21-03.ActiveIdentifications:      INDRA.CSI INDRA.SI-CSI
 
 INDRA.T21-03.IdentificationParameterFile.INDRA.CSI:       IDGridsINDRA_CSI.dat
+INDRA.T21-03.IdentificationParameterFile.INDRA.SI-CSI:    IDGridsINDRA_SI_CSI.dat
