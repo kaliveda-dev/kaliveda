@@ -1228,6 +1228,7 @@ Bool_t KVINDRA::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPP
 
       fMesytecData = kTRUE;
    }
+   fReconParameters.SetValue64bit("INDRA.TS", f.GetTimeStamp());
    auto mfmfilereader = dynamic_cast<KVMFMDataFileReader*>(fRawDataReader);
    mfmfilereader->GetMesytecBufferReader().read_event_in_buffer(
       (const uint8_t*)f.GetPointUserData(), f.GetBlobSize(),
