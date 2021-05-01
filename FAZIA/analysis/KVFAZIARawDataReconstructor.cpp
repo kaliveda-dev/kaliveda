@@ -58,7 +58,7 @@ void KVFAZIARawDataReconstructor::InitRun()
    // Create new KVReconstructedEvent filled with KVFAZIAReconNuc object
    // used to reconstruct & store events
 
-   if (!recev) recev = new KVReconstructedEvent(50, "KVFAZIAReconNuc");
+   if (!recev) recev = new KVReconstructedEvent(50);
 
    // get dataset to which we must associate new run
    KVDataSet* OutputDataset =
