@@ -7,14 +7,8 @@ KV_SOURCE=$(kaliveda-config --srcdir)
 if [ ! -d ./kaliveda.git ]; then
    ln -s $KV_SOURCE kaliveda.git
 fi
-if [ ! -d ./html ]; then
-git clone --single-branch -b gh-pages git@github.com:kaliveda-dev/kaliveda.git html
-fi
 
-# remove history from gh-pages
-cd html
-git reset --hard $(git rev-list --max-parents=0 --abbrev-commit HEAD)
-cd ..
+mkdir -p ./html
 
 # link scripts etc.
 list=$(ls $KV_SOURCE/doc/doxygen)
