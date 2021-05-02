@@ -62,15 +62,14 @@ Bool_t FilteredEventAnalysisTemplate::Analysis()
    // to the currently analysed reconstructed event
    if (link_to_unfiltered_simulation) GetFriendTreeEntry(GetEvent()->GetParameters()->GetIntValue("SIMEVENT_TREE_ENTRY"));
 
-   for (KVEvent::Iterator it = OKEventIterator(*GetEvent()).begin();
-         it != KVEvent::Iterator::End(); ++it) {
-      KVReconstructedNucleus* part = it.get_pointer<KVReconstructedNucleus>();
+   for (KVReconstructedEvent::Iterator it = KVReconstructedEvent::OKEventIterator(GetEvent()).begin();
+         it != KVReconstructedEvent::Iterator::End(); ++it) {
       // if we can access the events of the unfiltered simulation, and if Gemini++ was used
       // to decay events before filtering, this is how you can access the "parent" nucleus
       // of the current detected decay product
       // KVSimNucleus* papa = (KVSimNucleus*)GetFriendEvent()->GetParticle( part->GetParameters()->GetIntValue("GEMINI_PARENT_INDEX") );
 
-      FillHisto("Z_Vpar", part->GetFrame("CM")->GetVpar(), part->GetZ());
+      FillHisto("Z_Vpar", (*it).GetFrame("CM")->GetVpar(), (*it).GetZ());
    }
 
    GetGVList()->FillBranches();

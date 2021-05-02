@@ -17,7 +17,7 @@ void ROOT6ReconDataSelectorTemplate::InitAnalysis(void)
    AddGV("KVMult", "mtot"); // total multiplicity
    // total multiplicity in forward CM hemisphere
    auto gv = AddGV("KVMult", "mtot_av");
-   gv->SetSelection( {
+   gv->SetSelection({
       "Vcm>0", [](const KVNucleus * n)
       {
          return n->GetVpar() > 0;
@@ -77,7 +77,7 @@ Bool_t ROOT6ReconDataSelectorTemplate::Analysis(void)
    FillTree(); // write new results in TTree
 
    /*** LOOP OVER PARTICLES OF EVENT ***/
-   for (auto& n : OKEventIterator(*GetEvent())) {
+   for (auto& n : KVReconstructedEvent::OKEventIterator(GetEvent())) {
       // "OK" particles => using selection criteria of InitRun()
       // fill Z distribution
       FillHisto("zdist", n.GetZ());

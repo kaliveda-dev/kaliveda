@@ -68,7 +68,7 @@ Bool_t ROOT6FilteredEventAnalysisTemplate::Analysis()
    // to the currently analysed reconstructed event
    if (link_to_unfiltered_simulation) GetFriendTreeEntry(GetEvent()->GetParameters()->GetIntValue("SIMEVENT_TREE_ENTRY"));
 
-   for (auto& part : OKEventIterator(*GetEvent())) {
+   for (auto& part : KVReconstructedEvent::OKEventIterator(GetEvent())) {
       // if we can access the events of the unfiltered simulation, and if Gemini++ was used
       // to decay events before filtering, this is how you can access the "parent" nucleus
       // of the current detected decay product
