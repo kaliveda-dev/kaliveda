@@ -78,10 +78,10 @@ Bool_t ExampleFilteredSimDataAnalysis::Analysis()
    if (link_to_unfiltered_simulation) GetFriendTreeEntry(GetEvent()->GetParameters()->GetIntValue("SIMEVENT_TREE_ENTRY"));
 
 #ifdef WITH_CPP11
-   for (auto& part : OKEventIterator(*GetEvent())) {
+   for (auto& part : KVNucleusEvent::OKEventIterator(GetEvent())) {
 #else
-   for (KVEvent::Iterator it = OKEventIterator(*GetEvent()).begin(); it != GetEvent()->end(); ++it) {
-      KVNucleus& part = it.get_reference<KVNucleus>();
+   for (KVNucleusEvent::Iterator it = KVNucleusEvent::OKEventIterator(GetEvent()).begin(); it != KVNucleusEvent::Iterator::End(); ++it) {
+      KVNucleus& part = it.get_reference();
 #endif
       // if we can access the events of the unfiltered simulation, and if Gemini++ was used
       // to decay events before filtering, this is how you can access the "parent" nucleus

@@ -2,6 +2,8 @@
 #include "KVSimNucleus.h"
 #include "KVBatchSystem.h"
 
+#include <KVTemplateEvent.h>
+
 ClassImp(ExampleSimDataAnalysis)
 
 void ExampleSimDataAnalysis::InitAnalysis()
@@ -18,7 +20,8 @@ void ExampleSimDataAnalysis::InitAnalysis()
 #ifdef USING_ROOT5
       "_NUC_->GetZ()>0"
 #else
-   {"Z>0", [](const KVNucleus * n)
+   {
+      "Z>0", [](const KVNucleus * n)
       {
          return n->GetZ() > 0;
       }
@@ -60,10 +63,10 @@ Bool_t ExampleSimDataAnalysis::Analysis()
    Int_t EC = GetGV("mult_EC")->GetValue(); // event class according to mult
 
 #ifdef WITH_CPP11
-   for (auto& part : *GetEvent()) {
+   for (auto& part : KVNucleusEvent::EventIterator(GetEvent())) {
 #else
-   for (KVEvent::Iterator it = GetEvent()->begin(); it != GetEvent()->end(); ++it) {
-      KVNucleus& part = it.get_reference<KVNucleus>();
+   for (KVNucleusEvent::Iterator it = KVNucleusEvent::EventIterator(GetEvent()); it != KVNucleusEvent::Iterator::End(); ++it) {
+      KVNucleus& part = it.get_reference();
 #endif
       if (part.IsIsotope(2, 4)) { //cout << EC << " alpha" << endl;
          FillHisto(Form("VparVper_alphas_EC%d", EC),

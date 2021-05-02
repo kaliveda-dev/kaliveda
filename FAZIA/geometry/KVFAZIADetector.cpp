@@ -384,4 +384,5 @@ KVDetectorSignal* KVFAZIADetector::SetFPGAEnergy(int sigid, Int_t idx, Double_t 
          if (idx == 1) return SetQ3FastFPGAEnergy(energy);
          break;
    }
+   return nullptr;
 }

@@ -2,7 +2,7 @@
    Demonstrate use of global variables and check correct function
    */
 
-#include <KVEvent.h>
+#include <KVTemplateEvent.h>
 #include <KVGVList.h>
 #include <KVPosition.h>
 #include <iostream>
@@ -53,7 +53,7 @@ void generate_event(KVEvent& e)
 void globvars_test()
 {
    // set up event for test
-   KVEvent test_event;
+   KVNucleusEvent test_event;
 
    // global variable list
    KVGVList globVars;

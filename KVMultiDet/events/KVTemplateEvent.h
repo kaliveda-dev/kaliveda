@@ -109,11 +109,11 @@ public:
       {}
 
 #ifdef WITH_CPP11
-      Iterator(const KVTemplateEvent* e, Type t = Type::All, const TString& grp = "")
+      Iterator(const KVEvent* e, Type t = Type::All, const TString& grp = "")
 #else
       Iterator(const KVEvent* e, Type t = All, const TString& grp = "")
 #endif
-         : fIter(e->fParticles), fType(t), fIterating(kTRUE), fGroup(grp)
+         : fIter(e->GetParticleArray()), fType(t), fIterating(kTRUE), fGroup(grp)
       {
          // Construct an iterator object to read in sequence the particles in event *e.
          // By default, opt="" and all particles are included in the iteration.
@@ -130,11 +130,11 @@ public:
       }
 
 #ifdef WITH_CPP11
-      Iterator(const KVTemplateEvent& e, Type t = Type::All, const TString& grp = "")
+      Iterator(const KVEvent& e, Type t = Type::All, const TString& grp = "")
 #else
       Iterator(const KVEvent& e, Type t = All, const TString& grp = "")
 #endif
-         : fIter(e.fParticles), fType(t), fIterating(kTRUE), fGroup(grp)
+         : fIter(e.GetParticleArray()), fType(t), fIterating(kTRUE), fGroup(grp)
       {
          // Construct an iterator object to read in sequence the particles in event *e.
          // By default, opt="" and all particles are included in the iteration.
@@ -536,7 +536,7 @@ public:
       //
       // WARNING: Only one iteration at a time over the event can be performed
       //          using this method. If you want/need to perform several i.e. nested
-      //          iterations, use the KVEvent::Iterator class
+      //          iterations, use the KV*Event::Iterator classes
 
       TString Opt(opt);
       Opt.ToUpper();
@@ -888,9 +888,16 @@ public:
    struct EventIterator {
       Iterator it;
 #ifdef WITH_CPP11
-      EventIterator(const KVTemplateEvent& event, typename Iterator::Type t = Iterator::Type::All, const TString& grp = "")
+      EventIterator(const KVEvent& event, typename Iterator::Type t = Iterator::Type::All, const TString& grp = "")
 #else
       EventIterator(const KVEvent& event, typename Iterator::Type t = Iterator::All, const TString& grp = "")
+#endif
+         : it(event, t, grp)
+      {}
+#ifdef WITH_CPP11
+      EventIterator(const KVEvent* event, typename Iterator::Type t = Iterator::Type::All, const TString& grp = "")
+#else
+      EventIterator(const KVEvent* event, typename Iterator::Type t = Iterator::All, const TString& grp = "")
 #endif
          : it(event, t, grp)
       {}
@@ -905,7 +912,14 @@ public:
    };
 
    struct OKEventIterator : public EventIterator {
-      OKEventIterator(const KVTemplateEvent& event) :
+      OKEventIterator(const KVEvent& event) :
+#ifdef WITH_CPP11
+         EventIterator(event, Iterator::Type::OK)
+#else
+         EventIterator(event, Iterator::OK)
+#endif
+      {}
+      OKEventIterator(const KVEvent* event) :
 #ifdef WITH_CPP11
          EventIterator(event, Iterator::Type::OK)
 #else

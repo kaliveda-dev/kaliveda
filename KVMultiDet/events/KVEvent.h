@@ -227,6 +227,10 @@ public:
       }
    }
 
+   const TClonesArray* GetParticleArray() const
+   {
+      return fParticles;
+   }
    virtual Int_t GetMult(Option_t* = "") const
    {
       // Returns multiplicity (number of particles) of event.
@@ -303,6 +307,7 @@ public:
    virtual Double_t GetSum(const Char_t*, Option_t* = "") = 0;
    virtual Double_t GetChannelQValue() const = 0;
    virtual void SetFrameName(const KVString& name) = 0;
+   virtual void ChangeDefaultFrame(const Char_t*, const Char_t* = "") = 0;
    const Char_t* GetFrameName() const
    {
       // Returns name of default kinematical frame for particles in event, if set

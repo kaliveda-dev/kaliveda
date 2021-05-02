@@ -144,26 +144,33 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
       if (vg->IsGlobalVariable()) {
          if (vg->IsNBody()) vg->FillN(e);
          else {
-            for (KVEvent::Iterator it1 = OKEventIterator(*e).begin(); it1 != KVEvent::Iterator::End(); ++it1) {
-               if (vg->IsTwoBody()) {
-                  for (KVEvent::Iterator it2(it1); it2 != KVEvent::Iterator::End(); ++it2) {
-                     // we use every distinct pair of particles (including identical pairs) in the event
-                     vg->Fill2(it1.get_pointer<const KVNucleus>(), it2.get_pointer<const KVNucleus>());
+            Int_t mult = e->GetMult();
+            for (int i = 1; i <= mult; ++i) {
+               KVNucleus* nuc_i = e->GetParticle(i);
+               if (nuc_i->IsOK()) {
+                  if (vg->IsTwoBody()) {
+                     for (int j = i; j <= mult; ++j) {
+                        KVNucleus* nuc_j = e->GetParticle(j);
+                        if (nuc_j->IsOK()) {
+                           // we use every distinct pair of particles (including identical pairs) in the event
+                           vg->Fill2(nuc_i, nuc_j);
+                        }
+                     }
                   }
-               }
-               else {
-                  vg->Fill(it1.get_pointer<const KVNucleus>());
+                  else {
+                     vg->Fill(nuc_i);
+                  }
                }
             }
          }
-      }
-      vg->Calculate();
+         vg->Calculate();
 #ifdef USING_ROOT6
-      if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
-         return;
-      }
-      vg->DefineNewFrame(e);
+         if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
+            return;
+         }
+         vg->DefineNewFrame(e);
 #endif
+      }
    }
 }
 

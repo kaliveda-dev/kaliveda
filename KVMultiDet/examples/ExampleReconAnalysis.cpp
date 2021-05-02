@@ -30,7 +30,7 @@ void ExampleReconAnalysis::InitAnalysis(void)
    gv->SetSelection("_NUC_->GetVpar()>0");
 #else
    auto gv = AddGV("KVMult", "mtot_av");
-   gv->SetSelection( {
+   gv->SetSelection({
       "Vcm>0", [](const KVNucleus * n)
       {
          return n->GetVpar() > 0;
@@ -94,9 +94,9 @@ Bool_t ExampleReconAnalysis::Analysis(void)
 
    /*** LOOP OVER PARTICLES OF EVENT ***/
 #ifdef WITH_CPP11
-   for (auto& n : OKEventIterator(*GetEvent())) {
+   for (auto& n : KVReconstructedEvent::OKEventIterator(GetEvent())) {
 #else
-   for (KVReconstructedEvent::Iterator it = KVReconstructedEvent::OKEventIterator(*GetEvent()).begin(); it != GetEvent()->end(); ++it) {
+   for (KVReconstructedEvent::Iterator it = KVReconstructedEvent::OKEventIterator(GetEvent()).begin(); it != KVReconstructedEvent::TIterator::End(); ++it) {
       KVReconstructedNucleus& n = it.get_reference();
 #endif
       // "OK" particles => using selection criteria of InitRun()

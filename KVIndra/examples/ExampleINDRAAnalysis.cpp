@@ -102,9 +102,9 @@ Bool_t ExampleINDRAAnalysis::Analysis(void)
 
    /*** LOOP OVER PARTICLES OF EVENT ***/
 #ifdef WITH_CPP11
-   for (auto& particle : OKEventIterator(*GetEvent())) {
+   for (auto& particle : KVINDRAReconEvent::OKEventIterator(GetEvent())) {
 #else
-   for (KVEvent::Iterator it = OKEventIterator(*GetEvent()).begin(); it != GetEvent()->end(); ++it) {
+   for (KVINDRAReconEvent::Iterator it = KVINDRAReconEvent::OKEventIterator(GetEvent()).begin(); it != GetEvent()->end(); ++it) {
       KVNucleus& particle = it.get_reference<KVNucleus>();
 #endif
       // "OK" => using selection criteria of InitRun()
