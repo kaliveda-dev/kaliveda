@@ -1041,7 +1041,6 @@ void KVDataAnalysisLauncher::Process(void)
    SetResource("NbEventsToRead", Form("%.0f", teNbToRead->GetNumber()));
    GUIenv->SaveLevel(kEnvUser);
    if (IsBatch()) {
-      gBatchSystemManager->GetDefaultBatchSystem()->cd();
       gBatchSystem->Clear();
       gBatchSystem->SetBatchSystemParameters(fBatchParameters);
       datan->SetBatchSystem(gBatchSystem);
