@@ -22,7 +22,7 @@ KVFAZIAIDSiCsI::KVFAZIAIDSiCsI()
    set_id_code(kSi2CsI);
    fBelowProton = 0;
    fSiThreshold = 0;
-
+   fMassIDProb->SetParameters(16.5, .4);
 }
 
 KVFAZIAIDSiCsI::~KVFAZIAIDSiCsI()
@@ -86,25 +86,3 @@ void KVFAZIAIDSiCsI::Initialize()
    }
 }
 
-void KVFAZIAIDSiCsI::SetIdentificationStatus(KVReconstructedNucleus* n)
-{
-   // For filtering simulations
-   //
-   // Z-dependence of A identification:
-   //    all ok if Z<=14, decreasing probability for 15<=Z<=18
-   //    no A identification for Z>18
-   //
-   // If A is not measured, we make sure the KE of the particle corresponds to the simulated one
-
-   n->SetZMeasured();
-   fMassIDProb->SetParameters(16.5, .4);
-   Bool_t okmass = (n->GetZ() <= 14) || (n->GetZ() < 19 && gRandom->Uniform() < fMassIDProb->Eval(n->GetZ()));
-   if (okmass) {
-      n->SetAMeasured();
-   }
-   else {
-      double e = n->GetE();
-      n->SetZ(n->GetZ());
-      n->SetE(e);
-   }
-}

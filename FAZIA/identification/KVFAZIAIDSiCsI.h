@@ -37,7 +37,6 @@ public:
    {
       return fSiThreshold;
    }
-   void SetIdentificationStatus(KVReconstructedNucleus* n);
 
    ClassDef(KVFAZIAIDSiCsI, 1) //id telescope to manage FAZIA Si-CsI identification
 };

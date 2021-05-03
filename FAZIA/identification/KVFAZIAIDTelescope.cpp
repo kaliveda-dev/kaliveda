@@ -81,7 +81,6 @@ const Char_t* KVFAZIAIDTelescope::GetNewName(KVString oldname)
    }
 
    return newname.Data();
-
 }
 
 void KVFAZIAIDTelescope::SetIdentificationStatus(KVReconstructedNucleus* n)
@@ -89,20 +88,22 @@ void KVFAZIAIDTelescope::SetIdentificationStatus(KVReconstructedNucleus* n)
    // For filtering simulations
    //
    // Z-dependence of A identification:
-   //    all ok if Z<=20, decreasing probability for 21<=Z<25
-   //    no A identification for Z>=25
-   //
-   // If A is not measured, we make sure the KE of the particle corresponds to the simulated one
+   // fMassIDProb parameters has to set in the Initialize method
 
    n->SetZMeasured();
-   fMassIDProb->SetParameters(22.5, .4);
-   Bool_t okmass = (n->GetZ() <= 20) || (n->GetZ() < 25 && gRandom->Uniform() < fMassIDProb->Eval(n->GetZ()));
+   Bool_t okmass = (gRandom->Uniform() < fMassIDProb->Eval(n->GetZ()));
+
    if (okmass) {
-      n->SetAMeasured();
+      //reset A to the original mass in case of multiple call of this method
+      if (n->GetParameters()->HasParameter("OriginalMass")) n->SetA(n->GetParameters()->GetIntValue("OriginalMass"));
+      n->SetAMeasured(kTRUE);
    }
    else {
+      //save the original mass in the parameter list in case of multiple call of this method
+      n->GetParameters()->SetValue("OriginalMass", n->GetA());
       double e = n->GetE();
       n->SetZ(n->GetZ());
       n->SetE(e);
+      n->SetAMeasured(kFALSE);
    }
 }
