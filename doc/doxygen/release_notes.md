@@ -4,6 +4,41 @@ Last update: 28th May 2021
 
 ## Version 1.12/04 (current development version)
 
+__Changes 28/5/2021 in__ \ref NucEvents : __Templated event classes__
+
+In the standard library, containers are generally used to store values and objects whose type is defined at compile time
+through template parameters: std::vector<int>, std::unordered_map<std::string, std::thread>, etc.
+
+In ROOT (and in KaliVeda), containers such as TList handle pointers to objects which may be of any type
+derived from TObject, and the actual type of the objects in any list is usually determined at runtime.
+
+A great advantage of the standard containers is they provide iterators which make it possible to loop
+very simply over their contents, with a range-based for loop:
+
+~~~~{.cpp}
+ std::vector<int> V;
+ for(auto v : V) { std::cout << v << std::endl; }
+~~~~
+
+The type of the `auto v` variable is the type of the objects in the vector (`int` in this case).
+
+STL-style iterators were already added to KVEvent some time ago to enable the use of range-based for loops with all event classes,
+but they had the following small drawback:
+
+~~~~{.cpp}
+ KVReconstructedEvent R;
+ for(auto& n :  R) { std::cout << n.GetIDCode() << std::endl; }
+~~~~
+
+This code would not compile, because although we would expect `n` to be of type `KVReconstructedNucleus&`, in fact for all
+event classes the iterators returned base class references `KVNucleus&`.
+
+This has now been resolved by realising that the event classes are in fact STL-style containers for particle/nucleus types:
+a KVReconstructedEvent contains KVReconstructedNucleus objects, a KVSimEvent contains KVSimNucleus objects. Regarding the original
+KVEvent base class for all events, it is now an abstract base class and KVEvent objects cannot be instantiated. An event of
+KVNucleus objects is now called KVNucleusEvent - this could be a major code-breaker but was necessary to ensure backwards
+compatibility (still able to read existing data).
+
 __Changes 3/5/2021 in__ \ref Analysis \ref Infrastructure : __New multicore "batch" system__
 
 On multicore machines, PROOFLite can be used for analysis of any data contained in a TTree
@@ -53,7 +88,7 @@ if( !GetEvent()->IsOK() ) return kFALSE;
 
 which was previously used at the beginning of the Analysis() method. The new mechanism is implemented by
 default in the new examples and templates for automatically-generated user analysis classes. For the moment, trigger conditions for INDRA data
-are handled; the implementation for INDRA-FAZIA data will follow shortly.
+are handled; the implementation for other data will follow shortly.
 
 __Changes 22/1/2021 in__ \ref GlobalVariables
 

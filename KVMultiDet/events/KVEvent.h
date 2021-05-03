@@ -15,12 +15,12 @@ class KVIntegerList;
 
 /**
   \class KVEvent
-  \brief Base class container for multi-particle events
+  \brief Abstract base class container for multi-particle events
   \ingroup NucEvents
 
 The main business of KaliVeda is the analysis of multi-body events produced in heavy-ion reactions,
-therefore it is no surprise that a central role is played by the class KVEvent which can be thought of as a
-container class for particles and nuclei (see KVParticle & KVNucleus).
+therefore it is no surprise that a central role is played by classes derived from KVEvent which can be thought of as
+container classes for nuclei described by different classes (see KVNucleus, KVSimNucleus and KVReconstructedNucleus).
 
 In addition to containing a list of particles/nuclei, each event class also has in common the following functionality:
 
@@ -32,6 +32,9 @@ In addition to containing a list of particles/nuclei, each event class also has 
 Let us mention in passing the associated KVEventViewer class which can be used to produce 3D images of events using the ROOT OpenGL backend.
 
 See the chapter in the User's Guide for more details: http://indra.in2p3.fr/kaliveda/UsersGuide/events.html
+
+Instances of this class cannot be used (it is a pure virtual abstract class). See classes derived from KVTemplateEvent for
+concrete event classes. KVNucleusEvent can be used for a simple event containing KVNucleus objects.
 
 ### Kinematical reference frames
 

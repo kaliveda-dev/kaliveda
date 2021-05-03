@@ -42,10 +42,22 @@ $Id: KVEvent.h,v 1.29 2008/12/17 11:23:12 ebonnet Exp $
 
 class KVIntegerList;
 
+/**
+ \class KVTemplateEvent
+ \brief Base class for event classes as containers of different nucleus objects
+ \ingroup NucEvents
+
+
+ */
 template <typename Nucleus>
 class KVTemplateEvent: public KVEvent {
 
 public:
+   /**
+    \class KVIterator
+    \brief Class for iterating over nuclei in events
+    \ingroup NucEvents
+    */
    class Iterator {
    public:
       typedef std::forward_iterator_tag iterator_category;
