@@ -17,7 +17,6 @@ protected:
 
    Bool_t fMultiJobs;  //set to kTRUE if several jobs are to be submitted for the runlist set in fAnalyser
    Int_t fRunsPerJob; //number of runs per job submitted in multi job mode (default=1)
-   KVNumberList fCurrJobRunList;//runlist for (multi job mode) job being submitted
    KVString fDefJobTime; // default job length
    KVString fDefJobMem; // default job memory allocation (with units, e.g. "512M")
    KVString fDefJobDisk; // default job disk space (with units, e.g. "1G")
@@ -81,7 +80,6 @@ public:
    void SetSendMailAddress(const char*);
 
    void Run();
-   const Char_t* GetJobName() const;
    virtual void GetBatchSystemParameterList(KVNameValueList&);
    virtual void SetBatchSystemParameters(const KVNameValueList&);
 

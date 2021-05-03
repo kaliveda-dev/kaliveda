@@ -175,17 +175,12 @@ BatchSystem:     Xterm
 Xterm.BatchSystem.Title:    Execute task in an X-terminal window
 Xterm.BatchSystem.DefaultJobOptions:   -T #JobName# -e
 Xterm.BatchSystem.JobSubCmd:   xterm
-Xterm.BatchSystem.JobScript: "KaliVedaAnalysis -b -n"&
-+BatchSystem:     Linux
-Linux.BatchSystem.Title:    Execute task in background with output stored in log file
-Linux.BatchSystem.DefaultJobOptions:   -b -n > #JobName#.log 2>&1 &
-Linux.BatchSystem.JobSubCmd:   KaliVedaAnalysis
+Xterm.BatchSystem.JobScript: 'KaliVedaAnalysis -b -n | tee #JobName#.log'&
 +BatchSystem:    PROOFLite
 PROOFLite.BatchSystem.Title:  Use PROOFLite
 PROOFLite.BatchSystem.JobSubCmd:  root
 #Plugins for batch systems
-Plugin.KVBatchSystem:    Xterm    KVRootBatch     KVMultiDetanalysis    "KVRootBatch(const Char_t*)"
-+Plugin.KVBatchSystem:    Linux    KVLinuxBatch     KVMultiDetanalysis    "KVLinuxBatch(const Char_t*)"
+Plugin.KVBatchSystem:    Xterm    KVXtermBatch     KVMultiDetanalysis    "KVXtermBatch(const Char_t*)"
 +Plugin.KVBatchSystem:    PROOFLite    KVPROOFLiteBatch     KVMultiDetanalysis    "KVPROOFLiteBatch(const Char_t*)"
 
 # Plugins for data analysis

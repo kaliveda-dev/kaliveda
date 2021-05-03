@@ -1,6 +1,19 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 4th May 2021
+Last update: 28th May 2021
+
+## Version 1.12/04 (current development version)
+
+__Changes 3/5/2021 in__ \ref Analysis \ref Infrastructure : __New multicore "batch" system__
+
+On multicore machines, PROOFLite can be used for analysis of any data contained in a TTree
+(e.g. reconstructed data). However raw data is usually contained in some other type of file
+and PROOFLite cannot be used. New "batch" system KVXtermBatch has been developed to remedy this.
+
+When analysing or reconstructing raw data not contained in a TFile on a multicore machine,
+KaliVedaGUI will automatically switch to the new batch system in order to exploit all cores of
+the PC. When N runs are to be analysed on an M-core machine, this batch system will run
+M jobs concurrently with the N runs shared as evenly as possible among the jobs.
 
 ## Version 1.12/03 (Released: 04/5/2021)
 

@@ -437,39 +437,6 @@ void KV_CCIN2P3_GE::Run()
 
 }
 
-const Char_t* KV_CCIN2P3_GE::GetJobName() const
-{
-   //Returns name of batch job, either during submission of batch jobs or when an analysis
-   //task is running in batch mode (access through gBatchSystem global pointer).
-   //
-   //In multi-job mode, the job name is generated from the base name set by SetJobName()
-   //plus the extension "_Rxxxx-yyyy" with "xxxx" and "yyyy" the number of the first and last run
-   //which will be analysed by the current job.
-   //
-   // Depending on the batch system, some sanitization of the jobname may be required
-   // e.g. to remove "illegal" characters from the jobname. This is done by SanitizeJobName()
-   // before the jobname is returned.
-
-   if (!fAnalyser) {
-      //stand-alone batch submission ?
-      fCurrJobName = fJobName;
-   }
-   else {
-      //replace any special symbols with their current values
-      fCurrJobName = fAnalyser->ExpandAutoBatchName(fJobName.Data());
-      if (MultiJobsMode() && !fAnalyser->BatchMode()) {
-         KVString tmp;
-         if (fCurrJobRunList.GetNValues() > 1)
-            tmp.Form("_R%d-%d", fCurrJobRunList.First(), fCurrJobRunList.Last());
-         else
-            tmp.Form("_R%d", fCurrJobRunList.First());
-         fCurrJobName += tmp;
-      }
-   }
-   SanitizeJobName();
-   return fCurrJobName.Data();
-}
-
 void KV_CCIN2P3_GE::GetBatchSystemParameterList(KVNameValueList& nl)
 {
    // Fill the list with all relevant parameters for batch system,

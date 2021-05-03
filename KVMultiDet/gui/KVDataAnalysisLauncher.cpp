@@ -806,10 +806,30 @@ KVDataSetAnalyser* KVDataAnalysisLauncher::GetDataAnalyser(KVDataAnalysisTask* t
 //__________________________________________
 void KVDataAnalysisLauncher::SetSystemList(Int_t itask)
 {
-   // Sets the list of all possible systems in the system list
-   // Called every time a task is selected
+   // Sets the list of all possible systems in the system list.
+   // Called every time a task is selected.
+   //
+   // The choice of task may lead to a change of batch system:
+   //  - if the current system is PROOFLite but the data to be read by the task is
+   //    not in a TFile (i.e. not in a TTree) then we switch to Xterm batch system.
+   //  - if the current system is Xterm but the data to be read by the task *is*
+   //    in a TFile (i.e. in a TTree) then we switch to PROOFLite batch system
 
    KVDataAnalysisTask* task = gDataSet->GetAnalysisTask(itask + 1);
+
+   TString current_batch = gBatchSystem->GetName();
+   TString data_reader = gDataSet->GetDataSetEnv(Form("DataSet.RunFileClass.%s", task->GetPrereq()));
+
+   if (current_batch == "PROOFLite" && data_reader != "TFile") {
+      gBatchSystemManager->GetBatchSystem("Xterm")->cd();
+      withBatch->SetToolTipText(gBatchSystem->GetTitle());
+      Info("SetSystemList", "Switched batch system to %s: %s", gBatchSystem->GetName(), gBatchSystem->GetTitle());
+   }
+   else if (current_batch == "Xterm" && data_reader == "TFile") {
+      gBatchSystemManager->GetBatchSystem("PROOFLite")->cd();
+      withBatch->SetToolTipText(gBatchSystem->GetTitle());
+      Info("SetSystemList", "Switched batch system to %s: %s", gBatchSystem->GetName(), gBatchSystem->GetTitle());
+   }
 
    GetDataAnalyser(task);
 

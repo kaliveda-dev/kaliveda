@@ -85,6 +85,7 @@ protected:
    KVString fJobScript;          //full path of shell script to be executed by batch system
    KVString fDefOpt;             //default options for job submission command
    mutable KVString fCurrJobName; //name of current job being submitted
+   KVNumberList fCurrJobRunList;//runlist for (multi job mode) job being submitted
 
    virtual void ChangeDefJobOpt(KVDataAnalyser* da);
 
@@ -138,6 +139,10 @@ public:
 
    void cd();
 
+   virtual Bool_t MultiJobsMode() const
+   {
+      return kFALSE;
+   }
 
    virtual void WriteBatchEnvFile(TEnv*);
    virtual void ReadBatchEnvFile(TEnv*);
