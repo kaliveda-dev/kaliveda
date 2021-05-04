@@ -465,6 +465,7 @@ void KVParticleCondition::CreateClassFactory() const
 
    //create new class
    cf = new KVClassFactory(new_class.Data(), "Particle condition to test", "KVParticleCondition");
+   cf->SetInheritAllConstructors(kFALSE); // avoid generating ctor with LambdaFunc argument!!!
 }
 
 void KVParticleCondition::Optimize() const
@@ -494,8 +495,8 @@ void KVParticleCondition::Optimize() const
    CreateClassFactory();
    KVString created_class_name = cf->GetClassName();
    //add Test() method
-   cf->AddMethod("Test", "Bool_t");
-   cf->AddMethodArgument("Test", "const KVNucleus*", "nuc");
+   cf->AddMethod("optimized_test", "Bool_t", "public", false, true);
+   cf->AddMethodArgument("optimized_test", "const KVNucleus*", "nuc");
    cf->AddHeaderIncludeFile("KVNucleus.h");
 
    //write body of method
@@ -512,7 +513,7 @@ void KVParticleCondition::Optimize() const
    body += "   return ";
    body += tmp;
 
-   cf->AddMethodBody("Test", body);
+   cf->AddMethodBody("optimized_test", body);
 
    //generate .cpp and .h for new class
    cf->GenerateCode();

@@ -126,6 +126,10 @@ protected:
    mutable Bool_t fOptOK;//!false if optimisation failed (can't load generated code)
 
    void Optimize() const;
+   virtual bool optimized_test(const KVNucleus*) const
+   {
+      return kFALSE;
+   }
    void CreateClassFactory() const;
    void SetClassFactory(KVClassFactory* CF);
 
@@ -214,7 +218,7 @@ public:
 #endif
       if (!fOptimal) Optimize();
 
-      return (fOptOK ? fOptimal->Test(nuc) : kFALSE);
+      return (fOptOK ? fOptimal->optimized_test(nuc) : kFALSE);
    }
 
    Bool_t Test(const KVNucleus& nuc) const
