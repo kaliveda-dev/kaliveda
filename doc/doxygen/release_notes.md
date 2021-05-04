@@ -2,7 +2,17 @@
 
 Last update: 19th February 2021
 
-## Version 1.12/01 (Released: 19/2/2021)
+## Version 1.12/03 (Released: 04/5/2021)
+
+__Bugfixes__
+
+  * correct bug in KVParticleCondition when using (old-style) pseudo-code (not lambdas);
+  
+  * fix bug in KVEvent::MakeEventBranch which could either explode or (silently) not write any events in a TTree;
+
+  * fix (potential) bug with gamma multiplicities in reconstructed events.
+
+## Versions 1.12/01 (Released: 19/2/2021) &  1.12/02 (Released: 01/4/2021)
 
 __Changes 19/2/2021 in__ \ref Analysis : __Reusable analysis classes__
 
