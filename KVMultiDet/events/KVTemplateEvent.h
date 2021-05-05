@@ -47,14 +47,14 @@ class KVIntegerList;
  \brief Base class for event classes as containers of different nucleus objects
  \ingroup NucEvents
 
-
+Iterating
  */
 template <typename Nucleus>
 class KVTemplateEvent: public KVEvent {
 
 public:
    /**
-    \class KVIterator
+    \class Iterator
     \brief Class for iterating over nuclei in events
     \ingroup NucEvents
     */
@@ -136,6 +136,9 @@ public:
          //                                    i.e. KVParticle::BelongsToGroup(opt) returns
          //                                    kTRUE
 
+         if (!e->GetParticleArray()->GetClass()->InheritsFrom(Nucleus::Class()))
+            ::Warning("KVTemplateEvent::Iterator", "KVTemplateEvent<%s>::Iterator for %s nuclei requested for event containing %s nuclei",
+                      Nucleus::Class()->GetName(), Nucleus::Class()->GetName(), e->GetParticleArray()->GetClass()->GetName());
          // set iterator to first particle of event corresponding to selection
          fIter.Begin();
          while ((current() != nullptr) && !AcceptableIteration()) ++fIter;
@@ -157,6 +160,9 @@ public:
          //                                    i.e. KVParticle::BelongsToGroup(opt) returns
          //                                    kTRUE
 
+         if (!e.GetParticleArray()->GetClass()->InheritsFrom(Nucleus::Class()))
+            ::Warning("KVTemplateEvent::Iterator", "KVTemplateEvent<%s>::Iterator for %s nuclei requested for event containing %s nuclei",
+                      Nucleus::Class()->GetName(), Nucleus::Class()->GetName(), e.GetParticleArray()->GetClass()->GetName());
          // set iterator to first particle of event corresponding to selection
          fIter.Begin();
          while ((current() != nullptr) && !AcceptableIteration()) ++fIter;
@@ -972,5 +978,4 @@ public:
 };
 
 typedef KVTemplateEvent<KVNucleus> KVNucleusEvent;
-
 #endif
