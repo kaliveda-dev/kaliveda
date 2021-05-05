@@ -1,0 +1,23 @@
+# Beam : Ar 36 @ 95 MeV/A
+# CSI calib based on data for Si-CsI identified isotopes of Z=2-4
+# E_CsI calculated from deltaE in silicon detector
+# Initial parameter values from INDRA_camp5, only a1 and a2 varied in fit
+RunList:                                  1000-8000
+SignalIn:                                 TotLight
+SignalOut:                                Energy
+CalibType:                                LightEnergy
+CalibClass:                               LightEnergyCsI
+CSI_0617: 97.2755 ,  0.147386 ,  6.01 ,  0.385
+CSI_0618: 92.961 ,  0.536757 ,  6.00987 ,  0.385
+CSI_0619: 129.789 ,  0.420624 ,  6.00999 ,  0.385
+CSI_0621: 100.758 ,  0.0533051 ,  6.01 ,  0.385
+CSI_0622: 94.4121 ,  0.134877 ,  6.01 ,  0.385
+CSI_0623: 65.0778 ,  0.299775 ,  6.01 ,  0.385
+CSI_0624: 92.4847 ,  0.0985274 ,  6.0093 ,  0.385
+CSI_0801: 105.745 ,  0.0188965 ,  6.01 ,  0.385
+CSI_0802: 121.464 ,  0.09931 ,  6.01 ,  0.385
+CSI_0803: 190.848 ,  0.70445 ,  6 ,  0.385
+CSI_0804: 102.174 ,  0.130145 ,  6.00999 ,  0.385
+CSI_0805: 145.45 ,  0.528521 ,  6.01 ,  0.385
+CSI_0807: 95.2696 ,  0.110519 ,  6.00999 ,  0.385
+CSI_0808: 72.9991 ,  0.0161018 ,  6.01 ,  0.385
