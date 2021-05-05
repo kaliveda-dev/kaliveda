@@ -1,14 +1,39 @@
 #include <iostream>
 #include <algorithm>
-#include "KVTemplateEvent.h"
 #include "TRandom.h"
-
+#include "KVReconstructedEvent.h"
 using std::cout;
 using std::endl;
 
 bool compareZ(KVNucleus& a, KVNucleus& b)
 {
    return a.GetZ() < b.GetZ();
+}
+
+void nucleus_event_iterator(KVEvent* e_ptr)
+{
+#ifdef WITH_CPP11
+   for (auto& n : KVNucleusEvent::OKEventIterator(e_ptr)) {
+      n.Print();
+   }
+#else
+   for (KVNucleusEvent::Iterator it = KVNucleusEvent::OKEventIterator(e_ptr).begin(); it != KVNucleusEvent::Iterator::End(); ++it) {
+      (*it).Print();
+   }
+#endif
+}
+
+void recon_event_iterator(KVEvent* e_ptr)
+{
+#ifdef WITH_CPP11
+   for (auto& n : KVReconstructedEvent::OKEventIterator(e_ptr)) {
+      n.Print();
+   }
+#else
+   for (KVReconstructedEvent::Iterator it = KVReconstructedEvent::OKEventIterator(e_ptr).begin(); it != KVReconstructedEvent::Iterator::End(); ++it) {
+      (*it).Print();
+   }
+#endif
 }
 
 void iterator_examples()
@@ -99,6 +124,20 @@ void iterator_examples()
    KVNucleusEvent::Iterator maxZ = std::max_element(it.begin(), it.end(), compareZ);
    (*maxZ).Print();
 #endif
+
+   cout << "\nLoop over OK particles using base pointer (KVEvent*):" << endl;
+   KVEvent* _eptr = &Event;
+   cout << "\n1.) KVNucleusEventIterator with KVNucleusEvent" << endl;
+   nucleus_event_iterator(_eptr);
+   cout << "\n2.) KVReconstructedEventIterator with KVNucleusEvent [Warning]" << endl;
+   recon_event_iterator(_eptr);
+   KVReconstructedEvent recev;
+   recev.AddParticle()->SetZ(10);
+   _eptr = &recev;
+   cout << "\n3.) KVNucleusEventIterator with KVReconstructedEvent" << endl;
+   nucleus_event_iterator(_eptr);
+   cout << "\n4.) KVReconstructedEventIterator with KVReconstructedEvent" << endl;
+   recon_event_iterator(_eptr);
 
    cout << "\nLoop over all particles (0-9) [GetNextParticle]:" << endl;
    KVNucleus* n;
