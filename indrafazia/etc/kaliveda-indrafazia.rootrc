@@ -193,6 +193,9 @@ INDRAFAZIA.E789.INDRA.CSI.IDTelescopeNameFormat: CSI_R_L_%s
 +Plugin.KVFAZIA:    INDRAFAZIA.E789    KVFAZIETO    FAZIAgeometry    "KVFAZIETO()"
 +Plugin.KVINDRA:    INDRAFAZIA.E789    KVINDRA    KVIndraexp_events    "KVINDRA()"
 
+INDRAFAZIA.E789.INDRA.CSI.ExpectedDetectorSignals: R,L,T
+INDRAFAZIA.E789.INDRA.SI.ExpectedDetectorSignals: PG,GG,T
+
 INDRAFAZIA.E789.IdentificationParameterFile.INDRA.SI-CSI:       IDGridsINDRA_SI_CSI.dat
 #INDRAFAZIA.E789.IdentificationParameterFile.FAZIA.Si-CsI:       IDGridsFAZIA_Si_CsI.dat
 INDRAFAZIA.E789.IdentificationParameterFile.FAZIA.Si-Si:        IDGridsFAZIA_Si_Si.dat
