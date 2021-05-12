@@ -407,5 +407,5 @@ Plugin.KVCalibrator: ^LightEnergyCsI$  KVLightEnergyCsI   KVMultiDetcalibration 
 
 # plugins for events
 Plugin.KVEvent: NucEvent  KVNucleusEvent  KVMultiDetevents  "KVNucleusEvent()"
-+Plugin.KVEvent: SimEvent  KVSimEvent  KVMultiDetevents  "KVSimEvent()"
++Plugin.KVEvent: SimEvent  KVSimEvent  KVMultiDetsimulation  "KVSimEvent()"
 +Plugin.KVEvent: ReconEvent  KVReconstructedEvent  KVMultiDetexp_events  "KVReconstructedEvent()"

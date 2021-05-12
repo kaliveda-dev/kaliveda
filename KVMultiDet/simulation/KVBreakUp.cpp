@@ -43,7 +43,7 @@ void KVBreakUp::init(void)
    tstart = tstop = tellapsed = 0;
 
    StorePartitions();
-   current_event = KVEvent::Factory("Event");
+   current_event = KVEvent::Factory("SimEvent");
 }
 
 //_______________________________________________________
@@ -689,7 +689,7 @@ KVHashList* KVBreakUp::GetObjects()
 //_______________________________________________________
 void KVBreakUp::ResetTotalIterations()
 {
-   //Comme c'est écrit
+   //Comme c'est Ù‰crit
    niter_tot = 0;
 
 }
@@ -756,7 +756,7 @@ void KVBreakUp::SaveHistos(KVString filename, KVString suff, Option_t* option)
 //_______________________________________________________
 void KVBreakUp::PrintConfig() const
 {
-   // Comme c'est écrit
+   // Comme c'est Ù‰crit
    // Why not "Print(Option_t*)" ?
    //   - because TCollection has several 'virtual' Print methods which
    //     are overloaded (i.e. have different arguments): BAD!

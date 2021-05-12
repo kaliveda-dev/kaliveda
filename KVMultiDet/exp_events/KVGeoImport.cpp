@@ -79,7 +79,8 @@ void KVGeoImport::ImportGeometry(Double_t dTheta, Double_t dPhi,
 
    Int_t ndets0 = fArray->GetDetectors()->GetEntries();
 
-   unique_ptr<KVEvent> evt(KVEvent::Factory("Event"));
+   KVNucleusEvent EVT;
+   KVEvent* evt = &EVT;
    KVNucleus* nuc = evt->AddParticle();
    nuc->SetZAandE(1, 1, 1);
 
@@ -96,7 +97,7 @@ void KVGeoImport::ImportGeometry(Double_t dTheta, Double_t dPhi,
          nuc->SetTheta(theta);
          nuc->SetPhi(phi);
          fLastDetector = nullptr;
-         PropagateEvent(evt.get(), fOrigin);
+         PropagateEvent(evt, fOrigin);
          count++;
          if (!KVDataAnalyser::IsRunningBatchAnalysis())
             std::cout << "\xd" << "Info in <KVGeoImport::ImportGeometry>: tested " << count << " directions" << std::flush;
