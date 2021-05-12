@@ -55,12 +55,12 @@ $Id: KVINDRA.cpp,v 1.68 2009/01/21 10:05:51 franklan Exp $
 #ifdef WITH_MFM
 #include "KVMFMDataFileReader.h"
 #include "MFMEbyedatFrame.h"
-#include "MFMMesytecMDPPFrame.h"
 #ifdef WITH_MESYTEC
-#include "KVINDRAGroupReconstructor.h"
+#include "MFMMesytecMDPPFrame.h"
 #include "mesytec_buffer_reader.h"
 #endif
 #endif
+#include "KVINDRAGroupReconstructor.h"
 
 using namespace std;
 
@@ -176,8 +176,7 @@ void KVINDRA::BuildGeometry()
             SearchKVFile(path.Data(), path2, "data");
             if (path2 == "") {
                Warning("BuildGeometry", "fichier %s inconnu", path.Data());
-            }
-            else {
+            } else {
                fStrucInfos.ReadFile(path2, kEnvChange);
             }
          }
@@ -316,8 +315,7 @@ void KVINDRA::FillTrajectoryIDTelescopeLists()
                // i.e. dE has to be immediately in front of E on the trajectory
                if (tr->GetNodeInFront(idt->GetDetector(2)->GetNode()) == idt->GetDetector(1)->GetNode())
                   tr->AccessIDTelescopeList()->Add(idt);
-            }
-            else
+            } else
                tr->AccessIDTelescopeList()->Add(idt);//single-detector telescope
          }
       }
@@ -361,8 +359,7 @@ void KVINDRA::Build(Int_t run)
       if (det_name.BeginsWith("CI") || det_name.BeginsWith("SI")) {
          fEbyedatParamDetMap.SetValue(det_name + "_PG", det_name);
          fEbyedatParamDetMap.SetValue(det_name + "_GG", det_name);
-      }
-      else if (det_name.BeginsWith("CSI")) {
+      } else if (det_name.BeginsWith("CSI")) {
          fEbyedatParamDetMap.SetValue(det_name + "_R", det_name);
          fEbyedatParamDetMap.SetValue(det_name + "_L", det_name);
       }
@@ -564,23 +561,19 @@ KVINDRADetector* KVINDRA::GetDetectorByType(UInt_t cou, UInt_t mod, UInt_t type)
       sprintf(nom_det, "CI_%02d%02d", cou, mod);
       det = (KVINDRADetector*) GetListOfChIo()->FindObject(nom_det);
       return det;
-   }
-   else if (type >= Si_GG && type <= Si_T) {
+   } else if (type >= Si_GG && type <= Si_T) {
       sprintf(nom_det, "SI_%02d%02d", cou, mod);
       det = (KVINDRADetector*) GetListOfSi()->FindObject(nom_det);
       return det;
-   }
-   else if (type >= SiLi_GG && type <= SiLi_T) {
+   } else if (type >= SiLi_GG && type <= SiLi_T) {
       sprintf(nom_det, "SILI_%02d", cou);
       det = (KVINDRADetector*) GetListOfSi()->FindObject(nom_det);
       return det;
-   }
-   else if (type >= Si75_GG && type <= Si75_T) {
+   } else if (type >= Si75_GG && type <= Si75_T) {
       sprintf(nom_det, "SI75_%02d", cou);
       det = (KVINDRADetector*) GetListOfSi()->FindObject(nom_det);
       return det;
-   }
-   else if (type >= CsI_R && type <= CsI_T) {
+   } else if (type >= CsI_R && type <= CsI_T) {
       sprintf(nom_det, "CSI_%02d%02d", cou, mod);
       det = (KVINDRADetector*) GetListOfCsI()->FindObject(nom_det);
       return det;
@@ -624,8 +617,7 @@ void KVINDRA::SetNamesOfIDTelescopes() const
          if (de_type == "PHOS") {
             idt->SetName(Form("%s_R_L_%s", de_type.Data(), de_number.Data()));
             idt->SetType(Form("%s_R_L", de_type.Data()));
-         }
-         else {
+         } else {
             // CsI identification telescopes are called either CSI_R_L_RRMM (before 2021)
             // or CSI_RRMM (for datasets from 2021 onwards)
             TString csi_id_name_fmt = KVBase::GetDataSetEnv(fDataSet, "INDRA.CSI.IDTelescopeNameFormat", "CSI_%s");
@@ -634,11 +626,9 @@ void KVINDRA::SetNamesOfIDTelescopes() const
             if (csi_id_name_fmt.Contains("R_L")) {
                idt->SetType("CSI_R_L");
                KVINDRAGroupReconstructor::CSI_ID_TYPE = "CSI_R_L";
-            }
-            else idt->SetType("CSI");
+            } else idt->SetType("CSI");
          }
-      }
-      else {
+      } else {
          N = idt->GetDetector(2)->GetName();
          N.Begin("_");
          KVString e_type = N.Next();
@@ -673,8 +663,7 @@ void KVINDRA::handle_ebyedat_raw_data_parameter(const char* param_name, uint16_t
       // parameter type given by whatever comes after final '_'
       std::string lab(param_name);
       sig_type = lab.substr(lab.rfind('_') + 1);
-   }
-   else { // no detector associated to parameter
+   } else { // no detector associated to parameter
       sig_type = param_name;
    }
    add_and_set_detector_signal(det, detname, val, sig_type);
@@ -816,8 +805,7 @@ void KVINDRA::SetPinLasersForCsI()
          line.ReadLine(pila_file);
       }
       pila_file.close();
-   }
-   else {
+   } else {
       Info("SetPinLasersForCsI", "File %s not found. Correspondance Csi-PinLaser is unknown.",
            gDataSet->GetDataSetEnv("CsIPinCorr", ""));
    }
@@ -1065,8 +1053,7 @@ void KVINDRA::SetROOTGeometry(Bool_t on)
       INDRAGeometryBuilder igb;
       igb.Build(kFALSE, fCloseGeometryNow);
       if (fCloseGeometryNow) PerformClosedROOTGeometryOperations();
-   }
-   else {
+   } else {
       KVMultiDetArray::SetROOTGeometry(on);
    }
 }
@@ -1142,15 +1129,13 @@ void KVINDRA::SetRawDataFromReconEvent(KVNameValueList& l)
                detname = parname.substr(0, parname.rfind('_'));
                sig_type = parname.substr(parname.rfind('_') + 1);
                det = GetDetector(detname);
-            }
-            else {
+            } else {
                sig_type = parname;
             }
             add_and_set_detector_signal(det, detname, np->GetDouble(), sig_type);
          }
       }
-   }
-   else {
+   } else {
       fMesytecData = l.GetBoolValue("INDRA.MESYTEC");
       fEbyedatData = l.GetBoolValue("INDRA.EBYEDAT");
       KVASMultiDetArray::SetRawDataFromReconEvent(l);
@@ -1197,8 +1182,7 @@ void KVINDRA::InitialiseRawDataReading(KVRawDataReader* r)
                   );
                }
             }
-         }
-         else {
+         } else {
             Fatal("InitialiseRawDataReading",
                   "Name of file containing names of Mesytec channel config for each run should be defined in dataset variable %s.MesytecChannelsConf",
                   GetDataSet().Data());
@@ -1210,6 +1194,7 @@ void KVINDRA::InitialiseRawDataReading(KVRawDataReader* r)
 }
 
 #ifdef WITH_MFM
+#ifdef WITH_MESYTEC
 Bool_t KVINDRA::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPPFrame& f)
 {
    // Read a raw data event from a Mesytec MFM Frame.
@@ -1218,7 +1203,6 @@ Bool_t KVINDRA::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPP
    // array (if they can be identified), either associated more globally with the array/event
    // itself. The latter are created as needed and go into the fExtraRawDataSignals list.
 
-#ifdef WITH_MESYTEC
    if (!fMesytecData) {
       // first time we read data, we tweak the parameter names
       mesytec::module::set_data_type_alias("qdc_long", "TotLight"); // => CsI
@@ -1247,8 +1231,6 @@ Bool_t KVINDRA::handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPP
    }
    );
    return kTRUE;
-#else
-   return false;
-#endif
 }
+#endif
 #endif

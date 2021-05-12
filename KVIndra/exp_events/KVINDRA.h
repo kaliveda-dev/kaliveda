@@ -112,7 +112,9 @@ protected:
 #endif
 #ifdef WITH_MFM
    Bool_t handle_raw_data_event_mfmframe_ebyedat(const MFMEbyedatFrame&);
+#ifdef WITH_MESYTEC
    virtual Bool_t handle_raw_data_event_mfmframe_mesytec_mdpp(const MFMMesytecMDPPFrame&);
+#endif
 #endif
    void handle_ebyedat_raw_data_parameter(const char* param_name, uint16_t val);
    void copy_fired_parameters_to_recon_param_list();
