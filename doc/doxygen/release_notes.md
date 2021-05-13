@@ -1,6 +1,6 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 19th February 2021
+Last update: 4th May 2021
 
 ## Version 1.12/03 (Released: 04/5/2021)
 
