@@ -717,7 +717,7 @@ INDRA.T21-03.DataSet.RunFile.DoNotDelete: raw
 INDRA.T21-03.DataSet.RunFileClass.raw:    MFM
 INDRA.T21-03.MesytecCrateConf:   mesytec_crate.conf
 INDRA.T21-03.MesytecChannelsConf:   mesytec_voies_conf.dat
-INDRA.T21-03.EventReconstruction.DoCalibration: no
+INDRA.T21-03.EventReconstruction.DoCalibration: yes
 INDRA.T21-03.EventReconstruction.DoIdentification: yes
 
 +Plugin.KVMultiDetArray:    INDRA.T21-03    KVINDRA    KVIndraexp_events    "KVINDRA()"
