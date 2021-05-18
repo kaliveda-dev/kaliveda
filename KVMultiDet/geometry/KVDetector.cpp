@@ -1415,10 +1415,19 @@ Double_t KVDetector::GetIncidentEnergyFromERes(Int_t Z, Int_t A, Double_t Eres)
 {
    // Overrides KVMaterial::GetIncidentEnergyFromERes
    //
-   // Calculate incident energy of nucleus from residual energy
+   // Calculate incident energy of nucleus from residual energy.
+   //
+   // Returns -1 if Eres is out of defined range of values
 
    if (Z < 1 || Eres <= 0.) return 0.;
-   return GetEResFunction(Z, A)->GetX(Eres);
+   //return GetEResFunction(Z, A)->GetX(Eres);
+   Int_t status;
+   Double_t einc = KVBase::ProtectedGetX(GetEResFunction(Z, A), Eres, status);
+   if (status != 0) {
+      // problem with inversion - value out of defined range of function
+      return -1;
+   }
+   return einc;
 }
 
 Double_t KVDetector::GetSmallestEmaxValid(Int_t Z, Int_t A)

@@ -135,7 +135,7 @@ void KVINDRAForwardGroupReconstructor::DoCalibration(KVReconstructedNucleus* PAR
          }
       }
       else {
-         if (!stopped_in_silicon) {
+         if (!stopped_in_silicon && (TMath::Abs(fECsI) > 0.0)) {
             if (!CalculateSiliconDEFromResidualEnergy(PART, si)) return;
          }
          else {
