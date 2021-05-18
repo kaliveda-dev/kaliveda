@@ -348,9 +348,9 @@ Bool_t KVINDRAForwardGroupReconstructor::CoherencySiCsI(KVReconstructedNucleus& 
       // Seeing the very low statistics for 8He compared to 8Be/2alpha, we assume that if Si-CsI id
       // gives something above 8He it is either incoherent (below 7Li) or 8Be + something else in ChIo-Si
       // (above 7Li).
+      Int_t Zref = IDcsi->Z;
+      Int_t Aref = IDcsi->A;
       if (IDsicsi->IDOK) {
-         Int_t Zref = IDcsi->Z;
-         Int_t Aref = IDcsi->A;
          if (IDsicsi->Aident) { // Si-CsI provides mass identification
 
             if (IDcsi->Z == 4 && IDcsi->A == 8) {
@@ -479,6 +479,12 @@ Bool_t KVINDRAForwardGroupReconstructor::CoherencySiCsI(KVReconstructedNucleus& 
                return kTRUE;
             }
          }
+      }
+      else if (IDsicsi->IDattempted && (IDsicsi->IDquality == 4 || IDsicsi->IDquality == 5)) {
+         // "noise" in between Si-CsI identification lines => pile-up with good particle
+         // in CsI plus another particle stopped in the Silicon
+         if (IDsicsi->Z < Zref) fCoherent = kFALSE;
+         else fPileup = kTRUE;
       }
       PART.SetParameter("Coherent", fCoherent);
       PART.SetParameter("Pileup", fPileup);

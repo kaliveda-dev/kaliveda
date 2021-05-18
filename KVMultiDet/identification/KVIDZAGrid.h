@@ -57,7 +57,7 @@ of identification.
 </ul>
 
 In both cases, an acceptable identification is achieved if the quality code is kICODE0, kICODE1, kICODE2, or kICODE3.<br>
-Points with codes kICODE4 or kICODE5 are normally considered as "noise" and should be rejected.<br>
+Points with codes kICODE4 or kICODE5 are normally considered as "noise" (pile-up ?) and should be rejected.<br>
 Points which are (vertically) out of range for this grid have code kICODE6 (point too far below) or kICODE7 (point too far above).<br>
 Points with code kICODE8 are totally out of range.
  */
