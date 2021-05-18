@@ -273,7 +273,6 @@ public:
    Nucleus* AddParticle()
    {
       // Method used for building an event particle by particle.
-      // DO NOT USE FOR READING EVENTS - use GetParticle(Int_t npart)!!
       //
       // This method increases the multiplicity fMult by one and "creates" a new particle with index (fMult-1).
       // In actual fact a new object is only created if needed i.e. if the new multiplicity is greater
@@ -947,7 +946,14 @@ public:
    };
 
    struct GroupEventIterator : public EventIterator {
-      GroupEventIterator(const KVTemplateEvent& event, const TString& grp) :
+      GroupEventIterator(const KVEvent& event, const TString& grp) :
+#ifdef WITH_CPP11
+         EventIterator(event, Iterator::Type::Group, grp)
+#else
+         EventIterator(event, Iterator::Group, grp)
+#endif
+      {}
+      GroupEventIterator(const KVEvent* event, const TString& grp) :
 #ifdef WITH_CPP11
          EventIterator(event, Iterator::Type::Group, grp)
 #else
@@ -978,4 +984,7 @@ public:
 };
 
 typedef KVTemplateEvent<KVNucleus> KVNucleusEvent;
+typedef KVTemplateEvent<KVNucleus>::EventIterator EventIterator;
+typedef KVTemplateEvent<KVNucleus>::GroupEventIterator GroupEventIterator;
+typedef KVTemplateEvent<KVNucleus>::OKEventIterator OKEventIterator;
 #endif

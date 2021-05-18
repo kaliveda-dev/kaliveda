@@ -114,9 +114,9 @@ namespace MicroStat {
 
       massTot0 = 0;
 #ifdef WITH_CPP11
-      for (auto& e : *partition) massTot0 += e.GetMass();
-#else
-      for (KVEvent::Iterator it = partition->begin(); it != partition->end(); ++it) massTot0 += (*it).GetMass();
+      for (auto& e : EventIterator(partition)) massTot0 += e.GetMass();
+//#else
+      for (KVNucleusEvent::Iterator it = EventIterator(partition).begin(); it != KVNucleusEvent::Iterator::End(); ++it) massTot0 += (*it).GetMass();
 #endif
       resetGenerateEvent();
    }

@@ -49,7 +49,7 @@ void example(double E0 = 50, int nevents = 100000)
    CN.SetExcitEnergy(E0);
 
    // decay products
-   KVEvent decay;
+   KVNucleusEvent decay;
    KVNucleus* n = decay.AddParticle();
    n->SetZandA(1, 2);
    n = decay.AddParticle();
@@ -79,7 +79,7 @@ void example(double E0 = 50, int nevents = 100000)
       histos.Add(h = new TH1F(n->GetSymbol(), Form("Kinetic energy of %s", n->GetSymbol()), 200, 0, etot));
       h->Sumw2();
    }
-   KVEvent event;
+   KVNucleusEvent event;
 
    while (nevents--) {
       gps.GenerateEvent(&decay, &event);

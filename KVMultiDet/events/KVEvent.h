@@ -309,6 +309,7 @@ public:
 
    virtual Double_t GetSum(const Char_t*, Option_t* = "") = 0;
    virtual Double_t GetChannelQValue() const = 0;
+   virtual KVString GetPartitionName() = 0;
    virtual void SetFrameName(const KVString& name) = 0;
    virtual void ChangeDefaultFrame(const Char_t*, const Char_t* = "") = 0;
    const Char_t* GetFrameName() const
