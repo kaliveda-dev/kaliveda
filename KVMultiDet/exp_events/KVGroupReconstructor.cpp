@@ -84,7 +84,10 @@ void KVGroupReconstructor::Process()
       return;
    }
    if (fDoIdentification) Identify();
-   if (fDoCalibration) Calibrate();
+   if (fDoCalibration) {
+      Calibrate();
+      PerformSecondaryAnalysis();
+   }
 }
 
 void KVGroupReconstructor::Reconstruct()

@@ -51,6 +51,7 @@ protected:
    virtual void PostReconstructionProcessing();
    virtual void IdentifyParticle(KVReconstructedNucleus& PART);
    virtual void CalibrateParticle(KVReconstructedNucleus* PART);
+   virtual void PerformSecondaryAnalysis() {}
 
    Double_t GetTargetEnergyLossCorrection(KVReconstructedNucleus* ion);
    TString GetPartSeedCond() const

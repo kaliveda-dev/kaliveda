@@ -54,6 +54,8 @@ protected:
    }
 
    void CalculateChIoDEFromResidualEnergy(KVReconstructedNucleus* n, Double_t ERES);
+   /* void PerformSecondaryAnalysis();  ** TO REIMPLEMENT */
+
 public:
    KVINDRAGroupReconstructor() {}
    virtual ~KVINDRAGroupReconstructor() {}
