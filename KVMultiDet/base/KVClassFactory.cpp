@@ -908,6 +908,7 @@ Bool_t KVClassFactory::CheckTemplateFiles(const Char_t* base_class,
    //we look for the template .h file in $TEMPLATEDIR, in $HOME and in $PWD
    //if found, fTemplateH contains the full path to the file.
    //if not found, we return kFALSE as we cannot proceed with the class generation.
+
    if (!KVBase::SearchKVFile(KVBase::GetTEMPLATEDIRFilePath(filename), fTemplateH)) {
       if (!KVBase::SearchKVFile(filename, fTemplateH)) return kFALSE;
    }
@@ -916,6 +917,7 @@ Bool_t KVClassFactory::CheckTemplateFiles(const Char_t* base_class,
    if (!KVBase::SearchKVFile(KVBase::GetTEMPLATEDIRFilePath(filename), fTemplateCPP)) {
       if (!KVBase::SearchKVFile(filename.Data(), fTemplateCPP)) return kFALSE;
    }
+
    return kTRUE;
 }
 

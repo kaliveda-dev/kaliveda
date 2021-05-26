@@ -43,11 +43,14 @@ KVDataRepositoryManager::~KVDataRepositoryManager()
 void KVDataRepositoryManager::Init()
 {
    //Read .kvrootrc and set up all data repositories it defines.
+   //
    //The default data repository (gDataRepository) is defined by the environment variable
    //DataRepository.Default (default value = "default").
+   //
    //For this repository, KVDataRepository::cd() will be called and
    //gDataRepository and gDataSetManager will point, respectively, to the repository and
    //to its data set manager.
+   //
    //If the repository corresponding to DataRepository.Default is not found,
    //the last repository defined in the .kvrootrc file will be made default.
 

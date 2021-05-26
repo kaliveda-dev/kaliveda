@@ -17,18 +17,11 @@ void ExampleReconAnalysis::InitAnalysis(void)
    /* These will be automatically calculated for each event before
       your Analysis() method will be called                        */
    AddGV("KVZtot", "ztot");                             // total charge
-#ifdef WITH_CPP11
    auto zvtot = AddGV("KVZVtot", "zvtot");              // total Z*vpar
    zvtot->SetMaxNumBranches(1);    // only write "Z" component in TTree
-#else
-   AddGV("KVZVtot", "zvtot")->SetMaxNumBranches(1);
-#endif
+
    AddGV("KVMult", "mtot"); // total multiplicity
    // total multiplicity in forward CM hemisphere
-#ifdef USING_ROOT5
-   KVVarGlob* gv = AddGV("KVMult", "mtot_av");
-   gv->SetSelection("_NUC_->GetVpar()>0");
-#else
    auto gv = AddGV("KVMult", "mtot_av");
    gv->SetSelection({
       "Vcm>0", [](const KVNucleus * n)
@@ -36,7 +29,6 @@ void ExampleReconAnalysis::InitAnalysis(void)
          return n->GetVpar() > 0;
       }}
                    );
-#endif
    gv->SetFrame("CM");
 
    /*** DECLARING SOME HISTOGRAMS ***/
@@ -76,10 +68,8 @@ void ExampleReconAnalysis::InitRun(void)
    // set title of TTree with name of analysed system
    GetTree("myTree")->SetTitle(GetCurrentRun()->GetSystemName());
 
-#ifdef USING_ROOT6
    // reject reconstructed events which are not consistent with the DAQ trigger
    SetTriggerConditionsForRun(GetCurrentRun()->GetNumber());
-#endif
 }
 
 //_____________________________________
@@ -93,12 +83,7 @@ Bool_t ExampleReconAnalysis::Analysis(void)
    FillTree(); // write new results in TTree
 
    /*** LOOP OVER PARTICLES OF EVENT ***/
-#ifdef WITH_CPP11
-   for (auto& n : KVReconstructedEvent::OKEventIterator(GetEvent())) {
-#else
-   for (KVReconstructedEvent::Iterator it = KVReconstructedEvent::OKEventIterator(GetEvent()).begin(); it != KVReconstructedEvent::TIterator::End(); ++it) {
-      KVReconstructedNucleus& n = it.get_reference();
-#endif
+   for (auto& n : ReconEventOKIterator(GetEvent())) {
       // "OK" particles => using selection criteria of InitRun()
       // fill Z distribution
       FillHisto("zdist", n.GetZ());

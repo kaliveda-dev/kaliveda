@@ -1,19 +1,7 @@
-//Created by KVClassFactory on Fri Aug  2 15:34:58 2019
-//Author: John Frankland,,,
-
 #include "ExampleRawAnalysis.h"
 #include "KVMultiDetArray.h"
 
 ClassImp(ExampleRawAnalysis)
-
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>exampleRawAnalysis</h2>
-<h4>Analysis of raw data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 // This class is derived from the KaliVeda class KVRawDataAnalyser.
 // It is to be used for analysis of raw (i.e. unreconstructed) data.
