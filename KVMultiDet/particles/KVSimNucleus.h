@@ -97,10 +97,6 @@ public:
    {
       return angmom;
    }
-   TVector3& GetSpin()
-   {
-      return GetAngMom();
-   }
    Double_t GetRadius() const
    {
       // Spherical nuclear radius 1.2*A**(1/3)
