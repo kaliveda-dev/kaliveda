@@ -18,136 +18,17 @@ class KVIntegerList;
   \brief Abstract base class container for multi-particle events
   \ingroup NucEvents
 
-The main business of KaliVeda is the analysis of multi-body events produced in heavy-ion reactions,
-therefore it is no surprise that a central role is played by classes derived from KVEvent which can be thought of as
-container classes for nuclei described by different classes (see KVNucleus, KVSimNucleus and KVReconstructedNucleus).
-
-In addition to containing a list of particles/nuclei, each event class also has in common the following functionality:
+This base class defines the basic functionality and interface for all event classes, which in addition to handling a collection
+of particles/nuclei, also have in common the following functionality:
 
  - an associated list of parameters, accessible through the GetParameters() and SetParameter() methods;
  - iterators for looping over all or a subset of the particles of the event;
  - methods for defining named subsets ('groups') of particles according to various selection criteria;
  - methods for defining/modifying different relativistic reference frames in which to 'view' the particles of the event
 
-Let us mention in passing the associated KVEventViewer class which can be used to produce 3D images of events using the ROOT OpenGL backend.
+Concrete implementations of event classes derive from child class KVTemplateEvent.
 
-See the chapter in the User's Guide for more details: http://indra.in2p3.fr/kaliveda/UsersGuide/events.html
-
-Instances of this class cannot be used (it is a pure virtual abstract class). See classes derived from KVTemplateEvent for
-concrete event classes. KVNucleusEvent can be used for a simple event containing KVNucleus objects.
-
-### Kinematical reference frames
-
-See also KVParticle for accessing/changing reference frames of individual particles.
-
-#### 1. Defining and accessing different reference frames for all particles of an event
-You can define and use several
-different reference frames for the particles in an event. Each
-frame can be used independently, and new frames can be defined based on any of the
-existing frames:
-
-__Example:__ (for an event accessed through pointer `KVEvent* e`):
- - define a new frame moving at 5 cm/ns in the beam direction:
-
-~~~~~~~~~~~~~~~~~~{.cpp}
-            e->SetFrame("moving_frame", TVector3(0,0,5));
-~~~~~~~~~~~~~~~~~~
-
- - define a rotated coordinate frame in the "moving_frame", rotated by \f$90^o\f$ clockwise around the +ve beam direction:
-
-~~~~~~~~~~~~~~~~~~{.cpp}
-            TRotation rot;
-            rot.RotateZ(TMath::PiOver2());
-            e->SetFrame("rotated_moving_frame", "moving_frame", rot);
-~~~~~~~~~~~~~~~~~~
-
-  Note that the same frame can be defined directly from the original frame of all particles in the event by using a combined boost-then-rotation transform:
-
-~~~~~~~~~~~~~~~~~~{.cpp}
-            e->SetFrame("rotated_moving_frame", KVFrameTransform(TVector3(0,0,5),rot));
-
-            --//-- the following only works with C++11 and later
-            e->SetFrame("rotated_moving_frame", {{0,0,5},rot});
-~~~~~~~~~~~~~~~~~~
-
- - define a similarly rotated coordinate frame in the original (default) reference frame:
-
-~~~~~~~~~~~~~~~~~~{.cpp}
-            e->SetFrame("rotated_frame", rot);
-~~~~~~~~~~~~~~~~~~
-
- - access kinematical information in any of these frames for any of the particles in the event:
-
-~~~~~~~~~~~~~~~~~~{.cpp}
-            e->GetParticle(i)->GetFrame("moving_frame")->GetVpar();
-            e->GetParticle(i)->GetFrame("rotated_frame")->GetPhi();
-            e->GetParticle(i)->GetFrame("rotated_moving_frame")->GetTransverseEnergy();
-~~~~~~~~~~~~~~~~~~
-
-Note that the frame `"rotated_moving_frame"` is directly accessible even if it is defined in two
-steps as a rotation of the `"moving_frame"`.
-
-#### 2. Changing the default reference frame for all particles in an event
-Let us consider an event for which the different reference frames in the previous paragraph have been defined.
-Calling method Print() will show all reference frames defined for each particle:
-
-~~~~~~~~~~~~~~~~~~{.cpp}
-e->Print()
-
-KVParticle mass=939 Theta=45 Phi=0 KE=32.7103 Vpar=5.45392
-         moving_frame:  Theta=85.1751 Phi=0 KE=16.6117 Vpar=0.468125
-                 rotated_moving_frame:  Theta=85.1751 Phi=270 KE=16.6117 Vpar=0.468125
-         rotated_frame:  Theta=45 Phi=270 KE=32.7103 Vpar=5.45392
-
-etc. etc.
-~~~~~~~~~~~~~~~~~~
-
-Indentation indicates the relationships between frames: `"rotated_moving_frame"` is a child frame of `"moving_frame"`.
-The first line is the default kinematics. As yet it has no name, but if we want we can set a name for the
-default kinematics of each particle in the event:
-
-~~~~~~~~~~~~~~~~~~{.cpp}
-e->SetFrameName("lab");
-~~~~~~~~~~~~~~~~~~
-
-Now if we want to change the default kinematical frame for the event by using ChangeDefaultFrame():
-
-~~~~~~~~~~~~~~~~~~{.cpp}
-e->ChangeDefaultFrame("rotated_moving_frame");
-
-e->Print();
-
-KVParticle mass=939 Theta=85.1751 Phi=270 KE=16.6117 Vpar=0.468125
-         moving_frame:  Theta=85.1751 Phi=0 KE=16.6117 Vpar=0.468125
-                 lab:  Theta=45 Phi=0 KE=32.7103 Vpar=5.45392
-                         rotated_frame:  Theta=45 Phi=270 KE=32.7103 Vpar=5.45392
-KVNameValueList::ParticleParameters : Parameters associated with a particle in an event (0x7f5a1ff8b1b8)
- <frameName=rotated_moving_frame>
-~~~~~~~~~~~~~~~~~~
-
-Note that the name of the default kinematics is stored as a parameter `"frameName"` and can be retrieved with method GetFrameName().
-Note also how the relationships between frames are preserved, i.e. if we present the frames as graphs:
-
-with "lab" as default frame:
-~~~~
-          lab
-           |
-           +--moving_frame
-           |        |
-           |        +--rotated_moving_frame
-           |
-           +--rotated_frame
-~~~~
-with "rotated_moving_frame" as default frame:
-~~~~
-   rotated_moving_frame
-           |
-           +--moving_frame
-                    |
-                    +--lab
-                        |
-                        +--rotated_frame
-~~~~
+\sa KVTemplateEvent
 
  */
 class KVEvent: public KVBase {
@@ -221,7 +102,8 @@ public:
 
    void Copy(TObject& obj) const
    {
-      //Copy this to obj
+      // Copy this event into the object referenced by obj,
+      // assumed to be at least derived from KVEvent.
       KVBase::Copy(obj);
       fParameters.Copy(((KVEvent&)obj).fParameters);
       Int_t MTOT = fParticles->GetEntriesFast();
@@ -234,25 +116,33 @@ public:
    {
       return fParticles;
    }
-   virtual Int_t GetMult(Option_t* = "") const
+   virtual Int_t GetMult(Option_t* opt = "") const
    {
-      // Returns multiplicity (number of particles) of event.
+      // Returns multiplicity (number of particles) in event.
       //
-      // Optional argument not used here
+      // \param[in] opt optional argument which may limit multiplicity to certain nuclei:
+      //              - opt="" (default): all nuclei of event are counted
+      //              - opt="OK": only nuclei for which KVNucleus::IsOK() returns true are counted
+      //              - opt="group": only nuclei belonging to given group are counted
+      //
+      // \note Any value given for opt is case-insensitive
 
       return fParticles->GetEntriesFast();
    }
    virtual KVNucleus* GetNextParticle(Option_t* = "") const = 0;
    virtual void ResetGetNextParticle() const = 0;
    virtual KVNucleus* GetParticle(Int_t npart) const = 0;
+
    virtual KVNucleus* AddParticle() = 0;
+
    virtual void SetFrame(const Char_t*, const KVFrameTransform&) = 0;
    virtual void SetFrame(const Char_t*, const Char_t*, const KVFrameTransform&) = 0;
    virtual Bool_t IsOK() const
    {
       // Returns kTRUE if the event is OK for analysis.
-      // This means there must be at least MOKmin particles with IsOK()=kTRUE,
-      // where MOKmin is set by calling SetMinimumOKMultiplicity(Int_t)
+      //
+      // This means there must be at least MOKmin particles for which KVNucleus::IsOK() returns kTRUE,
+      // where MOKmin is set by calling SetMinimumOKMultiplicity()
       // (value stored in parameter MIN_OK_MULT)
 
       return (GetMult("ok") >= GetMinimumOKMultiplicity());
@@ -275,13 +165,20 @@ public:
    virtual void MergeEventFragments(TCollection* events, Option_t* opt = "")
    {
       // Merge all events in the list into one event (this one)
+      //
       // We also merge/sum the parameter lists of the events
+      //
       // First we clear this event, then we fill it with copies of each particle in each event
       // in the list.
+      //
       // If option "opt" is given, it is given as argument to each call to
-      // KVEvent::Clear() - this option is then passed on to the Clear()
+      // KVEvent::Clear() - this option is then passed on to the KVNucleus::Clear()
       // method of each particle in each event.
-      // NOTE: the events in the list will be empty and useless after this!
+      //
+      // \param[in] events A list of events to merge
+      // \param[in] opt Optional argument transmitted to KVEvent::Clear()
+      //
+      // \note the events in the list will be empty and useless after this!
 
       Clear(opt);
       TIter it(events);
@@ -354,11 +251,10 @@ public:
    void Clear(Option_t* opt = "")
    {
       // Reset the event to zero ready for new event.
-      // Any option string is passed on to the Clear() method of the particle
-      // objects in the TClonesArray fParticles.
+      //
+      // \param[in] opt option string passed on to the Clear() method of the particle objects in the TClonesArray fParticles
 
-      if (strcmp(opt, "")) {
-         // pass options to particle class Clear() method
+      if (strcmp(opt, "")) { // pass options to particle class Clear() method
          TString Opt = Form("C+%s", opt);
          fParticles->Clear(Opt);
       }
