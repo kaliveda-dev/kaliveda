@@ -1338,15 +1338,15 @@ void KVDataSet::MakeAnalysisClass(const Char_t* task, const Char_t* classname)
    _task += " analysis";
    //We want to be able to write analysis classes even when we don't have any data
    //to analyse. Therefore we use GetAnalysisTaskAny.
-   unique_ptr<KVDataAnalysisTask> dat(GetAnalysisTaskAny(_task.Data()));
-   if (!dat.get()) {
+   KVDataAnalysisTask dat = GetAnalysisTaskAny(_task.Data());
+   if (dat.IsZombie()) {
       Error("MakeAnalysisClass",
             "called for unknown or unavailable analysis task : %s", _task.Data());
       return;
    }
-   if (!dat->WithUserClass()) {
+   if (!dat.WithUserClass()) {
       Error("MakeAnalysisClass",
-            "no user analysis class for analysis task : %s", dat->GetTitle());
+            "no user analysis class for analysis task : %s", dat.GetTitle());
       return;
    }
 
@@ -1355,7 +1355,7 @@ void KVDataSet::MakeAnalysisClass(const Char_t* task, const Char_t* classname)
 
    TClass* cl = 0x0;
    //has the user base class for the task been compiled and loaded ?
-   if (dat->CheckUserBaseClassIsLoaded()) cl = TClass::GetClass(dat->GetUserBaseClass());
+   if (dat.CheckUserBaseClassIsLoaded()) cl = TClass::GetClass(dat.GetUserBaseClass());
    else
       return;
 
@@ -1458,7 +1458,7 @@ Bool_t KVDataSet::FindDataSetFile(const Char_t* filename)
 
 //___________________________________________________________________________
 
-KVDataAnalysisTask* KVDataSet::GetAnalysisTaskAny(const Char_t* keywords) const
+KVDataAnalysisTask KVDataSet::GetAnalysisTaskAny(const Char_t* keywords) const
 {
    //This method returns a pointer to the analysis task whose description (title) contains
    //all of the whitespace-separated keywords (which may be regular expressions)
@@ -1466,9 +1466,8 @@ KVDataAnalysisTask* KVDataSet::GetAnalysisTaskAny(const Char_t* keywords) const
    //The analysis task does not need to be "available", i.e. the associated prerequisite
    //data type does not have to be present in the repository (see GetAnalysisTask).
    //
-   //WARNING! WARNING! WARNING!
-   //  *** the user must delete the KVDataAnalysisTask object returned by this method after use ***
-   //
+   // If no task is found, the returned KVDataAnalysisTask object will be a zombie
+   // (test with IsZombie()).
 
    //case-insensitive search for matches in list of all analysis tasks, based on 'title' attribute
    KVDataAnalysisTask* tsk =
@@ -1476,12 +1475,14 @@ KVDataAnalysisTask* KVDataSet::GetAnalysisTaskAny(const Char_t* keywords) const
    if (!tsk) {
       Error("GetAnalysisTaskAny", "No task found with the following keywords in its title : %s",
             keywords);
-      return 0;
+      KVDataAnalysisTask bad_task;
+      bad_task.SetBit(kZombie);
+      return bad_task;
    }
    //make new copy of default analysis task
-   KVDataAnalysisTask* new_task = new KVDataAnalysisTask(*tsk);
+   KVDataAnalysisTask new_task(*tsk);
    //check if any dataset-specific parameters need to be changed
-   SetDataSetSpecificTaskParameters(new_task);
+   SetDataSetSpecificTaskParameters(&new_task);
    return new_task; //must be deleted by user
 }
 

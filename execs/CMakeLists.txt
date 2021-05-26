@@ -2,15 +2,14 @@
 KALIVEDA_SET_INCLUDE_DIRS(KVMultiDet MODULES ${KVMultiDet_MOD_LIST})
 
 if(USE_INDRA)
-	#---set paths to find all KVIndra headers
-	KALIVEDA_SET_INCLUDE_DIRS(KVIndra MODULES ${KVIndra_MOD_LIST})
+    #---set paths to find all KVIndra headers
+    KALIVEDA_SET_INCLUDE_DIRS(KVIndra MODULES ${KVIndra_MOD_LIST})
 endif()
-
 set(build_targets
-	analyse_logs delete_logs kvdatanalyser kvtreeanalyzer
-	KaliVedaAnalysis update_runlist kaliveda kaliveda-sim
-        KaliVedaGUI
-)
+    analyse_logs delete_logs kvdatanalyser kvtreeanalyzer
+    KaliVedaAnalysis update_runlist kaliveda kaliveda-sim
+    KaliVedaGUI
+    )
 if(USE_INDRA)
     list(APPEND build_targets KVDataBaseGUI)
 endif()
@@ -43,8 +42,8 @@ set(update_runlist_SRC update_runlist.cxx)
 set(irods_uploader_SRC irods_uploader.cpp)
 
 foreach(t ${build_targets})
-	add_executable(${t} ${${t}_SRC})
-        target_link_libraries(${t} ${KVMultiDet_LIB_LIST} ${${t}_LIB})
+    add_executable(${t} ${${t}_SRC})
+    target_link_libraries(${t} ${KVMultiDet_LIB_LIST} ${${t}_LIB})
 endforeach()
 
 #---install built executables

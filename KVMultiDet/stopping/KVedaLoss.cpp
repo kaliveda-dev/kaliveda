@@ -65,7 +65,6 @@ Bool_t KVedaLoss::init_materials() const
    // any files in $(WORKING_DIR)/vedaloss/*.dat will also be read, these contain
    // materials added by the user(s)
 
-   Info("init_materials", "Initialising KVedaLoss...");
    fMaterials = new KVHashList;
    fMaterials->SetName("VEDALOSS materials list");
    fMaterials->SetOwner();
