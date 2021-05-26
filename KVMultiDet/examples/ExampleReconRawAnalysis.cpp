@@ -1,18 +1,6 @@
-//Created by KVClassFactory on Fri Aug  2 16:52:45 2019
-//Author: John Frankland,,,
-
 #include "ExampleReconRawAnalysis.h"
 
 ClassImp(ExampleReconRawAnalysis)
-
-////////////////////////////////////////////////////////////////////////////////
-// BEGIN_HTML <!--
-/* -->
-<h2>ExampleReconRawAnalysis</h2>
-<h4>Analysis of reconstructed raw data</h4>
-<!-- */
-// --> END_HTML
-////////////////////////////////////////////////////////////////////////////////
 
 // This class is derived from the KaliVeda class KVReconRawDataAnalyser.
 // It is to be used for analysis of events reconstructed from raw data.
@@ -46,11 +34,9 @@ void ExampleReconRawAnalysis::InitAnalysis()
    t->Branch("Z", &Z);
 
    /*** DEFINE WHERE TO SAVE THE RESULTS ***/
-   // When running in batch mode, we use the job name for the output file
-   if (gDataAnalyser->GetBatchSystem())
-      SetCombinedOutputFile(Form("%s.root", gDataAnalyser->GetBatchSystem()->GetJobName()));
-   else
-      SetCombinedOutputFile(Form("ExampleReconRawAnalysis_results.root"));
+   // This filename will be used for interactive and PROOFlite jobs.
+   // When running in batch mode, this will automatically use the job name.
+   SetJobOutputFileName("ExampleReconRawAnalysis_results.root");
 }
 
 //____________________________________________________________________________//

@@ -1,8 +1,15 @@
-//Created by KVClassFactory on Fri Aug  2 16:52:45 2019
-//Author: John Frankland,,,
-
 #ifndef __EXAMPLERECONRAWANALYSIS_H
 #define __EXAMPLERECONRAWANALYSIS_H
+
+/**
+ \class ExampleReconRawAnalysis
+ \brief Analysis of reconstructed raw data
+
+ Write a detailed documentation for your class here, see doxygen manual for help.
+
+ \author John Frankland
+ \date Wed May 26 16:00:42 2021
+*/
 
 #include "KVReconRawDataAnalyser.h"
 
@@ -23,6 +30,5 @@ public:
 
    ClassDef(ExampleReconRawAnalysis, 1) //Analysis of reconstructed raw data
 };
-
 
 #endif

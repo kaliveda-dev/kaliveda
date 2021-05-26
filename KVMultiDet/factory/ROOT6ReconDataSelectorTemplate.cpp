@@ -77,7 +77,7 @@ Bool_t ROOT6ReconDataSelectorTemplate::Analysis(void)
    FillTree(); // write new results in TTree
 
    /*** LOOP OVER PARTICLES OF EVENT ***/
-   for (auto& n : KVReconstructedEvent::OKEventIterator(GetEvent())) {
+   for (auto& n : ReconEventOKIterator(GetEvent())) {
       // "OK" particles => using selection criteria of InitRun()
       // fill Z distribution
       FillHisto("zdist", n.GetZ());

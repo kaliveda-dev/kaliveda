@@ -14,7 +14,7 @@ void ExampleINDRAAnalysis::InitAnalysis(void)
    // Called at the beginning of the analysis
    // The examples given are compatible with interactive, batch,
    // and PROOFLite analyses.
-#ifdef USING_ROOT6
+
    /*** ADDING GLOBAL VARIABLES TO THE ANALYSIS ***/
    /* These will be automatically calculated for each event before
       your Analysis() method will be called                        */
@@ -44,7 +44,7 @@ void ExampleINDRAAnalysis::InitAnalysis(void)
    gv->SetNewFrameDefinition([](KVEvent * e, const KVVarGlob * vg) {
       e->SetFrame("EL", "CM", ((KVFlowTensor*)vg)->GetFlowReacPlaneRotation());
    });
-#endif
+
    /*** DECLARING SOME HISTOGRAMS ***/
    AddHisto(new TH1F("zdist", "Charge distribution", 100, -.5, 99.5));
    AddHisto(new TH2F("zvpar", "Z vs V_{par} in ellipsoid", 100, -15., 15., 75, .5, 75.5));
@@ -80,10 +80,8 @@ void ExampleINDRAAnalysis::InitRun(void)
    // set title of TTree with name of analysed system
    GetTree("myTree")->SetTitle(GetCurrentRun()->GetSystemName());
 
-#ifdef USING_ROOT6
    // Reject events with less identified particles than the acquisition multiplicity trigger
    SetTriggerConditionsForRun(GetCurrentRun()->GetNumber());
-#endif
 
    // retrieve system parameters for complete event selection
    const KV2Body* kin = gDataAnalyser->GetKinematics();
@@ -101,12 +99,7 @@ Bool_t ExampleINDRAAnalysis::Analysis(void)
    GetGVList()->FillBranches(); // update values of all global variable branches
 
    /*** LOOP OVER PARTICLES OF EVENT ***/
-#ifdef WITH_CPP11
-   for (auto& particle : KVINDRAReconEvent::OKEventIterator(GetEvent())) {
-#else
-   for (KVINDRAReconEvent::Iterator it = KVINDRAReconEvent::OKEventIterator(GetEvent()).begin(); it != GetEvent()->end(); ++it) {
-      KVNucleus& particle = it.get_reference<KVNucleus>();
-#endif
+   for (auto& particle : ReconEventOKIterator(GetEvent())) {
       // "OK" => using selection criteria of InitRun()
       // fill Z distribution
       FillHisto("zdist", particle.GetZ());

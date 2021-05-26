@@ -92,7 +92,7 @@ Bool_t ROOT6KVINDRAEventSelectorTemplate::Analysis(void)
    GetGVList()->FillBranches(); // update values of all global variable branches
 
    /*** LOOP OVER PARTICLES OF EVENT ***/
-   for (auto& particle : KVINDRAReconEvent::OKEventIterator(GetEvent())) {
+   for (auto& particle : ReconEventOKIterator(GetEvent())) {
       // "OK" => using selection criteria of InitRun()
       // fill Z distribution
       FillHisto("zdist", particle.GetZ());
