@@ -44,10 +44,8 @@ class KVIntegerList;
 
 /**
  \class KVTemplateEvent
- \brief Base class for event classes as containers of different nucleus objects
+ \brief Base class for event classes as containers of different types of nucleus objects
  \ingroup NucEvents
-
-Iterating
  */
 template <typename Nucleus>
 class KVTemplateEvent: public KVEvent {
@@ -272,15 +270,10 @@ public:
 
    Nucleus* AddParticle()
    {
-      // Method used for building an event particle by particle.
+      // Add a nucleus to the event and return a pointer to it.
       //
-      // This method increases the multiplicity fMult by one and "creates" a new particle with index (fMult-1).
-      // In actual fact a new object is only created if needed i.e. if the new multiplicity is greater
-      // than previously. Particle objects in the array are reused from one event to another.
-      // The default constructor for the class corresponding to the "new" particle will only be called
-      // once during its lifetime (i.e. if N events are generated, the particle ctor will be called only once,
-      // not N times). Once created, in subsequent events we just call the particle's Clear() method
-      // in order to reset its internal variables ready for a new event.
+      // All nuclei belong to the event and will be deleted either by the event
+      // destructor or when method Clear() is called.
 
       Int_t mult = GetMult();
 #ifdef __WITHOUT_TCA_CONSTRUCTED_AT
@@ -308,12 +301,14 @@ public:
    }
    virtual Int_t GetMult(Option_t* opt = "") const
    {
-      //Returns multiplicity (number of particles) of event.
-      //If opt = "" (default), returns number of particles in TClonesArray* fParticles
-      // i.e. the value of fParticles->GetEntriesFast() (we assume there are no gaps
-      // in the list)
-      //If opt = "ok" only particles with IsOK()==kTRUE are included.
-      //If opt = "name" only particles belonging to group "name" are included.
+      // Returns multiplicity (number of particles) in event.
+      //
+      // \param[in] opt optional argument which may limit multiplicity to certain nuclei:
+      //              - opt="" (default): all nuclei of event are counted
+      //              - opt="OK": only nuclei for which KVNucleus::IsOK() returns true are counted
+      //              - opt="group": only nuclei belonging to given group are counted
+      //
+      // \note Any value given for opt is case-insensitive
 
       if (TString(opt) == "") return KVEvent::GetMult();
       Int_t fMultOK = 0;
@@ -902,6 +897,20 @@ public:
       SetParameter("defaultFrame", name);
    }
 
+   /**
+    \class EventIterator
+    \brief Class for iterating over nuclei in events accessed through base pointer/reference
+    \ingroup NucEvents
+
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    the Iterator class which allows to use iterators with events passed as base references or pointers:
+
+    ~~~~{.cpp}
+    KVEvent* event; // pointer to valid event object
+
+    for(auto& nuc : EventIterator(event)) { // loop over nuclei in event }
+    ~~~~
+    */
    struct EventIterator {
       Iterator it;
 #ifdef WITH_CPP11
@@ -928,15 +937,29 @@ public:
       }
    };
 
-   struct OKEventIterator : public EventIterator {
-      OKEventIterator(const KVEvent& event) :
+   /**
+    \class EventOKIterator
+    \brief Class for iterating over "OK" nuclei in events accessed through base pointer/reference
+    \ingroup NucEvents
+
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    the Iterator class which allows to use iterators with events passed as base references or pointers:
+
+    ~~~~{.cpp}
+    KVEvent* event; // pointer to valid event object
+
+    for(auto& nuc : EventOKIterator(event)) { // loop over OK nuclei in event }
+    ~~~~
+    */
+   struct EventOKIterator : public EventIterator {
+      EventOKIterator(const KVEvent& event) :
 #ifdef WITH_CPP11
          EventIterator(event, Iterator::Type::OK)
 #else
          EventIterator(event, Iterator::OK)
 #endif
       {}
-      OKEventIterator(const KVEvent* event) :
+      EventOKIterator(const KVEvent* event) :
 #ifdef WITH_CPP11
          EventIterator(event, Iterator::Type::OK)
 #else
@@ -945,15 +968,29 @@ public:
       {}
    };
 
-   struct GroupEventIterator : public EventIterator {
-      GroupEventIterator(const KVEvent& event, const TString& grp) :
+   /**
+    \class EventGroupIterator
+    \brief Class for iterating over nuclei of given group in events accessed through base pointer/reference
+    \ingroup NucEvents
+
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    the Iterator class which allows to use iterators with events passed as base references or pointers:
+
+    ~~~~{.cpp}
+    KVEvent* event; // pointer to valid event object
+
+    for(auto& nuc : EventGroupIterator(event,"groupname")) { // loop over nuclei of group "groupname" in event }
+    ~~~~
+    */
+   struct EventGroupIterator : public EventIterator {
+      EventGroupIterator(const KVEvent& event, const TString& grp) :
 #ifdef WITH_CPP11
          EventIterator(event, Iterator::Type::Group, grp)
 #else
          EventIterator(event, Iterator::Group, grp)
 #endif
       {}
-      GroupEventIterator(const KVEvent* event, const TString& grp) :
+      EventGroupIterator(const KVEvent* event, const TString& grp) :
 #ifdef WITH_CPP11
          EventIterator(event, Iterator::Type::Group, grp)
 #else
@@ -975,16 +1012,30 @@ public:
       Bool_t ok_iter = (Opt == "OK");
       Bool_t grp_iter = (!ok_iter && Opt.Length());
 
-      if (ok_iter) return OKEventIterator(*this).begin();
-      else if (grp_iter) return GroupEventIterator(*this, Opt).begin();
-      return EventIterator(*this).begin();
+      if (ok_iter) return EventOKIterator(this).begin();
+      else if (grp_iter) return EventGroupIterator(this, Opt).begin();
+      return EventIterator(this).begin();
    }
 
    ClassDef(KVTemplateEvent, 0)         //Base class for all types of multiparticle event
 };
 
 typedef KVTemplateEvent<KVNucleus> KVNucleusEvent;
+
+/**
+  \class KVNucleusEvent
+  \brief A container for KVNucleus objects
+    \ingroup NucEvents
+
+  This is a typedef for KVTemplateEvent<KVNucleus>.
+ */
+/**
+  \class KVNucleusEvent::Iterator
+  \brief Iterate over the KVNucleus objects contained in a KVNucleusEvent
+    \ingroup NucEvents
+
+ */
 typedef KVTemplateEvent<KVNucleus>::EventIterator EventIterator;
-typedef KVTemplateEvent<KVNucleus>::GroupEventIterator GroupEventIterator;
-typedef KVTemplateEvent<KVNucleus>::OKEventIterator OKEventIterator;
+typedef KVTemplateEvent<KVNucleus>::EventGroupIterator EventGroupIterator;
+typedef KVTemplateEvent<KVNucleus>::EventOKIterator EventOKIterator;
 #endif

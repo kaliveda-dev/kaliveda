@@ -28,8 +28,15 @@ class TList;
 
 /**
   \class KVReconstructedEvent
-  \ingroup Reconstruction,NucEvents
+  \ingroup Reconstruction
+  \ingroup NucEvents
   \brief Physical event reconstructed from data measured with a detector array using implemented identification and calibration procedures.
+*/
+/**
+  \class KVReconstructedEvent::Iterator
+  \ingroup Reconstruction
+  \ingroup NucEvents
+  \brief Iterator for reconstructed events
 */
 class KVReconstructedEvent: public KVTemplateEvent<KVReconstructedNucleus> {
 
@@ -84,4 +91,56 @@ public:
    ClassDef(KVReconstructedEvent, 3)    //Base class for reconstructed experimental multiparticle events
 };
 
+typedef KVReconstructedEvent::EventIterator ReconEventIterator;
+typedef KVReconstructedEvent::EventGroupIterator ReconEventGroupIterator;
+typedef KVReconstructedEvent::EventOKIterator ReconEventOKIterator;
+
+/**
+  \class ReconEventIterator
+  \brief Wrapper class for iterating over nuclei in KVReconstructedEvent accessed through base pointer or reference
+  \ingroup NucEvents
+  \ingroup Reconstruction
+
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    which allows to use iterators with reconstructed events passed as base references or pointers.
+    The iterator returns references to KVReconstructedNucleus objects:
+
+    ~~~~{.cpp}
+    KVEvent* event; // pointer to valid KVReconstructedEvent object
+
+    for(auto& nuc : ReconEventIterator(event)) {  nuc.GetStoppingDetector(); }
+    ~~~~
+  */
+/**
+  \class ReconEventOKIterator
+  \brief Wrapper class for iterating over "OK" nuclei in KVReconstructedEvent accessed through base pointer or reference
+  \ingroup NucEvents
+  \ingroup Reconstruction
+
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    which allows to use iterators with reconstructed events passed as base references or pointers.
+    The iterator returns references to KVReconstructedNucleus objects:
+
+    ~~~~{.cpp}
+    KVEvent* event; // pointer to valid KVReconstructedEvent object
+
+    for(auto& nuc : ReconEventOKIterator(event)) {  nuc.GetStoppingDetector(); }
+    ~~~~
+  */
+/**
+  \class ReconEventGroupIterator
+  \brief Wrapper class for iterating over nuclei in KVReconstructedEvent accessed through base pointer or reference
+  \ingroup NucEvents
+  \ingroup Reconstruction
+
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    which allows to use iterators with reconstructed events passed as base references or pointers.
+    The iterator returns references to KVReconstructedNucleus objects:
+
+    ~~~~{.cpp}
+    KVEvent* event; // pointer to valid KVReconstructedEvent object
+
+    for(auto& nuc : ReconEventGroupIterator(event, "groupname")) {  nuc.GetStoppingDetector(); }
+    ~~~~
+  */
 #endif

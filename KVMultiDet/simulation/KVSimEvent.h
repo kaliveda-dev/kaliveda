@@ -13,6 +13,12 @@
   \ingroup Simulation
 \ingroup NucEvents
  */
+/**
+  \class KVSimEvent::Iterator
+  \ingroup Simulation
+  \ingroup NucEvents
+  \brief Iterator for simulated events
+*/
 class KVSimEvent : public KVTemplateEvent<KVSimNucleus> {
 public:
 
@@ -26,5 +32,56 @@ public:
 
    ClassDef(KVSimEvent, 5) //Events from simulation
 };
+typedef KVSimEvent::EventIterator SimEventIterator;
+typedef KVSimEvent::EventGroupIterator SimEventGroupIterator;
+typedef KVSimEvent::EventOKIterator SimEventOKIterator;
 
+/**
+  \class SimEventIterator
+  \brief Wrapper class for iterating over nuclei in KVSimEvent accessed through base pointer or reference
+  \ingroup NucEvents
+  \ingroup Simulation
+
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    which allows to use iterators with simulated events passed as base references or pointers.
+    The iterator returns references to KVSimNucleus objects:
+
+    ~~~~{.cpp}
+    KVEvent* event; // pointer to valid KVSimEvent object
+
+    for(auto& nuc : SimEventIterator(event)) {  nuc.GetAngMom(); }
+    ~~~~
+  */
+/**
+  \class SimEventOKIterator
+  \brief Wrapper class for iterating over "OK" nuclei in KVSimEvent accessed through base pointer or reference
+  \ingroup NucEvents
+  \ingroup Simulation
+
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    which allows to use iterators with simulated events passed as base references or pointers.
+    The iterator returns references to KVSimNucleus objects:
+
+    ~~~~{.cpp}
+    KVEvent* event; // pointer to valid KVSimEvent object
+
+    for(auto& nuc : SimOKEventIterator(event)) {  nuc.GetAngMom(); }
+    ~~~~
+  */
+/**
+  \class SimEventGroupIterator
+  \brief Wrapper class for iterating over nuclei in KVSimEvent accessed through base pointer or reference
+  \ingroup NucEvents
+  \ingroup Simulation
+
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    which allows to use iterators with simulated events passed as base references or pointers.
+    The iterator returns references to KVSimNucleus objects:
+
+    ~~~~{.cpp}
+    KVEvent* event; // pointer to valid KVSimEvent object
+
+    for(auto& nuc : SimGroupEventIterator(event, "groupname")) {  nuc.GetAngMom(); }
+    ~~~~
+  */
 #endif

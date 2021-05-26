@@ -27,13 +27,16 @@
 #pragma link C++ class KVTemplateEvent<KVReconstructedNucleus>+;
 #pragma link C++ class KVTemplateEvent<KVReconstructedNucleus>::Iterator+;
 #pragma link C++ class KVTemplateEvent<KVReconstructedNucleus>::EventIterator+;
-#pragma link C++ class KVTemplateEvent<KVReconstructedNucleus>::OKEventIterator+;
-#pragma link C++ class KVTemplateEvent<KVReconstructedNucleus>::GroupEventIterator+;
+#pragma link C++ class KVTemplateEvent<KVReconstructedNucleus>::EventOKIterator+;
+#pragma link C++ class KVTemplateEvent<KVReconstructedNucleus>::EventGroupIterator+;
 #pragma link C++ class KVReconstructedEvent-;//customised streamer
-/*#pragma link C++ class KVReconstructedEvent::Iterator+;
+#pragma link C++ class KVReconstructedEvent::Iterator+;
 #pragma link C++ class KVReconstructedEvent::EventIterator+;
-#pragma link C++ class KVReconstructedEvent::OKEventIterator+;
-#pragma link C++ class KVReconstructedEvent::GroupEventIterator+;*/
+#pragma link C++ class KVReconstructedEvent::EventOKIterator+;
+#pragma link C++ class KVReconstructedEvent::EventGroupIterator+;
+#pragma link C++ class ReconEventIterator+;
+#pragma link C++ class ReconEventGroupIterator+;
+#pragma link C++ class ReconEventOKIterator+;
 #pragma link C++ class KVIDTelescope+;
 #pragma link C++ class KVIDCsI+;
 #ifdef WITH_FITLTG

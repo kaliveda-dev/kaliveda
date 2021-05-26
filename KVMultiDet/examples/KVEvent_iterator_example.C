@@ -13,11 +13,11 @@ bool compareZ(KVNucleus& a, KVNucleus& b)
 void nucleus_event_iterator(KVEvent* e_ptr)
 {
 #ifdef WITH_CPP11
-   for (auto& n : OKEventIterator(e_ptr)) {
+   for (auto& n : EventOKIterator(e_ptr)) {
       n.Print();
    }
 #else
-   for (KVNucleusEvent::Iterator it = OKEventIterator(e_ptr).begin(); it != KVNucleusEvent::Iterator::End(); ++it) {
+   for (KVNucleusEvent::Iterator it = EventOKIterator(e_ptr).begin(); it != KVNucleusEvent::Iterator::End(); ++it) {
       (*it).Print();
    }
 #endif
@@ -26,11 +26,11 @@ void nucleus_event_iterator(KVEvent* e_ptr)
 void recon_event_iterator(KVEvent* e_ptr)
 {
 #ifdef WITH_CPP11
-   for (auto& n : KVReconstructedEvent::OKEventIterator(e_ptr)) {
+   for (auto& n : ReconEventOKIterator(e_ptr)) {
       n.Print();
    }
 #else
-   for (KVReconstructedEvent::Iterator it = KVReconstructedEvent::OKEventIterator(e_ptr).begin(); it != KVReconstructedEvent::Iterator::End(); ++it) {
+   for (KVReconstructedEvent::Iterator it = ReconEventOKIterator(e_ptr).begin(); it != KVReconstructedEvent::Iterator::End(); ++it) {
       (*it).Print();
    }
 #endif
@@ -69,12 +69,12 @@ void iterator_examples()
 #endif
 
    cout << "\nLoop over OK particles (1,3,5,7,9):" << endl;
-   for (KVNucleusEvent::Iterator it = OKEventIterator(Event).begin(); it != Event.end(); ++it) {
+   for (KVNucleusEvent::Iterator it = EventOKIterator(Event).begin(); it != Event.end(); ++it) {
       (*it).Print();
    }
 
    cout << "\nLoop over GROUP particles (5,6,7,8,9):" << endl;
-   for (KVNucleusEvent::Iterator it = GroupEventIterator(Event, "GROUP").begin(); it != Event.end(); ++it) {
+   for (KVNucleusEvent::Iterator it = EventGroupIterator(Event, "GROUP").begin(); it != Event.end(); ++it) {
       (*it).Print();
    }
 
@@ -101,11 +101,11 @@ void iterator_examples()
 
 #ifdef WITH_CPP11
    cout << "\nLoop over RANDOM particles [range-based for loop]:" << endl;
-   for (auto& nuc : GroupEventIterator(Event, "RANDOM")) {
+   for (auto& nuc : EventGroupIterator(Event, "RANDOM")) {
       nuc.Print();
    }
    cout << "\nLoop over OK particles [range-based for loop]:" << endl;
-   for (auto& nuc : OKEventIterator(Event)) {
+   for (auto& nuc : EventOKIterator(Event)) {
       nuc.Print();
    }
 #endif
@@ -120,7 +120,7 @@ void iterator_examples()
 
 #if !defined(__APPLE__)
    cout << "\nFind largest Z in RANDOM group using std::max_element:" << endl;
-   KVNucleusEvent::GroupEventIterator it(Event, "RANDOM");
+   KVNucleusEvent::EventGroupIterator it(Event, "RANDOM");
    KVNucleusEvent::Iterator maxZ = std::max_element(it.begin(), it.end(), compareZ);
    (*maxZ).Print();
 #endif
