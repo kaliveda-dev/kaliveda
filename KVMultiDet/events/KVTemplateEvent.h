@@ -68,7 +68,8 @@ public:
          Null,      // null value
          All,       // include all particles
          OK,        // include particles which are "OK"
-         Group      // include particles belonging to group
+         Group,      // include particles belonging to group
+         Bad      // type mismatch: iterator goes straight to end
       };
 
    private:
@@ -82,6 +83,8 @@ public:
          // corresponds to the selection criteria (if any)
 
          switch (fType) {
+            case Bad:
+               return kFALSE;
             case OK:
                return current()->IsOK();
                break;
@@ -97,7 +100,6 @@ public:
       Nucleus* current() const
       {
          // Returns pointer to current particle in iteration
-         // Resets fIterating flag to kFALSE at end of list
          return static_cast<Nucleus*>(*fIter);
       }
    public:
@@ -134,12 +136,16 @@ public:
          //                                    i.e. KVParticle::BelongsToGroup(opt) returns
          //                                    kTRUE
 
-         if (!e->GetParticleArray()->GetClass()->InheritsFrom(Nucleus::Class()))
-            ::Warning("KVTemplateEvent::Iterator", "KVTemplateEvent<%s>::Iterator for %s nuclei requested for event containing %s nuclei",
+
+         if (!e->GetParticleArray()->GetClass()->InheritsFrom(Nucleus::Class())) {
+            ::Warning("KVTemplateEvent::Iterator", "KVTemplateEvent<%s>::Iterator for %s nuclei requested for event containing %s nuclei. Iteration is aborted.",
                       Nucleus::Class()->GetName(), Nucleus::Class()->GetName(), e->GetParticleArray()->GetClass()->GetName());
+            fType = Bad;
+         }
          // set iterator to first particle of event corresponding to selection
          fIter.Begin();
          while ((current() != nullptr) && !AcceptableIteration()) ++fIter;
+         if (current() == nullptr) fIterating = kFALSE;
       }
 
 #ifdef WITH_CPP11
@@ -158,12 +164,15 @@ public:
          //                                    i.e. KVParticle::BelongsToGroup(opt) returns
          //                                    kTRUE
 
-         if (!e.GetParticleArray()->GetClass()->InheritsFrom(Nucleus::Class()))
-            ::Warning("KVTemplateEvent::Iterator", "KVTemplateEvent<%s>::Iterator for %s nuclei requested for event containing %s nuclei",
+         if (!e.GetParticleArray()->GetClass()->InheritsFrom(Nucleus::Class())) {
+            ::Warning("KVTemplateEvent::Iterator", "KVTemplateEvent<%s>::Iterator for %s nuclei requested for event containing %s nuclei. Iteration is aborted.",
                       Nucleus::Class()->GetName(), Nucleus::Class()->GetName(), e.GetParticleArray()->GetClass()->GetName());
+            fType = Bad;
+         }
          // set iterator to first particle of event corresponding to selection
          fIter.Begin();
          while ((current() != nullptr) && !AcceptableIteration()) ++fIter;
+         if (current() == nullptr) fIterating = kFALSE;
       }
 
       Nucleus& operator* () const
@@ -897,20 +906,6 @@ public:
       SetParameter("defaultFrame", name);
    }
 
-   /**
-    \class EventIterator
-    \brief Class for iterating over nuclei in events accessed through base pointer/reference
-    \ingroup NucEvents
-
-    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
-    the Iterator class which allows to use iterators with events passed as base references or pointers:
-
-    ~~~~{.cpp}
-    KVEvent* event; // pointer to valid event object
-
-    for(auto& nuc : EventIterator(event)) { // loop over nuclei in event }
-    ~~~~
-    */
    struct EventIterator {
       Iterator it;
 #ifdef WITH_CPP11
@@ -937,20 +932,6 @@ public:
       }
    };
 
-   /**
-    \class EventOKIterator
-    \brief Class for iterating over "OK" nuclei in events accessed through base pointer/reference
-    \ingroup NucEvents
-
-    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
-    the Iterator class which allows to use iterators with events passed as base references or pointers:
-
-    ~~~~{.cpp}
-    KVEvent* event; // pointer to valid event object
-
-    for(auto& nuc : EventOKIterator(event)) { // loop over OK nuclei in event }
-    ~~~~
-    */
    struct EventOKIterator : public EventIterator {
       EventOKIterator(const KVEvent& event) :
 #ifdef WITH_CPP11
@@ -968,20 +949,6 @@ public:
       {}
    };
 
-   /**
-    \class EventGroupIterator
-    \brief Class for iterating over nuclei of given group in events accessed through base pointer/reference
-    \ingroup NucEvents
-
-    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
-    the Iterator class which allows to use iterators with events passed as base references or pointers:
-
-    ~~~~{.cpp}
-    KVEvent* event; // pointer to valid event object
-
-    for(auto& nuc : EventGroupIterator(event,"groupname")) { // loop over nuclei of group "groupname" in event }
-    ~~~~
-    */
    struct EventGroupIterator : public EventIterator {
       EventGroupIterator(const KVEvent& event, const TString& grp) :
 #ifdef WITH_CPP11
@@ -1029,13 +996,50 @@ typedef KVTemplateEvent<KVNucleus> KVNucleusEvent;
 
   This is a typedef for KVTemplateEvent<KVNucleus>.
  */
-/**
-  \class KVNucleusEvent::Iterator
-  \brief Iterate over the KVNucleus objects contained in a KVNucleusEvent
-    \ingroup NucEvents
 
- */
 typedef KVTemplateEvent<KVNucleus>::EventIterator EventIterator;
 typedef KVTemplateEvent<KVNucleus>::EventGroupIterator EventGroupIterator;
 typedef KVTemplateEvent<KVNucleus>::EventOKIterator EventOKIterator;
+/**
+ \class EventIterator
+ \brief Class for iterating over nuclei in events accessed through base pointer/reference
+ \ingroup NucEvents
+
+ Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+ the Iterator class which allows to use iterators with events passed as base references or pointers:
+
+ ~~~~{.cpp}
+ KVEvent* event; // pointer to valid event object
+
+ for(auto& nuc : EventIterator(event)) { // loop over nuclei in event }
+ ~~~~
+ */
+/**
+ \class EventOKIterator
+ \brief Class for iterating over "OK" nuclei in events accessed through base pointer/reference
+ \ingroup NucEvents
+
+ Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+ the Iterator class which allows to use iterators with events passed as base references or pointers:
+
+ ~~~~{.cpp}
+ KVEvent* event; // pointer to valid event object
+
+ for(auto& nuc : EventOKIterator(event)) { // loop over OK nuclei in event }
+ ~~~~
+ */
+/**
+ \class EventGroupIterator
+ \brief Class for iterating over nuclei of given group in events accessed through base pointer/reference
+ \ingroup NucEvents
+
+ Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+ the Iterator class which allows to use iterators with events passed as base references or pointers:
+
+ ~~~~{.cpp}
+ KVEvent* event; // pointer to valid event object
+
+ for(auto& nuc : EventGroupIterator(event,"groupname")) { // loop over nuclei of group "groupname" in event }
+ ~~~~
+ */
 #endif
