@@ -92,7 +92,7 @@ void KVSimReader::DeclareTree(Option_t* option)
    file = new TFile(filename, option);
 
    tree = new TTree(tree_name, tree_title);
-   KVEvent::MakeEventBranch(tree, branch_name, "KVSimEvent", evt);
+   KVEvent::MakeEventBranch(tree, branch_name, evt);
 }
 
 //____________________________________________________

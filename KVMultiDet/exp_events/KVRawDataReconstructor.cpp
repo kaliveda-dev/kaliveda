@@ -49,7 +49,7 @@ void KVRawDataReconstructor::InitRun()
                        );
 
    //leaves for reconstructed events
-   KVEvent::MakeEventBranch(fRecTree, "ReconEvent", fRecev->ClassName(), fRecev);
+   KVEvent::MakeEventBranch(fRecTree, "ReconEvent", fRecev);
 
    Info("InitRun", "Created reconstructed data tree %s : %s", fRecTree->GetName(), fRecTree->GetTitle());
 }

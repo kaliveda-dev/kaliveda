@@ -919,7 +919,7 @@ void KVElasticScatterEvent::DefineTrees()
    TTree* tt = 0;
 
    tt = new TTree("ElasticScatter", IsA()->GetName());
-   KVEvent::MakeEventBranch(tt, "Simulated_evts", "KVSimEvent", sim_evt);
+   KVEvent::MakeEventBranch(tt, "Simulated_evts", sim_evt);
    ltree->Add(tt);
 }
 

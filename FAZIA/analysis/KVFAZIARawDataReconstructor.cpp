@@ -76,7 +76,7 @@ void KVFAZIARawDataReconstructor::InitRun()
                    );
 
    //leaves for reconstructed events
-   KVEvent::MakeEventBranch(tree, "FAZIAReconEvent", "KVReconstructedEvent", recev);
+   KVEvent::MakeEventBranch(tree, "FAZIAReconEvent", recev);
 
    Info("InitRun", "Created reconstructed data tree %s : %s", tree->GetName(), tree->GetTitle());
    nb_recon = 0;
