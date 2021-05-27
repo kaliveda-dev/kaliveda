@@ -32,12 +32,7 @@ class TList;
   \ingroup NucEvents
   \brief Physical event reconstructed from data measured with a detector array using implemented identification and calibration procedures.
 */
-/**
-  \class KVReconstructedEvent::Iterator
-  \ingroup Reconstruction
-  \ingroup NucEvents
-  \brief Iterator for reconstructed events
-*/
+
 class KVReconstructedEvent: public KVTemplateEvent<KVReconstructedNucleus> {
 
    Bool_t fMeanAngles;          //!kTRUE if particle momenta calculated using mean angles of detectors (default: randomised angles)

@@ -13,12 +13,7 @@
   \ingroup Simulation
 \ingroup NucEvents
  */
-/**
-  \class KVSimEvent::Iterator
-  \ingroup Simulation
-  \ingroup NucEvents
-  \brief Iterator for simulated events
-*/
+
 class KVSimEvent : public KVTemplateEvent<KVSimNucleus> {
 public:
 

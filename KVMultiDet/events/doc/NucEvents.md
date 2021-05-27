@@ -10,10 +10,13 @@
       - \ref stoRef
       - \ref copyEv
       - \ref mergEv
+    - \ref evTree
     - \ref iterEv
       - \ref indexLoop
       - \ref simpIt
       - \ref stlIter
+      - \ref rangeIter
+      - \ref baseSTL
     - \ref kinFrames
       - \ref kinFrame1
       - \ref defFrame
@@ -36,6 +39,7 @@ auto print_event = [](KVEvent& event){ event.Print(); };
 
 KVReconstructedEvent recev;
 print_event(recev); // OK
+
 KVSimEvent simev;
 print_event(simev); // OK
 ~~~~
@@ -105,7 +109,6 @@ event->GetMult("qP"); // group names are also case insensitive
 1
 ~~~~
 
-
 \subsubsection objOwn 2.1.2 Object ownership
 
 Events are built up by repeated calls to the KVEvent::AddParticle() method which creates a new
@@ -115,7 +118,7 @@ when it goes out of scope.
 
 Therefore a KVEvent cannot be used to store references to nuclei in another KVEvent object,
 for example if one wants to handle a subset of the nuclei in the event. This is why the
-iterators allow to iterate only over selected subsets of nuclei if required.
+iterators presented below allow to iterate only over selected subsets (groups) of nuclei if required (see \ref iterEv).
 
 \subsubsection stoRef 2.1.3 Storing references to nuclei in an event
 
@@ -129,15 +132,15 @@ as long as the collection does not try to delete the objects when it goes out of
 You can if you wish copy all or part of an event, as long as you understand that the nuclei 
 in the copy will be new independent objects; they will not change if you change the original
 event after the copy (there may also be unwanted side-effects, especially for
-KVReconstructedNucleus particles). Copying nuclei in events is in general not recommended,
-but here is how to do it:
+KVReconstructedNucleus particles).
+
+Making a complete copy of an event (included the associated list of parameters) can be done like this:
 
 ~~~~~~~~~{.cpp}
-KVEvent *event, *event2; // pointers to 2 valid event objects
-event2->Clear();
-for(auto & n : EventIterator(event)){
-   n.Copy( *(event2->AddParticle()) );
-}
+KVEvent event, event2;
+// make a copy of event in event2
+event2.Clear(); // reset event2 before copying
+event.Copy(event2);
 ~~~~~~~~~
 
 \subsubsection mergEv 2.1.5 Merging several events into one
@@ -152,12 +155,78 @@ merged_event.MergeEventFragments(&event_list);
 
 **WARNING** after merging, the subevents in the list will be empty and useless. Do not try to use them after merging!
 
-\subsection iterEv 2.2 Iterating over nuclei
+\subsection evTree 2.2 Writing & reading events in ROOT TTree branches
+
+Events i.e. KVEvent-derived objects can be written in a branch of a TTree in order to store them in a ROOT file.
+This is the format used for all event-based data handled (or generated) by KaliVeda.
+
+Here is a complete example of how to write events in a TTree on disk:
+
+~~~~{.cpp}
+TFile f("events.root", "recreate");
+TTree* t = new TTree;
+
+// the event object has to be instantiated on the heap (with 'new') before branch creation
+KVSimEvent* simev = new KVSimEvent;
+
+// note that a static method is used: the event pointer is given in argument
+KVEvent::MakeEventBranch(t, "event_branch", simev);
+
+// now we can begin to fill the events, and the TTree
+simev->AddParticle();
+simev->AddParticle();
+...etc...
+t->Fill();
+
+// and finally write to disk
+f.Write()
+~~~~
+
+Reading back the events written in the branch of a TTree can be done as follows:
+
+~~~~{.cpp}
+TFile f("events.root");
+f.ls();
+TFile**		events.root	
+ TFile*		events.root	
+  KEY: TTree	tree;1	My tree
+
+tree->Print();
+******************************************************************************
+*Tree    :tree      : My tree                                                *
+*Entries :        1 : Total =            2317 bytes  File  Size =        819 *
+*        :          : Tree compression factor =   3.37                       *
+******************************************************************************
+*Br    0 :event_branch : KVSimEvent                                          *
+*Entries :        1 : Total  Size=       1951 bytes  File Size  =        429 *
+*Baskets :        1 : Basket Size=   10000000 bytes  Compression=   3.37     *
+*............................................................................*
+
+// to connect to the branch requires a null-initialised pointer
+KVSimEvent* simev = nullptr;
+
+// NB. the address of the pointer is passed as argument
+tree->SetBranchAddress("event_branch", &simev);
+
+// read an event
+tree->GetEntry(0);
+
+// simev is now initialised and points to the event read from the TTree
+simev->Print();
+
+KVSimEvent with 3 particles :
+------------------------------------
+KVNucleus Z=0 A=0 E*=-nan
+KVParticle mass=0 Theta=0 Phi=0 KE=0 Vpar=0
+etc. etc.
+~~~~
+
+\subsection iterEv 2.3 Iterating over nuclei
 
 There are several different ways to loop over all (or part of) the nuclei in an event and do something
 useful (for analysis) with them.
 
-\subsubsection indexLoop 2.2.1 Simple indexed loop
+\subsubsection indexLoop 2.3.1 Simple indexed loop
 
 ~~~~{.cpp}
 KVSimEvent simev;
@@ -213,7 +282,7 @@ ztot_ok = simev.GetSum("GetZ","Ok");  // case insensitive "OK"
 ztot_qp = simev.GetSum("GetZ","Qp");  // groupname case insensitive
 ~~~~
 
-\subsubsection simpIt 2.2.2 Simple iterator
+\subsubsection simpIt 2.3.2 Simple (deprecated) iterator
 
 The KVEvent::GetNextParticle() method can be used to easily loop over nuclei in an event:
 
@@ -261,7 +330,7 @@ while( (nuc = recev.GetNextParticle("qp")) ) { std::cout << nuc->GetStoppingDete
 
 Again, the name of the group or the "OK" status argument are case insensitive.
 
-\subsubsection stlIter 2.2.3 STL-style iterators
+\subsubsection stlIter 2.3.3 STL-style iterators
 
 STL containers such as std::vector can be iterated over using the std::vector::iterator class:
 
@@ -283,55 +352,187 @@ for(KVReconstructedEvent::Iterator it = recev.begin(); it!=recev.end(); ++it)
 {
    std::cout << (*it).GetStoppingDetector()->GetName();
 }
-~~~~
 
-This makes it possible to use range-based for loops:
-
-~~~~{.cpp}
-KVReconstructedEvent recev;
-for(auto& nuc : recev)
+// or more simply:
+for(auto it = recev.begin(); it!=recev.end(); ++it)
 {
-   std::cout << nuc.GetStoppingDetector()->GetName();
+   std::cout << (*it).GetStoppingDetector()->GetName();
 }
 ~~~~
 
 Dereferencing the iterator (i.e. the result of `*it`) gives a reference to the type of nucleus
 contained in the event: in this case, a reference to a KVReconstructedNucleus. The following table resumes the
-different event classes & associated iterators and nucleus types:
+different event classes & associated iterators and underlying nucleus types:
 
-Event class          | Iterator class                 | Type of nucleus        | 
--------------------- | ------------------------------ | ---------------------- |
-KVNucleusEvent       | KVNucleusEvent::Iterator       | KVNucleus              |
-KVSimEvent           | KVSimEvent::Iterator           | KVSimNucleus           |
-KVReconstructedEvent | KVReconstructedEvent::Iterator | KVReconstructedNucleus |
+Event class          | Iterator class                 | Type of nucleus        
+-------------------- | ------------------------------ | ---------------------- 
+KVNucleusEvent       | KVNucleusEvent::Iterator       | KVNucleus              
+KVSimEvent           | KVSimEvent::Iterator           | KVSimNucleus           
+KVReconstructedEvent | KVReconstructedEvent::Iterator | KVReconstructedNucleus 
 
-Note that the basic iterator
-will include all nuclei of the event in the loop. To restrict the iteration to only "OK" nuclei
-or nuclei belonging to a previously defined group, we provide a method analogous to the KVEvent::GetNextParticle()
-method presented previously:
+#### Iterating over "OK" particles or groups of particles
+
+The iterator returned by KVReconstructedEvent::begin() in the previous example will include all nuclei of the event in the loop:
+this Iterator is of type KVReconstructedEvent::Iterator::Type::All.
+Iterators of different types can be used in order to limit loops to include only particles which are `"OK"` (used for analysis
+of reconstructed nuclei):
 
 ~~~~{.cpp}
-// limit to "OK" nuclei
-for(KVReconstructedEvent::Iterator it = r.GetNextParticleIterator("OK"); it!=r.end(); ++it)
+for(auto it = KVReconstructedEvent::Iterator(recev, KVReconstructedEvent::Iterator::Type::OK); it!=recev.end(); ++it)
 {
-   std::cout << (*it).GetStoppingDetector()->GetName();
-}
-
-// limit to nuclei in "QP" group
-for(KVReconstructedEvent::Iterator it = r.GetNextParticleIterator("qp"); it!=r.end(); ++it)
-{
-   std::cout << (*it).GetStoppingDetector()->GetName();
+  // loop over all "OK" particles
 }
 ~~~~
 
-Things are slightly more complicated when we want to iterate over the particles of an event using a
-KVEvent reference or pointer: the iterators are not defined for the KVEvent class (in fact they are only
-defined for the templated KVTemplateEvent class from which the other event containers inherit the
-KVTemplateEvent::Iterator for their specific nucleus type).
+Similarly, in order to loop over all particles belonging to a previously defined group,
 
-\subsection kinFrames 2.3 Defining and using different kinematical reference frames for events
+~~~~{.cpp}
+for(auto it = KVReconstructedEvent::Iterator(recev, KVReconstructedEvent::Iterator::Type::Group, "QP"); it!=recev.end(); ++it)
+{
+  // loop over particles in "QP" group
+}
+~~~~
 
-\subsubsection kinFrame1 2.3.1 Defining and accessing different reference frames
+In order to simplify the use of such iterators, we provide wrapper classes for an easier interface
+
+~~~~{.cpp}
+for(auto it = KVReconstructedEvent::EventOKIterator(event).begin(); it!=recev.end(); ++it)
+{
+  // loop over all "OK" particles
+}
+~~~~
+
+and to further simplify the code, we provide aliases for these wrappers:
+
+~~~~{.cpp}
+for(auto it = ReconEventOKIterator(event).begin(); it!=recev.end(); ++it)
+{
+  // loop over all "OK" particles
+}
+~~~~
+
+The following table resumes all types, wrappers and aliases for the three main event classes:
+
+Event class          | Iterator type                         | Wrapper                            | Alias  
+-------------------- | ------------------------------------- | ---------------------------------- | -------------------
+KVNucleusEvent       | KVNucleusEvent::Iterator::Type::All   | KVNucleusEvent::EventIterator      | EventIterator
+^                    | KVNucleusEvent::Iterator::Type::OK    | KVNucleusEvent::EventOKIterator    | EventOKIterator
+^                    | KVNucleusEvent::Iterator::Type::Group | KVNucleusEvent::EventGroupIterator | EventGroupIterator
+KVReconstructedEvent       | KVReconstructedEvent::Iterator::Type::All   | KVReconstructedEvent::EventIterator      | ReconEventIterator
+^                    | KVReconstructedEvent::Iterator::Type::OK    | KVReconstructedEvent::EventOKIterator    | ReconEventOKIterator
+^                    | KVReconstructedEvent::Iterator::Type::Group | KVReconstructedEvent::EventGroupIterator | ReconEventGroupIterator
+KVSimEvent       | KVSimEvent::Iterator::Type::All   | KVSimEvent::EventIterator      | SimEventIterator
+^                    | KVSimEvent::Iterator::Type::OK    | KVSimEvent::EventOKIterator    | SimEventOKIterator
+^                    | KVSimEvent::Iterator::Type::Group | KVSimEvent::EventGroupIterator | SimEventGroupIterator
+
+\subsubsection rangeIter 2.3.4 Range-based for loops
+
+Just as STL containers can be iterated over using a range-based `for` loop,
+
+~~~~{.cpp}
+std::vector<int> numbers {1,3,6,10};
+for(auto number : numbers)
+{  std::cout << number << std::endl; }
+1
+3
+6
+10
+~~~~
+
+the same facility is also available for event classes, thanks to the iterator classes and wrappers presented above:
+
+~~~~{.cpp}
+KVNucleusEvent event;
+
+for(auto& nuc : event)  { nuc.Print(); }
+~~~~
+
+Note the use of an automatic reference type for `nuc`: this is recommended to avoid copying of underlying nucleus
+objects, which may have unfortunate side-effects in certain cases (KVReconstructedNucleus).
+
+Range-based for loops limited to either "OK" particles or particles in different groups can also be easily
+implemented thanks to the wrappers introduced above:
+
+~~~~{.cpp}
+KVReconstructedEvent recev;
+for(auto& nuc : ReconEventOKIterator(recev))
+{
+  // loop over all "OK" particles
+}
+
+KVSimEvent simev;
+for(auto& nuc : SimEventGroupIterator(simev,"QP"))
+{
+  // loop over particles in "QP" group
+}
+~~~~
+
+\subsubsection baseSTL 2.3.5 STL iterators & range-based for loops with base pointers/references to events
+
+Often, for example in analysis classes, the event to be analysed (=iterated over) is accessed through a pointer or
+reference of base type KVEvent, for example via the KVEventSelector::GetEvent() method. The STL-type iterators which
+allow to perform the range-based for loops presented above are not defined for KVEvent, only in daughter classes
+inheriting from the templated class KVTemplateEvent. In such a case we do not necessarily know in advance what
+is the actual type of the event (and hence of the contained nuclei). However, the wrapper classes presented above
+require only a base pointer or reference (KVEvent* or KVEvent&), and so still can be used:
+
+~~~~{.cpp}
+// assuming we are in a KVEventSelector analysis class: GetEvent() method returns a KVEvent*
+// pointer to the events read from the TTree being analysed
+
+for(auto& nuc : ReconEventOKIterator(GetEvent()))
+{
+  // loop over all "OK" particles
+  std::cout << nuc.GetStoppingDetector()->GetName() << std::endl;
+}
+~~~~
+
+The choice of wrapper to use depends on the type of nucleus reference which is required in the loop,
+which in turn depends on the methods applied to each nucleus in the code: if only those methods which are defined for KVNucleus
+are required,
+an EventIterator wrapper (which returns KVNucleus& references) can be used; if methods specific to KVSimNucleus are
+used, a SimEventIterator wrapper should be used; etc. The following table resumes the different options:
+
+Reference type          | Wrappers                       
+-------------------- | -------------------------------------
+KVNucleus&      | EventIterator
+^                    | EventOKIterator
+^                    | EventGroupIterator
+KVReconstructedNucleus&       | ReconEventIterator
+^                    | ReconEventOKIterator
+^                    | ReconEventGroupIterator
+KVSimNucleus&        | SimEventIterator
+^                    | SimEventOKIterator
+^                    | SimEventGroupIterator
+
+#### Warning about type safety
+
+It should be noted that these iterator wrappers are not 'type-safe': at compile time, there is no way of knowing if the event
+whose pointer or reference is supplied to the wrapper at run time will contain nuclei of the class corresponding to the
+wrapper (note that it is perfectly OK for the nuclei in the event to be of a class which inherits from the wrapper nucleus
+type). Consider the following example:
+
+~~~~{.cpp}
+KVSimEvent simev;
+KVEvent& base_ref = simev;
+for(auto& nuc : ReconEventIterator(base_ref))
+{
+   std::cout << nuc.GetStoppingDetector()->GetName() << std::endl;
+}
+~~~~
+
+The KVSimEvent contains KVSimNucleus nuclei; using the ReconEventIterator wrapper with a base reference to this event,
+we attempt to use a method with these nuclei which is only defined for KVReconstructedNucleus nuclei. This would have
+disastrous consequences (segmentation violation). To avoid this, a warning will
+be printed if the wrapper does not correspond to the type of nuclei in the event, and no iteration will be performed: in the previous case, this will give:
+
+~~~~{.cpp}
+Warning in <KVTemplateEvent::Iterator>: KVTemplateEvent<KVReconstructedNucleus>::Iterator for KVReconstructedNucleus nuclei requested for event containing KVSimNucleus nuclei. Iteration is aborted.
+~~~~
+
+\subsection kinFrames 2.4 Defining and using different kinematical reference frames for events
+
+\subsubsection kinFrame1 2.4.1 Defining and accessing different reference frames
 
 You can define and use several
 different reference frames for the particles in an event. Each
@@ -383,7 +584,7 @@ event->GetParticle(i)->GetFrame("rotated_moving_frame")->GetTransverseEnergy();
 Note that the frame `"rotated_moving_frame"` is directly accessible even if it is defined in two
 steps as a rotation of the `"moving_frame"`.
 
-\subsubsection defFrame 2.3.2 Changing the default reference frame of an event
+\subsubsection defFrame 2.4.2 Changing the default reference frame of an event
 
 Let us consider an event for which the different reference frames in the previous paragraph have been defined.
 Calling method KVEvent::Print() will show all reference frames defined for each particle:
