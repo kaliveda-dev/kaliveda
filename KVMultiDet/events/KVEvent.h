@@ -127,6 +127,7 @@ public:
       //
       // \note Any value given for opt is case-insensitive
 
+      (void)opt;
       return fParticles->GetEntriesFast();
    }
    virtual KVNucleus* GetNextParticle(Option_t* = "") const = 0;

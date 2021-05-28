@@ -22,14 +22,6 @@
 #pragma link C++ class KVRungeKutta+;
 #pragma link C++ class KVTemplateEvent<KVSimNucleus>+;
 #pragma link C++ class KVSimEvent-;
-#pragma link C++ class KVTemplateEvent<KVSimNuc>::Iterator+;
-#pragma link C++ class KVTemplateEvent<KVSimNuc>::EventIterator+;
-#pragma link C++ class KVTemplateEvent<KVSimNuc>::EventOKIterator+;
-#pragma link C++ class KVTemplateEvent<KVSimNuc>::EventGroupIterator+;
-#pragma link C++ class KVSimEvent::Iterator+;
-#pragma link C++ class KVSimEvent::EventIterator+;
-#pragma link C++ class KVSimEvent::EventOKIterator+;
-#pragma link C++ class KVSimEvent::EventGroupIterator+;
 #pragma link C++ class SimEventIterator+;
 #pragma link C++ class SimEventGroupIterator+;
 #pragma link C++ class SimEventOKIterator+;

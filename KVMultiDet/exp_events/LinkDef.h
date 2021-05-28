@@ -30,10 +30,6 @@
 #pragma link C++ class KVTemplateEvent<KVReconstructedNucleus>::EventOKIterator+;
 #pragma link C++ class KVTemplateEvent<KVReconstructedNucleus>::EventGroupIterator+;
 #pragma link C++ class KVReconstructedEvent-;//customised streamer
-#pragma link C++ class KVReconstructedEvent::Iterator+;
-#pragma link C++ class KVReconstructedEvent::EventIterator+;
-#pragma link C++ class KVReconstructedEvent::EventOKIterator+;
-#pragma link C++ class KVReconstructedEvent::EventGroupIterator+;
 #pragma link C++ class ReconEventIterator+;
 #pragma link C++ class ReconEventGroupIterator+;
 #pragma link C++ class ReconEventOKIterator+;
