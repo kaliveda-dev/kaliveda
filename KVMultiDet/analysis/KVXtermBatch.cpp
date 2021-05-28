@@ -1,5 +1,6 @@
 #include "KVDataSetAnalyser.h"
 #include "KVXtermBatch.h"
+#include <cassert>
 
 void KVXtermBatch::Run()
 {
