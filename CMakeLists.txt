@@ -1,5 +1,5 @@
 #--- Top-level CMake file for KaliVeda
-cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR
@@ -43,6 +43,18 @@ else()
 endif()
 
 include(SetUpROOTBuild)
+
+#--determine what C++ standard is used by the compiler
+include(GetCompilerStandard)
+GET_COMPILER_STANDARD(CURRENT_CXX_COMPILER_STANDARD)
+
+#--if C++11 support is not enabled (i.e. current standard is < C++11)
+#--we require it here (this can only happen with ROOT5)
+if(CURRENT_CXX_COMPILER_STANDARD LESS CXX_STANDARD_11)
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED yes)
+    message(STATUS "KaliVeda: C++11 support is required and has been enabled")
+endif()
 
 #--check for BOOST - minimum version corresponds progress_display
 set(WITH_BOOST)
@@ -193,20 +205,6 @@ if(NOT PROTOBUF_FOUND)
 
 endif(NOT PROTOBUF_FOUND)
 if(PROTOBUF_FOUND)
-    # protobuf requires C++11 or higher
-    # check if -std=c++11/4/7 flag already in cxx flags
-    string(FIND ${CMAKE_CXX_FLAGS} "-std=c++11" CPP11_FLAGS)
-    string(FIND ${CMAKE_CXX_FLAGS} "-std=c++14" CPP14_FLAGS)
-    string(FIND ${CMAKE_CXX_FLAGS} "-std=c++17" CPP17_FLAGS)
-    if((CPP11_FLAGS GREATER 0) OR (CPP14_FLAGS GREATER 0) OR (CPP17_FLAGS GREATER 0))
-        # nothing to do, one of flags is already present
-    else()
-       include(CheckCXXCompilerFlag)
-       CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-       if(COMPILER_SUPPORTS_CXX11)
-           set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-       endif()
-    endif()
     set(WITH_PROTOBUF yes)
     include_directories(${PROTOBUF_INCLUDE_DIRS})
     if(${ROOT_VERSION} VERSION_LESS 6)
@@ -289,7 +287,7 @@ endif()
 # no more support for BackTrack from 6.18
 if(ROOT_VERSION VERSION_LESS 6.18.00)
    #--- BackTrack package for model parameter optimisation
-   option(USE_BACKTRACK "Build BackTrack backtracing statistical analysis package" OFF)
+   option(USE_BACKTRACK "Build BackTrack backtracing statistical analysis package" ON)
    if(USE_BACKTRACK)
 	   #---check if roofit is available
 	   if(NOT ROOT_roofit_FOUND)
@@ -304,7 +302,7 @@ else(ROOT_VERSION VERSION_LESS 6.18.00)
 endif(ROOT_VERSION VERSION_LESS 6.18.00)
 
 #--- MicroStat package for calculating event statistical weights
-option(USE_MICROSTAT "Build MicroStat package for event generation using statistical weights" OFF)
+option(USE_MICROSTAT "Build MicroStat package for event generation using statistical weights" ON)
 add_feature_info(microstat USE_MICROSTAT "Build MicroStat package for event generation using statistical weights")
 
 #--- Libraries for INDRA data
