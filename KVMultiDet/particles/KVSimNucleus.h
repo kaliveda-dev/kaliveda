@@ -14,6 +14,17 @@ class TVector3;
 \brief Nucleus in a simulated event
 \ingroup NucEvents
 \ingroup Simulation
+
+This class is used to represent nuclei in events produced by models and simulations.
+In addition to the properties handled by parent class KVNucleus, a KVSimNucleus can also have:
+  - a position in space (methods SetPosition(), GetPosition())
+  - an angular momentum (spin) (methods SetAngMom(), GetAngMom())
+  - a density (SetDensity(), GetDensity())
+
+Methods are also provided for simple calculations of nuclear radii, (spherical) moment of inertia,
+and rotation energy corresponding to the nucleus' angular momentum.
+
+\sa KVNucleus, KVSimEvent, NucEvents
 */
 
 

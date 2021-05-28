@@ -28,7 +28,7 @@ of particles/nuclei, also have in common the following functionality:
 
 Concrete implementations of event classes derive from child class KVTemplateEvent.
 
-\sa KVTemplateEvent
+\sa KVTemplateEvent, NucEvents
 
  */
 class KVEvent: public KVBase {

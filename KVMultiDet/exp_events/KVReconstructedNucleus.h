@@ -14,7 +14,20 @@
 /**
   \class KVReconstructedNucleus
  \brief Nuclei reconstructed from data measured by a detector array
-\ingroup Reconstruction,NucEvents
+\ingroup Reconstruction \ingroup NucEvents
+
+KVReconstructedNucleus is a nucleus reconstructed from hits in the detectors of an array,
+either coming from experimental data or filtered simulations. In addition to the properties handled by
+parent class KVNucleus, a KVReconstructedNucleus provides the following informations:
+  - access to the detector in which the nucleus was stopped (method GetStoppingDetector()). As all nuclei are reconstructed beginning from
+    at least one hit in a detector, all KVReconstructedNucleus objects are associated with at least one detector;
+  - access to the full trajectory (KVReconNucTrajectory) through the detectors of the array used to reconstruct the nucleus
+    (method GetReconstructionTrajectory()). Note that the first detector on the trajectory is the one in which the nucleus stopped,
+    i.e. the one returned by method GetStoppingDetector();
+  - information about the identification and calibration status of the nucleus (see list of methods);
+  - detailed information about all attempts made to identify this nucleus (methods GetIdentificationResult());
+  - the name of the array in which the nucleus was detected (methods GetArrayName(), InArray()): useful when data come from a combination of different arrays!
+
 */
 class KVReconstructedNucleus: public KVNucleus {
 
@@ -71,12 +84,10 @@ public:
 
    const KVSeqCollection* GetDetectorList() const
    {
-      // Return pointer to list of detectors through which particle passed,
-      // in reverse order (i.e. first detector in list is the one in which particle stopped).
-      // This is the particle's reconstruction trajectory
+      // Obsolete method. Use GetReconstructionTrajectory() to acces the list of detectors hit by the nucleus.
 
       if (fReconTraj) {
-         Obsolete("GetDetectorList", "1.10", "1.11");
+         Obsolete("GetDetectorList", "1.10", "1.12");
          return nullptr;
       }
       // backwards compatibility for old data
@@ -96,7 +107,9 @@ public:
    KVDetector* GetDetector(int i) const
    {
       //Returns the detectors hit by the particle.
+      //
       //If i=0, this is the detector in which the particle stopped.
+      //
       //For i>0 one obtains the names of the detectors through which the particle
       //must have passed before stopping, in inverse order (i.e. i=0 is the last
       //detector, as i increases we get the detectors closer to the target).

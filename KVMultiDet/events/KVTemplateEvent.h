@@ -46,6 +46,11 @@ class KVIntegerList;
  \class KVTemplateEvent
  \brief Base class for event classes as containers of different types of nucleus objects
  \ingroup NucEvents
+ \tparam Nucleus Class used to describe nuclei belonging to the event
+ \sa NucEvents, KVNucleusEvent, KVSimEvent, KVReconstructedEvent
+
+ Each event class can only contain nuclei represented by the same class: events are therefore containers in the same
+ sense as STL containers such as std::vector.
  */
 template <typename Nucleus>
 class KVTemplateEvent: public KVEvent {
@@ -53,8 +58,24 @@ class KVTemplateEvent: public KVEvent {
 public:
    /**
     \class Iterator
-    \brief Class for iterating over nuclei in events
+    \brief Class used for iterating over nuclei in events
     \ingroup NucEvents
+    \tparam Nucleus Class used to describe nuclei belonging to the event
+
+    The Iterator class is an STL-compliant iterator which can be used to perform loops over nuclei in an event.
+    Iterators of different types can be used for different kinds of iteration:
+
+    ~~~~{.cpp}
+    KVEvent* event; // base pointer to an object of some concrete implementation of an event class
+
+    Iterator it(event);  // default: Type::All, iterate over all nuclei
+
+    Iterator it2(event, Type::OK);  // iterate over nuclei whose method KVNucleus::IsOK() returns kTRUE
+
+    Iterator it3(event, Type::Group, "GroupName");  // iterate over nuclei belonging to previously-defined group "GroupName"
+    ~~~~
+
+    \sa KVTemplateEvent, NucEvents
     */
    class Iterator {
    public:
@@ -991,10 +1012,14 @@ typedef KVTemplateEvent<KVNucleus> KVNucleusEvent;
 
 /**
   \class KVNucleusEvent
-  \brief A container for KVNucleus objects
+  \brief An event container for KVNucleus objects
     \ingroup NucEvents
 
   This is a typedef for KVTemplateEvent<KVNucleus>.
+
+  This is the most basic kind of event, made up of KVNucleus nuclei.
+
+  \sa KVTemplateEvent, KVEvent, NucEvents
  */
 
 typedef KVTemplateEvent<KVNucleus>::EventIterator EventIterator;

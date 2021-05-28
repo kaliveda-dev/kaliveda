@@ -1,6 +1,8 @@
 \defgroup NucEvents Nuclei & Events
 \brief Classes describing atomic nuclei properties, kinematics, and multi-particle events
 
+The list of all classes is at the bottom of the page!
+
 ### Contents
 
   - \ref events
@@ -396,7 +398,7 @@ for(auto it = KVReconstructedEvent::Iterator(recev, KVReconstructedEvent::Iterat
 In order to simplify the use of such iterators, we provide wrapper classes for an easier interface
 
 ~~~~{.cpp}
-for(auto it = KVReconstructedEvent::EventOKIterator(event).begin(); it!=recev.end(); ++it)
+for(auto it = KVReconstructedEvent::EventOKIterator(recev).begin(); it!=recev.end(); ++it)
 {
   // loop over all "OK" particles
 }
@@ -405,7 +407,7 @@ for(auto it = KVReconstructedEvent::EventOKIterator(event).begin(); it!=recev.en
 and to further simplify the code, we provide aliases for these wrappers:
 
 ~~~~{.cpp}
-for(auto it = ReconEventOKIterator(event).begin(); it!=recev.end(); ++it)
+for(auto it = ReconEventOKIterator(recev).begin(); it!=recev.end(); ++it)
 {
   // loop over all "OK" particles
 }

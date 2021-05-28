@@ -30,7 +30,13 @@ class TList;
   \class KVReconstructedEvent
   \ingroup Reconstruction
   \ingroup NucEvents
-  \brief Physical event reconstructed from data measured with a detector array using implemented identification and calibration procedures.
+  \brief Event containing KVReconstructedNucleus nuclei reconstructed from hits in detectors
+
+  A KVReconstructedEvent is the result of applying reconstruction procedures to data from either experiments
+  or filtered simulations in order to deduce the KVReconstructedNucleus nuclei produced in a reaction and
+  detected by an array.
+
+  \sa KVReconstructedNucleus, NucEvents
 */
 
 class KVReconstructedEvent: public KVTemplateEvent<KVReconstructedNucleus> {
@@ -96,7 +102,7 @@ typedef KVReconstructedEvent::EventOKIterator ReconEventOKIterator;
   \ingroup NucEvents
   \ingroup Reconstruction
 
-    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper
     which allows to use iterators with reconstructed events passed as base references or pointers.
     The iterator returns references to KVReconstructedNucleus objects:
 
@@ -112,7 +118,7 @@ typedef KVReconstructedEvent::EventOKIterator ReconEventOKIterator;
   \ingroup NucEvents
   \ingroup Reconstruction
 
-    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper
     which allows to use iterators with reconstructed events passed as base references or pointers.
     The iterator returns references to KVReconstructedNucleus objects:
 
@@ -124,11 +130,11 @@ typedef KVReconstructedEvent::EventOKIterator ReconEventOKIterator;
   */
 /**
   \class ReconEventGroupIterator
-  \brief Wrapper class for iterating over nuclei in KVReconstructedEvent accessed through base pointer or reference
+  \brief Wrapper class for iterating over groups of nuclei in KVReconstructedEvent accessed through base pointer or reference
   \ingroup NucEvents
   \ingroup Reconstruction
 
-    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper for
+    Iterators are not defined for the abstract base class KVEvent. This class is a wrapper
     which allows to use iterators with reconstructed events passed as base references or pointers.
     The iterator returns references to KVReconstructedNucleus objects:
 

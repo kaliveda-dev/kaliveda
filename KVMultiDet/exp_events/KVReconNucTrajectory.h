@@ -25,6 +25,10 @@ KVReconNucTrajectory* rnt = rnuc_p->GetReconstructionTrajectory();
 
   For looping over all detectors on the trajectory, see KVGeoDNTrajectory class reference
   (section Iterate Over Trajectory).
+
+  Note that, as for parent trajectory class KVGeoDNTractory, by default all reconstruction trajectories begin
+  from the detector in which a nucleus stopped, and iteration over them moves towards the target (i.e. backwards in
+  time regarding the flight of the nucleus into the detectors).
  */
 class KVReconNucTrajectory : public KVGeoDNTrajectory {
 
