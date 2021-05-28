@@ -31,10 +31,10 @@ $ kaliveda
 *                                                         *
 *         W E L C O M E     to     K A L I V E D A        *
 *                                                         *
-* Version: 1.10/15                      Built: 2018-01-27 *
-* git: release-1.10.15@release-1.10.15                    *
+* Version: 1.12/04                      Built: 2021-05-28 *
+* git: heads/dev@release-1.12.03-78-g19052575             *
 *                                                         *
-*               For help, read the doc on :               *
+*               For help, see the website :               *
 *             http://indra.in2p3.fr/kaliveda              *
 *                                                         *
 *                          ENJOY !!!                      *
@@ -45,18 +45,20 @@ kaliveda [1] KVSimNucleus Targ("64Ni");
 
 kaliveda [2] KVSimNucleus CN = Proj + Targ;     // compound nucleus from fusion reaction
 
-kaliveda [3] CN.Print()
+kaliveda [3] CN.Print()  // show properties of compound
+
 KVNucleus Z=58 A=130 E*=429.83
 KVParticle mass=121445 Theta=0 Phi=0 KE=503.595
 
 kaliveda [4] KVLifeTime* life = CN.GetLifeTimePtr();  // info on ground-state lifetime of CN
 kaliveda [5] life->Print()
+
 KVLifeTime :  1374 s
 
 kaliveda [6] KVMaterial degrader("Aluminium", 10.*KVUnits::um); // aluminium foil 10 microns thick
-Info in <KVedaLoss::init_materials>: Initialising KVedaLoss...
 
 kaliveda [7] degrader.Print()
+
 KVMaterial: Aluminium (Aluminium)
  Thickness 0.001 cm
  Area density 0.0026989 g/cm**2
@@ -73,56 +75,9 @@ kaliveda [9] KVGemini G;     // interface to Gemini++ statistical decay code
 kaliveda [10] KVSimEvent E;         // event = container to hold particles/nuclei
 
 kaliveda [11] G.DecaySingleNucleus(CN,&E);       // do Gemini decay of compound
-kaliveda [12] E.Print()
 
-KVEvent with 24 particles :
-------------------------------------
-KVNucleus Z=1 A=2 E*=2.27374e-13
-KVParticle mass=1876.12 Theta=74.1129 Phi=163.956 KE=17.6305
-KVNucleus Z=2 A=4 E*=4.54747e-13
-KVParticle mass=3728.4 Theta=34.6003 Phi=192.385 KE=54.6151
-KVNucleus Z=1 A=1 E*=0
-KVParticle mass=938.783 Theta=100.769 Phi=75.9263 KE=15.42
-KVNucleus Z=0 A=1 E*=0
-KVParticle mass=939.565 Theta=54.2761 Phi=208.037 KE=2.62572
-KVNucleus Z=1 A=2 E*=0
-KVParticle mass=1876.12 Theta=65.0278 Phi=195.867 KE=32.4179
-KVNucleus Z=2 A=4 E*=4.54747e-13
-KVParticle mass=3728.4 Theta=11.381 Phi=203.801 KE=77.7559
-KVNucleus Z=1 A=1 E*=0
-KVParticle mass=938.783 Theta=38.3422 Phi=75.0213 KE=37.7378
-KVNucleus Z=0 A=1 E*=1.13687e-13
-KVParticle mass=939.565 Theta=31.9192 Phi=306.447 KE=12.8464
-KVNucleus Z=2 A=4 E*=0
-KVParticle mass=3728.4 Theta=39.5815 Phi=252.673 KE=26.2452
-KVNucleus Z=0 A=1 E*=0
-KVParticle mass=939.565 Theta=87.0128 Phi=308.048 KE=7.87463
-KVNucleus Z=0 A=1 E*=0
-KVParticle mass=939.565 Theta=68.3761 Phi=142.603 KE=2.71129
-KVNucleus Z=0 A=1 E*=0
-KVParticle mass=939.565 Theta=31.7806 Phi=24.7525 KE=5.56436
-KVNucleus Z=0 A=1 E*=0
-KVParticle mass=939.565 Theta=91.1919 Phi=274.11 KE=3.88649
-KVNucleus Z=0 A=1 E*=0
-KVParticle mass=939.565 Theta=41.2121 Phi=151.415 KE=9.73267
-KVNucleus Z=0 A=1 E*=0
-KVParticle mass=939.565 Theta=35.0477 Phi=3.32441 KE=23.1505
-KVNucleus Z=0 A=1 E*=0
-KVParticle mass=939.565 Theta=43.3099 Phi=96.9527 KE=5.30944
-KVNucleus Z=1 A=1 E*=1.13687e-13
-KVParticle mass=938.783 Theta=68.8613 Phi=96.8121 KE=11.8566
-KVNucleus Z=1 A=1 E*=0
-KVParticle mass=938.783 Theta=47.5611 Phi=348.233 KE=18.2544
-KVNucleus Z=0 A=1 E*=0
-KVParticle mass=939.565 Theta=36.9956 Phi=59.144 KE=9.9018
-KVNucleus Z=1 A=1 E*=0
-KVParticle mass=938.783 Theta=81.3116 Phi=72.7043 KE=12.926
-KVNucleus Z=0 A=1 E*=0
-KVParticle mass=939.565 Theta=29.1912 Phi=3.86268 KE=10.7258
-KVNucleus Z=1 A=1 E*=1.13687e-13
-KVParticle mass=938.783 Theta=113.652 Phi=357.498 KE=5.44342
-KVNucleus Z=0 A=1 E*=0
-KVParticle mass=939.565 Theta=23.9712 Phi=69.0088 KE=8.59304
-KVNucleus Z=44 A=96 E*=0
-KVParticle mass=89337.4 Theta=4.07848 Phi=342.44 KE=351.691
+kaliveda [12] for(auto& product : E){ std::cout << "(Z=" << product.GetZ() << "), "; } // iterate over decay products
+
+(Z=1), (Z=0), (Z=0), (Z=1), (Z=2), (Z=1), (Z=1), (Z=0), (Z=0), (Z=0), (Z=0), (Z=1),
+(Z=1), (Z=0), (Z=1), (Z=0), (Z=0), (Z=1), (Z=2), (Z=0), (Z=2), (Z=2), (Z=0), (Z=2), (Z=40)
 </div>
