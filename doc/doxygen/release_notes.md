@@ -4,6 +4,12 @@ Last update: 28th May 2021
 
 ## Version 1.12/04 (current development version)
 
+__Changes 28/5/2021 in__ Build system
+
+The minimum required version for cmake is now 3.5 (version by default in Ubuntu 16.04)
+
+C++11 support is enabled by default for all builds if it was not already enabled by ROOT.
+
 __Changes 28/5/2021 in__ \ref NucEvents : __Templated event classes__
 
 In the standard library, containers are generally used to store values and objects whose type is defined at compile time
