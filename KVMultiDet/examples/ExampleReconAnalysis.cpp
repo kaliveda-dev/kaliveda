@@ -23,12 +23,15 @@ void ExampleReconAnalysis::InitAnalysis(void)
    AddGV("KVMult", "mtot"); // total multiplicity
    // total multiplicity in forward CM hemisphere
    auto gv = AddGV("KVMult", "mtot_av");
+#ifdef USING_ROOT6
    gv->SetSelection({
       "Vcm>0", [](const KVNucleus * n)
       {
          return n->GetVpar() > 0;
-      }}
+      }
+   }
                    );
+#endif
    gv->SetFrame("CM");
 
    /*** DECLARING SOME HISTOGRAMS ***/
@@ -68,8 +71,10 @@ void ExampleReconAnalysis::InitRun(void)
    // set title of TTree with name of analysed system
    GetTree("myTree")->SetTitle(GetCurrentRun()->GetSystemName());
 
+#ifdef USING_ROOT6
    // reject reconstructed events which are not consistent with the DAQ trigger
    SetTriggerConditionsForRun(GetCurrentRun()->GetNumber());
+#endif
 }
 
 //_____________________________________

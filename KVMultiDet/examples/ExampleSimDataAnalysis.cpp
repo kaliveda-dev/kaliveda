@@ -16,11 +16,13 @@ void ExampleSimDataAnalysis::InitAnalysis()
 
    // DEFINITION OF GLOBAL VARIABLES FOR ANALYSIS
    AddGV("KVMult", "mult");   // total multiplicity of each event
+#ifdef USING_ROOT6
    AddGV("KVMult", "Mcha")->SetSelection({"Z>0", [](const KVNucleus * n)
    {
       return n->GetZ() > 0;
-   }}); // charged particle multiplicity
-
+   }
+                                         }); // charged particle multiplicity
+#endif
    // for sorting events according to multiplicity
    KVEventClassifier* ec = GetGVList()->AddEventClassifier("mult");
    ec->AddCut(5);

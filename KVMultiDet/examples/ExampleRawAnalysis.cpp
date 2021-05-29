@@ -35,11 +35,9 @@ void ExampleRawAnalysis::InitAnalysis()
    t->Branch("Value", &DetSigVal);
 
    /*** DEFINE WHERE TO SAVE THE RESULTS ***/
-   // When running in batch mode, we use the job name for the output file
-   if (gDataAnalyser->GetBatchSystem())
-      SetCombinedOutputFile(Form("%s.root", gDataAnalyser->GetBatchSystem()->GetJobName()));
-   else
-      SetCombinedOutputFile(Form("ExampleRawAnalysis_results.root"));
+   // This filename will be used for interactive and PROOFlite jobs.
+   // When running in batch mode, this will automatically use the job name.
+   SetJobOutputFileName("ExampleRawAnalysis_results.root");
 }
 
 //____________________________________________________________________________//
