@@ -19,31 +19,37 @@ void ExampleINDRAAnalysis::InitAnalysis(void)
    /* These will be automatically calculated for each event before
       your Analysis() method will be called                        */
    auto ztot = AddGV("KVZtot", "ztot");                 // total charge
+#ifdef USING_ROOT6
    // complete event selection: total charge
    ztot->SetEventSelection([&](const KVVarGlob * var) {
       return var->GetValue() >= 0.8 * ztot_sys; // ztot_sys will be set in InitRun
    });
-
+#endif
    auto zvtot = AddGV("KVZVtot", "zvtot");              // total Z*vpar
    zvtot->SetMaxNumBranches(1);    // only write "Z" component in TTree
+#ifdef USING_ROOT6
    // complete event selection: total pseudo-momentum
    zvtot->SetEventSelection([&](const KVVarGlob * var) {
       return var->GetValue() >= 0.8 * zvtot_sys
              && var->GetValue() <= 1.1 * zvtot_sys; // zvtot_sys will be set in InitRun
    });
+#endif
    AddGV("KVMult", "mtot");                             // total multiplicity
    AddGV("KVEtransLCP", "et12");                        // total LCP transverse energy
    auto gv = AddGV("KVFlowTensor", "tensor");
    gv->SetOption("weight", "RKE");
    gv->SetFrame("CM");// optional - this is the default frame
+#ifdef USING_ROOT6
    gv->SetSelection({"Z>4", [](const KVNucleus * n)
    {
       return n->GetZ() > 4;
-   }});   // relativistic CM KE tensor for fragments
+   }
+                    });   // relativistic CM KE tensor for fragments
    // Define ellipsoid frame (wrt axes of flow tensor ellipsoid)
    gv->SetNewFrameDefinition([](KVEvent * e, const KVVarGlob * vg) {
       e->SetFrame("EL", "CM", ((KVFlowTensor*)vg)->GetFlowReacPlaneRotation());
    });
+#endif
 
    /*** DECLARING SOME HISTOGRAMS ***/
    AddHisto(new TH1F("zdist", "Charge distribution", 100, -.5, 99.5));
