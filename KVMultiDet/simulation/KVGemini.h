@@ -42,8 +42,8 @@ public:
    KVGemini();
    virtual ~KVGemini();
 
-   void DecaySingleNucleus(KVSimNucleus&, KVSimEvent*, bool);
-   void DecayEvent(const KVSimEvent*, KVSimEvent*, bool);
+   void DecaySingleNucleus(KVSimNucleus&, KVSimEvent*, bool = true);
+   void DecayEvent(const KVSimEvent*, KVSimEvent*, bool = true);
    void FillTreeWithEvents(KVSimNucleus&, bool, Int_t, TTree*, TString branchname = "");
    void FillTreeWithArrays(KVSimNucleus&, bool, Int_t, TTree*, TString mode = "EThetaPhi");
 
