@@ -4,11 +4,13 @@ Last update: 28th May 2021
 
 ## Version 1.12/04 (current development version)
 
-__Changes 28/5/2021 in__ Build system
+__Changes 28/5/2021 in Build system__
 
 The minimum required version for cmake is now 3.5 (version by default in Ubuntu 16.04)
 
-C++11 support is enabled by default for all builds if it was not already enabled by ROOT.
+C++11 support is enabled by default for all builds if it was not already enabled by ROOT. Note that although this now means that even when using ROOT5
+auto variables, range-based for loops and lambda functions can be used, as C++11 support in the ROOT5 dictionary generator and interpreter is
+very limited (or non-existent) many new features of KaliVeda reliant on C++11 are still only enabled when building with ROOT6.
 
 __Changes 28/5/2021 in__ \ref NucEvents : __Templated event classes__
 
@@ -42,8 +44,10 @@ event classes the iterators returned base class references `KVNucleus&`.
 This has now been resolved by realising that the event classes are in fact STL-style containers for particle/nucleus types:
 a KVReconstructedEvent contains KVReconstructedNucleus objects, a KVSimEvent contains KVSimNucleus objects. Regarding the original
 KVEvent base class for all events, it is now an abstract base class and KVEvent objects cannot be instantiated. An event of
-KVNucleus objects is now called KVNucleusEvent - this could be a major code-breaker but was necessary to ensure backwards
+KVNucleus objects is now called KVNucleusEvent - __this could be a major code-breaker__ but was necessary to ensure backwards
 compatibility (still able to read existing data).
+
+See \ref NucEvents for a full explanation of how to use the new event classes and iterators.
 
 __Changes 3/5/2021 in__ \ref Analysis \ref Infrastructure : __New multicore "batch" system__
 
