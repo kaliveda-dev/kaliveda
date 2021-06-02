@@ -620,6 +620,13 @@ const Char_t* KVBase::GetKVBuildDate()
    return tmp.Data();
 }
 
+const Char_t* KVBase::GetKVBuildTime()
+{
+   //Returns KaliVeda build time
+   static TString tmp(KV_BUILD_TIME);
+   return tmp.Data();
+}
+
 //__________________________________________________________________________________________________________________
 
 const Char_t* KVBase::GetKVBuildType()
@@ -1169,34 +1176,18 @@ void KVBase::PrintSplashScreen()
 {
    // Prints welcome message and infos on version etc.
 
-   cout << "***********************************************************" <<
-        endl;
-   cout << "*                    HI COQUINE !!!                       *" <<
-        endl;
-   cout << "*                                                         *" <<
-        endl;
-   cout << "*         W E L C O M E     to     K A L I V E D A        *" <<
-        endl;
-   cout << "*                                                         *" <<
-        endl;
-   printf("* Version: %-10s                   Built: %-10s *\n", KVBase::GetKVVersion(), KVBase::GetKVBuildDate());
+   cout << "/----------------------------------------------------------------------\\" << endl;
+   cout << "| Welcome to KaliVeda " << GetKVVersion() << "             github:kaliveda-dev/kaliveda |" << endl;
+   cout << "| (c) 2002-2021, The KaliVeda development team                         |" << endl;
+   cout << "|                                                                      |" << endl;
+   cout << "| Built with ROOT " << KV_ROOT_VERSION << " on " << KVBase::GetKVBuildDate() << ", " << KVBase::GetKVBuildTime() << "                      |" << endl;
 #ifdef WITH_GIT_INFOS
    TString gitinfo;
    gitinfo.Form("%s@%s", gitBranch(), gitCommit());
-   printf("* git: %-50s *\n", gitinfo.Data());
+   printf("| From %-50s              |\n", gitinfo.Data());
 #endif
-   cout << "*                                                         *" <<
-        endl;
-   cout << "*               For help, see the website :               *" <<
-        endl;
-   cout << "*             http://indra.in2p3.fr/kaliveda              *" <<
-        endl;
-   cout << "*                                                         *" <<
-        endl;
-   cout << "*                          ENJOY !!!                      *" <<
-        endl;
-   cout << "***********************************************************" <<
-        endl << endl;
+   cout << "| See http://indra.in2p3.fr/kaliveda for help                          |" << endl;
+   cout << "\\----------------------------------------------------------------------/" << endl << endl;
 }
 
 const Char_t* KVBase::GetDataSetEnv(const Char_t* dataset, const Char_t* type, const Char_t* defval)
