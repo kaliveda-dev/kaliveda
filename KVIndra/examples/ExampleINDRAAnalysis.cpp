@@ -86,9 +86,10 @@ void ExampleINDRAAnalysis::InitRun(void)
    // set title of TTree with name of analysed system
    GetTree("myTree")->SetTitle(GetCurrentRun()->GetSystemName());
 
+#ifdef USING_ROOT6
    // Reject events with less identified particles than the acquisition multiplicity trigger
    SetTriggerConditionsForRun(GetCurrentRun()->GetNumber());
-
+#endif
    // retrieve system parameters for complete event selection
    const KV2Body* kin = gDataAnalyser->GetKinematics();
    zvtot_sys = kin->GetNucleus(1)->GetVpar() * kin->GetNucleus(1)->GetZ();
@@ -101,6 +102,11 @@ Bool_t ExampleINDRAAnalysis::Analysis(void)
    // Analysis method called event by event.
    // The current event can be accessed by a call to method GetEvent().
    // See KVINDRAReconEvent documentation for the available methods.
+
+#ifndef USING_ROOT6
+   // deprecated rejection of events based on DAQ trigger conditions
+   if (!GetEvent()->IsOK()) return kTRUE;
+#endif
 
    GetGVList()->FillBranches(); // update values of all global variable branches
 
