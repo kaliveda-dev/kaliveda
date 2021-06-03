@@ -3,11 +3,6 @@
 
 #include "ipde_fit_parameter.h"
 #include <TH1.h>
-/**
-  \defgroup ImpactParameters The Impact Parameter module
-
-  Tools for estimating impact parameters for experimental data
- */
 namespace KVImpactParameters {
    /** \class KVImpactParameters::algebraic_fitting_function
      \ingroup ImpactParameters
