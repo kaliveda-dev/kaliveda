@@ -125,6 +125,8 @@ public:
 
    TGraph* DivideGraphs(TGraph* G1, TGraph* G2);
    TGraph* ComputeNewGraphFrom(TGraph* g0, TGraph* g1, TString formula);
+   TGraph* ComputeNewGraphFrom(TList* lgr, TString formula);
+
    Double_t* GetLimits(TGraph* G1);
    Double_t* GetLimits(TProfile* G1);
    Double_t* GetLimits(TMultiGraph* mgr);
