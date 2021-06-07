@@ -13,12 +13,11 @@
 #include "TList.h"
 #include "TString.h"
 #include "TClass.h"
-#include "TRandom3.h"
 #include "TGraph.h"
 #include "TROOT.h"
 #include "TMethodCall.h"
 #include "TMath.h"
-
+#include "TRandom.h"
 #include "KVNumberList.h"
 #include "KVList.h"
 
@@ -1778,7 +1777,7 @@ TGraph* KVHistoManipulator::ComputeNewGraphFrom(TGraph* g0, TGraph* g1, const TS
       return nullptr;
    }
 
-   AUTO_NEW_CTOR(TGraph, gfinal)();
+   auto gfinal = new TGraph;
    gfinal->SetName(Form("from_%s_%s", g0->GetName(), g1->GetName()));
    Double_t* x0 = g0->GetX();
    Double_t* y0 = g0->GetY();
@@ -1792,6 +1791,54 @@ TGraph* KVHistoManipulator::ComputeNewGraphFrom(TGraph* g0, TGraph* g1, const TS
          Warning("ComputeNewGraphFrom", "X values are different for the same point %d : %lf %lf", ii, x0[ii], x1[ii]);
       Double_t result = f1.Eval(x0[ii]);
       gfinal->SetPoint(ii, x0[ii], result);
+   }
+
+   return gfinal;
+}
+
+//______________________________________________________________________________________________
+TGraph* KVHistoManipulator::ComputeNewGraphFrom(TList* lgr, TString formula)
+{
+
+   //generalization of the previous method ComputeNewGraphFrom(TGraph* g0, TGraph* g1, TString formula)
+   //
+   //create a new TGraph from the combination of the graph in the list
+   //new errors are not computed
+   //x-values are unchanged
+   //from a given list "lgr", compute expression indicated in the "formula", with the following prescription :
+   //the "i" position of the graph in the list will correspond to the "[i]" parameters of the formula
+   //for each points of the graphs, the formula is computed with the y-values of the graphs and the new y-value is set to the new graph
+   //Examples
+   //if there is 2 graphs in the list, and the formula "[0]+[1]" is set, the method will give a new TGraph with the sum of the y-values of the two TGraphs
+
+   Int_t ngr = lgr->GetEntries();
+   TF1 f1("func_ComputeNewGraphFrom", formula, 0, 1);
+   if (f1.IsZombie()) {
+      Error("ComputeNewGraphFrom", "wrong formula %s, check the expression", formula.Data());
+      return nullptr;
+   }
+   if (f1.GetNpar() != ngr) {
+      Error("ComputeNewGraphFrom", "number of parameters (%d) of formula %s is not the same as the number of graphics (%d) in the list", f1.GetNpar(), formula.Data(), ngr);
+      return nullptr;
+   }
+
+   auto gfinal = new TGraph;
+   gfinal->SetName("new_graph");
+
+   TGraph* gr;
+   Int_t npoints = ((TGraph*)lgr->At(0))->GetN();
+
+   std::vector<Double_t> par(ngr);
+   Double_t xx;
+   for (Int_t ii = 0; ii < npoints; ii++) {
+      for (Int_t jj = 0; jj < ngr; jj += 1) {
+         gr = (TGraph*)lgr->At(jj);
+         gr->GetPoint(ii, xx, par[jj]);
+      }
+      f1.SetParameters(par.data());
+
+      Double_t result = f1.Eval(xx);
+      gfinal->SetPoint(ii, xx, result);
    }
    return gfinal;
 }
