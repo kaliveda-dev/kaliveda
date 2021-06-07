@@ -9,10 +9,11 @@
 
 #include <vector>
 #include <numeric>
-#include <TF1.h>
+#include <TF2.h>
 #include <TH1.h>
 #include <TCanvas.h>
 #include <TGraph.h>
+#include <KVValueRange.h>
 #include "TMath.h"
 #include "TNamed.h"
 
@@ -253,6 +254,16 @@ namespace KVImpactParameters {
          // \param[in] cb the centrality \f$c_b\f$
          return fIntegerVariable ? theKernel(TMath::Nint(X), theFitter.meanX(cb), theFitter.redVar(cb))
                 : theKernel(X, theFitter.meanX(cb), theFitter.redVar(cb));
+      }
+      double P_X_cb_for_TF2_obs_vs_b(double* x, double*)
+      {
+         // \returns conditional probability distribution \f$P(X|b)\f$, X is ordinate, b is abscissa
+         // \param[in] x[0] impact parameter b
+         // \param[in] x[1] value of observable X
+
+         auto X = x[1];
+         auto cb = fIPDist.GetCentrality().Eval(x[0]);
+         return x[0] * theKernel(X, theFitter.meanX(cb), theFitter.redVar(cb));
       }
       double P_X_cb_for_integral(double* x, double* par)
       {
@@ -504,16 +515,13 @@ namespace KVImpactParameters {
          mean_X_vs_cb_function.SetParameters(par);
          return mean_X_vs_cb_function;
       }
-      void DrawMeanXvsb(const TString& title = "", Color_t color = -1, Option_t* opt = "")
+      TGraph* GraphMeanXvsb(int npts = 500)
       {
-         // Draw the dependence of the mean value of the observable with impact parameter, \f$\bar{X}(b)\f$,
+         // Create a graph of the dependence of the mean value of the observable with impact parameter, \f$\bar{X}(b)\f$,
          // given by
          //\f[
          //\bar{X}(b)=\theta k(b)
          //\f]
-         // \param[in] title title to affect to the drawn function
-         // \param[in] color colour to use for drawing function
-         // \param[in] opt drawing option if required, e.g. "same"
          //
          // \note To have absolute impact parameters in [fm], call SetIPDistParams() first with the
          // total measured cross-section \f$\sigma_R\f$ in [mb] and the desired fall-off parameter
@@ -521,11 +529,11 @@ namespace KVImpactParameters {
 
          Double_t par[theFitter.npar()];
          theFitter.fill_array_from_params(par);
-         mean_X_vs_b_function.SetRange(0, GetIPDist().GetB0() + 4 * GetIPDist().GetDeltaB());
+         KVValueRange<double> brange(0, GetIPDist().GetB0() + 4 * GetIPDist().GetDeltaB());
          mean_X_vs_b_function.SetParameters(par);
-         TF1* copy = mean_X_vs_b_function.DrawCopy(opt);
-         if (!title.IsNull()) copy->SetTitle(title);
-         if (color >= 0) copy->SetLineColor(color);
+         auto gr = new TGraph;
+         for (int i = 0; i <= npts; ++i) gr->SetPoint(i, brange.ValueIofN(i, npts), mean_X_vs_b_function.Eval(brange.ValueIofN(i, npts)));
+         return gr;
       }
       void update_fit_params()
       {
@@ -568,7 +576,7 @@ namespace KVImpactParameters {
          f->SetTitle(title);
          return f->GetMaximum();
       }
-      double DrawBDistForXSelection(double X1, double X2, Option_t* opt = "", Color_t color = kRed, const TString& title = "")
+      double DrawBDistForXSelection(KVValueRange<double> Xrange, Option_t* opt = "", Color_t color = kRed, const TString& title = "")
       {
          // Draw impact parameter distribution (as differential cross-section) for observable cuts\f$X_1<X<X_2\f$
          //\f[
@@ -588,7 +596,7 @@ namespace KVImpactParameters {
          // \f$\Delta b\f$ in [fm] (see impact_parameter_distribution).
 
 
-         B_dist_for_X_select.SetParameters(X1, X2);
+         B_dist_for_X_select.SetParameters(Xrange.Min(), Xrange.Max());
          //TF1* f = B_dist_for_X_select.DrawCopy(opt);
          TGraph* f = new TGraph;
          double maxS = 0;
@@ -605,6 +613,32 @@ namespace KVImpactParameters {
          if (TString(opt) == "same") f->Draw("c");
          else f->Draw("ac");
          return maxS;
+      }
+      TGraph* GraphBDistForXSelection(KVValueRange<double> Xrange, int npts = 500)
+      {
+         // Graph impact parameter distribution (as differential cross-section) for observable cuts\f$X_1<X<X_2\f$
+         //\f[
+         //\frac{\mathrm{d}\sigma}{\mathrm{d}b}=\sigma_{\mathrm{tot}}P(b|X_{1}<X<X_{2})=\frac{P(b)}{c_{X_{1}}-c_{X_{2}}}\int_{X_{1}}^{X_{2}}P(X|b)\,\mathrm{d}X
+         //\f]
+         //
+         // \param[in] Xrange range of X for observable cut
+         //
+         // \returns graph of differential cross-section
+         //
+         // \note To have absolute impact parameters in [fm], call SetIPDistParams() first with the
+         // total measured cross-section \f$\sigma_R\f$ in [mb] and the desired fall-off parameter
+         // \f$\Delta b\f$ in [fm] (see impact_parameter_distribution).
+
+
+         B_dist_for_X_select.SetParameters(Xrange.Min(), Xrange.Max());
+         TGraph* f = new TGraph;
+         for (int i = 0; i < npts; ++i) {
+            double b = 2 * i * GetIPDist().GetB0() / 499.;
+            double sig = B_dist_for_X_select.Eval(b);
+            f->SetPoint(i, b, sig);
+         }
+         f->SetLineWidth(2);
+         return f;
       }
       void DrawBDistForSelection(TH1* sel, TH1* incl, double& mean, double& sigma, Option_t* opt = "", Color_t color = kRed, const TString& title = "")
       {
@@ -764,20 +798,17 @@ namespace KVImpactParameters {
          fitted_P_X.SetParameter(0, norm);
          return &fitted_P_X;
       }
-      void DrawP_XForGivenB(double b, Option_t* opt = "", Color_t color = kRed, const TString& title = "")
+      TGraph* GraphP_XForGivenB(double b, KVValueRange<double> Xrange, int npts = 500)
       {
          // Draw conditional probability distribution of observable,\f$P(X|b)\f$, for a single value of \f$b\f$.
          //
          // \param[in] b impact parameter
-         // \param[in] opt drawing option if required, e.g. "same"
-         // \param[in] color colour to use for drawing distribution
-         // \param[in] title title to affect to the drawn distribution
+         // \param[in] Xrange range of values of observable for graph
+         // \param[in] npts number of points used in graph
          p_X_X_integrator.SetParameter(0, fIPDist.GetCentrality().Eval(b));
-         TF1* f = p_X_X_integrator.DrawCopy(opt);
-         f->SetNpx(500);
-         f->SetLineColor(color);
-         f->SetLineWidth(2);
-         f->SetTitle(title);
+         auto graph = new TGraph;
+         for (int i = 0; i < npts; ++i) graph->SetPoint(i, Xrange.ValueIofN(i, npts), p_X_X_integrator.Eval(Xrange.ValueIofN(i, npts)));
+         return graph;
       }
       void Print(Option_t* = "") const
       {
@@ -813,6 +844,16 @@ namespace KVImpactParameters {
          if (!title.IsNull()) copy->SetTitle(title);
          if (color >= 0) copy->SetLineColor(color);
          theFitter.restore_params();
+      }
+
+      TF2* GetJointProbabilityDistribution(KVValueRange<double> b_range, KVValueRange<double> X_range)
+      {
+         // Create and return a 2D function representing the joint probability \f$P(X,b)\f$ with \f$b\f$ on the abscissa
+         // and the observable on the ordinate
+
+         auto jpd = new TF2("joint_proba_dist", this, &bayesian_estimator::P_X_cb_for_TF2_obs_vs_b,
+                            b_range.Min(), b_range.Max(), X_range.Min(), X_range.Max(), 0);
+         return jpd;
       }
 
       ClassDef(bayesian_estimator, 1) //Estimate impact parameter distribution by fits to data

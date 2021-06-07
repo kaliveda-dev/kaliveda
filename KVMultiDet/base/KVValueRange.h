@@ -63,6 +63,11 @@ public:
    }
 
    virtual ~KVValueRange() {}
+   TString GetExpression(const TString& obs_name)
+   {
+      // Return cut expressed as "Xmin \leq X \leq Xmax" with "X" given by obs_name
+      return Form("%g #leq %s #leq %g", Min(), obs_name.Data(), Max());
+   }
 
    ClassDef(KVValueRange, 1) //Range of values specified by minimum, maximum
 };
