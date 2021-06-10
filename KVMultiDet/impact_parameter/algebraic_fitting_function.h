@@ -112,7 +112,7 @@ namespace KVImpactParameters {
       {
          return theta() * k_cb(cb);
       }
-      double redVar(double cb) const
+      double redVar(double) const
       {
          return theta();
       }
