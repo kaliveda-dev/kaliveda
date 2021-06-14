@@ -32,12 +32,63 @@ class KVIonRangeTable;
 class KVNucleus;
 class TGeoMedium;
 class TGeoVolume;
+class TGraph;
 
 /**
   \class KVMaterial
   \ingroup Stopping
-  \brief  Description of physical materials used to construct detectors; interface to range tables
- */
+  \brief  Description of physical materials used to construct detectors & targets; interface to range tables
+
+ KVMaterial is a class for describing the properties of physical materials with which charged nuclear species
+ may interact in the course of heavy-ion reactions.
+ It is the base class for all detector and target classes. It provides an easy-to-use interface to range tables and
+ energy loss calculations for charged particles.
+
+ The list of available material types depends on the underlying range table: this list can be obtained or visualised like so:
+ ~~~~{.cpp}
+ KVMaterial::GetRangeTable()->Print(); // print infos on range table
+
+ KVMaterial::GetRangeTable()->GetListOfMaterials()->ls(); // retrieve pointer to list
+
+ OBJ: TObjArray   TObjArray   An array of objects : 0
+  OBJ: TNamed  Silicon  Si : 0 at: 0x55a63a979390
+  OBJ: TNamed  Mylar Myl : 0 at: 0x55a63d6a95f0
+  OBJ: TNamed  Plastic  NE102 : 0 at: 0x55a63d64ea90
+  OBJ: TNamed  Nickel   Ni : 0 at: 0x55a63d6afb90
+  OBJ: TNamed  Octofluoropropane C3F8 : 0 at: 0x55a63a9f8e00
+ etc. etc.
+ ~~~~
+
+ Materials can be created in a variety of ways, using either the full name or symbolic name from the previous list:
+
+~~~~{.cpp}
+KVMaterial si("Silicon", 300*KVUnits::um); // 300 microns of silicon
+
+KVMaterial gas("C3F8", 5*KVUnits::cm, 30*KVUnits::mbar); // 5cm of C3F8 at 30mbar pressure
+
+KVMaterial ni_target(350*KVUnits::ug, "Ni") // Nickel with area density 350ug/cm**2
+~~~~
+
+Once defined, energy loss calculations can be easily performed:
+
+~~~~{.cpp}
+si.GetDeltaE(2, 4, 50.0); // energy loss of 50MeV alpha particle in 300um of Silicon
+
+ni_target.GetPunchThroughEnergy(6,12); // punch through for 12C ions in 350ug/cm**2 of Nickel
+~~~~
+
+Several methods are also provided in order to deduce either incident energy, \f$E_{inc}\f$, energy loss \f$\Delta E\f$,
+or residual energy, \f$E_{res}=E_{inc}-\Delta E\f$, from one of the others. All such methods are summarized in the following table:
+
+|                     | calculate \f$E_{inc}\f$     | calculate  \f$\Delta E\f$ | calculate \f$E_{res}\f$ |
+|---------------------|-----------------------------|---------------------------|-------------------------|
+| from \f$E_{inc}\f$  |            -                |        GetDeltaE()        |       GetERes()         |
+^                     |                             | GetELostByParticle()      |                         |
+| from \f$\Delta E\f$ | GetIncidentEnergy()         |             -             |   GetEResFromDeltaE()   |
+| from \f$E_{res}\f$  | GetIncidentEnergyFromERes() | GetDeltaEFromERes()       |           -             |
+^                     | GetParticleEIncFromERes()   |                           |                         |
+
+*/
 class KVMaterial: public KVBase {
 
 protected:
@@ -71,7 +122,7 @@ public:
 
    void init();
    virtual ~ KVMaterial();
-   void SetMass(Double_t a);
+   void SetMass(Int_t a);
    virtual void SetMaterial(const Char_t* type);
    Double_t GetMass() const;
    Double_t GetZ() const;
@@ -83,17 +134,25 @@ public:
    Double_t GetEffectiveThickness(TVector3& norm, TVector3& direction);
    Double_t GetEffectiveAreaDensity(TVector3& norm, TVector3& direction);
 
-   virtual void DetectParticle(KVNucleus*, TVector3* norm = 0);
-   virtual Double_t GetELostByParticle(KVNucleus*, TVector3* norm = 0);
-   virtual Double_t GetParticleEIncFromERes(KVNucleus*, TVector3* norm = 0);
+   virtual void DetectParticle(KVNucleus*, TVector3* norm = nullptr);
+   virtual Double_t GetELostByParticle(KVNucleus*, TVector3* norm = nullptr);
+   virtual Double_t GetParticleEIncFromERes(KVNucleus*, TVector3* norm = nullptr);
 
    virtual void Print(Option_t* option = "") const;
    virtual Double_t GetEnergyLoss() const
    {
+      // Returns total energy loss [MeV] of charged particles in the absorber, which may be defined either by
+      // a call to SetEnergyLoss(), either by repeated calls to DetectParticle(). In the latter case,
+      // if DetectParticle() is called several times for different charged particles, this method returns the sum of all energy losses
+      // for all charged particles.
+      //
+      // The total energy loss is set to zero by calling method Clear().
       return fELoss;
    }
    virtual void SetEnergyLoss(Double_t e) const
    {
+      // Define the total energy loss [MeV] of charged particles in the absorber
+      // \sa GetEnergyLoss()
       fELoss = e;
    }
 
@@ -104,7 +163,7 @@ public:
 #endif
    virtual void Clear(Option_t* opt = "");
 
-   virtual Double_t GetEmaxValid(Int_t Z, Int_t A);
+   Double_t GetEmaxValid(Int_t Z, Int_t A);
    virtual Double_t GetIncidentEnergy(Int_t Z, Int_t A, Double_t delta_e =
                                          -1.0, enum SolType type = kEmax);
    virtual Double_t GetIncidentEnergyFromERes(Int_t Z, Int_t A, Double_t Eres);
@@ -123,8 +182,8 @@ public:
 
    virtual KVMaterial* GetActiveLayer() const
    {
-      //to facilitate polymorphism with KVDetector class
-      return 0;
+      // \returns nullptr (see overrides in derived classes)
+      return nullptr;
    }
 
    virtual void SetPressure(Double_t);
@@ -141,13 +200,16 @@ public:
    virtual TGeoMedium* GetGeoMedium(const Char_t* /*med_name*/ = "");
    virtual void SetAbsGeoVolume(TGeoVolume* v)
    {
+      // Link this material to a volume in a ROOT geometry
       fAbsorberVolume = v;
    }
    virtual TGeoVolume* GetAbsGeoVolume() const
    {
-      // Returns pointer to volume representing this absorber in the ROOT geometry.
+      // Returns pointer to volume representing this absorber in a ROOT geometry.
       return fAbsorberVolume;
    }
+
+   virtual TGraph* GetGraphOfDeltaEVsE(const KVNucleus& nuc, Int_t npts, Double_t Emin, Double_t Emax);
 
    ClassDef(KVMaterial, 6)// Class describing physical materials used to construct detectors & targets
 };
