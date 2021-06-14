@@ -11,7 +11,8 @@ int main(int argc, char** argv)
       --argc;
    }
    KVBase::InitEnvironment();
-   TRint* myapp = new TRint("kvtreeanalyzer", &argc, argv, NULL, 0);
+   TRint* myapp = new TRint("kvtreeanalyzer", &argc, argv, NULL, 0, kTRUE);
+   KVBase::PrintSplashScreen();
    KVTreeAnalyzer* kvt = new KVTreeAnalyzer(kFALSE);
    if (fname != "" && fname.EndsWith(".root")) {
       kvt->OpenAnyFile(argv[1]);
