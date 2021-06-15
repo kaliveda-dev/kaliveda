@@ -135,18 +135,19 @@ void KVRangeYanez::CheckMaterialsList() const
 }
 KVIonRangeTableMaterial* KVRangeYanez::AddElementalMaterial(Int_t z, Int_t a) const
 {
-   // Adds a material composed of a single isotope of a chemical element.
+   // Adds a material composed of a single chemical element.
    //
-   // \param[in] z atomic number of element
-   // \param[in] a mass number of element
+   // \param[in] z atomic number \f$Z\f$ of element
+   // \param[in] a [optional] mass number \f$A\f$ of isotope
    //
    // If the mass number of the isotope \f$A\f$ is not specified, we create a material containing the naturally
    // occuring isotopes of the given element, weighted according to natural abundance.
    //
    // If the mass is given, the material symbol will be `"AX"` where `X` is the symbol for the element
-   //     e.g. `"48Ca"`,  `"124Sn"`, etc.
+   //    - e.g. `"48Ca"`,  `"124Sn"`, etc.
+   //
    // and the material name will be `"Xxx-A"` where `Xxx` is the name of the element
-   //     e.g. `"Calcium-48"`, `"Tin-124"`, etc.
+   //    - e.g. `"Calcium-48"`, `"Tin-124"`, etc.
    //
    // Otherwise, we just use the element symbol and name for naturally-occurring
    // mixtures of atomic elements (`"Ca"`, `"Calcium"`, etc.).
@@ -190,7 +191,7 @@ KVIonRangeTableMaterial* KVRangeYanez::AddCompoundMaterial(
    // \param[in] z[nelem] atomic numbers of elements
    // \param[in] a[nelem] mass numbers of elements
    // \param[in] natoms[nelem] number of atoms of each element
-   // \param[in] density in \f$g/cm^{3}\f$, if compound is a solid
+   // \param[in] density in \f$g/cm^{3}\f$, only required if compound is a solid
 
    TString state = "gas";
    if (density > 0) state = "solid";

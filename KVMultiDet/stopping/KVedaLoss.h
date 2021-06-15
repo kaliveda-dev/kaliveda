@@ -15,9 +15,38 @@ class TGeoMaterial;
   \ingroup Stopping
   \brief C++ implementation of VEDALOSS stopping power calculation
 
-See documentation <a href="KVedaLossDoc/KVedaLoss.html">here</a>.
+##Description
+Based on the original Fortran code VEDALOSS written by Roland Dayras (CEA/SPhN Saclay) and
+Enrico de Filippo (INFN LNS Catania), KVedaLoss provides range tables for the stopping of charged ions
+in a large variety of pre-defined solid and gaseous media. It can be used to calculated energy losses,
+residual energies, ranges, and the corresponding inverse calculations.
 
-### Energy limits
+The code interpolates the range tables of Northcliffe and Schilling (NCS) with those of Hubert, Bimbot and Gauvin (HBG)
+in order to calculate ranges based on data valid in the energy range \f$0.1\leq E/A\leq 250\f$ MeV/nucleon.
+For \f$E/A<2.5\f$ MeV/nucleon ranges are taken from NCS (which include the contribution from nuclear stopping),
+while at higher energies ranges are taken from HBG. It should be noted that the ranges of HBG were calculated
+from 2.5 MeV/nucleon upwards taking the NCS range at 2.5 MeV/nucleon as starting point.
+
+## Method
+For each material, the interpolated range for each ion from \f$Z=1\f$ to \f$Z=100\f$ is parametrised as
+\f[
+\log R = \sum_{i=0}^{5}a_{i}\left(\log\epsilon\right)^{i}
+\f]
+where \f$R\f$ is the range [\f$g/cm^{2}\f$] of the ion and \f$\epsilon\f$ its incident energy [MeV/nucleon].
+The six parameters \f$a_{i}\f$ for each atomic number \f$Z\f$ (for a reference isotope mass  number \f$A\f$)
+were found by fitting the range data taken from NS and HBG. Such fits can be realized using the KVedaLossRangeFitter
+class.
+
+See <a href="http://indra.in2p3.fr/kaliveda/KVedaLossDoc/KVedaLoss.html">here</a> for comparisons of the fitted
+ranges with the original values from NCS and HBG.
+
+## Adding new absorber definitions
+KVedaLoss provides methods to add new absorber definitions using interpolations of the NCS and HBG range tables
+provided by KVRangeYanez. See below for methods to add new absorbers composed of single elements, compounds, or mixtures.
+
+For full explanations and examples of how to use this facility, see \ref Stopping
+
+## Energy limits
 Normally all range, \f$dE\f$, \f$E_{res}\f$ functions are limited to range \f$0\leq E\leq E_{max}\f$,
 where \f$E_{max}\f$ is nominal maximum energy for which range tables are valid
 (usually 400MeV/u for \f$Z<3\f$, 250MeV/u for \f$Z>3\f$).

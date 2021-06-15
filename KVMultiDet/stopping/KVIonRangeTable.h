@@ -34,34 +34,69 @@ public:
 
    static KVIonRangeTable* GetRangeTable(const Char_t* name);
 
-   virtual KVIonRangeTableMaterial* AddElementalMaterial(Int_t /*z*/, Int_t /*a*/ = 0) const
+   virtual KVIonRangeTableMaterial* AddElementalMaterial(Int_t z, Int_t a = 0) const
    {
-      // Adds a material composed of a single isotope of a chemical element.
-      // If the isotope (a) is not specified, we create a material containing the naturally
-      // occuring isotopes of the given element, weighted according to their abundance.
+      // Adds a material composed of a single chemical element.
+      //
+      // \param[in] z atomic number of element \f$Z\f$
+      // \param[in] a [optional] mass number of isotope \f$A\f$
+      //
+      // If the isotope \a a is not specified, we create a material containing the naturally
+      // occuring isotopes of the given element, weighted according to their natural abundances.
+      //
       // If the element name is "X", this material will be called "natX", for "naturally-occuring X".
+
+      IGNORE_UNUSED(z);
+      IGNORE_UNUSED(a);
       return nullptr;
    }
    virtual KVIonRangeTableMaterial* AddCompoundMaterial(
-      const Char_t* /*name*/, const Char_t* /* symbol */,
-      Int_t /* nelem */, Int_t* /* z */, Int_t* /* a */, Int_t* /* natoms */, Double_t /* density */ = -1.0) const
+      const Char_t* name, const Char_t* symbol,
+      Int_t nelem, Int_t* z, Int_t* a, Int_t* natoms, Double_t density = -1.0) const
    {
-      // Adds a compound material:
-      //   nelem = number of elements in compound
-      //   z[],a[],natoms[]: arrays with atomic number, mass, and number of atoms of each element
-      //   if compound is a solid, give density in g/cm**3
+      // Adds a compound material with a simple formula composed of different elements
+      //
+      // \param[in] name name for the new compound (no spaces)
+      // \param[in] symbol chemical symbol for compound
+      // \param[in] nelem number of elements in compound
+      // \param[in] z[nelem] atomic numbers of elements
+      // \param[in] a[nelem] mass numbers of elements
+      // \param[in] natoms[nelem] number of atoms of each element
+      // \param[in] density in \f$g/cm^{3}\f$, only required if compound is a solid
+
+      IGNORE_UNUSED(name);
+      IGNORE_UNUSED(symbol);
+      IGNORE_UNUSED(nelem);
+      IGNORE_UNUSED(z);
+      IGNORE_UNUSED(a);
+      IGNORE_UNUSED(natoms);
+      IGNORE_UNUSED(density);
       return nullptr;
    }
    virtual KVIonRangeTableMaterial* AddMixedMaterial(
-      const Char_t* /* name */, const Char_t* /* symbol */,
-      Int_t /* nelem */, Int_t* /* z */, Int_t* /* a */, Int_t* /* natoms */, Double_t* /* proportion */,
-      Double_t /* density */ = -1.0) const
+      const Char_t*  name, const Char_t*  symbol,
+      Int_t  nelem, Int_t*  z, Int_t*  a, Int_t*  natoms, Double_t*  proportion,
+      Double_t  density  = -1.0) const
    {
       // Adds a material which is a mixture of either elements or compounds:
-      //   nelem = number of elements in mixture
-      //   z[],a[],natoms[],proportion[]: arrays with atomic number, mass, number of atoms
-      //            and proportion of each element
-      //   if mixture is a solid, give density in g/cm**3
+      //
+      // \param[in] name name for the new mixture (no spaces)
+      // \param[in] symbol chemical symbol for mixture
+      // \param[in] nelem number of elements in mixture
+      // \param[in] z[nelem] atomic numbers of elements
+      // \param[in] a[nelem] mass numbers of elements
+      // \param[in] natoms[nelem] number of atoms of each element
+      // \param[in] proportion[nelem] proportion by mass in mixture of element
+      // \param[in] density in \f$g/cm^{3}\f$, if mixture is a solid
+
+      IGNORE_UNUSED(name);
+      IGNORE_UNUSED(symbol);
+      IGNORE_UNUSED(nelem);
+      IGNORE_UNUSED(z);
+      IGNORE_UNUSED(a);
+      IGNORE_UNUSED(natoms);
+      IGNORE_UNUSED(proportion);
+      IGNORE_UNUSED(density);
       return nullptr;
    }
 

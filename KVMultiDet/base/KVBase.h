@@ -12,6 +12,7 @@ $Id: KVBase.h,v 1.42 2009/03/12 13:59:40 franklan Exp $
 #define KVBASE_H
 
 #include "KVConfig.h"
+#include "KVMacros.h"
 #include "TRandom3.h"
 #include "TNamed.h"
 #include "RVersion.h"

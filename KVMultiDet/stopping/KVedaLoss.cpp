@@ -143,9 +143,15 @@ Bool_t KVedaLoss::ReadMaterials(const Char_t* DataFilePath) const
 
 KVIonRangeTableMaterial* KVedaLoss::AddElementalMaterial(Int_t Z, Int_t A) const
 {
-   // Use the RANGE tables to generate a new material of a given element.
-   // If A is given only one isotope will be used, by default the natural abundance
-   // of each isotope is used to generate a mixture
+   // Use the RANGE tables (see KVRangeYanez) to generate a new material composed of a single chemical element.
+   //
+   // \param[in] Z atomic number of element \f$Z\f$
+   // \param[in] A [optional] mass number of isotope \f$A\f$
+   //
+   // If the isotope \a A is not specified, we create a material containing the naturally
+   // occuring isotopes of the given element, weighted according to their natural abundances.
+   //
+   // If the element name is "X", this material will be called "natX", for "naturally-occuring X".
 
    unique_ptr<KVIonRangeTable> yanez(KVIonRangeTable::GetRangeTable("RANGE"));
    KVIonRangeTableMaterial* mat = yanez->AddElementalMaterial(Z, A);
@@ -167,7 +173,15 @@ Bool_t KVedaLoss::AddRANGEMaterial(const Char_t* name) const
 
 KVIonRangeTableMaterial* KVedaLoss::AddCompoundMaterial(const Char_t* name, const Char_t* symbol, Int_t nel, Int_t* Z, Int_t* A, Int_t* nat, Double_t dens) const
 {
-   // Use the RANGE tables to generate a new compound material
+   // Use the RANGE tables (see KVRangeYanez) to add a compound material with a simple formula composed of different elements
+   //
+   // \param[in] name name for the new compound (no spaces)
+   // \param[in] symbol chemical symbol for compound
+   // \param[in] nelem number of elements in compound
+   // \param[in] z[nelem] atomic numbers of elements
+   // \param[in] a[nelem] mass numbers of elements
+   // \param[in] natoms[nelem] number of atoms of each element
+   // \param[in] density in \f$g/cm^{3}\f$, only required if compound is a solid
 
    unique_ptr<KVIonRangeTable> yanez(KVIonRangeTable::GetRangeTable("RANGE"));
    KVIonRangeTableMaterial* mat = yanez->AddCompoundMaterial(name, symbol, nel, Z, A, nat, dens);
@@ -177,7 +191,16 @@ KVIonRangeTableMaterial* KVedaLoss::AddCompoundMaterial(const Char_t* name, cons
 
 KVIonRangeTableMaterial* KVedaLoss::AddMixedMaterial(const Char_t* name, const Char_t* symbol, Int_t nel, Int_t* Z, Int_t* A, Int_t* nat, Double_t* prop, Double_t dens) const
 {
-   // Use the RANGE tables to generate a new mixed material
+   // Use the RANGE tables (see KVRangeYanez) to add a material which is a mixture of either elements or compounds:
+   //
+   // \param[in] name name for the new mixture (no spaces)
+   // \param[in] symbol chemical symbol for mixture
+   // \param[in] nel number of elements in mixture
+   // \param[in] z[nel] atomic numbers of elements
+   // \param[in] a[nel] mass numbers of elements
+   // \param[in] nat[nel] number of atoms of each element
+   // \param[in] prop[nel] proportion by mass in mixture of element
+   // \param[in] density in \f$g/cm^{3}\f$, if mixture is a solid
 
    unique_ptr<KVIonRangeTable> yanez(KVIonRangeTable::GetRangeTable("RANGE"));
    KVIonRangeTableMaterial* mat = yanez->AddMixedMaterial(name, symbol, nel, Z, A, nat, prop, dens);

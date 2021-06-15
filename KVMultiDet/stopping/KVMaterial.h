@@ -88,6 +88,7 @@ or residual energy, \f$E_{res}=E_{inc}-\Delta E\f$, from one of the others. All 
 | from \f$E_{res}\f$  | GetIncidentEnergyFromERes() | GetDeltaEFromERes()       |           -             |
 ^                     | GetParticleEIncFromERes()   |                           |                         |
 
+For more details on the underlying range tables, see \ref Stopping
 */
 class KVMaterial: public KVBase {
 
