@@ -54,6 +54,9 @@ if(CURRENT_CXX_COMPILER_STANDARD LESS CXX_STANDARD_11)
     set(CMAKE_CXX_STANDARD 11)
     set(CMAKE_CXX_STANDARD_REQUIRED yes)
     message(STATUS "KaliVeda: C++11 support is required and has been enabled")
+    set(KALIVEDA_NEEDS_CXX11 TRUE)
+else()
+    set(KALIVEDA_NEEDS_CXX11 FALSE)
 endif()
 
 #--check for BOOST - minimum version corresponds progress_display

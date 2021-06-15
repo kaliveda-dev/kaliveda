@@ -27,6 +27,9 @@ foreach(lib ${KALIVEDA_LIBRARIES})
    set(KaliVeda_${lib}_FOUND yes)
 endforeach()
 
+#---set true if we need to enforce C++11 standard to compile with KaliVeda
+set(KaliVeda_NEEDS_CXX11 @KALIVEDA_NEEDS_CXX11@)
+
 #---set path to 'use file'
 set(KALIVEDA_USE_FILE ${KALIVEDA_CMAKEPKG_DIR}/KaliVedaUseFile.cmake)
 
