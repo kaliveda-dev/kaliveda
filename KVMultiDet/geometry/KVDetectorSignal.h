@@ -14,7 +14,30 @@ class KVNumberList;
 /**
   \class KVDetectorSignal
   \ingroup Calibration
-  \brief Output signal data produced by a detector
+  \brief Base class for output signal data produced by a detector
+
+ Detectors (see KVDetector) are composed of one or more absorber layers. Among these, a single \e active layer
+allows to measure the energy loss of charged particles, which can be reconstructed by calibration of one
+or more signals associated to the detector read out by some electronics/DAQ system. Both the raw data
+and any calibrated quantities derived from them are handled by KVDetectorSignal and its child classes.
+
+Each KVDetector has a list of associated signals:
+~~~~{.cpp}
+KVDetector det;
+
+auto sig = det.AddDetectorSignal("raw");
+
+det.GetListOfDetectorSignals().ls();
+OBJ: KVUniqueNameList   KVSeqCollection_156  Optimised list in which objects with the same name can only be placed once : 0
+ KVDetectorSignal        raw      Signal raw of detector Det_1        [0.000000]
+
+sig->SetValue(50);
+det.GetDetectorSignal("raw")->GetValue()
+(double) 50.000000
+~~~~
+
+\sa KVDetectorSignalExpression
+\sa KVCalibratedSignal
 */
 
 class KVDetectorSignal : public KVBase {
@@ -32,13 +55,19 @@ public:
    virtual ~KVDetectorSignal()
    {}
 
-   virtual Double_t GetValue(const KVNameValueList& = "") const
+   virtual Double_t GetValue(const KVNameValueList& params = "") const
    {
+      // \param[in] params [optional] list of extra parameters possibly required to calculate value of signal (see child classes)
+      // \returns value of the signal
+
+      IGNORE_UNUSED(params);
       return fValue;
    }
    virtual void SetValue(Double_t x)
    {
-      // Note that this has no effect on calibrated signals or signal expressions
+      // Set the value of the signal.
+      // \param[in] x the value to be set
+      // \note this has no effect on calibrated signals or signal expressions
       if (IsRaw() && !IsExpression()) fValue = x;
    }
    virtual void Reset()
@@ -50,55 +79,68 @@ public:
       SetValue(0);
       SetFired(false);
    }
-   virtual Double_t GetInverseValue(Double_t out_val, const TString& in_sig, const KVNameValueList& = "") const
+   void Clear(Option_t* = "")
    {
-      // Returns the value of the input signal for a given value of the output,
-      // using the inverse calibration function
+      // Override base method in KVBase which resets the name, type and label of the object.
+      //
+      // Calls Reset(). The Option_t string is not used.
+      Reset();
+   }
+   virtual Double_t GetInverseValue(Double_t out_val, const TString& in_sig, const KVNameValueList& params = "") const
+   {
+      //\param[in] out_val output value of signal to invert
+      //\param[in] name/type of input signal to calculate by inversion
+      //\param[in] [optional] list of extra parameters possibly required to calculate value of signal (see child classes)
+      // \returns the value of the input signal for a given value of the output, using the inverse calibration function
 
+      IGNORE_UNUSED(params);
       if (in_sig == GetName()) return out_val;
       return 0.;
    }
 
    void SetDetector(const KVDetector* d)
    {
+      //\param[in] d pointer to detector to associate with this signal
       fDetector = d;
    }
 
    const KVDetector* GetDetector() const
    {
+      //\returns pointer to detector associated with this signal
       return fDetector;
    }
    void SetFired(Bool_t yes = true)
    {
+      //\param[in] yes set "Fired" status of signal
       fFired = yes;
    }
    Bool_t IsFired() const
    {
+      //\returns "Fired" status of signal
       return fFired;
    }
 
    virtual Bool_t IsValid() const
    {
+      //\returns kTRUE if this signal is valid (see child classes)
       return kTRUE;
    }
 
    virtual Bool_t IsRaw() const
    {
-      // Returns kTRUE if signal is available without any calibration
-      // being defined i.e. corresponds to raw data
+      // \returns kTRUE if signal is available without any calibration being defined i.e. corresponds to raw data
       return kTRUE;
    }
 
    virtual Bool_t IsExpression() const
    {
-      // Returns kTRUE for detector signal expressions
+      // \returns kTRUE if this signal is a mathematical combination of other signals (see child classes)
       return kFALSE;
    }
 
    virtual Bool_t GetValueNeedsExtraParameters() const
    {
-      // Returns kTRUE if GetValue() must be called with extra parameters
-      // in order to calculate the correct value
+      // \returns kTRUE if GetValue() must be called with extra parameters in order to calculate the correct value
       return kFALSE;
    }
    void ls(Option_t* = "") const;
