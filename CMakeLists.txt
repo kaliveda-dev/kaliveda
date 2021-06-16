@@ -171,7 +171,6 @@ endif()
 option(USE_MFM
                 "Enable support for reading GANIL MFM format data"
                 ON)
-add_feature_info(mfm USE_MFM "Enable support for reading GANIL MFM format data")
 if(USE_MFM)
     find_package(mfmlib QUIET)
     if(mfmlib_FOUND)
@@ -184,6 +183,7 @@ if(USE_MFM)
        set(USE_MFM OFF CACHE BOOL "" FORCE)
     endif(mfmlib_FOUND)
 endif()
+add_feature_info(mfm USE_MFM "Enable support for reading GANIL MFM format data")
 
 #---Google Protobuffers for reading FAZIA data
 
@@ -223,7 +223,6 @@ endif(USE_PROTOBUF)
 option(USE_MESYTEC
                 "Enable support for reading Mesytec DAQ data"
                 ON)
-add_feature_info(mesytec USE_MESYTEC "Enable support for reading Mesytec DAQ data")
 if(USE_MESYTEC)
     find_package(mesytec_data QUIET)
     if(mesytec_data_FOUND)
@@ -234,6 +233,7 @@ if(USE_MESYTEC)
        set(USE_MESYTEC OFF CACHE BOOL "" FORCE)
     endif(mesytec_data_FOUND)
 endif()
+add_feature_info(mesytec USE_MESYTEC "Enable support for reading Mesytec DAQ data")
 
 #---optional support for zeroMQ sockets
 find_package(ZMQ)
