@@ -286,13 +286,6 @@ add_feature_info(indrafazia USE_INDRAFAZIA "Build libraries for analysis of INDR
 Feature_Summary(WHAT ENABLED_FEATURES DESCRIPTION "------ENABLED FEATURES:")
 Feature_Summary(WHAT DISABLED_FEATURES DESCRIPTION "------DISABLED FEATURES:")
 
-# check for C++11 compatibility - use if possible
-include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-if(COMPILER_SUPPORTS_CXX11)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-endif()
-
 #---Set the library version in the main CMakeLists.txt------------------------------------------
 file(READ ${CMAKE_SOURCE_DIR}/VERSION versionstr)
 string(STRIP ${versionstr} versionstr)
