@@ -890,7 +890,52 @@ void KVIDZAGrid::IdentZA(Double_t x, Double_t y, Int_t& Z, Double_t& A)
       }
    }
 
+   if (fICode < kICODE4) ReCheckQuality(Z, A);
+
+
    //cout << "Z = " << Z << " A = " << A << " icode = " << fICode << endl;
+}
+
+void KVIDZAGrid::ReCheckQuality(Int_t& Z, Double_t& A)
+{
+   //Recheck the identification quality using the 'manual' width set for each Z in the parameter list
+   //
+   //If abs(Aint-Areal)> ManualWidth + ManualWidthScaling*sqrt(Z), kIDCode5 is returned.
+   //To be activated, a parameter "ManualWidth" should be added to the grid's parameter list.
+   //
+   //Acceptable values for FAZIA are :
+   //  * ManualWidth : 0.3
+   //  * ManualWidthScaling : 0.05
+   //
+   // Example of use :
+   //~~~~{.cpp}
+   //KVIDZAGrid grid;
+   //grid.ReadAsciiFile("my_grid_file.dat");
+   //grid.SetManualWidth(0.3,0.05);
+   //~~~~
+
+   double da = 1.;
+   double das = 0.;
+
+   if (!GetParameters()->HasParameter("ManualWidth")) return;
+   da = GetParameters()->GetDoubleValue("ManualWidth");
+
+   if (GetParameters()->HasParameter("ManualWidthScaling")) das = GetParameters()->GetDoubleValue("ManualWidthScaling");
+   da += das * TMath::Sqrt(Z);
+
+   int aa = TMath::Nint(A);
+
+   KVNucleus nn(Z, aa);
+   if (nn.GetLifeTime() < 1e-9) fICode = kICODE5;
+
+   if (Z == 1 && aa == 1) da *= .75;
+   if (TMath::Abs(aa - A) > da) fICode = kICODE5;
+}
+
+void KVIDZAGrid::SetManualWidth(Double_t manual_width, Double_t manual_width_scaling)
+{
+   GetParameters()->SetValue("ManualWidth", manual_width);
+   GetParameters()->SetValue("ManualWidthScaling", manual_width_scaling);
 }
 
 //_________________________________________________________________________//

@@ -182,6 +182,10 @@ public:
    KVIDGraph* MakeSubsetGraph(Int_t Zmin, Int_t Zmax, const Char_t* /*graph_class*/ = ""); //*MENU*
    KVIDGraph* MakeSubsetGraph(TList*, TClass* /*graph_class*/ = 0);
 
+   void ReCheckQuality(Int_t& Z, Double_t& A);
+
+   void SetManualWidth(Double_t manual_width = .3, Double_t manual_width_scaling = 0.05); //*MENU*
+
    ClassDef(KVIDZAGrid, 2)     //Base class for 2D Z & A identification grids
 };
 
