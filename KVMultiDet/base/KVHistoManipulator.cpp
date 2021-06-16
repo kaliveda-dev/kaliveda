@@ -837,7 +837,7 @@ TGraph* KVHistoManipulator::LinkGraphs(TGraph* grx, TGraph* gry)
 
    TGraph* corre = 0;
    if (grx->InheritsFrom("TGraphErrors") || gry->InheritsFrom("TGraphErrors")) {
-      if (grx->InheritsFrom("TGraphErrors")) ex = grx->GetEX();
+      if (grx->InheritsFrom("TGraphErrors")) ex = grx->GetEY();
       if (gry->InheritsFrom("TGraphErrors")) ey = gry->GetEY();
       corre = new TGraphErrors(npoints, xx, yy, ex, ey);
    }
