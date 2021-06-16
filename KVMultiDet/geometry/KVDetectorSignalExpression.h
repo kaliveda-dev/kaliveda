@@ -52,6 +52,11 @@ public:
    {
       Warning("SetValue", "[%s] : Calling SetValue for a signal expression has no effect", GetName());
    }
+   KVString GetExpression() const
+   {
+      // \returns the mathematical expression used to define this signal
+      return GetLabel();
+   }
 
    ClassDef(KVDetectorSignalExpression, 1) //Mathematical expression involving one or more detector signals
 };

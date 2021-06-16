@@ -18,6 +18,7 @@ KVDetectorSignalExpression::KVDetectorSignalExpression(const Char_t* type, const
 
    int nsigs = 0;
    KVString expr = _expr;
+   SetLabel(_expr);
    TIter it_sig(&det->GetListOfDetectorSignals());
    KVDetectorSignal* ds;
    fRaw = kTRUE;
