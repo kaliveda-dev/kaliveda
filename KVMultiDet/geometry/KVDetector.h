@@ -53,7 +53,7 @@ class TGraph;
 KVDetector is the base class for the description of all individual detectors in the KaliVeda framework. A detector
 is defined by the following characteristics:
    - it is composed of one or more absorber layers in which the energy loss of charged particles can be
-     calculated, described by KVMaterial objects;
+     measured or calculated, described by KVMaterial objects;
    - it has a single \e active layer in which energy losses may be associated to data read out from some electronics/DAQ
      system via objects of the KVDetectorSignal class;
    - it can be attributed KVCalibrator objects used to transform raw KVDetectorSignal data into calibrated
@@ -256,6 +256,15 @@ protected:
    Bool_t fDetecting;//! =kTRUE if detector is "detecting", =kFALSE if not
 
    Bool_t fSingleLayer;//! =kTRUE if detector has a single absorber layer
+
+   void AddDetectorSignal(KVDetectorSignal* ds)
+   {
+      // Internal use only.
+      //
+      // Add KVDetectorSignal object to list of detector's signals.
+      ds->SetDetector(this);
+      fDetSignals.Add(ds);
+   }
 
 public:
    KVDetector();
@@ -771,12 +780,15 @@ public:
    {
       return fDetSignals;
    }
-   void AddDetectorSignal(KVDetectorSignal* ds)
+   KVDetectorSignal* AddDetectorSignal(const KVString& type)
    {
       // Add KVDetectorSignal object to list of detector's signals.
-      // Object ownership is taken over by the detector, i.e. will be deleted by the detector
+      // \param[in] type define the name of the signal to add
+      // \returns pointer to the new signal object
 
-      fDetSignals.Add(ds);
+      auto signal = new KVDetectorSignal(type, this);
+      fDetSignals.Add(signal);
+      return signal;
    }
    Bool_t AddDetectorSignalExpression(const TString& type, const KVString& _expr);
 
