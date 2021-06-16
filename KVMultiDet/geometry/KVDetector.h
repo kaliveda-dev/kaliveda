@@ -48,52 +48,91 @@ class TGraph;
  \class KVDetector
  \ingroup Geometry
  \ingroup Stopping
- \brief Base class for detector geometry description, interface to energy-loss calculations
+ \brief Base class for detector geometry description
 
-A detector is composed of one or more absorber layers (KVMaterial objects) in which the energy loss of charged particles can be calculated. One of these layers
-is set as "active" (by default it is the last added layer) which means that only the energy loss in this layer can actually be "read", e.g. an ionisation chamber is composed of an
-"active" gas layer sandwiched between two "inactive" windows :
+KVDetector is the base class for the description of all individual detectors in the KaliVeda framework. A detector
+is defined by the following characteristics:
+   - it is composed of one or more absorber layers in which the energy loss of charged particles can be
+     calculated, described by KVMaterial objects;
+   - it has a single \e active layer in which energy losses may be associated to data read out from some electronics/DAQ
+     system via objects of the KVDetectorSignal class;
+   - it can be attributed KVCalibrator objects used to transform raw KVDetectorSignal data into calibrated
+     KVCalibratedSignal data;
+   - it can have spacial dimensions and position (parent class KVPosition), when it is part of a KVMultiDetArray
+     (array of detectors) deduced from a ROOT geometry description using class KVGeoImport:
+       - in this case, each KVDetector is associated with a node (KVGeoDetectorNode) in the geometry;
+       - each node is part of one or more trajectories (KVGeoDNTrajectory) which describe the possible flight paths of
+         particles starting from the target through the detectors of the array;
+       - the trajectories allow to describe the spacial relationships between the different detectors of the array
+         ("in front", "behind"), from which \f$\Delta E-E\f$ telescopes (KVIDTelescope) can be deduced which group pairs of
+         adjacent detectors along the trajectories;
+       - each detector is also the first node of a trajectory leading back towards the target (KVReconNucTrajectory) which is used in event
+         reconstruction (KVEventReconstructor, KVGroupReconstructor) to determine the trajectory of reconstructed nuclei
+         (KVReconstructedNucleus) starting from the detectors the furthest from the target which are fired in each
+         event read from the raw data (KVRawDataReconstructor).
+
+###Example 1: defining a detector
 
 ~~~~~~~~~~~{.cpp}
       KVDetector chio("Myl", 2.5*KVUnits::um);                       //first layer - 2.5 micron mylar window
       KVMaterial *gas = new KVMaterial("C3F8", 5.*KVUnits::cm, 50.0*KVUnits::mbar);
-      chio.AddAbsorber(gas);                                         //second layer - 5cm of C3F8 gas at 50mbar pressure and 19 deg. C
+      chio.AddAbsorber(gas);                                         //second layer - 5cm of C3F8 gas at 50mbar pressure
       chio.SetActiveLayer(gas);                                      //make gas layer "active"
       KVMaterial *win = new KVMaterial("Myl",2.5*KVUnits::um);       //exit window
       chio.AddAbsorber(win);
+
+      chio.Print("all");
+
+    KVDetector : Det_1
+        KVMaterial: Myl (Mylar)
+ Thickness 0.00025 cm
+ Area density 0.00034875 g/cm**2
+-----------------------------------------------
+ Z = 4.54545 atomic mass = 8.72727
+ Density = 1.395 g/cm**3
+-----------------------------------------------
+ ### ACTIVE LAYER ###
+        KVMaterial: C3F8 (Octofluoropropane)
+ Pressure 37.5031 torr
+ Thickness 5 cm
+ Area density 0.00193476 g/cm**2
+-----------------------------------------------
+ Z = 8.18182 atomic mass = 17.0909
+ Density = 0.000386953 g/cm**3
+-----------------------------------------------
+ ####################
+        KVMaterial: Myl (Mylar)
+ Thickness 0.00025 cm
+ Area density 0.00034875 g/cm**2
+-----------------------------------------------
+ Z = 4.54545 atomic mass = 8.72727
+ Density = 1.395 g/cm**3
+-----------------------------------------------
+     --- Detector belongs to the following Identification Telescopes:
+OBJ: KVList KVSeqCollection_158  Extended version of ROOT TList : 0
 ~~~~~~~~~~~
 
-A detector is created either with the constructor taking the material type as argument:
+###Example 2: Simulate detection of a charged particle in a detector
 
 ~~~~~~~~~~~{.cpp}
-      KVDetector det("Si");
-~~~~~~~~~~~
+KVNucleus xe("129Xe", 50.0);   // 50 MeV/nucleon 129Xe ion
 
-or using SetMaterial:
+chio.DetectParticle(&xe);
 
-~~~~~~~~~~~{.cpp}
-      KVDetector det;
-      det.SetMaterial("Si");
-~~~~~~~~~~~
+chio.GetEnergyLoss()
+(double) 48.309654        // energy loss in gas (active) layer
 
-or it is created when a ROOT geometry is imported into a KVMultiDetArray object using
-KVGeoImport.
+xe.GetEnergy()
+(double) 6380.9388       // kinetic energy of 129Xe after detector
 
-###Calculate the energy loss of a charged particle in a detector
+50*129 - xe.GetEnergy() - chio.GetEnergyLoss()
+(double) 20.751563       // energy lost in Mylar windows
 
-Two methods are available: one simply calculates the energy lost by the particle
-in the detector, but does not modify either the particle or the detector (GetELostByParticle);
-the other simulates the passage of the particle through the detector, the particle's energy
-is reduced by the amount lost in the detector's absorbers and the total energy lost in the
-detector is increased, e.g.:
+chio.GetIncidentEnergy(54,129,chio.GetEnergyLoss())
+(double) 6450.0000 // deduce incident energy from dE - corrected for Mylar
 
-~~~~~~~~~~~{.cpp}
-      KVNucleus alpha(2,4);           //an alpha-particle
-      alpha.SetEnergy(100);           //with 100MeV kinetic energy
-      det.DetectParticle(&alpha);     //simulate passage of particle in the detector/target
-      det.GetEnergy();                        //energy lost by particle in detector/target
-      alpha.GetEnergy();                      //residual energy of particle
-      det.Clear();                            //reset detector ready for a new detection
+chio.GetIncidentEnergyFromERes(54,129,xe.GetEnergy())
+(double) 6450.0000 // deduce incident energy from Eres - corrected for Mylar
 ~~~~~~~~~~~
 
 ###Important note on detector positions, angles, solid angle, distances etc.
