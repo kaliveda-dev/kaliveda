@@ -21,7 +21,7 @@ allows to measure the energy loss of charged particles, which can be reconstruct
 or more signals associated to the detector read out by some electronics/DAQ system. Both the raw data
 and any calibrated quantities derived from them are handled by KVDetectorSignal and its child classes.
 
-Each KVDetector has a list of associated signals:
+### Example of use
 ~~~~{.cpp}
 KVDetector det;
 
@@ -32,7 +32,9 @@ OBJ: KVUniqueNameList   KVSeqCollection_156  Optimised list in which objects wit
  KVDetectorSignal        raw      Signal raw of detector Det_1        [0.000000]
 
 sig->SetValue(50);
-det.GetDetectorSignal("raw")->GetValue()
+det.GetDetectorSignal("raw")->GetValue() // WARNING: if no signal "raw" defined, GetDetectorSignal() returns nullptr!
+(double) 50.000000
+det.GetDetectorSignalValue("raw") // Same as previous, but returns 0 if signal not defined
 (double) 50.000000
 ~~~~
 
@@ -148,6 +150,17 @@ public:
    virtual Int_t GetStatus(const TString&) const;
 
    TString GetFullName() const;
+
+   const Char_t* GetType() const
+   {
+      // \returns the type of the signal - this is the same as the signal name
+      return GetName();
+   }
+   void SetType(const Char_t* typ)
+   {
+      // \param[in] typ the type of the signal - will be used as the name of the signal
+      SetName(typ);
+   }
 
    ClassDef(KVDetectorSignal, 1) //Data produced by a detector
 };

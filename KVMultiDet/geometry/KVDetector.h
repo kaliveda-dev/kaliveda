@@ -62,7 +62,7 @@ is defined by the following characteristics:
      (array of detectors) deduced from a ROOT geometry description using class KVGeoImport:
        - in this case, each KVDetector is associated with a node (KVGeoDetectorNode) in the geometry;
        - each node is part of one or more trajectories (KVGeoDNTrajectory) which describe the possible flight paths of
-         particles starting from the target through the detectors of the array;
+         particles through the detectors of the array;
        - the trajectories allow to describe the spacial relationships between the different detectors of the array
          ("in front", "behind"), from which \f$\Delta E-E\f$ telescopes (KVIDTelescope) can be deduced which group pairs of
          adjacent detectors along the trajectories;
@@ -491,51 +491,57 @@ public:
 
    Double_t GetDetectorSignalValue(const TString& type, const KVNameValueList& params = "") const
    {
-      // Return value of signal of given type associated with detector
+      // \param[in] type name/type of signal
+      // \param[in] params list of extra parameters possibly required to calculate value of signal can be passed as a string of `"param1=value,param2=value,..."` parameter/value pairs
+      // \returns value of signal of given type associated with detector
       //
-      // Some signals require the necessary calibrators to be present & initialised
+      // \note Some signals require the necessary calibrators to be present & initialised
       //
-      // Any additional parameters which are required can be passed as a string of
-      // "param1=value,param2=value,..." parameter/value pairs.
-      //
-      // If the signal is not available, returns 0.
+      // \note If the signal is not available, returns 0.
 
       KVDetectorSignal* s = GetDetectorSignal(type);
       return (s ? s->GetValue(params) : 0);
    }
    void SetDetectorSignalValue(const TString& type, Double_t val) const
    {
+      // \param[in] type name/type of signal
+      // \param[in] val value to set for signal
+      //
       // Set value of signal of given type associated with detector
-      // Only to be used with raw detector signals (i.e. not expressions, not calibrated signals)
+      // \note Only to be used with raw detector signals (i.e. not expressions, not calibrated signals)
 
       KVDetectorSignal* s = GetDetectorSignal(type);
       if (s) s->SetValue(val);
    }
    Double_t GetInverseDetectorSignalValue(const TString& output, Double_t value, const TString& input, const KVNameValueList& params = "") const
    {
+      // \param[in] output name/type of output signal
+      // \param[in] value value of output signal
+      // \param[in] input name/type of input signal
+      // \param[in] params list of extra parameters possibly required to calculate value of signal can be passed as a string of `"param1=value,param2=value,..."` parameter/value pairs
+      //
       // Calculate the value of the input signal for a given value of the output signal.
       //
-      // This uses the inverse calibrations of all intermediate calibrators.
+      // This uses the inverse calibrations of all intermediate signals.
       //
-      // Any additional parameters which are required can be passed as a string of
-      // "param1=value,param2=value,..." parameter/value pairs.
-      //
-      // If the output signal is not defined, or if input & output are not related,
-      // this returns 0.
+      // \note If the output signal is not defined, or if input & output are not related, this returns 0.
 
       KVDetectorSignal* s = GetDetectorSignal(output);
       return (s ? s->GetInverseValue(value, input, params) : 0);
    }
    virtual KVDetectorSignal* GetDetectorSignal(const TString& type) const
    {
-      // Return the signal with given type, if defined for this detector
-      // If signal not defined, returns nullptr.
+      // \param[in] type name/type of signal
+      // \returns pointer to the signal with given type if defined for detector
+      //
+      // \warning If no such signal defined, returns nullptr
 
       return fDetSignals.get_object<KVDetectorSignal>(type);
    }
    Bool_t HasDetectorSignalValue(const TString& type) const
    {
-      // Return kTRUE if signal with given type is defind for detector
+      // \param[in] type name/type of signal
+      // \returns kTRUE if signal with given type is defined for detector
       return (GetDetectorSignal(type) != nullptr);
    }
 
@@ -782,9 +788,10 @@ public:
    }
    KVDetectorSignal* AddDetectorSignal(const KVString& type)
    {
-      // Add KVDetectorSignal object to list of detector's signals.
+      // Add a new signal to the list of detector's signals.
       // \param[in] type define the name of the signal to add
       // \returns pointer to the new signal object
+      // \note do not `delete`{.cpp} the signal object: the detector handles deletion
 
       auto signal = new KVDetectorSignal(type, this);
       fDetSignals.Add(signal);

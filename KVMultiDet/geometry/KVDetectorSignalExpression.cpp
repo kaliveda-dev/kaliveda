@@ -9,12 +9,13 @@ ClassImp(KVDetectorSignalExpression)
 KVDetectorSignalExpression::KVDetectorSignalExpression(const Char_t* type, const KVString& _expr, KVDetector* det)
    : KVDetectorSignal(type, det), fFormula(nullptr)
 {
-   // 'type' will be an alias for this expression
+   // \param[in] type the typename for this expression, will be used as an alias for the expression
+   // \param[in] _expr a mathematical expression using names of signals already defined for detector \a det. See TFormula
+   //             class for valid operators/functions.
+   // \param[in] det the detector to which this expression is to be associated
    //
-   // 'expr' is any mathematically valid expression involving signals which are defined for 'det'
-   //
-   // If no valid signals are contained in the expression, IsValid() returns kFALSE
-   // and the expression should not be used
+   // If no valid signals are contained in the expression (i.e. signals not already defined for the
+   // detector \a det), IsValid() returns kFALSE and the expression should not be used
 
    int nsigs = 0;
    KVString expr = _expr;
@@ -46,10 +47,8 @@ KVDetectorSignalExpression::KVDetectorSignalExpression(const Char_t* type, const
 
 Double_t KVDetectorSignalExpression::GetValue(const KVNameValueList& params) const
 {
-   // Evaluate the expression using all current values of signals
-   //
-   // Any extra parameters required by any calibrations in the expression can be passed
-   // as a comma-separated list of "param=value" pairs
+   // \param[in] params comma-separated list of "param=value" pairs if extra parameters are required to evaluate any signals in the expression
+   // \returns value of the expression using all current values of signals
 
    int nsigs = fSignals.size();
    for (int i = 0; i < nsigs; ++i) {

@@ -69,6 +69,29 @@
   Det_A14_SomeCalibration
   ~~~~~~~~~~~~~
 
+In order to add calibrations to a dataset,
+it needs to have a file `[array_name].CalibrationFiles.dat` which contains the names of files containing
+different calibrations for different detectors and different runs.
+
+Each of these files should have the same basic structure:
+~~~~~~~~~~
+# Any useful comments on a line starting with '#'
+# Remember that comments are always useful
+# You will remember nothing about this calibration in 3 months' time...
+SignalIn:                                PG
+SignalOut:                               Volts
+CalibType:                               ChannelVolt
+CalibOptions:                            func=pol3,min=0,max=1,inverse=true
+SI_0801:                                 71.9228,3979.44,32.1727,-27.9312
+SI_0802:                                 70.9138,3978.88,31.5155,-27.9611
+[etc. etc.]
+~~~~~~~~~~
+
+This file defines how to transform the `PG` signal of the listed detectors into a new `Volts` signal.
+
+See the <a href="http://indra.in2p3.fr/kaliveda/UsersGuide/calibrations.html#detector-calibration">chapter</a> in the User's Guide for more details.
+
+\sa KVCalibratedSignal
  */
 
 class KVCalibrator: public KVBase {

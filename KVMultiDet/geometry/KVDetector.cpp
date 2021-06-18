@@ -375,22 +375,25 @@ const Char_t* KVDetector::GetArrayName()
 //_____________________________________________________________________________________
 Bool_t KVDetector::AddCalibrator(KVCalibrator* cal, const KVNameValueList& opts)
 {
-   // Associate a calibration with this detector (the object will be deleted by the detector)
+   // Associate a calibration with this detector.
    //
-   // This will add a new signal to the list of the detector's signals
+   // This will add a new signal to the list of the detector's signals.
    //
-   // Also sets calibrator's name to [detname]_[caltype]
+   // Also sets calibrator's name to `[detname]_[caltype]` where `caltype` is the type of the KVCalibration object.
    //
-   // The (optional) KVNameValueList argument can be used to pass any extra parameters/options.
-   // For example, if it contains a parameter `ZRange`:
+   // \param[in] cal pointer to KVCalibrator object (must be on heap, i.e. created with new: detector handles deletion)
+   // \param[in] opts
+   // \parblock
+   // can be used to pass any extra parameters/options needed by the calibrator.
    //
-   //~~~~~~~~~~~~~~~
-   // ZRange=1-10
-   //~~~~~~~~~~~~~~~
-   //
+   // For example, if it contains a parameter `ZRange`, e.g. `ZRange=1-10`
    // then the calibrator will be handled by a KVZDependentCalibratedSignal (handles several
    // calibrators which provide the same output signal, each one is used for a specific range
    // of atomic numbers)
+   // \endparblock
+   //
+   // \returns kFALSE in case of problems (non-existent input signal for calibrator, output signal not defined for calibrator),
+   // otherwise kTRUE
 
    if (!cal) return kFALSE;
    // look for input signal
@@ -1582,13 +1585,12 @@ Bool_t KVDetector::HasSameStructureAs(const KVDetector* other) const
 
 Bool_t KVDetector::AddDetectorSignalExpression(const TString& type, const KVString& _expr)
 {
-   // Add a new KVDetectorSignalExpression to this detector:
+   // Add a new KVDetectorSignalExpression to this detector
    //
-   // 'type' will be the name of the new signal.
+   // \param[in] type the name/type of the new signal
+   // \param[in] _expr mathematical expression using any of the known signals of the detector
    //
-   // '_expr' is a mathematical expression using any of the known signals of the detector.
-   //
-   // If the expression is not valid, no signal will be created and method returns kFALSE.
+   // \note If the expression is not valid, no signal will be created and method returns kFALSE.
 
    KVDetectorSignalExpression* ds = new KVDetectorSignalExpression(type, _expr, this);
    if (!ds->IsValid()) {

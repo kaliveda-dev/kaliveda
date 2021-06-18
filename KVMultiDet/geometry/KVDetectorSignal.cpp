@@ -20,7 +20,7 @@ KVDetectorSignal::KVDetectorSignal(const Char_t* type, const KVDetector* det)
 void KVDetectorSignal::ls(Option_t*) const
 {
    // Print compact listing of infos on signal: name/type, associated detector, value
-   printf(" %s \t\t %s \t\t %s \t\t [%lf] %s\n", ClassName(), GetName(), GetType(), GetValue(), IsFired() ? "*FIRED*" : "");
+   printf(" %s \t\t %s \t\t %s \t\t [%lf] %s\n", ClassName(), GetName(), GetTitle(), GetValue(), IsFired() ? "*FIRED*" : "");
 }
 
 Int_t KVDetectorSignal::GetStatus(const TString&) const
