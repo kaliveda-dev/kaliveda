@@ -390,7 +390,7 @@ public:
    {
       // A detector is considered to be calibrated if it has
       // a signal "Energy" available
-      return (HasDetectorSignalValue("Energy"));
+      return (HasDetectorSignal("Energy"));
    }
    Bool_t IsCalibrated(const KVNameValueList& params) const;
 
@@ -489,7 +489,7 @@ public:
    }
    virtual void RemoveCalibrators();
 
-   Double_t GetDetectorSignalValue(const TString& type, const KVNameValueList& params = "") const
+   Double_t GetDetectorSignalValue(const KVString& type, const KVNameValueList& params = "") const
    {
       // \param[in] type name/type of signal
       // \param[in] params list of extra parameters possibly required to calculate value of signal can be passed as a string of `"param1=value,param2=value,..."` parameter/value pairs
@@ -502,7 +502,7 @@ public:
       KVDetectorSignal* s = GetDetectorSignal(type);
       return (s ? s->GetValue(params) : 0);
    }
-   void SetDetectorSignalValue(const TString& type, Double_t val) const
+   void SetDetectorSignalValue(const KVString& type, Double_t val) const
    {
       // \param[in] type name/type of signal
       // \param[in] val value to set for signal
@@ -513,7 +513,7 @@ public:
       KVDetectorSignal* s = GetDetectorSignal(type);
       if (s) s->SetValue(val);
    }
-   Double_t GetInverseDetectorSignalValue(const TString& output, Double_t value, const TString& input, const KVNameValueList& params = "") const
+   Double_t GetInverseDetectorSignalValue(const KVString& output, Double_t value, const KVString& input, const KVNameValueList& params = "") const
    {
       // \param[in] output name/type of output signal
       // \param[in] value value of output signal
@@ -529,7 +529,7 @@ public:
       KVDetectorSignal* s = GetDetectorSignal(output);
       return (s ? s->GetInverseValue(value, input, params) : 0);
    }
-   virtual KVDetectorSignal* GetDetectorSignal(const TString& type) const
+   virtual KVDetectorSignal* GetDetectorSignal(const KVString& type) const
    {
       // \param[in] type name/type of signal
       // \returns pointer to the signal with given type if defined for detector
@@ -538,7 +538,7 @@ public:
 
       return fDetSignals.get_object<KVDetectorSignal>(type);
    }
-   Bool_t HasDetectorSignalValue(const TString& type) const
+   Bool_t HasDetectorSignal(const KVString& type) const
    {
       // \param[in] type name/type of signal
       // \returns kTRUE if signal with given type is defined for detector
@@ -797,7 +797,7 @@ public:
       fDetSignals.Add(signal);
       return signal;
    }
-   Bool_t AddDetectorSignalExpression(const TString& type, const KVString& _expr);
+   Bool_t AddDetectorSignalExpression(const KVString& type, const KVString& _expr);
 
    ClassDef(KVDetector, 10)      //Base class for the description of detectors in multidetector arrays
 };

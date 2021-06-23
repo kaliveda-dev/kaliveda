@@ -1583,7 +1583,7 @@ Bool_t KVDetector::HasSameStructureAs(const KVDetector* other) const
    return same;
 }
 
-Bool_t KVDetector::AddDetectorSignalExpression(const TString& type, const KVString& _expr)
+Bool_t KVDetector::AddDetectorSignalExpression(const KVString& type, const KVString& _expr)
 {
    // Add a new KVDetectorSignalExpression to this detector
    //

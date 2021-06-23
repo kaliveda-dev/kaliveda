@@ -79,7 +79,7 @@ Bool_t ExampleRawAnalysis::Analysis()
          if (det->Fired()) {
             ++Mult;
             // if detector has a signal "QH1FPGAEnergy", store it in tree
-            if (det->HasDetectorSignalValue("QH1FPGAEnergy")) {
+            if (det->HasDetectorSignal("QH1FPGAEnergy")) {
                DetSigName = det->GetName();
                DetSigVal = det->GetDetectorSignalValue("QH1FPGAEnergy");
                FillTree();

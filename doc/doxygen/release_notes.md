@@ -2,7 +2,7 @@
 
 Last update: 28th May 2021
 
-## Version 1.12/04 (current development version - `dev` branch)
+## Version 1.12/04 (current development version - dev branch)
 
 __Changes 28/5/2021 in Build system__
 
