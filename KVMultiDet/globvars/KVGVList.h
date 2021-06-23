@@ -200,7 +200,7 @@ public:
    {
       return fAbortEventAnalysis;
    }
-   KVEventClassifier* AddEventClassifier(const TString& varname);
+   KVEventClassifier* AddEventClassifier(const TString& varname, const TString& value = "");
 
    ClassDef(KVGVList, 3)       // List of global variables
 };

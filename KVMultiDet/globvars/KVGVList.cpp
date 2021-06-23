@@ -142,6 +142,7 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
    while ((vg = (KVVarGlob*)it())) {
 
       if (vg->IsGlobalVariable()) {
+         // call Fill methods for global variables
          if (vg->IsNBody()) vg->FillN(e);
          else {
             Int_t mult = e->GetMult();
@@ -163,14 +164,15 @@ void KVGVList::CalculateGlobalVariables(KVEvent* e)
                }
             }
          }
-         vg->Calculate();
-#ifdef USING_ROOT6
-         if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
-            return;
-         }
-         vg->DefineNewFrame(e);
-#endif
       }
+      // call calculate for global variables and for KVEventClassifier objects
+      vg->Calculate();
+#ifdef USING_ROOT6
+      if ((fAbortEventAnalysis = !vg->TestEventSelection())) {
+         return;
+      }
+      vg->DefineNewFrame(e);
+#endif
    }
 }
 
@@ -375,10 +377,13 @@ void KVGVList::FillBranches()
    }
 }
 
-KVEventClassifier* KVGVList::AddEventClassifier(const TString& varname)
+KVEventClassifier* KVGVList::AddEventClassifier(const TString& varname, const TString& value)
 {
    // Add an event classification object to the list, based on the named global variable
    // (which must already be in the list).
+   //
+   // \param[in] varname name of global variable previously added to list
+   // \param[in] value [optional] for multi-valued variables, you can specify which value to use by name
    //
    // Returns a pointer to the object, in order to add either cuts or bins like so:
    //
@@ -425,7 +430,7 @@ KVEventClassifier* KVGVList::AddEventClassifier(const TString& varname)
    if (!gv) {
       Warning("AddEventClassifier", "Variable %s not found in list. No classification possible.", varname.Data());
    }
-   KVEventClassifier* ec = new KVEventClassifier(gv);
+   KVEventClassifier* ec = new KVEventClassifier(gv, value);
    Add(ec);
    return ec;
 }

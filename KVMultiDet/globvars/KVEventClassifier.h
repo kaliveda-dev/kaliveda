@@ -77,15 +77,28 @@ Note that in this case, any value outside of a defined bin is unclassified.
 
 class KVEventClassifier : public KVVarGlob1 {
    KVVarGlob* fVar;//! variable used for event classification
+   TString fVal;//! optional name of value calculated by variable to use
    std::vector<double> fCuts;//! cuts in variable to define event classes
    bool fBcuts;//! true if cuts are to be used
    bool fBins;//! true if separate bins are to be used
+   bool fWithVal;//! true if named value given
+   bool fWithExpression;//! true if an expression using several values is used
+   std::unique_ptr<TFormula> fFormula;//! in case a combination of values is used
+   std::vector<std::string> fValues;//! indices of values in parsed expression
 
    int calc_where() const;
 
 public:
-   KVEventClassifier() : KVVarGlob1("KVEventClassifier"), fVar(nullptr), fBcuts(false), fBins(false) {}
-   KVEventClassifier(KVVarGlob* b) : KVVarGlob1(Form("%s_EC", b->GetName())), fVar(b), fBcuts(false), fBins(false) {}
+   KVEventClassifier() : KVVarGlob1("KVEventClassifier"), fVar(nullptr), fVal(""), fBcuts(false),
+      fBins(false), fWithVal(false), fWithExpression(false), fFormula(nullptr)
+   {}
+   KVEventClassifier(KVVarGlob* b, const TString& value = "")
+      : KVVarGlob1((value == "") ? Form("%s_EC", b->GetName()) : Form("%s_%s_EC", b->GetName(), value.Data())),
+        fVar(b), fVal(value), fBcuts(false), fBins(false), fWithVal(value != ""), fWithExpression(false), fFormula(nullptr)
+   {
+      // \param[in] b address of global variable to use for event classification
+      // \param[in] value [optional] name of value to use if global variable is multi-valued
+   }
    virtual ~KVEventClassifier() {}
    ROOT_COPY_CTOR(KVEventClassifier, KVVarGlob1)
    ROOT_COPY_ASSIGN_OP(KVEventClassifier)
@@ -95,9 +108,14 @@ public:
       // Copy this object into other
       KVVarGlob1::Copy(other);
       ((KVEventClassifier&)other).fVar = fVar;
+      ((KVEventClassifier&)other).fVal = fVal;
       ((KVEventClassifier&)other).fCuts = fCuts;
       ((KVEventClassifier&)other).fBcuts = fBcuts;
       ((KVEventClassifier&)other).fBins = fBins;
+      ((KVEventClassifier&)other).fWithVal = fWithVal;
+      ((KVEventClassifier&)other).fWithExpression = fWithExpression;
+      ((KVEventClassifier&)other).fFormula.reset(new TFormula(*(fFormula.get())));
+      ((KVEventClassifier&)other).fValues = fValues;
    }
    Bool_t IsGlobalVariable() const
    {
@@ -192,11 +210,7 @@ public:
       fCuts.push_back(xmax);
    }
 
-   void Init()
-   {
-      // Sort cuts/bins into ascending order
-      std::sort(fCuts.begin(), fCuts.end());
-   }
+   void Init();
    void Reset() {}
    void Calculate()
    {
