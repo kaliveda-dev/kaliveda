@@ -404,8 +404,19 @@ private:
 
    TString fName;                       //!non-persistent name field - Is useful
    TString fFrameName;                  //!non-persistent frame name field, sets when calling SetFrame method
-   KVList fBoosted;                     //!list of momenta of the particle in different Lorentz-boosted frames
-   KVUniqueNameList fGroups;            //!list of TObjString for manage different group name
+
+   class FrameList : public KVList {
+      KVParticle* parent;
+   public:
+      FrameList(KVParticle* p) : KVList(), parent(p) {}
+      void Add(TObject*);
+      TObject* Remove(TObject*);
+      void Clear(Option_t* = "");
+      void AddAll(const TCollection*);
+   };
+
+   mutable FrameList fBoosted{this};          //!list of momenta of the particle in different Lorentz-boosted frames
+   mutable KVUniqueNameList fGroups;            //!list of TObjString for manage different group name
    static Double_t kSpeedOfLight;       //speed of light in cm/ns
 
    // TLorentzVector setters should not be used
@@ -483,25 +494,82 @@ protected:
    TVector3* fE0;              //the momentum of the particle before it is slowed/stopped by an absorber
    KVNameValueList fParameters;//a general-purpose list of parameters associated with this particle
 
+private:
+   KVParticle* fParentFrame{nullptr};//! parent kinematical frame
+   KVParticle* fOriginal{nullptr};//! if != nullptr, this object is a representation of the particle in a kinematical frame
+   mutable Bool_t fFrameCopyOnly{kFALSE};//! used to inhibit full copying of particles in different kinematical frames
+
+   Int_t _GetNumberOfDefinedFrames() const;
+public:
+   void SetFrameCopyOnly() const
+   {
+      fFrameCopyOnly = kTRUE;
+   }
+   void ResetFrameCopyOnly() const
+   {
+      fFrameCopyOnly = kFALSE;
+   }
+   KVParticle* GetParentFrame() const
+   {
+      return fParentFrame;
+   }
+   void SetParentFrame(KVParticle* p)
+   {
+      fParentFrame = p;
+   }
+   const KVParticle* GetTopmostParentFrame() const
+   {
+      // \return pointer to current default kinematics for particle, i.e. the one at the top of the graph of kinematical frames
+      // which has no parent frame
+
+      auto top_node = this;
+      while (top_node->GetParentFrame()) {
+         top_node = top_node->GetParentFrame();
+      }
+      return top_node;
+   }
+   const KVParticle* GetCurrentDefaultKinematics() const
+   {
+      // \return pointer to current default kinematics for particle
+      return GetTopmostParentFrame();
+   }
+   Bool_t IsDefaultKinematics() const
+   {
+      // \returns kTRUE if this particle is in its default kinematic frame
+      return GetTopmostParentFrame() == this;
+   }
+   const KVParticle* GetOriginal() const
+   {
+      return fOriginal ? fOriginal : this;
+   }
+   KVParticle* GetOriginal()
+   {
+      return fOriginal ? fOriginal : this;
+   }
+   void SetOriginal(KVParticle* p)
+   {
+      fOriginal = p;
+   }
+
+protected:
    virtual void AddGroup_Withcondition(const Char_t*, KVParticleCondition*);
    virtual void AddGroup_Sanscondition(const Char_t* groupname, const Char_t* from = "");
-   void CreateGroups();
    void SetGroups(KVUniqueNameList* un);
    void AddGroups(KVUniqueNameList* un);
 
 public:
 
-   Bool_t HasFrame(const Char_t* frame)
+   Int_t GetNumberOfDefinedGroups() const
    {
-      // Check if a given frame has been defined
-      // Note that this may be a frame defined by transformation of another frame
-      // Also: frame names are case-insensitive
-
-      return (get_frame(frame) != nullptr);
+      //\return the number of defined groups for the particle
+      return GetGroups()->GetEntries();
    }
-   Int_t GetNumberOfDefinedFrames(void);
-   Int_t GetNumberOfDefinedGroups(void);
-   KVUniqueNameList* GetGroups() const;
+   KVUniqueNameList* GetGroups() const
+   {
+      //\return the list of groups
+      return (KVUniqueNameList*)&GetOriginal()->fGroups;
+   }
+
 
    enum {
       kIsOK = BIT(14),          //acceptation/rejection flag
@@ -517,11 +585,7 @@ public:
    KVParticle(const KVParticle&);
    virtual ~ KVParticle();
    void init();
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
    virtual void Copy(TObject&) const;
-#else
-   virtual void Copy(TObject&);
-#endif
    virtual void Clear(Option_t* opt = "");
 
    virtual void SetMass(Double_t m)
@@ -664,12 +728,12 @@ public:
    void SetIsOK(Bool_t flag = kTRUE);
    void ResetIsOK()
    {
-      ResetBit(kIsOKSet);
+      GetOriginal()->ResetBit(kIsOKSet);
    }
 
-   KVList* GetListOfFrames(void)
+   KVList* GetListOfFrames() const
    {
-      return (KVList*)&fBoosted;
+      return &fBoosted;
    }
    void ls(Option_t* option = "") const;
 
@@ -683,18 +747,18 @@ public:
       else {
          *fE0 = *e;
       }
-   };
+   }
    TVector3* GetPInitial() const
    {
       return fE0;
-   };
+   }
    void SetIsDetected()
    {
-      SetBit(kIsDetected);
-   };
-   Bool_t IsDetected()
+      GetOriginal()->SetBit(kIsDetected);
+   }
+   Bool_t IsDetected() const
    {
-      return TestBit(kIsDetected);
+      return GetOriginal()->TestBit(kIsDetected);
    }
    KVParticle& operator=(const KVParticle& rhs);
 
@@ -716,17 +780,36 @@ public:
    void ChangeDefaultFrame(const Char_t*, const Char_t* defname = "");
    void SetFrame(const Char_t* frame, const KVFrameTransform&);
    void SetFrame(const Char_t* newframe, const Char_t* oldframe, const KVFrameTransform&);
+   void UpdateAllFrames();
 
+   Bool_t HasFrame(const Char_t* frame) const
+   {
+      // \param[in] frame name of a previously defined kinematical frame
+      // \returns kTRUE if a kinematical frame called \a frame has been defined for this particle
+      //
+      // \note Frame names are case-insensitive
+      //
+      // \note We search the entire hierarchy of kinematical frames, starting from the current default kinematics
+
+      return (GetTopmostParentFrame()->get_frame(frame) != nullptr);
+   }
+   Int_t GetNumberOfDefinedFrames() const
+   {
+      // \returns the total number of kinematic frames defined for this particle
+      return GetTopmostParentFrame()->_GetNumberOfDefinedFrames();
+   }
    KVParticle const* GetFrame(const Char_t* frame, Bool_t warn_and_return_null_if_unknown = kTRUE) const;
 
    const Char_t* GetFrameName(void) const
    {
+      // \returns name of the current kinematical frame
       return fFrameName;
    }
    void SetFrameName(const Char_t* framename)
    {
       // Set the (non-persistent) name of the reference frame for this particle's kinematics.
       // Also sets a (persistent) parameter "frameName"
+
       fFrameName = framename;
       if (fFrameName != "") SetParameter("frameName", framename);
       else GetParameters()->RemoveParameter("frameName");
@@ -740,8 +823,6 @@ public:
    {
       GetParameters()->SetValue(name, value);
    }
-
-   void UpdateAllFrames();
 
    ClassDef(KVParticle, 8)      //General base class for all massive particles
 };

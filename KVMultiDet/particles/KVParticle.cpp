@@ -43,7 +43,7 @@ KVParticle::KVParticle() : fParameters("ParticleParameters", "Parameters associa
 void KVParticle::init()
 {
    //default initialisation
-   fE0 = 0;
+   fE0 = nullptr;
    SetFrameName("");
    fGroups.SetOwner(kTRUE);
 }
@@ -197,12 +197,7 @@ void KVParticle::SetKE(Double_t ecin)
       SetMomentum(0., 0., 0.);
 }
 
-//______________________________________________________________________________________
-#if ROOT_VERSION_CODE >= ROOT_VERSION(3,4,0)
 void KVParticle::Copy(TObject& obj) const
-#else
-void KVParticle::Copy(TObject& obj)
-#endif
 {
    // Copy this to obj
    // Particle kinematics are copied using operator=(const KVParticle&)
@@ -211,9 +206,12 @@ void KVParticle::Copy(TObject& obj)
    // The list of parameters associated with the particle is copied
 
    ((KVParticle&) obj) = *this;
-   ((KVParticle&) obj).SetGroups(this->GetGroups());
-   ((KVParticle&) obj).SetName(this->GetName());
-   fParameters.Copy(((KVParticle&) obj).fParameters);
+   if (!fFrameCopyOnly) {
+      // do not make a full copy if particle is just a new kinematical frame
+      ((KVParticle&) obj).SetGroups(GetGroups());
+      ((KVParticle&) obj).SetName(GetName());
+      fParameters.Copy(((KVParticle&) obj).fParameters);
+   }
 }
 
 
@@ -228,7 +226,7 @@ void KVParticle::Clear(Option_t*)
       fE0 = 0;
    }
    ResetIsOK();                 //in case IsOK() status was set "by hand" in previous event
-   ResetBit(kIsDetected);
+   GetOriginal()->ResetBit(kIsDetected);
    fParameters.Clear();
    fGroups.Clear();
    fBoosted.Delete();
@@ -241,7 +239,7 @@ Bool_t KVParticle::IsOK()
    //depending on a previous call to SetIsOK(Bool_t flag).
    //If SetIsOK has not been called, IsOK returns kTRUE by default.
 
-   if (TestBit(kIsOKSet)) {     //status set by SetIsOK()
+   if (GetOriginal()->TestBit(kIsOKSet)) {     //status set by SetIsOK()
       return TestBit(kIsOK);
    }
    //Default if SetIsOK not used: accept particle
@@ -256,8 +254,8 @@ void KVParticle::SetIsOK(Bool_t flag)
    //
    //In order to 'forget' this status (accept all particles) use ResetIsOK()
 
-   SetBit(kIsOK, flag);
-   SetBit(kIsOKSet);
+   GetOriginal()->SetBit(kIsOK, flag);
+   GetOriginal()->SetBit(kIsOKSet);
 }
 
 void KVParticle::ls(Option_t* option) const
@@ -278,8 +276,10 @@ KVParticle& KVParticle::operator=(const KVParticle& rhs)
 {
    //KVParticle assignment operator.
 
-   TLorentzVector::operator=((TLorentzVector&) rhs);
-   if (rhs.GetPInitial()) SetE0(rhs.GetPInitial());
+   if (this != &rhs) {
+      TLorentzVector::operator=((TLorentzVector&) rhs);
+      if (rhs.GetPInitial()) SetE0(rhs.GetPInitial());
+   }
    return *this;
 }
 
@@ -303,15 +303,14 @@ void KVParticle::ResetEnergy()
 void KVParticle::SetName(const Char_t* nom)
 {
    //Set Name of the particle
-   fName.Form("%s", nom);
-
+   GetOriginal()->fName.Form("%s", nom);
 }
 
 //___________________________________________________________________________//
 const Char_t* KVParticle::GetName() const
 {
    // return the field fName
-   return fName.Data();
+   return GetOriginal()->fName.Data();
 }
 
 //___________________________________________________________________________//
@@ -328,12 +327,6 @@ void KVParticle::AddGroup_Sanscondition(const Char_t* groupname, const Char_t* f
    // Implementation of AddGroup_Sansconditioncon(st Char_t*, const Char_t*)
    // Can be overridden in child classes [instead of AddGroup(const Char_t*, const Char_t*),
    // which cannot]
-   // if this method is overridde in child class
-   // the line
-   //         if (!fGroups) CreateGroups();
-   // has to be included
-   // The group will be added to all 'particles' representing different kinematical frames
-   // for this particle
 
    TString sfrom(from);
    sfrom.ToUpper();
@@ -341,15 +334,7 @@ void KVParticle::AddGroup_Sanscondition(const Char_t* groupname, const Char_t* f
    sgroupname.ToUpper();
 
    if (BelongsToGroup(sfrom.Data()) && !BelongsToGroup(sgroupname.Data())) {
-      fGroups.Add(new TObjString(sgroupname.Data()));
-      if (fBoosted.GetEntries()) {
-         // recursively add to all boosted particles
-         TIter it(&fBoosted);
-         KVKinematicalFrame* f;
-         while ((f = (KVKinematicalFrame*)it())) {
-            f->GetParticle()->AddGroup(sgroupname);
-         }
-      }
+      GetGroups()->Add(new TObjString(sgroupname.Data()));
    }
 }
 
@@ -381,8 +366,7 @@ void KVParticle::AddGroup(const Char_t* groupname, KVParticleCondition* cond)
 void KVParticle::SetGroups(KVUniqueNameList* un)
 {
    //Define for the particle a new list of groups
-   //if there is an existing list, it's deleted
-   fGroups.Clear();
+   GetGroups()->Clear();
    AddGroups(un);
 }
 
@@ -398,33 +382,19 @@ void KVParticle::AddGroups(KVUniqueNameList* un)
 
 }
 
-Int_t KVParticle::GetNumberOfDefinedFrames()
+Int_t KVParticle::_GetNumberOfDefinedFrames() const
 {
-   // Returns the total number of defined kinematical frames for this particle.
-   // This includes all frames which are defined with respect to other frames
-   // (i.e. we count recursively the contents of all fBoosted lists)
+   // \returns the number of kinematical frames defined by transformations of this frame
+   //
+   // \note this is always at least equal to one (we count the present frame of the particle)
 
-   if (!fBoosted.GetEntries()) return 0;
-   TIter it(&fBoosted);
+   TIter it(GetListOfFrames());
    KVKinematicalFrame* p;
-   Int_t nf = 0;
+   Int_t nf = 1; // start with the current actual frame
    while ((p = (KVKinematicalFrame*)it())) {
-      nf += (1 + p->GetParticle()->GetNumberOfDefinedFrames());
+      nf += p->GetParticle()->_GetNumberOfDefinedFrames();
    }
    return nf;
-}
-//___________________________________________________________________________//
-Int_t KVParticle::GetNumberOfDefinedGroups(void)
-{
-   //return the number of defined groups for the particle
-   return fGroups.GetEntries();
-}
-
-//___________________________________________________________________________//
-KVUniqueNameList* KVParticle::GetGroups() const
-{
-   //return the KVUniqueNameList pointeur where list of groups are stored
-   return (KVUniqueNameList*)&fGroups;
 }
 
 //___________________________________________________________________________//
@@ -439,8 +409,8 @@ Bool_t KVParticle::BelongsToGroup(const Char_t* groupname) const
    //Important for KVEvent::GetNextParticle()
    if (sgroupname.IsNull()) return kTRUE;
    //retourne kFALSE si aucun groupe n'est defini
-   if (!fGroups.GetEntries()) return kFALSE;
-   if (fGroups.FindObject(sgroupname.Data())) return kTRUE;
+   if (!GetNumberOfDefinedGroups()) return kFALSE;
+   if (GetGroups()->FindObject(sgroupname.Data())) return kTRUE;
    return kFALSE;
 }
 
@@ -448,37 +418,19 @@ Bool_t KVParticle::BelongsToGroup(const Char_t* groupname) const
 void KVParticle::RemoveGroup(const Char_t* groupname)
 {
    // Remove group from list of groups
-   // Apply the method to all particles stored in fBoosted
-   if (!fGroups.GetEntries()) return;
+   if (!GetGroups()->GetEntries()) return;
    TString sgroupname(groupname);
    sgroupname.ToUpper();
 
    TObjString* os = 0;
-   if ((os = (TObjString*)fGroups.FindObject(sgroupname.Data()))) {
-      delete fGroups.Remove(os);
-      if (fBoosted.GetEntries()) {
-         TIter it(&fBoosted);
-         KVKinematicalFrame* f;
-         while ((f = (KVKinematicalFrame*)it())) {
-            f->GetParticle()->RemoveGroup(sgroupname);
-         }
-      }
-   }
+   if ((os = (TObjString*)GetGroups()->FindObject(sgroupname.Data()))) delete  GetGroups()->Remove(os);
 }
 
 //___________________________________________________________________________//
 void KVParticle::RemoveAllGroups()
 {
    //Remove all groups
-   // Apply the method to all particles stored in fBoosted
-   fGroups.Clear();
-   if (fBoosted.GetEntries()) {
-      TIter it(&fBoosted);
-      KVKinematicalFrame* f;
-      while ((f = (KVKinematicalFrame*)it())) {
-         f->GetParticle()->RemoveAllGroups();
-      }
-   }
+   GetGroups()->Clear();
 }
 
 //___________________________________________________________________________//
@@ -486,18 +438,19 @@ void KVParticle::RemoveAllGroups()
 void KVParticle::ListGroups(void) const
 {
    //List all stored groups
-   if (!fGroups.GetEntries()) {
-      cout << "Cette particle n appartient a aucun groupe" << endl;
+   if (GetGroups()->GetEntries()) {
+      cout << "Particle belongs to no groups" << endl;
       return;
    }
    else {
-      cout << "--------------------------------------------------" << endl;
-      cout << "Liste des groupes auxquels la particule appartient" << endl;
+      cout << "----------------------------------------" << endl;
+      cout << "List of groups this particle belongs to:" << endl;
+      cout << "----------------------------------------" << endl;
    }
    TObjString* os = 0;
    TIter no(GetGroups());
-   while ((os = (TObjString*)no.Next())) cout << os->GetName() << endl;
-   cout << "--------------------------------------------------" << endl;
+   while ((os = (TObjString*)no.Next())) cout << "\t" << os->GetName() << endl;
+   cout << "----------------------------------------" << endl;
 }
 
 KVParticle KVParticle::InFrame(const KVFrameTransform& t)
@@ -526,11 +479,14 @@ void KVParticle::ChangeDefaultFrame(const Char_t* newdef, const Char_t* defname)
 {
    // Make existing reference frame 'newdef' the new default frame for particle kinematics.
    // The current default frame will then be accessible from the list of frames
-   // using its name (if set with SetFrameName). You can change/set the name of the previous
-   // default frame with 'defname'
+   // using its name (if set with SetFrameName).
+   //
+   // You can change/set the name of the previous default frame with 'defname'.
+   // If no name was set and none given, it will be renamed "default" by default.
 
    TString _defname(defname);
    if (_defname == "") _defname = GetFrameName();
+   if (_defname == "") _defname = "default";
    // get list of all parents of new default
    TList parents;
    TString ff = newdef;
@@ -564,6 +520,7 @@ void KVParticle::ChangeDefaultFrame(const Char_t* newdef, const Char_t* defname)
    save_newdef->GetParticle()->Set4Mom(old_def_p);
    save_newdef->SetTransform(next_trans.Inverse());
    save_newdef->SetName(_defname);
+   save_newdef->GetParticle()->SetFrameName(_defname);
    newdframe->GetParticle()->GetListOfFrames()->Add(save_newdef);
    // copy frame list from new default frame
    TList frame_list;
@@ -638,11 +595,12 @@ void KVParticle::SetFrame(const Char_t* frame, const KVFrameTransform& ft)
 
    if (!strcmp(frame, "")) return;
 
-   KVKinematicalFrame* tmp = get_frame(frame);
+   KVKinematicalFrame* tmp = GetTopmostParentFrame()->get_frame(frame);
    if (!tmp) {
       //if this frame has not already been defined, create a new one
       tmp = new KVKinematicalFrame(frame, this, ft);
       fBoosted.Add(tmp);
+      tmp->GetParticle()->SetOriginal(GetOriginal());
    }
    else
       tmp->ApplyTransform(this, ft);
@@ -689,7 +647,7 @@ KVParticle const* KVParticle::GetFrame(const Char_t* frame, Bool_t warn_and_retu
    //
 
    if (!fFrameName.CompareTo(frame, TString::kIgnoreCase)) return (KVParticle const*)this;
-   KVKinematicalFrame* f = get_frame(frame);
+   KVKinematicalFrame* f = GetTopmostParentFrame()->get_frame(frame);
    return f ? (KVParticle const*)f->GetParticle() :
           (warn_and_return_null_if_unknown ?
            Warning("GetFrame(const Char_t*)", "No frame \"%s\" defined for particle. 0x0 returned.",
@@ -719,9 +677,10 @@ void KVParticle::UpdateAllFrames()
 
 KVKinematicalFrame* KVParticle::get_frame(const Char_t* frame) const
 {
-   // PRIVATE method for internal use only
-   // This allows to modify the returned frame, i.e. in order to define
-   // new frames in SetFrame(newframe,oldframe,...)
+   // \param[in] frame name of a kinematical frame
+   // \returns pointer to the kinematical frame if previously defined, nullptr otherwise
+   //
+   // \note PRIVATE method for internal use only. This method allows to modify the returned frame, i.e. in order to define new frames in SetFrame()
 
    if (!fBoosted.GetEntries() || !strcmp(frame, "")) {
       // no frames defined or no frame name given
@@ -766,7 +725,7 @@ void KVParticle::SetFrame(const Char_t* newframe, const Char_t* oldframe, const 
    // See SetFrame(const Char_t*,const KVFrameTransform&) for details on
    // defining kinematically-transformed frames.
 
-   KVKinematicalFrame* f = get_frame(oldframe);
+   KVKinematicalFrame* f = GetTopmostParentFrame()->get_frame(oldframe);
    if (!f) {
       Error("SetFrame(newframe,oldframe)", "oldframe=%s does not exist!", oldframe);
       return;
@@ -847,4 +806,48 @@ void KVParticle::Streamer(TBuffer& R__b)
    else {
       R__b.WriteClassBuffer(KVParticle::Class(), this);
    }
+}
+
+void KVParticle::FrameList::Add(TObject* f)
+{
+   // When a kinematical frame is added, this particle becomes the parent frame
+   dynamic_cast<KVKinematicalFrame*>(f)->GetParticle()->SetParentFrame(parent);
+   KVList::Add(f);
+}
+
+TObject* KVParticle::FrameList::Remove(TObject* f)
+{
+   // When a kinematical frame is removed, this particle is no longer the parent frame
+   if (KVList::Remove(f) == f) {
+      auto _f = dynamic_cast<KVKinematicalFrame*>(f);
+      if (_f->GetParticle()->GetParentFrame() == parent) {
+         _f->GetParticle()->SetParentFrame(nullptr);
+      }
+      return f;
+   }
+   return nullptr;
+}
+
+void KVParticle::FrameList::Clear(Option_t* opt)
+{
+   // When the frame list is cleared, this particle is no longer the parent of any frames in the list
+   TIter it(this);
+   KVKinematicalFrame* f;
+   while ((f = (KVKinematicalFrame*)it())) {
+      if (f->GetParticle()->GetParentFrame() == parent) {
+         f->GetParticle()->SetParentFrame(nullptr);
+      }
+   }
+   KVList::Clear(opt);
+}
+
+void KVParticle::FrameList::AddAll(const TCollection* l)
+{
+   // When all frames in a list are added to this one, this particle becomes the parent of all frames in the list
+   TIter it(l);
+   KVKinematicalFrame* f;
+   while ((f = (KVKinematicalFrame*)it())) {
+      f->GetParticle()->SetParentFrame(parent);
+   }
+   KVList::AddAll(l);
 }

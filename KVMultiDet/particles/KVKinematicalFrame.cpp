@@ -13,6 +13,7 @@ KVKinematicalFrame::KVKinematicalFrame(const Char_t* name, const KVParticle* ori
    // This frame has a name which can be used to retrieve it from a list
 
    ReapplyTransform(original);
+   fParticle->SetFrameName(name);
 }
 
 KVKinematicalFrame::KVKinematicalFrame(const KVFrameTransform& trans, const KVParticle* original)
@@ -37,7 +38,12 @@ KVKinematicalFrame::KVKinematicalFrame(const KVKinematicalFrame& o)
      fParticle(o.GetParticle() ? (KVParticle*)o.GetParticle()->IsA()->New() : nullptr)
 {
    // Copy constructor required for rootcint (not rootcling)
-   if (GetParticle()) o.GetParticle()->Copy(*GetParticle());
+   if (GetParticle()) {
+      o.GetParticle()->SetFrameCopyOnly();
+      o.GetParticle()->Copy(*GetParticle());
+      o.GetParticle()->ResetFrameCopyOnly();
+      fParticle->SetFrameName(o.GetParticle()->GetFrameName());
+   }
 }
 
 KVKinematicalFrame& KVKinematicalFrame::operator=(const KVKinematicalFrame& o)
@@ -47,7 +53,12 @@ KVKinematicalFrame& KVKinematicalFrame::operator=(const KVKinematicalFrame& o)
    if (&o == this) return (*this);
    fTransform = o.fTransform;
    fParticle.reset(o.GetParticle() ? (KVParticle*)o.GetParticle()->IsA()->New() : nullptr);
-   if (GetParticle()) o.GetParticle()->Copy(*GetParticle());
+   if (GetParticle()) {
+      o.GetParticle()->SetFrameCopyOnly();
+      o.GetParticle()->Copy(*GetParticle());
+      o.GetParticle()->ResetFrameCopyOnly();
+      fParticle->SetFrameName(o.GetParticle()->GetFrameName());
+   }
    return *this;
 }
 
@@ -55,7 +66,9 @@ void KVKinematicalFrame::ReapplyTransform(const KVParticle* original)
 {
    // Apply stored kinematical transformation to the particle
 
-   original->Copy(*(fParticle.get()));   //copy all information on particle
+   original->SetFrameCopyOnly();
+   original->Copy(*(fParticle.get()));
+   original->ResetFrameCopyOnly();
    fParticle->Transform(fTransform.Inverse());
 }
 
