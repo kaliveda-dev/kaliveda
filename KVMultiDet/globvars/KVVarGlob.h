@@ -409,6 +409,13 @@ public:
       // describing N-body global variables.
       AbstractMethod("FillN(KVEvent*)");
    }
+   Bool_t HasValue(const Char_t* name) const
+   {
+      // \param[in] name name of a value calculated by this variable
+      // \returns kTRUE if value with name is defined for variable
+
+      return nameList.HasParameter(name);
+   }
    Double_t GetValue(void) const
    {
       // \returns principal gobal variable value
@@ -618,12 +625,17 @@ public:
    }
    virtual TString GetValueName(Int_t i) const
    {
-      // Returns name of value associated with index 'i',
+      // \returns name of value associated with index 'i',
       // as defined by using SetNameIndex method.
       for (int j = 0; j < GetNumberOfValues(); j++) {
          if (nameList.GetIntValue(j) == i) return nameList.GetParameter(j)->GetName();
       }
       return TString("unknown");
+   }
+   const KVNameValueList& GetValueNameList() const
+   {
+      // \returns list of names of all values defined for variable
+      return nameList;
    }
    virtual Char_t GetValueType(Int_t) const
    {
