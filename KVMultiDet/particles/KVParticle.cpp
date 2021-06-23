@@ -354,10 +354,6 @@ void KVParticle::AddGroup(const Char_t* groupname, const Char_t* from)
 void KVParticle::AddGroup(const Char_t* groupname, KVParticleCondition* cond)
 {
    //define and store a group name from a condition on the particle
-   //
-   // Apply the method to all particles stored in fBoosted
-   // SetParticleClassName has to be set before using this method if you use
-   // in the KVParticleCondistion a specific method of a derived KVNucleus class
 
    AddGroup_Withcondition(groupname, cond);
 }

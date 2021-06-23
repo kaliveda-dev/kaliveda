@@ -397,6 +397,8 @@ part.BelongsToGroup("titi");// this returns kFALSE
  */
 class KVParticle: public TLorentzVector {
 
+   friend class KVKinematicalFrame;
+
 private:
    void print_frames(TString fmt = "") const;
    KVKinematicalFrame* get_frame(const Char_t*) const;
@@ -500,7 +502,6 @@ private:
    mutable Bool_t fFrameCopyOnly{kFALSE};//! used to inhibit full copying of particles in different kinematical frames
 
    Int_t _GetNumberOfDefinedFrames() const;
-public:
    void SetFrameCopyOnly() const
    {
       fFrameCopyOnly = kTRUE;
@@ -528,16 +529,6 @@ public:
       }
       return top_node;
    }
-   const KVParticle* GetCurrentDefaultKinematics() const
-   {
-      // \return pointer to current default kinematics for particle
-      return GetTopmostParentFrame();
-   }
-   Bool_t IsDefaultKinematics() const
-   {
-      // \returns kTRUE if this particle is in its default kinematic frame
-      return GetTopmostParentFrame() == this;
-   }
    const KVParticle* GetOriginal() const
    {
       return fOriginal ? fOriginal : this;
@@ -558,18 +549,6 @@ protected:
    void AddGroups(KVUniqueNameList* un);
 
 public:
-
-   Int_t GetNumberOfDefinedGroups() const
-   {
-      //\return the number of defined groups for the particle
-      return GetGroups()->GetEntries();
-   }
-   KVUniqueNameList* GetGroups() const
-   {
-      //\return the list of groups
-      return (KVUniqueNameList*)&GetOriginal()->fGroups;
-   }
-
 
    enum {
       kIsOK = BIT(14),          //acceptation/rejection flag
@@ -773,7 +752,18 @@ public:
    Bool_t BelongsToGroup(const Char_t* groupname) const;
    void RemoveGroup(const Char_t* groupname);
    void RemoveAllGroups();
-   void ListGroups(void) const;
+   void ListGroups() const;
+   Int_t GetNumberOfDefinedGroups() const
+   {
+      //\return the number of defined groups for the particle
+      return GetGroups()->GetEntries();
+   }
+   KVUniqueNameList* GetGroups() const
+   {
+      //\return the list of groups
+      return (KVUniqueNameList*)&GetOriginal()->fGroups;
+   }
+
 
    KVParticle InFrame(const KVFrameTransform&);
    void ChangeFrame(const KVFrameTransform&, const KVString& = "");
@@ -781,6 +771,17 @@ public:
    void SetFrame(const Char_t* frame, const KVFrameTransform&);
    void SetFrame(const Char_t* newframe, const Char_t* oldframe, const KVFrameTransform&);
    void UpdateAllFrames();
+
+   const KVParticle* GetCurrentDefaultKinematics() const
+   {
+      // \return pointer to current default kinematics for particle
+      return GetTopmostParentFrame();
+   }
+   Bool_t IsDefaultKinematics() const
+   {
+      // \returns kTRUE if this particle is in its default kinematic frame
+      return GetTopmostParentFrame() == this;
+   }
 
    Bool_t HasFrame(const Char_t* frame) const
    {
