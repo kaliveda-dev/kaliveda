@@ -9,13 +9,15 @@
   \ingroup GlobalVariables
   \brief Simple source reconstruction global variable
 
- It takes all nuclei selected with SetSelection(KVParticleCondition&) and adds them
+ It takes all nuclei selected according to the conditions given to KVVarGlob::SetSelection() and adds them
  together (charge, mass, momentum, energy) in order to calculate
  a 'source' nucleus, for which we can obtain various quantities (see below).
- The reference frame from which particle momenta are taken can be set with SetFrame("..").
+
+ The reference frame from which particle momenta are taken can be set with KVVarGlob::SetFrame().
+
  Each nucleus which is included in the source definition is added
  to a group with the same name as this variable. This can be used for further analysis
- of the particles (by testing KVParticle::BelongsToGroup("...") method).
+ of the particles (by testing KVParticle::BelongsToGroup() method).
 
  Index     Name       Meaning
 -----------------------------------------------------
@@ -53,6 +55,7 @@ protected:
    {
       Add(*n);
       ++fMult;
+      const_cast<KVNucleus*>(n)->AddGroup(GetName());
    }
 
 public:
