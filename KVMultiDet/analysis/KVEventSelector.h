@@ -360,7 +360,11 @@ public:
       //for the analysis.
       //This is equivalent to GetGVList()->GetGV( name ).
 
-      return GetGVList()->GetGV(name);
+      auto gv = GetGVList()->GetGV(name);
+      if (!gv) {
+         Error("GetGV(const Char_t* name)", "Request for undefined global variable name=%s", name);
+      }
+      return gv;
    }
    virtual void RecalculateGlobalVariables();
    Bool_t AtEndOfRun(void)
