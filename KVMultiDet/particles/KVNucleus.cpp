@@ -613,9 +613,12 @@ Double_t KVNucleus::GetMassExcess(Int_t z, Int_t a) const
    CheckZAndA(z, a);
 
    Double_t val = gNDTManager->GetValue(z, a, "MassExcess");
-   if (val == -555) return GetExtraMassExcess(z, a);
-   else           return val;
-
+   if (val == -555) val = GetExtraMassExcess(z, a);
+   else {
+      // subtract electron mass from experimental atomic mass
+      val -= z * kMe;
+   }
+   return val;
 }
 //________________________________________________________________________________________
 
@@ -1507,4 +1510,25 @@ Double_t KVNucleus::ShimaChargeStatePrecision() const
 //-------------------------
 {
    return 0.04 * GetZ();
+}
+
+void KVNucleus::Streamer(TBuffer& R__b)
+{
+   // Stream an object of class KVNucleus.
+   //
+   // Streamer customized to correct masses of nuclei in data written with version <7
+
+   UInt_t R__s, R__c;
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c);
+      R__b.ReadClassBuffer(KVNucleus::Class(), this, R__v, R__s, R__c);
+      if (R__v < 7) {
+         // Before v7, nuclear masses were actually atomic masses, including the electrons
+         double m = GetMass();
+         SetMass(m - GetZ()*kMe);
+      }
+   }
+   else {
+      R__b.WriteClassBuffer(KVNucleus::Class(), this);
+   }
 }
