@@ -237,7 +237,7 @@ public:
    Double_t ShimaChargeState(Int_t) const;
    Double_t ShimaChargeStatePrecision() const;
 
-   ClassDef(KVNucleus, 6)      //Class describing atomic nuclei
+   ClassDef(KVNucleus, 7)      //Class describing atomic nuclei
 };
 
 inline void KVNucleus::SetMassFormula(UChar_t mt)
