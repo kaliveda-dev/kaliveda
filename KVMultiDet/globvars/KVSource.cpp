@@ -6,7 +6,11 @@ void KVSource::init()
 {
    // Initialisation called by ctor.
    // Set up correspondance between variable names and index.
+   //
+   // Also calls SetDefineGroup(): by default, each particle attributed to the source
+   // is added to a group with the same name as this variable.
 
+   SetDefineGroup();
    SetNameIndex("Ex", 0);
    SetNameIndex("Z", 1);
    SetNameIndex("A", 2);

@@ -1047,7 +1047,7 @@ Int_t KVNucleus::GetAWithMaxBindingEnergy(Int_t zz)
 }
 //___________________________________________________________________________//
 
-void KVNucleus::AddGroup_Withcondition(const Char_t* groupname, KVParticleCondition* pc)
+void KVNucleus::AddGroup_Withcondition(const Char_t* groupname, KVParticleCondition* pc) const
 {
    // implementation of AddGroup(const Char_t* groupname,KVParticleCondition* pc)
    // Can be overriden in child classes [unlike

@@ -211,7 +211,7 @@ in order to calculate the KVFlowTensor in this frame:
 ~~~~
 
 \authors D. Cussol (LPC Caen), J.D. Frankland (GANIL)
-\date 2004-2020
+\date 2004-2021
  */
 
 class KVVarGlob: public KVBase {
@@ -242,6 +242,8 @@ private:
    using FrameSetter = std::function<void(KVEvent*, const KVVarGlob*)>;
    FrameSetter fFrameSetter;// used to define a new kinematical frame for event based on variable
 #endif
+
+   Bool_t fDefineGroupFromSelection{kFALSE};// kTRUE if all selected particles are to be added to a group with the name of the variable
 
    void init();
    static void AddExtraInitMethodComment(KVClassFactory& cf, KVString& body);
@@ -390,8 +392,14 @@ public:
       // Evaluate contribution of particle to variable only if it satisfies
       // the particle selection criteria given with SetSelection()/AddSelection(),
       // call fill() with particle in desired frame
+      //
+      // If SetDefineFrame() has been called, each selected particle will be added to a group
+      // with the name given to the method (default = name of variable)
       const KVNucleus* c_in_frame = dynamic_cast<const KVNucleus*>(c->GetFrame(fFrame, false));
-      if (fSelection.Test(c_in_frame)) fill(c_in_frame);
+      if (fSelection.Test(c_in_frame)) {
+         fill(c_in_frame);
+         if (fDefineGroupFromSelection) c->AddGroup(GetOptionString("GROUP_NAME"));
+      }
    }
    void Fill2(const KVNucleus* n1, const KVNucleus* n2)
    {
@@ -714,6 +722,7 @@ public:
       if (fFrameSetter) fFrameSetter(e, this);
    }
 #endif
+   void SetDefineGroup(const KVString& groupname = "");
 
    ClassDef(KVVarGlob, 7)      // Base class for global variables
 };

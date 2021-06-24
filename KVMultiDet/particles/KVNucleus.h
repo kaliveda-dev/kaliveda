@@ -138,7 +138,7 @@ private:
    };
 
 protected:
-   virtual void AddGroup_Withcondition(const Char_t* groupname, KVParticleCondition*);
+   virtual void AddGroup_Withcondition(const Char_t* groupname, KVParticleCondition*) const;
 
 public:
    enum {                       //determines how to calculate mass from Z

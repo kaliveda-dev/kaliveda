@@ -246,3 +246,15 @@ void KVVarGlob::Print(Option_t*) const
    printf("\n");
 }
 
+void KVVarGlob::SetDefineGroup(const KVString& groupname)
+{
+   // If called, any particle which is accepted by the selection conditions will be added
+   // to a group with the name of this variable.
+   //
+   // \param[in] groupname [optional] specify different name of group
+
+   fDefineGroupFromSelection = kTRUE;
+   if (groupname.IsNull()) SetOption("GROUP_NAME", GetName());
+   else SetOption("GROUP_NAME", groupname);
+}
+

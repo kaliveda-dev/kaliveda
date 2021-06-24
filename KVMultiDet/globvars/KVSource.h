@@ -55,7 +55,6 @@ protected:
    {
       Add(*n);
       ++fMult;
-      const_cast<KVNucleus*>(n)->AddGroup(GetName());
    }
 
 public:

@@ -314,7 +314,7 @@ const Char_t* KVParticle::GetName() const
 }
 
 //___________________________________________________________________________//
-void KVParticle::AddGroup_Withcondition(const Char_t*, KVParticleCondition*)
+void KVParticle::AddGroup_Withcondition(const Char_t*, KVParticleCondition*) const
 {
    // Dummy implementation of AddGroup(const Char_t* groupname, KVParticleCondition*)
    // Does nothing. Real implementation is in KVNucleus::AddGroup_Withcondition.
@@ -322,7 +322,7 @@ void KVParticle::AddGroup_Withcondition(const Char_t*, KVParticleCondition*)
 };
 
 //___________________________________________________________________________//
-void KVParticle::AddGroup_Sanscondition(const Char_t* groupname, const Char_t* from)
+void KVParticle::AddGroup_Sanscondition(const Char_t* groupname, const Char_t* from) const
 {
    // Implementation of AddGroup_Sansconditioncon(st Char_t*, const Char_t*)
    // Can be overridden in child classes [instead of AddGroup(const Char_t*, const Char_t*),
@@ -339,7 +339,7 @@ void KVParticle::AddGroup_Sanscondition(const Char_t* groupname, const Char_t* f
 }
 
 //___________________________________________________________________________//
-void KVParticle::AddGroup(const Char_t* groupname, const Char_t* from)
+void KVParticle::AddGroup(const Char_t* groupname, const Char_t* from) const
 {
    // Associate this particle with the given named group.
    // Optional argument "from" allows to put a condition on the already stored
@@ -351,7 +351,7 @@ void KVParticle::AddGroup(const Char_t* groupname, const Char_t* from)
 
 //___________________________________________________________________________//
 
-void KVParticle::AddGroup(const Char_t* groupname, KVParticleCondition* cond)
+void KVParticle::AddGroup(const Char_t* groupname, KVParticleCondition* cond) const
 {
    //define and store a group name from a condition on the particle
 
