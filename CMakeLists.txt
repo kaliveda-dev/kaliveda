@@ -18,17 +18,25 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 
 #--look for ROOT & all essential libraries
+set(REQUIRED_ROOT_VERSION 6.18)
 find_package(ROOT QUIET
    COMPONENTS Rint Graf Geom Spectrum Proof ProofPlayer Physics Hist
    RIO Tree MathCore Matrix Gpad Gui Net Graf3d Thread
    OPTIONAL_COMPONENTS RGL RooFit RooFitCore Minuit RSQLite SQLite)
+#- NOTE: version check is done here, not by find_package
+#- This is to distinguish between a non-cmake-compatible installation of ROOT
+#- (which may be found by the 'if(NOT ROOT_FOUND)' part below) and a ROOT
+#- version which is insufficient.
+if("${ROOT_VERSION}" VERSION_LESS "${REQUIRED_ROOT_VERSION}")
+    message(FATAL_ERROR "KaliVeda requires ROOT version ${REQUIRED_ROOT_VERSION} or later.")
+endif()
 
 if(NOT ROOT_FOUND)
    message(STATUS "Looking for ROOT built without cmake...")
 #- may have ROOT built without cmake support
 #- try again with included FindROOT.cmake
    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/ROOT)
-   find_package(ROOT REQUIRED
+   find_package(ROOT ${REQUIRED_ROOT_VERSION} REQUIRED
       Rint Graf Geom Spectrum Proof ProofPlayer Physics Hist
       RIO Tree MathCore Matrix Gpad Gui Net Graf3d Thread
       OPTIONAL_COMPONENTS RGL RooFit RooFitCore Minuit RSQLite SQLite)
