@@ -21,12 +21,14 @@ This global variable can calculate sums of objects of any type as long as:
 template
 <class SumObject>
 class KVVGObjectSum : public KVVarGlob {
+   Int_t fMult;// number of objects summed
    SumObject fResult;// result of summing objects
 
 protected:
    void Add(const SumObject& obj)
    {
       fResult += obj;
+      ++fMult;
    }
 public:
    KVVGObjectSum()
@@ -48,12 +50,19 @@ public:
    {
       // Reset summed object by calling default ctor
       fResult = SumObject();
+      fMult = 0;
    }
 
    const SumObject& GetSumObject() const
    {
       // return const reference to the summed object
       return fResult;
+   }
+
+   Int_t GetMult() const
+   {
+      // \returns number of objects that were summed
+      return fMult;
    }
 
    ClassDef(KVVGObjectSum, 1) //Global variable calculating sum of objects
