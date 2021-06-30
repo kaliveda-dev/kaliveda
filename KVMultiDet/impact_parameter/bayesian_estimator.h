@@ -104,7 +104,9 @@ namespace KVImpactParameters {
    \tparam FluctuationKernel Class implementing fluctuations of the observable according to a given PDF
 
    Implementation of the method of estimating impact parameter distributions for experimental data
-   presented in the article Frankland et al., *Phys. Rev.* **Cxx**, yy(2020). The aim is to reproduce the
+   presented in the articles Das et al., *Phys. Rev.* **C** 97, 014905(2018) and Rogly et al., *Phys. Rev.* **C** 98, 024902(2018).
+
+    The aim is to reproduce the
    inclusive distribution \f$P(X)\f$ of an observable assumed to have a monotonic dependence on impact parameter
    by adjusting the parameters of a fitting function defined by
    \f[
@@ -141,11 +143,18 @@ namespace KVImpactParameters {
    void FittingFunction::normalise_shape_function() const           normalize shape parameters
    ~~~~~
 
-   \sa KVImpactParameters::algebraic_fitting_function
-   \sa KVImpactParameters::rogly_fitting_function
-   \sa KVImpactParameters::gamma_kernel
-   \sa KVImpactParameters::BD_kernel
-   \sa KVImpactParameters::NBD_kernel
+   We provide the following FittingFunctions and FluctuationKernels:
+
+   FittingFunction                  | Function
+   ---------------------------------|----------------------------------------------------------------------------------------------------------------
+   algebraic_fitting_function       | \f$k(c_b) = (k_{\mathrm{max}}-k_{\mathrm{min}})\left[ 1 - {c_b}^{\alpha}\right]^{\gamma} + k_{\mathrm{min}}\f$
+   rogly_fitting_function           | \f$k(c_b) = k_0 \exp{\left(-\sum_{i=1}^{N} a_i c_b^i\right)}\f$
+
+   FluctuationKernel | Distribution      | Function
+   ------------------|-------------------|------------------------------------------------------------------
+   gamma_kernel      | Gamma             |\f$f(X) = \frac{1}{\Gamma(k)\theta^k} X^{k-1} \exp{(-X/\theta)}\f$
+   BD_kernel         | Binomial          |\f$f(X) = \frac{n!}{X!(n-X)!} p^{X}(1-p)^{n-X}\f$
+   NBD_kernel        | Negative binomial |\f$f(X) = \frac{(X+n-1)!}{X!(n-1)!} p^{n}(1-p)^{X}\f$
 
    ## Example of use
    In all of the the following, the namespace prefix `KVImpactParameters::` can be dropped if
@@ -155,7 +164,7 @@ namespace KVImpactParameters {
    ~~~~~~~~~
    ### Fitting a given inclusive P(X) distribution
 
-   First initialize the estimator with the required fitting function and kernem, such as for example:
+   First initialize the estimator with the required fitting function and kernel, such as for example:
    ~~~~~~~~~{.cpp}
    --/ use 3rd order exponential polynomial function of Rogly et al with gamma kernel:
    KVImpactParameters::bayesian_estimator<KVImpactParameters::rogly_fitting_function<3>,KVImpactParameters::gamma_kernel> ipd;
@@ -186,17 +195,15 @@ namespace KVImpactParameters {
 
    Once a fit has been successful, the bayesian_estimator object can be used to deduce impact parameter
    distributions etc. for the fitted observable. This can be just after performing the fit as in the
-   previous section, or using the already known parameters from a previous fit. In the latter case, you
+   previous section (after first calling update_fit_params() - otherwise the internal fit parameter values are not
+   necessarily consistent with the last performed fit), or using the already known parameters from a previous fit.
+   In the latter case, you
    should initialize the object using the appropriate FittingFunction constructor, e.g. for algebraic_fitting_function
    which requires 5 parameters \f$\alpha,\gamma,\theta,X_{min},X_{max}\f$, you can initialise the
    estimator like so:
 
    ~~~~~~~~~{.cpp}
    bayesian_estimator<algebraic_fitting_function, gamma_kernel> ipd({alpha,gamma,theta,Xmin,Xmax});
-
-   [if C++11 is not used:
-   bayesian_estimator<algebraic_fitting_function, gamma_kernel> ipd(algebraic_fitting_function(alpha,gamma,theta,Xmin,Xmax));
-   ]
    ~~~~~~~~~
 
    See the list of methods below which can then be used in order to exploit the fit result.

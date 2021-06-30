@@ -383,7 +383,8 @@ KVEventClassifier* KVGVList::AddEventClassifier(const TString& varname, const TS
    // (which must already be in the list).
    //
    // \param[in] varname name of global variable previously added to list
-   // \param[in] value [optional] for multi-valued variables, you can specify which value to use by name
+   // \param[in] value [optional] for multi-valued variables, you can specify which value to use by name, or a mathematical expression
+   //                involving one or more of the available values
    //
    // Returns a pointer to the object, in order to add either cuts or bins like so:
    //

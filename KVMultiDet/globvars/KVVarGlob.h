@@ -210,6 +210,20 @@ in order to calculate the KVFlowTensor in this frame:
     vg->SetFrame("QP_FRAME"); // frame will have been defined before tensor is filled
 ~~~~
 
+### Tagging groups of particles with global variables
+Each global variable can be used to 'tag' the particles which are used for its calculation,
+i.e. those which satisfy the selection criteria set with SetSelection(). Each particle will be added to a group
+which can be subsequently used for iteration (see \ref NucEvents). By default, the group name will be the same
+as the global variable, but can be changed by giving an argument to the SetDefineGroup() method:
+
+~~~~{.cpp}
+// the following variable calculates the multiplicity of 4He nuclei and defines a group
+// with name "alpha" containing only those nuclei
+KVMult alpha_mult("alpha");
+alpha_mult.SetSelection({"4He", [](const KVNucleus* n){ return n->IsIsotope(2,4); });
+alpha_mult.SetDefineGroup();
+~~~~
+
 \authors D. Cussol (LPC Caen), J.D. Frankland (GANIL)
 \date 2004-2021
  */

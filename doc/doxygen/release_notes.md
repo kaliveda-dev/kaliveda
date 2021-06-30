@@ -1,20 +1,91 @@
 \page release_notes Release Notes for KaliVeda
 
-Last update: 28th May 2021
+Last update: 30th June 2021
 
 ## Version 1.12/04 (current development version - dev branch)
 
+__Changes 30/6/2021 in Build system__
+
+**MAJOR** The minimum required version of ROOT is now 6.18 or later.
+
+This is due to unconstrained use of C++11 syntax and later in KaliVeda classes, especially member variables
+where the rootcint dictionary generator of ROOT 5 is not capable of handling the syntax.
+
+__Changes 24/6/2021 in__ \ref GlobalVariables
+
+The following improvements have been made:
+
+  * All global variables can now 'tag' the particles which pass their selection criteria, by creating groups which, by
+    default have the name of the variable (an alternative name can be given). This is handled by KVVarGlob::SetDefineGroup(),
+    which can be used as in the following example:
+    
+~~~~{.cpp}
+[in the InitAnalysis() method of some analysis class]
+auto gv = AddGV("KVMult","alpha");
+gv->SetSelection({"ALPHA", [](const KVNucleus* n){
+                return dynamic_cast<const KVReconstructedNucleus*>(n)->IsAMeasured()
+                 && n->IsIsotope(2,4);  // count isotopically identified alpha particles
+                };
+gv->SetDefineGroup();  // create group "alpha" for these particles
+
+[in the Analysis() method of the class]
+for(auto& n : ReconEventGroupIterator(GetEvent(), "alpha"))
+{
+    // loop over the isotopically identified alpha particles
+}
+~~~~
+
+  * Note that it was previously stated in the class documentation for KVSource that the variable tagged each particle
+    used to reconstruct the source: in fact this was not true, but has now been correctly implemented. The tagging is
+    done by default, there is no need to call KVVarGlob::SetDefineGroup() for this variable (unless you want to change
+    the default name used for the group).
+
+  * It is now possible to classify events using mathematical expressions involving the different values of multi-valued
+    global variables with KVEventClassifier. For example, for a KVSource global variable, which provides the values
+    "Ex" and "A" (excitation energy and mass of the reconstructed source) it is now possible to
+    sort events according to excitation energy per nucleon by doing the following:
+    
+~~~~{.cpp}
+    KVGVList list_of_variables;
+    list_of_variables.AddGV("KVSource", "QP");
+    auto ec = list_of_variables.AddEventClassifier("QP", "Ex/A");
+~~~~
+
+__Changes 21/6/2021 in__ \ref NucEvents : Major improvements to handling of kinematical frames
+
+Including:
+
+  * _Bugfix_ : when a nucleus was accessed in a reference frame that was not its default frame,
+  attributing a group to the particle would only affect the specific frame, and not the nucleus _per se_:
+  this affected especially global variable classes whose KVVarGlob::fill() method acts on a pointer to
+  the nucleus in the reference frame given by KVVarGlob::SetFrame() method. This has now been solved,
+  so that all non-kinematical properties of particles (associated parameters, groups) are now the same
+  in all reference frames.
+  
+  * It is now possible to access the default kinematics of a particle using any of its defined kinematical frames,
+  using KVParticle::GetCurrentDefaultKinematics().
+
+__Changes 29/5/2021 in__ \ref Simulation : __rotational energy in KVGemini__
+
+In the KVGemini interface to the GEMINI++ statistical decay code, we now add systematically any rotational energy of
+the nuclei to deexcite to their internal excitation energy (which normally only accounts for thermal excitation)
+before calculating the decay. This is because GEMINI++ expects \f$E*=U+E_{rot}\f$ and subtracts \f$E_{rot}\f$
+from \f$E*\f$ in order to calculate the thermal excitation energy \f$U\f$ available for decay. To ensure consistency
+the \f$E_{rot}\f$ added by KVGemini is calculated according to the GEMINI++ prescription.
+
+See methods KVGemini::DecayEvent() and KVGemini::DecaySingleNucleus().
+
 __Changes 28/5/2021 in Build system__
 
-The minimum required version for cmake is now 3.5 (version by default in Ubuntu 16.04)
+**MAJOR** The minimum required version for cmake is now 3.5 (version by default in Ubuntu 16.04)
 
-C++11 support is enabled by default for all builds if it was not already enabled by ROOT. Note that although this now means that even when using ROOT5
+**MAJOR** C++11 support is enabled by default for all builds if it was not already enabled by ROOT. Note that although this now means that even when using ROOT5
 auto variables, range-based for loops and lambda functions can be used, as C++11 support in the ROOT5 dictionary generator and interpreter is
 very limited (or non-existent) many new features of KaliVeda reliant on C++11 are still only enabled when building with ROOT6.
 
 __Changes 28/5/2021 in__ \ref NucEvents : __Templated event classes__
 
-In the standard library, containers are generally used to store values and objects whose type is defined at compile time
+In the C++ standard library, containers are generally used to store values and objects whose type is defined at compile time
 through template parameters: std::vector<int>, std::unordered_map<std::string, std::thread>, etc.
 
 In ROOT (and in KaliVeda), containers such as TList handle pointers to objects which may be of any type

@@ -28,6 +28,14 @@ auto mt_cuts = GetGVList()->AddEventClassifier("mtot");
 ~~~~
 See method KVGVList::AddEventClassifier().
 
+Additionally, if the global variable used provides several named values, a mathematical expression can
+be used involving these values. For example, with the KVSource variable, it is possible to do
+~~~~{.cpp}
+AddGV("KVSource", "QP");
+auto ec = GetGVList()->AddEventClassifier("QP", "Ex/A");
+~~~~
+in order to sort according to the excitation energy per nucleon of the reconstructed source.
+
 If the global variable list is then used to create automatic branches in a TTree (KVGVList::MakeBranches()),
 this event classification object will add a branch `mtot_EC` in order to store its values.
 
@@ -97,7 +105,8 @@ public:
         fVar(b), fVal(value), fBcuts(false), fBins(false), fWithVal(value != ""), fWithExpression(false), fFormula(nullptr)
    {
       // \param[in] b address of global variable to use for event classification
-      // \param[in] value [optional] name of value to use if global variable is multi-valued
+      // \param[in] value [optional] for multi-valued variables, you can specify which value to use by name, or a mathematical expression
+      //                involving one or more of the available values
    }
    virtual ~KVEventClassifier() {}
    ROOT_COPY_CTOR(KVEventClassifier, KVVarGlob1)

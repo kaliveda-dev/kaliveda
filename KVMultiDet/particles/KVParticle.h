@@ -112,7 +112,7 @@ GetREtran() and GetRTransverseEnergy() return the relativistic transverse energy
 
 ### Kinematical reference frames
 #### 1. Accessing particle kinematics in different frames
-Particle kinematics in different frames can be accessed with InFrame(const KVFrameTransform&).
+Particle kinematics in different frames can be accessed with method InFrame().
 This method does not modify the particle's kinematics or default reference frame (see 2 below).
 If you want to access lots of information from this frame, it is probably more efficient to
 define and store it in the particle's list of reference frames (see 3 below).
@@ -135,17 +135,17 @@ __Example:__ inspect kinematics of particle (accessed through pointer `KVParticl
  - in a frame moving at \f$0.1c\f$ in the beam direction:
 
 ~~~~~~~~~~~~~~~~~~{.cpp}
-            p->InFrame(KVFrameTransform(TVector3(0,0,0.1),kTRUE)).GetKE();
+p->InFrame(KVFrameTransform(TVector3(0,0,0.1),kTRUE)).GetKE();
 
-            // the following only works with C++11 and later
-            p->InFrame({{0,0,0.1},kTRUE}).GetKE();
+p->InFrame({{0,0,0.1},kTRUE}).GetKE(); // C++11 equivalent of above
 ~~~~~~~~~~~~~~~~~~
 
-In this case we need to pass two arguments to the KVFrameTransform(const TVector3&, Bool_t = kFALSE) constructor;
-before C++11, this required an explicit call to the constructor.
+In this case we need to pass two arguments to the KVFrameTransform constructor:
+before C++11, this required an explicit call to the constructor (top line); since C++11, uniform initialization
+allows to just give the expected arguments, using `{}` to enclose the arguments for any aggregate (class) types.
 
 #### 2. Modifying particle kinematics
-Particle kinematics can be modified using method ChangeFrame(const KVFrameTransform&):
+Particle kinematics can be modified using method ChangeFrame():
 
 __Example:__ change kinematics of particle (accessed through pointer `KVParticle* p`)
  - to a frame moving at 5 cm/ns in the beam direction:
@@ -165,10 +165,9 @@ __Example:__ change kinematics of particle (accessed through pointer `KVParticle
  - to a frame moving at \f$0.1c\f$ in the beam direction:
 
 ~~~~~~~~~~~~~~~~~~{.cpp}
-            p->ChangeFrame(KVFrameTransform(TVector3(0,0,0.1),kTRUE));
+ p->ChangeFrame(KVFrameTransform(TVector3(0,0,0.1),kTRUE));
 
-            // the following only works with C++11 and later
-            p->ChangeFrame({{0,0,0.1},kTRUE});
+p->ChangeFrame({{0,0,0.1},kTRUE});  // C++11 equivalent of above
 ~~~~~~~~~~~~~~~~~~
 
 #### 3. Using several reference frames
@@ -177,7 +176,7 @@ different reference frames while keeping the original kinematics as the default.
 frame can be used independently, and new frames can be defined based on any of the
 existing frames:
 
-__Example:__ (for a particle accessed through pointer `KVParticle* p`):
+__Example:__ (for a particle accessed through pointer `KVParticle* p`{.cpp}):
  - define a new frame moving at 5 cm/ns in the beam direction:
 
 ~~~~~~~~~~~~~~~~~~{.cpp}
@@ -195,10 +194,9 @@ __Example:__ (for a particle accessed through pointer `KVParticle* p`):
   Note that the same frame can be defined directly from the original particle by using a combined boost-then-rotation transform:
 
 ~~~~~~~~~~~~~~~~~~{.cpp}
-            p->SetFrame("rotated_moving_frame", KVFrameTransform(TVector3(0,0,5),rot));
+   p->SetFrame("rotated_moving_frame", KVFrameTransform(TVector3(0,0,5),rot));
 
-            // the following only works with C++11 and later
-            p->SetFrame("rotated_moving_frame", {{0,0,5},rot});
+   p->SetFrame("rotated_moving_frame", {{0,0,5},rot});  // C++11 equivalent of above
 ~~~~~~~~~~~~~~~~~~
 
  - define a similarly rotated coordinate frame in the original (default) reference frame:
@@ -218,6 +216,34 @@ __Example:__ (for a particle accessed through pointer `KVParticle* p`):
 Note that the frame `"rotated_moving_frame"` is directly accessible even if it is defined in two
 steps as a rotation of the `"moving_frame"`.
 
+The total number of defined frames (including the default frame) is given by GetNumberOfDefinedFrames().
+Calling Print() will show all reference frames defined for the particle:
+
+~~~~~~~~~~~~~~~~~~{.cpp}
+p->Print()
+
+KVParticle mass=0 Theta=0 Phi=0 KE=0 Vpar=0
+    moving_frame:  Theta=0 Phi=0 KE=0 Vpar=0
+       rotated_moving_frame:  Theta=0 Phi=0 KE=0 Vpar=0
+    rotated_frame:  Theta=0 Phi=0 KE=0 Vpar=0
+~~~~~~~~~~~~~~~~~~
+
+Indentation indicates the relationships between frames: `"rotated_moving_frame"` is a child frame of `"moving_frame"`.
+The first line is the default kinematics, which by default has no name (a name can be set using SetFrameName()).
+
+The current default kinematics can always be accessed using GetCurrentDefaultKinematics(): this method returns the default
+kinematical frame for the particle when accessed from any kinematical frame:
+
+~~~~{.cpp}
+p->SetFrameName("lab");    // set name for default kinematics
+
+auto show_default_frame = [](const KVParticle* p){ std::cout << p->GetCurrentDefaultKinematics()->GetFrameName() << std::endl; };
+
+show_default_frame( p->GetFrame("moving_frame") )
+
+"lab"
+~~~~
+
 #### 4. Changing the default kinematics
 Let us consider a particle for which the different reference frames in the previous paragraph have been defined.
 For an example, imagine that the default kinematics are that of particle with rest mass 939 MeV moving with
@@ -234,28 +260,10 @@ p.SetFrame("rotated_moving_frame", "moving_frame", rot);
 p.SetFrame("rotated_frame", rot);
 ~~~~~~~~~~~~~~~~~~
 
-Calling Print() will show all reference frames defined for the particle:
-
-~~~~~~~~~~~~~~~~~~{.cpp}
-p.Print()
-
-KVParticle mass=939 Theta=45 Phi=0 KE=32.7103 Vpar=5.45392
-         moving_frame:  Theta=85.1751 Phi=0 KE=16.6117 Vpar=0.468125
-                 rotated_moving_frame:  Theta=85.1751 Phi=270 KE=16.6117 Vpar=0.468125
-         rotated_frame:  Theta=45 Phi=270 KE=32.7103 Vpar=5.45392
-~~~~~~~~~~~~~~~~~~
-
-Indentation indicates the relationships between frames: `"rotated_moving_frame"` is a child frame of `"moving_frame"`.
-The first line is the default kinematics. As yet it has no name:
-
-~~~~~~~~~~~~~~~~~~{.cpp}
-p.SetFrameName("lab");
-~~~~~~~~~~~~~~~~~~
-
 Now if we want to change the default kinematical frame for this particle:
 
 ~~~~~~~~~~~~~~~~~~{.cpp}
-p.ChangeDefaultFrame("rotated_moving_frame");
+p.ChangeDefaultFrame("rotated_moving_frame", "lab"); // second argument is name for previous default frame, if not defined before
 
 p.Print();
 
@@ -267,8 +275,7 @@ KVNameValueList::ParticleParameters : Parameters associated with a particle in a
  <frameName=rotated_moving_frame>
 ~~~~~~~~~~~~~~~~~~
 
-Note that the name of the default kinematics is stored as a parameter `"frameName"` and can be retrieved with GetFrameName().
-Note also how the relationships between frames are preserved, i.e. if we present the frames as graphs:
+The relationships between frames are preserved, i.e. if we present the frames as graphs:
 
 with "lab" as default frame:
 ~~~~
@@ -372,27 +379,21 @@ The number of such groups for a given particle is unlimited.
 Group names are case _insensitive_. Example:
 
 ~~~~~~~~~~~~~~{.cpp}
-KVNucleus nn;
-nn.AddGroup("forward");
-nn.BelongsToGroup("ForWaRD");// -> return kTRUE
+KVParticle part;
+part.AddGroup("forward");
+part.BelongsToGroup("ForWaRD");// -> return kTRUE
 ~~~~~~~~~~~~~~
 
- Any groups added to the particle are propagated to all existing kinematical frames. In other words, if a particle has a kinematical frame `"CM"` defined when it is
- added to a group:
+Groups are valid for all kinematical frames, and can be defined using a pointer to the nucleus in any of
+its defined kinematical frames:
 
 ~~~~~~~~~~~~~~~{.cpp}
 part.SetFrame("CM", [some transformation]);
 part.AddGroup("toto");
-part.BelongsToGroup("toto");// this returns kTRUE
-part.GetFrame("CM")->BelongsToGroup("toto");// this returns kTRUE also
-~~~~~~~~~~~~~~~
+part.GetFrame("CM")->BelongsToGroup("toto");// returns kTRUE
 
-On the contrary if some change is made in the following way :
-
-~~~~~~~~~~~~~~~{.cpp}
 part.GetFrame("CM")->AddGroup("titi");
-part.GetFrame("CM")->BelongsToGroup("titi");// this returns kTRUE
-part.BelongsToGroup("titi");// this returns kFALSE
+part.BelongsToGroup("titi");// returns kRUE
 ~~~~~~~~~~~~~~~
  */
 class KVParticle: public TLorentzVector {

@@ -40,11 +40,16 @@ void KVGemini::DecaySingleNucleus(KVSimNucleus& toDecay, KVSimEvent* decayProduc
    //       if you just want to keep the products of a single nucleus
    //
    //
-   // \param[in] addRotationalEnergy enable or not the addition of the Yrast rotational energy to the excitation energy E*.
+   // \param[in] addRotationalEnergy
+   //\parblock
+   // enable or not the addition of the Yrast rotational energy to the excitation energy E*.
+   //
    // Up to now, two cases are known:
    //     - HIPSE and DIT model => the excitation energy consists just in the thermal energy, the addition of the rotational energy is needed
-   // This is because Gemini systematically subtracts the Yrast energy from the given excitation energy of each nucleus
+   //
+   // This is done because Gemini systematically subtracts the Yrast energy from the given excitation energy of each nucleus
    // in order to calculate the thermal excitation energy.
+   //\endparblock
    //
    // If there is a problem with the decay of the nucleus,
    // we throw an exception of type gemini_bad_decay
@@ -122,7 +127,9 @@ void KVGemini::DecayEvent(const KVSimEvent* hot, KVSimEvent* cold, bool addRotat
    // If there is a problem with the decay of any of the nuclei in the event,
    // we throw an exception of type gemini_bad_decay
    //
-   // \param[in] addRotationalEnergy defines whether or not to add Yrast rotational energy to E* of each nucleus (\sa DecaySingleNucleus() )
+   // \param[in] addRotationalEnergy defines whether or not to add Yrast rotational energy to E* of each nucleus
+   //
+   // \sa DecaySingleNucleus()
    // \note Do not set any parameters for the `cold` event before calling this method, they will be cleared before decay
 
    cold->Clear();
