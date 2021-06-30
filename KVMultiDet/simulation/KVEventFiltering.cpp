@@ -160,7 +160,7 @@ Bool_t KVEventFiltering::Analysis()
 
 void KVEventFiltering::EndAnalysis()
 {
-   gEnv->SetValue(Form("%s.HasCalibIdentInfos", GetOpt("Dataset").Data()), fIdCalMode);
+   gEnv->SetValue(Form("%s.HasCalibIdentInfos", GetOpt("Dataset").Data()), fIdCalMode.Data());
 }
 
 void KVEventFiltering::EndRun()

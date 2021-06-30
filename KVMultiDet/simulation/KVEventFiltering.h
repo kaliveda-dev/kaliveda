@@ -107,7 +107,7 @@ class KVEventFiltering : public KVEventSelector {
    KVGemini GEM;
 #endif
 
-   const char* fIdCalMode; //! original exp setup hasIDandCalib to be reset in case of modifications
+   TString fIdCalMode; //! original exp setup hasIDandCalib to be reset in case of modifications
 
    void RandomRotation(KVEvent* to_rotate, const TString& frame_name = "") const;
 public:
