@@ -545,7 +545,7 @@ public:
       fIsInitialized = kFALSE; //allow re-initialisation
    }
 
-   void SetNormalization(Double_t norm)
+   virtual void SetNormalization(Double_t norm)
    {
       fNormalization = norm;
    }
