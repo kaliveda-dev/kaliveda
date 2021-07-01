@@ -291,7 +291,7 @@ void KVEventFiltering::InitAnalysis()
    if (fGemDecayPerEvent > 1) Info("InitAnalysis", "  -- %d decays per primary event", fGemDecayPerEvent);
    if (fGemAddRotEner) Info("InitAnalysis", "  -- Rotational energy will be added to excitation energy");
 #endif
-   if (!gDataSet->HasCalibIdentInfos()) {
+   if (filt == "Full" && !gDataSet->HasCalibIdentInfos()) {
       // for old data without implementation of calibration/identification
       // we set status of identifications according to experimental informations in IdentificationBilan.dat
       // this "turns off" any telescopes which were not working during the experimental run
