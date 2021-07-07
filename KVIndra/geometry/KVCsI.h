@@ -42,7 +42,7 @@ public:
 
    void DeduceACQParameters(KVEvent*, KVNumberList&);
 
-   virtual KVDetectorSignal* GetDetectorSignal(const TString& type) const
+   virtual KVDetectorSignal* GetDetectorSignal(const KVString& type) const
    {
       // Overrides KVDetector method for special case of `TotLight` signal.
       //
