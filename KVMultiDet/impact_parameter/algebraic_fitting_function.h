@@ -91,7 +91,7 @@ namespace KVImpactParameters {
          params.Xmax.value = 1;
       }
 
-      constexpr int npar() const
+      int npar() const
       {
          return 5;
       }
