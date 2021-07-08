@@ -928,7 +928,7 @@ void KVIDZAGrid::ReCheckQuality(Int_t& Z, Double_t& A)
    KVNucleus nn(Z, aa);
    if (nn.GetLifeTime() < 1e-9) fICode = kICODE5;
 
-   if (Z == 1 && aa == 1) da *= .75;
+//   if (Z == 1 && aa == 1) da *= .75;
    if (TMath::Abs(aa - A) > da) fICode = kICODE5;
 }
 
